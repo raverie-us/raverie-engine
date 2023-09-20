@@ -26,12 +26,7 @@ RaverieDefineType(GeneratedWaveNode, builder, type)
 }
 
 GeneratedWaveNode::GeneratedWaveNode(StringParam name, unsigned ID) :
-    SoundNode(name, ID, false, true),
-    mWaveType(SynthWaveType::SineWave),
-    mWaveFrequency(440.0f),
-    mVolume(1.0f),
-    mSquareWavePulseValue(0.5f),
-    mState(Off)
+    SoundNode(name, ID, false, true), mWaveType(SynthWaveType::SineWave), mWaveFrequency(440.0f), mVolume(1.0f), mSquareWavePulseValue(0.5f), mState(Off)
 {
   WaveDataThreaded.SetType(mWaveType);
   WaveDataThreaded.SetFrequency(mWaveFrequency.Get(AudioThreads::MainThread));
@@ -63,10 +58,7 @@ void GeneratedWaveNode::SetWaveFrequency(float frequency)
 
 void GeneratedWaveNode::InterpolateWaveFrequency(float frequency, float time)
 {
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(
-          &GeneratedWaveNode::InterpolateFrequencyThreaded, this, Math::Clamp(frequency, 0.0f, 20000.0f), time),
-      this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&GeneratedWaveNode::InterpolateFrequencyThreaded, this, Math::Clamp(frequency, 0.0f, 20000.0f), time), this);
 }
 
 void GeneratedWaveNode::Play()
@@ -91,11 +83,7 @@ void GeneratedWaveNode::SetVolume(float volume)
 
 void GeneratedWaveNode::InterpolateVolume(float volume, float time)
 {
-  Z::gSound->Mixer.AddTask(CreateFunctor(&GeneratedWaveNode::InterpolateVolumeThreaded,
-                                         this,
-                                         Math::Clamp(volume, 0.0f, cMaxVolumeValue),
-                                         Math::Max(time, 0.01f)),
-                           this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&GeneratedWaveNode::InterpolateVolumeThreaded, this, Math::Clamp(volume, 0.0f, cMaxVolumeValue), Math::Max(time, 0.01f)), this);
 }
 
 float GeneratedWaveNode::GetDecibels()
@@ -122,29 +110,23 @@ void GeneratedWaveNode::SetSquareWavePulseValue(float value)
 {
   mSquareWavePulseValue = Math::Clamp(value, 0.0f, 1.0f);
 
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&Oscillator::SetSquareWavePositiveFraction, &WaveDataThreaded, mSquareWavePulseValue), this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&Oscillator::SetSquareWavePositiveFraction, &WaveDataThreaded, mSquareWavePulseValue), this);
 }
 
-bool GeneratedWaveNode::GetOutputSamples(BufferType* outputBuffer,
-                                         const unsigned numberOfChannels,
-                                         ListenerNode* listener,
-                                         const bool firstRequest)
+bool GeneratedWaveNode::GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest)
 {
   if (mState.Get(AudioThreads::MixThread) == Off)
     return false;
 
   if (mState.Get(AudioThreads::MixThread) == Stopping)
   {
-    VolumeInterpolatorThreaded.SetValues(
-        mVolume.Get(AudioThreads::MixThread), 0.0f, (unsigned)(outputBuffer->Size() / numberOfChannels));
+    VolumeInterpolatorThreaded.SetValues(mVolume.Get(AudioThreads::MixThread), 0.0f, (unsigned)(outputBuffer->Size() / numberOfChannels));
     mState.Set(Off, AudioThreads::MixThread);
   }
   else if (mState.Get(AudioThreads::MixThread) == Starting)
   {
     if (VolumeInterpolatorThreaded.Finished())
-      VolumeInterpolatorThreaded.SetValues(
-          0.0f, mVolume.Get(AudioThreads::MixThread), (unsigned)(outputBuffer->Size() / numberOfChannels));
+      VolumeInterpolatorThreaded.SetValues(0.0f, mVolume.Get(AudioThreads::MixThread), (unsigned)(outputBuffer->Size() / numberOfChannels));
     mState.Set(Active, AudioThreads::MixThread);
   }
 
@@ -179,14 +161,12 @@ bool GeneratedWaveNode::GetOutputSamples(BufferType* outputBuffer,
 
 void GeneratedWaveNode::InterpolateFrequencyThreaded(float frequency, float time)
 {
-  FrequencyInterpolatorThreaded.SetValues(
-      mWaveFrequency.Get(AudioThreads::MixThread), frequency, (unsigned)(time * cSystemSampleRate));
+  FrequencyInterpolatorThreaded.SetValues(mWaveFrequency.Get(AudioThreads::MixThread), frequency, (unsigned)(time * cSystemSampleRate));
 }
 
 void GeneratedWaveNode::InterpolateVolumeThreaded(float volume, float time)
 {
-  VolumeInterpolatorThreaded.SetValues(
-      mVolume.Get(AudioThreads::MixThread), volume, (unsigned)(time * cSystemSampleRate));
+  VolumeInterpolatorThreaded.SetValues(mVolume.Get(AudioThreads::MixThread), volume, (unsigned)(time * cSystemSampleRate));
 }
 
 // ADSR Envelope
@@ -276,9 +256,7 @@ RaverieDefineType(AdditiveSynthNode, builder, type)
   RaverieBindMethod(StopAllNotes);
 }
 
-AdditiveSynthNode::AdditiveSynthNode(StringParam name, unsigned ID) :
-    SoundNode(name, ID, false, true),
-    mCurrentNoteCountThreaded(0)
+AdditiveSynthNode::AdditiveSynthNode(StringParam name, unsigned ID) : SoundNode(name, ID, false, true), mCurrentNoteCountThreaded(0)
 {
 }
 
@@ -303,11 +281,7 @@ void AdditiveSynthNode::AddHarmonic(float multiplier, float volume, AdsrEnvelope
                                     Math::Max(envelope.mSustainLevel, 0.0f),
                                     Math::Max(envelope.mReleaseTime, 0.0f));
 
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&AdditiveSynthNode::AddHarmonicThreaded,
-                    this,
-                    HarmonicData(Math::Max(multiplier, 0.0f), Math::Max(volume, 0.0f), envelopeSettings, type)),
-      this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&AdditiveSynthNode::AddHarmonicThreaded, this, HarmonicData(Math::Max(multiplier, 0.0f), Math::Max(volume, 0.0f), envelopeSettings, type)), this);
 }
 
 void AdditiveSynthNode::RemoveAllHarmonics()
@@ -333,10 +307,7 @@ void AdditiveSynthNode::StopAllNotes()
   Z::gSound->Mixer.AddTask(CreateFunctor(&AdditiveSynthNode::StopAllNotesThreaded, this), this);
 }
 
-bool AdditiveSynthNode::GetOutputSamples(BufferType* outputBuffer,
-                                         const unsigned numberOfChannels,
-                                         ListenerNode* listener,
-                                         const bool firstRequest)
+bool AdditiveSynthNode::GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest)
 {
   if (mCurrentNoteCountThreaded == 0)
     return false;
@@ -432,11 +403,7 @@ RaverieDefineType(MicrophoneInputNode, builder, type)
   RaverieBindGetterSetter(Active);
 }
 
-MicrophoneInputNode::MicrophoneInputNode(StringParam name, unsigned ID) :
-    SoundNode(name, ID, false, true),
-    mActive(false),
-    mVolume(1.0f),
-    mStopping(cFalse)
+MicrophoneInputNode::MicrophoneInputNode(StringParam name, unsigned ID) : SoundNode(name, ID, false, true), mActive(false), mVolume(1.0f), mStopping(cFalse)
 {
 }
 
@@ -455,9 +422,7 @@ void MicrophoneInputNode::SetVolume(float volume)
 
   // Don't change volume if we are currently not active or deactivating
   if (mActive.Get(AudioThreads::MainThread) && mStopping.Get() == cFalse)
-    Z::gSound->Mixer.AddTask(
-        CreateFunctor(&InterpolatingObject::SetValues, &VolumeInterpolatorThreaded, volume, cPropertyChangeFrames),
-        this);
+    Z::gSound->Mixer.AddTask(CreateFunctor(&InterpolatingObject::SetValues, &VolumeInterpolatorThreaded, volume, cPropertyChangeFrames), this);
 }
 
 bool MicrophoneInputNode::GetActive()
@@ -480,28 +445,20 @@ void MicrophoneInputNode::SetActive(bool active)
   if (!active && mStopping.Get() == cFalse)
   {
     mStopping.Set(cTrue);
-    Z::gSound->Mixer.AddTask(
-        CreateFunctor(&InterpolatingObject::SetValues, &VolumeInterpolatorThreaded, 0.0f, cPropertyChangeFrames), this);
+    Z::gSound->Mixer.AddTask(CreateFunctor(&InterpolatingObject::SetValues, &VolumeInterpolatorThreaded, 0.0f, cPropertyChangeFrames), this);
   }
   // Otherwise we are activating
   {
     // Make sure the stopping flag is reset
     mStopping.Set(cFalse);
     // Interpolate volume to its previous setting
-    Z::gSound->Mixer.AddTask(CreateFunctor(&InterpolatingObject::SetValues,
-                                           &VolumeInterpolatorThreaded,
-                                           mVolume.Get(AudioThreads::MainThread),
-                                           cPropertyChangeFrames),
-                             this);
+    Z::gSound->Mixer.AddTask(CreateFunctor(&InterpolatingObject::SetValues, &VolumeInterpolatorThreaded, mVolume.Get(AudioThreads::MainThread), cPropertyChangeFrames), this);
     // Mark that we are active
     mActive.Set(true, AudioThreads::MainThread);
   }
 }
 
-bool MicrophoneInputNode::GetOutputSamples(BufferType* outputBuffer,
-                                           const unsigned numberOfChannels,
-                                           ListenerNode* listener,
-                                           const bool firstRequest)
+bool MicrophoneInputNode::GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest)
 {
   if (!mActive.Get(AudioThreads::MixThread) || Z::gSound->Mixer.InputBuffer.Empty())
     return false;
@@ -555,9 +512,7 @@ bool MicrophoneInputNode::GetOutputSamples(BufferType* outputBuffer,
 
 // Linear Grain Window
 
-LinearGrainWindow::LinearGrainWindow(unsigned length) :
-    GrainWindow(length, GranularSynthWindows::Linear),
-    mHalfLength(length / 2)
+LinearGrainWindow::LinearGrainWindow(unsigned length) : GrainWindow(length, GranularSynthWindows::Linear), mHalfLength(length / 2)
 {
 }
 
@@ -585,8 +540,7 @@ void LinearGrainWindow::CopySettings(GrainWindow* other)
 
 // Cosine Grain Window
 
-RaisedCosineGrainWindow::RaisedCosineGrainWindow(unsigned length, unsigned attackLength, unsigned releaseLength) :
-    GrainWindow(length, GranularSynthWindows::RaisedCosine)
+RaisedCosineGrainWindow::RaisedCosineGrainWindow(unsigned length, unsigned attackLength, unsigned releaseLength) : GrainWindow(length, GranularSynthWindows::RaisedCosine)
 {
   Reset(length, attackLength, releaseLength);
 }
@@ -680,11 +634,7 @@ void RaisedCosineGrainWindow::CopySettings(GrainWindow* other)
 
 // Parabolic Window
 
-ParabolicGrainWindow::ParabolicGrainWindow(unsigned length) :
-    GrainWindow(length, GranularSynthWindows::Parabolic),
-    mLastAmplitude(0.0f),
-    mSlope(0.0f),
-    mCurve(0.0f)
+ParabolicGrainWindow::ParabolicGrainWindow(unsigned length) : GrainWindow(length, GranularSynthWindows::Parabolic), mLastAmplitude(0.0f), mSlope(0.0f), mCurve(0.0f)
 {
   Reset(length, 0, 0);
 }
@@ -724,8 +674,7 @@ void ParabolicGrainWindow::CopySettings(GrainWindow* other)
 
 // Trapezoid Window
 
-TrapezoidGrainWindow::TrapezoidGrainWindow(unsigned length, unsigned attack, unsigned release) :
-    GrainWindow(length, GranularSynthWindows::Trapezoid)
+TrapezoidGrainWindow::TrapezoidGrainWindow(unsigned length, unsigned attack, unsigned release) : GrainWindow(length, GranularSynthWindows::Trapezoid)
 {
   Reset(length, attack, release);
 }
@@ -918,9 +867,7 @@ void Grain::GetSamples(float* outputBuffer, unsigned outputFrames, unsigned outp
     {
       float samples[2] = {sample * mLeftVolume, sample * mRightVolume};
       AudioFrame frameSamples(samples, 2);
-      memcpy(outputBuffer + (frame * outputChannels),
-             frameSamples.GetSamples(outputChannels),
-             sizeof(float) * outputChannels);
+      memcpy(outputBuffer + (frame * outputChannels), frameSamples.GetSamples(outputChannels), sizeof(float) * outputChannels);
     }
   }
 
@@ -1166,10 +1113,7 @@ void GranularSynthNode::SetWindowRelease(int releaseMS)
   mWindowReleaseFrames.Set(MsToFrames(Math::Max(releaseMS, 0)), AudioThreads::MainThread);
 }
 
-bool GranularSynthNode::GetOutputSamples(BufferType* outputBuffer,
-                                         const unsigned numberOfChannels,
-                                         ListenerNode* listener,
-                                         const bool firstRequest)
+bool GranularSynthNode::GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest)
 {
   if (SamplesThreaded.Empty())
     return false;
@@ -1209,8 +1153,7 @@ bool GranularSynthNode::GetOutputSamples(BufferType* outputBuffer,
 
     int grainIndex;
     // If randomizing grain position, get a random starting index
-    if (mRandomLocationValue.Get(AudioThreads::MixThread) > 0.0f &&
-        RandomObjectThreaded.Float() < mRandomLocationValue.Get(AudioThreads::MixThread))
+    if (mRandomLocationValue.Get(AudioThreads::MixThread) > 0.0f && RandomObjectThreaded.Float() < mRandomLocationValue.Get(AudioThreads::MixThread))
     {
       grainIndex = RandomObjectThreaded.IntRangeInEx(0, SamplesThreaded.Size());
       grainIndex -= grainIndex % mSampleChannelsThreaded;
@@ -1227,25 +1170,20 @@ bool GranularSynthNode::GetOutputSamples(BufferType* outputBuffer,
     }
 
     // Activate the new grain
-    newGrain.Activate(
-        GetValueThreaded(mGrainLengthFrames.Get(AudioThreads::MixThread),
-                         mGrainLengthVariance.Get(AudioThreads::MixThread)),
-        GetValueThreaded(mGrainVolume.Get(AudioThreads::MixThread), mGrainVolumeVariance.Get(AudioThreads::MixThread)),
-        GetValueThreaded(mGrainPanningValue.Get(AudioThreads::MixThread),
-                         mGrainPanningVariance.Get(AudioThreads::MixThread)),
-        &SamplesThreaded,
-        mSampleChannelsThreaded,
-        grainIndex,
-        GetValueThreaded(mGrainResampleRate.Get(AudioThreads::MixThread),
-                         mGrainResampleVariance.Get(AudioThreads::MixThread)),
-        mWindowType.Get(AudioThreads::MixThread),
-        mWindowAttackFrames.Get(AudioThreads::MixThread),
-        mWindowReleaseFrames.Get(AudioThreads::MixThread));
+    newGrain.Activate(GetValueThreaded(mGrainLengthFrames.Get(AudioThreads::MixThread), mGrainLengthVariance.Get(AudioThreads::MixThread)),
+                      GetValueThreaded(mGrainVolume.Get(AudioThreads::MixThread), mGrainVolumeVariance.Get(AudioThreads::MixThread)),
+                      GetValueThreaded(mGrainPanningValue.Get(AudioThreads::MixThread), mGrainPanningVariance.Get(AudioThreads::MixThread)),
+                      &SamplesThreaded,
+                      mSampleChannelsThreaded,
+                      grainIndex,
+                      GetValueThreaded(mGrainResampleRate.Get(AudioThreads::MixThread), mGrainResampleVariance.Get(AudioThreads::MixThread)),
+                      mWindowType.Get(AudioThreads::MixThread),
+                      mWindowAttackFrames.Get(AudioThreads::MixThread),
+                      mWindowReleaseFrames.Get(AudioThreads::MixThread));
 
     int nextDelayFrames = mGrainDelayFrames.Get(AudioThreads::MixThread);
     if (mGrainDelayVariance.Get(AudioThreads::MixThread) > 0)
-      nextDelayFrames = RandomObjectThreaded.IntVariance(mGrainDelayFrames.Get(AudioThreads::MixThread),
-                                                         mGrainDelayVariance.Get(AudioThreads::MixThread));
+      nextDelayFrames = RandomObjectThreaded.IntVariance(mGrainDelayFrames.Get(AudioThreads::MixThread), mGrainDelayVariance.Get(AudioThreads::MixThread));
     if (mBufferScanRate.Get(AudioThreads::MixThread) != 0.0f)
       nextDelayFrames = (unsigned)(nextDelayFrames * mBufferScanRate.Get(AudioThreads::MixThread));
 
@@ -1258,8 +1196,7 @@ bool GranularSynthNode::GetOutputSamples(BufferType* outputBuffer,
   else
     mFramesToNextGrainThreaded -= frames;
 
-  mGrainStartIndexThreaded +=
-      (unsigned)(frames * mBufferScanRate.Get(AudioThreads::MixThread)) * mSampleChannelsThreaded;
+  mGrainStartIndexThreaded += (unsigned)(frames * mBufferScanRate.Get(AudioThreads::MixThread)) * mSampleChannelsThreaded;
   if (mGrainStartIndexThreaded >= (int)SamplesThreaded.Size())
     mGrainStartIndexThreaded -= SamplesThreaded.Size();
   else if (mGrainStartIndexThreaded < 0)
@@ -1275,13 +1212,9 @@ void GranularSynthNode::ValidateLengthsThreaded()
     mGrainLengthFrames.Set(SamplesThreaded.Size() - 1, AudioThreads::MixThread);
     mGrainLengthVariance.Set(0, AudioThreads::MixThread);
   }
-  else if ((mGrainLengthFrames.Get(AudioThreads::MixThread) + mGrainLengthVariance.Get(AudioThreads::MixThread)) *
-               mSampleChannelsThreaded >=
-           SamplesThreaded.Size())
+  else if ((mGrainLengthFrames.Get(AudioThreads::MixThread) + mGrainLengthVariance.Get(AudioThreads::MixThread)) * mSampleChannelsThreaded >= SamplesThreaded.Size())
   {
-    mGrainLengthVariance.Set((SamplesThreaded.Size() / mSampleChannelsThreaded) -
-                                 mGrainLengthFrames.Get(AudioThreads::MixThread),
-                             AudioThreads::MixThread);
+    mGrainLengthVariance.Set((SamplesThreaded.Size() / mSampleChannelsThreaded) - mGrainLengthFrames.Get(AudioThreads::MixThread), AudioThreads::MixThread);
   }
 }
 

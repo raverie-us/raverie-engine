@@ -20,12 +20,8 @@ RaverieDefineType(RaverieCompileFragmentEvent, builder, type)
 }
 
 // Resource Entry
-RaverieCompileFragmentEvent::RaverieCompileFragmentEvent(Module& dependencies,
-                                                     Array<RaverieDocumentResource*>& fragments,
-                                                     ResourceLibrary* owningLibrary) :
-    mDependencies(dependencies),
-    mFragments(fragments),
-    mOwningLibrary(owningLibrary)
+RaverieCompileFragmentEvent::RaverieCompileFragmentEvent(Module& dependencies, Array<RaverieDocumentResource*>& fragments, ResourceLibrary* owningLibrary) :
+    mDependencies(dependencies), mFragments(fragments), mOwningLibrary(owningLibrary)
 {
 }
 
@@ -37,21 +33,8 @@ ResourceEntry::ResourceEntry()
   mLibrary = nullptr;
 }
 
-ResourceEntry::ResourceEntry(uint order,
-                             StringParam type,
-                             StringParam name,
-                             StringParam location,
-                             ResourceId id,
-                             ContentItem* library,
-                             BuilderComponent* builder) :
-    LoadOrder(order),
-    Type(type),
-    Name(name),
-    Location(location),
-    mResourceId(id),
-    mLibrarySource(library),
-    mBuilder(builder),
-    mLibrary(nullptr)
+ResourceEntry::ResourceEntry(uint order, StringParam type, StringParam name, StringParam location, ResourceId id, ContentItem* library, BuilderComponent* builder) :
+    LoadOrder(order), Type(type), Name(name), Location(location), mResourceId(id), mLibrarySource(library), mBuilder(builder), mLibrary(nullptr)
 {
 }
 
@@ -356,10 +339,7 @@ void ResourceLibrary::Unload()
     {
       // Report error and manually delete the resource.
       String resourceType = resource->RaverieGetDerivedType()->Name;
-      String error = String::Format("%s resource '%s' is being referenced while unloading library '%s'.",
-                                    resourceType.c_str(),
-                                    resource->Name.c_str(),
-                                    Name.c_str());
+      String error = String::Format("%s resource '%s' is being referenced while unloading library '%s'.", resourceType.c_str(), resource->Name.c_str(), Name.c_str());
       DoNotifyError("Error", error);
       resource->GetManager()->Remove(resource, RemoveMode::Unloading);
       delete resource;
@@ -424,10 +404,7 @@ void ResourceLibrary::PluginsModified()
   ScriptsModified();
 }
 
-bool AddDependencies(Module& module,
-                     ResourceLibrary* library,
-                     HashSet<ResourceLibrary*>& modifiedLibrariesOut,
-                     bool onlyFragments)
+bool AddDependencies(Module& module, ResourceLibrary* library, HashSet<ResourceLibrary*>& modifiedLibrariesOut, bool onlyFragments)
 {
   forRange (ResourceLibrary* dependency, library->Dependencies)
   {

@@ -33,10 +33,7 @@ RaverieDefineType(WebServerRequestEvent, builder, type)
   RaverieBindOverloadedMethod(Respond, RaverieInstanceOverload(void, StringParam));
 }
 
-WebServerRequestEvent::WebServerRequestEvent(WebServerConnection* connection) :
-    mWebServer(connection->mWebServer),
-    mConnection(connection),
-    mMethod(WebServerRequestMethod::Other)
+WebServerRequestEvent::WebServerRequestEvent(WebServerConnection* connection) : mWebServer(connection->mWebServer), mConnection(connection), mMethod(WebServerRequestMethod::Other)
 {
 }
 
@@ -45,8 +42,7 @@ WebServerRequestEvent::~WebServerRequestEvent()
   if (!mConnection)
     return;
 
-  String contents = String::Format(
-      "404 Not Found (Timestamp: %lld, Clock: %lld)", (long long)Time::GetTime(), (long long)Time::Clock());
+  String contents = String::Format("404 Not Found (Timestamp: %lld, Clock: %lld)", (long long)Time::GetTime(), (long long)Time::Clock());
   Respond(WebResponseCode::NotFound, String(), contents);
 }
 
@@ -697,8 +693,7 @@ OsInt WebServer::AcceptThread(void* userData)
       WebServerConnection* connection = new WebServerConnection(self);
       connection->mSocket = RaverieMove(acceptedSocket);
 
-      connection->mReadWriteThread.Initialize(
-          &WebServerConnection::ReadWriteThread, connection, "WebServerConnectionReadWrite");
+      connection->mReadWriteThread.Initialize(&WebServerConnection::ReadWriteThread, connection, "WebServerConnectionReadWrite");
 
       self->mConnectionsLock.Lock();
       self->mConnections.PushBack(connection);

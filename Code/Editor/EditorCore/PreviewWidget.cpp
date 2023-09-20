@@ -51,9 +51,7 @@ PreviewWidgetGroup::PreviewWidgetGroup(Composite* parent, StringParam name) : Pr
   mName = name;
 }
 
-PreviewWidget* PreviewWidgetGroup::AddPreviewWidget(StringParam name,
-                                                    HandleParam instance,
-                                                    PreviewImportance::Enum minImportance)
+PreviewWidget* PreviewWidgetGroup::AddPreviewWidget(StringParam name, HandleParam instance, PreviewImportance::Enum minImportance)
 {
   // Create the preview
   PreviewWidget* preview = ResourcePreview::CreatePreviewWidget(this, name, instance, minImportance);
@@ -164,10 +162,7 @@ RaverieDefineType(PreviewWidgetFactory, builder, type)
 {
 }
 
-PreviewWidget* ResourcePreview::CreatePreviewWidget(Composite* parent,
-                                                    StringParam name,
-                                                    HandleParam instance,
-                                                    PreviewImportance::Enum minImportance)
+PreviewWidget* ResourcePreview::CreatePreviewWidget(Composite* parent, StringParam name, HandleParam instance, PreviewImportance::Enum minImportance)
 {
   PreviewWidgetFactory* tileFactory = PreviewWidgetFactory::GetInstance();
 

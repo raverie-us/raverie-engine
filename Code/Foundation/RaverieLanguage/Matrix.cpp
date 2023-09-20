@@ -15,8 +15,7 @@ byte* IndexIntoMatrix(byte* memory, size_t indexX, size_t indexY, size_t sizeX, 
 #endif
 }
 
-const byte*
-IndexIntoMatrix(const byte* memory, size_t indexX, size_t indexY, size_t sizeX, size_t sizeY, size_t elementSize)
+const byte* IndexIntoMatrix(const byte* memory, size_t indexX, size_t indexY, size_t sizeX, size_t sizeY, size_t elementSize)
 {
 #if ColumnBasis == 1
   return memory + (indexX + indexY * sizeX) * elementSize;
@@ -437,13 +436,8 @@ void MatrixEqual(Call& call, ExceptionReport& report)
 class MatrixTransformUserData
 {
 public:
-  MatrixTransformUserData(
-      size_t matrix0SizeX, size_t matrix0SizeY, size_t matrix1SizeX, size_t matrix1SizeY, size_t elementTypeIndex) :
-      Matrix0SizeX(matrix0SizeX),
-      Matrix0SizeY(matrix0SizeY),
-      Matrix1SizeX(matrix1SizeX),
-      Matrix1SizeY(matrix1SizeY),
-      ElementTypeIndex(elementTypeIndex)
+  MatrixTransformUserData(size_t matrix0SizeX, size_t matrix0SizeY, size_t matrix1SizeX, size_t matrix1SizeY, size_t elementTypeIndex) :
+      Matrix0SizeX(matrix0SizeX), Matrix0SizeY(matrix0SizeY), Matrix1SizeX(matrix1SizeX), Matrix1SizeY(matrix1SizeY), ElementTypeIndex(elementTypeIndex)
   {
   }
 
@@ -471,8 +465,7 @@ void MatrixMultiply(Call& call, ExceptionReport& report)
   {
     for (size_t matrix1X = 0; matrix1X < userData.Matrix1SizeX; ++matrix1X)
     {
-      byte* returnElement = IndexIntoMatrix(
-          returnMatrix, matrix1X, matrix0Y, userData.Matrix1SizeX, userData.Matrix1SizeY, elementType->Size);
+      byte* returnElement = IndexIntoMatrix(returnMatrix, matrix1X, matrix0Y, userData.Matrix1SizeX, userData.Matrix1SizeY, elementType->Size);
       // To properly accumulate the multiplications the initial value first
       // needs to be zeroed out
       memset(returnElement, 0, elementType->Size);
@@ -483,10 +476,8 @@ void MatrixMultiply(Call& call, ExceptionReport& report)
         // same (just make this variable for clarity)
         size_t matrix0X = matrix1Y;
 
-        byte* matrix0Element = IndexIntoMatrix(
-            matrix0, matrix0X, matrix0Y, userData.Matrix0SizeX, userData.Matrix0SizeY, elementType->Size);
-        byte* matrix1Element = IndexIntoMatrix(
-            matrix1, matrix1X, matrix1Y, userData.Matrix1SizeX, userData.Matrix1SizeY, elementType->Size);
+        byte* matrix0Element = IndexIntoMatrix(matrix0, matrix0X, matrix0Y, userData.Matrix0SizeX, userData.Matrix0SizeY, elementType->Size);
+        byte* matrix1Element = IndexIntoMatrix(matrix1, matrix1X, matrix1Y, userData.Matrix1SizeX, userData.Matrix1SizeY, elementType->Size);
 
         // We need to accumulate the multiplications of matrix0 and matrix1 but
         // we don't know what the inner type is or how to perform add or
@@ -516,8 +507,7 @@ void MatrixMultiplyPoint(Call& call, ExceptionReport& report)
 
   for (size_t matrix0Y = 0; matrix0Y < userData.Matrix0SizeY; ++matrix0Y)
   {
-    Real* returnElement = (Real*)IndexIntoMatrix(
-        (byte*)tempReturnVector, 0, matrix0Y, userData.Matrix1SizeX, userData.Matrix1SizeY, elementType->Size);
+    Real* returnElement = (Real*)IndexIntoMatrix((byte*)tempReturnVector, 0, matrix0Y, userData.Matrix1SizeX, userData.Matrix1SizeY, elementType->Size);
     // To properly accumulate the multiplications the initial value first needs
     // to be zeroed out
     memset(returnElement, 0, elementType->Size);
@@ -526,20 +516,13 @@ void MatrixMultiplyPoint(Call& call, ExceptionReport& report)
     {
       size_t matrix0X = vector0Y;
 
-      Real* matrix0Element = (Real*)IndexIntoMatrix(
-          (byte*)matrix0, matrix0X, matrix0Y, userData.Matrix0SizeX, userData.Matrix0SizeY, elementType->Size);
-      Real* vector0Element = (Real*)IndexIntoMatrix(
-          (byte*)vector0, 0, vector0Y, userData.Matrix1SizeX, userData.Matrix1SizeY, elementType->Size);
+      Real* matrix0Element = (Real*)IndexIntoMatrix((byte*)matrix0, matrix0X, matrix0Y, userData.Matrix0SizeX, userData.Matrix0SizeY, elementType->Size);
+      Real* vector0Element = (Real*)IndexIntoMatrix((byte*)vector0, 0, vector0Y, userData.Matrix1SizeX, userData.Matrix1SizeY, elementType->Size);
 
       *returnElement += (*matrix0Element) * (*vector0Element);
     }
 
-    Real* matrix0Element = (Real*)IndexIntoMatrix((byte*)matrix0,
-                                                  userData.Matrix0SizeX - 1,
-                                                  matrix0Y,
-                                                  userData.Matrix0SizeX,
-                                                  userData.Matrix0SizeY,
-                                                  elementType->Size);
+    Real* matrix0Element = (Real*)IndexIntoMatrix((byte*)matrix0, userData.Matrix0SizeX - 1, matrix0Y, userData.Matrix0SizeX, userData.Matrix0SizeY, elementType->Size);
     *returnElement += *matrix0Element;
   }
 
@@ -566,8 +549,7 @@ void MatrixMultiplyPointNoDivide(Call& call, ExceptionReport& report)
 
   for (size_t matrix0Y = 0; matrix0Y < userData.Matrix0SizeY; ++matrix0Y)
   {
-    Real* returnElement = (Real*)IndexIntoMatrix(
-        (byte*)tempReturnVector, 0, matrix0Y, userData.Matrix1SizeX, userData.Matrix1SizeY, elementType->Size);
+    Real* returnElement = (Real*)IndexIntoMatrix((byte*)tempReturnVector, 0, matrix0Y, userData.Matrix1SizeX, userData.Matrix1SizeY, elementType->Size);
     // To properly accumulate the multiplications the initial value first needs
     // to be zeroed out
     memset(returnElement, 0, elementType->Size);
@@ -576,20 +558,13 @@ void MatrixMultiplyPointNoDivide(Call& call, ExceptionReport& report)
     {
       size_t matrix0X = vector0Y;
 
-      Real* matrix0Element = (Real*)IndexIntoMatrix(
-          (byte*)matrix0, matrix0X, matrix0Y, userData.Matrix0SizeX, userData.Matrix0SizeY, elementType->Size);
-      Real* vector0Element = (Real*)IndexIntoMatrix(
-          (byte*)vector0, 0, vector0Y, userData.Matrix1SizeX, userData.Matrix1SizeY, elementType->Size);
+      Real* matrix0Element = (Real*)IndexIntoMatrix((byte*)matrix0, matrix0X, matrix0Y, userData.Matrix0SizeX, userData.Matrix0SizeY, elementType->Size);
+      Real* vector0Element = (Real*)IndexIntoMatrix((byte*)vector0, 0, vector0Y, userData.Matrix1SizeX, userData.Matrix1SizeY, elementType->Size);
 
       *returnElement += (*matrix0Element) * (*vector0Element);
     }
 
-    Real* matrix0Element = (Real*)IndexIntoMatrix((byte*)matrix0,
-                                                  userData.Matrix0SizeX - 1,
-                                                  matrix0Y,
-                                                  userData.Matrix0SizeX,
-                                                  userData.Matrix0SizeY,
-                                                  elementType->Size);
+    Real* matrix0Element = (Real*)IndexIntoMatrix((byte*)matrix0, userData.Matrix0SizeX - 1, matrix0Y, userData.Matrix0SizeX, userData.Matrix0SizeY, elementType->Size);
     *returnElement += *matrix0Element;
   }
 }
@@ -612,8 +587,7 @@ void GenerateMatrixMembers(LibraryBuilder& builder, BoundType* type, MatrixUserD
 
       // Get the offset into the matrix structure for the current member (by
       // offsetting from 0)
-      size_t offset = (size_t)IndexIntoMatrix(
-          (byte*)nullptr, sizeX, sizeY, matrixUserData.SizeX, matrixUserData.SizeY, elementType->Size);
+      size_t offset = (size_t)IndexIntoMatrix((byte*)nullptr, sizeX, sizeY, matrixUserData.SizeX, matrixUserData.SizeY, elementType->Size);
       builder.AddBoundField(type, nameBuilder.ToString(), elementType, offset, MemberOptions::None);
     }
   }
@@ -700,49 +674,19 @@ void CreateMatrixTypes(LibraryBuilder& builder)
         f = builder.AddBoundConstructor(matrixType, MatrixSplatConstructor, OneParameter(elementType));
         f->ComplexUserData.WriteObject(matrixUserData);
 
-        f = builder.AddBoundFunction(matrixType,
-                                     OperatorGet,
-                                     MatrixGet,
-                                     TwoParameters(core.IntegerType, "y", "x"),
-                                     elementType,
-                                     FunctionOptions::None);
+        f = builder.AddBoundFunction(matrixType, OperatorGet, MatrixGet, TwoParameters(core.IntegerType, "y", "x"), elementType, FunctionOptions::None);
         f->ComplexUserData.WriteObject(matrixUserData);
-        f = builder.AddBoundFunction(matrixType,
-                                     "GetByIndex",
-                                     MatrixGetByIndex,
-                                     OneParameter(core.IntegerType, "index"),
-                                     elementType,
-                                     FunctionOptions::None);
+        f = builder.AddBoundFunction(matrixType, "GetByIndex", MatrixGetByIndex, OneParameter(core.IntegerType, "index"), elementType, FunctionOptions::None);
         f->ComplexUserData.WriteObject(matrixUserData);
 
+        f = builder.AddBoundFunction(matrixType, OperatorSet, MatrixSet, ThreeParameters(core.IntegerType, "y", core.IntegerType, "x", elementType, "value"), core.VoidType, FunctionOptions::None);
+        f->ComplexUserData.WriteObject(matrixUserData);
+        f = builder.AddBoundFunction(matrixType, "SetByIndex", MatrixSetByIndex, TwoParameters(core.IntegerType, "index", elementType, "value"), core.VoidType, FunctionOptions::None);
+        f->ComplexUserData.WriteObject(matrixUserData);
+        f = builder.AddBoundFunction(matrixType, OperatorGet, MatrixGetVector, OneParameter(core.IntegerType, "y"), core.VectorTypes[typeIndex][indexX], FunctionOptions::None);
+        f->ComplexUserData.WriteObject(matrixUserData);
         f = builder.AddBoundFunction(
-            matrixType,
-            OperatorSet,
-            MatrixSet,
-            ThreeParameters(core.IntegerType, "y", core.IntegerType, "x", elementType, "value"),
-            core.VoidType,
-            FunctionOptions::None);
-        f->ComplexUserData.WriteObject(matrixUserData);
-        f = builder.AddBoundFunction(matrixType,
-                                     "SetByIndex",
-                                     MatrixSetByIndex,
-                                     TwoParameters(core.IntegerType, "index", elementType, "value"),
-                                     core.VoidType,
-                                     FunctionOptions::None);
-        f->ComplexUserData.WriteObject(matrixUserData);
-        f = builder.AddBoundFunction(matrixType,
-                                     OperatorGet,
-                                     MatrixGetVector,
-                                     OneParameter(core.IntegerType, "y"),
-                                     core.VectorTypes[typeIndex][indexX],
-                                     FunctionOptions::None);
-        f->ComplexUserData.WriteObject(matrixUserData);
-        f = builder.AddBoundFunction(matrixType,
-                                     OperatorSet,
-                                     MatrixSetVector,
-                                     TwoParameters(core.IntegerType, "y", core.VectorTypes[typeIndex][indexX], "value"),
-                                     core.VoidType,
-                                     FunctionOptions::None);
+            matrixType, OperatorSet, MatrixSetVector, TwoParameters(core.IntegerType, "y", core.VectorTypes[typeIndex][indexX], "value"), core.VoidType, FunctionOptions::None);
         f->ComplexUserData.WriteObject(matrixUserData);
         // Don't actually want to have this equal function bound, but for unit
         // testing it can be nice
@@ -751,23 +695,17 @@ void CreateMatrixTypes(LibraryBuilder& builder)
         // f->ComplexUserData.WriteObject(matrixUserData);
 
         // Bind properties
-        Property* p = builder.AddBoundGetterSetter(
-            matrixType, "Count", core.IntegerType, nullptr, MatrixCount, FunctionOptions::None);
+        Property* p = builder.AddBoundGetterSetter(matrixType, "Count", core.IntegerType, nullptr, MatrixCount, FunctionOptions::None);
         p->Get->ComplexUserData.WriteObject(matrixUserData);
-        p = builder.AddBoundGetterSetter(
-            matrixType, "Count", core.IntegerType, nullptr, MatrixCount, FunctionOptions::Static);
+        p = builder.AddBoundGetterSetter(matrixType, "Count", core.IntegerType, nullptr, MatrixCount, FunctionOptions::Static);
         p->Get->ComplexUserData.WriteObject(matrixUserData);
-        p = builder.AddBoundGetterSetter(
-            matrixType, "CountX", core.IntegerType, nullptr, MatrixCountX, FunctionOptions::None);
+        p = builder.AddBoundGetterSetter(matrixType, "CountX", core.IntegerType, nullptr, MatrixCountX, FunctionOptions::None);
         p->Get->ComplexUserData.WriteObject(matrixUserData);
-        p = builder.AddBoundGetterSetter(
-            matrixType, "CountX", core.IntegerType, nullptr, MatrixCountX, FunctionOptions::Static);
+        p = builder.AddBoundGetterSetter(matrixType, "CountX", core.IntegerType, nullptr, MatrixCountX, FunctionOptions::Static);
         p->Get->ComplexUserData.WriteObject(matrixUserData);
-        p = builder.AddBoundGetterSetter(
-            matrixType, "CountY", core.IntegerType, nullptr, MatrixCountY, FunctionOptions::None);
+        p = builder.AddBoundGetterSetter(matrixType, "CountY", core.IntegerType, nullptr, MatrixCountY, FunctionOptions::None);
         p->Get->ComplexUserData.WriteObject(matrixUserData);
-        p = builder.AddBoundGetterSetter(
-            matrixType, "CountY", core.IntegerType, nullptr, MatrixCountY, FunctionOptions::Static);
+        p = builder.AddBoundGetterSetter(matrixType, "CountY", core.IntegerType, nullptr, MatrixCountY, FunctionOptions::Static);
         p->Get->ComplexUserData.WriteObject(matrixUserData);
 
         // Generate all of the M00, M01, etc... members
@@ -794,58 +732,27 @@ void CreateMatrixTypes(LibraryBuilder& builder)
 
   // Add the determinant functions (only for real because that's all hlsl has)
   String determinantDescription = RaverieDocumentString("Computes the determinant of the given matrix");
-  Function* fn = builder.AddBoundFunction(core.MathType,
-                                          "Determinant",
-                                          RealMatrixDeterminant<Math::Matrix2>,
-                                          OneParameter(matrixTypes[0][1][1]),
-                                          core.RealType,
-                                          FunctionOptions::Static);
+  Function* fn = builder.AddBoundFunction(core.MathType, "Determinant", RealMatrixDeterminant<Math::Matrix2>, OneParameter(matrixTypes[0][1][1]), core.RealType, FunctionOptions::Static);
   fn->Description = determinantDescription;
-  fn = builder.AddBoundFunction(core.MathType,
-                                "Determinant",
-                                RealMatrixDeterminant<Math::Matrix3>,
-                                OneParameter(matrixTypes[0][2][2]),
-                                core.RealType,
-                                FunctionOptions::Static);
+  fn = builder.AddBoundFunction(core.MathType, "Determinant", RealMatrixDeterminant<Math::Matrix3>, OneParameter(matrixTypes[0][2][2]), core.RealType, FunctionOptions::Static);
   fn->Description = determinantDescription;
-  fn = builder.AddBoundFunction(core.MathType,
-                                "Determinant",
-                                RealMatrixDeterminant<Math::Matrix4>,
-                                OneParameter(matrixTypes[0][3][3]),
-                                core.RealType,
-                                FunctionOptions::Static);
+  fn = builder.AddBoundFunction(core.MathType, "Determinant", RealMatrixDeterminant<Math::Matrix4>, OneParameter(matrixTypes[0][3][3]), core.RealType, FunctionOptions::Static);
   fn->Description = determinantDescription;
 
   // Add the inverse functions for only square real matrices
   String invertDescription = RaverieDocumentString("Computes the inverse of the given matrix if it "
-                                                 "exists. Undefined if the matrix is uninvertible");
-  fn = builder.AddBoundFunction(core.MathType,
-                                "Invert",
-                                RealMatrixInverse<Math::Matrix2>,
-                                OneParameter(matrixTypes[0][1][1]),
-                                matrixTypes[0][1][1],
-                                FunctionOptions::Static);
+                                                   "exists. Undefined if the matrix is uninvertible");
+  fn = builder.AddBoundFunction(core.MathType, "Invert", RealMatrixInverse<Math::Matrix2>, OneParameter(matrixTypes[0][1][1]), matrixTypes[0][1][1], FunctionOptions::Static);
   fn->Description = invertDescription;
-  fn = builder.AddBoundFunction(core.MathType,
-                                "Invert",
-                                RealMatrixInverse<Math::Matrix3>,
-                                OneParameter(matrixTypes[0][2][2]),
-                                matrixTypes[0][2][2],
-                                FunctionOptions::Static);
+  fn = builder.AddBoundFunction(core.MathType, "Invert", RealMatrixInverse<Math::Matrix3>, OneParameter(matrixTypes[0][2][2]), matrixTypes[0][2][2], FunctionOptions::Static);
   fn->Description = invertDescription;
-  fn = builder.AddBoundFunction(core.MathType,
-                                "Invert",
-                                RealMatrixInverse<Math::Matrix4>,
-                                OneParameter(matrixTypes[0][3][3]),
-                                matrixTypes[0][3][3],
-                                FunctionOptions::Static);
+  fn = builder.AddBoundFunction(core.MathType, "Invert", RealMatrixInverse<Math::Matrix4>, OneParameter(matrixTypes[0][3][3]), matrixTypes[0][3][3], FunctionOptions::Static);
   fn->Description = invertDescription;
 
   // Operations on one matrix that need to reference different matrix
   // types (only need a loop over x and y dimensions plus types)
-  String transposeDescription =
-      RaverieDocumentString("Returns the transposed matrix. A transposed matrix is one where all "
-                          "rows are turned into columns, i.e. A^T[j][i] = A[i][j]");
+  String transposeDescription = RaverieDocumentString("Returns the transposed matrix. A transposed matrix is one where all "
+                                                      "rows are turned into columns, i.e. A^T[j][i] = A[i][j]");
   for (size_t typeIndex = 0; typeIndex < Core::MaxMatrixElementTypes; ++typeIndex)
   {
     for (size_t sizeY = Core::MinMatrixComponents; sizeY <= Core::MaxMatrixComponents; ++sizeY)
@@ -858,8 +765,7 @@ void CreateMatrixTypes(LibraryBuilder& builder)
         BoundType* resultType = matrixTypes[typeIndex][sizeX - 1][sizeY - 1];
 
         MatrixUserData matrixUserData(sizeX, sizeY, typeIndex);
-        Function* f = builder.AddBoundFunction(
-            core.MathType, "Transpose", MatrixTranspose, OneParameter(matrixType), resultType, FunctionOptions::Static);
+        Function* f = builder.AddBoundFunction(core.MathType, "Transpose", MatrixTranspose, OneParameter(matrixType), resultType, FunctionOptions::Static);
         f->Description = transposeDescription;
         f->ComplexUserData.WriteObject(matrixUserData);
       }
@@ -869,9 +775,9 @@ void CreateMatrixTypes(LibraryBuilder& builder)
   // Iterate over matrices that share one common dimension for multiplication
   // (but skip bools because boolean matrix multiplication is weird...)
   String matrixMultiplyDescription = RaverieDocumentString("Multiplies the two matrices together. Matrix "
-                                                         "multiplication is in right-to-left order, "
-                                                         "that is if the matrices represent transformations, "
-                                                         "then 'the' is applied first followed by 'by'.");
+                                                           "multiplication is in right-to-left order, "
+                                                           "that is if the matrices represent transformations, "
+                                                           "then 'the' is applied first followed by 'by'.");
   for (size_t typeIndex = 0; typeIndex < Core::MaxMatrixElementTypes - 1; ++typeIndex)
   {
     for (size_t matrixASizeY = Core::MinMatrixComponents; matrixASizeY <= Core::MaxMatrixComponents; ++matrixASizeY)
@@ -887,12 +793,7 @@ void CreateMatrixTypes(LibraryBuilder& builder)
           BoundType* resultMatrix = matrixTypes[typeIndex][matrixASizeY - 1][matrixBSizeX - 1];
 
           MatrixTransformUserData transformUserData(matrixASizeX, matrixASizeY, matrixBSizeX, matrixBSizeY, typeIndex);
-          Function* f = builder.AddBoundFunction(core.MathType,
-                                                 "Multiply",
-                                                 MatrixMultiply,
-                                                 TwoParameters(matrixA, "by", matrixB, "the"),
-                                                 resultMatrix,
-                                                 FunctionOptions::Static);
+          Function* f = builder.AddBoundFunction(core.MathType, "Multiply", MatrixMultiply, TwoParameters(matrixA, "by", matrixB, "the"), resultMatrix, FunctionOptions::Static);
           f->Description = matrixMultiplyDescription;
           f->ComplexUserData.WriteObject(transformUserData);
         }
@@ -901,12 +802,7 @@ void CreateMatrixTypes(LibraryBuilder& builder)
         MatrixTransformUserData transformUserData(matrixASizeX, matrixASizeY, 1, matrixASizeX, typeIndex);
         BoundType* inVectorType = core.VectorTypes[typeIndex][matrixASizeX - 1];
         BoundType* resultVectorType = core.VectorTypes[typeIndex][matrixASizeY - 1];
-        Function* f = builder.AddBoundFunction(core.MathType,
-                                               "Multiply",
-                                               MatrixMultiply,
-                                               TwoParameters(matrixA, "by", inVectorType, "the"),
-                                               resultVectorType,
-                                               FunctionOptions::Static);
+        Function* f = builder.AddBoundFunction(core.MathType, "Multiply", MatrixMultiply, TwoParameters(matrixA, "by", inVectorType, "the"), resultVectorType, FunctionOptions::Static);
         f->Description = matrixMultiplyDescription;
         f->ComplexUserData.WriteObject(transformUserData);
       }
@@ -920,46 +816,30 @@ void CreateMatrixTypes(LibraryBuilder& builder)
 
     // Generate the MultiplyPoint (with the vector Real(N-1) version that
     // assumes 1 as the last element)
-    MatrixTransformUserData transformUserData =
-        MatrixTransformUserData(matrixSize, matrixSize, 1, matrixSize - 1, VectorScalarTypes::Real);
+    MatrixTransformUserData transformUserData = MatrixTransformUserData(matrixSize, matrixSize, 1, matrixSize - 1, VectorScalarTypes::Real);
     BoundType* inVectorType = core.RealTypes[matrixSize - 2];
     BoundType* resultVectorType = core.RealTypes[matrixSize - 2];
-    Function* f = builder.AddBoundFunction(core.MathType,
-                                           "MultiplyPoint",
-                                           MatrixMultiplyPoint,
-                                           TwoParameters(matrixType, "by", inVectorType, "the"),
-                                           resultVectorType,
-                                           FunctionOptions::Static);
+    Function* f = builder.AddBoundFunction(core.MathType, "MultiplyPoint", MatrixMultiplyPoint, TwoParameters(matrixType, "by", inVectorType, "the"), resultVectorType, FunctionOptions::Static);
     f->ComplexUserData.WriteObject(transformUserData);
     f->Description = RaverieDocumentString("Multiplies the given vector as a point while "
-                                         "performing the homogeneous division");
+                                           "performing the homogeneous division");
 
     // Generate the MultiplyPointWithNoDivide (with the vector Real(N-1) version
     // that assumes 1 as the last element)
     transformUserData = MatrixTransformUserData(matrixSize, matrixSize, 1, matrixSize - 1, VectorScalarTypes::Real);
     inVectorType = core.RealTypes[matrixSize - 2];
     resultVectorType = core.RealTypes[matrixSize - 2];
-    f = builder.AddBoundFunction(core.MathType,
-                                 "MultiplyPointNoDivide",
-                                 MatrixMultiplyPointNoDivide,
-                                 TwoParameters(matrixType, "by", inVectorType, "the"),
-                                 resultVectorType,
-                                 FunctionOptions::Static);
+    f = builder.AddBoundFunction(core.MathType, "MultiplyPointNoDivide", MatrixMultiplyPointNoDivide, TwoParameters(matrixType, "by", inVectorType, "the"), resultVectorType, FunctionOptions::Static);
     f->ComplexUserData.WriteObject(transformUserData);
     f->Description = RaverieDocumentString("Multiplies the given vector as a point without "
-                                         "performing the homogeneous division");
+                                           "performing the homogeneous division");
 
     // Also generate the MultiplyNormal (with the vector Real(N-1) version that
     // assumes 0 as the last element)
     transformUserData = MatrixTransformUserData(matrixSize, matrixSize, 1, matrixSize - 1, VectorScalarTypes::Real);
     inVectorType = core.RealTypes[matrixSize - 2];
     resultVectorType = core.RealTypes[matrixSize - 2];
-    f = builder.AddBoundFunction(core.MathType,
-                                 "MultiplyNormal",
-                                 MatrixMultiply,
-                                 TwoParameters(matrixType, "by", inVectorType, "the"),
-                                 resultVectorType,
-                                 FunctionOptions::Static);
+    f = builder.AddBoundFunction(core.MathType, "MultiplyNormal", MatrixMultiply, TwoParameters(matrixType, "by", inVectorType, "the"), resultVectorType, FunctionOptions::Static);
     f->Description = RaverieDocumentString("Multiplies the given vector as a vector (0 for the last component)");
     f->ComplexUserData.WriteObject(transformUserData);
   }
@@ -967,117 +847,41 @@ void CreateMatrixTypes(LibraryBuilder& builder)
   // Bind matrix building functions
   {
     // Real2x2
-    RaverieFullBindMethod(
-        builder, core.MathType, Math::Matrix2::GenerateScale, RaverieNoOverload, "GenerateScaleMatrix2x2", "scale")
-        ->Description = RaverieDocumentString("Generates a two-dimensional scale matrix.");
-    RaverieFullBindMethod(builder,
-                        core.MathType,
-                        Math::Matrix2::GenerateRotation,
-                        RaverieNoOverload,
-                        "GenerateRotationMatrix2x2",
-                        "radians")
-        ->Description = RaverieDocumentString("Generates a two-dimensional rotation matrix.");
-    RaverieFullBindMethod(builder,
-                        core.MathType,
-                        Math::Matrix2::GenerateTransform,
-                        RaverieNoOverload,
-                        "GenerateTransformMatrix2x2",
-                        "radians, scale")
-        ->Description = RaverieDocumentString("Generates a two-dimensional transform.");
+    RaverieFullBindMethod(builder, core.MathType, Math::Matrix2::GenerateScale, RaverieNoOverload, "GenerateScaleMatrix2x2", "scale")->Description =
+        RaverieDocumentString("Generates a two-dimensional scale matrix.");
+    RaverieFullBindMethod(builder, core.MathType, Math::Matrix2::GenerateRotation, RaverieNoOverload, "GenerateRotationMatrix2x2", "radians")->Description =
+        RaverieDocumentString("Generates a two-dimensional rotation matrix.");
+    RaverieFullBindMethod(builder, core.MathType, Math::Matrix2::GenerateTransform, RaverieNoOverload, "GenerateTransformMatrix2x2", "radians, scale")->Description =
+        RaverieDocumentString("Generates a two-dimensional transform.");
 
     // Real3x3
-    RaverieFullBindMethod(builder,
-                        core.MathType,
-                        Math::Matrix3::GenerateScale,
-                        (Real3x3(*)(Real2Param)),
-                        "GenerateScaleMatrix3x3",
-                        "scale")
-        ->Description = RaverieDocumentString("Generates a two-dimensional scale matrix.");
-    RaverieFullBindMethod(builder,
-                        core.MathType,
-                        Math::Matrix3::GenerateScale,
-                        (Real3x3(*)(Real3Param)),
-                        "GenerateScaleMatrix3x3",
-                        "scale")
-        ->Description = RaverieDocumentString("Generates a three-dimensional scale matrix.");
-    RaverieFullBindMethod(builder,
-                        core.MathType,
-                        Math::Matrix3::GenerateRotation,
-                        (Real3x3(*)(Real)),
-                        "GenerateRotationMatrix3x3",
-                        "radians")
-        ->Description = RaverieDocumentString("Generates a two-dimensional rotation matrix.");
-    RaverieFullBindMethod(builder,
-                        core.MathType,
-                        Math::Matrix3::GenerateRotation,
-                        (Real3x3(*)(Real3Param, Real)),
-                        "GenerateRotationMatrix3x3",
-                        "axis, radians")
-        ->Description = RaverieDocumentString("Generates a three-dimensional rotation matrix.");
-    RaverieFullBindMethod(builder,
-                        core.MathType,
-                        Math::Matrix3::GenerateTranslation,
-                        (Real3x3(*)(Real2Param)),
-                        "GenerateTranslationMatrix3x3",
-                        "translation")
-        ->Description = RaverieDocumentString("Generates a two-dimensional translation matrix.");
-    RaverieFullBindMethod(builder,
-                        core.MathType,
-                        Math::Matrix3::GenerateTransform,
-                        (Real3x3(*)(Real2Param, Real, Real2Param)),
-                        "GenerateTransformMatrix3x3",
-                        "translation, radians, scale")
+    RaverieFullBindMethod(builder, core.MathType, Math::Matrix3::GenerateScale, (Real3x3(*)(Real2Param)), "GenerateScaleMatrix3x3", "scale")->Description =
+        RaverieDocumentString("Generates a two-dimensional scale matrix.");
+    RaverieFullBindMethod(builder, core.MathType, Math::Matrix3::GenerateScale, (Real3x3(*)(Real3Param)), "GenerateScaleMatrix3x3", "scale")->Description =
+        RaverieDocumentString("Generates a three-dimensional scale matrix.");
+    RaverieFullBindMethod(builder, core.MathType, Math::Matrix3::GenerateRotation, (Real3x3(*)(Real)), "GenerateRotationMatrix3x3", "radians")->Description =
+        RaverieDocumentString("Generates a two-dimensional rotation matrix.");
+    RaverieFullBindMethod(builder, core.MathType, Math::Matrix3::GenerateRotation, (Real3x3(*)(Real3Param, Real)), "GenerateRotationMatrix3x3", "axis, radians")->Description =
+        RaverieDocumentString("Generates a three-dimensional rotation matrix.");
+    RaverieFullBindMethod(builder, core.MathType, Math::Matrix3::GenerateTranslation, (Real3x3(*)(Real2Param)), "GenerateTranslationMatrix3x3", "translation")->Description =
+        RaverieDocumentString("Generates a two-dimensional translation matrix.");
+    RaverieFullBindMethod(builder, core.MathType, Math::Matrix3::GenerateTransform, (Real3x3(*)(Real2Param, Real, Real2Param)), "GenerateTransformMatrix3x3", "translation, radians, scale")
         ->Description = RaverieDocumentString("Generates a two-dimensions transform.");
-    RaverieFullBindMethod(builder,
-                        core.MathType,
-                        Math::Matrix3::GenerateTransform,
-                        (Real3x3(*)(Real3x3Param, Real3Param)),
-                        "GenerateTransformMatrix3x3",
-                        "rotation, scale")
-        ->Description = RaverieDocumentString("Generates a three-dimensions transform.");
-    RaverieFullBindMethod(builder,
-                        core.MathType,
-                        Math::Matrix3::GenerateTransform,
-                        (Real3x3(*)(QuaternionParam, Real3Param)),
-                        "GenerateTransformMatrix3x3",
-                        "rotation, scale")
-        ->Description = RaverieDocumentString("Generates a three-dimensions transform.");
+    RaverieFullBindMethod(builder, core.MathType, Math::Matrix3::GenerateTransform, (Real3x3(*)(Real3x3Param, Real3Param)), "GenerateTransformMatrix3x3", "rotation, scale")->Description =
+        RaverieDocumentString("Generates a three-dimensions transform.");
+    RaverieFullBindMethod(builder, core.MathType, Math::Matrix3::GenerateTransform, (Real3x3(*)(QuaternionParam, Real3Param)), "GenerateTransformMatrix3x3", "rotation, scale")->Description =
+        RaverieDocumentString("Generates a three-dimensions transform.");
 
     // Real3x3
-    RaverieFullBindMethod(builder,
-                        core.MathType,
-                        Math::Matrix4::GenerateScale,
-                        (Real4x4(*)(Real3Param)),
-                        "GenerateScaleMatrix4x4",
-                        "scale")
-        ->Description = RaverieDocumentString("Generates a three-dimensional scale matrix.");
-    RaverieFullBindMethod(builder,
-                        core.MathType,
-                        Math::Matrix4::GenerateRotation,
-                        (Real4x4(*)(Real3Param, Real)),
-                        "GenerateRotationMatrix4x4",
-                        "axis, radians")
-        ->Description = RaverieDocumentString("Generates a three-dimensional rotation matrix.");
-    RaverieFullBindMethod(builder,
-                        core.MathType,
-                        Math::Matrix4::GenerateTranslation,
-                        (Real4x4(*)(Real3Param)),
-                        "GenerateTranslationMatrix4x4",
-                        "translation")
+    RaverieFullBindMethod(builder, core.MathType, Math::Matrix4::GenerateScale, (Real4x4(*)(Real3Param)), "GenerateScaleMatrix4x4", "scale")->Description =
+        RaverieDocumentString("Generates a three-dimensional scale matrix.");
+    RaverieFullBindMethod(builder, core.MathType, Math::Matrix4::GenerateRotation, (Real4x4(*)(Real3Param, Real)), "GenerateRotationMatrix4x4", "axis, radians")->Description =
+        RaverieDocumentString("Generates a three-dimensional rotation matrix.");
+    RaverieFullBindMethod(builder, core.MathType, Math::Matrix4::GenerateTranslation, (Real4x4(*)(Real3Param)), "GenerateTranslationMatrix4x4", "translation")->Description =
+        RaverieDocumentString("Generates a three-dimensional translation matrix.");
+    RaverieFullBindMethod(builder, core.MathType, Math::Matrix4::GenerateTransform, (Real4x4(*)(Real3Param, QuaternionParam, Real3Param)), "GenerateTransformMatrix4x4", "translation, rotation, scale")
         ->Description = RaverieDocumentString("Generates a three-dimensional translation matrix.");
-    RaverieFullBindMethod(builder,
-                        core.MathType,
-                        Math::Matrix4::GenerateTransform,
-                        (Real4x4(*)(Real3Param, QuaternionParam, Real3Param)),
-                        "GenerateTransformMatrix4x4",
-                        "translation, rotation, scale")
-        ->Description = RaverieDocumentString("Generates a three-dimensional translation matrix.");
-    RaverieFullBindMethod(builder,
-                        core.MathType,
-                        Math::Matrix4::GenerateTransform,
-                        (Real4x4(*)(Real3Param, Real3x3Param, Real3Param)),
-                        "GenerateTransformMatrix4x4",
-                        "translation, rotation, scale")
+    RaverieFullBindMethod(builder, core.MathType, Math::Matrix4::GenerateTransform, (Real4x4(*)(Real3Param, Real3x3Param, Real3Param)), "GenerateTransformMatrix4x4", "translation, rotation, scale")
         ->Description = RaverieDocumentString("Generates a three-dimensional translation matrix.");
   }
 }

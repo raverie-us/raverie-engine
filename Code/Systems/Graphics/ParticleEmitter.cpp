@@ -243,10 +243,7 @@ int ParticleEmitterShared::GetParticleEmissionCount(ParticleList* particleList, 
   return particlesToEmit;
 }
 
-Particle* ParticleEmitterShared::CreateInitializedParticle(ParticleList* particleList,
-                                                           int particle,
-                                                           Mat4Ref transform,
-                                                           Vec3Param emitterVelocity)
+Particle* ParticleEmitterShared::CreateInitializedParticle(ParticleList* particleList, int particle, Mat4Ref transform, Vec3Param emitterVelocity)
 {
   Particle* newParticle = particleList->AllocateParticle();
   Math::Random& random = mGraphicsSpace->mRandom;

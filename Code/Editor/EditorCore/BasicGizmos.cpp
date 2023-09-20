@@ -172,12 +172,7 @@ Vec3 ScaleVector(Vec3Param delta, float distance, Vec3Param start)
 namespace GizmoSnapping
 {
 
-Vec3 GetSnappedPosition(Vec3Param currentPosition,
-                        Vec3Param worldMovement,
-                        QuatParam bases,
-                        GizmoDragMode::Enum dragMode,
-                        GizmoSnapMode::Enum snapMode,
-                        float snapDistance)
+Vec3 GetSnappedPosition(Vec3Param currentPosition, Vec3Param worldMovement, QuatParam bases, GizmoDragMode::Enum dragMode, GizmoSnapMode::Enum snapMode, float snapDistance)
 {
   Vec3 movement = worldMovement;
 
@@ -238,11 +233,7 @@ Vec3 GetSnappedPosition(Vec3Param currentPosition,
   return currentPosition + movement;
 }
 
-Vec3 GetSnappedScale(Vec3Param startPosition,
-                     Vec3Param mouseWorldMovement,
-                     GizmoSnapMode::Enum snapMode,
-                     float snapDistance,
-                     GizmoDragMode::Enum dragMode)
+Vec3 GetSnappedScale(Vec3Param startPosition, Vec3Param mouseWorldMovement, GizmoSnapMode::Enum snapMode, float snapDistance, GizmoDragMode::Enum dragMode)
 {
   Vec3 worldMovement = mouseWorldMovement;
 
@@ -403,8 +394,7 @@ void SquareGizmo::OnGizmoRayTest(GizmoRayTestEvent* e)
 
   Ray ray = e->GetWorldRay();
   Intersection::IntersectionPoint point;
-  Intersection::Type result =
-      Intersection::RayObb(ray.Start, ray.Direction, scaledCenter, mSize * 0.5f * viewScale, worldRotation, &point);
+  Intersection::Type result = Intersection::RayObb(ray.Start, ray.Direction, scaledCenter, mSize * 0.5f * viewScale, worldRotation, &point);
 
   if (result != Intersection::None)
     e->RegisterResult(GetOwner(), point.T, mPickingPriority);
@@ -431,21 +421,9 @@ void SquareGizmo::OnFrameUpdate(Event*)
       if (Transform* parentTransform = parent->has(Transform))
         viewScaleOffset = parentTransform->GetWorldTranslation() - position;
 
-  gDebugDraw->Add(Debug::Obb(position, mSize * 0.5f, rot)
-                      .OnTop(mDrawOnTop)
-                      .Color(color)
-                      .Filled(mFilled)
-                      .ViewScaled(mViewScaled)
-                      .ViewAligned(mViewAligned)
-                      .ViewScaleOffset(viewScaleOffset));
+  gDebugDraw->Add(Debug::Obb(position, mSize * 0.5f, rot).OnTop(mDrawOnTop).Color(color).Filled(mFilled).ViewScaled(mViewScaled).ViewAligned(mViewAligned).ViewScaleOffset(viewScaleOffset));
 
-  gDebugDraw->Add(Debug::Obb(position, mSize * 0.5f, rot)
-                      .OnTop(mDrawOnTop)
-                      .Color(color)
-                      .Border(mBordered)
-                      .ViewScaled(mViewScaled)
-                      .ViewAligned(mViewAligned)
-                      .ViewScaleOffset(viewScaleOffset));
+  gDebugDraw->Add(Debug::Obb(position, mSize * 0.5f, rot).OnTop(mDrawOnTop).Color(color).Border(mBordered).ViewScaled(mViewScaled).ViewAligned(mViewAligned).ViewScaleOffset(viewScaleOffset));
 }
 
 RaverieDefineType(ArrowGizmo, builder, type)
@@ -553,14 +531,8 @@ void ArrowGizmo::OnFrameUpdate(Event*)
                       .Border(true));
 
   // fill
-  gDebugDraw->Add(Debug::Line(worldStart, worldEnd)
-                      .HeadSize(mHeadSize)
-                      .Color(color)
-                      .OnTop(mDrawOnTop)
-                      .ViewScaled(mViewScaled)
-                      .DualHeads(mDualHeads)
-                      .BoxHeads(boxHeads)
-                      .Filled(mFilledHeads) /*.BackShade(true)*/);
+  gDebugDraw->Add(
+      Debug::Line(worldStart, worldEnd).HeadSize(mHeadSize).Color(color).OnTop(mDrawOnTop).ViewScaled(mViewScaled).DualHeads(mDualHeads).BoxHeads(boxHeads).Filled(mFilledHeads) /*.BackShade(true)*/);
 }
 
 RaverieDefineType(RingGizmoEvent, builder, type)
@@ -674,12 +646,7 @@ void RingGizmo::OnGizmoRayTest(GizmoRayTestEvent* e)
   Ray mouseRay = e->GetWorldRay();
 
   Intersection::IntersectionPoint point;
-  Intersection::Type result = Intersection::RayCylinder(mouseRay.Start,
-                                                        mouseRay.Direction,
-                                                        center - axis * tubeRadius,
-                                                        center + axis * tubeRadius,
-                                                        outerSphereRadius,
-                                                        &point);
+  Intersection::Type result = Intersection::RayCylinder(mouseRay.Start, mouseRay.Direction, center - axis * tubeRadius, center + axis * tubeRadius, outerSphereRadius, &point);
 
   // All negative values of 'Intersection::Type' are considered false.
   if (result > 0)
@@ -813,17 +780,9 @@ void RingGizmo::OnFrameUpdate(Event*)
     Vec3 end0 = mGrabPoint + mGrabMoveAxis * mGrabArrowLength * 0.5f;
     Vec3 end1 = mGrabPoint - mGrabMoveAxis * mGrabArrowLength * 0.5f;
 
-    gDebugDraw->Add(Debug::Line(mGrabPoint, end0)
-                        .ViewScaled(mGrabArrowViewScaled)
-                        .HeadSize(mGrabArrowHeadSize)
-                        .Color(ToByteColor(mGrabArrowColor))
-                        .OnTop(mGrabArrowOnTop)
+    gDebugDraw->Add(Debug::Line(mGrabPoint, end0).ViewScaled(mGrabArrowViewScaled).HeadSize(mGrabArrowHeadSize).Color(ToByteColor(mGrabArrowColor)).OnTop(mGrabArrowOnTop)
                     /*.Border(true)*/); // double thickness
-    gDebugDraw->Add(Debug::Line(mGrabPoint, end1)
-                        .ViewScaled(mGrabArrowViewScaled)
-                        .HeadSize(mGrabArrowHeadSize)
-                        .Color(ToByteColor(mGrabArrowColor))
-                        .OnTop(mGrabArrowOnTop)
+    gDebugDraw->Add(Debug::Line(mGrabPoint, end1).ViewScaled(mGrabArrowViewScaled).HeadSize(mGrabArrowHeadSize).Color(ToByteColor(mGrabArrowColor)).OnTop(mGrabArrowOnTop)
                     /*.Border(true)*/); // double thickness
   }
 }
@@ -915,16 +874,12 @@ void TranslateGizmo::OnGizmoModified(GizmoUpdateEvent* e)
   DispatchEvent(Events::TranslateGizmoModified, &eventToSend);
 }
 
-Vec3 TranslateGizmo::TranslateFromDrag(GizmoDrag* gizmoDrag,
-                                       Vec3Param startPosition,
-                                       Vec3Param movement,
-                                       QuatParam rotation)
+Vec3 TranslateGizmo::TranslateFromDrag(GizmoDrag* gizmoDrag, Vec3Param startPosition, Vec3Param movement, QuatParam rotation)
 {
   Vec3 newPosition;
   if (GetSnapping())
   {
-    newPosition = GizmoSnapping::GetSnappedPosition(
-        startPosition, movement, rotation, gizmoDrag->mDragMode, mSnapMode, mSnapDistance);
+    newPosition = GizmoSnapping::GetSnappedPosition(startPosition, movement, rotation, gizmoDrag->mDragMode, mSnapMode, mSnapDistance);
   }
   else
   {
@@ -1060,12 +1015,7 @@ void ScaleGizmo::OnGizmoModified(GizmoUpdateEvent* e)
 
 // Generate a new scale based on drag-type [ie: viewplane, gizmo-basis-plane,
 // gizmo-axis].
-Vec3 ScaleGizmo::ScaleFromDrag(GizmoBasis::Enum basis,
-                               GizmoDrag* gizmoDrag,
-                               float distance,
-                               Vec3Param movement,
-                               Vec3Param startScale,
-                               MetaTransformParam transform)
+Vec3 ScaleGizmo::ScaleFromDrag(GizmoBasis::Enum basis, GizmoDrag* gizmoDrag, float distance, Vec3Param movement, Vec3Param startScale, MetaTransformParam transform)
 {
   GizmoDragMode::Enum dragMode = gizmoDrag->mDragMode;
   bool viewPlaneGizmo = (dragMode == GizmoDragMode::ViewPlane);
@@ -1166,8 +1116,7 @@ Vec3 ScaleGizmo::ScaleFromDrag(GizmoBasis::Enum basis,
 
     // Pass in an Identity bases as the scale to be snapped is already
     // in local space.
-    newScale =
-        GizmoSnapping::GetSnappedPosition(startScale, scaleDelta, Quat::cIdentity, dragMode, mSnapMode, mSnapDistance);
+    newScale = GizmoSnapping::GetSnappedPosition(startScale, scaleDelta, Quat::cIdentity, dragMode, mSnapMode, mSnapDistance);
   }
 
   return newScale;

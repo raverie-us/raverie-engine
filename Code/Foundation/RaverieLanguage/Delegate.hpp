@@ -44,4 +44,3 @@ public:
 
 typedef const Delegate& DelegateParam;
 } // namespace Raverie
-

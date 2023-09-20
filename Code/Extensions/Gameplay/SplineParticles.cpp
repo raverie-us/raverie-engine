@@ -90,8 +90,7 @@ void SplineParticleEmitter::FindSpline()
   }
 }
 
-int SplineParticleEmitter::EmitParticles(
-    ParticleList* particleList, float dt, Mat4Ref transform, Vec3Param emitterVelocity, float timeAlive)
+int SplineParticleEmitter::EmitParticles(ParticleList* particleList, float dt, Mat4Ref transform, Vec3Param emitterVelocity, float timeAlive)
 {
   // If there are no particles to emit, no need to do anything
   int particlesToEmit = GetParticleEmissionCount(particleList, dt, timeAlive);
@@ -211,10 +210,8 @@ RaverieDefineType(SplineParticleAnimator, builder, type)
   RaverieBindFieldProperty(mHelixOffset)->RaverieFilterBool(mHelix);
 
   RaverieBindFieldProperty(mMode)->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  RaverieBindFieldProperty(mSpringFrequencyHz)
-      ->RaverieFilterEquality(mMode, SplineAnimatorMode::Enum, SplineAnimatorMode::Spring);
-  RaverieBindFieldProperty(mSpringDampingRatio)
-      ->RaverieFilterEquality(mMode, SplineAnimatorMode::Enum, SplineAnimatorMode::Spring);
+  RaverieBindFieldProperty(mSpringFrequencyHz)->RaverieFilterEquality(mMode, SplineAnimatorMode::Enum, SplineAnimatorMode::Spring);
+  RaverieBindFieldProperty(mSpringDampingRatio)->RaverieFilterEquality(mMode, SplineAnimatorMode::Enum, SplineAnimatorMode::Spring);
 }
 
 SplineParticleAnimator::~SplineParticleAnimator()

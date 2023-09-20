@@ -6,73 +6,28 @@ namespace Raverie
 
 //                                   Message //
 
-Message::Message() :
-    mType(0),
-    mData(),
-    mChannelId(0),
-    mSequenceId(0),
-    mTimestamp(cInvalidMessageTimestamp),
-    mIsFragment(false),
-    mFragmentIndex(0),
-    mIsFinalFragment(false)
+Message::Message() : mType(0), mData(), mChannelId(0), mSequenceId(0), mTimestamp(cInvalidMessageTimestamp), mIsFragment(false), mFragmentIndex(0), mIsFinalFragment(false)
 {
 }
 
 Message::Message(MessageType type, const BitStream& data) :
-    mType(type),
-    mData(data),
-    mChannelId(0),
-    mSequenceId(0),
-    mTimestamp(cInvalidMessageTimestamp),
-    mIsFragment(false),
-    mFragmentIndex(0),
-    mIsFinalFragment(false)
+    mType(type), mData(data), mChannelId(0), mSequenceId(0), mTimestamp(cInvalidMessageTimestamp), mIsFragment(false), mFragmentIndex(0), mIsFinalFragment(false)
 {
 }
 Message::Message(MessageType type, MoveReference<BitStream> data) :
-    mType(type),
-    mData(RaverieMove(data)),
-    mChannelId(0),
-    mSequenceId(0),
-    mTimestamp(cInvalidMessageTimestamp),
-    mIsFragment(false),
-    mFragmentIndex(0),
-    mIsFinalFragment(false)
+    mType(type), mData(RaverieMove(data)), mChannelId(0), mSequenceId(0), mTimestamp(cInvalidMessageTimestamp), mIsFragment(false), mFragmentIndex(0), mIsFinalFragment(false)
 {
 }
 
-Message::Message(MessageType type) :
-    mType(type),
-    mData(),
-    mChannelId(0),
-    mSequenceId(0),
-    mTimestamp(cInvalidMessageTimestamp),
-    mIsFragment(false),
-    mFragmentIndex(0),
-    mIsFinalFragment(false)
+Message::Message(MessageType type) : mType(type), mData(), mChannelId(0), mSequenceId(0), mTimestamp(cInvalidMessageTimestamp), mIsFragment(false), mFragmentIndex(0), mIsFinalFragment(false)
 {
 }
 
-Message::Message(const BitStream& data) :
-    mType(0),
-    mData(data),
-    mChannelId(0),
-    mSequenceId(0),
-    mTimestamp(cInvalidMessageTimestamp),
-    mIsFragment(false),
-    mFragmentIndex(0),
-    mIsFinalFragment(false)
+Message::Message(const BitStream& data) : mType(0), mData(data), mChannelId(0), mSequenceId(0), mTimestamp(cInvalidMessageTimestamp), mIsFragment(false), mFragmentIndex(0), mIsFinalFragment(false)
 {
 }
 Message::Message(MoveReference<BitStream> data) :
-    mType(0),
-    mData(RaverieMove(data)),
-    mChannelId(0),
-    mSequenceId(0),
-    mTimestamp(cInvalidMessageTimestamp),
-    mIsFragment(false),
-    mFragmentIndex(0),
-    mIsFinalFragment(false)
+    mType(0), mData(RaverieMove(data)), mChannelId(0), mSequenceId(0), mTimestamp(cInvalidMessageTimestamp), mIsFragment(false), mFragmentIndex(0), mIsFinalFragment(false)
 {
 }
 
@@ -437,14 +392,7 @@ Bits Serialize<Message>(SerializeDirection::Enum direction, BitStream& bitStream
 
 //                                 OutMessage //
 
-OutMessage::OutMessage() :
-    Message(),
-    mReliable(false),
-    mTransferMode(TransferMode::Immediate),
-    mReceiptID(0),
-    mPriority(0),
-    mLifetime(0),
-    mCreationTime(0)
+OutMessage::OutMessage() : Message(), mReliable(false), mTransferMode(TransferMode::Immediate), mReceiptID(0), mPriority(0), mLifetime(0), mCreationTime(0)
 {
 }
 OutMessage::OutMessage(MoveReference<Message> message,
@@ -456,13 +404,7 @@ OutMessage::OutMessage(MoveReference<Message> message,
                        MessagePriority priority,
                        TimeMs lifetime,
                        TimeMs creationTime) :
-    Message(RaverieMove(message)),
-    mReliable(reliable),
-    mTransferMode(transferMode),
-    mReceiptID(receiptId),
-    mPriority(priority),
-    mLifetime(lifetime),
-    mCreationTime(creationTime)
+    Message(RaverieMove(message)), mReliable(reliable), mTransferMode(transferMode), mReceiptID(receiptId), mPriority(priority), mLifetime(lifetime), mCreationTime(creationTime)
 {
   mChannelId = channelId;
   mSequenceId = sequenceId;
@@ -479,13 +421,7 @@ OutMessage::OutMessage(const OutMessage& rhs, MoveReference<Message> takeThisMes
 {
 }
 OutMessage::OutMessage(const OutMessage& rhs) :
-    Message(rhs),
-    mReliable(rhs.mReliable),
-    mTransferMode(rhs.mTransferMode),
-    mReceiptID(rhs.mReceiptID),
-    mPriority(rhs.mPriority),
-    mLifetime(rhs.mLifetime),
-    mCreationTime(rhs.mCreationTime)
+    Message(rhs), mReliable(rhs.mReliable), mTransferMode(rhs.mTransferMode), mReceiptID(rhs.mReceiptID), mPriority(rhs.mPriority), mLifetime(rhs.mLifetime), mCreationTime(rhs.mCreationTime)
 {
 }
 
@@ -612,9 +548,7 @@ FragmentedMessage::FragmentedMessage(MoveReference<Message> fragment) : mFragmen
   AddInternal(RaverieMove(fragment));
 }
 
-FragmentedMessage::FragmentedMessage(MoveReference<FragmentedMessage> rhs) :
-    mFragments(RaverieMove(rhs->mFragments)),
-    mFinalFragmentIndex(rhs->mFinalFragmentIndex)
+FragmentedMessage::FragmentedMessage(MoveReference<FragmentedMessage> rhs) : mFragments(RaverieMove(rhs->mFragments)), mFinalFragmentIndex(rhs->mFinalFragmentIndex)
 {
 }
 
@@ -659,11 +593,8 @@ void FragmentedMessage::Add(MoveReference<Message> fragment)
   // and Should not be a duplicate fragment,
   // and If we have a final fragment, this fragment neither claims to be the
   // final fragment and it's index is less than the final fragment index.
-  Assert(fragment->IsFragment() && fragment->GetSequenceId() == mFragments.Front().GetSequenceId() &&
-         !IsDuplicate(*fragment) &&
-         (mFinalFragmentIndex != 0
-              ? (!fragment->IsFinalFragment() && fragment->GetFragmentIndex() < mFinalFragmentIndex)
-              : true));
+  Assert(fragment->IsFragment() && fragment->GetSequenceId() == mFragments.Front().GetSequenceId() && !IsDuplicate(*fragment) &&
+         (mFinalFragmentIndex != 0 ? (!fragment->IsFinalFragment() && fragment->GetFragmentIndex() < mFinalFragmentIndex) : true));
 
   // Add fragment
   AddInternal(RaverieMove(fragment));

@@ -250,14 +250,11 @@ uint SolveCubic(real a0, real a1, real a2, real a3, real* roots)
   switch (rootCount)
   {
   case 3:
-    roots[2] = roots[2] - Math::EvaluateCubic(roots[2], a0, a1, a2, a3) /
-                              Math::EvaluateQuadratic(roots[2], a1, two * a2, three * a3);
+    roots[2] = roots[2] - Math::EvaluateCubic(roots[2], a0, a1, a2, a3) / Math::EvaluateQuadratic(roots[2], a1, two * a2, three * a3);
   case 2:
-    roots[1] = roots[1] - Math::EvaluateCubic(roots[1], a0, a1, a2, a3) /
-                              Math::EvaluateQuadratic(roots[1], a1, two * a2, three * a3);
+    roots[1] = roots[1] - Math::EvaluateCubic(roots[1], a0, a1, a2, a3) / Math::EvaluateQuadratic(roots[1], a1, two * a2, three * a3);
   case 1:
-    roots[0] = roots[0] - Math::EvaluateCubic(roots[0], a0, a1, a2, a3) /
-                              Math::EvaluateQuadratic(roots[0], a1, two * a2, three * a3);
+    roots[0] = roots[0] - Math::EvaluateCubic(roots[0], a0, a1, a2, a3) / Math::EvaluateQuadratic(roots[0], a1, two * a2, three * a3);
   case 0:
     break;
   }
@@ -291,8 +288,7 @@ uint SolveQuartic(real a0, real a1, real a2, real a3, real a4, real* roots)
 
   real p = real(-3.0 / 8.0) * Math::Sq(a3) + a2;
   real q = Cubed(a3) / real(8.0) - (a3 * a2) / real(2.0) + a1;
-  real r =
-      real(-3.0 / 256.0) * Math::Sq(a3) * Math::Sq(a3) + (Math::Sq(a3) * a2) / real(16.0) - (a3 * a1) / real(4.0) + a0;
+  real r = real(-3.0 / 256.0) * Math::Sq(a3) * Math::Sq(a3) + (Math::Sq(a3) * a2) / real(16.0) - (a3 * a1) / real(4.0) + a0;
 
   uint rootCount = 0;
   // Find solution to: y^3 - p/2 * y^2 - r * y + (4 * r * p - q^2)/8 = 0
@@ -353,17 +349,13 @@ uint SolveQuartic(real a0, real a1, real a2, real a3, real a4, real* roots)
     switch (rootCount)
     {
     case 4:
-      roots[3] = roots[3] - Math::EvaluateQuartic(roots[3], a0, a1, a2, a3, a4) /
-                                Math::EvaluateCubic(roots[3], a1, two * a2, three * a3, four * a4);
+      roots[3] = roots[3] - Math::EvaluateQuartic(roots[3], a0, a1, a2, a3, a4) / Math::EvaluateCubic(roots[3], a1, two * a2, three * a3, four * a4);
     case 3:
-      roots[2] = roots[2] - Math::EvaluateQuartic(roots[2], a0, a1, a2, a3, a4) /
-                                Math::EvaluateCubic(roots[2], a1, two * a2, three * a3, four * a4);
+      roots[2] = roots[2] - Math::EvaluateQuartic(roots[2], a0, a1, a2, a3, a4) / Math::EvaluateCubic(roots[2], a1, two * a2, three * a3, four * a4);
     case 2:
-      roots[1] = roots[1] - Math::EvaluateQuartic(roots[1], a0, a1, a2, a3, a4) /
-                                Math::EvaluateCubic(roots[1], a1, two * a2, three * a3, four * a4);
+      roots[1] = roots[1] - Math::EvaluateQuartic(roots[1], a0, a1, a2, a3, a4) / Math::EvaluateCubic(roots[1], a1, two * a2, three * a3, four * a4);
     case 1:
-      roots[0] = roots[0] - Math::EvaluateQuartic(roots[0], a0, a1, a2, a3, a4) /
-                                Math::EvaluateCubic(roots[0], a1, two * a2, three * a3, four * a4);
+      roots[0] = roots[0] - Math::EvaluateQuartic(roots[0], a0, a1, a2, a3, a4) / Math::EvaluateCubic(roots[0], a1, two * a2, three * a3, four * a4);
       break;
 
     case 0:

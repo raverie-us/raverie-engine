@@ -65,8 +65,8 @@ namespace Z
 extern SystemObjectManager* gSystemObjects;
 }
 
-#define CreateSystemObjectFrom(Type, Value)                                                                            \
-  RaverieInitializeType(Type);                                                                                           \
+#define CreateSystemObjectFrom(Type, Value)                                                                                                                                                            \
+  RaverieInitializeType(Type);                                                                                                                                                                         \
   Z::gSystemObjects->Add(Value, RaverieTypeId(Type), ObjectCleanup::AutoDelete);
 
 } // namespace Raverie

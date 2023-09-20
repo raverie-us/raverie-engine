@@ -96,11 +96,7 @@ RaverieDefineType(MetaComposition, builder, type)
 {
 }
 
-MetaComposition::MetaComposition(BoundType* componentType) :
-    mComponentType(componentType),
-    mSupportsComponentAddition(true),
-    mSupportsComponentRemoval(true),
-    mSupportsComponentReorder(true)
+MetaComposition::MetaComposition(BoundType* componentType) : mComponentType(componentType), mSupportsComponentAddition(true), mSupportsComponentRemoval(true), mSupportsComponentReorder(true)
 {
 }
 
@@ -175,9 +171,7 @@ uint MetaComposition::GetComponentIndex(HandleParam owner, HandleParam component
 
 void MetaComposition::Enumerate(Array<BoundType*>& addTypes, EnumerateAction::Enum action, HandleParam owner)
 {
-  ReturnIf(action == EnumerateAction::AllAddableToObject && owner.IsNull(),
-           ,
-           "Must give instance to get only addable types");
+  ReturnIf(action == EnumerateAction::AllAddableToObject && owner.IsNull(), , "Must give instance to get only addable types");
 
   forRange (BoundType* componentType, mComponentTypes.Values())
   {
@@ -342,14 +336,12 @@ MetaCreationContext* MetaComposition::GetCreationContext()
   return nullptr;
 }
 
-void MetaComposition::AddComponent(
-    HandleParam owner, HandleParam component, int index, bool ignoreDependencies, MetaCreationContext* creationContext)
+void MetaComposition::AddComponent(HandleParam owner, HandleParam component, int index, bool ignoreDependencies, MetaCreationContext* creationContext)
 {
   Error("Not implemented");
 }
 
-void MetaComposition::AddComponent(
-    HandleParam owner, BoundType* typeToAdd, int index, bool ignoreDependencies, MetaCreationContext* creationContext)
+void MetaComposition::AddComponent(HandleParam owner, BoundType* typeToAdd, int index, bool ignoreDependencies, MetaCreationContext* creationContext)
 {
   Handle component = MakeObject(typeToAdd);
   AddComponent(owner, component, index, ignoreDependencies);
@@ -384,8 +376,7 @@ bool MetaComposition::CanRemoveComponent(HandleParam owner, HandleParam componen
     {
       cstr toRemoveName = typeToRemove->Name.c_str();
       cstr blockingComponentName = componentType->Name.c_str();
-      reason = String::Format(
-          "Component %s can't be removed due to a dependency from %s.", toRemoveName, blockingComponentName);
+      reason = String::Format("Component %s can't be removed due to a dependency from %s.", toRemoveName, blockingComponentName);
 
       return false;
     }
@@ -413,8 +404,7 @@ void MetaComposition::RemoveComponent(HandleParam owner, HandleParam component, 
   Error("Not Implemented.");
 }
 
-bool MetaComposition::CanMoveComponent(
-    HandleParam owner, HandleParam component, uint destination, Handle& blockingComponent, String& reason)
+bool MetaComposition::CanMoveComponent(HandleParam owner, HandleParam component, uint destination, Handle& blockingComponent, String& reason)
 {
   String componentName = component.StoredType->Name;
   uint currentIndex = GetComponentIndex(owner, component);

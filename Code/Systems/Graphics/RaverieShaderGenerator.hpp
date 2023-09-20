@@ -36,22 +36,14 @@ public:
   void Initialize();
   void InitializeSpirV();
 
-  LibraryRef BuildFragmentsLibrary(Module& dependencies,
-                                   Array<RaverieDocumentResource*>& fragments,
-                                   StringParam libraryName = "Fragments");
+  LibraryRef BuildFragmentsLibrary(Module& dependencies, Array<RaverieDocumentResource*>& fragments, StringParam libraryName = "Fragments");
   bool Commit(RaverieCompileEvent* e);
   void MapFragmentTypes();
 
-  bool BuildShaders(ShaderSet& shaders,
-                    HashMap<String, UniqueComposite>& composites,
-                    Array<ShaderEntry>& shaderEntries,
-                    Array<ShaderDefinition>* compositeShaderDefs = nullptr);
-  bool CompilePipeline(RaverieShaderIRType* shaderType,
-                       ShaderPipelineDescription& pipeline,
-                       Array<TranslationPassResultRef>& pipelineResults);
+  bool BuildShaders(ShaderSet& shaders, HashMap<String, UniqueComposite>& composites, Array<ShaderEntry>& shaderEntries, Array<ShaderDefinition>* compositeShaderDefs = nullptr);
+  bool CompilePipeline(RaverieShaderIRType* shaderType, ShaderPipelineDescription& pipeline, Array<TranslationPassResultRef>& pipelineResults);
 
-  ShaderInput
-  CreateShaderInput(StringParam fragmentName, StringParam inputName, ShaderInputType::Enum type, AnyParam value);
+  ShaderInput CreateShaderInput(StringParam fragmentName, StringParam inputName, ShaderInputType::Enum type, AnyParam value);
 
   void OnRaverieFragmentCompilationError(Raverie::ErrorEvent* event);
   void OnRaverieFragmentTypeParsed(Raverie::ParseEvent* event);

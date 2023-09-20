@@ -72,10 +72,7 @@ Math::Vec3 ListenerNode::GetRelativeFacingThreaded(Math::Vec3Param facingDirecti
   return Math::Transform(mWorldToLocalThreaded, facingDirection);
 }
 
-bool ListenerNode::GetOutputSamples(BufferType* outputBuffer,
-                                    const unsigned numberOfChannels,
-                                    ListenerNode* listener,
-                                    const bool firstRequest)
+bool ListenerNode::GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest)
 {
   // Get input
   bool isThereOutput = AccumulateInputSamples(outputBuffer->Size(), numberOfChannels, this);

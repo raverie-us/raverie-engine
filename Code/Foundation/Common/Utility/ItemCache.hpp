@@ -42,10 +42,7 @@ public:
   {
   }
   /// Move Constructor
-  ItemCache(MoveReference<ItemCache> rhs) :
-      mIdStore(RaverieMove(rhs->mIdStore)),
-      mItemIdMap(RaverieMove(rhs->mItemIdMap)),
-      mIdItemMap(RaverieMove(rhs->mIdItemMap))
+  ItemCache(MoveReference<ItemCache> rhs) : mIdStore(RaverieMove(rhs->mIdStore)), mItemIdMap(RaverieMove(rhs->mItemIdMap)), mIdItemMap(RaverieMove(rhs->mIdItemMap))
   {
   }
 

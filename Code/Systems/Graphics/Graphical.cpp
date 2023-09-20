@@ -354,8 +354,7 @@ void Graphical::AddComponentShaderInputs(Component* component)
     return;
 
   String componentName = RaverieVirtualTypeId(component)->Name;
-  Array<ShaderMetaProperty>* shaderProperties =
-      Z::gEngine->has(GraphicsEngine)->mComponentShaderProperties.FindPointer(componentName);
+  Array<ShaderMetaProperty>* shaderProperties = Z::gEngine->has(GraphicsEngine)->mComponentShaderProperties.FindPointer(componentName);
 
   // No inputs from this component
   if (shaderProperties == nullptr)

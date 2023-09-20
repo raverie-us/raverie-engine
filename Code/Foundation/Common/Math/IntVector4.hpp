@@ -83,7 +83,8 @@ struct IntVector4
   /// Set all of this vector's elements to 0.
   void ZeroOut(void);
 
-  union {
+  union
+  {
     struct
     {
       int x, y, z, w;

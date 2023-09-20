@@ -20,10 +20,7 @@ PropertyToUndo::PropertyToUndo(OperationQueue* propQueue)
   mOperationQueue = propQueue;
 }
 
-void PropertyToUndo::ChangeProperty(HandleParam object,
-                                    PropertyPathParam property,
-                                    PropertyState& state,
-                                    PropertyAction::Enum action)
+void PropertyToUndo::ChangeProperty(HandleParam object, PropertyPathParam property, PropertyState& state, PropertyAction::Enum action)
 {
   // if this was a commit operation then queue the undo
   if (action == PropertyAction::Commit)
@@ -76,16 +73,12 @@ void PropertyToUndo::Redo()
 }
 
 // Undo Meta Composition
-UndoMetaComposition::UndoMetaComposition(PropertyInterface* propertyInterface,
-                                         BoundType* objectType,
-                                         OperationQueue* opQueue) :
-    EventMetaComposition(propertyInterface, objectType),
-    mOperationQueue(opQueue)
+UndoMetaComposition::UndoMetaComposition(PropertyInterface* propertyInterface, BoundType* objectType, OperationQueue* opQueue) :
+    EventMetaComposition(propertyInterface, objectType), mOperationQueue(opQueue)
 {
 }
 
-void UndoMetaComposition::AddComponent(
-    HandleParam owner, BoundType* typeToAdd, int index, bool ignoreDependencies, MetaCreationContext* creationContext)
+void UndoMetaComposition::AddComponent(HandleParam owner, BoundType* typeToAdd, int index, bool ignoreDependencies, MetaCreationContext* creationContext)
 {
   QueueAddComponent(mOperationQueue, owner, typeToAdd);
   mPropertyInterface->SendComponentsModifiedOnGrid(owner);

@@ -710,20 +710,14 @@ void GenerateVectorSwizzles(LibraryBuilder& builder, BoundType* type, BoundType*
           // user data pointer
           size_t& order = *(size_t*)&orderUserData;
 
-          order = count | (componentIndex[0] << 3) | (componentIndex[1] << 5) | (componentIndex[2] << 7) |
-                  (componentIndex[3] << 9);
+          order = count | (componentIndex[0] << 3) | (componentIndex[1] << 5) | (componentIndex[2] << 7) | (componentIndex[3] << 9);
 
           // As long as we have no duplicate components, we
           // can at least make it a read/write property (with a get/set)
           if (noDuplicateComponents)
           {
             // Add the get/set property
-            property = builder.AddBoundGetterSetter(type,
-                                                    name,
-                                                    sizeType,
-                                                    VectorSwizzleSet<ComponentType>,
-                                                    VectorSwizzleGet<ComponentType>,
-                                                    MemberOptions::None);
+            property = builder.AddBoundGetterSetter(type, name, sizeType, VectorSwizzleSet<ComponentType>, VectorSwizzleGet<ComponentType>, MemberOptions::None);
 
             // Store the userdata on the property get/set functions
             property->Get->UserData = orderUserData;
@@ -732,8 +726,7 @@ void GenerateVectorSwizzles(LibraryBuilder& builder, BoundType* type, BoundType*
           else
           {
             // Add the get (read only) property
-            property = builder.AddBoundGetterSetter(
-                type, name, sizeType, nullptr, VectorSwizzleGet<ComponentType>, MemberOptions::None);
+            property = builder.AddBoundGetterSetter(type, name, sizeType, nullptr, VectorSwizzleGet<ComponentType>, MemberOptions::None);
 
             // Store the userdata on the property get function
             property->Get->UserData = orderUserData;
@@ -750,9 +743,7 @@ void GenerateVectorSwizzles(LibraryBuilder& builder, BoundType* type, BoundType*
 }
 
 template <size_t Components, typename ComponentType>
-void GenerateVectorComponentConstructors(LibraryBuilder& builder,
-                                         BoundType* type,
-                                         BoundType* componentTypes[Core::MaxComponents])
+void GenerateVectorComponentConstructors(LibraryBuilder& builder, BoundType* type, BoundType* componentTypes[Core::MaxComponents])
 {
   // We're generating constructors for a fixed number of components (a specific
   // vector type)
@@ -802,11 +793,7 @@ void GenerateVectorComponentConstructors(LibraryBuilder& builder,
   }
 }
 
-BoundType* Core::InstantiatePropertyDelegate(LibraryBuilder& builder,
-                                             StringParam baseName,
-                                             StringParam fullyQualifiedName,
-                                             const Array<Constant>& templateTypes,
-                                             const void* userData)
+BoundType* Core::InstantiatePropertyDelegate(LibraryBuilder& builder, StringParam baseName, StringParam fullyQualifiedName, const Array<Constant>& templateTypes, const void* userData)
 {
   // Get the type that we're getting / setting
   Type* innerType = templateTypes.Front().TypeValue;
@@ -822,20 +809,11 @@ BoundType* Core::InstantiatePropertyDelegate(LibraryBuilder& builder,
   DelegateType* setDelegateType = builder.GetDelegateType(setParameters, core.VoidType);
   DelegateType* getDelegateType = builder.GetDelegateType(ParameterArray(), innerType);
 
-  BoundType* type =
-      builder.AddBoundType(baseName, fullyQualifiedName, TypeCopyMode::ReferenceType, sizeof(PropertyDelegateTemplate));
+  BoundType* type = builder.AddBoundType(baseName, fullyQualifiedName, TypeCopyMode::ReferenceType, sizeof(PropertyDelegateTemplate));
   builder.AddBoundField(type, "Set", setDelegateType, RaverieOffsetOf(PropertyDelegateTemplate, Set), MemberOptions::None);
   builder.AddBoundField(type, "Get", getDelegateType, RaverieOffsetOf(PropertyDelegateTemplate, Get), MemberOptions::None);
-  builder.AddBoundField(type,
-                        "Property",
-                        RaverieTypeId(Property),
-                        RaverieOffsetOf(PropertyDelegateTemplate, ReferencedProperty),
-                        MemberOptions::None);
-  builder.AddBoundField(type,
-                        "Instance",
-                        RaverieTypeId(Any),
-                        RaverieOffsetOf(PropertyDelegateTemplate, ReferencedProperty),
-                        MemberOptions::None);
+  builder.AddBoundField(type, "Property", RaverieTypeId(Property), RaverieOffsetOf(PropertyDelegateTemplate, ReferencedProperty), MemberOptions::None);
+  builder.AddBoundField(type, "Instance", RaverieTypeId(Any), RaverieOffsetOf(PropertyDelegateTemplate, ReferencedProperty), MemberOptions::None);
 
   // Bind the constructor
   RaverieFullBindDestructor(builder, type, PropertyDelegateTemplate);
@@ -1361,10 +1339,8 @@ static FormatCEdge FormatCEdgeWidthNumberLoop("WidthNumberLoop", 10, '0', '1', '
 static FormatCEdge FormatCEdgePrecisionDot("PrecisionDot", 1, '.');
 static FormatCEdge FormatCEdgePrecisionStar("PrecisionStar", 1, '*');
 static FormatCEdge FormatCEdgePrecisionNumber("PrecisionNumber", 10, '0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
-static FormatCEdge
-    FormatCEdgePrecisionNumberLoop("PrecisionNumberLoop", 10, '0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
-static FormatCEdge FormatCEdgeSpecifiers(
-    "Specifiers", 18, 'd', 'i', 'u', 'o', 'x', 'X', 'f', 'F', 'e', 'E', 'g', 'G', 'a', 'A', 'c', 's', 'p', '%');
+static FormatCEdge FormatCEdgePrecisionNumberLoop("PrecisionNumberLoop", 10, '0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
+static FormatCEdge FormatCEdgeSpecifiers("Specifiers", 18, 'd', 'i', 'u', 'o', 'x', 'X', 'f', 'F', 'e', 'E', 'g', 'G', 'a', 'A', 'c', 's', 'p', '%');
 
 static void InitializeFormatCStates()
 {
@@ -1474,15 +1450,8 @@ int FormatCSprintf(char* buffer, cstr format, int widthStar, int precisionStar, 
 }
 
 template <typename T>
-void FormatCPrint(ExecutableState* state,
-                  ExceptionReport& report,
-                  StringBuilder& builder,
-                  StringParam format,
-                  Array<char>& temporaryBuffer,
-                  int widthStar,
-                  int precisionStar,
-                  const Any& argument,
-                  T value)
+void FormatCPrint(
+    ExecutableState* state, ExceptionReport& report, StringBuilder& builder, StringParam format, Array<char>& temporaryBuffer, int widthStar, int precisionStar, const Any& argument, T value)
 {
   // Grab the stored type of the argument, for error printing
   Type* argumentType = argument.StoredType;
@@ -1636,8 +1605,7 @@ void StringFormatC(Call& call, ExceptionReport& report)
         // specifier
         if (transitioned == false)
         {
-          state->ThrowException(report,
-                                BuildString("Invalid or unsupported format specifier: '", formatSpecifierRange, "'."));
+          state->ThrowException(report, BuildString("Invalid or unsupported format specifier: '", formatSpecifierRange, "'."));
           return;
         }
         // If we reached the end (parsed the format specifier)
@@ -1769,9 +1737,7 @@ void StringFormatC(Call& call, ExceptionReport& report)
             // character, which is the format specifier that told us it was an
             // integer
             StringIterator lastrune = formatSpecifierRange.End() - 1;
-            String integralFormatSpecifierString = BuildString(StringRange(formatSpecifierRange.Begin(), lastrune),
-                                                               "ll",
-                                                               StringRange(lastrune, formatSpecifierRange.End()));
+            String integralFormatSpecifierString = BuildString(StringRange(formatSpecifierRange.Begin(), lastrune), "ll", StringRange(lastrune, formatSpecifierRange.End()));
 
             // Convert as many types as we can to the DoubleInteger value
             DoubleInteger value = 0;
@@ -1798,15 +1764,7 @@ void StringFormatC(Call& call, ExceptionReport& report)
 
             // Print the value out and store it in the builder (this can throw
             // an exception)
-            FormatCPrint(state,
-                         report,
-                         builder,
-                         integralFormatSpecifierString,
-                         temporaryBuffer,
-                         widthStar,
-                         precisionStar,
-                         argument,
-                         value);
+            FormatCPrint(state, report, builder, integralFormatSpecifierString, temporaryBuffer, widthStar, precisionStar, argument, value);
             if (report.HasThrownExceptions())
               return;
           }
@@ -1838,15 +1796,7 @@ void StringFormatC(Call& call, ExceptionReport& report)
 
             // Print the value out and store it in the builder (this can throw
             // an exception)
-            FormatCPrint(state,
-                         report,
-                         builder,
-                         formatSpecifierRange,
-                         temporaryBuffer,
-                         widthStar,
-                         precisionStar,
-                         argument,
-                         value);
+            FormatCPrint(state, report, builder, formatSpecifierRange, temporaryBuffer, widthStar, precisionStar, argument, value);
             if (report.HasThrownExceptions())
               return;
           }
@@ -1857,15 +1807,7 @@ void StringFormatC(Call& call, ExceptionReport& report)
           {
             // Print the value out and store it in the builder (this can throw
             // an exception)
-            FormatCPrint(state,
-                         report,
-                         builder,
-                         formatSpecifierRange,
-                         temporaryBuffer,
-                         widthStar,
-                         precisionStar,
-                         argument,
-                         argument.ToString().c_str());
+            FormatCPrint(state, report, builder, formatSpecifierRange, temporaryBuffer, widthStar, precisionStar, argument, argument.ToString().c_str());
             if (report.HasThrownExceptions())
               return;
           }
@@ -1908,15 +1850,7 @@ void StringFormatC(Call& call, ExceptionReport& report)
 
             // Print the value out and store it in the builder (this can throw
             // an exception)
-            FormatCPrint(state,
-                         report,
-                         builder,
-                         formatSpecifierRange,
-                         temporaryBuffer,
-                         widthStar,
-                         precisionStar,
-                         argument,
-                         pointerValue);
+            FormatCPrint(state, report, builder, formatSpecifierRange, temporaryBuffer, widthStar, precisionStar, argument, pointerValue);
             if (report.HasThrownExceptions())
               return;
           }
@@ -1985,11 +1919,7 @@ String Boolean3ToString(Boolean3Param value)
 
 String Boolean4ToString(Boolean4Param value)
 {
-  return String::Format("(%s, %s, %s, %s)",
-                        TrueFalseCstr(value.x),
-                        TrueFalseCstr(value.y),
-                        TrueFalseCstr(value.z),
-                        TrueFalseCstr(value.w));
+  return String::Format("(%s, %s, %s, %s)", TrueFalseCstr(value.x), TrueFalseCstr(value.y), TrueFalseCstr(value.z), TrueFalseCstr(value.w));
 }
 
 String ByteToString(Byte value)
@@ -2050,18 +1980,8 @@ String QuaternionToString(QuaternionParam value)
 
   // Print out the quaternion, then the Euler Angles form, then the Axis/Angle
   // form
-  return String::Format("(%g, %g, %g, %g), Euler: (%g, %g, %g), Axis: (%g, %g, %g), Angle: %g",
-                        value.x,
-                        value.y,
-                        value.z,
-                        value.w,
-                        angles.Angles.x,
-                        angles.Angles.y,
-                        angles.Angles.z,
-                        axis.x,
-                        axis.y,
-                        axis.z,
-                        angle);
+  return String::Format(
+      "(%g, %g, %g, %g), Euler: (%g, %g, %g), Axis: (%g, %g, %g), Angle: %g", value.x, value.y, value.z, value.w, angles.Angles.x, angles.Angles.y, angles.Angles.z, axis.x, axis.y, axis.z, angle);
 }
 
 String DoubleIntegerToString(DoubleInteger value)
@@ -2472,11 +2392,7 @@ void SplatVecToVecOneExtra(Call& call, ExceptionReport& report)
 
 // Splats a function of the type Scalar Fn(Scalar) to
 // Vec(n) Fn(Vec(n), a, b) (vector could be of whatever scalar type is)
-template <size_t Components,
-          typename ScalarType,
-          typename ExtraA,
-          typename ExtraB,
-          ScalarType (*Function)(ScalarType, ExtraA, ExtraB)>
+template <size_t Components, typename ScalarType, typename ExtraA, typename ExtraB, ScalarType (*Function)(ScalarType, ExtraA, ExtraB)>
 void SplatVecToVecTwoExtra(Call& call, ExceptionReport& report)
 {
   // Get a pointer to our input vector
@@ -2599,353 +2515,231 @@ void SplatTwoVecAndRealToVec(Call& call, ExceptionReport& report)
   }
 }
 
-#define RaverieSplatAllVectorOperationsAs(                                                                               \
-    RaverieBuilder, RaverieType, NamespaceAndClass, type, Method, Name, UserDescription)                                   \
-  RaverieBuilder                                                                                                         \
-      .AddBoundFunction(RaverieType,                                                                                     \
-                        Name,                                                                                          \
-                        SplatVecToVec<1, type, NamespaceAndClass::Method>,                                             \
-                        OneParameter(this->type##Type),                                                                \
-                        this->type##Type,                                                                              \
-                        FunctionOptions::Static)                                                                       \
-      ->Description = RaverieDocumentString(UserDescription);                                                            \
-  RaverieBuilder                                                                                                         \
-      .AddBoundFunction(RaverieType,                                                                                     \
-                        Name,                                                                                          \
-                        SplatVecToVec<2, type, NamespaceAndClass::Method>,                                             \
-                        OneParameter(this->type##2Type),                                                               \
-                        this->type##2Type,                                                                             \
-                        FunctionOptions::Static)                                                                       \
-      ->Description = RaverieDocumentString(BuildString(UserDescription, " Performed component-wise."));                 \
-  RaverieBuilder                                                                                                         \
-      .AddBoundFunction(RaverieType,                                                                                     \
-                        Name,                                                                                          \
-                        SplatVecToVec<3, type, NamespaceAndClass::Method>,                                             \
-                        OneParameter(this->type##3Type),                                                               \
-                        this->type##3Type,                                                                             \
-                        FunctionOptions::Static)                                                                       \
-      ->Description = RaverieDocumentString(BuildString(UserDescription, " Performed component-wise."));                 \
-  RaverieBuilder                                                                                                         \
-      .AddBoundFunction(RaverieType,                                                                                     \
-                        Name,                                                                                          \
-                        SplatVecToVec<4, type, NamespaceAndClass::Method>,                                             \
-                        OneParameter(this->type##4Type),                                                               \
-                        this->type##4Type,                                                                             \
-                        FunctionOptions::Static)                                                                       \
+#define RaverieSplatAllVectorOperationsAs(RaverieBuilder, RaverieType, NamespaceAndClass, type, Method, Name, UserDescription)                                                                         \
+  RaverieBuilder.AddBoundFunction(RaverieType, Name, SplatVecToVec<1, type, NamespaceAndClass::Method>, OneParameter(this->type##Type), this->type##Type, FunctionOptions::Static)->Description =      \
+      RaverieDocumentString(UserDescription);                                                                                                                                                          \
+  RaverieBuilder.AddBoundFunction(RaverieType, Name, SplatVecToVec<2, type, NamespaceAndClass::Method>, OneParameter(this->type##2Type), this->type##2Type, FunctionOptions::Static)->Description =    \
+      RaverieDocumentString(BuildString(UserDescription, " Performed component-wise."));                                                                                                               \
+  RaverieBuilder.AddBoundFunction(RaverieType, Name, SplatVecToVec<3, type, NamespaceAndClass::Method>, OneParameter(this->type##3Type), this->type##3Type, FunctionOptions::Static)->Description =    \
+      RaverieDocumentString(BuildString(UserDescription, " Performed component-wise."));                                                                                                               \
+  RaverieBuilder.AddBoundFunction(RaverieType, Name, SplatVecToVec<4, type, NamespaceAndClass::Method>, OneParameter(this->type##4Type), this->type##4Type, FunctionOptions::Static)->Description =    \
+      RaverieDocumentString(BuildString(UserDescription, " Performed component-wise."));
+
+#define RaverieSplatNamedAllVectorOperationsTwoExtraAs(RaverieBuilder, RaverieType, NamespaceAndClass, type, typeA, typeB, Method, Name, p1, p2, p3, UserDescription)                                  \
+  RaverieBuilder                                                                                                                                                                                       \
+      .AddBoundFunction(RaverieType,                                                                                                                                                                   \
+                        Name,                                                                                                                                                                          \
+                        SplatVecToVecTwoExtra<1, type, typeA, typeB, NamespaceAndClass::Method>,                                                                                                       \
+                        ThreeParameters(this->type##Type, p1, RaverieTypeId(typeA), p2, RaverieTypeId(typeB), p3),                                                                                     \
+                        this->type##Type,                                                                                                                                                              \
+                        FunctionOptions::Static)                                                                                                                                                       \
+      ->Description = RaverieDocumentString(UserDescription);                                                                                                                                          \
+  RaverieBuilder                                                                                                                                                                                       \
+      .AddBoundFunction(RaverieType,                                                                                                                                                                   \
+                        Name,                                                                                                                                                                          \
+                        SplatVecToVecTwoExtra<2, type, typeA, typeB, NamespaceAndClass::Method>,                                                                                                       \
+                        ThreeParameters(this->type##2Type, p1, RaverieTypeId(typeA), p2, RaverieTypeId(typeB), p3),                                                                                    \
+                        this->type##2Type,                                                                                                                                                             \
+                        FunctionOptions::Static)                                                                                                                                                       \
+      ->Description = RaverieDocumentString(BuildString(UserDescription, " Performed component-wise."));                                                                                               \
+  RaverieBuilder                                                                                                                                                                                       \
+      .AddBoundFunction(RaverieType,                                                                                                                                                                   \
+                        Name,                                                                                                                                                                          \
+                        SplatVecToVecTwoExtra<3, type, typeA, typeB, NamespaceAndClass::Method>,                                                                                                       \
+                        ThreeParameters(this->type##3Type, p1, RaverieTypeId(typeA), p2, RaverieTypeId(typeB), p3),                                                                                    \
+                        this->type##3Type,                                                                                                                                                             \
+                        FunctionOptions::Static)                                                                                                                                                       \
+      ->Description = RaverieDocumentString(BuildString(UserDescription, " Performed component-wise."));                                                                                               \
+  RaverieBuilder                                                                                                                                                                                       \
+      .AddBoundFunction(RaverieType,                                                                                                                                                                   \
+                        Name,                                                                                                                                                                          \
+                        SplatVecToVecTwoExtra<4, type, typeA, typeB, NamespaceAndClass::Method>,                                                                                                       \
+                        ThreeParameters(this->type##4Type, p1, RaverieTypeId(typeA), p2, RaverieTypeId(typeB), p3),                                                                                    \
+                        this->type##4Type,                                                                                                                                                             \
+                        FunctionOptions::Static)                                                                                                                                                       \
       ->Description = RaverieDocumentString(BuildString(UserDescription, " Performed component-wise."));
 
-#define RaverieSplatNamedAllVectorOperationsTwoExtraAs(                                                                  \
-    RaverieBuilder, RaverieType, NamespaceAndClass, type, typeA, typeB, Method, Name, p1, p2, p3, UserDescription)         \
-  RaverieBuilder                                                                                                         \
-      .AddBoundFunction(RaverieType,                                                                                     \
-                        Name,                                                                                          \
-                        SplatVecToVecTwoExtra<1, type, typeA, typeB, NamespaceAndClass::Method>,                       \
-                        ThreeParameters(this->type##Type, p1, RaverieTypeId(typeA), p2, RaverieTypeId(typeB), p3),         \
-                        this->type##Type,                                                                              \
-                        FunctionOptions::Static)                                                                       \
-      ->Description = RaverieDocumentString(UserDescription);                                                            \
-  RaverieBuilder                                                                                                         \
-      .AddBoundFunction(RaverieType,                                                                                     \
-                        Name,                                                                                          \
-                        SplatVecToVecTwoExtra<2, type, typeA, typeB, NamespaceAndClass::Method>,                       \
-                        ThreeParameters(this->type##2Type, p1, RaverieTypeId(typeA), p2, RaverieTypeId(typeB), p3),        \
-                        this->type##2Type,                                                                             \
-                        FunctionOptions::Static)                                                                       \
-      ->Description = RaverieDocumentString(BuildString(UserDescription, " Performed component-wise."));                 \
-  RaverieBuilder                                                                                                         \
-      .AddBoundFunction(RaverieType,                                                                                     \
-                        Name,                                                                                          \
-                        SplatVecToVecTwoExtra<3, type, typeA, typeB, NamespaceAndClass::Method>,                       \
-                        ThreeParameters(this->type##3Type, p1, RaverieTypeId(typeA), p2, RaverieTypeId(typeB), p3),        \
-                        this->type##3Type,                                                                             \
-                        FunctionOptions::Static)                                                                       \
-      ->Description = RaverieDocumentString(BuildString(UserDescription, " Performed component-wise."));                 \
-  RaverieBuilder                                                                                                         \
-      .AddBoundFunction(RaverieType,                                                                                     \
-                        Name,                                                                                          \
-                        SplatVecToVecTwoExtra<4, type, typeA, typeB, NamespaceAndClass::Method>,                       \
-                        ThreeParameters(this->type##4Type, p1, RaverieTypeId(typeA), p2, RaverieTypeId(typeB), p3),        \
-                        this->type##4Type,                                                                             \
-                        FunctionOptions::Static)                                                                       \
+#define RaverieSplatNamedAllVectorOperationsOneExtraAs(RaverieBuilder, RaverieType, NamespaceAndClass, type, typeA, Method, Name, p1, p2, UserDescription)                                             \
+  RaverieBuilder                                                                                                                                                                                       \
+      .AddBoundFunction(RaverieType,                                                                                                                                                                   \
+                        Name,                                                                                                                                                                          \
+                        SplatVecToVecOneExtra<1, type, typeA, NamespaceAndClass::Method>,                                                                                                              \
+                        TwoParameters(this->type##Type, p1, RaverieTypeId(typeA), p2),                                                                                                                 \
+                        this->type##Type,                                                                                                                                                              \
+                        FunctionOptions::Static)                                                                                                                                                       \
+      ->Description = RaverieDocumentString(UserDescription);                                                                                                                                          \
+  RaverieBuilder                                                                                                                                                                                       \
+      .AddBoundFunction(RaverieType,                                                                                                                                                                   \
+                        Name,                                                                                                                                                                          \
+                        SplatVecToVecOneExtra<2, type, typeA, NamespaceAndClass::Method>,                                                                                                              \
+                        TwoParameters(this->type##2Type, p1, RaverieTypeId(typeA), p2),                                                                                                                \
+                        this->type##2Type,                                                                                                                                                             \
+                        FunctionOptions::Static)                                                                                                                                                       \
+      ->Description = RaverieDocumentString(BuildString(UserDescription, " Performed component-wise."));                                                                                               \
+  RaverieBuilder                                                                                                                                                                                       \
+      .AddBoundFunction(RaverieType,                                                                                                                                                                   \
+                        Name,                                                                                                                                                                          \
+                        SplatVecToVecOneExtra<3, type, typeA, NamespaceAndClass::Method>,                                                                                                              \
+                        TwoParameters(this->type##3Type, p1, RaverieTypeId(typeA), p2),                                                                                                                \
+                        this->type##3Type,                                                                                                                                                             \
+                        FunctionOptions::Static)                                                                                                                                                       \
+      ->Description = RaverieDocumentString(BuildString(UserDescription, " Performed component-wise."));                                                                                               \
+  RaverieBuilder                                                                                                                                                                                       \
+      .AddBoundFunction(RaverieType,                                                                                                                                                                   \
+                        Name,                                                                                                                                                                          \
+                        SplatVecToVecOneExtra<4, type, typeA, NamespaceAndClass::Method>,                                                                                                              \
+                        TwoParameters(this->type##4Type, p1, RaverieTypeId(typeA), p2),                                                                                                                \
+                        this->type##4Type,                                                                                                                                                             \
+                        FunctionOptions::Static)                                                                                                                                                       \
       ->Description = RaverieDocumentString(BuildString(UserDescription, " Performed component-wise."));
 
-#define RaverieSplatNamedAllVectorOperationsOneExtraAs(                                                                  \
-    RaverieBuilder, RaverieType, NamespaceAndClass, type, typeA, Method, Name, p1, p2, UserDescription)                    \
-  RaverieBuilder                                                                                                         \
-      .AddBoundFunction(RaverieType,                                                                                     \
-                        Name,                                                                                          \
-                        SplatVecToVecOneExtra<1, type, typeA, NamespaceAndClass::Method>,                              \
-                        TwoParameters(this->type##Type, p1, RaverieTypeId(typeA), p2),                                   \
-                        this->type##Type,                                                                              \
-                        FunctionOptions::Static)                                                                       \
-      ->Description = RaverieDocumentString(UserDescription);                                                            \
-  RaverieBuilder                                                                                                         \
-      .AddBoundFunction(RaverieType,                                                                                     \
-                        Name,                                                                                          \
-                        SplatVecToVecOneExtra<2, type, typeA, NamespaceAndClass::Method>,                              \
-                        TwoParameters(this->type##2Type, p1, RaverieTypeId(typeA), p2),                                  \
-                        this->type##2Type,                                                                             \
-                        FunctionOptions::Static)                                                                       \
-      ->Description = RaverieDocumentString(BuildString(UserDescription, " Performed component-wise."));                 \
-  RaverieBuilder                                                                                                         \
-      .AddBoundFunction(RaverieType,                                                                                     \
-                        Name,                                                                                          \
-                        SplatVecToVecOneExtra<3, type, typeA, NamespaceAndClass::Method>,                              \
-                        TwoParameters(this->type##3Type, p1, RaverieTypeId(typeA), p2),                                  \
-                        this->type##3Type,                                                                             \
-                        FunctionOptions::Static)                                                                       \
-      ->Description = RaverieDocumentString(BuildString(UserDescription, " Performed component-wise."));                 \
-  RaverieBuilder                                                                                                         \
-      .AddBoundFunction(RaverieType,                                                                                     \
-                        Name,                                                                                          \
-                        SplatVecToVecOneExtra<4, type, typeA, NamespaceAndClass::Method>,                              \
-                        TwoParameters(this->type##4Type, p1, RaverieTypeId(typeA), p2),                                  \
-                        this->type##4Type,                                                                             \
-                        FunctionOptions::Static)                                                                       \
+#define RaverieSplatNamedAllVectorOperationsAs(RaverieBuilder, RaverieType, NamespaceAndClass, type, Method, FunctionName, ParamName, UserDescription)                                                 \
+  RaverieBuilder.AddBoundFunction(RaverieType, FunctionName, SplatVecToVec<1, type, NamespaceAndClass::Method>, OneParameter(this->type##Type, ParamName), this->type##Type, FunctionOptions::Static)  \
+      ->Description = RaverieDocumentString(UserDescription);                                                                                                                                          \
+  RaverieBuilder                                                                                                                                                                                       \
+      .AddBoundFunction(RaverieType, FunctionName, SplatVecToVec<2, type, NamespaceAndClass::Method>, OneParameter(this->type##2Type, ParamName), this->type##2Type, FunctionOptions::Static)          \
+      ->Description = RaverieDocumentString(BuildString(UserDescription, " Performed component-wise."));                                                                                               \
+  RaverieBuilder                                                                                                                                                                                       \
+      .AddBoundFunction(RaverieType, FunctionName, SplatVecToVec<3, type, NamespaceAndClass::Method>, OneParameter(this->type##3Type, ParamName), this->type##3Type, FunctionOptions::Static)          \
+      ->Description = RaverieDocumentString(BuildString(UserDescription, " Performed component-wise."));                                                                                               \
+  RaverieBuilder                                                                                                                                                                                       \
+      .AddBoundFunction(RaverieType, FunctionName, SplatVecToVec<4, type, NamespaceAndClass::Method>, OneParameter(this->type##4Type, ParamName), this->type##4Type, FunctionOptions::Static)          \
       ->Description = RaverieDocumentString(BuildString(UserDescription, " Performed component-wise."));
 
-#define RaverieSplatNamedAllVectorOperationsAs(                                                                          \
-    RaverieBuilder, RaverieType, NamespaceAndClass, type, Method, FunctionName, ParamName, UserDescription)                \
-  RaverieBuilder                                                                                                         \
-      .AddBoundFunction(RaverieType,                                                                                     \
-                        FunctionName,                                                                                  \
-                        SplatVecToVec<1, type, NamespaceAndClass::Method>,                                             \
-                        OneParameter(this->type##Type, ParamName),                                                     \
-                        this->type##Type,                                                                              \
-                        FunctionOptions::Static)                                                                       \
-      ->Description = RaverieDocumentString(UserDescription);                                                            \
-  RaverieBuilder                                                                                                         \
-      .AddBoundFunction(RaverieType,                                                                                     \
-                        FunctionName,                                                                                  \
-                        SplatVecToVec<2, type, NamespaceAndClass::Method>,                                             \
-                        OneParameter(this->type##2Type, ParamName),                                                    \
-                        this->type##2Type,                                                                             \
-                        FunctionOptions::Static)                                                                       \
-      ->Description = RaverieDocumentString(BuildString(UserDescription, " Performed component-wise."));                 \
-  RaverieBuilder                                                                                                         \
-      .AddBoundFunction(RaverieType,                                                                                     \
-                        FunctionName,                                                                                  \
-                        SplatVecToVec<3, type, NamespaceAndClass::Method>,                                             \
-                        OneParameter(this->type##3Type, ParamName),                                                    \
-                        this->type##3Type,                                                                             \
-                        FunctionOptions::Static)                                                                       \
-      ->Description = RaverieDocumentString(BuildString(UserDescription, " Performed component-wise."));                 \
-  RaverieBuilder                                                                                                         \
-      .AddBoundFunction(RaverieType,                                                                                     \
-                        FunctionName,                                                                                  \
-                        SplatVecToVec<4, type, NamespaceAndClass::Method>,                                             \
-                        OneParameter(this->type##4Type, ParamName),                                                    \
-                        this->type##4Type,                                                                             \
-                        FunctionOptions::Static)                                                                       \
-      ->Description = RaverieDocumentString(BuildString(UserDescription, " Performed component-wise."));
-
-#define RaverieSplatAllVectorOperationsWithErrorAs(                                                                      \
-    RaverieBuilder, RaverieType, NamespaceAndClass, type, Method, FunctionName, ErrorFormatString)                         \
-  RaverieBuilder                                                                                                         \
-      .AddBoundFunction(RaverieType,                                                                                     \
-                        FunctionName,                                                                                  \
-                        SplatVecToVecWithError<1, type, NamespaceAndClass::Method>,                                    \
-                        OneParameter(this->type##Type),                                                                \
-                        this->type##Type,                                                                              \
-                        FunctionOptions::Static)                                                                       \
-      ->UserData = ErrorFormatString;                                                                                  \
-  RaverieBuilder                                                                                                         \
-      .AddBoundFunction(RaverieType,                                                                                     \
-                        FunctionName,                                                                                  \
-                        SplatVecToVecWithError<2, type, NamespaceAndClass::Method>,                                    \
-                        OneParameter(this->type##2Type),                                                               \
-                        this->type##2Type,                                                                             \
-                        FunctionOptions::Static)                                                                       \
-      ->UserData = ErrorFormatString;                                                                                  \
-  RaverieBuilder                                                                                                         \
-      .AddBoundFunction(RaverieType,                                                                                     \
-                        FunctionName,                                                                                  \
-                        SplatVecToVecWithError<3, type, NamespaceAndClass::Method>,                                    \
-                        OneParameter(this->type##3Type),                                                               \
-                        this->type##3Type,                                                                             \
-                        FunctionOptions::Static)                                                                       \
-      ->UserData = ErrorFormatString;                                                                                  \
-  RaverieBuilder                                                                                                         \
-      .AddBoundFunction(RaverieType,                                                                                     \
-                        FunctionName,                                                                                  \
-                        SplatVecToVecWithError<4, type, NamespaceAndClass::Method>,                                    \
-                        OneParameter(this->type##4Type),                                                               \
-                        this->type##4Type,                                                                             \
-                        FunctionOptions::Static)                                                                       \
+#define RaverieSplatAllVectorOperationsWithErrorAs(RaverieBuilder, RaverieType, NamespaceAndClass, type, Method, FunctionName, ErrorFormatString)                                                      \
+  RaverieBuilder.AddBoundFunction(RaverieType, FunctionName, SplatVecToVecWithError<1, type, NamespaceAndClass::Method>, OneParameter(this->type##Type), this->type##Type, FunctionOptions::Static)    \
+      ->UserData = ErrorFormatString;                                                                                                                                                                  \
+  RaverieBuilder.AddBoundFunction(RaverieType, FunctionName, SplatVecToVecWithError<2, type, NamespaceAndClass::Method>, OneParameter(this->type##2Type), this->type##2Type, FunctionOptions::Static)  \
+      ->UserData = ErrorFormatString;                                                                                                                                                                  \
+  RaverieBuilder.AddBoundFunction(RaverieType, FunctionName, SplatVecToVecWithError<3, type, NamespaceAndClass::Method>, OneParameter(this->type##3Type), this->type##3Type, FunctionOptions::Static)  \
+      ->UserData = ErrorFormatString;                                                                                                                                                                  \
+  RaverieBuilder.AddBoundFunction(RaverieType, FunctionName, SplatVecToVecWithError<4, type, NamespaceAndClass::Method>, OneParameter(this->type##4Type), this->type##4Type, FunctionOptions::Static)  \
       ->UserData = ErrorFormatString;
 
-#define RaverieSplatNamedAllVectorOperationsWithErrorAs(                                                                 \
-    RaverieBuilder, RaverieType, NamespaceAndClass, type, Method, FunctionName, ParamName, ErrorFormatString)              \
-  RaverieBuilder                                                                                                         \
-      .AddBoundFunction(RaverieType,                                                                                     \
-                        FunctionName,                                                                                  \
-                        SplatVecToVecWithError<1, type, NamespaceAndClass::Method>,                                    \
-                        OneParameter(this->type##Type, ParamName),                                                     \
-                        this->type##Type,                                                                              \
-                        FunctionOptions::Static)                                                                       \
-      ->UserData = ErrorFormatString;                                                                                  \
-  RaverieBuilder                                                                                                         \
-      .AddBoundFunction(RaverieType,                                                                                     \
-                        FunctionName,                                                                                  \
-                        SplatVecToVecWithError<2, type, NamespaceAndClass::Method>,                                    \
-                        OneParameter(this->type##2Type, ParamName),                                                    \
-                        this->type##2Type,                                                                             \
-                        FunctionOptions::Static)                                                                       \
-      ->UserData = ErrorFormatString;                                                                                  \
-  RaverieBuilder                                                                                                         \
-      .AddBoundFunction(RaverieType,                                                                                     \
-                        FunctionName,                                                                                  \
-                        SplatVecToVecWithError<3, type, NamespaceAndClass::Method>,                                    \
-                        OneParameter(this->type##3Type, ParamName),                                                    \
-                        this->type##3Type,                                                                             \
-                        FunctionOptions::Static)                                                                       \
-      ->UserData = ErrorFormatString;                                                                                  \
-  RaverieBuilder                                                                                                         \
-      .AddBoundFunction(RaverieType,                                                                                     \
-                        FunctionName,                                                                                  \
-                        SplatVecToVecWithError<4, type, NamespaceAndClass::Method>,                                    \
-                        OneParameter(this->type##4Type, ParamName),                                                    \
-                        this->type##4Type,                                                                             \
-                        FunctionOptions::Static)                                                                       \
+#define RaverieSplatNamedAllVectorOperationsWithErrorAs(RaverieBuilder, RaverieType, NamespaceAndClass, type, Method, FunctionName, ParamName, ErrorFormatString)                                      \
+  RaverieBuilder                                                                                                                                                                                       \
+      .AddBoundFunction(RaverieType, FunctionName, SplatVecToVecWithError<1, type, NamespaceAndClass::Method>, OneParameter(this->type##Type, ParamName), this->type##Type, FunctionOptions::Static)   \
+      ->UserData = ErrorFormatString;                                                                                                                                                                  \
+  RaverieBuilder                                                                                                                                                                                       \
+      .AddBoundFunction(RaverieType, FunctionName, SplatVecToVecWithError<2, type, NamespaceAndClass::Method>, OneParameter(this->type##2Type, ParamName), this->type##2Type, FunctionOptions::Static) \
+      ->UserData = ErrorFormatString;                                                                                                                                                                  \
+  RaverieBuilder                                                                                                                                                                                       \
+      .AddBoundFunction(RaverieType, FunctionName, SplatVecToVecWithError<3, type, NamespaceAndClass::Method>, OneParameter(this->type##3Type, ParamName), this->type##3Type, FunctionOptions::Static) \
+      ->UserData = ErrorFormatString;                                                                                                                                                                  \
+  RaverieBuilder                                                                                                                                                                                       \
+      .AddBoundFunction(RaverieType, FunctionName, SplatVecToVecWithError<4, type, NamespaceAndClass::Method>, OneParameter(this->type##4Type, ParamName), this->type##4Type, FunctionOptions::Static) \
       ->UserData = ErrorFormatString;
 
-#define RaverieSplatAllTwoVecToVecAs(RaverieBuilder, RaverieType, NamespaceAndClass, type, Method, Name, UserDescription)    \
-  RaverieBuilder                                                                                                         \
-      .AddBoundFunction(RaverieType,                                                                                     \
-                        Name,                                                                                          \
-                        SplatTwoVecToVec<1, type, NamespaceAndClass::Method>,                                          \
-                        TwoParameters(this->type##Type),                                                               \
-                        this->type##Type,                                                                              \
-                        FunctionOptions::Static)                                                                       \
-      ->Description = RaverieDocumentString(UserDescription);                                                            \
-  RaverieBuilder                                                                                                         \
-      .AddBoundFunction(RaverieType,                                                                                     \
-                        Name,                                                                                          \
-                        SplatTwoVecToVec<2, type, NamespaceAndClass::Method>,                                          \
-                        TwoParameters(this->type##2Type),                                                              \
-                        this->type##2Type,                                                                             \
-                        FunctionOptions::Static)                                                                       \
-      ->Description = RaverieDocumentString(BuildString(UserDescription, " Performed component-wise."));                 \
-  RaverieBuilder                                                                                                         \
-      .AddBoundFunction(RaverieType,                                                                                     \
-                        Name,                                                                                          \
-                        SplatTwoVecToVec<3, type, NamespaceAndClass::Method>,                                          \
-                        TwoParameters(this->type##3Type),                                                              \
-                        this->type##3Type,                                                                             \
-                        FunctionOptions::Static)                                                                       \
-      ->Description = RaverieDocumentString(BuildString(UserDescription, " Performed component-wise."));                 \
-  RaverieBuilder                                                                                                         \
-      .AddBoundFunction(RaverieType,                                                                                     \
-                        Name,                                                                                          \
-                        SplatTwoVecToVec<4, type, NamespaceAndClass::Method>,                                          \
-                        TwoParameters(this->type##4Type),                                                              \
-                        this->type##4Type,                                                                             \
-                        FunctionOptions::Static)                                                                       \
+#define RaverieSplatAllTwoVecToVecAs(RaverieBuilder, RaverieType, NamespaceAndClass, type, Method, Name, UserDescription)                                                                              \
+  RaverieBuilder.AddBoundFunction(RaverieType, Name, SplatTwoVecToVec<1, type, NamespaceAndClass::Method>, TwoParameters(this->type##Type), this->type##Type, FunctionOptions::Static)->Description =  \
+      RaverieDocumentString(UserDescription);                                                                                                                                                          \
+  RaverieBuilder.AddBoundFunction(RaverieType, Name, SplatTwoVecToVec<2, type, NamespaceAndClass::Method>, TwoParameters(this->type##2Type), this->type##2Type, FunctionOptions::Static)               \
+      ->Description = RaverieDocumentString(BuildString(UserDescription, " Performed component-wise."));                                                                                               \
+  RaverieBuilder.AddBoundFunction(RaverieType, Name, SplatTwoVecToVec<3, type, NamespaceAndClass::Method>, TwoParameters(this->type##3Type), this->type##3Type, FunctionOptions::Static)               \
+      ->Description = RaverieDocumentString(BuildString(UserDescription, " Performed component-wise."));                                                                                               \
+  RaverieBuilder.AddBoundFunction(RaverieType, Name, SplatTwoVecToVec<4, type, NamespaceAndClass::Method>, TwoParameters(this->type##4Type), this->type##4Type, FunctionOptions::Static)               \
       ->Description = RaverieDocumentString(BuildString(UserDescription, " Performed component-wise."));
 
-#define RaverieSplatNamedAllTwoVecToVecAs(                                                                               \
-    RaverieBuilder, RaverieType, NamespaceAndClass, type, Method, FunctionName, Param1Name, Param2Name, UserDescription)   \
-  RaverieBuilder                                                                                                         \
-      .AddBoundFunction(RaverieType,                                                                                     \
-                        FunctionName,                                                                                  \
-                        SplatTwoVecToVec<1, type, NamespaceAndClass::Method>,                                          \
-                        TwoParameters(this->type##Type, Param1Name, this->type##Type, Param2Name),                     \
-                        this->type##Type,                                                                              \
-                        FunctionOptions::Static)                                                                       \
-      ->Description = RaverieDocumentString(UserDescription);                                                            \
-  RaverieBuilder                                                                                                         \
-      .AddBoundFunction(RaverieType,                                                                                     \
-                        FunctionName,                                                                                  \
-                        SplatTwoVecToVec<2, type, NamespaceAndClass::Method>,                                          \
-                        TwoParameters(this->type##2Type, Param1Name, this->type##2Type, Param2Name),                   \
-                        this->type##2Type,                                                                             \
-                        FunctionOptions::Static)                                                                       \
-      ->Description = RaverieDocumentString(BuildString(UserDescription, " Performed component-wise."));                 \
-  RaverieBuilder                                                                                                         \
-      .AddBoundFunction(RaverieType,                                                                                     \
-                        FunctionName,                                                                                  \
-                        SplatTwoVecToVec<3, type, NamespaceAndClass::Method>,                                          \
-                        TwoParameters(this->type##3Type, Param1Name, this->type##3Type, Param2Name),                   \
-                        this->type##3Type,                                                                             \
-                        FunctionOptions::Static)                                                                       \
-      ->Description = RaverieDocumentString(BuildString(UserDescription, " Performed component-wise."));                 \
-  RaverieBuilder                                                                                                         \
-      .AddBoundFunction(RaverieType,                                                                                     \
-                        FunctionName,                                                                                  \
-                        SplatTwoVecToVec<4, type, NamespaceAndClass::Method>,                                          \
-                        TwoParameters(this->type##4Type, Param1Name, this->type##4Type, Param2Name),                   \
-                        this->type##4Type,                                                                             \
-                        FunctionOptions::Static)                                                                       \
+#define RaverieSplatNamedAllTwoVecToVecAs(RaverieBuilder, RaverieType, NamespaceAndClass, type, Method, FunctionName, Param1Name, Param2Name, UserDescription)                                         \
+  RaverieBuilder                                                                                                                                                                                       \
+      .AddBoundFunction(RaverieType,                                                                                                                                                                   \
+                        FunctionName,                                                                                                                                                                  \
+                        SplatTwoVecToVec<1, type, NamespaceAndClass::Method>,                                                                                                                          \
+                        TwoParameters(this->type##Type, Param1Name, this->type##Type, Param2Name),                                                                                                     \
+                        this->type##Type,                                                                                                                                                              \
+                        FunctionOptions::Static)                                                                                                                                                       \
+      ->Description = RaverieDocumentString(UserDescription);                                                                                                                                          \
+  RaverieBuilder                                                                                                                                                                                       \
+      .AddBoundFunction(RaverieType,                                                                                                                                                                   \
+                        FunctionName,                                                                                                                                                                  \
+                        SplatTwoVecToVec<2, type, NamespaceAndClass::Method>,                                                                                                                          \
+                        TwoParameters(this->type##2Type, Param1Name, this->type##2Type, Param2Name),                                                                                                   \
+                        this->type##2Type,                                                                                                                                                             \
+                        FunctionOptions::Static)                                                                                                                                                       \
+      ->Description = RaverieDocumentString(BuildString(UserDescription, " Performed component-wise."));                                                                                               \
+  RaverieBuilder                                                                                                                                                                                       \
+      .AddBoundFunction(RaverieType,                                                                                                                                                                   \
+                        FunctionName,                                                                                                                                                                  \
+                        SplatTwoVecToVec<3, type, NamespaceAndClass::Method>,                                                                                                                          \
+                        TwoParameters(this->type##3Type, Param1Name, this->type##3Type, Param2Name),                                                                                                   \
+                        this->type##3Type,                                                                                                                                                             \
+                        FunctionOptions::Static)                                                                                                                                                       \
+      ->Description = RaverieDocumentString(BuildString(UserDescription, " Performed component-wise."));                                                                                               \
+  RaverieBuilder                                                                                                                                                                                       \
+      .AddBoundFunction(RaverieType,                                                                                                                                                                   \
+                        FunctionName,                                                                                                                                                                  \
+                        SplatTwoVecToVec<4, type, NamespaceAndClass::Method>,                                                                                                                          \
+                        TwoParameters(this->type##4Type, Param1Name, this->type##4Type, Param2Name),                                                                                                   \
+                        this->type##4Type,                                                                                                                                                             \
+                        FunctionOptions::Static)                                                                                                                                                       \
       ->Description = RaverieDocumentString(BuildString(UserDescription, " Performed component-wise."));
 
-#define RaverieSplatAllThreeVecToVecAs(                                                                                  \
-    RaverieBuilder, RaverieType, NamespaceAndClass, type, Method, Name, p1, p2, p3, UserDescription)                       \
-  RaverieBuilder                                                                                                         \
-      .AddBoundFunction(RaverieType,                                                                                     \
-                        Name,                                                                                          \
-                        SplatThreeVecToVec<1, type, NamespaceAndClass::Method>,                                        \
-                        ThreeParameters(this->type##Type, p1, this->type##Type, p2, this->type##Type, p3),             \
-                        this->type##Type,                                                                              \
-                        FunctionOptions::Static)                                                                       \
-      ->Description = RaverieDocumentString(UserDescription);                                                            \
-  RaverieBuilder                                                                                                         \
-      .AddBoundFunction(RaverieType,                                                                                     \
-                        Name,                                                                                          \
-                        SplatThreeVecToVec<2, type, NamespaceAndClass::Method>,                                        \
-                        ThreeParameters(this->type##2Type, p1, this->type##2Type, p2, this->type##2Type, p3),          \
-                        this->type##2Type,                                                                             \
-                        FunctionOptions::Static)                                                                       \
-      ->Description = RaverieDocumentString(BuildString(UserDescription, " Performed component-wise."));                 \
-  RaverieBuilder                                                                                                         \
-      .AddBoundFunction(RaverieType,                                                                                     \
-                        Name,                                                                                          \
-                        SplatThreeVecToVec<3, type, NamespaceAndClass::Method>,                                        \
-                        ThreeParameters(this->type##3Type, p1, this->type##3Type, p2, this->type##3Type, p3),          \
-                        this->type##3Type,                                                                             \
-                        FunctionOptions::Static)                                                                       \
-      ->Description = RaverieDocumentString(BuildString(UserDescription, " Performed component-wise."));                 \
-  RaverieBuilder                                                                                                         \
-      .AddBoundFunction(RaverieType,                                                                                     \
-                        Name,                                                                                          \
-                        SplatThreeVecToVec<4, type, NamespaceAndClass::Method>,                                        \
-                        ThreeParameters(this->type##4Type, p1, this->type##4Type, p2, this->type##4Type, p3),          \
-                        this->type##4Type,                                                                             \
-                        FunctionOptions::Static)                                                                       \
+#define RaverieSplatAllThreeVecToVecAs(RaverieBuilder, RaverieType, NamespaceAndClass, type, Method, Name, p1, p2, p3, UserDescription)                                                                \
+  RaverieBuilder                                                                                                                                                                                       \
+      .AddBoundFunction(RaverieType,                                                                                                                                                                   \
+                        Name,                                                                                                                                                                          \
+                        SplatThreeVecToVec<1, type, NamespaceAndClass::Method>,                                                                                                                        \
+                        ThreeParameters(this->type##Type, p1, this->type##Type, p2, this->type##Type, p3),                                                                                             \
+                        this->type##Type,                                                                                                                                                              \
+                        FunctionOptions::Static)                                                                                                                                                       \
+      ->Description = RaverieDocumentString(UserDescription);                                                                                                                                          \
+  RaverieBuilder                                                                                                                                                                                       \
+      .AddBoundFunction(RaverieType,                                                                                                                                                                   \
+                        Name,                                                                                                                                                                          \
+                        SplatThreeVecToVec<2, type, NamespaceAndClass::Method>,                                                                                                                        \
+                        ThreeParameters(this->type##2Type, p1, this->type##2Type, p2, this->type##2Type, p3),                                                                                          \
+                        this->type##2Type,                                                                                                                                                             \
+                        FunctionOptions::Static)                                                                                                                                                       \
+      ->Description = RaverieDocumentString(BuildString(UserDescription, " Performed component-wise."));                                                                                               \
+  RaverieBuilder                                                                                                                                                                                       \
+      .AddBoundFunction(RaverieType,                                                                                                                                                                   \
+                        Name,                                                                                                                                                                          \
+                        SplatThreeVecToVec<3, type, NamespaceAndClass::Method>,                                                                                                                        \
+                        ThreeParameters(this->type##3Type, p1, this->type##3Type, p2, this->type##3Type, p3),                                                                                          \
+                        this->type##3Type,                                                                                                                                                             \
+                        FunctionOptions::Static)                                                                                                                                                       \
+      ->Description = RaverieDocumentString(BuildString(UserDescription, " Performed component-wise."));                                                                                               \
+  RaverieBuilder                                                                                                                                                                                       \
+      .AddBoundFunction(RaverieType,                                                                                                                                                                   \
+                        Name,                                                                                                                                                                          \
+                        SplatThreeVecToVec<4, type, NamespaceAndClass::Method>,                                                                                                                        \
+                        ThreeParameters(this->type##4Type, p1, this->type##4Type, p2, this->type##4Type, p3),                                                                                          \
+                        this->type##4Type,                                                                                                                                                             \
+                        FunctionOptions::Static)                                                                                                                                                       \
       ->Description = RaverieDocumentString(BuildString(UserDescription, " Performed component-wise."));
 
-#define RaverieSplatAllTwoVecAndRealToVecAs(                                                                             \
-    RaverieBuilder, RaverieType, NamespaceAndClass, type, Method, Name, p1, p2, p3, UserDescription)                       \
-  RaverieBuilder                                                                                                         \
-      .AddBoundFunction(RaverieType,                                                                                     \
-                        Name,                                                                                          \
-                        SplatTwoVecAndRealToVec<1, type, NamespaceAndClass::Method>,                                   \
-                        ThreeParameters(this->type##Type, p1, this->type##Type, p2, this->type##Type, p3),             \
-                        this->type##Type,                                                                              \
-                        FunctionOptions::Static)                                                                       \
-      ->Description = RaverieDocumentString(UserDescription);                                                            \
-  RaverieBuilder                                                                                                         \
-      .AddBoundFunction(RaverieType,                                                                                     \
-                        Name,                                                                                          \
-                        SplatTwoVecAndRealToVec<2, type, NamespaceAndClass::Method>,                                   \
-                        ThreeParameters(this->type##2Type, p1, this->type##2Type, p2, this->type##Type, p3),           \
-                        this->type##2Type,                                                                             \
-                        FunctionOptions::Static)                                                                       \
-      ->Description = RaverieDocumentString(BuildString(UserDescription, " Performed component-wise."));                 \
-  RaverieBuilder                                                                                                         \
-      .AddBoundFunction(RaverieType,                                                                                     \
-                        Name,                                                                                          \
-                        SplatTwoVecAndRealToVec<3, type, NamespaceAndClass::Method>,                                   \
-                        ThreeParameters(this->type##3Type, p1, this->type##3Type, p2, this->type##Type, p3),           \
-                        this->type##3Type,                                                                             \
-                        FunctionOptions::Static)                                                                       \
-      ->Description = RaverieDocumentString(BuildString(UserDescription, " Performed component-wise."));                 \
-  RaverieBuilder                                                                                                         \
-      .AddBoundFunction(RaverieType,                                                                                     \
-                        Name,                                                                                          \
-                        SplatTwoVecAndRealToVec<4, type, NamespaceAndClass::Method>,                                   \
-                        ThreeParameters(this->type##4Type, p1, this->type##4Type, p2, this->type##Type, p3),           \
-                        this->type##4Type,                                                                             \
-                        FunctionOptions::Static)                                                                       \
+#define RaverieSplatAllTwoVecAndRealToVecAs(RaverieBuilder, RaverieType, NamespaceAndClass, type, Method, Name, p1, p2, p3, UserDescription)                                                           \
+  RaverieBuilder                                                                                                                                                                                       \
+      .AddBoundFunction(RaverieType,                                                                                                                                                                   \
+                        Name,                                                                                                                                                                          \
+                        SplatTwoVecAndRealToVec<1, type, NamespaceAndClass::Method>,                                                                                                                   \
+                        ThreeParameters(this->type##Type, p1, this->type##Type, p2, this->type##Type, p3),                                                                                             \
+                        this->type##Type,                                                                                                                                                              \
+                        FunctionOptions::Static)                                                                                                                                                       \
+      ->Description = RaverieDocumentString(UserDescription);                                                                                                                                          \
+  RaverieBuilder                                                                                                                                                                                       \
+      .AddBoundFunction(RaverieType,                                                                                                                                                                   \
+                        Name,                                                                                                                                                                          \
+                        SplatTwoVecAndRealToVec<2, type, NamespaceAndClass::Method>,                                                                                                                   \
+                        ThreeParameters(this->type##2Type, p1, this->type##2Type, p2, this->type##Type, p3),                                                                                           \
+                        this->type##2Type,                                                                                                                                                             \
+                        FunctionOptions::Static)                                                                                                                                                       \
+      ->Description = RaverieDocumentString(BuildString(UserDescription, " Performed component-wise."));                                                                                               \
+  RaverieBuilder                                                                                                                                                                                       \
+      .AddBoundFunction(RaverieType,                                                                                                                                                                   \
+                        Name,                                                                                                                                                                          \
+                        SplatTwoVecAndRealToVec<3, type, NamespaceAndClass::Method>,                                                                                                                   \
+                        ThreeParameters(this->type##3Type, p1, this->type##3Type, p2, this->type##Type, p3),                                                                                           \
+                        this->type##3Type,                                                                                                                                                             \
+                        FunctionOptions::Static)                                                                                                                                                       \
+      ->Description = RaverieDocumentString(BuildString(UserDescription, " Performed component-wise."));                                                                                               \
+  RaverieBuilder                                                                                                                                                                                       \
+      .AddBoundFunction(RaverieType,                                                                                                                                                                   \
+                        Name,                                                                                                                                                                          \
+                        SplatTwoVecAndRealToVec<4, type, NamespaceAndClass::Method>,                                                                                                                   \
+                        ThreeParameters(this->type##4Type, p1, this->type##4Type, p2, this->type##Type, p3),                                                                                           \
+                        this->type##4Type,                                                                                                                                                             \
+                        FunctionOptions::Static)                                                                                                                                                       \
       ->Description = RaverieDocumentString(BuildString(UserDescription, " Performed component-wise."));
 
 // Splat a zero parameter function across a vector/matrix.
@@ -2972,11 +2766,7 @@ void FullNoParameterSplatAs(Call& call, ExceptionReport& report)
 }
 
 // Splat a one parameter function across a vector/matrix.
-template <typename ScalarType0,
-          typename ResultType,
-          size_t ScalarType0Offset,
-          typename FunctionPointer,
-          FunctionPointer Fn>
+template <typename ScalarType0, typename ResultType, size_t ScalarType0Offset, typename FunctionPointer, FunctionPointer Fn>
 void FullOneParameterSplat(Call& call, ExceptionReport& report)
 {
   size_t size = (size_t)call.GetFunction()->UserData;
@@ -3000,11 +2790,7 @@ void FullOneParameterSplat(Call& call, ExceptionReport& report)
 
 // This version of one parameter splatting allows the user to specify an
 // overloaded function (by providing the types manually)
-template <typename ScalarType0,
-          typename ResultType,
-          typename FnScalarType0,
-          size_t ScalarType0Offset,
-          ResultType (*Function)(FnScalarType0)>
+template <typename ScalarType0, typename ResultType, typename FnScalarType0, size_t ScalarType0Offset, ResultType (*Function)(FnScalarType0)>
 void FullOneParameterSplatAs(Call& call, ExceptionReport& report)
 {
   FullOneParameterSplat<ScalarType0, ResultType, ScalarType0Offset, decltype(Function), Function>(call, report);
@@ -3016,13 +2802,7 @@ void FullOneParameterSplatAs(Call& call, ExceptionReport& report)
 // Real3) while scalarOffset of <1, 0> are used to splat Real3 Ceil(Real3,
 // Real).
 
-template <typename ScalarType0,
-          typename ScalarType1,
-          typename ResultType,
-          size_t ScalarType0Offset,
-          size_t ScalarType1Offset,
-          typename FunctionPointer,
-          FunctionPointer Fn>
+template <typename ScalarType0, typename ScalarType1, typename ResultType, size_t ScalarType0Offset, size_t ScalarType1Offset, typename FunctionPointer, FunctionPointer Fn>
 void FullTwoParameterSplat(Call& call, ExceptionReport& report)
 {
   size_t size = (size_t)call.GetFunction()->UserData;
@@ -3057,13 +2837,7 @@ template <typename ScalarType0,
           ResultType (*Function)(ScalarType0, ScalarType1)>
 void FullTwoParameterSplatAs(Call& call, ExceptionReport& report)
 {
-  FullTwoParameterSplat<ScalarType0,
-                        ScalarType1,
-                        ResultType,
-                        ScalarType0Offset,
-                        ScalarType1Offset,
-                        decltype(Function),
-                        Function>(call, report);
+  FullTwoParameterSplat<ScalarType0, ScalarType1, ResultType, ScalarType0Offset, ScalarType1Offset, decltype(Function), Function>(call, report);
 }
 
 // Splats a function of the type Result Fn(Scalar0, Scalar1, Scalar2).
@@ -3120,15 +2894,7 @@ template <typename ScalarType0,
           ResultType (*Function)(FnScalarType0, FnScalarType1, FnScalarType2)>
 void FullThreeParameterSplatAs(Call& call, ExceptionReport& report)
 {
-  FullThreeParameterSplat<ScalarType0,
-                          ScalarType1,
-                          ScalarType2,
-                          ResultType,
-                          ScalarType0Offset,
-                          ScalarType1Offset,
-                          ScalarType2Offset,
-                          decltype(Function),
-                          Function>(call, report);
+  FullThreeParameterSplat<ScalarType0, ScalarType1, ScalarType2, ResultType, ScalarType0Offset, ScalarType1Offset, ScalarType2Offset, decltype(Function), Function>(call, report);
 }
 
 // User data for splatting a function with a custom error message.
@@ -3136,10 +2902,7 @@ void FullThreeParameterSplatAs(Call& call, ExceptionReport& report)
 class SplatWithErrorUserData
 {
 public:
-  SplatWithErrorUserData(size_t size, cstr errorFormat, BoundType* boundType) :
-      Size(size),
-      ErrorFormat(errorFormat),
-      Type(boundType)
+  SplatWithErrorUserData(size_t size, cstr errorFormat, BoundType* boundType) : Size(size), ErrorFormat(errorFormat), Type(boundType)
   {
   }
 
@@ -3236,12 +2999,7 @@ void SimpleSplatWithError(Call& call, ExceptionReport& report)
 // Vec(n) Fn(Vec(n)). The function being splatted is a Scalar Fn(Scalar)
 // function that has been altered to return if it failed so an exception
 // can be thrown.
-template <typename ScalarType0,
-          typename ScalarType1,
-          typename ResultType,
-          size_t ScalarType0Offset,
-          size_t ScalarType1Offset,
-          bool (*Function)(ScalarType0, ScalarType1, ResultType&)>
+template <typename ScalarType0, typename ScalarType1, typename ResultType, size_t ScalarType0Offset, size_t ScalarType1Offset, bool (*Function)(ScalarType0, ScalarType1, ResultType&)>
 void FullTwoParameterSplatWithError(Call& call, ExceptionReport& report)
 {
   SplatWithErrorUserData& userData = call.GetFunction()->ComplexUserData.ReadObject<SplatWithErrorUserData>(0);
@@ -3276,117 +3034,66 @@ void FullTwoParameterSplatWithError(Call& call, ExceptionReport& report)
   }
 }
 
-#define RaverieSetUserDataAndDescription(function, boundType, scalarBoundType, docString)                                \
-  f->UserData = (void*)(boundType->Size / scalarBoundType->Size);                                                      \
-  if (boundType == scalarBoundType)                                                                                    \
-    f->Description = RaverieDocumentString(docString);                                                                   \
-  else                                                                                                                 \
+#define RaverieSetUserDataAndDescription(function, boundType, scalarBoundType, docString)                                                                                                              \
+  f->UserData = (void*)(boundType->Size / scalarBoundType->Size);                                                                                                                                      \
+  if (boundType == scalarBoundType)                                                                                                                                                                    \
+    f->Description = RaverieDocumentString(docString);                                                                                                                                                 \
+  else                                                                                                                                                                                                 \
     f->Description = RaverieDocumentString(BuildString(docString, " Performed component-wise."));
 
-#define RaverieComplexOneParameterSplatBinder(scalarType0, returnType, offset0, function)                                \
-  FullOneParameterSplatAs<scalarType0, returnType, scalarType0, offset0, function>
+#define RaverieComplexOneParameterSplatBinder(scalarType0, returnType, offset0, function) FullOneParameterSplatAs<scalarType0, returnType, scalarType0, offset0, function>
 
-#define RaverieBindBasicSplat(                                                                                           \
-    builder, owner, scalarType, scalarBoundType, functionName, function, boundType, parameters, docString)             \
-  {                                                                                                                    \
-    Raverie::BoundFn boundFn = RaverieComplexOneParameterSplatBinder(scalarType, scalarType, 1, function);                 \
-    Function* f =                                                                                                      \
-        builder.AddBoundFunction(owner, functionName, boundFn, parameters, boundType, FunctionOptions::Static);        \
-    RaverieSetUserDataAndDescription(f, boundType, scalarBoundType, docString);                                          \
+#define RaverieBindBasicSplat(builder, owner, scalarType, scalarBoundType, functionName, function, boundType, parameters, docString)                                                                   \
+  {                                                                                                                                                                                                    \
+    Raverie::BoundFn boundFn = RaverieComplexOneParameterSplatBinder(scalarType, scalarType, 1, function);                                                                                             \
+    Function* f = builder.AddBoundFunction(owner, functionName, boundFn, parameters, boundType, FunctionOptions::Static);                                                                              \
+    RaverieSetUserDataAndDescription(f, boundType, scalarBoundType, docString);                                                                                                                        \
   }
 
-#define RaverieBindBasicSplatWithError(builder,                                                                          \
-                                     owner,                                                                            \
-                                     scalarType,                                                                       \
-                                     scalarBoundType,                                                                  \
-                                     functionName,                                                                     \
-                                     function,                                                                         \
-                                     boundType,                                                                        \
-                                     parameters,                                                                       \
-                                     docString,                                                                        \
-                                     errorFormat)                                                                      \
-  {                                                                                                                    \
-    Function* f = builder.AddBoundFunction(owner,                                                                      \
-                                           functionName,                                                               \
-                                           SimpleSplatWithError<scalarType, function>,                                 \
-                                           parameters,                                                                 \
-                                           boundType,                                                                  \
-                                           FunctionOptions::Static);                                                   \
-    SplatWithErrorUserData userData(boundType->Size / scalarBoundType->Size, errorFormat, boundType);                  \
-    f->ComplexUserData.WriteObject(userData);                                                                          \
-    if (boundType == scalarBoundType)                                                                                  \
-      f->Description = RaverieDocumentString(docString);                                                                 \
-    else                                                                                                               \
-      f->Description = RaverieDocumentString(BuildString(docString, " Performed component-wise."));                      \
+#define RaverieBindBasicSplatWithError(builder, owner, scalarType, scalarBoundType, functionName, function, boundType, parameters, docString, errorFormat)                                             \
+  {                                                                                                                                                                                                    \
+    Function* f = builder.AddBoundFunction(owner, functionName, SimpleSplatWithError<scalarType, function>, parameters, boundType, FunctionOptions::Static);                                           \
+    SplatWithErrorUserData userData(boundType->Size / scalarBoundType->Size, errorFormat, boundType);                                                                                                  \
+    f->ComplexUserData.WriteObject(userData);                                                                                                                                                          \
+    if (boundType == scalarBoundType)                                                                                                                                                                  \
+      f->Description = RaverieDocumentString(docString);                                                                                                                                               \
+    else                                                                                                                                                                                               \
+      f->Description = RaverieDocumentString(BuildString(docString, " Performed component-wise."));                                                                                                    \
   }
 
-#define RaverieComplexTwoParameterSplatBinder(scalarType0, scalarType1, returnType, offset0, offset1, function)          \
+#define RaverieComplexTwoParameterSplatBinder(scalarType0, scalarType1, returnType, offset0, offset1, function)                                                                                        \
   FullTwoParameterSplatAs<scalarType0, scalarType1, returnType, scalarType0, scalarType1, offset0, offset1, function>
 
-#define RaverieBindBasicTwoParamSplat(                                                                                   \
-    builder, owner, scalarType, scalarBoundType, functionName, function, boundType, parameters, docString)             \
-  {                                                                                                                    \
-    Raverie::BoundFn boundFn = RaverieComplexTwoParameterSplatBinder(scalarType, scalarType, scalarType, 1, 1, function);  \
-    Function* f =                                                                                                      \
-        builder.AddBoundFunction(owner, functionName, boundFn, parameters, boundType, FunctionOptions::Static);        \
-    RaverieSetUserDataAndDescription(f, boundType, scalarBoundType, docString);                                          \
+#define RaverieBindBasicTwoParamSplat(builder, owner, scalarType, scalarBoundType, functionName, function, boundType, parameters, docString)                                                           \
+  {                                                                                                                                                                                                    \
+    Raverie::BoundFn boundFn = RaverieComplexTwoParameterSplatBinder(scalarType, scalarType, scalarType, 1, 1, function);                                                                              \
+    Function* f = builder.AddBoundFunction(owner, functionName, boundFn, parameters, boundType, FunctionOptions::Static);                                                                              \
+    RaverieSetUserDataAndDescription(f, boundType, scalarBoundType, docString);                                                                                                                        \
   }
 
-#define RaverieBindBasicTwoParamSplatWithError(builder,                                                                  \
-                                             owner,                                                                    \
-                                             scalarType,                                                               \
-                                             scalarBoundType,                                                          \
-                                             functionName,                                                             \
-                                             function,                                                                 \
-                                             boundType,                                                                \
-                                             parameters,                                                               \
-                                             docString,                                                                \
-                                             errorFormat)                                                              \
-  {                                                                                                                    \
-    Raverie::BoundFn boundFn = FullTwoParameterSplatWithError<scalarType, scalarType, scalarType, 1, 1, function>;       \
-    Function* f =                                                                                                      \
-        builder.AddBoundFunction(owner, functionName, boundFn, parameters, boundType, FunctionOptions::Static);        \
-    SplatWithErrorUserData userData(boundType->Size / scalarBoundType->Size, errorFormat, boundType);                  \
-    f->ComplexUserData.WriteObject(userData);                                                                          \
-    if (boundType == scalarBoundType)                                                                                  \
-      f->Description = RaverieDocumentString(docString);                                                                 \
-    else                                                                                                               \
-      f->Description = RaverieDocumentString(BuildString(docString, " Performed component-wise."));                      \
+#define RaverieBindBasicTwoParamSplatWithError(builder, owner, scalarType, scalarBoundType, functionName, function, boundType, parameters, docString, errorFormat)                                     \
+  {                                                                                                                                                                                                    \
+    Raverie::BoundFn boundFn = FullTwoParameterSplatWithError<scalarType, scalarType, scalarType, 1, 1, function>;                                                                                     \
+    Function* f = builder.AddBoundFunction(owner, functionName, boundFn, parameters, boundType, FunctionOptions::Static);                                                                              \
+    SplatWithErrorUserData userData(boundType->Size / scalarBoundType->Size, errorFormat, boundType);                                                                                                  \
+    f->ComplexUserData.WriteObject(userData);                                                                                                                                                          \
+    if (boundType == scalarBoundType)                                                                                                                                                                  \
+      f->Description = RaverieDocumentString(docString);                                                                                                                                               \
+    else                                                                                                                                                                                               \
+      f->Description = RaverieDocumentString(BuildString(docString, " Performed component-wise."));                                                                                                    \
   }
 
-#define RaverieFullThreeParameterSplatBinder(Type0, Type1, Type2, ReturnType, Offset0, Offset1, Offset2, BoundFunction)  \
-  FullThreeParameterSplat<Type0,                                                                                       \
-                          Type1,                                                                                       \
-                          Type2,                                                                                       \
-                          ReturnType,                                                                                  \
-                          Offset0,                                                                                     \
-                          Offset1,                                                                                     \
-                          Offset2,                                                                                     \
-                          decltype(BoundFunction),                                                                     \
-                          BoundFunction>
+#define RaverieFullThreeParameterSplatBinder(Type0, Type1, Type2, ReturnType, Offset0, Offset1, Offset2, BoundFunction)                                                                                \
+  FullThreeParameterSplat<Type0, Type1, Type2, ReturnType, Offset0, Offset1, Offset2, decltype(BoundFunction), BoundFunction>
 
-#define RaverieComplexThreeParameterSplatBinder(                                                                         \
-    scalarType0, scalarType1, scalarType2, returnType, offset0, offset1, offset2, function)                            \
-  FullThreeParameterSplatAs<scalarType0,                                                                               \
-                            scalarType1,                                                                               \
-                            scalarType2,                                                                               \
-                            returnType,                                                                                \
-                            scalarType0,                                                                               \
-                            scalarType1,                                                                               \
-                            scalarType2,                                                                               \
-                            offset0,                                                                                   \
-                            offset1,                                                                                   \
-                            offset2,                                                                                   \
-                            function>
+#define RaverieComplexThreeParameterSplatBinder(scalarType0, scalarType1, scalarType2, returnType, offset0, offset1, offset2, function)                                                                \
+  FullThreeParameterSplatAs<scalarType0, scalarType1, scalarType2, returnType, scalarType0, scalarType1, scalarType2, offset0, offset1, offset2, function>
 
-#define RaverieBindBasicThreeParamSplat(                                                                                 \
-    builder, owner, scalarType, scalarBoundType, functionName, function, boundType, parameters, docString)             \
-  {                                                                                                                    \
-    Raverie::BoundFn boundFn =                                                                                           \
-        RaverieComplexThreeParameterSplatBinder(scalarType, scalarType, scalarType, scalarType, 1, 1, 1, function);      \
-    Function* f =                                                                                                      \
-        builder.AddBoundFunction(owner, functionName, boundFn, parameters, boundType, FunctionOptions::Static);        \
-    RaverieSetUserDataAndDescription(f, boundType, scalarBoundType, docString);                                          \
+#define RaverieBindBasicThreeParamSplat(builder, owner, scalarType, scalarBoundType, functionName, function, boundType, parameters, docString)                                                         \
+  {                                                                                                                                                                                                    \
+    Raverie::BoundFn boundFn = RaverieComplexThreeParameterSplatBinder(scalarType, scalarType, scalarType, scalarType, 1, 1, 1, function);                                                             \
+    Function* f = builder.AddBoundFunction(owner, functionName, boundFn, parameters, boundType, FunctionOptions::Static);                                                                              \
+    RaverieSetUserDataAndDescription(f, boundType, scalarBoundType, docString);                                                                                                                        \
   }
 
 void Core::SetupBindingString(LibraryBuilder& builder)
@@ -3420,240 +3127,94 @@ void Core::SetupBindingString(LibraryBuilder& builder)
   stringType->CopyMode = TypeCopyMode::ReferenceType;
   stringType->HandleManager = RaverieManagerId(StringManager);
   // Old functions that should eventually be removed
-  builder.AddBoundFunction(stringType,
-                           "SubString",
-                           SubString,
-                           TwoParameters(runeIteratorType, "start", "end"),
-                           stringType,
-                           FunctionOptions::None);
-  builder
-      .AddBoundFunction(stringType,
-                        "SubStringFromRuneIndices",
-                        SubStringFromRuneIndices,
-                        TwoParameters(integerType, "startIndex", "endIndex"),
-                        stringType,
-                        FunctionOptions::None)
-      ->Description = RaverieDocumentString("Creates a substring from start and end indices. WARNING: this may be "
-                                          "slow as finding an index for a UTF8 string requires a linear search.");
-  builder
-      .AddBoundFunction(stringType,
-                        Raverie::OperatorGet,
-                        StringGetRune,
-                        OneParameter(integerType, "index"),
-                        RaverieTypeId(ScriptRune),
-                        FunctionOptions::None)
-      ->Description = RaverieDocumentString("String operator Get is deprecated. To iterate through a String use a "
-                                          "StringRange (.All) or StringIterator (.Begin).");
-  builder
-      .AddBoundFunction(stringType,
-                        "SubStringBytes",
-                        SubStringBytes,
-                        TwoParameters(integerType, "startByteIndex", "lengthInBytes"),
-                        stringRangeType,
-                        FunctionOptions::None)
-      ->Description = RaverieDocumentString("Constructs a substring based upon a number of bytes. WARNING: strings "
-                                          "are UTF8 so indexing by bytes could produce unexpected results on "
-                                          "non-ascii strings.");
-  builder
-      .AddBoundFunction(stringType,
-                        "RuneIteratorFromByteIndex",
-                        StringRuneIteratorFromByteIndex,
-                        OneParameter(integerType, "byteIndex"),
-                        runeIteratorType,
-                        FunctionOptions::None)
-      ->Description = RaverieDocumentString("Finds the iterator from a byte index. WARNING: Strings are UTF8 and "
-                                          "constructing an iterator from bytes indices can make an iterator in the "
-                                          "middle of a rune.");
-  builder
-      .AddBoundFunction(stringType,
-                        "RuneIteratorFromRuneIndex",
-                        StringRuneIteratorFromRuneIndex,
-                        OneParameter(integerType, "runeIndex"),
-                        runeIteratorType,
-                        FunctionOptions::None)
-      ->Description = RaverieDocumentString("Finds the iterator from a rune index. WARNING: this may be slow as "
-                                          "finding an iterator from rune index requires a linear search.");
-  builder.AddBoundGetterSetter(stringType, "Empty", booleanType, nullptr, StringEmpty, FunctionOptions::None)
-      ->Description = RaverieDocumentString("Returns true if the string is emtpy.");
-  builder.AddBoundGetterSetter(stringType, "IsNotEmpty", booleanType, nullptr, StringIsNotEmpty, FunctionOptions::None)
-      ->Description = RaverieDocumentString("Returns true if the string is not empty.");
-  builder.AddBoundGetterSetter(stringType, "Begin", runeIteratorType, nullptr, StringBegin, FunctionOptions::None)
-      ->Description = RaverieDocumentString("Returns the RuneIterator at the start of this string.");
-  builder.AddBoundGetterSetter(stringType, "End", runeIteratorType, nullptr, StringEnd, FunctionOptions::None)
-      ->Description = RaverieDocumentString("Returns the RuneIterator at the end (one past the "
-                                          "last Rune) of this string.");
-  builder.AddBoundGetterSetter(stringType, "All", stringRangeType, nullptr, StringAll, FunctionOptions::None)
-      ->Description = RaverieDocumentString("Converts the string into a string range.");
-  builder.AddBoundGetterSetter(stringType, "ByteCount", integerType, nullptr, StringByteCount, MemberOptions::None)
-      ->Description = RaverieDocumentString("Returns the number of bytes in the string.");
-  builder.AddBoundGetterSetter(stringType, "Count", integerType, nullptr, StringCountLegacy, MemberOptions::None)
-      ->Description = RaverieDocumentString("Returns the number of bytes in the string.");
-  builder
-      .AddBoundFunction(
-          stringType, "ComputeRuneCount", StringComputeRuneCount, ParameterArray(), integerType, FunctionOptions::None)
-      ->Description = RaverieDocumentString("Compute the number of runes in the string.");
-  builder
-      .AddBoundFunction(
-          stringType, "Concatenate", StringConcatenate, TwoParameters(stringType), stringType, FunctionOptions::Static)
-      ->Description = RaverieDocumentString("Combines the two strings into a new string.");
-  builder
-      .AddBoundFunction(stringType,
-                        "Concatenate",
-                        StringRangeConcatenate,
-                        TwoParameters(stringRangeType),
-                        stringType,
-                        FunctionOptions::Static)
-      ->Description = RaverieDocumentString("Combines the two string ranges into a new string.");
-  builder
-      .AddBoundFunction(
-          stringType, "FromRune", StringFromRuneValue, OneParameter(integerType), stringType, FunctionOptions::Static)
-      ->Description = RaverieDocumentString("Constructs a string from the utf-8 code point of a rune.");
-  builder
-      .AddBoundFunction(
-          stringType, "FromRune", StringFromRune, OneParameter(runeType), stringType, FunctionOptions::Static)
-      ->Description = RaverieDocumentString("Constructs a string from a rune.");
-  builder
-      .AddBoundFunction(
-          stringType, "Contains", StringContains, OneParameter(stringRangeType), booleanType, FunctionOptions::None)
-      ->Description = RaverieDocumentString("Returns if the string Contains the specified substring.");
-  builder
-      .AddBoundFunction(stringType,
-                        "Compare",
-                        StringCompare,
-                        TwoParameters(stringType, "left", "right"),
-                        integerType,
-                        FunctionOptions::Static)
-      ->Description = RaverieDocumentString("Compares the two strings and returns an integer to "
-                                          "denote their relative sort order.");
-  builder
-      .AddBoundFunction(stringRangeType,
-                        "Compare",
-                        StringRangeCompare,
-                        TwoParameters(stringRangeType, "left", "right"),
-                        integerType,
-                        FunctionOptions::Static)
-      ->Description = RaverieDocumentString("Compares the two string ranges and returns an "
-                                          "integer to denote their relative sort order.");
-  builder
-      .AddBoundFunction(
-          stringType, "CompareTo", StringCompareTo, OneParameter(stringRangeType), integerType, FunctionOptions::None)
-      ->Description = RaverieDocumentString("Compares this string to the given string and returns an integer to "
-                                          "denote their relative sort order.");
-  builder
-      .AddBoundFunction(
-          stringType, "StartsWith", StringStartsWith, OneParameter(stringRangeType), booleanType, FunctionOptions::None)
-      ->Description = RaverieDocumentString("Returns if the string starts with the specified substring.");
-  builder
-      .AddBoundFunction(
-          stringType, "EndsWith", StringEndsWith, OneParameter(stringRangeType), booleanType, FunctionOptions::None)
-      ->Description = RaverieDocumentString("Returns if the string ends with the specified substring.");
-  builder
-      .AddBoundFunction(
-          stringType, "TrimStart", StringTrimStart, ParameterArray(), stringRangeType, FunctionOptions::None)
-      ->Description = RaverieDocumentString("Trims all leading whitespace.");
-  builder
-      .AddBoundFunction(stringType, "TrimEnd", StringTrimEnd, ParameterArray(), stringRangeType, FunctionOptions::None)
-      ->Description = RaverieDocumentString("Trims all trailing whitespace.");
-  builder.AddBoundFunction(stringType, "Trim", StringTrim, ParameterArray(), stringRangeType, FunctionOptions::None)
-      ->Description = RaverieDocumentString("Trims all leading and trailing whitespace.");
-  builder.AddBoundFunction(stringType, "ToLower", StringToLower, ParameterArray(), stringType, FunctionOptions::None)
-      ->Description = RaverieDocumentString("Returns a copy of the string that has been converted to lowercase.");
-  builder.AddBoundFunction(stringType, "ToUpper", StringToUpper, ParameterArray(), stringType, FunctionOptions::None)
-      ->Description = RaverieDocumentString("Returns a copy of the string that has been converted to uppercase.");
-  builder
-      .AddBoundFunction(stringType,
-                        "Replace",
-                        StringReplace,
-                        TwoParameters(stringRangeType, "oldValue", "newValue"),
-                        stringType,
-                        FunctionOptions::None)
-      ->Description = RaverieDocumentString("Returns a new string with all occurances of a "
-                                          "substrings replaced with another substring.");
-  builder
-      .AddBoundFunction(stringType,
-                        "FindRangeInclusive",
-                        StringFindRangeInclusive,
-                        TwoParameters(stringRangeType, "startRange", "endRange"),
-                        stringRangeType,
-                        FunctionOptions::None)
-      ->Description = RaverieDocumentString("Finds the first StringRange that starts with 'startRange' and ends with "
-                                          "'endRange'. This substring includes 'startRange' and 'endRange'.");
-  builder
-      .AddBoundFunction(stringType,
-                        "FindRangeExclusive",
-                        StringFindRangeExclusive,
-                        TwoParameters(stringRangeType, "startRange", "endRange"),
-                        stringRangeType,
-                        FunctionOptions::None)
-      ->Description = RaverieDocumentString("Finds the first StringRange that starts with 'startRange' and ends with "
-                                          "'endRange'. This substring excludes 'startRange' and 'endRange'.");
-  builder
-      .AddBoundFunction(stringType,
-                        "FindFirstOf",
-                        StringFindFirstOf,
-                        OneParameter(stringRangeType),
-                        stringRangeType,
-                        FunctionOptions::None)
-      ->Description = RaverieDocumentString("Returns a StringRange that Contains the first "
-                                          "occurrence of given StringRange.");
-  builder
-      .AddBoundFunction(stringType,
-                        "FindLastOf",
-                        StringFindLastOf,
-                        OneParameter(stringRangeType),
-                        stringRangeType,
-                        FunctionOptions::None)
-      ->Description = RaverieDocumentString("Returns a StringRange that Contains the last "
-                                          "occurrence of given StringRange.");
-  builder
-      .AddBoundFunction(stringType,
-                        "Join",
-                        JoinTwoStrings,
-                        ThreeParameters(stringRangeType, "separator", "value0", "value1"),
-                        stringType,
-                        FunctionOptions::Static)
+  builder.AddBoundFunction(stringType, "SubString", SubString, TwoParameters(runeIteratorType, "start", "end"), stringType, FunctionOptions::None);
+  builder.AddBoundFunction(stringType, "SubStringFromRuneIndices", SubStringFromRuneIndices, TwoParameters(integerType, "startIndex", "endIndex"), stringType, FunctionOptions::None)->Description =
+      RaverieDocumentString("Creates a substring from start and end indices. WARNING: this may be "
+                            "slow as finding an index for a UTF8 string requires a linear search.");
+  builder.AddBoundFunction(stringType, Raverie::OperatorGet, StringGetRune, OneParameter(integerType, "index"), RaverieTypeId(ScriptRune), FunctionOptions::None)->Description =
+      RaverieDocumentString("String operator Get is deprecated. To iterate through a String use a "
+                            "StringRange (.All) or StringIterator (.Begin).");
+  builder.AddBoundFunction(stringType, "SubStringBytes", SubStringBytes, TwoParameters(integerType, "startByteIndex", "lengthInBytes"), stringRangeType, FunctionOptions::None)->Description =
+      RaverieDocumentString("Constructs a substring based upon a number of bytes. WARNING: strings "
+                            "are UTF8 so indexing by bytes could produce unexpected results on "
+                            "non-ascii strings.");
+  builder.AddBoundFunction(stringType, "RuneIteratorFromByteIndex", StringRuneIteratorFromByteIndex, OneParameter(integerType, "byteIndex"), runeIteratorType, FunctionOptions::None)->Description =
+      RaverieDocumentString("Finds the iterator from a byte index. WARNING: Strings are UTF8 and "
+                            "constructing an iterator from bytes indices can make an iterator in the "
+                            "middle of a rune.");
+  builder.AddBoundFunction(stringType, "RuneIteratorFromRuneIndex", StringRuneIteratorFromRuneIndex, OneParameter(integerType, "runeIndex"), runeIteratorType, FunctionOptions::None)->Description =
+      RaverieDocumentString("Finds the iterator from a rune index. WARNING: this may be slow as "
+                            "finding an iterator from rune index requires a linear search.");
+  builder.AddBoundGetterSetter(stringType, "Empty", booleanType, nullptr, StringEmpty, FunctionOptions::None)->Description = RaverieDocumentString("Returns true if the string is emtpy.");
+  builder.AddBoundGetterSetter(stringType, "IsNotEmpty", booleanType, nullptr, StringIsNotEmpty, FunctionOptions::None)->Description =
+      RaverieDocumentString("Returns true if the string is not empty.");
+  builder.AddBoundGetterSetter(stringType, "Begin", runeIteratorType, nullptr, StringBegin, FunctionOptions::None)->Description =
+      RaverieDocumentString("Returns the RuneIterator at the start of this string.");
+  builder.AddBoundGetterSetter(stringType, "End", runeIteratorType, nullptr, StringEnd, FunctionOptions::None)->Description = RaverieDocumentString("Returns the RuneIterator at the end (one past the "
+                                                                                                                                                    "last Rune) of this string.");
+  builder.AddBoundGetterSetter(stringType, "All", stringRangeType, nullptr, StringAll, FunctionOptions::None)->Description = RaverieDocumentString("Converts the string into a string range.");
+  builder.AddBoundGetterSetter(stringType, "ByteCount", integerType, nullptr, StringByteCount, MemberOptions::None)->Description = RaverieDocumentString("Returns the number of bytes in the string.");
+  builder.AddBoundGetterSetter(stringType, "Count", integerType, nullptr, StringCountLegacy, MemberOptions::None)->Description = RaverieDocumentString("Returns the number of bytes in the string.");
+  builder.AddBoundFunction(stringType, "ComputeRuneCount", StringComputeRuneCount, ParameterArray(), integerType, FunctionOptions::None)->Description =
+      RaverieDocumentString("Compute the number of runes in the string.");
+  builder.AddBoundFunction(stringType, "Concatenate", StringConcatenate, TwoParameters(stringType), stringType, FunctionOptions::Static)->Description =
+      RaverieDocumentString("Combines the two strings into a new string.");
+  builder.AddBoundFunction(stringType, "Concatenate", StringRangeConcatenate, TwoParameters(stringRangeType), stringType, FunctionOptions::Static)->Description =
+      RaverieDocumentString("Combines the two string ranges into a new string.");
+  builder.AddBoundFunction(stringType, "FromRune", StringFromRuneValue, OneParameter(integerType), stringType, FunctionOptions::Static)->Description =
+      RaverieDocumentString("Constructs a string from the utf-8 code point of a rune.");
+  builder.AddBoundFunction(stringType, "FromRune", StringFromRune, OneParameter(runeType), stringType, FunctionOptions::Static)->Description =
+      RaverieDocumentString("Constructs a string from a rune.");
+  builder.AddBoundFunction(stringType, "Contains", StringContains, OneParameter(stringRangeType), booleanType, FunctionOptions::None)->Description =
+      RaverieDocumentString("Returns if the string Contains the specified substring.");
+  builder.AddBoundFunction(stringType, "Compare", StringCompare, TwoParameters(stringType, "left", "right"), integerType, FunctionOptions::Static)->Description =
+      RaverieDocumentString("Compares the two strings and returns an integer to "
+                            "denote their relative sort order.");
+  builder.AddBoundFunction(stringRangeType, "Compare", StringRangeCompare, TwoParameters(stringRangeType, "left", "right"), integerType, FunctionOptions::Static)->Description =
+      RaverieDocumentString("Compares the two string ranges and returns an "
+                            "integer to denote their relative sort order.");
+  builder.AddBoundFunction(stringType, "CompareTo", StringCompareTo, OneParameter(stringRangeType), integerType, FunctionOptions::None)->Description =
+      RaverieDocumentString("Compares this string to the given string and returns an integer to "
+                            "denote their relative sort order.");
+  builder.AddBoundFunction(stringType, "StartsWith", StringStartsWith, OneParameter(stringRangeType), booleanType, FunctionOptions::None)->Description =
+      RaverieDocumentString("Returns if the string starts with the specified substring.");
+  builder.AddBoundFunction(stringType, "EndsWith", StringEndsWith, OneParameter(stringRangeType), booleanType, FunctionOptions::None)->Description =
+      RaverieDocumentString("Returns if the string ends with the specified substring.");
+  builder.AddBoundFunction(stringType, "TrimStart", StringTrimStart, ParameterArray(), stringRangeType, FunctionOptions::None)->Description = RaverieDocumentString("Trims all leading whitespace.");
+  builder.AddBoundFunction(stringType, "TrimEnd", StringTrimEnd, ParameterArray(), stringRangeType, FunctionOptions::None)->Description = RaverieDocumentString("Trims all trailing whitespace.");
+  builder.AddBoundFunction(stringType, "Trim", StringTrim, ParameterArray(), stringRangeType, FunctionOptions::None)->Description = RaverieDocumentString("Trims all leading and trailing whitespace.");
+  builder.AddBoundFunction(stringType, "ToLower", StringToLower, ParameterArray(), stringType, FunctionOptions::None)->Description =
+      RaverieDocumentString("Returns a copy of the string that has been converted to lowercase.");
+  builder.AddBoundFunction(stringType, "ToUpper", StringToUpper, ParameterArray(), stringType, FunctionOptions::None)->Description =
+      RaverieDocumentString("Returns a copy of the string that has been converted to uppercase.");
+  builder.AddBoundFunction(stringType, "Replace", StringReplace, TwoParameters(stringRangeType, "oldValue", "newValue"), stringType, FunctionOptions::None)->Description =
+      RaverieDocumentString("Returns a new string with all occurances of a "
+                            "substrings replaced with another substring.");
+  builder.AddBoundFunction(stringType, "FindRangeInclusive", StringFindRangeInclusive, TwoParameters(stringRangeType, "startRange", "endRange"), stringRangeType, FunctionOptions::None)->Description =
+      RaverieDocumentString("Finds the first StringRange that starts with 'startRange' and ends with "
+                            "'endRange'. This substring includes 'startRange' and 'endRange'.");
+  builder.AddBoundFunction(stringType, "FindRangeExclusive", StringFindRangeExclusive, TwoParameters(stringRangeType, "startRange", "endRange"), stringRangeType, FunctionOptions::None)->Description =
+      RaverieDocumentString("Finds the first StringRange that starts with 'startRange' and ends with "
+                            "'endRange'. This substring excludes 'startRange' and 'endRange'.");
+  builder.AddBoundFunction(stringType, "FindFirstOf", StringFindFirstOf, OneParameter(stringRangeType), stringRangeType, FunctionOptions::None)->Description =
+      RaverieDocumentString("Returns a StringRange that Contains the first "
+                            "occurrence of given StringRange.");
+  builder.AddBoundFunction(stringType, "FindLastOf", StringFindLastOf, OneParameter(stringRangeType), stringRangeType, FunctionOptions::None)->Description =
+      RaverieDocumentString("Returns a StringRange that Contains the last "
+                            "occurrence of given StringRange.");
+  builder.AddBoundFunction(stringType, "Join", JoinTwoStrings, ThreeParameters(stringRangeType, "separator", "value0", "value1"), stringType, FunctionOptions::Static)->Description =
+      RaverieDocumentString("Concatenates the given strings with the given separator string.");
+  builder.AddBoundFunction(stringType, "Join", JoinThreeStrings, FourParameters(stringRangeType, "separator", "value0", "value1", "value2"), stringType, FunctionOptions::Static)->Description =
+      RaverieDocumentString("Concatenates the given strings with the given separator string.");
+  builder.AddBoundFunction(stringType, "Join", JoinFourStrings, FiveParameters(stringRangeType, "separator", "value0", "value1", "value2", "value3"), stringType, FunctionOptions::Static)
       ->Description = RaverieDocumentString("Concatenates the given strings with the given separator string.");
-  builder
-      .AddBoundFunction(stringType,
-                        "Join",
-                        JoinThreeStrings,
-                        FourParameters(stringRangeType, "separator", "value0", "value1", "value2"),
-                        stringType,
-                        FunctionOptions::Static)
-      ->Description = RaverieDocumentString("Concatenates the given strings with the given separator string.");
-  builder
-      .AddBoundFunction(stringType,
-                        "Join",
-                        JoinFourStrings,
-                        FiveParameters(stringRangeType, "separator", "value0", "value1", "value2", "value3"),
-                        stringType,
-                        FunctionOptions::Static)
-      ->Description = RaverieDocumentString("Concatenates the given strings with the given separator string.");
-  builder
-      .AddBoundFunction(stringType,
-                        "Split",
-                        StringSplit,
-                        OneParameter(stringRangeType, "separator"),
-                        splitRangeType,
-                        FunctionOptions::None)
-      ->Description = RaverieDocumentString("Splits the string, according to the separator "
-                                          "string, into a range of substrings.");
-  builder
-      .AddBoundFunction(stringType,
-                        "IsNullOrEmpty",
-                        StringRangeIsNullOrEmpty,
-                        OneParameter(stringRangeType),
-                        booleanType,
-                        FunctionOptions::Static)
-      ->Description = RaverieDocumentString("Returns if the given string is null or empty.");
-  builder
-      .AddBoundFunction(stringType,
-                        "IsNullOrWhitespace",
-                        StringRangeIsNullOrWhitespace,
-                        OneParameter(stringRangeType),
-                        booleanType,
-                        FunctionOptions::Static)
-      ->Description = RaverieDocumentString("Returns if the given string is null, empty, or all whitespace.");
+  builder.AddBoundFunction(stringType, "Split", StringSplit, OneParameter(stringRangeType, "separator"), splitRangeType, FunctionOptions::None)->Description =
+      RaverieDocumentString("Splits the string, according to the separator "
+                            "string, into a range of substrings.");
+  builder.AddBoundFunction(stringType, "IsNullOrEmpty", StringRangeIsNullOrEmpty, OneParameter(stringRangeType), booleanType, FunctionOptions::Static)->Description =
+      RaverieDocumentString("Returns if the given string is null or empty.");
+  builder.AddBoundFunction(stringType, "IsNullOrWhitespace", StringRangeIsNullOrWhitespace, OneParameter(stringRangeType), booleanType, FunctionOptions::Static)->Description =
+      RaverieDocumentString("Returns if the given string is null, empty, or all whitespace.");
 
   // Bind the FormatC function which has "variadic arguments"
   ParameterArray parameters;
@@ -3664,28 +3225,24 @@ void Core::SetupBindingString(LibraryBuilder& builder)
   {
     DelegateParameter& parameter = parameters.PushBack();
     parameter.ParameterType = RaverieTypeId(Any);
-    Function* formatFunction =
-        builder.AddBoundFunction(stringType, "FormatC", StringFormatC, parameters, stringType, FunctionOptions::Static);
+    Function* formatFunction = builder.AddBoundFunction(stringType, "FormatC", StringFormatC, parameters, stringType, FunctionOptions::Static);
     formatFunction->UserData = (void*)(i + 1);
   }
 
   this->StringType = stringType;
   this->StringRangeType = stringRangeType;
-  RaverieFullBindMethod(builder, byteType, &RaverieParseByte, RaverieNoOverload, "Parse", RaverieNoNames)->Description =
-      RaverieDocumentString("Attempt to convert the given StringRange to a Byte. "
-                          "If parsing fails 0 is returned.");
-  RaverieFullBindMethod(builder, integerType, &RaverieParseInteger, RaverieNoOverload, "Parse", RaverieNoNames)->Description =
-      RaverieDocumentString("Attempt to convert the given StringRange to an "
-                          "Integer. If parsing fails 0 is returned.");
-  RaverieFullBindMethod(builder, doubleIntegerType, &RaverieParseDoubleInteger, RaverieNoOverload, "Parse", RaverieNoNames)
-      ->Description = RaverieDocumentString("Attempt to convert the given StringRange to a "
-                                          "DoubleInteger. If parsing fails 0 is returned.");
-  RaverieFullBindMethod(builder, realType, &RaverieParseReal, RaverieNoOverload, "Parse", RaverieNoNames)->Description =
-      RaverieDocumentString("Attempt to convert the given StringRange to a Real. "
-                          "If parsing fails 0 is returned.");
-  RaverieFullBindMethod(builder, doubleRealType, &RaverieParseDoubleReal, RaverieNoOverload, "Parse", RaverieNoNames)
-      ->Description = RaverieDocumentString("Attempt to convert the given StringRange to a "
-                                          "DoubleReal. If parsing fails 0 is returned.");
+  RaverieFullBindMethod(builder, byteType, &RaverieParseByte, RaverieNoOverload, "Parse", RaverieNoNames)->Description = RaverieDocumentString("Attempt to convert the given StringRange to a Byte. "
+                                                                                                                                               "If parsing fails 0 is returned.");
+  RaverieFullBindMethod(builder, integerType, &RaverieParseInteger, RaverieNoOverload, "Parse", RaverieNoNames)->Description = RaverieDocumentString("Attempt to convert the given StringRange to an "
+                                                                                                                                                     "Integer. If parsing fails 0 is returned.");
+  RaverieFullBindMethod(builder, doubleIntegerType, &RaverieParseDoubleInteger, RaverieNoOverload, "Parse", RaverieNoNames)->Description =
+      RaverieDocumentString("Attempt to convert the given StringRange to a "
+                            "DoubleInteger. If parsing fails 0 is returned.");
+  RaverieFullBindMethod(builder, realType, &RaverieParseReal, RaverieNoOverload, "Parse", RaverieNoNames)->Description = RaverieDocumentString("Attempt to convert the given StringRange to a Real. "
+                                                                                                                                               "If parsing fails 0 is returned.");
+  RaverieFullBindMethod(builder, doubleRealType, &RaverieParseDoubleReal, RaverieNoOverload, "Parse", RaverieNoNames)->Description =
+      RaverieDocumentString("Attempt to convert the given StringRange to a "
+                            "DoubleReal. If parsing fails 0 is returned.");
 
   // Bind any stringify functions
   byteType->ToStringFunction = ByteToString;
@@ -3801,199 +3358,49 @@ void Core::SetupBindingMath(LibraryBuilder& builder)
 
   // Every vector gets a count which tells you how many elements there are, for
   // generic programming
-  builder.AddBoundGetterSetter(booleanType, "Count", this->IntegerType, nullptr, VectorCount<1>, FunctionOptions::None)
-      ->IsHidden = true;
-  builder
-      .AddBoundGetterSetter(boolean2Type, "Count", this->IntegerType, nullptr, VectorCount<2>, FunctionOptions::None)
-      ->IsHidden = true;
-  builder
-      .AddBoundGetterSetter(boolean3Type, "Count", this->IntegerType, nullptr, VectorCount<3>, FunctionOptions::None)
-      ->IsHidden = true;
-  builder
-      .AddBoundGetterSetter(boolean4Type, "Count", this->IntegerType, nullptr, VectorCount<4>, FunctionOptions::None)
-      ->IsHidden = true;
-  builder.AddBoundGetterSetter(integerType, "Count", this->IntegerType, nullptr, VectorCount<1>, FunctionOptions::None)
-      ->IsHidden = true;
-  builder
-      .AddBoundGetterSetter(integer2Type, "Count", this->IntegerType, nullptr, VectorCount<2>, FunctionOptions::None)
-      ->IsHidden = true;
-  builder
-      .AddBoundGetterSetter(integer3Type, "Count", this->IntegerType, nullptr, VectorCount<3>, FunctionOptions::None)
-      ->IsHidden = true;
-  builder
-      .AddBoundGetterSetter(integer4Type, "Count", this->IntegerType, nullptr, VectorCount<4>, FunctionOptions::None)
-      ->IsHidden = true;
-  builder.AddBoundGetterSetter(realType, "Count", this->IntegerType, nullptr, VectorCount<1>, FunctionOptions::None)
-      ->IsHidden = true;
-  builder.AddBoundGetterSetter(real2Type, "Count", this->IntegerType, nullptr, VectorCount<2>, FunctionOptions::None)
-      ->IsHidden = true;
-  builder.AddBoundGetterSetter(real3Type, "Count", this->IntegerType, nullptr, VectorCount<3>, FunctionOptions::None)
-      ->IsHidden = true;
-  builder.AddBoundGetterSetter(real4Type, "Count", this->IntegerType, nullptr, VectorCount<4>, FunctionOptions::None)
-      ->IsHidden = true;
-  builder
-      .AddBoundGetterSetter(quaternionType, "Count", this->IntegerType, nullptr, VectorCount<4>, FunctionOptions::None)
-      ->IsHidden = true;
+  builder.AddBoundGetterSetter(booleanType, "Count", this->IntegerType, nullptr, VectorCount<1>, FunctionOptions::None)->IsHidden = true;
+  builder.AddBoundGetterSetter(boolean2Type, "Count", this->IntegerType, nullptr, VectorCount<2>, FunctionOptions::None)->IsHidden = true;
+  builder.AddBoundGetterSetter(boolean3Type, "Count", this->IntegerType, nullptr, VectorCount<3>, FunctionOptions::None)->IsHidden = true;
+  builder.AddBoundGetterSetter(boolean4Type, "Count", this->IntegerType, nullptr, VectorCount<4>, FunctionOptions::None)->IsHidden = true;
+  builder.AddBoundGetterSetter(integerType, "Count", this->IntegerType, nullptr, VectorCount<1>, FunctionOptions::None)->IsHidden = true;
+  builder.AddBoundGetterSetter(integer2Type, "Count", this->IntegerType, nullptr, VectorCount<2>, FunctionOptions::None)->IsHidden = true;
+  builder.AddBoundGetterSetter(integer3Type, "Count", this->IntegerType, nullptr, VectorCount<3>, FunctionOptions::None)->IsHidden = true;
+  builder.AddBoundGetterSetter(integer4Type, "Count", this->IntegerType, nullptr, VectorCount<4>, FunctionOptions::None)->IsHidden = true;
+  builder.AddBoundGetterSetter(realType, "Count", this->IntegerType, nullptr, VectorCount<1>, FunctionOptions::None)->IsHidden = true;
+  builder.AddBoundGetterSetter(real2Type, "Count", this->IntegerType, nullptr, VectorCount<2>, FunctionOptions::None)->IsHidden = true;
+  builder.AddBoundGetterSetter(real3Type, "Count", this->IntegerType, nullptr, VectorCount<3>, FunctionOptions::None)->IsHidden = true;
+  builder.AddBoundGetterSetter(real4Type, "Count", this->IntegerType, nullptr, VectorCount<4>, FunctionOptions::None)->IsHidden = true;
+  builder.AddBoundGetterSetter(quaternionType, "Count", this->IntegerType, nullptr, VectorCount<4>, FunctionOptions::None)->IsHidden = true;
 
   // Bind the get functions for vectors (indexing)
-  builder.AddBoundFunction(booleanType,
-                           OperatorGet,
-                           VectorGet<1, Boolean>,
-                           OneParameter(this->IntegerType),
-                           this->BooleanType,
-                           FunctionOptions::None);
-  builder.AddBoundFunction(boolean2Type,
-                           OperatorGet,
-                           VectorGet<2, Boolean>,
-                           OneParameter(this->IntegerType),
-                           this->BooleanType,
-                           FunctionOptions::None);
-  builder.AddBoundFunction(boolean3Type,
-                           OperatorGet,
-                           VectorGet<3, Boolean>,
-                           OneParameter(this->IntegerType),
-                           this->BooleanType,
-                           FunctionOptions::None);
-  builder.AddBoundFunction(boolean4Type,
-                           OperatorGet,
-                           VectorGet<4, Boolean>,
-                           OneParameter(this->IntegerType),
-                           this->BooleanType,
-                           FunctionOptions::None);
-  builder.AddBoundFunction(integerType,
-                           OperatorGet,
-                           VectorGet<1, Integer>,
-                           OneParameter(this->IntegerType),
-                           this->IntegerType,
-                           FunctionOptions::None);
-  builder.AddBoundFunction(integer2Type,
-                           OperatorGet,
-                           VectorGet<2, Integer>,
-                           OneParameter(this->IntegerType),
-                           this->IntegerType,
-                           FunctionOptions::None);
-  builder.AddBoundFunction(integer3Type,
-                           OperatorGet,
-                           VectorGet<3, Integer>,
-                           OneParameter(this->IntegerType),
-                           this->IntegerType,
-                           FunctionOptions::None);
-  builder.AddBoundFunction(integer4Type,
-                           OperatorGet,
-                           VectorGet<4, Integer>,
-                           OneParameter(this->IntegerType),
-                           this->IntegerType,
-                           FunctionOptions::None);
-  builder.AddBoundFunction(realType,
-                           OperatorGet,
-                           VectorGet<1, Real>,
-                           OneParameter(this->IntegerType),
-                           this->RealType,
-                           FunctionOptions::None);
-  builder.AddBoundFunction(real2Type,
-                           OperatorGet,
-                           VectorGet<2, Real>,
-                           OneParameter(this->IntegerType),
-                           this->RealType,
-                           FunctionOptions::None);
-  builder.AddBoundFunction(real3Type,
-                           OperatorGet,
-                           VectorGet<3, Real>,
-                           OneParameter(this->IntegerType),
-                           this->RealType,
-                           FunctionOptions::None);
-  builder.AddBoundFunction(real4Type,
-                           OperatorGet,
-                           VectorGet<4, Real>,
-                           OneParameter(this->IntegerType),
-                           this->RealType,
-                           FunctionOptions::None);
-  builder.AddBoundFunction(quaternionType,
-                           OperatorGet,
-                           VectorGet<4, Real>,
-                           OneParameter(this->IntegerType),
-                           this->RealType,
-                           FunctionOptions::None);
+  builder.AddBoundFunction(booleanType, OperatorGet, VectorGet<1, Boolean>, OneParameter(this->IntegerType), this->BooleanType, FunctionOptions::None);
+  builder.AddBoundFunction(boolean2Type, OperatorGet, VectorGet<2, Boolean>, OneParameter(this->IntegerType), this->BooleanType, FunctionOptions::None);
+  builder.AddBoundFunction(boolean3Type, OperatorGet, VectorGet<3, Boolean>, OneParameter(this->IntegerType), this->BooleanType, FunctionOptions::None);
+  builder.AddBoundFunction(boolean4Type, OperatorGet, VectorGet<4, Boolean>, OneParameter(this->IntegerType), this->BooleanType, FunctionOptions::None);
+  builder.AddBoundFunction(integerType, OperatorGet, VectorGet<1, Integer>, OneParameter(this->IntegerType), this->IntegerType, FunctionOptions::None);
+  builder.AddBoundFunction(integer2Type, OperatorGet, VectorGet<2, Integer>, OneParameter(this->IntegerType), this->IntegerType, FunctionOptions::None);
+  builder.AddBoundFunction(integer3Type, OperatorGet, VectorGet<3, Integer>, OneParameter(this->IntegerType), this->IntegerType, FunctionOptions::None);
+  builder.AddBoundFunction(integer4Type, OperatorGet, VectorGet<4, Integer>, OneParameter(this->IntegerType), this->IntegerType, FunctionOptions::None);
+  builder.AddBoundFunction(realType, OperatorGet, VectorGet<1, Real>, OneParameter(this->IntegerType), this->RealType, FunctionOptions::None);
+  builder.AddBoundFunction(real2Type, OperatorGet, VectorGet<2, Real>, OneParameter(this->IntegerType), this->RealType, FunctionOptions::None);
+  builder.AddBoundFunction(real3Type, OperatorGet, VectorGet<3, Real>, OneParameter(this->IntegerType), this->RealType, FunctionOptions::None);
+  builder.AddBoundFunction(real4Type, OperatorGet, VectorGet<4, Real>, OneParameter(this->IntegerType), this->RealType, FunctionOptions::None);
+  builder.AddBoundFunction(quaternionType, OperatorGet, VectorGet<4, Real>, OneParameter(this->IntegerType), this->RealType, FunctionOptions::None);
 
   // Bind the set functions for vectors (indexing)
-  builder.AddBoundFunction(booleanType,
-                           OperatorSet,
-                           VectorSet<1, Boolean>,
-                           TwoParameters(this->IntegerType, this->BooleanType),
-                           this->VoidType,
-                           FunctionOptions::None);
-  builder.AddBoundFunction(boolean2Type,
-                           OperatorSet,
-                           VectorSet<2, Boolean>,
-                           TwoParameters(this->IntegerType, this->BooleanType),
-                           this->VoidType,
-                           FunctionOptions::None);
-  builder.AddBoundFunction(boolean3Type,
-                           OperatorSet,
-                           VectorSet<3, Boolean>,
-                           TwoParameters(this->IntegerType, this->BooleanType),
-                           this->VoidType,
-                           FunctionOptions::None);
-  builder.AddBoundFunction(boolean4Type,
-                           OperatorSet,
-                           VectorSet<4, Boolean>,
-                           TwoParameters(this->IntegerType, this->BooleanType),
-                           this->VoidType,
-                           FunctionOptions::None);
-  builder.AddBoundFunction(integerType,
-                           OperatorSet,
-                           VectorSet<1, Integer>,
-                           TwoParameters(this->IntegerType, this->IntegerType),
-                           this->VoidType,
-                           FunctionOptions::None);
-  builder.AddBoundFunction(integer2Type,
-                           OperatorSet,
-                           VectorSet<2, Integer>,
-                           TwoParameters(this->IntegerType, this->IntegerType),
-                           this->VoidType,
-                           FunctionOptions::None);
-  builder.AddBoundFunction(integer3Type,
-                           OperatorSet,
-                           VectorSet<3, Integer>,
-                           TwoParameters(this->IntegerType, this->IntegerType),
-                           this->VoidType,
-                           FunctionOptions::None);
-  builder.AddBoundFunction(integer4Type,
-                           OperatorSet,
-                           VectorSet<4, Integer>,
-                           TwoParameters(this->IntegerType, this->IntegerType),
-                           this->VoidType,
-                           FunctionOptions::None);
-  builder.AddBoundFunction(realType,
-                           OperatorSet,
-                           VectorSet<1, Real>,
-                           TwoParameters(this->IntegerType, this->RealType),
-                           this->VoidType,
-                           FunctionOptions::None);
-  builder.AddBoundFunction(real2Type,
-                           OperatorSet,
-                           VectorSet<2, Real>,
-                           TwoParameters(this->IntegerType, this->RealType),
-                           this->VoidType,
-                           FunctionOptions::None);
-  builder.AddBoundFunction(real3Type,
-                           OperatorSet,
-                           VectorSet<3, Real>,
-                           TwoParameters(this->IntegerType, this->RealType),
-                           this->VoidType,
-                           FunctionOptions::None);
-  builder.AddBoundFunction(real4Type,
-                           OperatorSet,
-                           VectorSet<4, Real>,
-                           TwoParameters(this->IntegerType, this->RealType),
-                           this->VoidType,
-                           FunctionOptions::None);
-  builder.AddBoundFunction(quaternionType,
-                           OperatorSet,
-                           VectorSet<4, Real>,
-                           TwoParameters(this->IntegerType, this->RealType),
-                           this->VoidType,
-                           FunctionOptions::None);
+  builder.AddBoundFunction(booleanType, OperatorSet, VectorSet<1, Boolean>, TwoParameters(this->IntegerType, this->BooleanType), this->VoidType, FunctionOptions::None);
+  builder.AddBoundFunction(boolean2Type, OperatorSet, VectorSet<2, Boolean>, TwoParameters(this->IntegerType, this->BooleanType), this->VoidType, FunctionOptions::None);
+  builder.AddBoundFunction(boolean3Type, OperatorSet, VectorSet<3, Boolean>, TwoParameters(this->IntegerType, this->BooleanType), this->VoidType, FunctionOptions::None);
+  builder.AddBoundFunction(boolean4Type, OperatorSet, VectorSet<4, Boolean>, TwoParameters(this->IntegerType, this->BooleanType), this->VoidType, FunctionOptions::None);
+  builder.AddBoundFunction(integerType, OperatorSet, VectorSet<1, Integer>, TwoParameters(this->IntegerType, this->IntegerType), this->VoidType, FunctionOptions::None);
+  builder.AddBoundFunction(integer2Type, OperatorSet, VectorSet<2, Integer>, TwoParameters(this->IntegerType, this->IntegerType), this->VoidType, FunctionOptions::None);
+  builder.AddBoundFunction(integer3Type, OperatorSet, VectorSet<3, Integer>, TwoParameters(this->IntegerType, this->IntegerType), this->VoidType, FunctionOptions::None);
+  builder.AddBoundFunction(integer4Type, OperatorSet, VectorSet<4, Integer>, TwoParameters(this->IntegerType, this->IntegerType), this->VoidType, FunctionOptions::None);
+  builder.AddBoundFunction(realType, OperatorSet, VectorSet<1, Real>, TwoParameters(this->IntegerType, this->RealType), this->VoidType, FunctionOptions::None);
+  builder.AddBoundFunction(real2Type, OperatorSet, VectorSet<2, Real>, TwoParameters(this->IntegerType, this->RealType), this->VoidType, FunctionOptions::None);
+  builder.AddBoundFunction(real3Type, OperatorSet, VectorSet<3, Real>, TwoParameters(this->IntegerType, this->RealType), this->VoidType, FunctionOptions::None);
+  builder.AddBoundFunction(real4Type, OperatorSet, VectorSet<4, Real>, TwoParameters(this->IntegerType, this->RealType), this->VoidType, FunctionOptions::None);
+  builder.AddBoundFunction(quaternionType, OperatorSet, VectorSet<4, Real>, TwoParameters(this->IntegerType, this->RealType), this->VoidType, FunctionOptions::None);
 
   // The names of the axes for each index
   const char* axes[4] = {"XAxis", "YAxis", "ZAxis", "WAxis"};
@@ -4013,46 +3420,41 @@ void Core::SetupBindingMath(LibraryBuilder& builder)
       Function* fn = nullptr;
 
       // Add a get property for the number of elements in the vector
-      prop =
-          builder.AddBoundGetterSetter(vectorType, "Count", integerType, nullptr, VectorCount, FunctionOptions::Static);
+      prop = builder.AddBoundGetterSetter(vectorType, "Count", integerType, nullptr, VectorCount, FunctionOptions::Static);
       *(size_t*)(&prop->Get->UserData) = userData.Count;
       prop->Description = RaverieDocumentString("The number of elements in the vector.");
 
       // Add a method to get an axis by index
-      fn = builder.AddBoundFunction(
-          vectorType, "GetAxis", VectorGetAxis, OneParameter(integerType), vectorType, FunctionOptions::Static);
+      fn = builder.AddBoundFunction(vectorType, "GetAxis", VectorGetAxis, OneParameter(integerType), vectorType, FunctionOptions::Static);
       fn->ComplexUserData.WriteObject(userData);
       fn->Description = RaverieDocumentString("Returns an axis vector from the given index "
-                                            "(ie. 0 is XAxis, 1 is YAxis, etc...");
+                                              "(ie. 0 is XAxis, 1 is YAxis, etc...");
 
       // Add a property for the zero vector
-      prop = builder.AddBoundGetterSetter(
-          vectorType, "Zero", vectorType, nullptr, VectorZeroFunction, FunctionOptions::Static);
+      prop = builder.AddBoundGetterSetter(vectorType, "Zero", vectorType, nullptr, VectorZeroFunction, FunctionOptions::Static);
       prop->Get->ComplexUserData.WriteObject(userData);
       prop->Description = RaverieDocumentString("The zero vector (a vector containing all zeroes).");
 
       // Add a property for the one vector
-      prop = builder.AddBoundGetterSetter(
-          vectorType, "One", vectorType, nullptr, VectorOneFunction, FunctionOptions::Static);
+      prop = builder.AddBoundGetterSetter(vectorType, "One", vectorType, nullptr, VectorOneFunction, FunctionOptions::Static);
       prop->Get->ComplexUserData.WriteObject(userData);
       prop->Description = RaverieDocumentString("The one vector (a vector containing all ones).");
 
       // Add a property for each axis (e.g. Real3.XAxis, Real3.YAxis, etc...)
       for (size_t axis = 0; axis <= dimension; ++axis)
       {
-        prop = builder.AddBoundGetterSetter(
-            vectorType, axes[axis], vectorType, nullptr, VectorAxisFunction, FunctionOptions::Static);
+        prop = builder.AddBoundGetterSetter(vectorType, axes[axis], vectorType, nullptr, VectorAxisFunction, FunctionOptions::Static);
         prop->Get->UserData = (void*)axis;
         prop->Get->ComplexUserData.WriteObject(userData);
       }
 
       // Simple helper macro to make binding the below splats easier
-#define RaverieNoParameterSplat(builder, type, name, scalarType, fn, count, description)                                 \
-  {                                                                                                                    \
-    BoundFn boundFn = FullNoParameterSplatAs<scalarType, fn>;                                                          \
-    prop = builder.AddBoundGetterSetter(type, name, type, nullptr, boundFn, FunctionOptions::Static);                  \
-    prop->Get->UserData = (void*)count;                                                                                \
-    prop->Description = RaverieDocumentString(description);                                                              \
+#define RaverieNoParameterSplat(builder, type, name, scalarType, fn, count, description)                                                                                                               \
+  {                                                                                                                                                                                                    \
+    BoundFn boundFn = FullNoParameterSplatAs<scalarType, fn>;                                                                                                                                          \
+    prop = builder.AddBoundGetterSetter(type, name, type, nullptr, boundFn, FunctionOptions::Static);                                                                                                  \
+    prop->Get->UserData = (void*)count;                                                                                                                                                                \
+    prop->Description = RaverieDocumentString(description);                                                                                                                                            \
   }
 
       // Add splats for the extremal values for types that matter (Real and
@@ -4060,169 +3462,113 @@ void Core::SetupBindingMath(LibraryBuilder& builder)
       if (typeIndex == VectorScalarTypes::Real)
       {
         RaverieNoParameterSplat(builder,
-                              vectorType,
-                              "PositiveMax",
-                              Real,
-                              RaverieRealPositiveMax,
-                              userData.Count,
-                              "The largest (most positive) value that can be "
-                              "represented by a Real.");
+                                vectorType,
+                                "PositiveMax",
+                                Real,
+                                RaverieRealPositiveMax,
+                                userData.Count,
+                                "The largest (most positive) value that can be "
+                                "represented by a Real.");
         RaverieNoParameterSplat(builder,
-                              vectorType,
-                              "PositiveValueClosestToZero",
-                              Real,
-                              RaverieRealPositiveValueClosestToZero,
-                              userData.Count,
-                              "The positive value closest to zero that can be "
-                              "represented by a Real.");
+                                vectorType,
+                                "PositiveValueClosestToZero",
+                                Real,
+                                RaverieRealPositiveValueClosestToZero,
+                                userData.Count,
+                                "The positive value closest to zero that can be "
+                                "represented by a Real.");
         RaverieNoParameterSplat(builder,
-                              vectorType,
-                              "NegativeValueClosestToZero",
-                              Real,
-                              RaverieRealNegativeValueClosestToZero,
-                              userData.Count,
-                              "The negative value closest to zero that can be "
-                              "represented by a Real.");
+                                vectorType,
+                                "NegativeValueClosestToZero",
+                                Real,
+                                RaverieRealNegativeValueClosestToZero,
+                                userData.Count,
+                                "The negative value closest to zero that can be "
+                                "represented by a Real.");
         RaverieNoParameterSplat(builder,
-                              vectorType,
-                              "NegativeMin",
-                              Real,
-                              RaverieRealNegativeMin,
-                              userData.Count,
-                              "The smallest (most negative) value that can be "
-                              "represented by a Real.");
+                                vectorType,
+                                "NegativeMin",
+                                Real,
+                                RaverieRealNegativeMin,
+                                userData.Count,
+                                "The smallest (most negative) value that can be "
+                                "represented by a Real.");
       }
       else if (typeIndex == VectorScalarTypes::Integer)
       {
         RaverieNoParameterSplat(builder,
-                              vectorType,
-                              "PositiveMax",
-                              Integer,
-                              RaverieIntegerPositiveMax,
-                              userData.Count,
-                              "The largest (most positive) value that can be "
-                              "represented by an Integer.");
+                                vectorType,
+                                "PositiveMax",
+                                Integer,
+                                RaverieIntegerPositiveMax,
+                                userData.Count,
+                                "The largest (most positive) value that can be "
+                                "represented by an Integer.");
         RaverieNoParameterSplat(builder,
-                              vectorType,
-                              "PositiveValueClosestToZero",
-                              Integer,
-                              RaverieIntegerPositiveValueClosestToZero,
-                              userData.Count,
-                              "The positive value closest to zero that can be "
-                              "represented by an Integer.");
+                                vectorType,
+                                "PositiveValueClosestToZero",
+                                Integer,
+                                RaverieIntegerPositiveValueClosestToZero,
+                                userData.Count,
+                                "The positive value closest to zero that can be "
+                                "represented by an Integer.");
         RaverieNoParameterSplat(builder,
-                              vectorType,
-                              "NegativeValueClosestToZero",
-                              Integer,
-                              RaverieIntegerNegativeValueClosestToZero,
-                              userData.Count,
-                              "The negative value closest to zero that can be "
-                              "represented by an Integer.");
+                                vectorType,
+                                "NegativeValueClosestToZero",
+                                Integer,
+                                RaverieIntegerNegativeValueClosestToZero,
+                                userData.Count,
+                                "The negative value closest to zero that can be "
+                                "represented by an Integer.");
         RaverieNoParameterSplat(builder,
-                              vectorType,
-                              "NegativeMin",
-                              Integer,
-                              RaverieIntegerNegativeMin,
-                              userData.Count,
-                              "The smallest (most negative) value that can be "
-                              "represented by an Integer.");
+                                vectorType,
+                                "NegativeMin",
+                                Integer,
+                                RaverieIntegerNegativeMin,
+                                userData.Count,
+                                "The smallest (most negative) value that can be "
+                                "represented by an Integer.");
       }
 #undef RaverieNoParameterSplat
     }
   }
   // Add getters for the extremal values for types that don't matter (Byte,
   // DoubleReal, and DoubleInteger)
-  RaverieFullBindGetterSetter(
-      builder, byteType, &RaverieBytePositiveMax, RaverieNoOverload, RaverieNoSetter, RaverieNoOverload, "PositiveMax")
-      ->Description = RaverieDocumentString("The largest (most positive) value that can be represented by a Byte.");
-  RaverieFullBindGetterSetter(builder,
-                            byteType,
-                            &RaverieBytePositiveValueClosestToZero,
-                            RaverieNoOverload,
-                            RaverieNoSetter,
-                            RaverieNoOverload,
-                            "PositiveValueClosestToZero")
-      ->Description = RaverieDocumentString("The positive value closest to zero that can be represented by a Byte.");
-  RaverieFullBindGetterSetter(builder,
-                            doubleRealType,
-                            &RaverieDoubleRealPositiveMax,
-                            RaverieNoOverload,
-                            RaverieNoSetter,
-                            RaverieNoOverload,
-                            "PositiveMax")
-      ->Description = RaverieDocumentString("The largest (most positive) value that can be "
-                                          "represented by a DoubleReal.");
-  RaverieFullBindGetterSetter(builder,
-                            doubleRealType,
-                            &RaverieDoubleRealPositiveValueClosestToZero,
-                            RaverieNoOverload,
-                            RaverieNoSetter,
-                            RaverieNoOverload,
-                            "PositiveValueClosestToZero")
+  RaverieFullBindGetterSetter(builder, byteType, &RaverieBytePositiveMax, RaverieNoOverload, RaverieNoSetter, RaverieNoOverload, "PositiveMax")->Description =
+      RaverieDocumentString("The largest (most positive) value that can be represented by a Byte.");
+  RaverieFullBindGetterSetter(builder, byteType, &RaverieBytePositiveValueClosestToZero, RaverieNoOverload, RaverieNoSetter, RaverieNoOverload, "PositiveValueClosestToZero")->Description =
+      RaverieDocumentString("The positive value closest to zero that can be represented by a Byte.");
+  RaverieFullBindGetterSetter(builder, doubleRealType, &RaverieDoubleRealPositiveMax, RaverieNoOverload, RaverieNoSetter, RaverieNoOverload, "PositiveMax")->Description =
+      RaverieDocumentString("The largest (most positive) value that can be "
+                            "represented by a DoubleReal.");
+  RaverieFullBindGetterSetter(builder, doubleRealType, &RaverieDoubleRealPositiveValueClosestToZero, RaverieNoOverload, RaverieNoSetter, RaverieNoOverload, "PositiveValueClosestToZero")->Description =
+      RaverieDocumentString("The positive value closest to zero that can be "
+                            "represented by a DoubleReal.");
+  RaverieFullBindGetterSetter(builder, doubleRealType, &RaverieDoubleRealNegativeValueClosestToZero, RaverieNoOverload, RaverieNoSetter, RaverieNoOverload, "NegativeValueClosestToZero")->Description =
+      RaverieDocumentString("The negative value closest to zero that can be "
+                            "represented by a DoubleReal.");
+  RaverieFullBindGetterSetter(builder, doubleRealType, &RaverieDoubleRealNegativeMin, RaverieNoOverload, RaverieNoSetter, RaverieNoOverload, "NegativeMin")->Description =
+      RaverieDocumentString("The smallest (most negative) value that can be "
+                            "represented by a DoubleReal.");
+  RaverieFullBindGetterSetter(builder, doubleIntegerType, &RaverieDoubleIntegerPositiveMax, RaverieNoOverload, RaverieNoSetter, RaverieNoOverload, "PositiveMax")->Description =
+      RaverieDocumentString("The largest (most positive) value that can be "
+                            "represented by a DoubleInteger.");
+  RaverieFullBindGetterSetter(builder, doubleIntegerType, &RaverieDoubleIntegerPositiveValueClosestToZero, RaverieNoOverload, RaverieNoSetter, RaverieNoOverload, "PositiveValueClosestToZero")
       ->Description = RaverieDocumentString("The positive value closest to zero that can be "
-                                          "represented by a DoubleReal.");
-  RaverieFullBindGetterSetter(builder,
-                            doubleRealType,
-                            &RaverieDoubleRealNegativeValueClosestToZero,
-                            RaverieNoOverload,
-                            RaverieNoSetter,
-                            RaverieNoOverload,
-                            "NegativeValueClosestToZero")
+                                            "represented by a DoubleInteger.");
+  RaverieFullBindGetterSetter(builder, doubleIntegerType, &RaverieDoubleIntegerNegativeValueClosestToZero, RaverieNoOverload, RaverieNoSetter, RaverieNoOverload, "NegativeValueClosestToZero")
       ->Description = RaverieDocumentString("The negative value closest to zero that can be "
-                                          "represented by a DoubleReal.");
-  RaverieFullBindGetterSetter(builder,
-                            doubleRealType,
-                            &RaverieDoubleRealNegativeMin,
-                            RaverieNoOverload,
-                            RaverieNoSetter,
-                            RaverieNoOverload,
-                            "NegativeMin")
-      ->Description = RaverieDocumentString("The smallest (most negative) value that can be "
-                                          "represented by a DoubleReal.");
-  RaverieFullBindGetterSetter(builder,
-                            doubleIntegerType,
-                            &RaverieDoubleIntegerPositiveMax,
-                            RaverieNoOverload,
-                            RaverieNoSetter,
-                            RaverieNoOverload,
-                            "PositiveMax")
-      ->Description = RaverieDocumentString("The largest (most positive) value that can be "
-                                          "represented by a DoubleInteger.");
-  RaverieFullBindGetterSetter(builder,
-                            doubleIntegerType,
-                            &RaverieDoubleIntegerPositiveValueClosestToZero,
-                            RaverieNoOverload,
-                            RaverieNoSetter,
-                            RaverieNoOverload,
-                            "PositiveValueClosestToZero")
-      ->Description = RaverieDocumentString("The positive value closest to zero that can be "
-                                          "represented by a DoubleInteger.");
-  RaverieFullBindGetterSetter(builder,
-                            doubleIntegerType,
-                            &RaverieDoubleIntegerNegativeValueClosestToZero,
-                            RaverieNoOverload,
-                            RaverieNoSetter,
-                            RaverieNoOverload,
-                            "NegativeValueClosestToZero")
-      ->Description = RaverieDocumentString("The negative value closest to zero that can be "
-                                          "represented by a DoubleInteger.");
-  RaverieFullBindGetterSetter(builder,
-                            doubleIntegerType,
-                            &RaverieDoubleIntegerNegativeMin,
-                            RaverieNoOverload,
-                            RaverieNoSetter,
-                            RaverieNoOverload,
-                            "NegativeMin")
-      ->Description = RaverieDocumentString("The smallest (most negative) value that can be "
-                                          "represented by a DoubleInteger.");
+                                            "represented by a DoubleInteger.");
+  RaverieFullBindGetterSetter(builder, doubleIntegerType, &RaverieDoubleIntegerNegativeMin, RaverieNoOverload, RaverieNoSetter, RaverieNoOverload, "NegativeMin")->Description =
+      RaverieDocumentString("The smallest (most negative) value that can be "
+                            "represented by a DoubleInteger.");
 
   // Quaternion static bindings
   {
     Property* prop = nullptr;
 
     // Add a get property for the number of elements in the vector
-    prop = builder.AddBoundGetterSetter(
-        quaternionType, "Count", integerType, nullptr, VectorCount, FunctionOptions::Static);
+    prop = builder.AddBoundGetterSetter(quaternionType, "Count", integerType, nullptr, VectorCount, FunctionOptions::Static);
     *(size_t*)(&prop->Get->UserData) = 4;
     prop->Description = RaverieDocumentString("The number of elements in the quaternion.");
   }
@@ -4231,392 +3577,213 @@ void Core::SetupBindingMath(LibraryBuilder& builder)
 
   // RaverieFullBindMethod(builder, math, (Real3 (*)(Real3Param, Real3Param,
   // Real)) &Math::RotateVector
-  RaverieFullBindMethod(builder, math, &Math::RotateVector, RaverieNoOverload, "RotateVector", "vector, axis, radians")
-      ->Description = RaverieDocumentString("Rotate a vector about an axis by the given radians.");
+  RaverieFullBindMethod(builder, math, &Math::RotateVector, RaverieNoOverload, "RotateVector", "vector, axis, radians")->Description =
+      RaverieDocumentString("Rotate a vector about an axis by the given radians.");
 
-  RaverieFullBindMethod(
-      builder, math, &Math::AngleBetween, (Real(*)(Real2Param, Real2Param)), "AngleBetween", RaverieNoNames)
-      ->Description = RaverieDocumentString("Returns the angle between two Real2s in radians.");
-  RaverieFullBindMethod(
-      builder, math, &Math::AngleBetween, (Real(*)(Real3Param, Real3Param)), "AngleBetween", RaverieNoNames)
-      ->Description = RaverieDocumentString("Returns the angle between two Real3s in radians.");
-  RaverieFullBindMethod(
-      builder, math, &Math::AngleBetween, (Real(*)(Real4Param, Real4Param)), "AngleBetween", RaverieNoNames)
-      ->Description = RaverieDocumentString("Returns the angle between two Real4s in radians.");
+  RaverieFullBindMethod(builder, math, &Math::AngleBetween, (Real(*)(Real2Param, Real2Param)), "AngleBetween", RaverieNoNames)->Description =
+      RaverieDocumentString("Returns the angle between two Real2s in radians.");
+  RaverieFullBindMethod(builder, math, &Math::AngleBetween, (Real(*)(Real3Param, Real3Param)), "AngleBetween", RaverieNoNames)->Description =
+      RaverieDocumentString("Returns the angle between two Real3s in radians.");
+  RaverieFullBindMethod(builder, math, &Math::AngleBetween, (Real(*)(Real4Param, Real4Param)), "AngleBetween", RaverieNoNames)->Description =
+      RaverieDocumentString("Returns the angle between two Real4s in radians.");
 
-  RaverieFullBindMethod(
-      builder, math, &Math::AngleBetween, (Real(*)(QuaternionParam, QuaternionParam)), "AngleBetween", RaverieNoNames)
-      ->Description = RaverieDocumentString("Returns the angle between two Quaternions in radians.");
+  RaverieFullBindMethod(builder, math, &Math::AngleBetween, (Real(*)(QuaternionParam, QuaternionParam)), "AngleBetween", RaverieNoNames)->Description =
+      RaverieDocumentString("Returns the angle between two Quaternions in radians.");
 
-  RaverieFullBindMethod(builder, math, &Math::Slerp, (Real2(*)(Real2Param, Real2Param, Real)), "Slerp", "start, end, t")
-      ->Description = RaverieDocumentString("Spherical linear interpolation. Used to interpolate "
-                                          "between two vectors by the parameter t.");
-  RaverieFullBindMethod(builder, math, &Math::Slerp, (Real3(*)(Real3Param, Real3Param, Real)), "Slerp", "start, end, t")
-      ->Description = RaverieDocumentString("Spherical linear interpolation. Used to interpolate "
-                                          "between two vectors by the parameter t.");
-  RaverieFullBindMethod(
-      builder, math, &Math::Slerp, (Quaternion(*)(QuaternionParam, QuaternionParam, Real)), "Slerp", "start, end, t")
-      ->Description = RaverieDocumentString("Spherical linear interpolation. Used to interpolate "
-                                          "between two rotations by the parameter t.");
+  RaverieFullBindMethod(builder, math, &Math::Slerp, (Real2(*)(Real2Param, Real2Param, Real)), "Slerp", "start, end, t")->Description =
+      RaverieDocumentString("Spherical linear interpolation. Used to interpolate "
+                            "between two vectors by the parameter t.");
+  RaverieFullBindMethod(builder, math, &Math::Slerp, (Real3(*)(Real3Param, Real3Param, Real)), "Slerp", "start, end, t")->Description =
+      RaverieDocumentString("Spherical linear interpolation. Used to interpolate "
+                            "between two vectors by the parameter t.");
+  RaverieFullBindMethod(builder, math, &Math::Slerp, (Quaternion(*)(QuaternionParam, QuaternionParam, Real)), "Slerp", "start, end, t")->Description =
+      RaverieDocumentString("Spherical linear interpolation. Used to interpolate "
+                            "between two rotations by the parameter t.");
 
-  RaverieFullBindMethod(builder,
-                      math,
-                      &Math::SlerpUnnormalized,
-                      (Real2(*)(Real2Param, Real2Param, Real)),
-                      "SlerpUnnormalized",
-                      "start, end, t")
-      ->Description = RaverieDocumentString("Spherical linear interpolation. Used to interpolate "
-                                          "between two vectors by the parameter t. This is "
-                                          "the 'pure' mathematical Slerp function that works "
-                                          "on un-normalized input. This effectively traces "
-                                          "along an ellipse defined by the two input vectors.");
-  RaverieFullBindMethod(builder,
-                      math,
-                      &Math::SlerpUnnormalized,
-                      (Real3(*)(Real3Param, Real3Param, Real)),
-                      "SlerpUnnormalized",
-                      "start, end, t")
-      ->Description = RaverieDocumentString("Spherical linear interpolation. Used to interpolate "
-                                          "between two vectors by the parameter t. This is "
-                                          "the 'pure' mathematical Slerp function that works "
-                                          "on un-normalized input. This effectively traces "
-                                          "along an ellipse defined by the two input vectors.");
+  RaverieFullBindMethod(builder, math, &Math::SlerpUnnormalized, (Real2(*)(Real2Param, Real2Param, Real)), "SlerpUnnormalized", "start, end, t")->Description =
+      RaverieDocumentString("Spherical linear interpolation. Used to interpolate "
+                            "between two vectors by the parameter t. This is "
+                            "the 'pure' mathematical Slerp function that works "
+                            "on un-normalized input. This effectively traces "
+                            "along an ellipse defined by the two input vectors.");
+  RaverieFullBindMethod(builder, math, &Math::SlerpUnnormalized, (Real3(*)(Real3Param, Real3Param, Real)), "SlerpUnnormalized", "start, end, t")->Description =
+      RaverieDocumentString("Spherical linear interpolation. Used to interpolate "
+                            "between two vectors by the parameter t. This is "
+                            "the 'pure' mathematical Slerp function that works "
+                            "on un-normalized input. This effectively traces "
+                            "along an ellipse defined by the two input vectors.");
 
-  RaverieFullBindMethod(builder,
-                      math,
-                      &Math::SafeRotateTowards,
-                      (Real2(*)(Real2Param, Real2Param, Real)),
-                      "RotateTowards",
-                      "p0, p1, maxRadians")
-      ->Description = RaverieDocumentString("Rotate a vector towards another vector changing at most maxRadians.");
+  RaverieFullBindMethod(builder, math, &Math::SafeRotateTowards, (Real2(*)(Real2Param, Real2Param, Real)), "RotateTowards", "p0, p1, maxRadians")->Description =
+      RaverieDocumentString("Rotate a vector towards another vector changing at most maxRadians.");
 
-  RaverieFullBindMethod(builder,
-                      math,
-                      &Math::SafeRotateTowards,
-                      (Real3(*)(Real3Param, Real3Param, Real)),
-                      "RotateTowards",
-                      "p0, p1, maxRadians")
-      ->Description = RaverieDocumentString("Rotate a vector towards another vector changing at most maxRadians.");
+  RaverieFullBindMethod(builder, math, &Math::SafeRotateTowards, (Real3(*)(Real3Param, Real3Param, Real)), "RotateTowards", "p0, p1, maxRadians")->Description =
+      RaverieDocumentString("Rotate a vector towards another vector changing at most maxRadians.");
 
-  RaverieFullBindMethod(builder,
-                      math,
-                      &Math::RotateTowards,
-                      (Quaternion(*)(QuaternionParam, QuaternionParam, Real)),
-                      "RotateTowards",
-                      "p0, p1, maxRadians")
-      ->Description = RaverieDocumentString("Rotate a quaternion towards another quaternion "
-                                          "changing at most maxRadians.");
+  RaverieFullBindMethod(builder, math, &Math::RotateTowards, (Quaternion(*)(QuaternionParam, QuaternionParam, Real)), "RotateTowards", "p0, p1, maxRadians")->Description =
+      RaverieDocumentString("Rotate a quaternion towards another quaternion "
+                            "changing at most maxRadians.");
 
   RaverieFullBindMethod(builder, math, &Math::SignedAngle, RaverieNoOverload, "SignedAngle", "p0, p1, up")->Description =
       RaverieDocumentString("Get the rotation angle between two vectors in radians.");
 
-  RaverieFullBindMethod(builder, math, &Math::Angle2D, RaverieNoOverload, "Angle2D", RaverieNoNames)->Description =
-      RaverieDocumentString("Computes the angle (in radians) about the z-axis "
-                          "between the vector and the x-axis.");
+  RaverieFullBindMethod(builder, math, &Math::Angle2D, RaverieNoOverload, "Angle2D", RaverieNoNames)->Description = RaverieDocumentString("Computes the angle (in radians) about the z-axis "
+                                                                                                                                          "between the vector and the x-axis.");
 
-  RaverieFullBindMethod(builder,
-                      math,
-                      &Math::ProjectOnVector,
-                      (Real2(*)(Real2Param, Real2Param)),
-                      "ProjectOnVector",
-                      "toBeProjected, normalizedVector")
-      ->Description = RaverieDocumentString("Projects the input vector onto the given normalized vector.");
-  RaverieFullBindMethod(builder,
-                      math,
-                      &Math::ProjectOnVector,
-                      (Real3(*)(Real3Param, Real3Param)),
-                      "ProjectOnVector",
-                      "toBeProjected, normalizedVector")
-      ->Description = RaverieDocumentString("Projects the input vector onto the given normalized vector.");
-  RaverieFullBindMethod(builder,
-                      math,
-                      &Math::ProjectOnVector,
-                      (Real4(*)(Real4Param, Real4Param)),
-                      "ProjectOnVector",
-                      "toBeProjected, normalizedVector")
-      ->Description = RaverieDocumentString("Projects the input vector onto the given normalized vector.");
+  RaverieFullBindMethod(builder, math, &Math::ProjectOnVector, (Real2(*)(Real2Param, Real2Param)), "ProjectOnVector", "toBeProjected, normalizedVector")->Description =
+      RaverieDocumentString("Projects the input vector onto the given normalized vector.");
+  RaverieFullBindMethod(builder, math, &Math::ProjectOnVector, (Real3(*)(Real3Param, Real3Param)), "ProjectOnVector", "toBeProjected, normalizedVector")->Description =
+      RaverieDocumentString("Projects the input vector onto the given normalized vector.");
+  RaverieFullBindMethod(builder, math, &Math::ProjectOnVector, (Real4(*)(Real4Param, Real4Param)), "ProjectOnVector", "toBeProjected, normalizedVector")->Description =
+      RaverieDocumentString("Projects the input vector onto the given normalized vector.");
   // Legacy project function (mostly to not break things like the swept
   // controller)
-  RaverieFullBindMethod(builder,
-                      math,
-                      &Math::ProjectOnVector,
-                      (Real3(*)(Real3Param, Real3Param)),
-                      "Project",
-                      "toBeProjected, normalizedVector")
-      ->Description = RaverieDocumentString("Projects the input vector onto the given normalized vector. Note: This "
-                                          "function is legacy. Instead call ProjectOnVector.");
+  RaverieFullBindMethod(builder, math, &Math::ProjectOnVector, (Real3(*)(Real3Param, Real3Param)), "Project", "toBeProjected, normalizedVector")->Description =
+      RaverieDocumentString("Projects the input vector onto the given normalized vector. Note: This "
+                            "function is legacy. Instead call ProjectOnVector.");
 
-  RaverieFullBindMethod(builder,
-                      math,
-                      &Math::ProjectOnPlane,
-                      (Real2(*)(Real2Param, Real2Param)),
-                      "ProjectOnPlane",
-                      "toBeProjected, planeNormal")
-      ->Description = RaverieDocumentString("Projects the input vector onto plane defined by the given normal.");
-  RaverieFullBindMethod(builder,
-                      math,
-                      &Math::ProjectOnPlane,
-                      (Real3(*)(Real3Param, Real3Param)),
-                      "ProjectOnPlane",
-                      "toBeProjected, planeNormal")
-      ->Description = RaverieDocumentString("Projects the input vector onto plane defined by the given normal.");
-  RaverieFullBindMethod(builder,
-                      math,
-                      &Math::ProjectOnPlane,
-                      (Real4(*)(Real4Param, Real4Param)),
-                      "ProjectOnPlane",
-                      "toBeProjected, planeNormal")
-      ->Description = RaverieDocumentString("Projects the input vector onto plane defined by the given normal.");
+  RaverieFullBindMethod(builder, math, &Math::ProjectOnPlane, (Real2(*)(Real2Param, Real2Param)), "ProjectOnPlane", "toBeProjected, planeNormal")->Description =
+      RaverieDocumentString("Projects the input vector onto plane defined by the given normal.");
+  RaverieFullBindMethod(builder, math, &Math::ProjectOnPlane, (Real3(*)(Real3Param, Real3Param)), "ProjectOnPlane", "toBeProjected, planeNormal")->Description =
+      RaverieDocumentString("Projects the input vector onto plane defined by the given normal.");
+  RaverieFullBindMethod(builder, math, &Math::ProjectOnPlane, (Real4(*)(Real4Param, Real4Param)), "ProjectOnPlane", "toBeProjected, planeNormal")->Description =
+      RaverieDocumentString("Projects the input vector onto plane defined by the given normal.");
 
-  RaverieFullBindMethod(builder,
-                      math,
-                      &Math::ReflectAcrossPlane,
-                      (Real2(*)(Real2Param, Real2Param)),
-                      "ReflectAcrossPlane",
-                      "toBeReflected, planeNormal")
-      ->Description = RaverieDocumentString("Reflects the input vector across the plane defined "
-                                          "by the given normal.");
-  RaverieFullBindMethod(builder,
-                      math,
-                      &Math::ReflectAcrossPlane,
-                      (Real3(*)(Real3Param, Real3Param)),
-                      "ReflectAcrossPlane",
-                      "toBeReflected, planeNormal")
-      ->Description = RaverieDocumentString("Reflects the input vector across the plane defined "
-                                          "by the given normal.");
-  RaverieFullBindMethod(builder,
-                      math,
-                      &Math::ReflectAcrossPlane,
-                      (Real4(*)(Real4Param, Real4Param)),
-                      "ReflectAcrossPlane",
-                      "toBeReflected, planeNormal")
-      ->Description = RaverieDocumentString("Reflects the input vector across the plane defined "
-                                          "by the given normal.");
+  RaverieFullBindMethod(builder, math, &Math::ReflectAcrossPlane, (Real2(*)(Real2Param, Real2Param)), "ReflectAcrossPlane", "toBeReflected, planeNormal")->Description =
+      RaverieDocumentString("Reflects the input vector across the plane defined "
+                            "by the given normal.");
+  RaverieFullBindMethod(builder, math, &Math::ReflectAcrossPlane, (Real3(*)(Real3Param, Real3Param)), "ReflectAcrossPlane", "toBeReflected, planeNormal")->Description =
+      RaverieDocumentString("Reflects the input vector across the plane defined "
+                            "by the given normal.");
+  RaverieFullBindMethod(builder, math, &Math::ReflectAcrossPlane, (Real4(*)(Real4Param, Real4Param)), "ReflectAcrossPlane", "toBeReflected, planeNormal")->Description =
+      RaverieDocumentString("Reflects the input vector across the plane defined "
+                            "by the given normal.");
 
-  RaverieFullBindMethod(builder,
-                      math,
-                      &Math::ReflectAcrossVector,
-                      (Real2(*)(Real2Param, Real2Param)),
-                      "ReflectAcrossVector",
-                      "toBeReflected, vector")
-      ->Description = RaverieDocumentString("Reflects the input vector across the given vector.");
-  RaverieFullBindMethod(builder,
-                      math,
-                      &Math::ReflectAcrossVector,
-                      (Real3(*)(Real3Param, Real3Param)),
-                      "ReflectAcrossVector",
-                      "toBeReflected, vector")
-      ->Description = RaverieDocumentString("Reflects the input vector across the given vector.");
-  RaverieFullBindMethod(builder,
-                      math,
-                      &Math::ReflectAcrossVector,
-                      (Real4(*)(Real4Param, Real4Param)),
-                      "ReflectAcrossVector",
-                      "toBeReflected, vector")
-      ->Description = RaverieDocumentString("Reflects the input vector across the given vector.");
+  RaverieFullBindMethod(builder, math, &Math::ReflectAcrossVector, (Real2(*)(Real2Param, Real2Param)), "ReflectAcrossVector", "toBeReflected, vector")->Description =
+      RaverieDocumentString("Reflects the input vector across the given vector.");
+  RaverieFullBindMethod(builder, math, &Math::ReflectAcrossVector, (Real3(*)(Real3Param, Real3Param)), "ReflectAcrossVector", "toBeReflected, vector")->Description =
+      RaverieDocumentString("Reflects the input vector across the given vector.");
+  RaverieFullBindMethod(builder, math, &Math::ReflectAcrossVector, (Real4(*)(Real4Param, Real4Param)), "ReflectAcrossVector", "toBeReflected, vector")->Description =
+      RaverieDocumentString("Reflects the input vector across the given vector.");
 
-  RaverieFullBindMethod(builder,
-                      math,
-                      &Math::Refract,
-                      (Real2(*)(Real2Param, Real2Param, Real)),
-                      "Refract",
-                      "toBeRefracted, planeNormal, refractionIndex")
-      ->Description = RaverieDocumentString("Calculates the refraction vector through a plane "
-                                          "given a certain index of refraction.");
-  RaverieFullBindMethod(builder,
-                      math,
-                      &Math::Refract,
-                      (Real3(*)(Real3Param, Real3Param, Real)),
-                      "Refract",
-                      "toBeRefracted, planeNormal, refractionIndex")
-      ->Description = RaverieDocumentString("Calculates the refraction vector through a plane "
-                                          "given a certain index of refraction.");
-  RaverieFullBindMethod(builder,
-                      math,
-                      &Math::Refract,
-                      (Real4(*)(Real4Param, Real4Param, Real)),
-                      "Refract",
-                      "toBeRefracted, planeNormal, refractionIndex")
-      ->Description = RaverieDocumentString("Calculates the refraction vector through a plane "
-                                          "given a certain index of refraction.");
+  RaverieFullBindMethod(builder, math, &Math::Refract, (Real2(*)(Real2Param, Real2Param, Real)), "Refract", "toBeRefracted, planeNormal, refractionIndex")->Description =
+      RaverieDocumentString("Calculates the refraction vector through a plane "
+                            "given a certain index of refraction.");
+  RaverieFullBindMethod(builder, math, &Math::Refract, (Real3(*)(Real3Param, Real3Param, Real)), "Refract", "toBeRefracted, planeNormal, refractionIndex")->Description =
+      RaverieDocumentString("Calculates the refraction vector through a plane "
+                            "given a certain index of refraction.");
+  RaverieFullBindMethod(builder, math, &Math::Refract, (Real4(*)(Real4Param, Real4Param, Real)), "Refract", "toBeRefracted, planeNormal, refractionIndex")->Description =
+      RaverieDocumentString("Calculates the refraction vector through a plane "
+                            "given a certain index of refraction.");
 
   // Lots of quaternion construction functions
-  RaverieFullBindMethod(
-      builder, math, &Math::ToQuaternion, (Quaternion(*)(Real3Param, Real)), "ToQuaternion", "axis, radians")
-      ->Description = RaverieDocumentString("Generates the quaternion that rotates about the "
-                                          "axis vector by the given radians.");
-  RaverieFullBindMethod(
-      builder, math, &Math::ToQuaternion, (Quaternion(*)(Real3Param, Real)), "AxisAngle", "axis, radians")
-      ->Description = RaverieDocumentString("Generates the quaternion that rotates about the "
-                                          "axis vector by the given radians.");
-  RaverieFullBindMethod(
-      builder, math, &Math::ToQuaternion, (Quaternion(*)(Real3Param, Real3Param)), "ToQuaternion", "facing, up")
-      ->Description = RaverieDocumentString("Generates the orientation represented by the given "
-                                          "facing and up vectors.");
-  RaverieFullBindMethod(builder,
-                      math,
-                      &Math::ToQuaternion,
-                      (Quaternion(*)(Real3Param, Real3Param, Real3Param)),
-                      "ToQuaternion",
-                      "facing, up, right")
-      ->Description = RaverieDocumentString("Generates the orientation represented by the given "
-                                          "facing, up, and right vectors.");
-  RaverieFullBindMethod(builder,
-                      math,
-                      &Math::ToQuaternion,
-                      (Quaternion(*)(Real, Real, Real)),
-                      "ToQuaternion",
-                      "xRadians, yRadians, zRadians")
-      ->Description = RaverieDocumentString("Generates the orientation from the given Euler angles.");
-  RaverieFullBindMethod(builder, math, &Math::ToQuaternion, (Quaternion(*)(Real3Param)), "ToQuaternion", "eulerRadians")
-      ->Description = RaverieDocumentString("Generates the orientation from the given Euler angle vector");
-  RaverieFullBindMethod(builder, math, &Math::ToQuaternion, (Quaternion(*)(Real3Param)), "Euler", "eulerRadians")
-      ->Description = RaverieDocumentString("Generates the orientation from the given Euler angle vector");
-  RaverieFullBindMethod(
-      builder, math, &Math::ToQuaternion, (Quaternion(*)(Real3x3Param)), "ToQuaternion", "rotationMatrix")
-      ->Description = RaverieDocumentString("Converts a rotation matrix into a quaternion.");
-  RaverieFullBindMethod(
-      builder, math, &Math::RotationQuaternionBetween, RaverieNoOverload, "RotationQuaternionBetween", "start, end")
-      ->Description = RaverieDocumentString("Generates the quaternion that rotates from parameter 1 to parameter 2.");
+  RaverieFullBindMethod(builder, math, &Math::ToQuaternion, (Quaternion(*)(Real3Param, Real)), "ToQuaternion", "axis, radians")->Description =
+      RaverieDocumentString("Generates the quaternion that rotates about the "
+                            "axis vector by the given radians.");
+  RaverieFullBindMethod(builder, math, &Math::ToQuaternion, (Quaternion(*)(Real3Param, Real)), "AxisAngle", "axis, radians")->Description =
+      RaverieDocumentString("Generates the quaternion that rotates about the "
+                            "axis vector by the given radians.");
+  RaverieFullBindMethod(builder, math, &Math::ToQuaternion, (Quaternion(*)(Real3Param, Real3Param)), "ToQuaternion", "facing, up")->Description =
+      RaverieDocumentString("Generates the orientation represented by the given "
+                            "facing and up vectors.");
+  RaverieFullBindMethod(builder, math, &Math::ToQuaternion, (Quaternion(*)(Real3Param, Real3Param, Real3Param)), "ToQuaternion", "facing, up, right")->Description =
+      RaverieDocumentString("Generates the orientation represented by the given "
+                            "facing, up, and right vectors.");
+  RaverieFullBindMethod(builder, math, &Math::ToQuaternion, (Quaternion(*)(Real, Real, Real)), "ToQuaternion", "xRadians, yRadians, zRadians")->Description =
+      RaverieDocumentString("Generates the orientation from the given Euler angles.");
+  RaverieFullBindMethod(builder, math, &Math::ToQuaternion, (Quaternion(*)(Real3Param)), "ToQuaternion", "eulerRadians")->Description =
+      RaverieDocumentString("Generates the orientation from the given Euler angle vector");
+  RaverieFullBindMethod(builder, math, &Math::ToQuaternion, (Quaternion(*)(Real3Param)), "Euler", "eulerRadians")->Description =
+      RaverieDocumentString("Generates the orientation from the given Euler angle vector");
+  RaverieFullBindMethod(builder, math, &Math::ToQuaternion, (Quaternion(*)(Real3x3Param)), "ToQuaternion", "rotationMatrix")->Description =
+      RaverieDocumentString("Converts a rotation matrix into a quaternion.");
+  RaverieFullBindMethod(builder, math, &Math::RotationQuaternionBetween, RaverieNoOverload, "RotationQuaternionBetween", "start, end")->Description =
+      RaverieDocumentString("Generates the quaternion that rotates from parameter 1 to parameter 2.");
 
   // Conversion to Real3x3 from various rotation formats
-  RaverieFullBindMethod(builder, math, &Math::ToMatrix3, (Real3x3(*)(Real3Param, Real)), "ToReal3x3", "axis, radians")
-      ->Description = RaverieDocumentString("Generates the three dimensional rotation matrix "
-                                          "that rotates about 'axis' by 'radians'.");
-  RaverieFullBindMethod(builder, math, &Math::ToMatrix3, (Real3x3(*)(Real3Param, Real3Param)), "ToReal3x3", "facing, up")
-      ->Description = RaverieDocumentString("Generates the orientation represented by the given "
-                                          "facing and up vectors.");
-  RaverieFullBindMethod(builder,
-                      math,
-                      &Math::ToMatrix3,
-                      (Real3x3(*)(Real3Param, Real3Param, Real3Param)),
-                      "ToReal3x3",
-                      "facing, up, right")
-      ->Description = RaverieDocumentString("Generates the orientation represented by the given "
-                                          "facing, up, and right vectors.");
-  RaverieFullBindMethod(
-      builder, math, &Math::ToMatrix3, (Real3x3(*)(Real, Real, Real)), "ToReal3x3", "xRadians, yRadians, zRadians")
-      ->Description = RaverieDocumentString("Generates the orientation from the given Euler angles.");
-  RaverieFullBindMethod(builder, math, &Math::ToMatrix3, (Real3x3(*)(QuaternionParam)), "ToReal3x3", "rotation")
-      ->Description = RaverieDocumentString("Converts a quaternion into a rotation matrix.");
+  RaverieFullBindMethod(builder, math, &Math::ToMatrix3, (Real3x3(*)(Real3Param, Real)), "ToReal3x3", "axis, radians")->Description =
+      RaverieDocumentString("Generates the three dimensional rotation matrix "
+                            "that rotates about 'axis' by 'radians'.");
+  RaverieFullBindMethod(builder, math, &Math::ToMatrix3, (Real3x3(*)(Real3Param, Real3Param)), "ToReal3x3", "facing, up")->Description =
+      RaverieDocumentString("Generates the orientation represented by the given "
+                            "facing and up vectors.");
+  RaverieFullBindMethod(builder, math, &Math::ToMatrix3, (Real3x3(*)(Real3Param, Real3Param, Real3Param)), "ToReal3x3", "facing, up, right")->Description =
+      RaverieDocumentString("Generates the orientation represented by the given "
+                            "facing, up, and right vectors.");
+  RaverieFullBindMethod(builder, math, &Math::ToMatrix3, (Real3x3(*)(Real, Real, Real)), "ToReal3x3", "xRadians, yRadians, zRadians")->Description =
+      RaverieDocumentString("Generates the orientation from the given Euler angles.");
+  RaverieFullBindMethod(builder, math, &Math::ToMatrix3, (Real3x3(*)(QuaternionParam)), "ToReal3x3", "rotation")->Description = RaverieDocumentString("Converts a quaternion into a rotation matrix.");
 
-  builder.AddBoundFunction(math, "Dot", VectorDotProduct<2>, TwoParameters(this->Real2Type), this->RealType, options)
-      ->Description = RaverieDocumentString("The vector dot product");
-  builder.AddBoundFunction(math, "Dot", VectorDotProduct<3>, TwoParameters(this->Real3Type), this->RealType, options)
-      ->Description = RaverieDocumentString("The vector dot product");
-  builder.AddBoundFunction(math, "Dot", VectorDotProduct<4>, TwoParameters(this->Real4Type), this->RealType, options)
-      ->Description = RaverieDocumentString("The vector dot product");
-  builder
-      .AddBoundFunction(math, "Dot", VectorDotProduct<4>, TwoParameters(this->QuaternionType), this->RealType, options)
-      ->Description = RaverieDocumentString("The vector dot product");
+  builder.AddBoundFunction(math, "Dot", VectorDotProduct<2>, TwoParameters(this->Real2Type), this->RealType, options)->Description = RaverieDocumentString("The vector dot product");
+  builder.AddBoundFunction(math, "Dot", VectorDotProduct<3>, TwoParameters(this->Real3Type), this->RealType, options)->Description = RaverieDocumentString("The vector dot product");
+  builder.AddBoundFunction(math, "Dot", VectorDotProduct<4>, TwoParameters(this->Real4Type), this->RealType, options)->Description = RaverieDocumentString("The vector dot product");
+  builder.AddBoundFunction(math, "Dot", VectorDotProduct<4>, TwoParameters(this->QuaternionType), this->RealType, options)->Description = RaverieDocumentString("The vector dot product");
 
-  builder
-      .AddBoundFunction(math, "Cross", Vector3CrossProduct, TwoParameters(this->Real3Type), this->Real3Type, options)
-      ->Description = RaverieDocumentString("The vector cross product. Creates a new vector perpendicular to p0 and "
-                                          "p1 using the right hand rule.");
-  RaverieFullBindMethod(builder, math, &Math::Cross, (float (*)(Real2Param, Real2Param)), "Cross", RaverieNoNames)
-      ->Description = RaverieDocumentString("2D cross product. Equivalent to Cross(Real3(p0.x, "
-                                          "p0.y, 0), Real3(p1.x, p1.y, 0)).");
-  RaverieFullBindMethod(builder, math, &Math::Cross, (Real2(*)(float, Real2Param)), "Cross", RaverieNoNames)->Description =
-      RaverieDocumentString("2D cross product. Equivalent to Cross(Real3(0, 0, "
-                          "p0), Real3(p1.x, p1.y, 0)).");
-  RaverieFullBindMethod(builder, math, &Math::Cross, (Real2(*)(Real2Param, float)), "Cross", RaverieNoNames)->Description =
+  builder.AddBoundFunction(math, "Cross", Vector3CrossProduct, TwoParameters(this->Real3Type), this->Real3Type, options)->Description =
+      RaverieDocumentString("The vector cross product. Creates a new vector perpendicular to p0 and "
+                            "p1 using the right hand rule.");
+  RaverieFullBindMethod(builder, math, &Math::Cross, (float (*)(Real2Param, Real2Param)), "Cross", RaverieNoNames)->Description =
       RaverieDocumentString("2D cross product. Equivalent to Cross(Real3(p0.x, "
-                          "p0.y, 0), Real3(0, 0, p1)).");
+                            "p0.y, 0), Real3(p1.x, p1.y, 0)).");
+  RaverieFullBindMethod(builder, math, &Math::Cross, (Real2(*)(float, Real2Param)), "Cross", RaverieNoNames)->Description = RaverieDocumentString("2D cross product. Equivalent to Cross(Real3(0, 0, "
+                                                                                                                                                  "p0), Real3(p1.x, p1.y, 0)).");
+  RaverieFullBindMethod(builder, math, &Math::Cross, (Real2(*)(Real2Param, float)), "Cross", RaverieNoNames)->Description = RaverieDocumentString("2D cross product. Equivalent to Cross(Real3(p0.x, "
+                                                                                                                                                  "p0.y, 0), Real3(0, 0, p1)).");
 
-  builder.AddBoundFunction(math, "LengthSq", VectorLengthSq<2>, OneParameter(this->Real2Type), this->RealType, options)
-      ->Description = RaverieDocumentString("The squared length of the vector. Used to avoid a "
-                                          "square root when possible.");
-  builder.AddBoundFunction(math, "LengthSq", VectorLengthSq<3>, OneParameter(this->Real3Type), this->RealType, options)
-      ->Description = RaverieDocumentString("The squared length of the vector. Used to avoid a "
-                                          "square root when possible.");
-  builder.AddBoundFunction(math, "LengthSq", VectorLengthSq<4>, OneParameter(this->Real4Type), this->RealType, options)
-      ->Description = RaverieDocumentString("The squared length of the vector. Used to avoid a "
-                                          "square root when possible.");
-  builder
-      .AddBoundFunction(
-          math, "LengthSq", VectorLengthSq<4>, OneParameter(this->QuaternionType), this->RealType, options)
-      ->Description = RaverieDocumentString("The squared length of the vector. Used to avoid a "
-                                          "square root when possible.");
+  builder.AddBoundFunction(math, "LengthSq", VectorLengthSq<2>, OneParameter(this->Real2Type), this->RealType, options)->Description =
+      RaverieDocumentString("The squared length of the vector. Used to avoid a "
+                            "square root when possible.");
+  builder.AddBoundFunction(math, "LengthSq", VectorLengthSq<3>, OneParameter(this->Real3Type), this->RealType, options)->Description =
+      RaverieDocumentString("The squared length of the vector. Used to avoid a "
+                            "square root when possible.");
+  builder.AddBoundFunction(math, "LengthSq", VectorLengthSq<4>, OneParameter(this->Real4Type), this->RealType, options)->Description =
+      RaverieDocumentString("The squared length of the vector. Used to avoid a "
+                            "square root when possible.");
+  builder.AddBoundFunction(math, "LengthSq", VectorLengthSq<4>, OneParameter(this->QuaternionType), this->RealType, options)->Description =
+      RaverieDocumentString("The squared length of the vector. Used to avoid a "
+                            "square root when possible.");
 
-  builder.AddBoundFunction(math, "Length", VectorLength<2>, OneParameter(this->Real2Type), this->RealType, options)
-      ->Description = RaverieDocumentString("The length of the vector.");
-  builder.AddBoundFunction(math, "Length", VectorLength<3>, OneParameter(this->Real3Type), this->RealType, options)
-      ->Description = RaverieDocumentString("The length of the vector.");
-  builder.AddBoundFunction(math, "Length", VectorLength<4>, OneParameter(this->Real4Type), this->RealType, options)
-      ->Description = RaverieDocumentString("The length of the vector.");
-  builder
-      .AddBoundFunction(math, "Length", VectorLength<4>, OneParameter(this->QuaternionType), this->RealType, options)
-      ->Description = RaverieDocumentString("The length of the vector.");
+  builder.AddBoundFunction(math, "Length", VectorLength<2>, OneParameter(this->Real2Type), this->RealType, options)->Description = RaverieDocumentString("The length of the vector.");
+  builder.AddBoundFunction(math, "Length", VectorLength<3>, OneParameter(this->Real3Type), this->RealType, options)->Description = RaverieDocumentString("The length of the vector.");
+  builder.AddBoundFunction(math, "Length", VectorLength<4>, OneParameter(this->Real4Type), this->RealType, options)->Description = RaverieDocumentString("The length of the vector.");
+  builder.AddBoundFunction(math, "Length", VectorLength<4>, OneParameter(this->QuaternionType), this->RealType, options)->Description = RaverieDocumentString("The length of the vector.");
 
-  builder
-      .AddBoundFunction(math, "Distance", VectorDistance<2>, TwoParameters(this->Real2Type), this->RealType, options)
-      ->Description = RaverieDocumentString("Returns the distance between two points.");
-  builder
-      .AddBoundFunction(math, "Distance", VectorDistance<3>, TwoParameters(this->Real3Type), this->RealType, options)
-      ->Description = RaverieDocumentString("Returns the distance between two points.");
-  builder
-      .AddBoundFunction(math, "Distance", VectorDistance<4>, TwoParameters(this->Real4Type), this->RealType, options)
-      ->Description = RaverieDocumentString("Returns the distance between two points.");
-  builder
-      .AddBoundFunction(
-          math, "DistanceSq", VectorDistanceSq<2>, TwoParameters(this->Real2Type), this->RealType, options)
-      ->Description = RaverieDocumentString("Returns the squared distance between two points.");
-  builder
-      .AddBoundFunction(
-          math, "DistanceSq", VectorDistanceSq<3>, TwoParameters(this->Real3Type), this->RealType, options)
-      ->Description = RaverieDocumentString("Returns the squared distance between two points.");
-  builder
-      .AddBoundFunction(
-          math, "DistanceSq", VectorDistanceSq<4>, TwoParameters(this->Real4Type), this->RealType, options)
-      ->Description = RaverieDocumentString("Returns the squared distance between two points.");
+  builder.AddBoundFunction(math, "Distance", VectorDistance<2>, TwoParameters(this->Real2Type), this->RealType, options)->Description =
+      RaverieDocumentString("Returns the distance between two points.");
+  builder.AddBoundFunction(math, "Distance", VectorDistance<3>, TwoParameters(this->Real3Type), this->RealType, options)->Description =
+      RaverieDocumentString("Returns the distance between two points.");
+  builder.AddBoundFunction(math, "Distance", VectorDistance<4>, TwoParameters(this->Real4Type), this->RealType, options)->Description =
+      RaverieDocumentString("Returns the distance between two points.");
+  builder.AddBoundFunction(math, "DistanceSq", VectorDistanceSq<2>, TwoParameters(this->Real2Type), this->RealType, options)->Description =
+      RaverieDocumentString("Returns the squared distance between two points.");
+  builder.AddBoundFunction(math, "DistanceSq", VectorDistanceSq<3>, TwoParameters(this->Real3Type), this->RealType, options)->Description =
+      RaverieDocumentString("Returns the squared distance between two points.");
+  builder.AddBoundFunction(math, "DistanceSq", VectorDistanceSq<4>, TwoParameters(this->Real4Type), this->RealType, options)->Description =
+      RaverieDocumentString("Returns the squared distance between two points.");
 
-  builder
-      .AddBoundFunction(math, "Normalize", VectorNormalize<2>, OneParameter(this->Real2Type), this->Real2Type, options)
-      ->Description = RaverieDocumentString("Returns a vector that points in the same direction "
-                                          "but has a length of 1.");
-  builder
-      .AddBoundFunction(math, "Normalize", VectorNormalize<3>, OneParameter(this->Real3Type), this->Real3Type, options)
-      ->Description = RaverieDocumentString("Returns a vector that points in the same direction "
-                                          "but has a length of 1.");
-  builder
-      .AddBoundFunction(math, "Normalize", VectorNormalize<4>, OneParameter(this->Real4Type), this->Real4Type, options)
-      ->Description = RaverieDocumentString("Returns a vector that points in the same direction "
-                                          "but has a length of 1.");
-  builder
-      .AddBoundFunction(
-          math, "Normalize", VectorNormalize<4>, OneParameter(this->QuaternionType), this->QuaternionType, options)
-      ->Description = RaverieDocumentString("Returns a unit quaternion that represents a pure rotation.");
+  builder.AddBoundFunction(math, "Normalize", VectorNormalize<2>, OneParameter(this->Real2Type), this->Real2Type, options)->Description =
+      RaverieDocumentString("Returns a vector that points in the same direction "
+                            "but has a length of 1.");
+  builder.AddBoundFunction(math, "Normalize", VectorNormalize<3>, OneParameter(this->Real3Type), this->Real3Type, options)->Description =
+      RaverieDocumentString("Returns a vector that points in the same direction "
+                            "but has a length of 1.");
+  builder.AddBoundFunction(math, "Normalize", VectorNormalize<4>, OneParameter(this->Real4Type), this->Real4Type, options)->Description =
+      RaverieDocumentString("Returns a vector that points in the same direction "
+                            "but has a length of 1.");
+  builder.AddBoundFunction(math, "Normalize", VectorNormalize<4>, OneParameter(this->QuaternionType), this->QuaternionType, options)->Description =
+      RaverieDocumentString("Returns a unit quaternion that represents a pure rotation.");
 
   builder.AddBoundGetterSetter(math, "Pi", this->RealType, nullptr, Pi, MemberOptions::Static);
-  builder.AddBoundGetterSetter(math, "E", this->RealType, nullptr, E, MemberOptions::Static)->Description =
-      RaverieDocumentString("Euler's number.");
+  builder.AddBoundGetterSetter(math, "E", this->RealType, nullptr, E, MemberOptions::Static)->Description = RaverieDocumentString("Euler's number.");
 
-  builder
-      .AddBoundFunction(math,
-                        "Multiply",
-                        QuaternionMultiplyQuaternion,
-                        TwoParameters(this->QuaternionType, "by", this->QuaternionType, "the"),
-                        this->QuaternionType,
-                        FunctionOptions::Static)
+  builder.AddBoundFunction(math, "Multiply", QuaternionMultiplyQuaternion, TwoParameters(this->QuaternionType, "by", this->QuaternionType, "the"), this->QuaternionType, FunctionOptions::Static)
       ->Description = RaverieDocumentString("Creates a new rotation that represents rotating by "
-                                          "parameter 2 and then parameter 1.");
-  builder
-      .AddBoundFunction(math,
-                        "Multiply",
-                        QuaternionMultiplyVector3,
-                        TwoParameters(this->QuaternionType, "by", this->Real3Type, "the"),
-                        this->Real3Type,
-                        FunctionOptions::Static)
-      ->Description = RaverieDocumentString("Creates a new vector that represents parameter 2 "
-                                          "being rotated by parameter 1.");
-  builder
-      .AddBoundFunction(
-          math, "Invert", QuaternionInvert, OneParameter(this->QuaternionType), this->QuaternionType, options)
-      ->Description = RaverieDocumentString("Returns the inverse rotation.");
+                                            "parameter 2 and then parameter 1.");
+  builder.AddBoundFunction(math, "Multiply", QuaternionMultiplyVector3, TwoParameters(this->QuaternionType, "by", this->Real3Type, "the"), this->Real3Type, FunctionOptions::Static)->Description =
+      RaverieDocumentString("Creates a new vector that represents parameter 2 "
+                            "being rotated by parameter 1.");
+  builder.AddBoundFunction(math, "Invert", QuaternionInvert, OneParameter(this->QuaternionType), this->QuaternionType, options)->Description = RaverieDocumentString("Returns the inverse rotation.");
 
-  builder.AddBoundGetterSetter(
-      quaternionType, "Identity", this->QuaternionType, nullptr, QuaternionIdentity, MemberOptions::Static);
+  builder.AddBoundGetterSetter(quaternionType, "Identity", this->QuaternionType, nullptr, QuaternionIdentity, MemberOptions::Static);
 
   CreateMatrixTypes(builder);
 
@@ -4626,434 +3793,229 @@ void Core::SetupBindingMath(LibraryBuilder& builder)
     BoundType* boundIntegerType = AllIntegerTypes[i];
     Function* f = nullptr;
 
-    RaverieBindBasicSplat(builder,
-                        math,
-                        Real,
-                        realType,
-                        "Abs",
-                        Math::Abs,
-                        boundType,
-                        OneParameter(boundType),
-                        "Returns the absolute value of value.");
+    RaverieBindBasicSplat(builder, math, Real, realType, "Abs", Math::Abs, boundType, OneParameter(boundType), "Returns the absolute value of value.");
     RaverieBindBasicSplatWithError(builder,
-                                 math,
-                                 Real,
-                                 realType,
-                                 "ACos",
-                                 Math::SafeArcCos,
-                                 boundType,
-                                 OneParameter(boundType, "units"),
-                                 "The transcendental function arc-cosine",
-                                 "ACos of '%s' is invalid. Values must be in the range [-1, 1].");
-    f = builder.AddBoundFunction(
-        math, "AllNonZero", AllNonZero, OneParameter(boundType), booleanType, FunctionOptions::Static);
+                                   math,
+                                   Real,
+                                   realType,
+                                   "ACos",
+                                   Math::SafeArcCos,
+                                   boundType,
+                                   OneParameter(boundType, "units"),
+                                   "The transcendental function arc-cosine",
+                                   "ACos of '%s' is invalid. Values must be in the range [-1, 1].");
+    f = builder.AddBoundFunction(math, "AllNonZero", AllNonZero, OneParameter(boundType), booleanType, FunctionOptions::Static);
     f->Description = RaverieDocumentString("Returns true if all values are not zero.");
     f->ComplexUserData.WriteObject(SplatWithErrorUserData(boundType->Size / realType->Size, nullptr, boundType));
-    f = builder.AddBoundFunction(
-        math, "AnyNonZero", AnyNonZero, OneParameter(boundType), booleanType, FunctionOptions::Static);
+    f = builder.AddBoundFunction(math, "AnyNonZero", AnyNonZero, OneParameter(boundType), booleanType, FunctionOptions::Static);
     f->Description = RaverieDocumentString("Returns true if any value is not zero.");
     f->ComplexUserData.WriteObject(SplatWithErrorUserData(boundType->Size / realType->Size, nullptr, boundType));
     RaverieBindBasicSplatWithError(builder,
-                                 math,
-                                 Real,
-                                 realType,
-                                 "ASin",
-                                 Math::SafeArcSin,
-                                 boundType,
-                                 OneParameter(boundType, "units"),
-                                 "The transcendental function arc-sine",
-                                 "ASin of '%s' is invalid. Values must be in the range [-1, 1].");
+                                   math,
+                                   Real,
+                                   realType,
+                                   "ASin",
+                                   Math::SafeArcSin,
+                                   boundType,
+                                   OneParameter(boundType, "units"),
+                                   "The transcendental function arc-sine",
+                                   "ASin of '%s' is invalid. Values must be in the range [-1, 1].");
     RaverieBindBasicSplat(builder,
-                        math,
-                        Real,
-                        realType,
-                        "ATan",
-                        Math::ArcTan,
-                        boundType,
-                        OneParameter(boundType, "units"),
-                        "The transcendental function arc-tangent. The return "
-                        "type is in radians.");
+                          math,
+                          Real,
+                          realType,
+                          "ATan",
+                          Math::ArcTan,
+                          boundType,
+                          OneParameter(boundType, "units"),
+                          "The transcendental function arc-tangent. The return "
+                          "type is in radians.");
     RaverieBindBasicTwoParamSplat(builder,
-                                math,
-                                Real,
-                                realType,
-                                "ATan2",
-                                Math::ArcTan2,
-                                boundType,
-                                TwoParameters(boundType, "y", "x"),
-                                "Performs the arc-tangent using the signs of x and y to determine what "
-                                "quadrant the angle lies in. Returns a value in the range of [-pi, "
-                                "pi]. The return type is in radians.");
-    RaverieBindBasicSplat(
-        builder, math, Real, realType, "Ceil", Math::Ceil, boundType, OneParameter(boundType), "Rounds value upward.");
-    f = builder.AddBoundFunction(math,
-                                 "Ceil",
-                                 RaverieComplexTwoParameterSplatBinder(Real, Integer, Real, 1, 0, Math::Ceil),
-                                 TwoParameters(boundType, "value", integerType, "places"),
-                                 boundType,
-                                 FunctionOptions::Static);
-    RaverieSetUserDataAndDescription(f,
-                                   boundType,
-                                   realType,
-                                   "Rounds value upward. The place represents where in the number we want "
-                                   "to perform rounding (0 is the 1s place, 1 is the 10s place, -1 is the "
-                                   "tenths place, etc).");
-    f = builder.AddBoundFunction(
-        math,
-        "Ceil",
-        RaverieComplexThreeParameterSplatBinder(Real, Integer, Integer, Real, 1, 0, 0, Math::Ceil),
-        ThreeParameters(boundType, "value", integerType, "places", integerType, "numericalBase"),
-        boundType,
-        FunctionOptions::Static);
-    RaverieSetUserDataAndDescription(f,
-                                   boundType,
-                                   realType,
-                                   "Rounds value upward. The place represents where in the number we want "
-                                   "to perform rounding (0 is the 1s place, 1 is the 10s place, -1 is the "
-                                   "tenths place, etc).");
-
-    RaverieBindBasicThreeParamSplat(builder,
                                   math,
                                   Real,
                                   realType,
-                                  "Clamp",
-                                  Math::Clamp<Real>,
+                                  "ATan2",
+                                  Math::ArcTan2,
                                   boundType,
-                                  ThreeParameters(boundType, "value", "min", "max"),
-                                  "Limits the value between the provided min and max.");
-    RaverieBindBasicSplat(builder,
-                        math,
-                        Real,
-                        realType,
-                        "Cos",
-                        Math::Cos,
-                        boundType,
-                        OneParameter(boundType, "radians"),
-                        "The transcendental function cosine.");
-    RaverieBindBasicSplat(builder,
-                        math,
-                        Real,
-                        realType,
-                        "Cosh",
-                        Math::Cosh,
-                        boundType,
-                        OneParameter(boundType, "radians"),
-                        "The hyperbolic cosine function.");
-    RaverieBindBasicSplat(builder,
-                        math,
-                        Real,
-                        realType,
-                        "Exp",
-                        Math::Exp,
-                        boundType,
-                        OneParameter(boundType),
-                        "Returns the base-e exponentiation of value, which is e^value.");
-    RaverieBindBasicSplat(builder,
-                        math,
-                        Real,
-                        realType,
-                        "Exp2",
-                        Math::Exp2,
-                        boundType,
-                        OneParameter(boundType),
-                        "Returns the base-2 exponentiation of value, which is 2^value.");
-    RaverieBindBasicSplat(builder,
-                        math,
-                        Real,
-                        realType,
-                        "Floor",
-                        Math::Floor,
-                        boundType,
-                        OneParameter(boundType),
-                        "Rounds value downward.");
-
+                                  TwoParameters(boundType, "y", "x"),
+                                  "Performs the arc-tangent using the signs of x and y to determine what "
+                                  "quadrant the angle lies in. Returns a value in the range of [-pi, "
+                                  "pi]. The return type is in radians.");
+    RaverieBindBasicSplat(builder, math, Real, realType, "Ceil", Math::Ceil, boundType, OneParameter(boundType), "Rounds value upward.");
+    f = builder.AddBoundFunction(
+        math, "Ceil", RaverieComplexTwoParameterSplatBinder(Real, Integer, Real, 1, 0, Math::Ceil), TwoParameters(boundType, "value", integerType, "places"), boundType, FunctionOptions::Static);
+    RaverieSetUserDataAndDescription(f,
+                                     boundType,
+                                     realType,
+                                     "Rounds value upward. The place represents where in the number we want "
+                                     "to perform rounding (0 is the 1s place, 1 is the 10s place, -1 is the "
+                                     "tenths place, etc).");
     f = builder.AddBoundFunction(math,
-                                 "Floor",
-                                 RaverieComplexTwoParameterSplatBinder(Real, Integer, Real, 1, 0, Math::Floor),
-                                 TwoParameters(boundType, "value", integerType, "places"),
+                                 "Ceil",
+                                 RaverieComplexThreeParameterSplatBinder(Real, Integer, Integer, Real, 1, 0, 0, Math::Ceil),
+                                 ThreeParameters(boundType, "value", integerType, "places", integerType, "numericalBase"),
                                  boundType,
                                  FunctionOptions::Static);
     RaverieSetUserDataAndDescription(f,
-                                   boundType,
-                                   realType,
-                                   "Rounds value downward. The place represents where in the number we "
-                                   "want to perform rounding (0 is the 1s place, 1 is the 10s place, -1 "
-                                   "is the tenths place, etc).");
+                                     boundType,
+                                     realType,
+                                     "Rounds value upward. The place represents where in the number we want "
+                                     "to perform rounding (0 is the 1s place, 1 is the 10s place, -1 is the "
+                                     "tenths place, etc).");
+
+    RaverieBindBasicThreeParamSplat(
+        builder, math, Real, realType, "Clamp", Math::Clamp<Real>, boundType, ThreeParameters(boundType, "value", "min", "max"), "Limits the value between the provided min and max.");
+    RaverieBindBasicSplat(builder, math, Real, realType, "Cos", Math::Cos, boundType, OneParameter(boundType, "radians"), "The transcendental function cosine.");
+    RaverieBindBasicSplat(builder, math, Real, realType, "Cosh", Math::Cosh, boundType, OneParameter(boundType, "radians"), "The hyperbolic cosine function.");
+    RaverieBindBasicSplat(builder, math, Real, realType, "Exp", Math::Exp, boundType, OneParameter(boundType), "Returns the base-e exponentiation of value, which is e^value.");
+    RaverieBindBasicSplat(builder, math, Real, realType, "Exp2", Math::Exp2, boundType, OneParameter(boundType), "Returns the base-2 exponentiation of value, which is 2^value.");
+    RaverieBindBasicSplat(builder, math, Real, realType, "Floor", Math::Floor, boundType, OneParameter(boundType), "Rounds value downward.");
+
     f = builder.AddBoundFunction(
-        math,
-        "Floor",
-        RaverieComplexThreeParameterSplatBinder(Real, Integer, Integer, Real, 1, 0, 0, Math::Floor),
-        ThreeParameters(boundType, "value", integerType, "places", integerType, "numericalBase"),
-        boundType,
-        FunctionOptions::Static);
+        math, "Floor", RaverieComplexTwoParameterSplatBinder(Real, Integer, Real, 1, 0, Math::Floor), TwoParameters(boundType, "value", integerType, "places"), boundType, FunctionOptions::Static);
     RaverieSetUserDataAndDescription(f,
-                                   boundType,
-                                   realType,
-                                   "Rounds value downward. The place represents where in the number we "
-                                   "want to perform rounding (0 is the 1s place, 1 is the 10s place, -1 "
-                                   "is the tenths place, etc).");
+                                     boundType,
+                                     realType,
+                                     "Rounds value downward. The place represents where in the number we "
+                                     "want to perform rounding (0 is the 1s place, 1 is the 10s place, -1 "
+                                     "is the tenths place, etc).");
+    f = builder.AddBoundFunction(math,
+                                 "Floor",
+                                 RaverieComplexThreeParameterSplatBinder(Real, Integer, Integer, Real, 1, 0, 0, Math::Floor),
+                                 ThreeParameters(boundType, "value", integerType, "places", integerType, "numericalBase"),
+                                 boundType,
+                                 FunctionOptions::Static);
+    RaverieSetUserDataAndDescription(f,
+                                     boundType,
+                                     realType,
+                                     "Rounds value downward. The place represents where in the number we "
+                                     "want to perform rounding (0 is the 1s place, 1 is the 10s place, -1 "
+                                     "is the tenths place, etc).");
 
     RaverieBindBasicTwoParamSplatWithError(builder,
-                                         math,
-                                         Real,
-                                         realType,
-                                         "FMod",
-                                         Math::SafeFMod,
-                                         boundType,
-                                         TwoParameters(boundType, "numerator", "denominator"),
-                                         "Returns the floating-point remainder of numerator/denominator "
-                                         "(rounded towards zero).",
-                                         "Fmod(%s, %s) is invalid because the denominator would produce a zero "
-                                         "division");
-    RaverieBindBasicSplat(builder,
-                        math,
-                        Real,
-                        realType,
-                        "Frac",
-                        Math::Fractional,
-                        boundType,
-                        OneParameter(boundType),
-                        "Returns the fractional part of value, a value between 0 and 1.");
+                                           math,
+                                           Real,
+                                           realType,
+                                           "FMod",
+                                           Math::SafeFMod,
+                                           boundType,
+                                           TwoParameters(boundType, "numerator", "denominator"),
+                                           "Returns the floating-point remainder of numerator/denominator "
+                                           "(rounded towards zero).",
+                                           "Fmod(%s, %s) is invalid because the denominator would produce a zero "
+                                           "division");
+    RaverieBindBasicSplat(builder, math, Real, realType, "Frac", Math::Fractional, boundType, OneParameter(boundType), "Returns the fractional part of value, a value between 0 and 1.");
 
-    f = builder.AddBoundFunction(
-        math,
-        "Lerp",
-        RaverieComplexThreeParameterSplatBinder(Real, Real, Real, Real, 1, 1, 1, Raverie::Lerp<Real>),
-        ThreeParameters(boundType, "start", boundType, "end", boundType, "t"),
-        boundType,
-        FunctionOptions::Static);
+    f = builder.AddBoundFunction(math,
+                                 "Lerp",
+                                 RaverieComplexThreeParameterSplatBinder(Real, Real, Real, Real, 1, 1, 1, Raverie::Lerp<Real>),
+                                 ThreeParameters(boundType, "start", boundType, "end", boundType, "t"),
+                                 boundType,
+                                 FunctionOptions::Static);
     RaverieSetUserDataAndDescription(f,
-                                   boundType,
-                                   realType,
-                                   "Linearly interpolates from start to end by the fraction t. T of 0 is "
-                                   "start and t of 1 is end.");
+                                     boundType,
+                                     realType,
+                                     "Linearly interpolates from start to end by the fraction t. T of 0 is "
+                                     "start and t of 1 is end.");
     // Add another version for lerp that is always of real type
     if (boundType != realType)
     {
-      f = builder.AddBoundFunction(
-          math,
-          "Lerp",
-          RaverieComplexThreeParameterSplatBinder(Real, Real, Real, Real, 1, 1, 0, Raverie::Lerp<Real>),
-          ThreeParameters(boundType, "start", boundType, "end", realType, "t"),
-          boundType,
-          FunctionOptions::Static);
+      f = builder.AddBoundFunction(math,
+                                   "Lerp",
+                                   RaverieComplexThreeParameterSplatBinder(Real, Real, Real, Real, 1, 1, 0, Raverie::Lerp<Real>),
+                                   ThreeParameters(boundType, "start", boundType, "end", realType, "t"),
+                                   boundType,
+                                   FunctionOptions::Static);
       RaverieSetUserDataAndDescription(f,
-                                     boundType,
-                                     realType,
-                                     "Linearly interpolates from start to end by the fraction t. T of 0 "
-                                     "is start and t of 1 is end.");
+                                       boundType,
+                                       realType,
+                                       "Linearly interpolates from start to end by the fraction t. T of 0 "
+                                       "is start and t of 1 is end.");
     }
 
-    RaverieBindBasicSplat(
-        builder, math, Real, realType, "Log", Math::Log, boundType, OneParameter(boundType), "Base e logarithm.");
-    RaverieBindBasicSplat(
-        builder, math, Real, realType, "Log10", Math::Log10, boundType, OneParameter(boundType), "Base 10 logarithm.");
-    RaverieBindBasicSplat(
-        builder, math, Real, realType, "Log2", Math::Log2, boundType, OneParameter(boundType), "Base 2 logarithm.");
-    RaverieBindBasicTwoParamSplat(builder,
-                                math,
-                                Real,
-                                realType,
-                                "Max",
-                                Math::Max<Real>,
-                                boundType,
-                                TwoParameters(boundType),
-                                "Returns whichever value is larger.");
-    RaverieBindBasicTwoParamSplat(builder,
-                                math,
-                                Real,
-                                realType,
-                                "Min",
-                                Math::Min<Real>,
-                                boundType,
-                                TwoParameters(boundType),
-                                "Returns whichever value is smaller.");
-    RaverieBindBasicTwoParamSplat(builder,
-                                math,
-                                Real,
-                                realType,
-                                "Pow",
-                                Math::Pow,
-                                boundType,
-                                TwoParameters(boundType, "base", "exponent"),
-                                "Returns base raised to the power of the exponent.");
+    RaverieBindBasicSplat(builder, math, Real, realType, "Log", Math::Log, boundType, OneParameter(boundType), "Base e logarithm.");
+    RaverieBindBasicSplat(builder, math, Real, realType, "Log10", Math::Log10, boundType, OneParameter(boundType), "Base 10 logarithm.");
+    RaverieBindBasicSplat(builder, math, Real, realType, "Log2", Math::Log2, boundType, OneParameter(boundType), "Base 2 logarithm.");
+    RaverieBindBasicTwoParamSplat(builder, math, Real, realType, "Max", Math::Max<Real>, boundType, TwoParameters(boundType), "Returns whichever value is larger.");
+    RaverieBindBasicTwoParamSplat(builder, math, Real, realType, "Min", Math::Min<Real>, boundType, TwoParameters(boundType), "Returns whichever value is smaller.");
+    RaverieBindBasicTwoParamSplat(builder, math, Real, realType, "Pow", Math::Pow, boundType, TwoParameters(boundType, "base", "exponent"), "Returns base raised to the power of the exponent.");
 
-    RaverieBindBasicSplat(builder,
-                        math,
-                        Real,
-                        realType,
-                        "Round",
-                        Math::Round,
-                        boundType,
-                        OneParameter(boundType),
-                        "Returns the integer value closest to value.");
+    RaverieBindBasicSplat(builder, math, Real, realType, "Round", Math::Round, boundType, OneParameter(boundType), "Returns the integer value closest to value.");
+    f = builder.AddBoundFunction(
+        math, "Round", RaverieComplexTwoParameterSplatBinder(Real, Integer, Real, 1, 0, Math::Round), TwoParameters(boundType, "value", integerType, "places"), boundType, FunctionOptions::Static);
+    RaverieSetUserDataAndDescription(f,
+                                     boundType,
+                                     realType,
+                                     "Returns the integer value closest to value. The place represents "
+                                     "where in the number we want to perform rounding (0 is the 1s place, 1 "
+                                     "is the 10s place, -1 is the tenths place, etc).");
     f = builder.AddBoundFunction(math,
                                  "Round",
-                                 RaverieComplexTwoParameterSplatBinder(Real, Integer, Real, 1, 0, Math::Round),
-                                 TwoParameters(boundType, "value", integerType, "places"),
+                                 RaverieComplexThreeParameterSplatBinder(Real, Integer, Integer, Real, 1, 0, 0, Math::Round),
+                                 ThreeParameters(boundType, "value", integerType, "places", integerType, "numericalBase"),
                                  boundType,
                                  FunctionOptions::Static);
     RaverieSetUserDataAndDescription(f,
-                                   boundType,
-                                   realType,
-                                   "Returns the integer value closest to value. The place represents "
-                                   "where in the number we want to perform rounding (0 is the 1s place, 1 "
-                                   "is the 10s place, -1 is the tenths place, etc).");
-    f = builder.AddBoundFunction(
-        math,
-        "Round",
-        RaverieComplexThreeParameterSplatBinder(Real, Integer, Integer, Real, 1, 0, 0, Math::Round),
-        ThreeParameters(boundType, "value", integerType, "places", integerType, "numericalBase"),
-        boundType,
-        FunctionOptions::Static);
-    RaverieSetUserDataAndDescription(f,
-                                   boundType,
-                                   realType,
-                                   "Returns the integer value closest to value. The place represents "
-                                   "where in the number we want to perform rounding (0 is the 1s place, 1 "
-                                   "is the 10s place, -1 is the tenths place, etc).");
+                                     boundType,
+                                     realType,
+                                     "Returns the integer value closest to value. The place represents "
+                                     "where in the number we want to perform rounding (0 is the 1s place, 1 "
+                                     "is the 10s place, -1 is the tenths place, etc).");
 
     RaverieBindBasicSplat(builder,
-                        math,
-                        Real,
-                        realType,
-                        "RSqrt",
-                        Math::Rsqrt,
-                        boundType,
-                        OneParameter(boundType),
-                        "Reciprocal square root approximation. Used for "
-                        "efficiency when higher accuracy is not need.");
-    RaverieBindBasicSplat(builder,
-                        math,
-                        Real,
-                        realType,
-                        "Saturate",
-                        Math::Clamp<Real>,
-                        boundType,
-                        OneParameter(boundType),
-                        "Limits the value between 0 and 1");
+                          math,
+                          Real,
+                          realType,
+                          "RSqrt",
+                          Math::Rsqrt,
+                          boundType,
+                          OneParameter(boundType),
+                          "Reciprocal square root approximation. Used for "
+                          "efficiency when higher accuracy is not need.");
+    RaverieBindBasicSplat(builder, math, Real, realType, "Saturate", Math::Clamp<Real>, boundType, OneParameter(boundType), "Limits the value between 0 and 1");
 
-    f = builder.AddBoundFunction(math,
-                                 "Sign",
-                                 RaverieComplexOneParameterSplatBinder(Real, Integer, 1, Math::Sign),
-                                 OneParameter(boundType),
-                                 boundIntegerType,
-                                 FunctionOptions::Static);
+    f = builder.AddBoundFunction(math, "Sign", RaverieComplexOneParameterSplatBinder(Real, Integer, 1, Math::Sign), OneParameter(boundType), boundIntegerType, FunctionOptions::Static);
     RaverieSetUserDataAndDescription(f, boundType, realType, "Returns the sign of the value as either 1 or -1.");
 
-    RaverieBindBasicSplat(builder,
-                        math,
-                        Real,
-                        realType,
-                        "Sin",
-                        Math::Sin,
-                        boundType,
-                        OneParameter(boundType, "radians"),
-                        "The transcendental function sine.");
-    RaverieBindBasicSplat(builder,
-                        math,
-                        Real,
-                        realType,
-                        "Sinh",
-                        Math::Sinh,
-                        boundType,
-                        OneParameter(boundType, "radians"),
-                        "The hyperbolic sine function.");
+    RaverieBindBasicSplat(builder, math, Real, realType, "Sin", Math::Sin, boundType, OneParameter(boundType, "radians"), "The transcendental function sine.");
+    RaverieBindBasicSplat(builder, math, Real, realType, "Sinh", Math::Sinh, boundType, OneParameter(boundType, "radians"), "The hyperbolic sine function.");
 
-    f = builder.AddBoundFunction(
-        math,
-        "SmoothStep",
-        RaverieFullThreeParameterSplatBinder(Real, Real, Real, Real, 1, 1, 1, Math::SmoothStep<Real>),
-        ThreeParameters(boundType, "min", boundType, "max", boundType, "x"),
-        boundType,
-        FunctionOptions::Static);
+    f = builder.AddBoundFunction(math,
+                                 "SmoothStep",
+                                 RaverieFullThreeParameterSplatBinder(Real, Real, Real, Real, 1, 1, 1, Math::SmoothStep<Real>),
+                                 ThreeParameters(boundType, "min", boundType, "max", boundType, "x"),
+                                 boundType,
+                                 FunctionOptions::Static);
     RaverieSetUserDataAndDescription(f,
-                                   boundType,
-                                   realType,
-                                   "Returns a smooth Hermite interpolation between 0 and 1 if x is "
-                                   "in-between min and max.");
+                                     boundType,
+                                     realType,
+                                     "Returns a smooth Hermite interpolation between 0 and 1 if x is "
+                                     "in-between min and max.");
     // Add another version for smoothstep that is always of real type
     if (boundType != realType)
     {
-      f = builder.AddBoundFunction(
-          math,
-          "SmoothStep",
-          RaverieFullThreeParameterSplatBinder(Real, Real, Real, Real, 1, 1, 0, Math::SmoothStep<Real>),
-          ThreeParameters(boundType, "min", boundType, "max", realType, "t"),
-          boundType,
-          FunctionOptions::Static);
+      f = builder.AddBoundFunction(math,
+                                   "SmoothStep",
+                                   RaverieFullThreeParameterSplatBinder(Real, Real, Real, Real, 1, 1, 0, Math::SmoothStep<Real>),
+                                   ThreeParameters(boundType, "min", boundType, "max", realType, "t"),
+                                   boundType,
+                                   FunctionOptions::Static);
       RaverieSetUserDataAndDescription(f,
-                                     boundType,
-                                     realType,
-                                     "Returns a smooth Hermite interpolation between 0 and 1 if t is "
-                                     "in-between min and max.");
+                                       boundType,
+                                       realType,
+                                       "Returns a smooth Hermite interpolation between 0 and 1 if t is "
+                                       "in-between min and max.");
     }
 
-    RaverieBindBasicSplatWithError(builder,
-                                 math,
-                                 Real,
-                                 realType,
-                                 "Sqrt",
-                                 Math::SafeSqrt,
-                                 boundType,
-                                 OneParameter(boundType),
-                                 "Computes the square root",
-                                 "Sqrt of the negative number '%s' is invalid.");
-    RaverieBindBasicTwoParamSplat(builder,
-                                math,
-                                Real,
-                                realType,
-                                "Step",
-                                Math::Step,
-                                boundType,
-                                TwoParameters(boundType, "y", "x"),
-                                "If y <= x then 1 is returned, otherwise 0 is returned.")
-        RaverieBindBasicSplat(builder,
-                            math,
-                            Real,
-                            realType,
-                            "Tan",
-                            Math::Tan,
-                            boundType,
-                            OneParameter(boundType, "radians"),
-                            "The transcendental function tangent.");
-    RaverieBindBasicSplat(builder,
-                        math,
-                        Real,
-                        realType,
-                        "Tanh",
-                        Math::Tanh,
-                        boundType,
-                        OneParameter(boundType, "radians"),
-                        "The hyperbolic tangent function.");
-    RaverieBindBasicSplat(builder,
-                        math,
-                        Real,
-                        realType,
-                        "ToRadians",
-                        Math::DegToRad,
-                        boundType,
-                        OneParameter(boundType, "degrees"),
-                        "Converts the given degrees to radians.");
-    RaverieBindBasicSplat(builder,
-                        math,
-                        Real,
-                        realType,
-                        "ToDegrees",
-                        Math::RadToDeg,
-                        boundType,
-                        OneParameter(boundType, "radians"),
-                        "Converts the given radians to degrees.");
+    RaverieBindBasicSplatWithError(
+        builder, math, Real, realType, "Sqrt", Math::SafeSqrt, boundType, OneParameter(boundType), "Computes the square root", "Sqrt of the negative number '%s' is invalid.");
+    RaverieBindBasicTwoParamSplat(builder, math, Real, realType, "Step", Math::Step, boundType, TwoParameters(boundType, "y", "x"), "If y <= x then 1 is returned, otherwise 0 is returned.")
+        RaverieBindBasicSplat(builder, math, Real, realType, "Tan", Math::Tan, boundType, OneParameter(boundType, "radians"), "The transcendental function tangent.");
+    RaverieBindBasicSplat(builder, math, Real, realType, "Tanh", Math::Tanh, boundType, OneParameter(boundType, "radians"), "The hyperbolic tangent function.");
+    RaverieBindBasicSplat(builder, math, Real, realType, "ToRadians", Math::DegToRad, boundType, OneParameter(boundType, "degrees"), "Converts the given degrees to radians.");
+    RaverieBindBasicSplat(builder, math, Real, realType, "ToDegrees", Math::RadToDeg, boundType, OneParameter(boundType, "radians"), "Converts the given radians to degrees.");
 
-    RaverieBindBasicSplat(builder,
-                        math,
-                        Real,
-                        realType,
-                        "Truncate",
-                        Math::Truncate,
-                        boundType,
-                        OneParameter(boundType),
-                        "Rounds value towards zero.");
+    RaverieBindBasicSplat(builder, math, Real, realType, "Truncate", Math::Truncate, boundType, OneParameter(boundType), "Rounds value towards zero.");
     f = builder.AddBoundFunction(math,
                                  "Truncate",
                                  RaverieComplexTwoParameterSplatBinder(Real, Integer, Real, 1, 0, Math::Truncate),
@@ -5061,38 +4023,32 @@ void Core::SetupBindingMath(LibraryBuilder& builder)
                                  boundType,
                                  FunctionOptions::Static);
     RaverieSetUserDataAndDescription(f,
-                                   boundType,
-                                   realType,
-                                   "Rounds value towards zero. The place represents where in the number "
-                                   "we want to perform rounding (0 is the 1s place, 1 is the 10s place, "
-                                   "-1 is the tenths place, etc).");
-    f = builder.AddBoundFunction(
-        math,
-        "Truncate",
-        RaverieComplexThreeParameterSplatBinder(Real, Integer, Integer, Real, 1, 0, 0, Math::Truncate),
-        ThreeParameters(boundType, "value", integerType, "places", integerType, "numericalBase"),
-        boundType,
-        FunctionOptions::Static);
+                                     boundType,
+                                     realType,
+                                     "Rounds value towards zero. The place represents where in the number "
+                                     "we want to perform rounding (0 is the 1s place, 1 is the 10s place, "
+                                     "-1 is the tenths place, etc).");
+    f = builder.AddBoundFunction(math,
+                                 "Truncate",
+                                 RaverieComplexThreeParameterSplatBinder(Real, Integer, Integer, Real, 1, 0, 0, Math::Truncate),
+                                 ThreeParameters(boundType, "value", integerType, "places", integerType, "numericalBase"),
+                                 boundType,
+                                 FunctionOptions::Static);
     RaverieSetUserDataAndDescription(f,
-                                   boundType,
-                                   realType,
-                                   "Rounds value towards zero. The place represents where in the number "
-                                   "we want to perform rounding (0 is the 1s place, 1 is the 10s place, "
-                                   "-1 is the tenths place, etc).");
+                                     boundType,
+                                     realType,
+                                     "Rounds value towards zero. The place represents where in the number "
+                                     "we want to perform rounding (0 is the 1s place, 1 is the 10s place, "
+                                     "-1 is the tenths place, etc).");
 
     // Approximately Equal
     BoundType* resultMatrixType = AllBooleanTypes[i];
-    f = builder.AddBoundFunction(math,
-                                 "ApproximatelyEqual",
-                                 RealApproximatelyEqual,
-                                 ThreeParameters(boundType, "p0", boundType, "p1", realType, "epsilon"),
-                                 resultMatrixType,
-                                 FunctionOptions::Static);
+    f = builder.AddBoundFunction(math, "ApproximatelyEqual", RealApproximatelyEqual, ThreeParameters(boundType, "p0", boundType, "p1", realType, "epsilon"), resultMatrixType, FunctionOptions::Static);
     RaverieSetUserDataAndDescription(f,
-                                   boundType,
-                                   realType,
-                                   "Checks if the two values are within "
-                                   "epsilon distance from each other.");
+                                     boundType,
+                                     realType,
+                                     "Checks if the two values are within "
+                                     "epsilon distance from each other.");
   }
 
   // Bind the integer functions separately (not many functions make sense to be
@@ -5102,68 +4058,19 @@ void Core::SetupBindingMath(LibraryBuilder& builder)
     BoundType* boundType = AllIntegerTypes[i];
     Function* f = nullptr;
 
-    RaverieBindBasicSplat(builder,
-                        math,
-                        Integer,
-                        integerType,
-                        "Abs",
-                        Math::Abs,
-                        boundType,
-                        OneParameter(boundType),
-                        "Returns the absolute value of value.");
-    f = builder.AddBoundFunction(
-        math, "AllNonZero", AllNonZero, OneParameter(boundType), booleanType, FunctionOptions::Static);
+    RaverieBindBasicSplat(builder, math, Integer, integerType, "Abs", Math::Abs, boundType, OneParameter(boundType), "Returns the absolute value of value.");
+    f = builder.AddBoundFunction(math, "AllNonZero", AllNonZero, OneParameter(boundType), booleanType, FunctionOptions::Static);
     f->Description = RaverieDocumentString("Returns true if all values are not zero.");
     f->ComplexUserData.WriteObject(SplatWithErrorUserData(boundType->Size / integerType->Size, nullptr, boundType));
-    f = builder.AddBoundFunction(
-        math, "AnyNonZero", AnyNonZero, OneParameter(boundType), booleanType, FunctionOptions::Static);
+    f = builder.AddBoundFunction(math, "AnyNonZero", AnyNonZero, OneParameter(boundType), booleanType, FunctionOptions::Static);
     f->Description = RaverieDocumentString("Returns true if any value is not zero.");
     f->ComplexUserData.WriteObject(SplatWithErrorUserData(boundType->Size / integerType->Size, nullptr, boundType));
-    RaverieBindBasicThreeParamSplat(builder,
-                                  math,
-                                  Integer,
-                                  integerType,
-                                  "Clamp",
-                                  Math::Clamp<Integer>,
-                                  boundType,
-                                  ThreeParameters(boundType, "value", "min", "max"),
-                                  "Limits the value between the provided min and max.");
-    RaverieBindBasicSplat(builder,
-                        math,
-                        Integer,
-                        integerType,
-                        "CountBits",
-                        Math::CountBits,
-                        boundType,
-                        OneParameter(boundType),
-                        "Counts the number of bits set on the input.");
-    RaverieBindBasicTwoParamSplat(builder,
-                                math,
-                                Integer,
-                                integerType,
-                                "Max",
-                                Math::Max<Integer>,
-                                boundType,
-                                TwoParameters(boundType),
-                                "Returns whichever value is larger.");
-    RaverieBindBasicTwoParamSplat(builder,
-                                math,
-                                Integer,
-                                integerType,
-                                "Min",
-                                Math::Min<Integer>,
-                                boundType,
-                                TwoParameters(boundType),
-                                "Returns whichever value is smaller.");
-    RaverieBindBasicSplat(builder,
-                        math,
-                        Integer,
-                        integerType,
-                        "Sign",
-                        Math::Sign,
-                        boundType,
-                        OneParameter(boundType),
-                        "Returns the sign of the value as either 1 or -1.");
+    RaverieBindBasicThreeParamSplat(
+        builder, math, Integer, integerType, "Clamp", Math::Clamp<Integer>, boundType, ThreeParameters(boundType, "value", "min", "max"), "Limits the value between the provided min and max.");
+    RaverieBindBasicSplat(builder, math, Integer, integerType, "CountBits", Math::CountBits, boundType, OneParameter(boundType), "Counts the number of bits set on the input.");
+    RaverieBindBasicTwoParamSplat(builder, math, Integer, integerType, "Max", Math::Max<Integer>, boundType, TwoParameters(boundType), "Returns whichever value is larger.");
+    RaverieBindBasicTwoParamSplat(builder, math, Integer, integerType, "Min", Math::Min<Integer>, boundType, TwoParameters(boundType), "Returns whichever value is smaller.");
+    RaverieBindBasicSplat(builder, math, Integer, integerType, "Sign", Math::Sign, boundType, OneParameter(boundType), "Returns the sign of the value as either 1 or -1.");
   }
 
   // Bind the boolean functions
@@ -5172,12 +4079,10 @@ void Core::SetupBindingMath(LibraryBuilder& builder)
     BoundType* boundType = AllBooleanTypes[i];
     Function* f = nullptr;
 
-    f = builder.AddBoundFunction(
-        math, "AllNonZero", AllNonZero, OneParameter(boundType), booleanType, FunctionOptions::Static);
+    f = builder.AddBoundFunction(math, "AllNonZero", AllNonZero, OneParameter(boundType), booleanType, FunctionOptions::Static);
     f->Description = RaverieDocumentString("Returns true if all values are true.");
     f->ComplexUserData.WriteObject(SplatWithErrorUserData(boundType->Size / booleanType->Size, nullptr, boundType));
-    f = builder.AddBoundFunction(
-        math, "AnyNonZero", AnyNonZero, OneParameter(boundType), booleanType, FunctionOptions::Static);
+    f = builder.AddBoundFunction(math, "AnyNonZero", AnyNonZero, OneParameter(boundType), booleanType, FunctionOptions::Static);
     f->Description = RaverieDocumentString("Returns true if any value is true.");
     f->ComplexUserData.WriteObject(SplatWithErrorUserData(boundType->Size / booleanType->Size, nullptr, boundType));
   }
@@ -5232,8 +4137,7 @@ void Core::SetupBinding(LibraryBuilder& builder)
   BoundType* nullType = builder.AddBoundType("Null", TypeCopyMode::ReferenceType, 0, 0);
   BoundType* voidType = builder.AddBoundType("Void", TypeCopyMode::ValueType, 0, 0);
   BoundType* errorType = builder.AddBoundType("[ErrorType]", TypeCopyMode::ValueType, 0, 0);
-  BoundType* overloadedMethodsType =
-      builder.AddBoundType("[MultipleMethodsOfTheSameName]", TypeCopyMode::ValueType, 0, 0);
+  BoundType* overloadedMethodsType = builder.AddBoundType("[MultipleMethodsOfTheSameName]", TypeCopyMode::ValueType, 0, 0);
   DelegateType* anyDelegateType = builder.GetDelegateType(ParameterArray(), voidType);
   DelegateType* errorDelegateType = builder.GetDelegateType(ParameterArray(), errorType);
 
@@ -5305,8 +4209,7 @@ void Core::SetupBinding(LibraryBuilder& builder)
   ScalarTypeOneFunctions[VectorScalarTypes::Integer] = ScalarTypeIntegerOne;
   ScalarTypeOneFunctions[VectorScalarTypes::Boolean] = ScalarTypeBooleanOne;
 
-  RaverieFullBindMethod(
-      builder, this->IntegerType, &ReinterpretRealToInteger, RaverieNoOverload, "Reinterpret", RaverieNoNames);
+  RaverieFullBindMethod(builder, this->IntegerType, &ReinterpretRealToInteger, RaverieNoOverload, "Reinterpret", RaverieNoNames);
   RaverieFullBindMethod(builder, this->RealType, &ReinterpretIntegerToReal, RaverieNoOverload, "Reinterpret", RaverieNoNames);
 
   // Create the one special any type (there should only ever be one
@@ -5327,14 +4230,9 @@ void Core::SetupBinding(LibraryBuilder& builder)
 
   // Add the hash-map template instantiator
   builder.AddTemplateInstantiator("HashMap", InstantiateHashMap, keyValueArguments, nullptr);
-  builder.AddTemplateInstantiator(
-      "HashMapRange", InstantiateHashMapRange, keyValueArguments, (void*)(size_t)HashMapRangeMode::Pair);
-  builder.AddTemplateInstantiator(
-      "HashMapKeyRange", InstantiateHashMapRange, StringArray(RaverieInit, "Key"), (void*)(size_t)HashMapRangeMode::Key);
-  builder.AddTemplateInstantiator("HashMapValueRange",
-                                  InstantiateHashMapRange,
-                                  StringArray(RaverieInit, "Value"),
-                                  (void*)(size_t)HashMapRangeMode::Value);
+  builder.AddTemplateInstantiator("HashMapRange", InstantiateHashMapRange, keyValueArguments, (void*)(size_t)HashMapRangeMode::Pair);
+  builder.AddTemplateInstantiator("HashMapKeyRange", InstantiateHashMapRange, StringArray(RaverieInit, "Key"), (void*)(size_t)HashMapRangeMode::Key);
+  builder.AddTemplateInstantiator("HashMapValueRange", InstantiateHashMapRange, StringArray(RaverieInit, "Value"), (void*)(size_t)HashMapRangeMode::Value);
   builder.AddTemplateInstantiator("KeyValue", InstantiateKeyValue, keyValueArguments, nullptr);
 
   SetupBindingString(builder);

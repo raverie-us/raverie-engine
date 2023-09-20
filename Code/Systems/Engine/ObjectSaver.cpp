@@ -29,8 +29,7 @@ void ObjectSaver::SaveFullObject(Object* object)
   SaveObject(object, object, path, false, InheritIdContext::Instance);
 }
 
-void ObjectSaver::SaveObject(
-    Object* object, Object* propertyPathParent, PropertyPath& path, bool patching, InheritIdContext::Enum context)
+void ObjectSaver::SaveObject(Object* object, Object* propertyPathParent, PropertyPath& path, bool patching, InheritIdContext::Enum context)
 {
   // Check to see if we should serialize this object
   BoundType* objectType = RaverieVirtualTypeId(object);
@@ -103,10 +102,7 @@ void ObjectSaver::SaveFullObjectInternal(Object* object)
   EndPolymorphic();
 }
 
-void ObjectSaver::SaveModifications(Object* object,
-                                    Object* propertyPathParent,
-                                    PropertyPath& path,
-                                    InheritIdContext::Enum context)
+void ObjectSaver::SaveModifications(Object* object, Object* propertyPathParent, PropertyPath& path, InheritIdContext::Enum context)
 {
   PolymorphicInfo info;
   BuildPolymorphicInfo(info, object, context, true);
@@ -122,10 +118,7 @@ void ObjectSaver::SaveModifications(Object* object,
   EndPolymorphic();
 }
 
-void ObjectSaver::SaveProperties(Object* object,
-                                 Object* propertyPathParent,
-                                 PropertyPath& path,
-                                 bool onlyModifiedProperties)
+void ObjectSaver::SaveProperties(Object* object, Object* propertyPathParent, PropertyPath& path, bool onlyModifiedProperties)
 {
   if (onlyModifiedProperties)
   {
@@ -144,8 +137,7 @@ void ObjectSaver::SaveProperties(Object* object,
 
         BoundType* propertyType = Type::GetBoundType(metaProperty->PropertyType);
 
-        if (propertyType && !metaProperty->IsStatic &&
-            propertyType->HasAttributeInherited(SerializationAttributes::cSerializationPrimitive) == nullptr)
+        if (propertyType && !metaProperty->IsStatic && propertyType->HasAttributeInherited(SerializationAttributes::cSerializationPrimitive) == nullptr)
         {
           path.AddPropertyToPath(metaProperty);
 
@@ -192,10 +184,7 @@ void ObjectSaver::SaveProperties(Object* object,
   }
 }
 
-void ObjectSaver::SaveChildren(Object* object,
-                               Object* propertyPathParent,
-                               PropertyPath& path,
-                               bool onlyModifiedChildren)
+void ObjectSaver::SaveChildren(Object* object, Object* propertyPathParent, PropertyPath& path, bool onlyModifiedChildren)
 {
   // We need a MetaComposition to get access to the object's children
   BoundType* objectMeta = RaverieVirtualTypeId(object);
@@ -246,10 +235,7 @@ void ObjectSaver::SaveChildren(Object* object,
   }
 }
 
-void ObjectSaver::BuildPolymorphicInfo(PolymorphicInfo& info,
-                                       Object* object,
-                                       InheritIdContext::Enum context,
-                                       bool patching)
+void ObjectSaver::BuildPolymorphicInfo(PolymorphicInfo& info, Object* object, InheritIdContext::Enum context, bool patching)
 {
   LocalModifications* modifications = LocalModifications::GetInstance();
   BoundType* objectType = RaverieVirtualTypeId(object);

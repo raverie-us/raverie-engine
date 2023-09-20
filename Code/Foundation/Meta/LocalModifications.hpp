@@ -106,10 +106,7 @@ public:
   void ClearModifications(HandleParam object, bool clearChildren, bool retainOverrideProperties);
   /// The 'cachedData' is strictly for performance to save allocations as it
   /// recurses.
-  void ClearModifications(HandleParam object,
-                          bool clearChildren,
-                          bool retainOverrideProperties,
-                          ObjectState::ModifiedProperties& cachedMemory);
+  void ClearModifications(HandleParam object, bool clearChildren, bool retainOverrideProperties, ObjectState::ModifiedProperties& cachedMemory);
 
   /// Property modifications.
   bool IsPropertyModified(HandleParam object, PropertyPathParam property);
@@ -133,8 +130,7 @@ public:
   void CombineObjectState(HandleParam object, ObjectState* objectState);
 
 private:
-  bool
-  IsModified(HandleParam object, HandleParam propertyPathParent, bool checkHierarchy, bool ignoreOverrideProperties);
+  bool IsModified(HandleParam object, HandleParam propertyPathParent, bool checkHierarchy, bool ignoreOverrideProperties);
   HashMap<Handle, ObjectState*> mObjectStates;
 };
 

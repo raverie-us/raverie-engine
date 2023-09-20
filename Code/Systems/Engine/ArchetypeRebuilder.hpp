@@ -35,9 +35,7 @@ class ArchetypeRebuilder
 {
 public:
   // Rebuild all archetypes in all GameSessions.
-  static void RebuildArchetypes(Archetype* modifiedArchetype,
-                                Cog* ignore = nullptr,
-                                Array<CogRestoreState*>* restoreStates = nullptr);
+  static void RebuildArchetypes(Archetype* modifiedArchetype, Cog* ignore = nullptr, Array<CogRestoreState*>* restoreStates = nullptr);
   static Cog* RebuildCog(Cog* cog);
   static Cog* RebuildCog(Cog* cog, HashSet<MetaSelection*>* modifiedSelections);
 };

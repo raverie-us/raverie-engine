@@ -6,123 +6,81 @@ namespace Raverie
 {
 RaverieDefineType(ColorClass, builder, type)
 {
-  RaverieFullBindMethod(builder,
-                      type,
-                      &ColorClass::FromBytes,
-                      RaverieStaticOverload(Real4, Integer, Integer, Integer),
-                      "FromBytes",
-                      "r, g, b")
-      ->Description = RaverieDocumentString("Converts RGB Bytes [0-255] into an RGBA Real4 (alpha defaults to 1.0). "
-                                          "Integer is used in place of Byte for convenience.");
-  RaverieFullBindMethod(builder,
-                      type,
-                      &ColorClass::FromBytes,
-                      RaverieStaticOverload(Real4, Integer, Integer, Integer, Integer),
-                      "FromBytes",
-                      "r, g, b, a")
-      ->Description = RaverieDocumentString("Converts RGBA Bytes [0-255] into an RGBA Real4. "
-                                          "Integer is used in place of Byte for convenience.");
-  RaverieFullBindMethod(
-      builder, type, &ColorClass::FromBytes, RaverieStaticOverload(Real4, Integer4Param), "FromBytes", "rgba")
-      ->Description = RaverieDocumentString("Converts RGBA Bytes [0-255] into an RGBA Real4. "
-                                          "Integer is used in place of Byte for convenience.");
+  RaverieFullBindMethod(builder, type, &ColorClass::FromBytes, RaverieStaticOverload(Real4, Integer, Integer, Integer), "FromBytes", "r, g, b")->Description =
+      RaverieDocumentString("Converts RGB Bytes [0-255] into an RGBA Real4 (alpha defaults to 1.0). "
+                            "Integer is used in place of Byte for convenience.");
+  RaverieFullBindMethod(builder, type, &ColorClass::FromBytes, RaverieStaticOverload(Real4, Integer, Integer, Integer, Integer), "FromBytes", "r, g, b, a")->Description =
+      RaverieDocumentString("Converts RGBA Bytes [0-255] into an RGBA Real4. "
+                            "Integer is used in place of Byte for convenience.");
+  RaverieFullBindMethod(builder, type, &ColorClass::FromBytes, RaverieStaticOverload(Real4, Integer4Param), "FromBytes", "rgba")->Description =
+      RaverieDocumentString("Converts RGBA Bytes [0-255] into an RGBA Real4. "
+                            "Integer is used in place of Byte for convenience.");
 
-  RaverieFullBindMethod(
-      builder, type, &ColorClass::FromInteger, RaverieStaticOverload(Real4, Integer), "FromInteger", "rgba")
-      ->Description = RaverieDocumentString("Converts an RGBA packed Integer into an RGBA Real4. Endianness is "
-                                          "handled so that 0x00FF00FF always means full green and full alpha.");
-  RaverieFullBindMethod(
-      builder, type, &ColorClass::FromInteger, RaverieStaticOverload(Real4, Integer, Integer), "FromInteger", "rgb, a")
-      ->Description = RaverieDocumentString("Converts an RGB packed Integer and an alpha Byte [0-255] into an RGBA "
-                                          "Real4. Endianness is handled so that 0x00FF00FF always means full green "
-                                          "and full alpha.");
-  RaverieFullBindMethod(
-      builder, type, &ColorClass::FromInteger, RaverieStaticOverload(Real4, Integer, Real), "FromInteger", "rgb, a")
-      ->Description = RaverieDocumentString("Converts an RGB packed Integer and an alpha Real "
-                                          "into an RGBA Real4. Endianness is handled so that "
-                                          "0x00FF00FF always means full green and full alpha.");
+  RaverieFullBindMethod(builder, type, &ColorClass::FromInteger, RaverieStaticOverload(Real4, Integer), "FromInteger", "rgba")->Description =
+      RaverieDocumentString("Converts an RGBA packed Integer into an RGBA Real4. Endianness is "
+                            "handled so that 0x00FF00FF always means full green and full alpha.");
+  RaverieFullBindMethod(builder, type, &ColorClass::FromInteger, RaverieStaticOverload(Real4, Integer, Integer), "FromInteger", "rgb, a")->Description =
+      RaverieDocumentString("Converts an RGB packed Integer and an alpha Byte [0-255] into an RGBA "
+                            "Real4. Endianness is handled so that 0x00FF00FF always means full green "
+                            "and full alpha.");
+  RaverieFullBindMethod(builder, type, &ColorClass::FromInteger, RaverieStaticOverload(Real4, Integer, Real), "FromInteger", "rgb, a")->Description =
+      RaverieDocumentString("Converts an RGB packed Integer and an alpha Real "
+                            "into an RGBA Real4. Endianness is handled so that "
+                            "0x00FF00FF always means full green and full alpha.");
 
-  RaverieFullBindMethod(
-      builder, type, &ColorClass::FromHsva, RaverieStaticOverload(Real4, Real, Real, Real), "FromHsva", "h, s, v")
-      ->Description = RaverieDocumentString("Converts HSV Reals into an RGBA Real4 (alpha defaults to 1.0). The hue "
-                                          "parameter will wrap if is beyond [0-1]. The saturation and value "
-                                          "parameters may go beyond [0-1] to represent HDR values.");
-  RaverieFullBindMethod(builder,
-                      type,
-                      &ColorClass::FromHsva,
-                      RaverieStaticOverload(Real4, Real, Real, Real, Real),
-                      "FromHsva",
-                      "h, s, v, a")
-      ->Description = RaverieDocumentString("Converts HSVA Reals into an RGBA Real4. The hue parameter will wrap if "
-                                          "is beyond [0-1]. The saturation and value parameters may go beyond "
-                                          "[0-1] to represent HDR values.");
-  RaverieFullBindMethod(builder, type, &ColorClass::FromHsva, RaverieStaticOverload(Real4, Real4Param), "FromHsva", "hsva")
-      ->Description = RaverieDocumentString("Converts an HSVA Real4 into an RGBA Real4. The hue parameter will wrap "
-                                          "if is beyond [0-1]. The saturation and value parameters may go beyond "
-                                          "[0-1] to represent HDR values.");
+  RaverieFullBindMethod(builder, type, &ColorClass::FromHsva, RaverieStaticOverload(Real4, Real, Real, Real), "FromHsva", "h, s, v")->Description =
+      RaverieDocumentString("Converts HSV Reals into an RGBA Real4 (alpha defaults to 1.0). The hue "
+                            "parameter will wrap if is beyond [0-1]. The saturation and value "
+                            "parameters may go beyond [0-1] to represent HDR values.");
+  RaverieFullBindMethod(builder, type, &ColorClass::FromHsva, RaverieStaticOverload(Real4, Real, Real, Real, Real), "FromHsva", "h, s, v, a")->Description =
+      RaverieDocumentString("Converts HSVA Reals into an RGBA Real4. The hue parameter will wrap if "
+                            "is beyond [0-1]. The saturation and value parameters may go beyond "
+                            "[0-1] to represent HDR values.");
+  RaverieFullBindMethod(builder, type, &ColorClass::FromHsva, RaverieStaticOverload(Real4, Real4Param), "FromHsva", "hsva")->Description =
+      RaverieDocumentString("Converts an HSVA Real4 into an RGBA Real4. The hue parameter will wrap "
+                            "if is beyond [0-1]. The saturation and value parameters may go beyond "
+                            "[0-1] to represent HDR values.");
 
-  RaverieFullBindMethod(builder, type, &ColorClass::FromHexString, RaverieNoOverload, "FromHexString", "value")
-      ->Description = RaverieDocumentString("Converts a hex String into an RGBA Real4. Must be a 3, 4, 6, or 8 digit "
-                                          "RGB[A] representation with an optional preceding '#' or '0x' (case "
-                                          "insensitive). E.g. #f00, #F00F, ff0000, 0x00FF00FF.");
+  RaverieFullBindMethod(builder, type, &ColorClass::FromHexString, RaverieNoOverload, "FromHexString", "value")->Description =
+      RaverieDocumentString("Converts a hex String into an RGBA Real4. Must be a 3, 4, 6, or 8 digit "
+                            "RGB[A] representation with an optional preceding '#' or '0x' (case "
+                            "insensitive). E.g. #f00, #F00F, ff0000, 0x00FF00FF.");
 
-  RaverieFullBindMethod(builder, type, &ColorClass::ToBytes, RaverieStaticOverload(Integer4, Real4Param), "ToBytes", "rgba")
-      ->Description = RaverieDocumentString("Converts an RGBA Real4 into an RGBA Integer4 [0-255]. Integer is used "
-                                          "in place of Byte for convenience.");
-  RaverieFullBindMethod(
-      builder, type, &ColorClass::ToBytes, RaverieStaticOverload(Integer4, Real, Real, Real), "ToBytes", "r, g, b")
-      ->Description = RaverieDocumentString("Converts RGB Reals into an RGBA Integer4 [0-255] (alpha defaults to "
-                                          "255). Integer is used in place of Byte for convenience.");
-  RaverieFullBindMethod(builder,
-                      type,
-                      &ColorClass::ToBytes,
-                      RaverieStaticOverload(Integer4, Real, Real, Real, Real),
-                      "ToBytes",
-                      "r, g, b, a")
-      ->Description = RaverieDocumentString("Converts RGBA Reals into an RGBA Integer4 [0-255]. "
-                                          "Integer is used in place of Byte for convenience.");
+  RaverieFullBindMethod(builder, type, &ColorClass::ToBytes, RaverieStaticOverload(Integer4, Real4Param), "ToBytes", "rgba")->Description =
+      RaverieDocumentString("Converts an RGBA Real4 into an RGBA Integer4 [0-255]. Integer is used "
+                            "in place of Byte for convenience.");
+  RaverieFullBindMethod(builder, type, &ColorClass::ToBytes, RaverieStaticOverload(Integer4, Real, Real, Real), "ToBytes", "r, g, b")->Description =
+      RaverieDocumentString("Converts RGB Reals into an RGBA Integer4 [0-255] (alpha defaults to "
+                            "255). Integer is used in place of Byte for convenience.");
+  RaverieFullBindMethod(builder, type, &ColorClass::ToBytes, RaverieStaticOverload(Integer4, Real, Real, Real, Real), "ToBytes", "r, g, b, a")->Description =
+      RaverieDocumentString("Converts RGBA Reals into an RGBA Integer4 [0-255]. "
+                            "Integer is used in place of Byte for convenience.");
 
-  RaverieFullBindMethod(
-      builder, type, &ColorClass::ToInteger, RaverieStaticOverload(Integer, Real4Param), "ToInteger", "rgba")
-      ->Description = RaverieDocumentString("Converts an RGBA Real4 into an RGBA packed Integer. Endianness is "
-                                          "handled so that 0x00FF00FF always means full green and full alpha.");
-  RaverieFullBindMethod(
-      builder, type, &ColorClass::ToInteger, RaverieStaticOverload(Integer, Real, Real, Real), "ToInteger", "r, g, b")
-      ->Description = RaverieDocumentString("Converts RGB Reals into an RGBA packed Integer (alpha defaults to 255). "
-                                          "Endianness is handled so that 0x00FF00FF always means full green and "
-                                          "full alpha.");
-  RaverieFullBindMethod(builder,
-                      type,
-                      &ColorClass::ToInteger,
-                      RaverieStaticOverload(Integer, Real, Real, Real, Real),
-                      "ToInteger",
-                      "r, g, b, a")
-      ->Description = RaverieDocumentString("Converts RGBA Reals into an RGBA packed Integer. Endianness is handled "
-                                          "so that 0x00FF00FF always means full green and full alpha.");
+  RaverieFullBindMethod(builder, type, &ColorClass::ToInteger, RaverieStaticOverload(Integer, Real4Param), "ToInteger", "rgba")->Description =
+      RaverieDocumentString("Converts an RGBA Real4 into an RGBA packed Integer. Endianness is "
+                            "handled so that 0x00FF00FF always means full green and full alpha.");
+  RaverieFullBindMethod(builder, type, &ColorClass::ToInteger, RaverieStaticOverload(Integer, Real, Real, Real), "ToInteger", "r, g, b")->Description =
+      RaverieDocumentString("Converts RGB Reals into an RGBA packed Integer (alpha defaults to 255). "
+                            "Endianness is handled so that 0x00FF00FF always means full green and "
+                            "full alpha.");
+  RaverieFullBindMethod(builder, type, &ColorClass::ToInteger, RaverieStaticOverload(Integer, Real, Real, Real, Real), "ToInteger", "r, g, b, a")->Description =
+      RaverieDocumentString("Converts RGBA Reals into an RGBA packed Integer. Endianness is handled "
+                            "so that 0x00FF00FF always means full green and full alpha.");
 
-  RaverieFullBindMethod(builder, type, &ColorClass::ToHsva, RaverieStaticOverload(Real4, Real4Param), "ToHsva", "rgba")
-      ->Description = RaverieDocumentString("Converts an RGBA Real4 into an HSVA Real4.");
-  RaverieFullBindMethod(
-      builder, type, &ColorClass::ToHsva, RaverieStaticOverload(Real4, Real, Real, Real), "ToHsva", "r, g, b")
-      ->Description = RaverieDocumentString("Converts RGB Reals into an HSVA Real4 (alpha defaults to 1.0).");
-  RaverieFullBindMethod(
-      builder, type, &ColorClass::ToHsva, RaverieStaticOverload(Real4, Real, Real, Real, Real), "ToHsva", "r, g, b, a")
-      ->Description = RaverieDocumentString("Converts RGBA Reals into an HSVA Real4.");
+  RaverieFullBindMethod(builder, type, &ColorClass::ToHsva, RaverieStaticOverload(Real4, Real4Param), "ToHsva", "rgba")->Description =
+      RaverieDocumentString("Converts an RGBA Real4 into an HSVA Real4.");
+  RaverieFullBindMethod(builder, type, &ColorClass::ToHsva, RaverieStaticOverload(Real4, Real, Real, Real), "ToHsva", "r, g, b")->Description =
+      RaverieDocumentString("Converts RGB Reals into an HSVA Real4 (alpha defaults to 1.0).");
+  RaverieFullBindMethod(builder, type, &ColorClass::ToHsva, RaverieStaticOverload(Real4, Real, Real, Real, Real), "ToHsva", "r, g, b, a")->Description =
+      RaverieDocumentString("Converts RGBA Reals into an HSVA Real4.");
 
-  RaverieFullBindMethod(
-      builder, type, &ColorClass::ToHexString, RaverieStaticOverload(String, Real4Param), "ToHexString", "rgba")
-      ->Description = RaverieDocumentString("Converts an RGBA Real4 into the 8 digit hex format RRGGBBAA.");
-  RaverieFullBindMethod(
-      builder, type, &ColorClass::ToHexString, RaverieStaticOverload(String, Real, Real, Real), "ToHexString", "r, g, b")
-      ->Description = RaverieDocumentString("Converts RGB Reals into the 8 digit hex format RRGGBBAA (alpha defaults "
-                                          "to 1.0 so the end will always be FF).");
-  RaverieFullBindMethod(builder,
-                      type,
-                      &ColorClass::ToHexString,
-                      RaverieStaticOverload(String, Real, Real, Real, Real),
-                      "ToHexString",
-                      "r, g, b, a")
-      ->Description = RaverieDocumentString("Converts RGBA Reals into the 8 digit hex format RRGGBBAA.");
+  RaverieFullBindMethod(builder, type, &ColorClass::ToHexString, RaverieStaticOverload(String, Real4Param), "ToHexString", "rgba")->Description =
+      RaverieDocumentString("Converts an RGBA Real4 into the 8 digit hex format RRGGBBAA.");
+  RaverieFullBindMethod(builder, type, &ColorClass::ToHexString, RaverieStaticOverload(String, Real, Real, Real), "ToHexString", "r, g, b")->Description =
+      RaverieDocumentString("Converts RGB Reals into the 8 digit hex format RRGGBBAA (alpha defaults "
+                            "to 1.0 so the end will always be FF).");
+  RaverieFullBindMethod(builder, type, &ColorClass::ToHexString, RaverieStaticOverload(String, Real, Real, Real, Real), "ToHexString", "r, g, b, a")->Description =
+      RaverieDocumentString("Converts RGBA Reals into the 8 digit hex format RRGGBBAA.");
 }
 
 // We need to ensure that we actually use an RGBA format where R is the highest
@@ -147,13 +105,11 @@ const float InvFactor = 1.0f / 255.0f;
 } // namespace CC
 
 #undef ByteColorRGBA
-#define ByteColorRGBA(r, g, b, a)                                                                                      \
-  ((ByteColor)((((a)&CC::MaxByte) << CC::AlphaOffset) | (((r)&CC::MaxByte) << CC::RedOffset) |                         \
-               (((g)&CC::MaxByte) << CC::GreenOffset) | ((b)&CC::MaxByte) << CC::BlueOffset))
+#define ByteColorRGBA(r, g, b, a)                                                                                                                                                                      \
+  ((ByteColor)((((a)&CC::MaxByte) << CC::AlphaOffset) | (((r)&CC::MaxByte) << CC::RedOffset) | (((g)&CC::MaxByte) << CC::GreenOffset) | ((b)&CC::MaxByte) << CC::BlueOffset))
 
 #undef FloatColorRGBA
-#define FloatColorRGBA(r, g, b, a)                                                                                     \
-  Math::Vec4(float(r) * CC::InvFactor, float(g) * CC::InvFactor, float(b) * CC::InvFactor, float(a) * CC::InvFactor)
+#define FloatColorRGBA(r, g, b, a) Math::Vec4(float(r) * CC::InvFactor, float(g) * CC::InvFactor, float(b) * CC::InvFactor, float(a) * CC::InvFactor)
 
 inline Math::Vec4 ToFloatColor(ByteColor color)
 {
@@ -165,10 +121,7 @@ inline Math::Vec4 ToFloatColor(ByteColor color)
 
 inline ByteColor ToByteColor(Math::Vec4 color)
 {
-  return ByteColorRGBA(byte(Math::Round(color.x * 255.f)),
-                       byte(Math::Round(color.y * 255.f)),
-                       byte(Math::Round(color.z * 255.f)),
-                       byte(Math::Round(color.w * 255.f)));
+  return ByteColorRGBA(byte(Math::Round(color.x * 255.f)), byte(Math::Round(color.y * 255.f)), byte(Math::Round(color.z * 255.f)), byte(Math::Round(color.w * 255.f)));
 }
 
 inline ByteColor ColorWithAlpha(ByteColor color, float alpha)
@@ -335,10 +288,7 @@ Integer4 ColorClass::ToBytes(Real4Param rgba)
 {
   Real4 rgbaClamped = Math::Clamp(rgba, Real4(0.0f), Real4(1.0f));
 
-  return Integer4(int(Math::Round(rgbaClamped.x * 255.0f)),
-                  int(Math::Round(rgbaClamped.y * 255.0f)),
-                  int(Math::Round(rgbaClamped.z * 255.0f)),
-                  int(Math::Round(rgbaClamped.w * 255.0f)));
+  return Integer4(int(Math::Round(rgbaClamped.x * 255.0f)), int(Math::Round(rgbaClamped.y * 255.0f)), int(Math::Round(rgbaClamped.z * 255.0f)), int(Math::Round(rgbaClamped.w * 255.0f)));
 }
 
 Integer4 ColorClass::ToBytes(Real r, Real g, Real b)
@@ -401,12 +351,11 @@ RaverieDefineType(ColorsClass, builder, type)
 {
   // Bind all the color definitions as getters
   const char* description = "RGBA color of Real4(%g, %g, %g, %g) or hex 0x%02X%02X%02X%02X";
-#define DefineColor(name, r, g, b, a)                                                                                  \
-  {                                                                                                                    \
-    Raverie::Property* prop = RaverieBindFieldGetter(name);                                                                \
-    prop->ComplexUserData.WriteObject(name, 0);                                                                        \
-    prop->Description = RaverieDocumentString(String::Format(                                                            \
-        description, r * CC::InvFactor, g * CC::InvFactor, b * CC::InvFactor, a * CC::InvFactor, r, g, b, a));         \
+#define DefineColor(name, r, g, b, a)                                                                                                                                                                  \
+  {                                                                                                                                                                                                    \
+    Raverie::Property* prop = RaverieBindFieldGetter(name);                                                                                                                                            \
+    prop->ComplexUserData.WriteObject(name, 0);                                                                                                                                                        \
+    prop->Description = RaverieDocumentString(String::Format(description, r * CC::InvFactor, g * CC::InvFactor, b * CC::InvFactor, a * CC::InvFactor, r, g, b, a));                                    \
   }
 #include "Math/ColorDefinitions.hpp"
 #undef DefineColor

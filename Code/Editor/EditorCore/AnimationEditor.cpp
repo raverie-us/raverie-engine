@@ -62,12 +62,7 @@ Animation* FindFirstAnimationOnCog(Cog* cog)
   return nullptr;
 }
 
-PropertyKeyIcon::PropertyKeyIcon(Composite* parent,
-                                 HandleParam object,
-                                 Property* metaProperty,
-                                 AnimationEditor* editor) :
-    Composite(parent),
-    mEditor(editor)
+PropertyKeyIcon::PropertyKeyIcon(Composite* parent, HandleParam object, Property* metaProperty, AnimationEditor* editor) : Composite(parent), mEditor(editor)
 {
   mComponentHandle = object;
   mProperty = metaProperty;
@@ -340,8 +335,7 @@ bool AnimationEditor::HasKeyFrames(HandleParam componentInstance, Property* meta
 
   // Find the property track (it will be created if it doesn't exist)
   String propertyPath = GetPropertyPath(component, metaProperty);
-  TrackNode* propertyTrack =
-      richAnimation->GetPropertyTrack(objectTrack, propertyPath, componentInstance.StoredType, false);
+  TrackNode* propertyTrack = richAnimation->GetPropertyTrack(objectTrack, propertyPath, componentInstance.StoredType, false);
   return propertyTrack != nullptr;
 }
 

@@ -243,8 +243,7 @@ struct MemberFunctionConnection : public EventConnection
   FuncType MyFunction;
   classType* MyObject;
 
-  MemberFunctionConnection(EventDispatcher* dispatcher, StringParam eventId, classType* instance, FuncType func) :
-      EventConnection(dispatcher, eventId)
+  MemberFunctionConnection(EventDispatcher* dispatcher, StringParam eventId, classType* instance, FuncType func) : EventConnection(dispatcher, eventId)
   {
     MyObject = instance;
     MyFunction = func;
@@ -265,16 +264,14 @@ struct MemberFunctionConnection : public EventConnection
 
 /// Create an event connection
 template <typename targetType, typename classType, typename eventType>
-inline void
-Connect(targetType* dispatcherObject, StringParam eventId, classType* receiver, void (classType::*function)(eventType*))
+inline void Connect(targetType* dispatcherObject, StringParam eventId, classType* receiver, void (classType::*function)(eventType*))
 {
   ReturnIf(dispatcherObject == nullptr, , "Dispatcher object is null");
   ReturnIf(receiver == nullptr || !receiver->GetReceiver(), , "Receiver is null");
   EventDispatcher* dispatcher = dispatcherObject->GetDispatcher();
   ReturnIf(dispatcher == nullptr, , "Dispatcher is null");
 
-  MemberFunctionConnection<classType, eventType>* connection =
-      new MemberFunctionConnection<classType, eventType>(dispatcher, eventId, receiver, function);
+  MemberFunctionConnection<classType, eventType>* connection = new MemberFunctionConnection<classType, eventType>(dispatcher, eventId, receiver, function);
 
   if (!dispatcher->IsUniqueConnection(connection))
   {
@@ -298,19 +295,19 @@ Connect(targetType* dispatcherObject, StringParam eventId, classType* receiver, 
 
 #define DefineEvent(name) const String name = #name
 
-#define ConnectThisTo(target, eventname, handle)                                                                       \
-  do                                                                                                                   \
-  {                                                                                                                    \
-    ::Raverie::Connect(target, eventname, this, &RaverieSelf::handle);                                                      \
+#define ConnectThisTo(target, eventname, handle)                                                                                                                                                       \
+  do                                                                                                                                                                                                   \
+  {                                                                                                                                                                                                    \
+    ::Raverie::Connect(target, eventname, this, &RaverieSelf::handle);                                                                                                                                 \
   } while (false)
 
 #define DisconnectAll(sender, receiver) sender->GetDispatcher()->Disconnect(receiver);
 
-#define SignalObjectEvent(event)                                                                                       \
-  do                                                                                                                   \
-  {                                                                                                                    \
-    ObjectEvent objectEvent(this);                                                                                     \
-    GetOwner()->GetDispatcher()->Dispatch(event, &objectEvent);                                                        \
+#define SignalObjectEvent(event)                                                                                                                                                                       \
+  do                                                                                                                                                                                                   \
+  {                                                                                                                                                                                                    \
+    ObjectEvent objectEvent(this);                                                                                                                                                                     \
+    GetOwner()->GetDispatcher()->Dispatch(event, &objectEvent);                                                                                                                                        \
   } while (false)
 
 template <typename eventType>
@@ -319,8 +316,7 @@ struct StaticFunctionConnection : public EventConnection
   typedef void (*FuncType)(eventType*);
   typedef void (**FuncPointer)(eventType*);
   FuncType MyFunction;
-  StaticFunctionConnection(EventDispatcher* dispatcher, StringParam eventId, FuncType func) :
-      EventConnection(dispatcher, eventId)
+  StaticFunctionConnection(EventDispatcher* dispatcher, StringParam eventId, FuncType func) : EventConnection(dispatcher, eventId)
   {
     MyFunction = func;
   }

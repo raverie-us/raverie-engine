@@ -6,19 +6,19 @@ namespace Raverie
 
 class GenericPhysicsMesh;
 
-#define DefinePhysicsRuntimeClone(ResourceType)                                                                        \
-  HandleOf<Resource> ResourceType::Clone()                                                                             \
-  {                                                                                                                    \
-    return RuntimeClone();                                                                                             \
-  }                                                                                                                    \
-                                                                                                                       \
-  HandleOf<ResourceType> ResourceType::RuntimeClone()                                                                  \
-  {                                                                                                                    \
-    AutoDeclare(manager, GetManager());                                                                                \
-    HandleOf<ResourceType> cloneHandle(manager->CreateRuntimeInternal());                                              \
-    ResourceType* clone = *cloneHandle;                                                                                \
-    CopyTo(clone);                                                                                                     \
-    return cloneHandle;                                                                                                \
+#define DefinePhysicsRuntimeClone(ResourceType)                                                                                                                                                        \
+  HandleOf<Resource> ResourceType::Clone()                                                                                                                                                             \
+  {                                                                                                                                                                                                    \
+    return RuntimeClone();                                                                                                                                                                             \
+  }                                                                                                                                                                                                    \
+                                                                                                                                                                                                       \
+  HandleOf<ResourceType> ResourceType::RuntimeClone()                                                                                                                                                  \
+  {                                                                                                                                                                                                    \
+    AutoDeclare(manager, GetManager());                                                                                                                                                                \
+    HandleOf<ResourceType> cloneHandle(manager->CreateRuntimeInternal());                                                                                                                              \
+    ResourceType* clone = *cloneHandle;                                                                                                                                                                \
+    CopyTo(clone);                                                                                                                                                                                     \
+    return cloneHandle;                                                                                                                                                                                \
   }
 
 template <typename ArrayType>
@@ -196,17 +196,17 @@ public:
   RaverieDeclareType(PhysicsMeshIndexData, TypeCopyMode::ReferenceType);
 };
 
-#define PhysicsDefineArrayType(arrayType)                                                                              \
-  RaverieDefineType(arrayType, builder, type)                                                                            \
-  {                                                                                                                    \
-    RaverieBindDocumented();                                                                                              \
-                                                                                                                       \
-    RaverieBindMethod(Get);                                                                                              \
-    RaverieBindMethod(Set);                                                                                              \
-    RaverieBindMethod(Add);                                                                                              \
-    RaverieBindMethod(Clear);                                                                                            \
-    RaverieBindGetter(All);                                                                                              \
-    RaverieBindGetterProperty(Count);                                                                                    \
+#define PhysicsDefineArrayType(arrayType)                                                                                                                                                              \
+  RaverieDefineType(arrayType, builder, type)                                                                                                                                                          \
+  {                                                                                                                                                                                                    \
+    RaverieBindDocumented();                                                                                                                                                                           \
+                                                                                                                                                                                                       \
+    RaverieBindMethod(Get);                                                                                                                                                                            \
+    RaverieBindMethod(Set);                                                                                                                                                                            \
+    RaverieBindMethod(Add);                                                                                                                                                                            \
+    RaverieBindMethod(Clear);                                                                                                                                                                          \
+    RaverieBindGetter(All);                                                                                                                                                                            \
+    RaverieBindGetterProperty(Count);                                                                                                                                                                  \
   }
 
 } // namespace Raverie

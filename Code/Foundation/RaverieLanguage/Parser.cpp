@@ -3,8 +3,8 @@
 #include "Precompiled.hpp"
 
 // Defines
-#define RaverieSaveAndVerifyTokenPosition()                                                                              \
-  TokenPositionVerifier __verifier(&this->TokenPositions);                                                             \
+#define RaverieSaveAndVerifyTokenPosition()                                                                                                                                                            \
+  TokenPositionVerifier __verifier(&this->TokenPositions);                                                                                                                                             \
   this->SaveTokenPosition();
 
 namespace Raverie
@@ -22,8 +22,7 @@ public:
 
   ~TokenPositionVerifier()
   {
-    ErrorIf(this->Count != this->Positions->Size(),
-            "Token count was not equal when we left the stack as when we started");
+    ErrorIf(this->Count != this->Positions->Size(), "Token count was not equal when we left the stack as when we started");
   }
 };
 
@@ -165,8 +164,7 @@ void Parser::ParseIntoTree(const Array<UserToken>& tokens, SyntaxTree& syntaxTre
     UserToken token = (*this->TokenStream)[this->TokenIndex];
 
     // Show an error message that prints out the token we hit
-    return this->Errors.Raise(
-        token.Location, ErrorCode::ParsingNotComplete, token.Token.c_str(), Grammar::GetName(token.TokenId).c_str());
+    return this->Errors.Raise(token.Location, ErrorCode::ParsingNotComplete, token.Token.c_str(), Grammar::GetName(token.TokenId).c_str());
   }
 
   // If we parsed everything but there were attributes that never got attached
@@ -198,10 +196,7 @@ bool Parser::IsTokenStreamEmpty(const Array<UserToken>& tokens)
   return false;
 }
 
-void Parser::ParseExpressionInFunctionAndClass(const Array<UserToken>& expression,
-                                               const Array<UserToken>& function,
-                                               const Array<UserToken>& classTokensWithoutFunction,
-                                               SyntaxTree& syntaxTree)
+void Parser::ParseExpressionInFunctionAndClass(const Array<UserToken>& expression, const Array<UserToken>& function, const Array<UserToken>& classTokensWithoutFunction, SyntaxTree& syntaxTree)
 {
   // If we have no expression tokens, don't do anything
   if (IsTokenStreamEmpty(expression))
@@ -429,11 +424,8 @@ ScopeNode* Parser::FindNearestScope(SyntaxNode* node, const CodeLocation& locati
   // end, however it's slightly more tolerant to just check if the location's
   // start is before the end This should never happen, but we'll handle it
   // anyways
-  bool isLocationInsideNode =
-      location.StartLine >= node->Location.StartLine &&
-      (location.StartLine != node->Location.StartLine || location.StartCharacter >= node->Location.StartCharacter) &&
-      location.StartLine <= node->Location.EndLine &&
-      (location.StartLine != node->Location.EndLine || location.StartCharacter <= node->Location.EndCharacter);
+  bool isLocationInsideNode = location.StartLine >= node->Location.StartLine && (location.StartLine != node->Location.StartLine || location.StartCharacter >= node->Location.StartCharacter) &&
+                              location.StartLine <= node->Location.EndLine && (location.StartLine != node->Location.EndLine || location.StartCharacter <= node->Location.EndCharacter);
 
   // We only want to consider nodes that we're inside of
   if (isLocationInsideNode == false)
@@ -736,8 +728,7 @@ bool Parser::ExpectAndRetrieveArgs(Grammar::Enum grammarConstant, const UserToke
       // Because we are expecting a particular token, format extra information
       // so that the error always says what we found and what we expected to
       // find
-      extra =
-          String::Format(" We found '%s' but we expected to find '%s'.", foundSymbol.c_str(), expectedSymbol.c_str());
+      extra = String::Format(" We found '%s' but we expected to find '%s'.", foundSymbol.c_str(), expectedSymbol.c_str());
     }
 
     // Report an error here
@@ -1303,8 +1294,7 @@ MemberVariableNode* Parser::MemberVariable()
       }
 
       // Look for a type after the member variable
-      if (this->AcceptOptionalTypeSpecifier(
-              node->ResultSyntaxType, ErrorCode::VariableTypeNotFound, node->Name.c_str()))
+      if (this->AcceptOptionalTypeSpecifier(node->ResultSyntaxType, ErrorCode::VariableTypeNotFound, node->Name.c_str()))
       {
         // Accept the beginning scope
         if (this->Accept(1, Grammar::BeginScope))
@@ -1408,8 +1398,7 @@ MemberVariableNode* Parser::MemberVariable()
           }
 
           // Attempt to read the statement separator
-          if (this->Expect(
-                  Grammar::StatementSeparator, ErrorCode::VariableInitializationNotComplete, node->Name.c_str()))
+          if (this->Expect(Grammar::StatementSeparator, ErrorCode::VariableInitializationNotComplete, node->Name.c_str()))
           {
             // Accept the token position, and return the variable node
             this->SetNodeLocationEndHere(node);
@@ -1531,9 +1520,7 @@ EnumValueNode* Parser::EnumValue()
     if (this->Accept(1, Grammar::Assignment))
     {
       // Read the custom value we want to give this enum entry
-      if (this->ExpectAndRetrieve(
-              Grammar::IntegerLiteral, node->Value, ErrorCode::EnumValueRequiresIntegerLiteral, node->Name.c_str()) ==
-          false)
+      if (this->ExpectAndRetrieve(Grammar::IntegerLiteral, node->Value, ErrorCode::EnumValueRequiresIntegerLiteral, node->Name.c_str()) == false)
       {
         // We didn't successfully parse an enum, so just recall the token
         // position and return null
@@ -1807,20 +1794,16 @@ ClassNode* Parser::Class()
           parsedSomething = false;
 
           // Attempt to parse a variable
-          parsedSomething |=
-              node->NonTraversedNonOwnedNodesInOrder.Add(node->Variables.Add(this->MemberVariable())) != nullptr;
+          parsedSomething |= node->NonTraversedNonOwnedNodesInOrder.Add(node->Variables.Add(this->MemberVariable())) != nullptr;
 
           // Attempt to parse a function definition
-          parsedSomething |=
-              node->NonTraversedNonOwnedNodesInOrder.Add(node->Functions.Add(this->Function())) != nullptr;
+          parsedSomething |= node->NonTraversedNonOwnedNodesInOrder.Add(node->Functions.Add(this->Function())) != nullptr;
 
           // Attempt to parse a constructor definition
-          parsedSomething |=
-              node->NonTraversedNonOwnedNodesInOrder.Add(node->Constructors.Add(this->Constructor())) != nullptr;
+          parsedSomething |= node->NonTraversedNonOwnedNodesInOrder.Add(node->Constructors.Add(this->Constructor())) != nullptr;
 
           // Attempt to parse a 'sends' statement
-          parsedSomething |=
-              node->NonTraversedNonOwnedNodesInOrder.Add(node->SendsEvents.Add(this->SendsEvent())) != nullptr;
+          parsedSomething |= node->NonTraversedNonOwnedNodesInOrder.Add(node->SendsEvents.Add(this->SendsEvent())) != nullptr;
 
           // Attempt to parse a destructor definition
           DestructorNode* destructor = this->Destructor();
@@ -2265,9 +2248,7 @@ AttributeNode* Parser::GetAttribute(NodeList<AttributeNode>& attributes, StringP
 }
 
 template <typename FunctionNodeType>
-FunctionNodeType* Parser::SpecializedFunction(Grammar::Enum type,
-                                              String functionName,
-                                              bool (Parser::*postArgs)(FunctionNodeType* node))
+FunctionNodeType* Parser::SpecializedFunction(Grammar::Enum type, String functionName, bool (Parser::*postArgs)(FunctionNodeType* node))
 {
   // Parse any optional attribute
   this->ParseAllOptionalAttributes();
@@ -2547,10 +2528,7 @@ ParameterNode* Parser::Parameter()
   return nullptr;
 }
 
-ExpressionNode* Parser::BinaryOperatorRightToLeftAssociative(ExpressionFn currentPrecedence,
-                                                             ExpressionFn nextPrecedence,
-                                                             int parameters,
-                                                             ...)
+ExpressionNode* Parser::BinaryOperatorRightToLeftAssociative(ExpressionFn currentPrecedence, ExpressionFn nextPrecedence, int parameters, ...)
 {
   // Save the token position
   RaverieSaveAndVerifyTokenPosition();
@@ -2606,9 +2584,7 @@ ExpressionNode* Parser::BinaryOperatorRightToLeftAssociative(ExpressionFn curren
         va_end(vl);
 
         // Show an error message
-        this->ErrorHere(ErrorCode::BinaryOperatorRightOperandNotFound,
-                        Grammar::GetName(acceptedOperator->TokenId).c_str(),
-                        acceptedOperator->Token.c_str());
+        this->ErrorHere(ErrorCode::BinaryOperatorRightOperandNotFound, Grammar::GetName(acceptedOperator->TokenId).c_str(), acceptedOperator->Token.c_str());
         RecallTokenPosition();
         return nullptr;
       }
@@ -2684,9 +2660,7 @@ ExpressionNode* Parser::BinaryOperatorLeftToRightAssociative(ExpressionFn nextPr
           va_end(vl);
 
           // Show an error message
-          this->ErrorHere(ErrorCode::BinaryOperatorRightOperandNotFound,
-                          Grammar::GetName(acceptedOperator->TokenId).c_str(),
-                          acceptedOperator->Token.c_str());
+          this->ErrorHere(ErrorCode::BinaryOperatorRightOperandNotFound, Grammar::GetName(acceptedOperator->TokenId).c_str(), acceptedOperator->Token.c_str());
 
           // We didn't successfully parse an expression, so just recall the
           // token position and return null
@@ -2779,12 +2753,7 @@ ExpressionNode* Parser::Expression06()
 ExpressionNode* Parser::Expression07()
 {
   // Parse the comparison operators
-  return BinaryOperatorLeftToRightAssociative(&Parser::Expression08,
-                                              4,
-                                              Grammar::LessThan,
-                                              Grammar::LessThanOrEqualTo,
-                                              Grammar::GreaterThan,
-                                              Grammar::GreaterThanOrEqualTo);
+  return BinaryOperatorLeftToRightAssociative(&Parser::Expression08, 4, Grammar::LessThan, Grammar::LessThanOrEqualTo, Grammar::GreaterThan, Grammar::GreaterThanOrEqualTo);
 }
 
 ExpressionNode* Parser::Expression08()
@@ -2802,8 +2771,7 @@ ExpressionNode* Parser::Expression09()
 ExpressionNode* Parser::Expression10()
 {
   // Parse the multaplicative operators and the modulo operator
-  return BinaryOperatorLeftToRightAssociative(
-      &Parser::Expression11, 3, Grammar::Multiply, Grammar::Divide, Grammar::Modulo);
+  return BinaryOperatorLeftToRightAssociative(&Parser::Expression11, 3, Grammar::Multiply, Grammar::Divide, Grammar::Modulo);
 }
 
 ExpressionNode* Parser::Expression11()
@@ -2873,9 +2841,7 @@ ExpressionNode* Parser::Expression12()
     else
     {
       // Show an error message
-      this->ErrorHere(ErrorCode::UnaryOperatorOperandNotFound,
-                      Grammar::GetName(acceptedOperator->TokenId).c_str(),
-                      acceptedOperator->Token.c_str());
+      this->ErrorHere(ErrorCode::UnaryOperatorOperandNotFound, Grammar::GetName(acceptedOperator->TokenId).c_str(), acceptedOperator->Token.c_str());
     }
   }
   else
@@ -3263,8 +3229,7 @@ MemberAccessNode* Parser::MemberAccess(ExpressionNode* leftOperand)
     const UserToken* member = nullptr;
 
     // Get the member name that we're trying to access
-    if (this->ExpectAndRetrieve(Grammar::UpperIdentifier, member, ErrorCode::MemberAccessNameNotFound) ||
-        this->Errors.TolerantMode)
+    if (this->ExpectAndRetrieve(Grammar::UpperIdentifier, member, ErrorCode::MemberAccessNameNotFound) || this->Errors.TolerantMode)
     {
       // We started a member access, so allocate the corresponding node
       MemberAccessNode* node = new MemberAccessNode();
@@ -3796,8 +3761,7 @@ StatementNode* Parser::Timeout()
       // try to go to a precision that's lower than our timer (typically the
       // standard C clock function)
       const UserToken* secondsToken = nullptr;
-      if (this->ExpectAndRetrieve(
-              Grammar::IntegerLiteral, secondsToken, ErrorCode::TimeoutSecondsExpectedIntegerLiteral))
+      if (this->ExpectAndRetrieve(Grammar::IntegerLiteral, secondsToken, ErrorCode::TimeoutSecondsExpectedIntegerLiteral))
       {
         // Look for the end parenthasis
         if (this->Expect(Grammar::EndGroup, ErrorCode::TimeoutSecondsNotComplete))
@@ -4282,8 +4246,7 @@ StatementNode* Parser::While()
       if (condition != nullptr)
       {
         // Look for the end parenthasis
-        if (this->Expect(Grammar::EndGroup, ErrorCode::WhileConditionalExpressionNotComplete) ||
-            this->Errors.TolerantMode)
+        if (this->Expect(Grammar::EndGroup, ErrorCode::WhileConditionalExpressionNotComplete) || this->Errors.TolerantMode)
         {
           // Create a while node since this is a valid while statement
           WhileNode* node = new WhileNode();
@@ -4466,7 +4429,7 @@ ExpressionNode* Parser::ExpressionInitializer(ExpressionNode* leftOperand)
 
   // Let the user know that the syntax has changed
   RaverieTodo("This can be removed once a considerable time period has passed or "
-           "when we give it a new meaning");
+              "when we give it a new meaning");
   if (this->Accept(1, Grammar::OldBeginInitializer))
   {
     // Show an error and recall back to the saved position
@@ -4564,9 +4527,7 @@ ExpressionNode* Parser::ExpressionInitializer(ExpressionNode* leftOperand)
         else
         {
           // Show an error and recall back to the saved position
-          this->ErrorHere(ErrorCode::CreationInitializeMemberExpectedInitialValue,
-                          memberName->Token.c_str(),
-                          memberName->Token.c_str());
+          this->ErrorHere(ErrorCode::CreationInitializeMemberExpectedInitialValue, memberName->Token.c_str(), memberName->Token.c_str());
           this->RecallTokenPosition();
 
           // Deleting the initializer should delete the constructor call and the
@@ -4623,8 +4584,7 @@ ExpressionNode* Parser::ExpressionInitializer(ExpressionNode* leftOperand)
         while (this->Accept(1, Grammar::ArgumentSeparator));
 
         // If we expect another expression...
-        if (acceptedInnerEndInitializer == false &&
-            this->Expect(Grammar::EndInitializer, ErrorCode::CreationInitializerNotComplete) == false)
+        if (acceptedInnerEndInitializer == false && this->Expect(Grammar::EndInitializer, ErrorCode::CreationInitializerNotComplete) == false)
         {
           // Deleting the initializer should delete the constructor call and the
           // creation node, and the type we parsed
@@ -4696,8 +4656,7 @@ ExpressionNode* Parser::ExpressionInitializer(ExpressionNode* leftOperand)
     while (this->Accept(1, Grammar::ArgumentSeparator));
 
     // If we expect another expression...
-    if (acceptedOuterEndInitializer == false &&
-        this->Expect(Grammar::EndInitializer, ErrorCode::CreationInitializerNotComplete) == false)
+    if (acceptedOuterEndInitializer == false && this->Expect(Grammar::EndInitializer, ErrorCode::CreationInitializerNotComplete) == false)
     {
       // Deleting the constructor call should delete the creation node, all
       // initializers, and the type we parsed
@@ -4742,9 +4701,9 @@ ExpressionNode* Parser::TypeId()
 
       // We may alternatively try to get the typeid of a type
       RaverieTodo("Investigate changing typeid(Type) to just parsing an "
-               "expression because now we have "
-               "StaticTypeNode (Decorate StaticTypeNode would need to allow "
-               "typeid as a parent)");
+                  "expression because now we have "
+                  "StaticTypeNode (Decorate StaticTypeNode would need to allow "
+                  "typeid as a parent)");
       SyntaxType* type = this->ReadTypeInfo();
 
       // Read the value we want to get the type of

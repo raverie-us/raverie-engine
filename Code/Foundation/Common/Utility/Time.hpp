@@ -39,18 +39,7 @@ public:
 
   static const char* GetMonthString(int month)
   {
-    const char* cDates[] = {"January",
-                            "February",
-                            "March",
-                            "April",
-                            "May",
-                            "June",
-                            "July",
-                            "August",
-                            "September",
-                            "October",
-                            "November",
-                            "December"};
+    const char* cDates[] = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 
     return cDates[month];
   }

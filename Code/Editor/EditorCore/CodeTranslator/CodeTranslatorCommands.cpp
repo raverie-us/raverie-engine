@@ -4,10 +4,7 @@
 namespace Raverie
 {
 
-void DispatchCodeTranslatorScriptError(StringParam eventId,
-                                       StringParam shortMessage,
-                                       StringParam fullMessage,
-                                       const Raverie::CodeLocation& location)
+void DispatchCodeTranslatorScriptError(StringParam eventId, StringParam shortMessage, StringParam fullMessage, const Raverie::CodeLocation& location)
 {
   // This should only happen when a composite has a raverie error. Figure out how
   // to report later?
@@ -70,8 +67,7 @@ String TranslatedShaderScriptEditor::OnTranslate()
   return "";
 }
 
-FragmentFileTranslatorScriptEditor::FragmentFileTranslatorScriptEditor(Composite* parent) :
-    TranslatedShaderScriptEditor(parent)
+FragmentFileTranslatorScriptEditor::FragmentFileTranslatorScriptEditor(Composite* parent) : TranslatedShaderScriptEditor(parent)
 {
   mFragment = nullptr;
 }
@@ -103,8 +99,7 @@ String RaverieCompositorScriptEditor::OnTranslate()
   return String();
 }
 
-TranslatedRaverieCompositorScriptEditor::TranslatedRaverieCompositorScriptEditor(Composite* parent) :
-    TranslatedShaderScriptEditor(parent)
+TranslatedRaverieCompositorScriptEditor::TranslatedRaverieCompositorScriptEditor(Composite* parent) : TranslatedShaderScriptEditor(parent)
 {
   mMaterial = nullptr;
   mDisplayMode = TranslationDisplayMode::Full;
@@ -204,7 +199,6 @@ void FragmentSplitScriptEditor::Build()
   mTranslatedEditor->Build();
 }
 
-
 void FragmentSplitScriptEditor::SetResource(RaverieFragment* fragment)
 {
   mFragment = fragment;
@@ -291,8 +285,7 @@ struct ShaderFileBuilder
 };
 
 template <typename Functor>
-void RunCodeTranslator(
-    Editor* editor, Space* space, CodeTranslator* translator, Functor customFileBuilder, StringParam rerunCommand)
+void RunCodeTranslator(Editor* editor, Space* space, CodeTranslator* translator, Functor customFileBuilder, StringParam rerunCommand)
 {
   // get the center window (where we add all tabs to)
   Window* centerWindow = editor->GetCenterWindow();
@@ -381,21 +374,17 @@ void CreateFragmentTranslationWindow(ObjectEvent* e, StringParam baseWindowName)
 {
   Editor* editor = Z::gEditor;
   RaverieFragment* fragment = (RaverieFragment*)e->Source;
-  EditorType* scriptEditor =
-      CreateScriptWindow<EditorType>(editor, BuildString(baseWindowName, fragment->Name), Lexer::Shader);
+  EditorType* scriptEditor = CreateScriptWindow<EditorType>(editor, BuildString(baseWindowName, fragment->Name), Lexer::Shader);
   scriptEditor->SetResource(fragment);
   scriptEditor->Build();
 }
 
 template <typename EditorType>
-void CreateMaterialTranslationWindow(ObjectEvent* e,
-                                     TranslationDisplayMode::Enum displayMode,
-                                     StringParam baseWindowName)
+void CreateMaterialTranslationWindow(ObjectEvent* e, TranslationDisplayMode::Enum displayMode, StringParam baseWindowName)
 {
   Editor* editor = Z::gEditor;
   Material* material = (Material*)e->Source;
-  EditorType* scriptEditor =
-      CreateScriptWindow<EditorType>(editor, BuildString(baseWindowName, material->Name), Lexer::Shader);
+  EditorType* scriptEditor = CreateScriptWindow<EditorType>(editor, BuildString(baseWindowName, material->Name), Lexer::Shader);
   scriptEditor->SetDisplayMode(displayMode);
   scriptEditor->SetResource(material);
   scriptEditor->Build();
@@ -405,8 +394,7 @@ void CodeTranslatorListener::OnComposeRaverieMaterial(ObjectEvent* e)
 {
   Editor* editor = Z::gEditor;
   Material* material = (Material*)e->Source;
-  RaverieCompositorScriptEditor* scriptEditor = CreateScriptWindow<RaverieCompositorScriptEditor>(
-      editor, BuildString("CompositedMat", material->Name), Lexer::Raverie);
+  RaverieCompositorScriptEditor* scriptEditor = CreateScriptWindow<RaverieCompositorScriptEditor>(editor, BuildString("CompositedMat", material->Name), Lexer::Raverie);
   scriptEditor->SetResource(material);
   scriptEditor->Build();
 }
@@ -418,20 +406,17 @@ void CodeTranslatorListener::OnTranslateRaverieFragment(ObjectEvent* e)
 
 void CodeTranslatorListener::OnTranslateRaveriePixelFragment(ObjectEvent* e)
 {
-  CreateMaterialTranslationWindow<TranslatedRaverieCompositorScriptEditor>(
-      e, TranslationDisplayMode::Pixel, "TranslatedPixelMat");
+  CreateMaterialTranslationWindow<TranslatedRaverieCompositorScriptEditor>(e, TranslationDisplayMode::Pixel, "TranslatedPixelMat");
 }
 
 void CodeTranslatorListener::OnTranslateRaverieGeometryFragment(ObjectEvent* e)
 {
-  CreateMaterialTranslationWindow<TranslatedRaverieCompositorScriptEditor>(
-      e, TranslationDisplayMode::Geometry, "TranslatedGeometryMat");
+  CreateMaterialTranslationWindow<TranslatedRaverieCompositorScriptEditor>(e, TranslationDisplayMode::Geometry, "TranslatedGeometryMat");
 }
 
 void CodeTranslatorListener::OnTranslateRaverieVertexFragment(ObjectEvent* e)
 {
-  CreateMaterialTranslationWindow<TranslatedRaverieCompositorScriptEditor>(
-      e, TranslationDisplayMode::Vertex, "TranslatedVertexMat");
+  CreateMaterialTranslationWindow<TranslatedRaverieCompositorScriptEditor>(e, TranslationDisplayMode::Vertex, "TranslatedVertexMat");
 }
 
 void CodeTranslatorListener::OnTranslateRaverieFragmentWithLineNumbers(ObjectEvent* e)

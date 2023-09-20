@@ -9,13 +9,7 @@ using namespace AudioConstants;
 
 // Pitch Change Handler
 
-PitchChangeHandler::PitchChangeHandler() :
-    mPitchCents(0),
-    mPitchFactor(1.0f),
-    mFramesToInterpolate(0),
-    mInputFrameCount(0),
-    mInputSampleCount(0),
-    mChannels(0)
+PitchChangeHandler::PitchChangeHandler() : mPitchCents(0), mPitchFactor(1.0f), mFramesToInterpolate(0), mInputFrameCount(0), mInputSampleCount(0), mChannels(0)
 {
   ResetLastSamples();
 }
@@ -112,8 +106,7 @@ void PitchChangeHandler::ProcessBuffer(BufferType* inputBuffer, BufferType* outp
     if (sourceFrameStart + mChannels > mInputSampleCount)
     {
       // Copy the previous frame into the output buffer
-      memcpy(
-          outputBuffer->Data() + outputFrameIndex, inputBuffer->Data() + previousFrameStart, sizeof(float) * mChannels);
+      memcpy(outputBuffer->Data() + outputFrameIndex, inputBuffer->Data() + previousFrameStart, sizeof(float) * mChannels);
       continue;
     }
 
@@ -133,8 +126,7 @@ void PitchChangeHandler::ProcessBuffer(BufferType* inputBuffer, BufferType* outp
         secondSample = (*inputBuffer)[sourceFrameStart + channel];
 
       // Interpolate between the two samples for the output sample
-      outputRange.Front() =
-          firstSample + ((secondSample - firstSample) * ((float)CurrentData.mPitchFrameIndex - frameIndex));
+      outputRange.Front() = firstSample + ((secondSample - firstSample) * ((float)CurrentData.mPitchFrameIndex - frameIndex));
     }
 
     // If currently interpolating, get updated pitch factor
@@ -210,11 +202,7 @@ bool PitchChangeHandler::Interpolating()
   return CurrentData.mInterpolating;
 }
 
-PitchChangeHandler::Data::Data() :
-    mInterpolationFramesProcessed(0),
-    mInterpolating(false),
-    mPitchFrameIndex(0.0),
-    mBufferSizeFraction(0.0)
+PitchChangeHandler::Data::Data() : mInterpolationFramesProcessed(0), mInterpolating(false), mPitchFrameIndex(0.0), mBufferSizeFraction(0.0)
 {
   memset(LastSamples, 0, sizeof(float) * cMaxChannels);
 }

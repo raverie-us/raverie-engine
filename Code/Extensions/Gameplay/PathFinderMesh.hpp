@@ -153,8 +153,7 @@ public:
 };
 
 // Finder Algorithm Mesh
-class PathFinderAlgorithmMesh
-    : public PathFinderAlgorithm<PathFinderAlgorithmMesh, NavMeshPolygonId, PathFinderMeshNodeRange>
+class PathFinderAlgorithmMesh : public PathFinderAlgorithm<PathFinderAlgorithmMesh, NavMeshPolygonId, PathFinderMeshNodeRange>
 {
 public:
   PathFinderAlgorithmMesh();

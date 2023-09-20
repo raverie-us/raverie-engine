@@ -40,8 +40,7 @@ struct ScrollManipulation : public MouseManipulation
   Vec2 mScrollStart;
   uint mOrientation;
 
-  ScrollManipulation(uint orientation, Mouse* mouse, Composite* owner, BaseScrollArea* scrollArea) :
-      MouseManipulation(mouse, owner)
+  ScrollManipulation(uint orientation, Mouse* mouse, Composite* owner, BaseScrollArea* scrollArea) : MouseManipulation(mouse, owner)
   {
     mOrientation = orientation;
     mScrollArea = scrollArea;
@@ -503,9 +502,7 @@ void BaseScrollArea::ScrollPixels(Vec2 additivePixels)
   SetScrolledOffsetInternal(mClientOffset + additivePixels, ScrollUpdate::External, true);
 }
 
-void BaseScrollArea::SetScrolledPercentageInternal(Vec2 scrollPercentage,
-                                                   ScrollUpdate::Enum updateType,
-                                                   bool generateMessages)
+void BaseScrollArea::SetScrolledPercentageInternal(Vec2 scrollPercentage, ScrollUpdate::Enum updateType, bool generateMessages)
 {
   // Clamp scroll to valid range.
   scrollPercentage.x = Math::Clamp(scrollPercentage.x, 0.0f, 1.0f);
@@ -522,10 +519,7 @@ void BaseScrollArea::SetScrolledPercentageInternal(Vec2 scrollPercentage,
   SetScrolledOffsetInternal(clientOffset, updateType, generateMessages);
 }
 
-void BaseScrollArea::SetScrolledOffsetInternal(Vec2Param clientOffset,
-                                               ScrollUpdate::Enum updateType,
-                                               bool generateMessages,
-                                               bool animate)
+void BaseScrollArea::SetScrolledOffsetInternal(Vec2Param clientOffset, ScrollUpdate::Enum updateType, bool generateMessages, bool animate)
 {
   if (generateMessages)
     MarkAsNeedsUpdate();

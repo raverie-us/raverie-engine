@@ -30,8 +30,7 @@ SpirVSpecializationConstantPass::SpirVSpecializationConstantPass()
   mFreezeAllConstants = true;
 }
 
-bool SpirVSpecializationConstantPass::RunTranslationPass(ShaderTranslationPassResult& inputData,
-                                                         ShaderTranslationPassResult& outputData)
+bool SpirVSpecializationConstantPass::RunTranslationPass(ShaderTranslationPassResult& inputData, ShaderTranslationPassResult& outputData)
 {
   mErrorLog.Clear();
 
@@ -52,9 +51,7 @@ bool SpirVSpecializationConstantPass::RunTranslationPass(ShaderTranslationPassRe
   return success;
 }
 
-void SpirVSpecializationConstantPass::GetSpecializationFlags(Array<String>& outFlags,
-                                                             ShaderStageInterfaceReflection& inputStageReflection,
-                                                             ShaderStageInterfaceReflection& outputStageReflection)
+void SpirVSpecializationConstantPass::GetSpecializationFlags(Array<String>& outFlags, ShaderStageInterfaceReflection& inputStageReflection, ShaderStageInterfaceReflection& outputStageReflection)
 {
   // Query for any constants unique to this pass (such as fragment properties)
   SpecializationConstantEvent toSend;

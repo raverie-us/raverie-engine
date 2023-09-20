@@ -167,13 +167,8 @@ public:
   bool EndsWith(StringRangeParam value) const;
 
   static String Join(StringRangeParam separator, StringRangeParam string1, StringRangeParam string2);
-  static String
-  Join(StringRangeParam separator, StringRangeParam string1, StringRangeParam string2, StringRangeParam string3);
-  static String Join(StringRangeParam separator,
-                     StringRangeParam string1,
-                     StringRangeParam string2,
-                     StringRangeParam string3,
-                     StringRangeParam string4);
+  static String Join(StringRangeParam separator, StringRangeParam string1, StringRangeParam string2, StringRangeParam string3);
+  static String Join(StringRangeParam separator, StringRangeParam string1, StringRangeParam string2, StringRangeParam string3, StringRangeParam string4);
   static String Join(StringRangeParam separator, const String* strings, size_t stringCount);
   static String JoinInternal(StringRangeParam separator, const StringRange* values, size_t count);
 

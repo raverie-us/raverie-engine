@@ -34,7 +34,8 @@ struct BroadPhaseProxy
 
 private:
   /// Any type that is useful to a BroadPhase should be in this union.
-  union {
+  union
+  {
     void* mProxy;
     u32 mIntProxy;
   };

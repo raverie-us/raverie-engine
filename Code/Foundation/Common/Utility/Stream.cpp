@@ -202,8 +202,7 @@ ByteBufferMemoryStream::ByteBufferMemoryStream(const byte* data, size_t size)
   mBuffer.Write(data, size);
 }
 
-ByteBufferMemoryStream::ByteBufferMemoryStream(const ByteBuffer::Block& block) :
-    ByteBufferMemoryStream(block.Data, block.Size)
+ByteBufferMemoryStream::ByteBufferMemoryStream(const ByteBuffer::Block& block) : ByteBufferMemoryStream(block.Data, block.Size)
 {
 }
 
@@ -211,13 +210,11 @@ ByteBufferMemoryStream::ByteBufferMemoryStream(const DataBlock& block) : ByteBuf
 {
 }
 
-ByteBufferMemoryStream::ByteBufferMemoryStream(const ByteBufferBlock& block) :
-    ByteBufferMemoryStream(const_cast<ByteBufferBlock&>(block).GetBegin(), const_cast<ByteBufferBlock&>(block).Size())
+ByteBufferMemoryStream::ByteBufferMemoryStream(const ByteBufferBlock& block) : ByteBufferMemoryStream(const_cast<ByteBufferBlock&>(block).GetBegin(), const_cast<ByteBufferBlock&>(block).Size())
 {
 }
 
-ByteBufferMemoryStream::ByteBufferMemoryStream(const Array<byte>& block) :
-    ByteBufferMemoryStream(block.Data(), block.Size())
+ByteBufferMemoryStream::ByteBufferMemoryStream(const Array<byte>& block) : ByteBufferMemoryStream(block.Data(), block.Size())
 {
 }
 
@@ -277,8 +274,7 @@ ArrayByteMemoryStream::ArrayByteMemoryStream(const byte* data, size_t size) : mC
   mBuffer.Insert(mBuffer.Begin(), data, data + size);
 }
 
-ArrayByteMemoryStream::ArrayByteMemoryStream(const ByteBuffer::Block& block) :
-    ArrayByteMemoryStream(block.Data, block.Size)
+ArrayByteMemoryStream::ArrayByteMemoryStream(const ByteBuffer::Block& block) : ArrayByteMemoryStream(block.Data, block.Size)
 {
 }
 
@@ -286,13 +282,11 @@ ArrayByteMemoryStream::ArrayByteMemoryStream(const DataBlock& block) : ArrayByte
 {
 }
 
-ArrayByteMemoryStream::ArrayByteMemoryStream(const ByteBufferBlock& block) :
-    ArrayByteMemoryStream(const_cast<ByteBufferBlock&>(block).GetBegin(), const_cast<ByteBufferBlock&>(block).Size())
+ArrayByteMemoryStream::ArrayByteMemoryStream(const ByteBufferBlock& block) : ArrayByteMemoryStream(const_cast<ByteBufferBlock&>(block).GetBegin(), const_cast<ByteBufferBlock&>(block).Size())
 {
 }
 
-ArrayByteMemoryStream::ArrayByteMemoryStream(const Array<byte>& block) :
-    ArrayByteMemoryStream(block.Data(), block.Size())
+ArrayByteMemoryStream::ArrayByteMemoryStream(const Array<byte>& block) : ArrayByteMemoryStream(block.Data(), block.Size())
 {
 }
 

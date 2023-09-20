@@ -69,14 +69,12 @@ void DirectBuilderComponent::BuildContent(BuildOptions& buildOptions)
     // Log what part of the source path was missing (if any)
     String sourceFileMissingDir = FindFirstMissingDirectory(sourceFile);
     if (sourceFileMissingDir != sourceFile)
-      buildOptions.Message = String::Format(
-          "%s. The source path '%s' doesn't exist", buildOptions.Message.c_str(), sourceFileMissingDir.c_str());
+      buildOptions.Message = String::Format("%s. The source path '%s' doesn't exist", buildOptions.Message.c_str(), sourceFileMissingDir.c_str());
 
     // Log what part of the destination path was missing (if any)
     String destFileMissingDir = FindFirstMissingDirectory(destFile);
     if (destFileMissingDir != destFile)
-      buildOptions.Message = String::Format(
-          "%s. The destination path '%s' doesn't exist", buildOptions.Message.c_str(), destFileMissingDir.c_str());
+      buildOptions.Message = String::Format("%s. The destination path '%s' doesn't exist", buildOptions.Message.c_str(), destFileMissingDir.c_str());
 
     return;
   }

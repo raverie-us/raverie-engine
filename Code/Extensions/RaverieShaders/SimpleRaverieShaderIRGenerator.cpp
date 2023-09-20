@@ -4,9 +4,7 @@
 namespace Raverie
 {
 
-void SimplifiedShaderReflectionData::CreateReflectionData(RaverieShaderIRLibrary* shaderLibrary,
-                                                          ShaderStageDescription& stageDef,
-                                                          Array<PassResultRef>& passResults)
+void SimplifiedShaderReflectionData::CreateReflectionData(RaverieShaderIRLibrary* shaderLibrary, ShaderStageDescription& stageDef, Array<PassResultRef>& passResults)
 {
   if (passResults.Empty())
     return;
@@ -16,8 +14,7 @@ void SimplifiedShaderReflectionData::CreateReflectionData(RaverieShaderIRLibrary
   CreateSimpleOpaqueTypeReflectionData(shaderLibrary, stageDef, passResults);
 }
 
-ShaderResourceReflectionData* SimplifiedShaderReflectionData::FindUniformReflectionData(RaverieShaderIRType* fragmentType,
-                                                                                        StringParam propertyName)
+ShaderResourceReflectionData* SimplifiedShaderReflectionData::FindUniformReflectionData(RaverieShaderIRType* fragmentType, StringParam propertyName)
 {
   String fragmentName = fragmentType->mMeta->mRaverieName;
   // Find the fragment's lookup data
@@ -44,9 +41,7 @@ ShaderResourceReflectionData* SimplifiedShaderReflectionData::FindUniformReflect
   return &uniformBuffer.mMembers[memberIndex];
 }
 
-void SimplifiedShaderReflectionData::FindSampledImageReflectionData(RaverieShaderIRType* fragmentType,
-                                                                    StringParam propertyName,
-                                                                    Array<ShaderResourceReflectionData*>& results)
+void SimplifiedShaderReflectionData::FindSampledImageReflectionData(RaverieShaderIRType* fragmentType, StringParam propertyName, Array<ShaderResourceReflectionData*>& results)
 {
   FragmentLookup* fragmentLookup = mFragmentLookup.FindPointer(fragmentType->mMeta->mRaverieName);
   if (fragmentLookup == nullptr)
@@ -55,9 +50,7 @@ void SimplifiedShaderReflectionData::FindSampledImageReflectionData(RaverieShade
   PopulateSamplerAndImageData(fragmentLookup->mSampledImages, propertyName, results);
 }
 
-void SimplifiedShaderReflectionData::FindImageReflectionData(RaverieShaderIRType* fragmentType,
-                                                             StringParam propertyName,
-                                                             Array<ShaderResourceReflectionData*>& results)
+void SimplifiedShaderReflectionData::FindImageReflectionData(RaverieShaderIRType* fragmentType, StringParam propertyName, Array<ShaderResourceReflectionData*>& results)
 {
   FragmentLookup* fragmentLookup = mFragmentLookup.FindPointer(fragmentType->mMeta->mRaverieName);
   if (fragmentLookup == nullptr)
@@ -66,9 +59,7 @@ void SimplifiedShaderReflectionData::FindImageReflectionData(RaverieShaderIRType
   PopulateSamplerAndImageData(fragmentLookup->mImages, propertyName, results);
 }
 
-void SimplifiedShaderReflectionData::FindSamplerReflectionData(RaverieShaderIRType* fragmentType,
-                                                               StringParam propertyName,
-                                                               Array<ShaderResourceReflectionData*>& results)
+void SimplifiedShaderReflectionData::FindSamplerReflectionData(RaverieShaderIRType* fragmentType, StringParam propertyName, Array<ShaderResourceReflectionData*>& results)
 {
   FragmentLookup* fragmentLookup = mFragmentLookup.FindPointer(fragmentType->mMeta->mRaverieName);
   if (fragmentLookup == nullptr)
@@ -77,8 +68,7 @@ void SimplifiedShaderReflectionData::FindSamplerReflectionData(RaverieShaderIRTy
   PopulateSamplerAndImageData(fragmentLookup->mSamplers, propertyName, results);
 }
 
-ShaderResourceReflectionData* SimplifiedShaderReflectionData::FindStorageImage(RaverieShaderIRType* fragmentType,
-                                                                               StringParam propertyName)
+ShaderResourceReflectionData* SimplifiedShaderReflectionData::FindStorageImage(RaverieShaderIRType* fragmentType, StringParam propertyName)
 {
   FragmentLookup* fragmentLookup = mFragmentLookup.FindPointer(fragmentType->mMeta->mRaverieName);
   if (fragmentLookup == nullptr)
@@ -92,8 +82,7 @@ ShaderResourceReflectionData* SimplifiedShaderReflectionData::FindStorageImage(R
   return &mReflection.mStorageImages[storageImageData->mIndex].mReflectionData;
 }
 
-ShaderResourceReflectionData* SimplifiedShaderReflectionData::FindStructedStorageBuffer(RaverieShaderIRType* fragmentType,
-                                                                                        StringParam propertyName)
+ShaderResourceReflectionData* SimplifiedShaderReflectionData::FindStructedStorageBuffer(RaverieShaderIRType* fragmentType, StringParam propertyName)
 {
   FragmentLookup* fragmentLookup = mFragmentLookup.FindPointer(fragmentType->mMeta->mRaverieName);
   if (fragmentLookup == nullptr)
@@ -107,9 +96,7 @@ ShaderResourceReflectionData* SimplifiedShaderReflectionData::FindStructedStorag
   return &mReflection.mStructedStorageBuffers[ssboData->mIndex].mReflectionData;
 }
 
-void SimplifiedShaderReflectionData::CreateUniformReflectionData(RaverieShaderIRLibrary* shaderLibrary,
-                                                                 ShaderStageDescription& stageDef,
-                                                                 Array<PassResultRef>& passResults)
+void SimplifiedShaderReflectionData::CreateUniformReflectionData(RaverieShaderIRLibrary* shaderLibrary, ShaderStageDescription& stageDef, Array<PassResultRef>& passResults)
 {
   HashMap<String, UniformReflectionData> memberRemappings;
   HashMap<String, SimpleResourceRemappingData> bufferRenames;
@@ -234,9 +221,7 @@ void SimplifiedShaderReflectionData::CreateUniformReflectionData(RaverieShaderIR
   mReflection = *lastStageData;
 }
 
-void SimplifiedShaderReflectionData::CreateSamplerAndImageReflectionData(RaverieShaderIRLibrary* shaderLibrary,
-                                                                         ShaderStageDescription& stageDef,
-                                                                         Array<PassResultRef>& passResults)
+void SimplifiedShaderReflectionData::CreateSamplerAndImageReflectionData(RaverieShaderIRLibrary* shaderLibrary, ShaderStageDescription& stageDef, Array<PassResultRef>& passResults)
 {
   ShaderStageInterfaceReflection& firstPassData = passResults[0]->mReflectionData;
   ShaderStageInterfaceReflection& lastPassData = passResults[passResults.Size() - 1]->mReflectionData;
@@ -283,8 +268,7 @@ void SimplifiedShaderReflectionData::CreateSamplerAndImageReflectionData(Raverie
         SampledImageRemappings results;
         RecursivelyBuildSamplerAndImageMappings(passResults, 1, *resourceMappings, results);
         // Build the final name to index mapping
-        BuildFinalSampledImageMappings(
-            &results, samplerIndices, imageIndices, sampledImageIndices, fragLookup.mSampledImages[fieldName]);
+        BuildFinalSampledImageMappings(&results, samplerIndices, imageIndices, sampledImageIndices, fragLookup.mSampledImages[fieldName]);
       }
       else if (shaderType->mBaseType == ShaderIRTypeBaseType::Sampler)
       {
@@ -294,8 +278,7 @@ void SimplifiedShaderReflectionData::CreateSamplerAndImageReflectionData(Raverie
 
         SampledImageRemappings results;
         RecursivelyBuildSamplerAndImageMappings(passResults, 1, *resourceMappings, results);
-        BuildFinalSampledImageMappings(
-            &results, samplerIndices, imageIndices, sampledImageIndices, fragLookup.mSamplers[fieldName]);
+        BuildFinalSampledImageMappings(&results, samplerIndices, imageIndices, sampledImageIndices, fragLookup.mSamplers[fieldName]);
       }
       else if (shaderType->mBaseType == ShaderIRTypeBaseType::Image)
       {
@@ -310,8 +293,7 @@ void SimplifiedShaderReflectionData::CreateSamplerAndImageReflectionData(Raverie
 
         SampledImageRemappings results;
         RecursivelyBuildSamplerAndImageMappings(passResults, 1, *resourceMappings, results);
-        BuildFinalSampledImageMappings(
-            &results, samplerIndices, imageIndices, sampledImageIndices, fragLookup.mImages[fieldName]);
+        BuildFinalSampledImageMappings(&results, samplerIndices, imageIndices, sampledImageIndices, fragLookup.mImages[fieldName]);
       }
     }
   }
@@ -370,11 +352,8 @@ void SimplifiedShaderReflectionData::MergeRemappings(SampledImageRemappings& des
   dest.mSampledImageRemappings.Insert(dest.mSampledImageRemappings.End(), source.mSampledImageRemappings.All());
 }
 
-void SimplifiedShaderReflectionData::BuildFinalSampledImageMappings(SampledImageRemappings* resourceMappings,
-                                                                    NameToIndexMap& samplerIndices,
-                                                                    NameToIndexMap& imageIndices,
-                                                                    NameToIndexMap& sampledImageIndices,
-                                                                    SampledImageRemappingData& results)
+void SimplifiedShaderReflectionData::BuildFinalSampledImageMappings(
+    SampledImageRemappings* resourceMappings, NameToIndexMap& samplerIndices, NameToIndexMap& imageIndices, NameToIndexMap& sampledImageIndices, SampledImageRemappingData& results)
 {
   if (resourceMappings == nullptr)
     return;
@@ -405,9 +384,7 @@ void SimplifiedShaderReflectionData::BuildFinalSampledImageMappings(SampledImage
   }
 }
 
-void SimplifiedShaderReflectionData::PopulateSamplerAndImageData(HashMap<String, SampledImageRemappingData>& searchMap,
-                                                                 StringParam propertyName,
-                                                                 Array<ShaderResourceReflectionData*>& results)
+void SimplifiedShaderReflectionData::PopulateSamplerAndImageData(HashMap<String, SampledImageRemappingData>& searchMap, StringParam propertyName, Array<ShaderResourceReflectionData*>& results)
 {
   // Find the property in the given search map
   SampledImageRemappingData* remapData = searchMap.FindPointer(propertyName);
@@ -434,9 +411,7 @@ void SimplifiedShaderReflectionData::PopulateSamplerAndImageData(HashMap<String,
   }
 }
 
-void SimplifiedShaderReflectionData::CreateSimpleOpaqueTypeReflectionData(RaverieShaderIRLibrary* shaderLibrary,
-                                                                          ShaderStageDescription& stageDef,
-                                                                          Array<PassResultRef>& passResults)
+void SimplifiedShaderReflectionData::CreateSimpleOpaqueTypeReflectionData(RaverieShaderIRLibrary* shaderLibrary, ShaderStageDescription& stageDef, Array<PassResultRef>& passResults)
 {
   // @JoshD: Currently hardcode this to only look at the last stage.
   // Currently nothing renames variables between stages so this is reasonable.
@@ -511,9 +486,7 @@ void SimplifiedShaderReflectionData::CreateSimpleOpaqueTypeReflectionData(Raveri
   }
 }
 
-SimpleRaverieShaderIRGenerator::SimpleRaverieShaderIRGenerator(FrontEndTranslatorType* frontEndTranslator) :
-    mFragmentProject("Fragments"),
-    mShaderProject("Shaders")
+SimpleRaverieShaderIRGenerator::SimpleRaverieShaderIRGenerator(FrontEndTranslatorType* frontEndTranslator) : mFragmentProject("Fragments"), mShaderProject("Shaders")
 {
   SetupEventConnections();
 
@@ -524,10 +497,8 @@ SimpleRaverieShaderIRGenerator::SimpleRaverieShaderIRGenerator(FrontEndTranslato
   Initialize(frontEndTranslator, settings);
 }
 
-SimpleRaverieShaderIRGenerator::SimpleRaverieShaderIRGenerator(FrontEndTranslatorType* frontEndTranslator,
-                                                           RaverieShaderSpirVSettings* settings) :
-    mFragmentProject("Fragments"),
-    mShaderProject("Shaders")
+SimpleRaverieShaderIRGenerator::SimpleRaverieShaderIRGenerator(FrontEndTranslatorType* frontEndTranslator, RaverieShaderSpirVSettings* settings) :
+    mFragmentProject("Fragments"), mShaderProject("Shaders")
 {
   SetupEventConnections();
   Initialize(frontEndTranslator, settings);
@@ -612,8 +583,7 @@ void SimpleRaverieShaderIRGenerator::ClearFragmentsProjectAndLibrary()
   mFragmentLibraryRef = nullptr;
 }
 
-bool SimpleRaverieShaderIRGenerator::ComposeShader(RaverieShaderIRCompositor::ShaderDefinition& shaderDef,
-                                                 ShaderCapabilities& capabilities)
+bool SimpleRaverieShaderIRGenerator::ComposeShader(RaverieShaderIRCompositor::ShaderDefinition& shaderDef, ShaderCapabilities& capabilities)
 {
   RaverieShaderIRCompositor compositor;
   EventConnect(&compositor, Events::TranslationError, &SimpleRaverieShaderIRGenerator::OnForwardEvent, this);
@@ -627,10 +597,9 @@ bool SimpleRaverieShaderIRGenerator::ComposeShader(RaverieShaderIRCompositor::Sh
   return success;
 }
 
-bool SimpleRaverieShaderIRGenerator::ComposeComputeShader(
-    RaverieShaderIRCompositor::ShaderDefinition& shaderDef,
-    ShaderCapabilities& capabilities,
-    RaverieShaderIRCompositor::ComputeShaderProperties* computeProperties)
+bool SimpleRaverieShaderIRGenerator::ComposeComputeShader(RaverieShaderIRCompositor::ShaderDefinition& shaderDef,
+                                                          ShaderCapabilities& capabilities,
+                                                          RaverieShaderIRCompositor::ComputeShaderProperties* computeProperties)
 {
   RaverieShaderIRCompositor compositor;
   EventConnect(&compositor, Events::TranslationError, &SimpleRaverieShaderIRGenerator::OnForwardEvent, this);
@@ -738,8 +707,7 @@ ShaderTranslationPassResult* SimpleRaverieShaderIRGenerator::FindTranslationResu
   return translationResult->mFinalPassData;
 }
 
-SimplifiedShaderReflectionData*
-SimpleRaverieShaderIRGenerator::FindSimplifiedReflectionResult(RaverieShaderIRType* shaderType)
+SimplifiedShaderReflectionData* SimpleRaverieShaderIRGenerator::FindSimplifiedReflectionResult(RaverieShaderIRType* shaderType)
 {
   ShaderTranslationResult* translationResult = mShaderResults.FindPointer(shaderType->mMeta->mRaverieName);
   if (translationResult == nullptr)
@@ -812,8 +780,7 @@ RaverieShaderSpirVSettings* SimpleRaverieShaderIRGenerator::CreateUnitTestSettin
   // Set custom callbacks in both the compositor and entry point code generation
   // for dealing with perspective position vs. api perspective position.
   settings->mCallbackSettings.SetCompositeCallback(&RaverieShaderIRCompositor::ApiPerspectivePositionCallback, nullptr);
-  settings->mCallbackSettings.SetAppendCallback(&EntryPointGeneration::PerspectiveTransformAppendVertexCallback,
-                                                nullptr);
+  settings->mCallbackSettings.SetAppendCallback(&EntryPointGeneration::PerspectiveTransformAppendVertexCallback, nullptr);
 
   settings->Finalize();
 
@@ -901,8 +868,7 @@ RaverieShaderSpirVSettings* SimpleRaverieShaderIRGenerator::CreateSettings(SpirV
   // Set custom callbacks in both the compositor and entry point code generation
   // for dealing with perspective position vs. api perspective position.
   settings->mCallbackSettings.SetCompositeCallback(&RaverieShaderIRCompositor::ApiPerspectivePositionCallback, nullptr);
-  settings->mCallbackSettings.SetAppendCallback(&EntryPointGeneration::PerspectiveTransformAppendVertexCallback,
-                                                nullptr);
+  settings->mCallbackSettings.SetAppendCallback(&EntryPointGeneration::PerspectiveTransformAppendVertexCallback, nullptr);
 
   settings->Finalize();
 
@@ -934,8 +900,7 @@ void SimpleRaverieShaderIRGenerator::SetupTranslator(FrontEndTranslatorType* fro
   frontEndTranslator->Setup();
 }
 
-bool SimpleRaverieShaderIRGenerator::CompilePipeline(RaverieShaderIRCompositor::ShaderStageDescription& stageDef,
-                                                   ShaderPipelineDescription& pipeline)
+bool SimpleRaverieShaderIRGenerator::CompilePipeline(RaverieShaderIRCompositor::ShaderStageDescription& stageDef, ShaderPipelineDescription& pipeline)
 {
   if (stageDef.mShaderCode.Empty())
     return false;
@@ -962,9 +927,9 @@ bool SimpleRaverieShaderIRGenerator::CompilePipeline(RaverieShaderIRCompositor::
 }
 
 bool SimpleRaverieShaderIRGenerator::CompilePipeline(RaverieShaderIRType* shaderType,
-                                                   ShaderPipelineDescription& pipeline,
-                                                   Array<TranslationPassResultRef>& pipelineResults,
-                                                   Array<TranslationPassResultRef>& debugResults)
+                                                     ShaderPipelineDescription& pipeline,
+                                                     Array<TranslationPassResultRef>& pipelineResults,
+                                                     Array<TranslationPassResultRef>& debugResults)
 {
   if (shaderType == nullptr)
     return false;

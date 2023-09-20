@@ -283,16 +283,9 @@ public:
   /// object component initialization) (Must not differ between client/server
   /// peers!) Returns true if successful, else false (a net property of that
   /// name already exists on the specified net channel).
-  bool AddNetPropertyToChannel(Component* component,
-                               Property* property,
-                               const String& netPropertyTypeName,
-                               NetPropertyConfig* netPropertyConfig,
-                               const String& netChannelName,
-                               NetChannelConfig* netChannelConfig);
-  bool AddNetPropertyToChannel(Component* component,
-                               Property* property,
-                               NetPropertyConfig* netPropertyConfig,
-                               NetChannelConfig* netChannelConfig);
+  bool AddNetPropertyToChannel(
+      Component* component, Property* property, const String& netPropertyTypeName, NetPropertyConfig* netPropertyConfig, const String& netChannelName, NetChannelConfig* netChannelConfig);
+  bool AddNetPropertyToChannel(Component* component, Property* property, NetPropertyConfig* netPropertyConfig, NetChannelConfig* netChannelConfig);
 
   /// [Client/Server] Removes the specified net channel.
   /// (Cannot be modified after net object component initialization)

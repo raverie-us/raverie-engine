@@ -74,8 +74,7 @@ RaverieDefineType(ReceivedDataEvent, builder, type)
   RaverieBindFieldProperty(Buffer);
 }
 
-ReceivedDataEvent::ReceivedDataEvent(const ConnectionData* connectionInfo, const byte* data, size_t size) :
-    ConnectionEvent(connectionInfo)
+ReceivedDataEvent::ReceivedDataEvent(const ConnectionData* connectionInfo, const byte* data, size_t size) : ConnectionEvent(connectionInfo)
 {
   // Resize the data buffer to be the size of the data we're getting
   Data.Resize(size);
@@ -90,10 +89,7 @@ SocketData::SocketData()
 {
 }
 
-SocketData::SocketData(const SocketData& rhs) :
-    ConnectionInfo(rhs.ConnectionInfo),
-    PartialReceivedData(rhs.PartialReceivedData),
-    PartialSentData(rhs.PartialSentData)
+SocketData::SocketData(const SocketData& rhs) : ConnectionInfo(rhs.ConnectionInfo), PartialReceivedData(rhs.PartialReceivedData), PartialSentData(rhs.PartialSentData)
 {
   Handle = RaverieMove(const_cast<SocketData&>(rhs).Handle);
 }
@@ -1048,13 +1044,10 @@ void TcpSocket::HandleChunks(SocketData& socketData, const byte* buffer, size_t 
         if (socketData.PartialReceivedData.Size() >= packetSize)
         {
           // Handle the received data (not including the chunk size)
-          HandleReceivedData(socketData,
-                             socketData.PartialReceivedData.Data() + sizeof(ChunkLengthType),
-                             packetSize - sizeof(ChunkLengthType));
+          HandleReceivedData(socketData, socketData.PartialReceivedData.Data() + sizeof(ChunkLengthType), packetSize - sizeof(ChunkLengthType));
 
           // Erase the packet from the received data
-          PodArray<byte>::range range(socketData.PartialReceivedData.Begin(),
-                                      socketData.PartialReceivedData.Begin() + packetSize);
+          PodArray<byte>::range range(socketData.PartialReceivedData.Begin(), socketData.PartialReceivedData.Begin() + packetSize);
           socketData.PartialReceivedData.Erase(range);
         }
         else
@@ -1093,8 +1086,7 @@ void TcpSocket::HandleChunks(SocketData& socketData, const byte* buffer, size_t 
           HandleReceivedData(socketData, socketData.PartialReceivedData.Data(), i);
 
           // Erase the packet from the received data
-          PodArray<byte>::range range(socketData.PartialReceivedData.Begin(),
-                                      socketData.PartialReceivedData.Begin() + i);
+          PodArray<byte>::range range(socketData.PartialReceivedData.Begin(), socketData.PartialReceivedData.Begin() + i);
           socketData.PartialReceivedData.Erase(range);
           break;
         }

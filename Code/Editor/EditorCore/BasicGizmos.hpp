@@ -99,18 +99,9 @@ DeclareEnum3(GizmoSnapMode, Relative, WorldAxes, WorldGrid);
 namespace GizmoSnapping
 {
 
-Vec3 GetSnappedPosition(Vec3Param currentPosition,
-                        Vec3Param worldMovement,
-                        QuatParam basis,
-                        GizmoDragMode::Enum dragMode,
-                        GizmoSnapMode::Enum snapMode,
-                        float snapDistance);
+Vec3 GetSnappedPosition(Vec3Param currentPosition, Vec3Param worldMovement, QuatParam basis, GizmoDragMode::Enum dragMode, GizmoSnapMode::Enum snapMode, float snapDistance);
 
-Vec3 GetSnappedScale(Vec3Param startPosition,
-                     Vec3Param mouseWorldMovement,
-                     GizmoSnapMode::Enum snapMode,
-                     float snapDistance,
-                     GizmoDragMode::Enum dragMode);
+Vec3 GetSnappedScale(Vec3Param startPosition, Vec3Param mouseWorldMovement, GizmoSnapMode::Enum snapMode, float snapDistance, GizmoDragMode::Enum dragMode);
 
 Vec3 GetSnappedVectorWorldAxes(Vec3Param start, Vec3Param end, float snapDistance);
 
@@ -384,12 +375,7 @@ public:
 
   /// Generate a new scale based on drag-type [ie: viewplane, gizmo-basis-plane,
   /// gizmo-axis].
-  Vec3 ScaleFromDrag(GizmoBasis::Enum basis,
-                     GizmoDrag* gizmoDrag,
-                     float distance,
-                     Vec3Param movement,
-                     Vec3Param startScale,
-                     MetaTransformParam transform);
+  Vec3 ScaleFromDrag(GizmoBasis::Enum basis, GizmoDrag* gizmoDrag, float distance, Vec3Param movement, Vec3Param startScale, MetaTransformParam transform);
 
   /// Used when dragging on the view axis to determine which direction
   Vec3 mEyeDirection;

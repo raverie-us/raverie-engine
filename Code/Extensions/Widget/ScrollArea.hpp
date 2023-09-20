@@ -101,10 +101,7 @@ public:
 
   void OnMouseScroll(MouseEvent* event);
   void SetScrolledPercentageInternal(Vec2 scrollPercentage, ScrollUpdate::Enum updateType, bool generateMessages);
-  void SetScrolledOffsetInternal(Vec2Param scrollOffset,
-                                 ScrollUpdate::Enum updateType,
-                                 bool generateMessages,
-                                 bool animate = false);
+  void SetScrolledOffsetInternal(Vec2Param scrollOffset, ScrollUpdate::Enum updateType, bool generateMessages, bool animate = false);
   // Changing the client area size
   virtual Vec2 GetClientSize() = 0;
   virtual void SetClientSize(Vec2 newSize) = 0;

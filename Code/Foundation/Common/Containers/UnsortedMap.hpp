@@ -15,10 +15,7 @@ namespace Raverie
 /// hash-map. Furthermore, because the key is neither sorted nor hashed, the key
 /// can be changed without having to remove and re-Insert an element (and can be
 /// changed while iterating through this container).
-template <typename KeyType,
-          typename DataType,
-          typename Comparer = ComparePolicy<KeyType>,
-          typename Allocator = DefaultAllocator>
+template <typename KeyType, typename DataType, typename Comparer = ComparePolicy<KeyType>, typename Allocator = DefaultAllocator>
 class UnsortedMap : public Array<Pair<KeyType, DataType>, Allocator>
 {
 public:

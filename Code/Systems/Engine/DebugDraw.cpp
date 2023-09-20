@@ -1,31 +1,31 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-#define AddDefinitions(DebugObjectType)                                                                                \
-  void DebugDraw::Add(Debug::DebugObjectType& debugObject)                                                             \
-  {                                                                                                                    \
-    if (&debugObject != nullptr)                                                                                       \
-      gDebugDraw->Add(debugObject);                                                                                    \
-    else                                                                                                               \
-      DoNotifyException("Null debug object", "You must initialize the debug object.");                                 \
-  }                                                                                                                    \
-  void DebugDraw::Add(uint spaceId, Debug::DebugObjectType& debugObject)                                               \
-  {                                                                                                                    \
-    if (&debugObject != nullptr)                                                                                       \
-      gDebugDraw->Add(spaceId, debugObject);                                                                           \
-    else                                                                                                               \
-      DoNotifyException("Null debug object", "You must initialize the debug object.");                                 \
-  }                                                                                                                    \
-  void DebugDraw::Add(Space* space, Debug::DebugObjectType& debugObject)                                               \
-  {                                                                                                                    \
-    if (&debugObject != nullptr)                                                                                       \
-      gDebugDraw->Add(space->GetRuntimeId(), debugObject);                                                             \
-    else                                                                                                               \
-      DoNotifyException("Null debug object", "You must initialize the debug object.");                                 \
+#define AddDefinitions(DebugObjectType)                                                                                                                                                                \
+  void DebugDraw::Add(Debug::DebugObjectType& debugObject)                                                                                                                                             \
+  {                                                                                                                                                                                                    \
+    if (&debugObject != nullptr)                                                                                                                                                                       \
+      gDebugDraw->Add(debugObject);                                                                                                                                                                    \
+    else                                                                                                                                                                                               \
+      DoNotifyException("Null debug object", "You must initialize the debug object.");                                                                                                                 \
+  }                                                                                                                                                                                                    \
+  void DebugDraw::Add(uint spaceId, Debug::DebugObjectType& debugObject)                                                                                                                               \
+  {                                                                                                                                                                                                    \
+    if (&debugObject != nullptr)                                                                                                                                                                       \
+      gDebugDraw->Add(spaceId, debugObject);                                                                                                                                                           \
+    else                                                                                                                                                                                               \
+      DoNotifyException("Null debug object", "You must initialize the debug object.");                                                                                                                 \
+  }                                                                                                                                                                                                    \
+  void DebugDraw::Add(Space* space, Debug::DebugObjectType& debugObject)                                                                                                                               \
+  {                                                                                                                                                                                                    \
+    if (&debugObject != nullptr)                                                                                                                                                                       \
+      gDebugDraw->Add(space->GetRuntimeId(), debugObject);                                                                                                                                             \
+    else                                                                                                                                                                                               \
+      DoNotifyException("Null debug object", "You must initialize the debug object.");                                                                                                                 \
   }
 
-#define AddBindings(DebugObjectType)                                                                                   \
-  RaverieBindOverloadedMethod(Add, (void (*)(Debug::DebugObjectType&)));                                                 \
+#define AddBindings(DebugObjectType)                                                                                                                                                                   \
+  RaverieBindOverloadedMethod(Add, (void (*)(Debug::DebugObjectType&)));                                                                                                                               \
   RaverieFullBindMethod(builder, type, RaverieSelf::Add, (void (*)(Space*, Debug::DebugObjectType&)), "Add", "space, shape")
 
 namespace Raverie

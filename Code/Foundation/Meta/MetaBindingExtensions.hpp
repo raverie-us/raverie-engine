@@ -142,8 +142,7 @@ namespace CommonGroups
 extern const String cAdvanced;
 } // namespace CommonGroups
 
-#define RaverieAdvancedGroup()                                                                                            \
-  AddAttribute(::Raverie::PropertyAttributes::cGroup)->AddParameter(::Raverie::CommonGroups::cAdvanced)
+#define RaverieAdvancedGroup() AddAttribute(::Raverie::PropertyAttributes::cGroup)->AddParameter(::Raverie::CommonGroups::cAdvanced)
 
 // Uncategorized
 extern const String cInvalidTypeName;
@@ -161,8 +160,7 @@ extern const String cInvalidTypeName;
 
 void BindEventSent(LibraryBuilder& builder, BoundType* boundType, StringParam eventName, BoundType* eventType);
 #define RaverieBindEvent(EventName, EventType) BindEventSent(builder, type, (EventName), RaverieTypeId(EventType))
-#define RaverieBindExternalEvent(EventName, EventType, SenderType)                                                        \
-  BindEventSent(builder, RaverieTypeId(SenderType), (EventName), RaverieTypeId(EventType))
+#define RaverieBindExternalEvent(EventName, EventType, SenderType) BindEventSent(builder, RaverieTypeId(SenderType), (EventName), RaverieTypeId(EventType))
 
 // Events
 namespace Events
@@ -191,8 +189,7 @@ public:
 
   // When a property is changed in the editor, this should be called to properly
   // send events or run any special functionality per object type.
-  static void NotifyPropertyModified(
-      HandleParam object, PropertyPathParam property, AnyParam oldValue, AnyParam newValue, bool intermediateChange);
+  static void NotifyPropertyModified(HandleParam object, PropertyPathParam property, AnyParam oldValue, AnyParam newValue, bool intermediateChange);
   static void NotifyComponentsModified(HandleParam object);
   // Called when an object is modified in any way.
   static void NotifyObjectModified(HandleParam object, bool intermediateChange = false);
@@ -215,8 +212,7 @@ public:
   // 1. Cog instance with "CameraViewport/CameraPath/Path" as the PropertyPath
   // 2. CameraViewport instance with "CameraPath/Path" as the PropertyPath
   // 3. Path instance with "Path" as the PropertyPath
-  virtual void PropertyModified(
-      HandleParam object, PropertyPathParam property, AnyParam oldValue, AnyParam newValue, bool intermediateChange);
+  virtual void PropertyModified(HandleParam object, PropertyPathParam property, AnyParam oldValue, AnyParam newValue, bool intermediateChange);
 
   // Called when any Component is added / moved / removed.
   virtual void ComponentsModified(HandleParam object);
@@ -390,19 +386,19 @@ public:
 #define hasAll(type) HasRange<type>()
 
 // Array Binding
-#define RaverieDefineArrayType(arrayType)                                                                                 \
-  RaverieDefineTemplateType(RaverieMetaArray<arrayType>, builder, type)                                                     \
-  {                                                                                                                    \
-  }                                                                                                                    \
-                                                                                                                       \
-  RaverieDefineExternalBaseType(arrayType, TypeCopyMode::ReferenceType, builder, type)                                   \
-  {                                                                                                                    \
-    type->HandleManager = RaverieManagerId(PointerManager);                                                              \
-    type->Add(new RaverieMetaArray<arrayType>());                                                                         \
+#define RaverieDefineArrayType(arrayType)                                                                                                                                                              \
+  RaverieDefineTemplateType(RaverieMetaArray<arrayType>, builder, type)                                                                                                                                \
+  {                                                                                                                                                                                                    \
+  }                                                                                                                                                                                                    \
+                                                                                                                                                                                                       \
+  RaverieDefineExternalBaseType(arrayType, TypeCopyMode::ReferenceType, builder, type)                                                                                                                 \
+  {                                                                                                                                                                                                    \
+    type->HandleManager = RaverieManagerId(PointerManager);                                                                                                                                            \
+    type->Add(new RaverieMetaArray<arrayType>());                                                                                                                                                      \
   }
 
-#define RaverieInitializeArrayTypeAs(arrayType, name)                                                                     \
-  RaverieInitializeTypeAs(RaverieMetaArray<arrayType>, "RaverieMetaArray" name);                                               \
+#define RaverieInitializeArrayTypeAs(arrayType, name)                                                                                                                                                  \
+  RaverieInitializeTypeAs(RaverieMetaArray<arrayType>, "RaverieMetaArray" name);                                                                                                                       \
   RaverieInitializeExternalTypeAs(arrayType, name);
 
 // Meta Attribute

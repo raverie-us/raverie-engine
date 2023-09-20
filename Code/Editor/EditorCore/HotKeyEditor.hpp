@@ -191,11 +191,7 @@ public:
 
   String mString;
 
-  HotKeyBinding(unsigned m1, unsigned m2, unsigned mk, StringParam bindStr) :
-      mModifier1(m1),
-      mModifier2(m2),
-      mMainKey(mk),
-      mString(bindStr)
+  HotKeyBinding(unsigned m1, unsigned m2, unsigned mk, StringParam bindStr) : mModifier1(m1), mModifier2(m2), mMainKey(mk), mString(bindStr)
   {
   }
 };

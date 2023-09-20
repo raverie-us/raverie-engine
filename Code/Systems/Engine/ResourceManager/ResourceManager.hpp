@@ -158,11 +158,7 @@ public:
   // Internals
   // Saves/Loads a resource from a stream object. If saving the resourcePtr
   // is saved, if loading the new resource is returned.
-  Resource* ResolveResourceStream(cstr fieldName,
-                                  Serializer& stream,
-                                  Resource* resourcePtr,
-                                  ResourceNotFound::Enum ifNotFound,
-                                  cstr defaultResourceName = nullptr);
+  Resource* ResolveResourceStream(cstr fieldName, Serializer& stream, Resource* resourcePtr, ResourceNotFound::Enum ifNotFound, cstr defaultResourceName = nullptr);
 
   // protected:
   // Map of ResourceIds to Resources.
@@ -212,105 +208,93 @@ public:
 // along with any other required setup of the resource for runtime usage. If
 // creation of a runtime resource in script is intended then bind the resource's
 // CreateRuntime method.
-#define DeclareResourceManager(ManagerType, ManagerResourceType)                                                       \
-  typedef ResourceManager RaverieBase;                                                                                   \
-  typedef ManagerType RaverieSelf;                                                                                       \
-  typedef ManagerResourceType ResourceType;                                                                            \
-  typedef ManagerResourceType RT;                                                                                      \
-  typedef ManagerType self_type;                                                                                       \
-  static void Initialize();                                                                                            \
-  static ManagerType* Instance;                                                                                        \
-  static ManagerType* GetInstance()                                                                                    \
-  {                                                                                                                    \
-    return Instance;                                                                                                   \
-  }                                                                                                                    \
-  static bool IsValid()                                                                                                \
-  {                                                                                                                    \
-    return Instance != NULL;                                                                                           \
-  }                                                                                                                    \
-  static RT* GetDefault()                                                                                              \
-  {                                                                                                                    \
-    return (RT*)Instance->GetDefaultResource();                                                                        \
-  }                                                                                                                    \
-  static RT* GetFallback()                                                                                             \
-  {                                                                                                                    \
-    return (RT*)Instance->GetFallbackResource();                                                                       \
-  }                                                                                                                    \
-  static RT* Find(ResourceId resourceId)                                                                               \
-  {                                                                                                                    \
-    return (RT*)Instance->GetResource(resourceId, ResourceNotFound::ErrorFallback);                                    \
-  }                                                                                                                    \
-  static RT* Find(StringParam nameId)                                                                                  \
-  {                                                                                                                    \
-    return (RT*)Instance->GetResource(nameId, ResourceNotFound::ErrorFallback);                                        \
-  }                                                                                                                    \
-  static RT* FindOrNull(ResourceId resourceId)                                                                         \
-  {                                                                                                                    \
-    return (RT*)Instance->GetResource(resourceId, ResourceNotFound::ReturnNull);                                       \
-  }                                                                                                                    \
-  static RT* FindOrNull(StringParam nameId)                                                                            \
-  {                                                                                                                    \
-    return (RT*)Instance->GetResource(nameId, ResourceNotFound::ReturnNull);                                           \
-  }                                                                                                                    \
-  static RT* CreateNewResource(StringParam name)                                                                       \
-  {                                                                                                                    \
-    return (RT*)Instance->CreateNewResourceInternal(name);                                                             \
-  }                                                                                                                    \
-                                                                                                                       \
-private:                                                                                                               \
-  friend class ManagerResourceType;                                                                                    \
-  static RT* CreateRuntime(StringParam name = String())                                                                \
-  {                                                                                                                    \
-    return (RT*)Instance->CreateRuntimeInternal(name);                                                                 \
-  }                                                                                                                    \
-  Resource* AllocateDefaultConstructed() override                                                                      \
-  {                                                                                                                    \
-    return new RT();                                                                                                   \
-  }                                                                                                                    \
-                                                                                                                       \
+#define DeclareResourceManager(ManagerType, ManagerResourceType)                                                                                                                                       \
+  typedef ResourceManager RaverieBase;                                                                                                                                                                 \
+  typedef ManagerType RaverieSelf;                                                                                                                                                                     \
+  typedef ManagerResourceType ResourceType;                                                                                                                                                            \
+  typedef ManagerResourceType RT;                                                                                                                                                                      \
+  typedef ManagerType self_type;                                                                                                                                                                       \
+  static void Initialize();                                                                                                                                                                            \
+  static ManagerType* Instance;                                                                                                                                                                        \
+  static ManagerType* GetInstance()                                                                                                                                                                    \
+  {                                                                                                                                                                                                    \
+    return Instance;                                                                                                                                                                                   \
+  }                                                                                                                                                                                                    \
+  static bool IsValid()                                                                                                                                                                                \
+  {                                                                                                                                                                                                    \
+    return Instance != NULL;                                                                                                                                                                           \
+  }                                                                                                                                                                                                    \
+  static RT* GetDefault()                                                                                                                                                                              \
+  {                                                                                                                                                                                                    \
+    return (RT*)Instance->GetDefaultResource();                                                                                                                                                        \
+  }                                                                                                                                                                                                    \
+  static RT* GetFallback()                                                                                                                                                                             \
+  {                                                                                                                                                                                                    \
+    return (RT*)Instance->GetFallbackResource();                                                                                                                                                       \
+  }                                                                                                                                                                                                    \
+  static RT* Find(ResourceId resourceId)                                                                                                                                                               \
+  {                                                                                                                                                                                                    \
+    return (RT*)Instance->GetResource(resourceId, ResourceNotFound::ErrorFallback);                                                                                                                    \
+  }                                                                                                                                                                                                    \
+  static RT* Find(StringParam nameId)                                                                                                                                                                  \
+  {                                                                                                                                                                                                    \
+    return (RT*)Instance->GetResource(nameId, ResourceNotFound::ErrorFallback);                                                                                                                        \
+  }                                                                                                                                                                                                    \
+  static RT* FindOrNull(ResourceId resourceId)                                                                                                                                                         \
+  {                                                                                                                                                                                                    \
+    return (RT*)Instance->GetResource(resourceId, ResourceNotFound::ReturnNull);                                                                                                                       \
+  }                                                                                                                                                                                                    \
+  static RT* FindOrNull(StringParam nameId)                                                                                                                                                            \
+  {                                                                                                                                                                                                    \
+    return (RT*)Instance->GetResource(nameId, ResourceNotFound::ReturnNull);                                                                                                                           \
+  }                                                                                                                                                                                                    \
+  static RT* CreateNewResource(StringParam name)                                                                                                                                                       \
+  {                                                                                                                                                                                                    \
+    return (RT*)Instance->CreateNewResourceInternal(name);                                                                                                                                             \
+  }                                                                                                                                                                                                    \
+                                                                                                                                                                                                       \
+private:                                                                                                                                                                                               \
+  friend class ManagerResourceType;                                                                                                                                                                    \
+  static RT* CreateRuntime(StringParam name = String())                                                                                                                                                \
+  {                                                                                                                                                                                                    \
+    return (RT*)Instance->CreateRuntimeInternal(name);                                                                                                                                                 \
+  }                                                                                                                                                                                                    \
+  Resource* AllocateDefaultConstructed() override                                                                                                                                                      \
+  {                                                                                                                                                                                                    \
+    return new RT();                                                                                                                                                                                   \
+  }                                                                                                                                                                                                    \
+                                                                                                                                                                                                       \
 public:
 
 // Implement native resource managers
-#define ImplementResourceManager(ManagerType, ManagerResourceType)                                                     \
-  ManagerType* ManagerType::Instance = NULL;                                                                           \
-  void ManagerType::Initialize()                                                                                       \
-  {                                                                                                                    \
-    BoundType* metaType = RaverieTypeId(ManagerResourceType);                                                            \
-    ManagerType::Instance = new ManagerType(metaType);                                                                 \
+#define ImplementResourceManager(ManagerType, ManagerResourceType)                                                                                                                                     \
+  ManagerType* ManagerType::Instance = NULL;                                                                                                                                                           \
+  void ManagerType::Initialize()                                                                                                                                                                       \
+  {                                                                                                                                                                                                    \
+    BoundType* metaType = RaverieTypeId(ManagerResourceType);                                                                                                                                          \
+    ManagerType::Instance = new ManagerType(metaType);                                                                                                                                                 \
   }
 
 // Initialize a ResourceManager it must be forward declared
 #define InitializeResourceManager(ManagerType) ManagerType::Initialize();
 
 template <typename ManagerType>
-void SerializeResourceImpl(cstr fieldName,
-                           Serializer& stream,
-                           HandleOf<typename ManagerType::ResourceType>& resourceRef)
+void SerializeResourceImpl(cstr fieldName, Serializer& stream, HandleOf<typename ManagerType::ResourceType>& resourceRef)
 {
-  resourceRef = (typename ManagerType::ResourceType*)ManagerType::GetInstance()->ResolveResourceStream(
-      fieldName, stream, resourceRef, ResourceNotFound::ReturnDefault);
+  resourceRef = (typename ManagerType::ResourceType*)ManagerType::GetInstance()->ResolveResourceStream(fieldName, stream, resourceRef, ResourceNotFound::ReturnDefault);
 }
 
 template <typename ManagerType>
-void SerializeResourceImpl(cstr fieldName,
-                           Serializer& stream,
-                           HandleOf<typename ManagerType::ResourceType>& resourceRef,
-                           cstr defaultResourceName,
-                           bool canBeNull = false)
+void SerializeResourceImpl(cstr fieldName, Serializer& stream, HandleOf<typename ManagerType::ResourceType>& resourceRef, cstr defaultResourceName, bool canBeNull = false)
 {
-  resourceRef = (typename ManagerType::ResourceType*)ManagerType::GetInstance()->ResolveResourceStream(
-      fieldName, stream, resourceRef, ResourceNotFound::ReturnNull, defaultResourceName);
+  resourceRef = (typename ManagerType::ResourceType*)ManagerType::GetInstance()->ResolveResourceStream(fieldName, stream, resourceRef, ResourceNotFound::ReturnNull, defaultResourceName);
 
   if (canBeNull == false && resourceRef.IsNull())
     resourceRef = ManagerType::GetInstance()->FindOrNull(defaultResourceName);
 }
 
 template <typename ManagerType>
-void SerializeResourceImpl(cstr fieldName,
-                           Serializer& stream,
-                           HandleOf<typename ManagerType::ResourceType>& resourceRef,
-                           StringParam defaultResourceName,
-                           bool canBeNull = false)
+void SerializeResourceImpl(cstr fieldName, Serializer& stream, HandleOf<typename ManagerType::ResourceType>& resourceRef, StringParam defaultResourceName, bool canBeNull = false)
 {
   SerializeResourceImpl<ManagerType>(fieldName, stream, resourceRef, defaultResourceName.c_str(), canBeNull);
 }
@@ -321,13 +305,10 @@ void SerializeResourceImpl(cstr fieldName,
 
 #define SerializeResource(fieldName, name, managerName) SerializeResourceImpl<managerName>(fieldName, stream, name);
 
-#define SerializeResourceNameManagerDefault(name, managerName)                                                         \
-  SerializeResourceImpl<managerName>(#name, stream, name, managerName::GetInstance()->DefaultResourceName.c_str());
+#define SerializeResourceNameManagerDefault(name, managerName) SerializeResourceImpl<managerName>(#name, stream, name, managerName::GetInstance()->DefaultResourceName.c_str());
 
-#define SerializeResourceNameDefault(name, managerName, defaultValue)                                                  \
-  SerializeResourceImpl<managerName>(#name, stream, name, defaultValue);
+#define SerializeResourceNameDefault(name, managerName, defaultValue) SerializeResourceImpl<managerName>(#name, stream, name, defaultValue);
 
-#define SerializeNullableResourceNameDefault(name, managerName, defaultValue)                                          \
-  SerializeResourceImpl<managerName>(#name, stream, name, defaultValue, true);
+#define SerializeNullableResourceNameDefault(name, managerName, defaultValue) SerializeResourceImpl<managerName>(#name, stream, name, defaultValue, true);
 
 } // namespace Raverie

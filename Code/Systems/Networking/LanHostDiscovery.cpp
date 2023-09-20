@@ -93,15 +93,13 @@ void LanHostDiscovery::RefreshAll(bool allowDiscovery, bool getExtraHostInfo, bo
 
   mDiscoveryMode = NetDiscoveryMode::RefreshList;
 
-  MultiHostRequest* hostRequest =
-      CreateMultiHostRequest(Network::LAN, allowDiscovery, removeStaleHosts, getExtraHostInfo);
+  MultiHostRequest* hostRequest = CreateMultiHostRequest(Network::LAN, allowDiscovery, removeStaleHosts, getExtraHostInfo);
 
   TimeMs timeout = FloatSecondsToTimeMs(mNetPeer->GetBasicHostInfoTimeout());
   // Create a ping which is sent to everyone on the network.
   if (allowDiscovery)
   {
-    mPingManager.PingHost(
-        Network::LAN, IpAddress("255.255.255.255", 0), HostPingType::DiscoverList, timeout, EventBundle());
+    mPingManager.PingHost(Network::LAN, IpAddress("255.255.255.255", 0), HostPingType::DiscoverList, timeout, EventBundle());
   }
   else // create a ping which is sent only to people we expect responses from.
   {
@@ -109,17 +107,13 @@ void LanHostDiscovery::RefreshAll(bool allowDiscovery, bool getExtraHostInfo, bo
   }
 }
 
-void LanHostDiscovery::SingleHostRefresh(IpAddress const& theirIp,
-                                         bool allowDiscovery,
-                                         bool getExtraHostInfo,
-                                         bool removeStaleHosts)
+void LanHostDiscovery::SingleHostRefresh(IpAddress const& theirIp, bool allowDiscovery, bool getExtraHostInfo, bool removeStaleHosts)
 {
   CancelIfRefreshingList();
 
   mDiscoveryMode = NetDiscoveryMode::Refresh;
 
-  SingleHostRequest* hostRequest =
-      CreateSingleHostRequest(Network::LAN, allowDiscovery, theirIp, removeStaleHosts, getExtraHostInfo);
+  SingleHostRequest* hostRequest = CreateSingleHostRequest(Network::LAN, allowDiscovery, theirIp, removeStaleHosts, getExtraHostInfo);
 
   TimeMs timeout = FloatSecondsToTimeMs(mNetPeer->GetBasicHostInfoTimeout());
 
@@ -202,9 +196,7 @@ void LanHostDiscovery::HandlePingTimeout(PendingHostPing& pendingHostPing)
   }
 }
 
-void LanHostDiscovery::HandlePong(IpAddress const& theirIpAddress,
-                                  NetHostPongData& netHostPongData,
-                                  PendingHostPing& pendingHostPing)
+void LanHostDiscovery::HandlePong(IpAddress const& theirIpAddress, NetHostPongData& netHostPongData, PendingHostPing& pendingHostPing)
 {
   // if ping from a game server:
   // read out ping data save it. update level of refresh.

@@ -11,10 +11,7 @@ BaseSpirVOptimizerPass::BaseSpirVOptimizerPass()
   mTargetEnv = SPV_ENV_UNIVERSAL_1_4;
 }
 
-bool BaseSpirVOptimizerPass::RunOptimizer(int primaryPass,
-                                          Array<String>& flags,
-                                          ShaderByteStream& inputByteStream,
-                                          ShaderByteStream& outputByteStream)
+bool BaseSpirVOptimizerPass::RunOptimizer(int primaryPass, Array<String>& flags, ShaderByteStream& inputByteStream, ShaderByteStream& outputByteStream)
 {
   bool success = true;
 
@@ -55,9 +52,7 @@ bool BaseSpirVOptimizerPass::RunOptimizer(int primaryPass,
   return success;
 }
 
-void BaseSpirVOptimizerPass::CreateOptimizerOptions(spv_optimizer_options& options,
-                                                    int primaryPass,
-                                                    Array<String>& flags)
+void BaseSpirVOptimizerPass::CreateOptimizerOptions(spv_optimizer_options& options, int primaryPass, Array<String>& flags)
 {
   options = spvOptimizerOptionsCreate();
   // We always assume the validator should never be run (that's a separate
@@ -114,8 +109,7 @@ String BaseSpirVOptimizerPass::GetErrorLog()
   return mErrorLog;
 }
 
-bool SpirVOptimizerPass::RunTranslationPass(ShaderTranslationPassResult& inputData,
-                                            ShaderTranslationPassResult& outputData)
+bool SpirVOptimizerPass::RunTranslationPass(ShaderTranslationPassResult& inputData, ShaderTranslationPassResult& outputData)
 {
   Array<String> flags;
   bool success = RunOptimizer(SPV_OPTIMIZER_PERFORMANCE_PASS, flags, inputData.mByteStream, outputData.mByteStream);
@@ -131,8 +125,7 @@ SpirVValidatorPass::SpirVValidatorPass()
   mTargetEnv = SPV_ENV_UNIVERSAL_1_4;
 }
 
-bool SpirVValidatorPass::RunTranslationPass(ShaderTranslationPassResult& inputData,
-                                            ShaderTranslationPassResult& outputData)
+bool SpirVValidatorPass::RunTranslationPass(ShaderTranslationPassResult& inputData, ShaderTranslationPassResult& outputData)
 {
   mErrorLog.Clear();
 
@@ -179,8 +172,7 @@ SpirVFileWriterPass::SpirVFileWriterPass(StringParam targetDirectory)
   mExtension = ".spv";
 }
 
-bool SpirVFileWriterPass::RunTranslationPass(ShaderTranslationPassResult& inputData,
-                                             ShaderTranslationPassResult& outputData)
+bool SpirVFileWriterPass::RunTranslationPass(ShaderTranslationPassResult& inputData, ShaderTranslationPassResult& outputData)
 {
   String typeName = inputData.mReflectionData.mShaderTypeName;
   String filePath = FilePath::CombineWithExtension(mTargetDirectory, typeName, mExtension);

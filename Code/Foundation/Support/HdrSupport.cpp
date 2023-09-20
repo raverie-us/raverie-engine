@@ -111,8 +111,7 @@ HdrHeaderGrammar::HdrHeaderGrammar()
   start |= P("FirstComment", P(comment)) << *statement << dimensions;
   statement |= P(comment) | variable;
   variable |= P("Name", P(token)) << P("Value", P(assignment));
-  dimensions |= P("YSign", P(sign)) << P("YName", P(token)) << P("YDim", P(token)) << P("XSign", P(sign))
-                                    << P("XName", P(token)) << P("XDim", P(token));
+  dimensions |= P("YSign", P(sign)) << P("YName", P(token)) << P("YDim", P(token)) << P("XSign", P(sign)) << P("XName", P(token)) << P("XDim", P(token));
 
   mTokenStart = &tokenStart;
   mStartRule = &start;
@@ -276,8 +275,8 @@ void ParseHdrHeader(Status& status, Stream* stream, uint& width, uint& height)
 }
 
 // Used to make sure no data reads go out of bounds
-#define ValidateRead(data, endData, count)                                                                             \
-  if (data + (count) > endData)                                                                                        \
+#define ValidateRead(data, endData, count)                                                                                                                                                             \
+  if (data + (count) > endData)                                                                                                                                                                        \
     return false;
 
 bool DecodeHdrScanline(byte*& imageData, const byte* endData, uint imageWidth, byte* scanline)
@@ -370,13 +369,7 @@ bool IsHdrSaveFormat(TextureFormat::Enum format)
   return format == TextureFormat::RGB32f;
 }
 
-void LoadHdr(Status& status,
-             Stream* stream,
-             byte** output,
-             uint* width,
-             uint* height,
-             TextureFormat::Enum* format,
-             TextureFormat::Enum requireFormat)
+void LoadHdr(Status& status, Stream* stream, byte** output, uint* width, uint* height, TextureFormat::Enum* format, TextureFormat::Enum requireFormat)
 {
   if (!IsHdrLoadFormat(requireFormat))
   {

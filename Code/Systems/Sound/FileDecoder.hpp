@@ -72,12 +72,10 @@ public:
   // Fills in the provided buffer with the next packet data from a buffer of
   // data. Returns -1 if getting packet fails or if the end of the data was
   // reached.
-  static int
-  GetPacketFromMemory(byte* packetDataToWrite, const byte* inputData, unsigned inputDataSize, unsigned* dataIndex);
+  static int GetPacketFromMemory(byte* packetDataToWrite, const byte* inputData, unsigned inputDataSize, unsigned* dataIndex);
   // Fills in the provided buffer with the next packet data from a file.
   // Returns -1 if getting packet fails or if the end of the data was reached.
-  static int
-  GetPacketFromFile(byte* packetDataToWrite, File* inputFile, FilePosition* filePosition, ThreadLock* lockObject);
+  static int GetPacketFromFile(byte* packetDataToWrite, File* inputFile, FilePosition* filePosition, ThreadLock* lockObject);
 };
 
 // File Decoder
@@ -135,10 +133,7 @@ protected:
 class DecompressedDecoder : public AudioFileDecoder
 {
 public:
-  DecompressedDecoder(Raverie::Status& status,
-                      const Raverie::String& fileName,
-                      FileDecoderCallback callback,
-                      void* callbackData);
+  DecompressedDecoder(Raverie::Status& status, const Raverie::String& fileName, FileDecoderCallback callback, void* callbackData);
   ~DecompressedDecoder();
 
   // Should only be called when starting the decoding thread
@@ -168,22 +163,10 @@ class StreamingDecoder : public AudioFileDecoder
 public:
   // The file object must be already open, and will not be closed by this
   // decoder
-  StreamingDecoder(Raverie::Status& status,
-                   Raverie::File* inputFile,
-                   Raverie::ThreadLock* lock,
-                   unsigned channels,
-                   unsigned frames,
-                   FileDecoderCallback callback,
-                   void* callbackData);
+  StreamingDecoder(Raverie::Status& status, Raverie::File* inputFile, Raverie::ThreadLock* lock, unsigned channels, unsigned frames, FileDecoderCallback callback, void* callbackData);
   // The input data buffer must already exist, and will not be deleted by this
   // decoder
-  StreamingDecoder(Raverie::Status& status,
-                   byte* inputData,
-                   unsigned dataSize,
-                   unsigned channels,
-                   unsigned frames,
-                   FileDecoderCallback callback,
-                   void* callbackData);
+  StreamingDecoder(Raverie::Status& status, byte* inputData, unsigned dataSize, unsigned channels, unsigned frames, FileDecoderCallback callback, void* callbackData);
 
   // Should only be called when starting the decoding thread
   void DecodingLoopThreaded() override;

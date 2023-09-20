@@ -238,8 +238,7 @@ struct has_valid_hash_policy_helper
   typedef struct HashPolicy<T> HashPolicyT;
 
   template <typename T2>
-  static inline yes
-  Test(static_verify_function_signature<size_t (HashPolicyT::*)(const T2&) const, &HashPolicyT::operator()>*);
+  static inline yes Test(static_verify_function_signature<size_t (HashPolicyT::*)(const T2&) const, &HashPolicyT::operator()>*);
   template <typename T2>
   static inline no Test(...);
 

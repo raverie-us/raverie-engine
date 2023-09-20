@@ -182,13 +182,11 @@ public:
   /// Returns the previous value
   value_type CompareExchange(value_type value, value_type comparison)
   {
-    return AtomicCompareExchange(
-        &mValue, reinterpret_cast<underlying_type&>(value), reinterpret_cast<underlying_type&>(comparison));
+    return AtomicCompareExchange(&mValue, reinterpret_cast<underlying_type&>(value), reinterpret_cast<underlying_type&>(comparison));
   }
   value_type CompareExchange(value_type value, value_type comparison) volatile
   {
-    return AtomicCompareExchange(
-        &mValue, reinterpret_cast<underlying_type&>(value), reinterpret_cast<underlying_type&>(comparison));
+    return AtomicCompareExchange(&mValue, reinterpret_cast<underlying_type&>(value), reinterpret_cast<underlying_type&>(comparison));
   }
 
   //
@@ -381,13 +379,11 @@ public:
   /// Returns true if the exchange took place, else false
   bool CompareExchange(value_type value, value_type comparison)
   {
-    return AtomicCompareExchange(
-        &mValue, reinterpret_cast<underlying_type&>(value), reinterpret_cast<underlying_type&>(comparison));
+    return AtomicCompareExchange(&mValue, reinterpret_cast<underlying_type&>(value), reinterpret_cast<underlying_type&>(comparison));
   }
   bool CompareExchange(value_type value, value_type comparison) volatile
   {
-    return AtomicCompareExchange(
-        &mValue, reinterpret_cast<underlying_type&>(value), reinterpret_cast<underlying_type&>(comparison));
+    return AtomicCompareExchange(&mValue, reinterpret_cast<underlying_type&>(value), reinterpret_cast<underlying_type&>(comparison));
   }
 
 private:

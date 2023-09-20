@@ -312,12 +312,8 @@ public:
 
   /// Called after a replica channel property has legitimately changed,
   /// determined using comparisons, in a particular replication phase
-  virtual void OnReplicaChannelPropertyChange(TimeMs timestamp,
-                                              ReplicationPhase::Enum replicationPhase,
-                                              Replica* replica,
-                                              ReplicaChannel* replicaChannel,
-                                              ReplicaProperty* replicaProperty,
-                                              TransmissionDirection::Enum direction)
+  virtual void OnReplicaChannelPropertyChange(
+      TimeMs timestamp, ReplicationPhase::Enum replicationPhase, Replica* replica, ReplicaChannel* replicaChannel, ReplicaProperty* replicaProperty, TransmissionDirection::Enum direction)
   {
   }
 
@@ -356,9 +352,7 @@ public:
   }
   /// [Client] Called after sending or receiving a disconnect notice
   /// Our replicator ID is cleared and link is destroyed immediately after this
-  virtual void ClientOnDisconnectNotice(ReplicatorLink* link,
-                                        DisconnectNoticeData& disconnectNoticeData,
-                                        TransmissionDirection::Enum direction)
+  virtual void ClientOnDisconnectNotice(ReplicatorLink* link, DisconnectNoticeData& disconnectNoticeData, TransmissionDirection::Enum direction)
   {
   }
 
@@ -382,9 +376,7 @@ public:
   /// [Server] Called after sending or receiving a disconnect notice
   /// Their replicator ID is released and link is destroyed immediately after
   /// this
-  virtual void ServerOnDisconnectNotice(ReplicatorLink* link,
-                                        DisconnectNoticeData& disconnectNoticeData,
-                                        TransmissionDirection::Enum direction)
+  virtual void ServerOnDisconnectNotice(ReplicatorLink* link, DisconnectNoticeData& disconnectNoticeData, TransmissionDirection::Enum direction)
   {
   }
 
@@ -546,10 +538,7 @@ public:
 
   public:
     /// Constructor
-    ItemCacher(Replicator* replicator, ReplicatorMessageType::Enum replicatorMessageType) :
-        ItemCache(),
-        mReplicator(replicator),
-        mReplicatorMessageType(replicatorMessageType)
+    ItemCacher(Replicator* replicator, ReplicatorMessageType::Enum replicatorMessageType) : ItemCache(), mReplicator(replicator), mReplicatorMessageType(replicatorMessageType)
     {
     }
 

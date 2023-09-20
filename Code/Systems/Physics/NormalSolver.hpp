@@ -42,8 +42,8 @@ private:
   typedef Array<ConstraintMolecule> MoleculeList;
 
   // Declare a InList for each joint type.
-#define JointType(type)                                                                                                \
-  typedef BaseInList<Joint, type, &Joint::SolverLink> type##List;                                                      \
+#define JointType(type)                                                                                                                                                                                \
+  typedef BaseInList<Joint, type, &Joint::SolverLink> type##List;                                                                                                                                      \
   type##List m##type##List;
 
 #include "JointList.hpp"

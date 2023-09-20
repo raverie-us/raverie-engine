@@ -55,11 +55,7 @@ void HeightPatch::SetHeight(CellIndex index, float height)
   Heights[linearIndex] = height;
 }
 
-HeightMapCellRange::HeightMapCellRange(HeightMap* heightMap, Vec2 position, real radius, real feather) :
-    mHeightMap(heightMap),
-    mToolPosition(position),
-    mRadius(radius),
-    mFeather(feather)
+HeightMapCellRange::HeightMapCellRange(HeightMap* heightMap, Vec2 position, real radius, real feather) : mHeightMap(heightMap), mToolPosition(position), mRadius(radius), mFeather(feather)
 {
   mCellSize = mHeightMap->mUnitsPerPatch / HeightPatch::Size;
 
@@ -187,8 +183,7 @@ void HeightMapCellRange::SignalPatchesModified()
 const Vec3 HeightMap::UpVector = Vec3(0, 1, 0);
 // Cell index limits account for generating padded vertex data
 const CellIndex HeightMap::sCellIndexMin = CellIndex(0, 0);
-const CellIndex HeightMap::sCellIndexMax =
-    CellIndex(HeightPatch::PaddedNumVerticesPerSide - 1, HeightPatch::PaddedNumVerticesPerSide - 1);
+const CellIndex HeightMap::sCellIndexMax = CellIndex(HeightPatch::PaddedNumVerticesPerSide - 1, HeightPatch::PaddedNumVerticesPerSide - 1);
 
 RaverieDefineType(HeightMap, builder, type)
 {
@@ -405,9 +400,7 @@ Aabb HeightMap::GetPatchLocalAabb(HeightPatch* patch)
   // The patch index is already in the center of the patch
   // however the height needs to be offset so it is the center
   // of the aabb.
-  Vec3 patchCenter = Vec3(float(patch->Index.x) * mUnitsPerPatch,
-                          patch->MinHeight + heightSize * 0.5f,
-                          float(patch->Index.y) * mUnitsPerPatch);
+  Vec3 patchCenter = Vec3(float(patch->Index.x) * mUnitsPerPatch, patch->MinHeight + heightSize * 0.5f, float(patch->Index.y) * mUnitsPerPatch);
 
   Aabb localAabb(patchCenter, patchSize * 0.5f);
 
@@ -519,8 +512,7 @@ Vec2 HeightMap::GetLocalPositionFromAbsoluteIndex(AbsoluteIndexParam absoluteInd
 AbsoluteIndex HeightMap::GetAbsoluteIndex(PatchIndex patchIndex, CellIndex cellIndex)
 {
   // Compute the absolute index
-  return AbsoluteIndex(patchIndex * HeightPatch::Size +
-                       CellIndex(cellIndex.x - HeightPatch::Size / 2, cellIndex.y - HeightPatch::Size / 2));
+  return AbsoluteIndex(patchIndex * HeightPatch::Size + CellIndex(cellIndex.x - HeightPatch::Size / 2, cellIndex.y - HeightPatch::Size / 2));
 }
 
 PatchIndex HeightMap::GetPatchIndex(AbsoluteIndexParam absoluteIndex)
@@ -616,8 +608,7 @@ void HeightMap::ApplyNoiseToPatch(HeightPatch* patch, float baseHeight, float fr
       AbsoluteIndex absoluteIndex = patch->Index * HeightPatch::Size + cellIndex;
 
       // Compute the height based off the noise function
-      float noiseHeight = PerlinNoise((float)absoluteIndex.x * frequency * FrequencyScale,
-                                      (float)absoluteIndex.y * frequency * FrequencyScale);
+      float noiseHeight = PerlinNoise((float)absoluteIndex.x * frequency * FrequencyScale, (float)absoluteIndex.y * frequency * FrequencyScale);
 
       // Add in the base height
       float height = baseHeight + noiseHeight * amplitude;
@@ -871,13 +862,7 @@ void HeightMap::SaveToHeightMapSource(Serializer& stream)
   Archetype* archetype = context ? (Archetype*)context->SavingArchetype : 0;
 
   if (Z::gRuntimeEditor)
-    mSource = (HeightMapSource*)Z::gRuntimeEditor->NewResourceOnWrite(HeightMapSourceManager::GetInstance(),
-                                                                      RaverieTypeId(HeightMap),
-                                                                      "Source",
-                                                                      GetSpace(),
-                                                                      mSource,
-                                                                      archetype,
-                                                                      mModified);
+    mSource = (HeightMapSource*)Z::gRuntimeEditor->NewResourceOnWrite(HeightMapSourceManager::GetInstance(), RaverieTypeId(HeightMap), "Source", GetSpace(), mSource, archetype, mModified);
 
   if (mSource)
   {
@@ -1244,10 +1229,7 @@ void HeightMap::MakePaddedHeightBuffer(HeightPatch* patch, real* heights)
   }
 }
 
-void HeightMap::ComputePaddedHeightPatchVertices(HeightPatch* patch,
-                                                 Array<Vec3>& outVertices,
-                                                 CellIndex min,
-                                                 CellIndex max)
+void HeightMap::ComputePaddedHeightPatchVertices(HeightPatch* patch, Array<Vec3>& outVertices, CellIndex min, CellIndex max)
 {
   const uint paddedWidth = HeightPatch::PaddedNumVerticesPerSide;
   const uint paddedSize = HeightPatch::PaddedNumVerticesTotal;
@@ -1395,8 +1377,7 @@ bool CellRayRange::Empty()
 {
   // if we are out of the patch bounds or we have exceeded our max tValue, then
   // we are empty
-  if (mCellIndex.x < 0 || mCellIndex.y < 0 || mCellIndex.x >= HeightPatch::Size || mCellIndex.y >= HeightPatch::Size ||
-      mCurrT >= mMaxT)
+  if (mCellIndex.x < 0 || mCellIndex.y < 0 || mCellIndex.x >= HeightPatch::Size || mCellIndex.y >= HeightPatch::Size || mCurrT >= mMaxT)
     return true;
   return false;
 }
@@ -1584,8 +1565,7 @@ void HeightMapRayRange::SetUp(float maxT)
   }
 }
 
-void HeightMapRayRange::GetTMinMaxRange(
-    Vec3Param localRayStart, Vec3Param localRayDir, Vec2Param rayStart, Vec2Param rayDir, float& minT, float& maxT)
+void HeightMapRayRange::GetTMinMaxRange(Vec3Param localRayStart, Vec3Param localRayDir, Vec2Param rayStart, Vec2Param rayDir, float& minT, float& maxT)
 {
   // if the raycast is straight down, then the projected ray will cause some bad
   // things to happen. Just set a simple set of bounds for the min/max so that

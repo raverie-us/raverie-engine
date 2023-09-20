@@ -10,7 +10,7 @@ namespace Raverie
 // virtual overhead.
 class OpenglRenderer;
 
-typedef void(*UniformFunction)(GLint, GLsizei, const void*);
+typedef void (*UniformFunction)(GLint, GLsizei, const void*);
 
 class StreamedVertexBuffer
 {
@@ -174,7 +174,6 @@ public:
   GLint mLoadingTransformLoc = 0;
   GLint mLoadingUvTransformLoc = 0;
   GLint mLoadingAlphaLoc = 0;
-
 
   GLuint mSingleTargetFbo = 0;
   GLuint mMultiTargetFbo = 0;

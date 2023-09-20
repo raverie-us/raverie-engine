@@ -76,43 +76,43 @@ private:
   LibraryRef Library;
 };
 
-#  define RaverieDeclareStaticLibraryInternals(Name, ...)                                                                \
-    /* Needed for binding macros work with this library */                                                             \
-    typedef Name RaverieLibrary;                                                                                         \
-    Name() : ::Raverie::StaticLibrary(#Name)                                                                                  \
-    {                                                                                                                  \
-      RaverieDependency(::Raverie::Core) __VA_ARGS__                                                                            \
-    }                                                                                                                  \
-    static Name* Instance;                                                                                             \
-    static void InitializeInstance()                                                                                   \
-    {                                                                                                                  \
-      ReturnIf(Instance != nullptr, , "Can't initialize a static library more than once");                             \
-      Instance = new Name();                                                                                           \
-    }                                                                                                                  \
-    static void Destroy()                                                                                              \
-    {                                                                                                                  \
-      delete Instance;                                                                                                 \
-      Instance = nullptr;                                                                                              \
-    }                                                                                                                  \
-    static Name& GetInstance()                                                                                         \
-    {                                                                                                                  \
-      ErrorIf(Instance == nullptr, "Attempted to get an uninitialized singleton static library");                      \
-      return *Instance;                                                                                                \
-    }                                                                                                                  \
-    static ::Raverie::LibraryRef GetLibrary()                                                                                 \
-    {                                                                                                                  \
-      return GetInstance().StaticLibrary::GetLibrary();                                                                \
-    }                                                                                                                  \
-    static ::Raverie::LibraryBuilder* GetBuilder()                                                                            \
-    {                                                                                                                  \
-      return GetInstance().StaticLibrary::GetBuilder();                                                                \
-    }                                                                                                                  \
-    static void BuildStaticLibrary()                                                                                   \
-    {                                                                                                                  \
-      InitializeInstance();                                                                                            \
-      return GetInstance().StaticLibrary::BuildLibrary();                                                              \
-    }                                                                                                                  \
-    void SetupBinding(::Raverie::LibraryBuilder& builder) override;
+#define RaverieDeclareStaticLibraryInternals(Name, ...)                                                                                                                                                \
+  /* Needed for binding macros work with this library */                                                                                                                                               \
+  typedef Name RaverieLibrary;                                                                                                                                                                         \
+  Name() : ::Raverie::StaticLibrary(#Name)                                                                                                                                                             \
+  {                                                                                                                                                                                                    \
+    RaverieDependency(::Raverie::Core) __VA_ARGS__                                                                                                                                                     \
+  }                                                                                                                                                                                                    \
+  static Name* Instance;                                                                                                                                                                               \
+  static void InitializeInstance()                                                                                                                                                                     \
+  {                                                                                                                                                                                                    \
+    ReturnIf(Instance != nullptr, , "Can't initialize a static library more than once");                                                                                                               \
+    Instance = new Name();                                                                                                                                                                             \
+  }                                                                                                                                                                                                    \
+  static void Destroy()                                                                                                                                                                                \
+  {                                                                                                                                                                                                    \
+    delete Instance;                                                                                                                                                                                   \
+    Instance = nullptr;                                                                                                                                                                                \
+  }                                                                                                                                                                                                    \
+  static Name& GetInstance()                                                                                                                                                                           \
+  {                                                                                                                                                                                                    \
+    ErrorIf(Instance == nullptr, "Attempted to get an uninitialized singleton static library");                                                                                                        \
+    return *Instance;                                                                                                                                                                                  \
+  }                                                                                                                                                                                                    \
+  static ::Raverie::LibraryRef GetLibrary()                                                                                                                                                            \
+  {                                                                                                                                                                                                    \
+    return GetInstance().StaticLibrary::GetLibrary();                                                                                                                                                  \
+  }                                                                                                                                                                                                    \
+  static ::Raverie::LibraryBuilder* GetBuilder()                                                                                                                                                       \
+  {                                                                                                                                                                                                    \
+    return GetInstance().StaticLibrary::GetBuilder();                                                                                                                                                  \
+  }                                                                                                                                                                                                    \
+  static void BuildStaticLibrary()                                                                                                                                                                     \
+  {                                                                                                                                                                                                    \
+    InitializeInstance();                                                                                                                                                                              \
+    return GetInstance().StaticLibrary::BuildLibrary();                                                                                                                                                \
+  }                                                                                                                                                                                                    \
+  void SetupBinding(::Raverie::LibraryBuilder& builder) override;
 
 // Create a static library that we can use in C++ binding
 // Use this in a header (preferrably in a namespace)
@@ -120,12 +120,12 @@ private:
 // RaverieDependency(Namespace::OtherLibrary) to mark dependencies
 // upon other static libraries
 // All libraries declared with this macro implicitly add a dependency on Core
-#  define RaverieDeclareStaticLibrary(Name, ...)                                                                         \
-    class Name : public ::Raverie::StaticLibrary                                                                              \
-    {                                                                                                                  \
-    public:                                                                                                            \
-      RaverieDeclareStaticLibraryInternals(Name, __VA_ARGS__)                                                            \
-    };
+#define RaverieDeclareStaticLibrary(Name, ...)                                                                                                                                                         \
+  class Name : public ::Raverie::StaticLibrary                                                                                                                                                         \
+  {                                                                                                                                                                                                    \
+  public:                                                                                                                                                                                              \
+    RaverieDeclareStaticLibraryInternals(Name, __VA_ARGS__)                                                                                                                                            \
+  };
 
 // This allows us to define an initialize all the types that belong within our
 // library This should be put in a translational unit (cpp) that can see all of
@@ -133,10 +133,10 @@ private:
 // or pre-main initialization because there were issues on some compilers that
 // would optimize out pre-main code if it was never referenced anywhere (but
 // would otherwise be available to script)
-#  define RaverieDefineStaticLibrary(Name)                                                                               \
-    Name* Name::Instance = nullptr;                                                                                    \
-    void Name::SetupBinding(::Raverie::LibraryBuilder& builder)
+#define RaverieDefineStaticLibrary(Name)                                                                                                                                                               \
+  Name* Name::Instance = nullptr;                                                                                                                                                                      \
+  void Name::SetupBinding(::Raverie::LibraryBuilder& builder)
 
 // Used in declaring dependencies upon other static libraries
-#  define RaverieDependency(Library) this->Dependencies.PushBack(&Library::GetInstance());
+#define RaverieDependency(Library) this->Dependencies.PushBack(&Library::GetInstance());
 } // namespace Raverie

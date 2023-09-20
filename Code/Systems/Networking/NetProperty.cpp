@@ -10,8 +10,7 @@ Variant TranslateVariant(const Variant& originalValue, BasicNetType::Enum target
 {
   // Get original and target native types
   NativeType* originalNativeType = originalValue.GetNativeType();
-  NativeType* targetNativeType =
-      GetNativeTypeByConstantId((NativeTypeId)BasicNetworkToNativeTypeEnum(targetBasicNetType));
+  NativeType* targetNativeType = GetNativeTypeByConstantId((NativeTypeId)BasicNetworkToNativeTypeEnum(targetBasicNetType));
 
   // Either the original or target native type is not a basic type?
   if (originalNativeType == nullptr || targetNativeType == nullptr)
@@ -49,8 +48,7 @@ RaverieDefineType(NetProperty, builder, type)
   RaverieBindGetterProperty(LastChangeTimePassed);
 }
 
-NetProperty::NetProperty(const String& name, NetPropertyType* netPropertyType, const Variant& propertyData) :
-    ReplicaProperty(name, netPropertyType, propertyData)
+NetProperty::NetProperty(const String& name, NetPropertyType* netPropertyType, const Variant& propertyData) : ReplicaProperty(name, netPropertyType, propertyData)
 {
 }
 
@@ -126,11 +124,7 @@ RaverieDefineType(NetPropertyType, builder, type)
   RaverieBindMethod(SetConfig);
 }
 
-NetPropertyType::NetPropertyType(const String& name,
-                                 NativeType* nativeType,
-                                 SerializeValueFn serializeValueFn,
-                                 GetValueFn getValueFn,
-                                 SetValueFn setValueFn) :
+NetPropertyType::NetPropertyType(const String& name, NativeType* nativeType, SerializeValueFn serializeValueFn, GetValueFn getValueFn, SetValueFn setValueFn) :
     ReplicaPropertyType(name, nativeType, serializeValueFn, getValueFn, setValueFn)
 {
   ResetConfig();
@@ -187,17 +181,14 @@ void NetPropertyType::SetConfig(NetPropertyConfig* netPropertyConfig)
   BasicNetType::Enum configBasicNetType = netPropertyConfig->GetBasicNetType();
 
   // Non-arithmetic type?
-  if (configBasicNetType == BasicNetType::Other || configBasicNetType == BasicNetType::Boolean ||
-      configBasicNetType == BasicNetType::String)
+  if (configBasicNetType == BasicNetType::Other || configBasicNetType == BasicNetType::Boolean || configBasicNetType == BasicNetType::String)
     return; // Unable to translate
 
   // Get our network property type
-  BasicNetType::Enum ourBasicNetType =
-      BasicNativeToNetworkTypeEnum((BasicNativeType::Enum)ReplicaPropertyType::GetNativeTypeId());
+  BasicNetType::Enum ourBasicNetType = BasicNativeToNetworkTypeEnum((BasicNativeType::Enum)ReplicaPropertyType::GetNativeTypeId());
 
   // Non-arithmetic type?
-  if (ourBasicNetType == BasicNetType::Other || ourBasicNetType == BasicNetType::Boolean ||
-      ourBasicNetType == BasicNetType::String)
+  if (ourBasicNetType == BasicNetType::Other || ourBasicNetType == BasicNetType::Boolean || ourBasicNetType == BasicNetType::String)
     return; // Unable to translate
 
   // Not valid yet?
@@ -244,74 +235,51 @@ void NetPropertyType::SetConfig(NetPropertyConfig* netPropertyConfig)
 //                              NetPropertyConfig //
 
 // Variant Configuration Helper Macros
-#define DefineVariantGetSetForArithmeticTypes(property)                                                                \
-  DefineVariantGetSetForType(property, Integer, int, int(DefaultInt##property));                                       \
-  DefineVariantGetSetForType(property, DoubleInteger, s64, s64(DefaultInt##property));                                 \
-  DefineVariantGetSetForType(property, Integer2, Integer2, Integer2(DefaultInt##property, DefaultInt##property));      \
-  DefineVariantGetSetForType(                                                                                          \
-      property, Integer3, Integer3, Integer3(DefaultInt##property, DefaultInt##property, DefaultInt##property));       \
-  DefineVariantGetSetForType(                                                                                          \
-      property,                                                                                                        \
-      Integer4,                                                                                                        \
-      Integer4,                                                                                                        \
-      Integer4(DefaultInt##property, DefaultInt##property, DefaultInt##property, DefaultInt##property));               \
-  DefineVariantGetSetForType(property, Real, float, float(DefaultFloat##property));                                    \
-  DefineVariantGetSetForType(property, DoubleReal, double, double(DefaultFloat##property));                            \
-  DefineVariantGetSetForType(                                                                                          \
-      property, Real2, Real2, Real2(float(DefaultFloat##property), float(DefaultFloat##property)));                    \
-  DefineVariantGetSetForType(                                                                                          \
-      property,                                                                                                        \
-      Real3,                                                                                                           \
-      Real3,                                                                                                           \
-      Real3(float(DefaultFloat##property), float(DefaultFloat##property), float(DefaultFloat##property)));             \
-  DefineVariantGetSetForType(property,                                                                                 \
-                             Real4,                                                                                    \
-                             Real4,                                                                                    \
-                             Real4(float(DefaultFloat##property),                                                      \
-                                   float(DefaultFloat##property),                                                      \
-                                   float(DefaultFloat##property),                                                      \
-                                   float(DefaultFloat##property)));                                                    \
-  DefineVariantGetSetForType(property,                                                                                 \
-                             Quaternion,                                                                               \
-                             Quaternion,                                                                               \
-                             Quaternion(float(DefaultFloat##property),                                                 \
-                                        float(DefaultFloat##property),                                                 \
-                                        float(DefaultFloat##property),                                                 \
-                                        float(DefaultFloat##property)))
+#define DefineVariantGetSetForArithmeticTypes(property)                                                                                                                                                \
+  DefineVariantGetSetForType(property, Integer, int, int(DefaultInt##property));                                                                                                                       \
+  DefineVariantGetSetForType(property, DoubleInteger, s64, s64(DefaultInt##property));                                                                                                                 \
+  DefineVariantGetSetForType(property, Integer2, Integer2, Integer2(DefaultInt##property, DefaultInt##property));                                                                                      \
+  DefineVariantGetSetForType(property, Integer3, Integer3, Integer3(DefaultInt##property, DefaultInt##property, DefaultInt##property));                                                                \
+  DefineVariantGetSetForType(property, Integer4, Integer4, Integer4(DefaultInt##property, DefaultInt##property, DefaultInt##property, DefaultInt##property));                                          \
+  DefineVariantGetSetForType(property, Real, float, float(DefaultFloat##property));                                                                                                                    \
+  DefineVariantGetSetForType(property, DoubleReal, double, double(DefaultFloat##property));                                                                                                            \
+  DefineVariantGetSetForType(property, Real2, Real2, Real2(float(DefaultFloat##property), float(DefaultFloat##property)));                                                                             \
+  DefineVariantGetSetForType(property, Real3, Real3, Real3(float(DefaultFloat##property), float(DefaultFloat##property), float(DefaultFloat##property)));                                              \
+  DefineVariantGetSetForType(property, Real4, Real4, Real4(float(DefaultFloat##property), float(DefaultFloat##property), float(DefaultFloat##property), float(DefaultFloat##property)));               \
+  DefineVariantGetSetForType(property, Quaternion, Quaternion, Quaternion(float(DefaultFloat##property), float(DefaultFloat##property), float(DefaultFloat##property), float(DefaultFloat##property)))
 
-#define DefineVariantGetSetForType(property, typeName, type, defaultValue)                                             \
-  void NetPropertyConfig::Set##property##typeName(type value)                                                          \
-  {                                                                                                                    \
-    m##property = value;                                                                                               \
-  }                                                                                                                    \
-  type NetPropertyConfig::Get##property##typeName() const                                                              \
-  {                                                                                                                    \
-    return m##property.GetOrDefault<type>(defaultValue);                                                               \
+#define DefineVariantGetSetForType(property, typeName, type, defaultValue)                                                                                                                             \
+  void NetPropertyConfig::Set##property##typeName(type value)                                                                                                                                          \
+  {                                                                                                                                                                                                    \
+    m##property = value;                                                                                                                                                                               \
+  }                                                                                                                                                                                                    \
+  type NetPropertyConfig::Get##property##typeName() const                                                                                                                                              \
+  {                                                                                                                                                                                                    \
+    return m##property.GetOrDefault<type>(defaultValue);                                                                                                                                               \
   }
 
-#define BindVariantGetSetForArithmeticTypes(property)                                                                  \
-  BindVariantGetSetForType(property, Integer);                                                                         \
-  BindVariantGetSetForType(property, DoubleInteger);                                                                   \
-  BindVariantGetSetForType(property, Integer2);                                                                        \
-  BindVariantGetSetForType(property, Integer3);                                                                        \
-  BindVariantGetSetForType(property, Integer4);                                                                        \
-  BindVariantGetSetForType(property, Real);                                                                            \
-  BindVariantGetSetForType(property, DoubleReal);                                                                      \
-  BindVariantGetSetForType(property, Real2);                                                                           \
-  BindVariantGetSetForType(property, Real3);                                                                           \
-  BindVariantGetSetForType(property, Real4);                                                                           \
+#define BindVariantGetSetForArithmeticTypes(property)                                                                                                                                                  \
+  BindVariantGetSetForType(property, Integer);                                                                                                                                                         \
+  BindVariantGetSetForType(property, DoubleInteger);                                                                                                                                                   \
+  BindVariantGetSetForType(property, Integer2);                                                                                                                                                        \
+  BindVariantGetSetForType(property, Integer3);                                                                                                                                                        \
+  BindVariantGetSetForType(property, Integer4);                                                                                                                                                        \
+  BindVariantGetSetForType(property, Real);                                                                                                                                                            \
+  BindVariantGetSetForType(property, DoubleReal);                                                                                                                                                      \
+  BindVariantGetSetForType(property, Real2);                                                                                                                                                           \
+  BindVariantGetSetForType(property, Real3);                                                                                                                                                           \
+  BindVariantGetSetForType(property, Real4);                                                                                                                                                           \
   BindVariantGetSetForType(property, Quaternion)
 
-#define BindVariantGetSetForType(property, typeName)                                                                   \
-  RaverieBindGetterSetterProperty(property##typeName)->Add(new PropertyFilter##typeName)
+#define BindVariantGetSetForType(property, typeName) RaverieBindGetterSetterProperty(property##typeName)->Add(new PropertyFilter##typeName)
 
-#define DefinePropertyFilterForType(typeName)                                                                          \
-  RaverieDefineType(PropertyFilter##typeName, builder, type)                                                             \
-  {                                                                                                                    \
-  }                                                                                                                    \
-  bool PropertyFilter##typeName::Filter(Member* prop, HandleParam instance)                                            \
-  {                                                                                                                    \
-    return (instance.Get<NetPropertyConfig*>()->mBasicNetType == BasicNetType::typeName);                              \
+#define DefinePropertyFilterForType(typeName)                                                                                                                                                          \
+  RaverieDefineType(PropertyFilter##typeName, builder, type)                                                                                                                                           \
+  {                                                                                                                                                                                                    \
+  }                                                                                                                                                                                                    \
+  bool PropertyFilter##typeName::Filter(Member* prop, HandleParam instance)                                                                                                                            \
+  {                                                                                                                                                                                                    \
+    return (instance.Get<NetPropertyConfig*>()->mBasicNetType == BasicNetType::typeName);                                                                                                              \
   }
 
 // Variant Configuration Property Filters
@@ -433,12 +401,8 @@ RaverieDefineType(NetPropertyConfig, builder, type)
   RaverieBindGetterSetterProperty(UseDeltaThreshold)->Add(new PropertyFilterArithmeticTypes);
   BindVariantGetSetForArithmeticTypes(DeltaThreshold);
   RaverieBindGetterSetterProperty(SerializationMode)->Add(new PropertyFilterMultiPrimitiveTypes);
-  RaverieBindGetterSetterProperty(UseHalfFloats)
-      ->AddAttributeChainable(PropertyAttributes::cInvalidatesObject)
-      ->Add(new PropertyFilterFloatingPointTypes);
-  RaverieBindGetterSetterProperty(UseQuantization)
-      ->AddAttributeChainable(PropertyAttributes::cInvalidatesObject)
-      ->Add(new PropertyFilterArithmeticTypes);
+  RaverieBindGetterSetterProperty(UseHalfFloats)->AddAttributeChainable(PropertyAttributes::cInvalidatesObject)->Add(new PropertyFilterFloatingPointTypes);
+  RaverieBindGetterSetterProperty(UseQuantization)->AddAttributeChainable(PropertyAttributes::cInvalidatesObject)->Add(new PropertyFilterArithmeticTypes);
   BindVariantGetSetForArithmeticTypes(QuantizationRangeMin);
   BindVariantGetSetForArithmeticTypes(QuantizationRangeMax);
   RaverieBindGetterSetterProperty(UseInterpolation)->Add(new PropertyFilterArithmeticTypes);
@@ -523,8 +487,7 @@ const String& NetPropertyConfig::GetName() const
 void NetPropertyConfig::TranslateVariantProperties()
 {
   // Non-arithmetic type?
-  if (mBasicNetType == BasicNetType::Other || mBasicNetType == BasicNetType::Boolean ||
-      mBasicNetType == BasicNetType::String)
+  if (mBasicNetType == BasicNetType::Other || mBasicNetType == BasicNetType::Boolean || mBasicNetType == BasicNetType::String)
     return; // Unable to translate
 
   // Translate variant properties

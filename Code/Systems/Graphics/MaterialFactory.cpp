@@ -90,8 +90,7 @@ bool MaterialFactory::CanAddComponent(HandleParam owner, BoundType* typeToAdd, A
   return MetaComposition::CanAddComponent(owner, typeToAdd, info);
 }
 
-void MaterialFactory::UpdateRestrictedComponents(HashMap<LibraryRef, RaverieShaderIRLibraryRef>& libraries,
-                                                 RaverieFragmentTypeMap& fragmentTypes)
+void MaterialFactory::UpdateRestrictedComponents(HashMap<LibraryRef, RaverieShaderIRLibraryRef>& libraries, RaverieFragmentTypeMap& fragmentTypes)
 {
   mRestrictedComponents.Clear();
   mGeometryComponents.Clear();

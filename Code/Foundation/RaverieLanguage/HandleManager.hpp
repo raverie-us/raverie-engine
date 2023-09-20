@@ -78,18 +78,16 @@ template <typename T>
 const HandleManagerId HandleManagerGuid<T>::Id = HandleManagers::GetInstance().GetNextId();
 
 // Get the id of a handle manager
-#  define RaverieManagerId(Type) Raverie::HandleManagerGuid<Type>::Id
+#define RaverieManagerId(Type) Raverie::HandleManagerGuid<Type>::Id
 
 // Creates and registers a shared handle manager
 // Any extra arguments will be given to the constructor of your type
 // Shared handle managers MUST be implemented in a thread safe fashion
-#  define RaverieRegisterSharedHandleManager(Type)                                                                       \
-    Raverie::HandleManagers::GetInstance().AddSharedManager(RaverieManagerId(Type), new Type(nullptr))
+#define RaverieRegisterSharedHandleManager(Type) Raverie::HandleManagers::GetInstance().AddSharedManager(RaverieManagerId(Type), new Type(nullptr))
 
 // Registers a unique (per ExecutableState) handle manager
 // The types registered are expected to have a default constructor
-#  define RaverieRegisterUniqueHandleManager(Type)                                                                       \
-    Raverie::HandleManagers::GetInstance().AddUniqueCreator(RaverieManagerId(Type), Raverie::HandleManagerCreator<Type>)
+#define RaverieRegisterUniqueHandleManager(Type) Raverie::HandleManagers::GetInstance().AddUniqueCreator(RaverieManagerId(Type), Raverie::HandleManagerCreator<Type>)
 
 // The result we get back from releasing a reference to a handle object
 namespace ReleaseResult
@@ -361,7 +359,5 @@ public:
   ReleaseResult::Enum ReleaseReference(const Handle& handle) override;
   bool IsEqual(const Handle& handleLhs, const Handle& handleRhs, const byte* objectLhs, const byte* objectRhs) override;
 };
-static_assert(sizeof(String) <= HandleUserDataSize,
-              "The String class must fit within Handle::Data (make handle Data bigger)");
+static_assert(sizeof(String) <= HandleUserDataSize, "The String class must fit within Handle::Data (make handle Data bigger)");
 } // namespace Raverie
-

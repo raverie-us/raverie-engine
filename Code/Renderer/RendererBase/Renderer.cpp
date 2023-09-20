@@ -28,10 +28,7 @@ StringParam GetCoreVertexFragmentName(CoreVertexType::Enum type)
   return cMesh;
 }
 
-GraphicsDriverSupport::GraphicsDriverSupport() :
-    mTextureCompression(false),
-    mMultiTargetBlend(false),
-    mSamplerObjects(false)
+GraphicsDriverSupport::GraphicsDriverSupport() : mTextureCompression(false), mMultiTargetBlend(false), mSamplerObjects(false)
 {
 }
 
@@ -395,14 +392,11 @@ void SetPixelDataGamma(byte* data, uint index, Vec4 value, uint elementCount)
   case 4:
     ((byte*)(data + index))[3] = (byte)Math::Min(maxByte, (uint)(Math::Max(value.w, 0.0f) * normFactor));
   case 3:
-    ((byte*)(data + index))[2] =
-        (byte)Math::Min(maxByte, (uint)(Math::Pow(Math::Max(value.z, 0.0f), gammaPower) * normFactor));
+    ((byte*)(data + index))[2] = (byte)Math::Min(maxByte, (uint)(Math::Pow(Math::Max(value.z, 0.0f), gammaPower) * normFactor));
   case 2:
-    ((byte*)(data + index))[1] =
-        (byte)Math::Min(maxByte, (uint)(Math::Pow(Math::Max(value.y, 0.0f), gammaPower) * normFactor));
+    ((byte*)(data + index))[1] = (byte)Math::Min(maxByte, (uint)(Math::Pow(Math::Max(value.y, 0.0f), gammaPower) * normFactor));
   case 1:
-    ((byte*)(data + index))[0] =
-        (byte)Math::Min(maxByte, (uint)(Math::Pow(Math::Max(value.x, 0.0f), gammaPower) * normFactor));
+    ((byte*)(data + index))[0] = (byte)Math::Min(maxByte, (uint)(Math::Pow(Math::Max(value.x, 0.0f), gammaPower) * normFactor));
   }
 }
 
@@ -670,18 +664,14 @@ void YInvertBC6Mode10Block(byte* block)
   // Invert index values to get implicit 0's in the required locations
   if (swapEndpoints0AB)
   {
-    indices0_7 = (~indices0_7 & ~cPartitionPatterns[newPartition].mIndexBits0_7) |
-                 (indices0_7 & cPartitionPatterns[newPartition].mIndexBits0_7);
-    indices8_15 = (~indices8_15 & ~cPartitionPatterns[newPartition].mIndexBits8_15) |
-                  (indices8_15 & cPartitionPatterns[newPartition].mIndexBits8_15);
+    indices0_7 = (~indices0_7 & ~cPartitionPatterns[newPartition].mIndexBits0_7) | (indices0_7 & cPartitionPatterns[newPartition].mIndexBits0_7);
+    indices8_15 = (~indices8_15 & ~cPartitionPatterns[newPartition].mIndexBits8_15) | (indices8_15 & cPartitionPatterns[newPartition].mIndexBits8_15);
   }
 
   if (swapEndpoints1AB)
   {
-    indices0_7 = (~indices0_7 & cPartitionPatterns[newPartition].mIndexBits0_7) |
-                 (indices0_7 & ~cPartitionPatterns[newPartition].mIndexBits0_7);
-    indices8_15 = (~indices8_15 & cPartitionPatterns[newPartition].mIndexBits8_15) |
-                  (indices8_15 & ~cPartitionPatterns[newPartition].mIndexBits8_15);
+    indices0_7 = (~indices0_7 & cPartitionPatterns[newPartition].mIndexBits0_7) | (indices0_7 & ~cPartitionPatterns[newPartition].mIndexBits0_7);
+    indices8_15 = (~indices8_15 & cPartitionPatterns[newPartition].mIndexBits8_15) | (indices8_15 & ~cPartitionPatterns[newPartition].mIndexBits8_15);
   }
 
   // Remove implicit 0's
@@ -729,8 +719,7 @@ void YInvertBC6Mode10Block(byte* block)
     byte b0A = (block[3] & 0x7e) >> 1;
     byte b0B = (block[7] & 0x1f) << 1 | (block[6] & 0x80) >> 7;
     byte b1A = (block[2] & 0x40) >> 1 | (block[1] & 0x40) >> 2 | (block[8] & 0x01) << 3 | (block[7] & 0xe0) >> 5;
-    byte b1B = (block[4] & 0x02) << 4 | (block[4] & 0x04) << 2 | (block[4] & 0x01) << 3 | (block[2] & 0x80) >> 5 |
-               (block[1] & 0x30) >> 4;
+    byte b1B = (block[4] & 0x02) << 4 | (block[4] & 0x04) << 2 | (block[4] & 0x01) << 3 | (block[2] & 0x80) >> 5 | (block[1] & 0x30) >> 4;
 
     // Other swaps assume this swap will happen first if it's needed
     if (swapEndpoints01)
@@ -846,12 +835,9 @@ void YInvertNonCompressed(byte* imageData, uint width, uint height, uint pixelSi
   }
 }
 
-void YInvertBlockCompressed(
-    byte* imageData, uint width, uint height, uint dataSize, TextureCompression::Enum compression)
+void YInvertBlockCompressed(byte* imageData, uint width, uint height, uint dataSize, TextureCompression::Enum compression)
 {
-  ReturnIf((width >= 3 && width % 4 != 0) || (height >= 3 && height % 4 != 0),
-           ,
-           "Block compressed image dimensions must be multiple of 4");
+  ReturnIf((width >= 3 && width % 4 != 0) || (height >= 3 && height % 4 != 0), , "Block compressed image dimensions must be multiple of 4");
 
   width = Math::Max(width, 4u);
   height = Math::Max(height, 4u);
@@ -959,8 +945,7 @@ void YInvertBlockCompressed(
   }
 }
 
-void BuildOrthographicTransformEngine(
-    Mat4& matrix, float verticalSize, float aspectRatio, float nearDistance, float farDistance)
+void BuildOrthographicTransformEngine(Mat4& matrix, float verticalSize, float aspectRatio, float nearDistance, float farDistance)
 {
   // Raverie maps NDC [-1,-1,-1] to [1,1,1] ([l,b,n] to [r,t,f])
   BuildOrthographicTransformGl(matrix, verticalSize, aspectRatio, nearDistance, farDistance);
@@ -971,8 +956,7 @@ void BuildOrthographicTransformEngine(
 // |  0   1/t    0             0      |
 // |  0    0   -2/(f-n)  -(f+n)/(f-n) |
 // |  0    0     0             1      |
-void BuildOrthographicTransformGl(
-    Mat4& matrix, float verticalSize, float aspectRatio, float nearDistance, float farDistance)
+void BuildOrthographicTransformGl(Mat4& matrix, float verticalSize, float aspectRatio, float nearDistance, float farDistance)
 {
   matrix = Mat4::cIdentity;
 
@@ -997,8 +981,7 @@ void BuildOrthographicTransformGl(
 // |  0   1/t    0             0      |
 // |  0    0   -1/(f-n)      -n/(f-n) |
 // |  0    0     0             1      |
-void BuildOrthographicTransformDx(
-    Mat4& matrix, float verticalSize, float aspectRatio, float nearDistance, float farDistance)
+void BuildOrthographicTransformDx(Mat4& matrix, float verticalSize, float aspectRatio, float nearDistance, float farDistance)
 {
   matrix = Mat4::cIdentity;
 
@@ -1018,8 +1001,7 @@ void BuildOrthographicTransformDx(
   matrix.m23 = -nearDistance / depth;
 }
 
-void BuildPerspectiveTransformEngine(
-    Mat4& matrix, float verticalFov, float aspectRatio, float nearDistance, float farDistance)
+void BuildPerspectiveTransformEngine(Mat4& matrix, float verticalFov, float aspectRatio, float nearDistance, float farDistance)
 {
   // Raverie maps NDC [-1,-1,-1] to [1,1,1] ([l,b,n] to [r,t,f])
   BuildPerspectiveTransformGl(matrix, verticalFov, aspectRatio, nearDistance, farDistance);
@@ -1030,8 +1012,7 @@ void BuildPerspectiveTransformEngine(
 // |  0   n/t        0           0      |
 // |  0    0   -(f+n)/(f-n)  -2fn/(f-n) |
 // |  0    0        -1           0      |
-void BuildPerspectiveTransformGl(
-    Mat4& matrix, float verticalFov, float aspectRatio, float nearDistance, float farDistance)
+void BuildPerspectiveTransformGl(Mat4& matrix, float verticalFov, float aspectRatio, float nearDistance, float farDistance)
 {
   matrix = Mat4::cIdentity;
 
@@ -1069,8 +1050,7 @@ void BuildPerspectiveTransformGl(
 // |  0   n/t        0           0      |
 // |  0    0       -f/(f-n)   -fn/(f-n) |
 // |  0    0        -1           0      |
-void BuildPerspectiveTransformDx(
-    Mat4& matrix, float verticalFov, float aspectRatio, float nearDistance, float farDistance)
+void BuildPerspectiveTransformDx(Mat4& matrix, float verticalFov, float aspectRatio, float nearDistance, float farDistance)
 {
   matrix = Mat4::cIdentity;
 
@@ -1362,19 +1342,12 @@ void RenderQueues::Clear()
   mBlendSettingsOverrides.Clear();
 }
 
-void RenderQueues::AddStreamedLineRect(
-    ViewNode& viewNode, Vec3 pos0, Vec3 pos1, Vec2 uv0, Vec2 uv1, Vec4 color, Vec2 uvAux0, Vec2 uvAux1)
+void RenderQueues::AddStreamedLineRect(ViewNode& viewNode, Vec3 pos0, Vec3 pos1, Vec2 uv0, Vec2 uv1, Vec4 color, Vec2 uvAux0, Vec2 uvAux1)
 {
   StreamedVertex v0(Math::TransformPoint(viewNode.mLocalToView, pos0), uv0, color, uvAux0);
-  StreamedVertex v1(Math::TransformPoint(viewNode.mLocalToView, Vec3(pos0.x, pos1.y, 0)),
-                    Vec2(uv0.x, uv1.y),
-                    color,
-                    Vec2(uvAux0.x, uvAux1.y));
+  StreamedVertex v1(Math::TransformPoint(viewNode.mLocalToView, Vec3(pos0.x, pos1.y, 0)), Vec2(uv0.x, uv1.y), color, Vec2(uvAux0.x, uvAux1.y));
   StreamedVertex v2(Math::TransformPoint(viewNode.mLocalToView, pos1), uv1, color, uvAux1);
-  StreamedVertex v3(Math::TransformPoint(viewNode.mLocalToView, Vec3(pos1.x, pos0.y, 0)),
-                    Vec2(uv1.x, uv0.y),
-                    color,
-                    Vec2(uvAux1.x, uvAux0.y));
+  StreamedVertex v3(Math::TransformPoint(viewNode.mLocalToView, Vec3(pos1.x, pos0.y, 0)), Vec2(uv1.x, uv0.y), color, Vec2(uvAux1.x, uvAux0.y));
 
   mStreamedVertices.PushBack(v0);
   mStreamedVertices.PushBack(v1);
@@ -1389,19 +1362,12 @@ void RenderQueues::AddStreamedLineRect(
   viewNode.mStreamedVertexType = PrimitiveType::Lines;
 }
 
-void RenderQueues::AddStreamedQuad(
-    ViewNode& viewNode, Vec3 pos0, Vec3 pos1, Vec2 uv0, Vec2 uv1, Vec4 color, Vec2 uvAux0, Vec2 uvAux1)
+void RenderQueues::AddStreamedQuad(ViewNode& viewNode, Vec3 pos0, Vec3 pos1, Vec2 uv0, Vec2 uv1, Vec4 color, Vec2 uvAux0, Vec2 uvAux1)
 {
   StreamedVertex v0(Math::TransformPoint(viewNode.mLocalToView, pos0), uv0, color, uvAux0);
-  StreamedVertex v1(Math::TransformPoint(viewNode.mLocalToView, Vec3(pos0.x, pos1.y, 0)),
-                    Vec2(uv0.x, uv1.y),
-                    color,
-                    Vec2(uvAux0.x, uvAux1.y));
+  StreamedVertex v1(Math::TransformPoint(viewNode.mLocalToView, Vec3(pos0.x, pos1.y, 0)), Vec2(uv0.x, uv1.y), color, Vec2(uvAux0.x, uvAux1.y));
   StreamedVertex v2(Math::TransformPoint(viewNode.mLocalToView, pos1), uv1, color, uvAux1);
-  StreamedVertex v3(Math::TransformPoint(viewNode.mLocalToView, Vec3(pos1.x, pos0.y, 0)),
-                    Vec2(uv1.x, uv0.y),
-                    color,
-                    Vec2(uvAux1.x, uvAux0.y));
+  StreamedVertex v3(Math::TransformPoint(viewNode.mLocalToView, Vec3(pos1.x, pos0.y, 0)), Vec2(uv1.x, uv0.y), color, Vec2(uvAux1.x, uvAux0.y));
 
   mStreamedVertices.PushBack(v0);
   mStreamedVertices.PushBack(v1);
@@ -1413,8 +1379,7 @@ void RenderQueues::AddStreamedQuad(
   viewNode.mStreamedVertexCount = mStreamedVertices.Size() - viewNode.mStreamedVertexStart;
 }
 
-void RenderQueues::AddStreamedQuadTiled(
-    ViewNode& viewNode, Vec3 pos0, Vec3 pos1, Vec2 uv0, Vec2 uv1, Vec4 color, Vec2 tileSize, Vec2 uvAux0, Vec2 uvAux1)
+void RenderQueues::AddStreamedQuadTiled(ViewNode& viewNode, Vec3 pos0, Vec3 pos1, Vec2 uv0, Vec2 uv1, Vec4 color, Vec2 tileSize, Vec2 uvAux0, Vec2 uvAux1)
 {
   Vec2 size = Vec2(pos1.x - pos0.x, pos0.y - pos1.y);
   Vec2 tiles = size / tileSize;
@@ -1473,16 +1438,7 @@ void RenderQueues::AddStreamedQuadTiled(
   }
 }
 
-void RenderQueues::AddStreamedQuadNineSliced(ViewNode& viewNode,
-                                             Vec3 pos0,
-                                             Vec3 pos1,
-                                             Vec2 uv0,
-                                             Vec2 uv1,
-                                             Vec4 color,
-                                             Vec4 posSlices,
-                                             Vec4 uvSlices,
-                                             Vec2 uvAux0,
-                                             Vec2 uvAux1)
+void RenderQueues::AddStreamedQuadNineSliced(ViewNode& viewNode, Vec3 pos0, Vec3 pos1, Vec2 uv0, Vec2 uv1, Vec4 color, Vec4 posSlices, Vec4 uvSlices, Vec2 uvAux0, Vec2 uvAux1)
 {
   Vec4 posX = Vec4(pos0.x, pos0.x + posSlices[NineSlices::Left], pos1.x - posSlices[NineSlices::Right], pos1.x);
   Vec4 posY = Vec4(pos0.y, pos0.y - posSlices[NineSlices::Top], pos1.y + posSlices[NineSlices::Bottom], pos1.y);
@@ -1533,24 +1489,15 @@ void RenderQueues::AddStreamedQuadNineSliced(ViewNode& viewNode,
   Vec2 sliceLerpY = Vec2(posY.y - posY.x, posY.z - posY.x) / denomY;
 
   // Want normalized uv's evenly mapped over the positional area
-  Vec4 uvAuxX = Vec4(uvAux0.x,
-                     uvAux0.x + (uvAux1.x - uvAux0.x) * sliceLerpX.x,
-                     uvAux0.x + (uvAux1.x - uvAux0.x) * sliceLerpX.y,
-                     uvAux1.x);
-  Vec4 uvAuxY = Vec4(uvAux0.y,
-                     uvAux0.y + (uvAux1.y - uvAux0.y) * sliceLerpY.x,
-                     uvAux0.y + (uvAux1.y - uvAux0.y) * sliceLerpY.y,
-                     uvAux1.y);
+  Vec4 uvAuxX = Vec4(uvAux0.x, uvAux0.x + (uvAux1.x - uvAux0.x) * sliceLerpX.x, uvAux0.x + (uvAux1.x - uvAux0.x) * sliceLerpX.y, uvAux1.x);
+  Vec4 uvAuxY = Vec4(uvAux0.y, uvAux0.y + (uvAux1.y - uvAux0.y) * sliceLerpY.x, uvAux0.y + (uvAux1.y - uvAux0.y) * sliceLerpY.y, uvAux1.y);
 
   StreamedVertex vertices[16];
   for (uint y = 0; y < 4; ++y)
   {
     for (uint x = 0; x < 4; ++x)
     {
-      StreamedVertex vertex(Math::TransformPoint(viewNode.mLocalToView, Vec3(posX[x], posY[y], 0)),
-                            Vec2(uvX[x], uvY[y]),
-                            color,
-                            Vec2(uvAuxX[x], uvAuxY[y]));
+      StreamedVertex vertex(Math::TransformPoint(viewNode.mLocalToView, Vec3(posX[x], posY[y], 0)), Vec2(uvX[x], uvY[y]), color, Vec2(uvAuxX[x], uvAuxY[y]));
       vertices[x + y * 4] = vertex;
     }
   }

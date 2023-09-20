@@ -4,13 +4,10 @@
 
 namespace Raverie
 {
-bool Overload::ResolveAndImplicitConvert(const FunctionArray* functions,
-                                         Function*& resolvedFunction,
-                                         FunctionCallNode& functionCallNode)
+bool Overload::ResolveAndImplicitConvert(const FunctionArray* functions, Function*& resolvedFunction, FunctionCallNode& functionCallNode)
 {
   // Loop through all the overload passes
-  for (size_t passIndex = OverloadPass::NoImplicitConversion; passIndex <= OverloadPass::AnyImplicitConversion;
-       ++passIndex)
+  for (size_t passIndex = OverloadPass::NoImplicitConversion; passIndex <= OverloadPass::AnyImplicitConversion; ++passIndex)
   {
     // Get the current pass as an enum
     OverloadPass::Enum pass = (OverloadPass::Enum)passIndex;
@@ -86,10 +83,7 @@ void Overload::GetFunctionCallSignatureString(StringBuilder& builder, const Func
   builder.Append(")");
 }
 
-void Overload::ReportSingleError(CompilationErrors& errors,
-                                 const CodeLocation& location,
-                                 const DelegateType* type,
-                                 const FunctionCallNode& functionCallNode)
+void Overload::ReportSingleError(CompilationErrors& errors, const CodeLocation& location, const DelegateType* type, const FunctionCallNode& functionCallNode)
 {
   // Get the calling signature
   StringBuilder call;
@@ -103,18 +97,13 @@ void Overload::ReportSingleError(CompilationErrors& errors,
   type->BuildSignatureString(options, functionCallNode.IsNamed);
 
   // Now report the error
-  return errors.Raise(
-      location, ErrorCode::UnableToResolveFunction, "delegate", call.ToString().c_str(), options.ToString().c_str());
+  return errors.Raise(location, ErrorCode::UnableToResolveFunction, "delegate", call.ToString().c_str(), options.ToString().c_str());
 }
 
-void Overload::ReportError(CompilationErrors& errors,
-                           const CodeLocation& location,
-                           const FunctionArray* functions,
-                           const FunctionCallNode& functionCallNode)
+void Overload::ReportError(CompilationErrors& errors, const CodeLocation& location, const FunctionArray* functions, const FunctionCallNode& functionCallNode)
 {
   // Error checking
-  ErrorIf(functions == nullptr || functions->Empty(),
-          "We cannot report overloading errors when no functions were provided");
+  ErrorIf(functions == nullptr || functions->Empty(), "We cannot report overloading errors when no functions were provided");
 
   // Get the name of one of the functions (we know there is at least one
   // function in this array)
@@ -144,8 +133,7 @@ void Overload::ReportError(CompilationErrors& errors,
   }
 
   // Now report the error
-  return errors.Raise(
-      location, ErrorCode::UnableToResolveFunction, name.c_str(), call.ToString().c_str(), options.ToString().c_str());
+  return errors.Raise(location, ErrorCode::UnableToResolveFunction, name.c_str(), call.ToString().c_str(), options.ToString().c_str());
 }
 
 bool Overload::TestCallAndImplicitConvert(DelegateType* delegateType, FunctionCallNode& functionCallNode)
@@ -192,9 +180,7 @@ void Overload::GenerateImplicitCasts(DelegateType* delegateType, FunctionCallNod
   }
 }
 
-bool Overload::TestDelegateTypeVsCall(DelegateType* delegateType,
-                                      FunctionCallNode& functionCallNode,
-                                      OverloadPass::Enum pass)
+bool Overload::TestDelegateTypeVsCall(DelegateType* delegateType, FunctionCallNode& functionCallNode, OverloadPass::Enum pass)
 {
   // Get the number of arguments
   size_t argumentCount = functionCallNode.Arguments.Size();

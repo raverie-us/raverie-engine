@@ -126,8 +126,7 @@ void DrawBoxAround(StreamedVertexArray& streamedVertices, ViewNode& lineNode, Wi
   LineSegment(streamedVertices, topRight, botRight, color4);
 }
 
-void DrawChain(
-    StreamedVertexArray& streamedVertices, ViewNode& lineNode, Widget* widget, ByteColor base, ByteColor parents)
+void DrawChain(StreamedVertexArray& streamedVertices, ViewNode& lineNode, Widget* widget, ByteColor base, ByteColor parents)
 {
   if (widget)
   {
@@ -191,8 +190,7 @@ void RootWidget::OnUiRenderUpdate(Event* event)
   renderTaskRange.mTaskIndex = renderTasks.mRenderTaskBuffer.mCurrentIndex;
   renderTaskRange.mTaskCount = 0;
 
-  HandleOf<RenderTarget> renderTarget =
-      Z::gEngine->has(GraphicsEngine)->GetRenderTarget((uint)mSize.x, (uint)mSize.y, TextureFormat::RGBA8);
+  HandleOf<RenderTarget> renderTarget = Z::gEngine->has(GraphicsEngine)->GetRenderTarget((uint)mSize.x, (uint)mSize.y, TextureFormat::RGBA8);
 
   GraphicsRenderSettings renderSettings;
   renderSettings.SetColorTarget(renderTarget);
@@ -337,11 +335,7 @@ void SendHierarchyEvents(cstr op,
 
   if (Interaction::DebugMouseInteraction)
   {
-    ZPrint("%s %s -> %s , Lca %s\n",
-           op,
-           oldObject ? oldObject->GetDebugName().c_str() : "None",
-           newObject ? newObject->GetDebugName().c_str() : "None",
-           lca ? lca->GetDebugName().c_str() : "None");
+    ZPrint("%s %s -> %s , Lca %s\n", op, oldObject ? oldObject->GetDebugName().c_str() : "None", newObject ? newObject->GetDebugName().c_str() : "None", lca ? lca->GetDebugName().c_str() : "None");
   }
 
   // Send the out event on the old object
@@ -623,7 +617,8 @@ void RootWidget::BuildMouseEvent(MouseEvent& event, OsMouseEvent* mouseEvent)
 Widget* RootWidget::UpdateMousePosition(OsMouseEvent* osmouseEvent)
 {
   // If the mouse is trapped, return the main viewport here
-  if (Shell::sInstance->GetMouseTrap() && !sMouseTrapFocusWidgets.Empty()) {
+  if (Shell::sInstance->GetMouseTrap() && !sMouseTrapFocusWidgets.Empty())
+  {
     return sMouseTrapFocusWidgets.Back();
   }
 

@@ -11,8 +11,7 @@ String BuildString(StringRange a, StringRange b, StringRange c);
 String BuildString(StringRange a, StringRange b, StringRange c, StringRange d);
 String BuildString(StringRange a, StringRange b, StringRange c, StringRange d, StringRange e);
 String BuildString(StringRange a, StringRange b, StringRange c, StringRange d, StringRange e, StringRange f);
-String
-BuildString(StringRange a, StringRange b, StringRange c, StringRange d, StringRange e, StringRange f, StringRange g);
+String BuildString(StringRange a, StringRange b, StringRange c, StringRange d, StringRange e, StringRange f, StringRange g);
 String BuildString(StringRange** ranges, uint count);
 
 String StringJoin(Array<String>& strings, StringParam joinToken);
@@ -55,8 +54,7 @@ struct MoveWithoutDestructionOperator<StringBuilder>
 {
   static inline void MoveWithoutDestruction(StringBuilder* dest, StringBuilder* source)
   {
-    MoveWithoutDestructionOperator<Array<ByteBuffer::byteType*>>::MoveWithoutDestruction(&dest->mBlocks,
-                                                                                         &source->mBlocks);
+    MoveWithoutDestructionOperator<Array<ByteBuffer::byteType*>>::MoveWithoutDestruction(&dest->mBlocks, &source->mBlocks);
 
     dest->mBlockSize = source->mBlockSize;
     dest->mTotalSize = source->mTotalSize;

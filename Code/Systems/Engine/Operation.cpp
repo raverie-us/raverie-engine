@@ -551,9 +551,7 @@ void OperationQueue::MarkPropertyAsModified(Component* component, StringParam pr
   Property* property = componentType->GetProperty(propertyName);
   if (property == nullptr)
   {
-    String msg = String::Format("Component '%s' doesn't have a property by the name of '%s'",
-                                componentType->Name.c_str(),
-                                propertyName.c_str());
+    String msg = String::Format("Component '%s' doesn't have a property by the name of '%s'", componentType->Name.c_str(), propertyName.c_str());
     DoNotifyException("Invalid property", msg);
     return;
   }
@@ -684,8 +682,7 @@ void OperationQueue::QueueChanges(MetaProxy* proxy)
       return;
 
     // Destroyed
-    DoNotifyException("An object marked for modification was destroyed",
-                      "Use the 'DestroyObject' function to destroy objects");
+    DoNotifyException("An object marked for modification was destroyed", "Use the 'DestroyObject' function to destroy objects");
     return;
   }
 
@@ -810,8 +807,7 @@ void OperationQueue::RegisterSideEffect(HandleParam object, PropertyPathParam pr
 {
   if (sListeningForSideEffects == false)
   {
-    DoNotifyExceptionAssert("OperationQueue is not listening for side effects",
-                            "First check OperationQueue.IsListeningForSideEffects");
+    DoNotifyExceptionAssert("OperationQueue is not listening for side effects", "First check OperationQueue.IsListeningForSideEffects");
     return;
   }
 

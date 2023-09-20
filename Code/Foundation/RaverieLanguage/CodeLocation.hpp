@@ -148,4 +148,3 @@ struct MoveWithoutDestructionOperator<Raverie::CodeLocation>
   }
 };
 } // namespace Raverie
-

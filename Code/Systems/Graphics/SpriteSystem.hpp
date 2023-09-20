@@ -7,16 +7,8 @@ namespace Raverie
 
 /// Sprite Particle System Enums
 DeclareEnum5(SpriteParticleGeometryMode, Billboarded, Beam, Outward, FaceVelocity, Flat);
-DeclareEnum9(SpriteParticleSortMode,
-             None,
-             BackToFrontView,
-             FrontToBackView,
-             NegativeToPositiveX,
-             PositiveToNegativeX,
-             NegativeToPositiveY,
-             PositiveToNegativeY,
-             NegativeToPositiveZ,
-             PositiveToNegativeZ);
+DeclareEnum9(
+    SpriteParticleSortMode, None, BackToFrontView, FrontToBackView, NegativeToPositiveX, PositiveToNegativeX, NegativeToPositiveY, PositiveToNegativeY, NegativeToPositiveZ, PositiveToNegativeZ);
 DeclareEnum2(SpriteParticleAnimationMode, Single, Looping);
 
 /// A particle system that uses sprites to represent each particle.

@@ -4,12 +4,8 @@
 namespace Raverie
 {
 
-AnimationProcessor::AnimationProcessor(AnimationBuilder* animationBuilder,
-                                       HierarchyDataMap& hierarchyData,
-                                       AnimationNodeRedirectMap& animationRedirectMap) :
-    mBuilder(animationBuilder),
-    mHierarchyDataMap(hierarchyData),
-    mAnimationRedirectMap(animationRedirectMap)
+AnimationProcessor::AnimationProcessor(AnimationBuilder* animationBuilder, HierarchyDataMap& hierarchyData, AnimationNodeRedirectMap& animationRedirectMap) :
+    mBuilder(animationBuilder), mHierarchyDataMap(hierarchyData), mAnimationRedirectMap(animationRedirectMap)
 {
 }
 
@@ -90,8 +86,7 @@ void AnimationProcessor::ExtractAndProcessAnimationData(const aiScene* scene)
         if (node.mIsAnimatedPivot)
         {
           Mat4 translateTransform;
-          positionKey.Position =
-              Math::TransformPoint(preAnimationCorrection * postAnimationCorrection, positionKey.Position);
+          positionKey.Position = Math::TransformPoint(preAnimationCorrection * postAnimationCorrection, positionKey.Position);
         }
 
         positionKey.Position = Math::TransformPoint(transform, positionKey.Position);
@@ -107,8 +102,7 @@ void AnimationProcessor::ExtractAndProcessAnimationData(const aiScene* scene)
         // Animation Correction if pivots were collapsed
         if (node.mIsAnimatedPivot)
         {
-          rotationKey.Rotation =
-              ToQuaternion(preAnimationCorrection) * rotationKey.Rotation * ToQuaternion(postAnimationCorrection);
+          rotationKey.Rotation = ToQuaternion(preAnimationCorrection) * rotationKey.Rotation * ToQuaternion(postAnimationCorrection);
         }
 
         rotationKey.Rotation = changeOfBasis * rotationKey.Rotation * changeOfBasis.Inverted();
@@ -178,8 +172,7 @@ void GetClipTrack(SceneTrack& sceneTrack, SceneTrack& clipTrack, float startTime
   // Find begin and end range for sub-track.
   KeyType startKey = {startTime};
   KeyType endKey = {endTime};
-  typename Array<KeyType>::iterator lower =
-      UpperBound(sceneKeys->All(), startKey, TransformKeyLessThan<KeyType>).Begin();
+  typename Array<KeyType>::iterator lower = UpperBound(sceneKeys->All(), startKey, TransformKeyLessThan<KeyType>).Begin();
   typename Array<KeyType>::iterator upper = UpperBound(sceneKeys->All(), endKey, TransformKeyLessThan<KeyType>).Begin();
 
   // Guarantee that at least one key is assigned.

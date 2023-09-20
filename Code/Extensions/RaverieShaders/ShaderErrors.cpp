@@ -50,9 +50,7 @@ void ShaderCompilationErrors::SendTranslationError(Raverie::CodeLocation& locati
   SendTranslationError(location, message, message);
 }
 
-void ShaderCompilationErrors::SendTranslationError(Raverie::CodeLocation& location,
-                                                   StringParam shortMsg,
-                                                   StringParam fullMsg)
+void ShaderCompilationErrors::SendTranslationError(Raverie::CodeLocation& location, StringParam shortMsg, StringParam fullMsg)
 {
   // Check if this is the first error being sent and if not check if we send
   // multiple errors

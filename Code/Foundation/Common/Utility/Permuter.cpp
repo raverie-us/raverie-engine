@@ -109,10 +109,7 @@ MultiPermuter::MultiPermuter() : mMaxSelect(0), mEmpty(true)
 {
 }
 
-MultiPermuter::MultiPermuter(size_t arraySize, size_t minSelect, size_t maxSelect) :
-    mMaxSelect(maxSelect),
-    mPermuter(arraySize, minSelect),
-    mEmpty(false)
+MultiPermuter::MultiPermuter(size_t arraySize, size_t minSelect, size_t maxSelect) : mMaxSelect(maxSelect), mPermuter(arraySize, minSelect), mEmpty(false)
 {
   if (minSelect == 0)
     minSelect = 1;

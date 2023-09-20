@@ -195,8 +195,7 @@ void ComputeContactLimits(Contact* contact, MoleculeWalker& fragments)
   fragments[2].SetLimit(-frictionMax, frictionMax);
 }
 
-void ComputeContactFragments(
-    Contact* contact, MoleculeWalker& fragments, uint atomCount, MoleculeData& data, real restitutionBias)
+void ComputeContactFragments(Contact* contact, MoleculeWalker& fragments, uint atomCount, MoleculeData& data, real restitutionBias)
 {
   real baumgarte = contact->GetLinearBaumgarte();
   JointMass masses;
@@ -330,10 +329,8 @@ void Contact::SolveSse(MoleculeWalker& fragments)
   SimVec m1 = Simd::UnAlignedLoad(masses.mInvMass[1].GetInvMasses().array);
   Mat3Param invM0 = masses.InverseInertia[0];
   Mat3Param invM1 = masses.InverseInertia[1];
-  SimMat3 i0 =
-      Simd::SetMat3(invM0.m00, invM0.m01, invM0.m02, invM0.m10, invM0.m11, invM0.m12, invM0.m20, invM0.m21, invM0.m22);
-  SimMat3 i1 =
-      Simd::SetMat3(invM1.m00, invM1.m01, invM1.m02, invM1.m10, invM1.m11, invM1.m12, invM1.m20, invM1.m21, invM1.m22);
+  SimMat3 i0 = Simd::SetMat3(invM0.m00, invM0.m01, invM0.m02, invM0.m10, invM0.m11, invM0.m12, invM0.m20, invM0.m21, invM0.m22);
+  SimMat3 i1 = Simd::SetMat3(invM1.m00, invM1.m01, invM1.m02, invM1.m10, invM1.m11, invM1.m12, invM1.m20, invM1.m21, invM1.m22);
 
   for (uint i = 0; i < contactCount; ++i)
   {
@@ -416,10 +413,7 @@ void Contact::ComputePositionMolecules(MoleculeWalker& fragments)
     worldAnchors.mWorldR[1] = contactPoint.WorldPoints[1] - cm1;
 
     real mass;
-    mol.mJacobian.Set(-contactPoint.Normal,
-                      -Math::Cross(worldAnchors[0], contactPoint.Normal),
-                      contactPoint.Normal,
-                      Math::Cross(worldAnchors[1], contactPoint.Normal));
+    mol.mJacobian.Set(-contactPoint.Normal, -Math::Cross(worldAnchors[0], contactPoint.Normal), contactPoint.Normal, Math::Cross(worldAnchors[1], contactPoint.Normal));
     mass = mol.mJacobian.ComputeMass(masses);
     mol.mMass = (mass == real(0.0) ? mass : real(1.0) / mass);
 

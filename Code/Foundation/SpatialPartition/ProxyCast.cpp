@@ -16,8 +16,7 @@ RaverieDefineType(BaseCastFilter, builder, type)
 
 BaseCastFilter::BaseCastFilter()
 {
-  mFlags.SetFlag(BaseCastFilterFlags::Refine | BaseCastFilterFlags::GetContactNormal |
-                 BaseCastFilterFlags::IgnoreInternalCasts | BaseCastFilterFlags::IgnoreGhost);
+  mFlags.SetFlag(BaseCastFilterFlags::Refine | BaseCastFilterFlags::GetContactNormal | BaseCastFilterFlags::IgnoreInternalCasts | BaseCastFilterFlags::IgnoreGhost);
   mIgnoredCog = nullptr;
 }
 
@@ -215,8 +214,7 @@ void ProxyResult::operator=(const ProxyResult& rhs)
 
 bool ProxyResult::operator==(const ProxyResult& rhs)
 {
-  return (mObjectHit == rhs.mObjectHit && mPoints[0] == rhs.mPoints[0] && mPoints[1] == rhs.mPoints[1] &&
-          mTime == rhs.mTime && mContactNormal == rhs.mContactNormal);
+  return (mObjectHit == rhs.mObjectHit && mPoints[0] == rhs.mPoints[0] && mPoints[1] == rhs.mPoints[1] && mTime == rhs.mTime && mContactNormal == rhs.mContactNormal);
 }
 
 bool ProxyResult::operator!=(const ProxyResult& rhs)
@@ -233,10 +231,7 @@ void ProxyResult::Set(void* proxy, Vec3 points[2], Vec3Param contactNormal, real
   mTime = time;
 }
 
-ProxyCastResults::ProxyCastResults(ProxyCastResultArray& array, BaseCastFilter& filter) :
-    CurrSize(0),
-    Filter(filter),
-    Results(array)
+ProxyCastResults::ProxyCastResults(ProxyCastResultArray& array, BaseCastFilter& filter) : CurrSize(0), Filter(filter), Results(array)
 {
 }
 

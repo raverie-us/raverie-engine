@@ -599,13 +599,8 @@ void UiRootWidget::Render(RenderTasksEvent* e, RenderTarget* color, RenderTarget
   FlushGraphicals(e, color, depth, renderPass);
 }
 
-void UiRootWidget::RenderWidgets(RenderTasksEvent* e,
-                                 RenderTarget* color,
-                                 RenderTarget* depth,
-                                 MaterialBlock* renderPass,
-                                 UiWidget* widget,
-                                 Vec4Param colorTransform,
-                                 Array<CachedFloatingWidget>* floatingWidgets)
+void UiRootWidget::RenderWidgets(
+    RenderTasksEvent* e, RenderTarget* color, RenderTarget* depth, MaterialBlock* renderPass, UiWidget* widget, Vec4Param colorTransform, Array<CachedFloatingWidget>* floatingWidgets)
 {
   // Don't render inactive, destroyed, or editor hidden widgets
   Cog* widgetCog = widget->GetOwner();
@@ -649,13 +644,7 @@ void UiRootWidget::RenderWidgets(RenderTasksEvent* e,
   }
 }
 
-void UiRootWidget::AddGraphical(RenderTasksEvent* e,
-                                RenderTarget* color,
-                                RenderTarget* depth,
-                                MaterialBlock* renderPass,
-                                Cog* widgetCog,
-                                StencilDrawMode::Enum stencilMode,
-                                uint stencilIncrement)
+void UiRootWidget::AddGraphical(RenderTasksEvent* e, RenderTarget* color, RenderTarget* depth, MaterialBlock* renderPass, Cog* widgetCog, StencilDrawMode::Enum stencilMode, uint stencilIncrement)
 {
   if (Graphical* graphical = widgetCog->has(Graphical))
   {
@@ -673,10 +662,7 @@ void UiRootWidget::AddGraphical(RenderTasksEvent* e,
   }
 }
 
-void UiRootWidget::FlushGraphicals(RenderTasksEvent* e,
-                                   RenderTarget* color,
-                                   RenderTarget* depth,
-                                   MaterialBlock* renderPass)
+void UiRootWidget::FlushGraphicals(RenderTasksEvent* e, RenderTarget* color, RenderTarget* depth, MaterialBlock* renderPass)
 {
   if (mGraphicals.GetCount() == 0)
     return;

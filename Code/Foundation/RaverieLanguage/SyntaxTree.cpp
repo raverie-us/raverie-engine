@@ -579,15 +579,11 @@ void SyntaxTree::GetNodesAtCursor(size_t cursorPosition, StringParam cursorOrigi
   GetNodesAtCursorRecursive(this->Root, cursorPosition, cursorOrigin, nodesOut);
 }
 
-void SyntaxTree::GetNodesAtCursorRecursive(SyntaxNode* node,
-                                           size_t cursorPosition,
-                                           StringParam cursorOrigin,
-                                           Array<SyntaxNode*>& nodesOut)
+void SyntaxTree::GetNodesAtCursorRecursive(SyntaxNode* node, size_t cursorPosition, StringParam cursorOrigin, Array<SyntaxNode*>& nodesOut)
 {
   // Check if the cursor is within the location of this node
   CodeLocation& location = node->Location;
-  if (location.Origin == cursorOrigin && cursorPosition >= location.StartPosition &&
-      cursorPosition <= location.EndPosition)
+  if (location.Origin == cursorOrigin && cursorPosition >= location.StartPosition && cursorPosition <= location.EndPosition)
     nodesOut.PushBack(node);
 
   // Walk through all child nodes of the current node
@@ -656,12 +652,7 @@ void AttributeNode::PopulateChildren(NodeChildren& childrenOut)
   childrenOut.Add(this->AttributeCall);
 }
 
-ExpressionNode::ExpressionNode() :
-    ResultType(Core::GetInstance().ErrorType),
-    PrecomputedResultType(nullptr),
-    Io(IoMode::NotSet),
-    IoUsage(IoMode::NotSet),
-    IsUsedAsStatement(false)
+ExpressionNode::ExpressionNode() : ResultType(Core::GetInstance().ErrorType), PrecomputedResultType(nullptr), Io(IoMode::NotSet), IoUsage(IoMode::NotSet), IsUsedAsStatement(false)
 {
 }
 
@@ -801,10 +792,7 @@ String MemberAccessNode::ToString() const
   return BuildString(Grammar::GetKeywordOrSymbol(this->Operator), this->Name);
 }
 
-TypeIdNode::TypeIdNode() :
-    CompileTimeSyntaxType(nullptr),
-    Value(nullptr),
-    CompileTimeType(Core::GetInstance().ErrorType)
+TypeIdNode::TypeIdNode() : CompileTimeSyntaxType(nullptr), Value(nullptr), CompileTimeType(Core::GetInstance().ErrorType)
 {
 }
 
@@ -826,12 +814,7 @@ void MemberIdNode::PopulateChildren(NodeChildren& childrenOut)
 }
 
 StaticTypeNode::StaticTypeNode() :
-    ReferencedSyntaxType(nullptr),
-    ReferencedType(Core::GetInstance().ErrorType),
-    Mode(CreationMode::Invalid),
-    OverloadedConstructors(nullptr),
-    ConstructorFunction(nullptr),
-    ThisHandleLocal(0)
+    ReferencedSyntaxType(nullptr), ReferencedType(Core::GetInstance().ErrorType), Mode(CreationMode::Invalid), OverloadedConstructors(nullptr), ConstructorFunction(nullptr), ThisHandleLocal(0)
 {
 }
 
@@ -901,10 +884,7 @@ LocalVariableNode::LocalVariableNode() : CreatedVariable(nullptr), ForwardLocalA
 {
 }
 
-LocalVariableNode::LocalVariableNode(StringParam baseName,
-                                     Project* parentProject,
-                                     ExpressionNode* optionalInitialValue) :
-    CreatedVariable(nullptr)
+LocalVariableNode::LocalVariableNode(StringParam baseName, Project* parentProject, ExpressionNode* optionalInitialValue) : CreatedVariable(nullptr)
 {
   this->IsGenerated = true;
 
@@ -912,8 +892,7 @@ LocalVariableNode::LocalVariableNode(StringParam baseName,
   // user cannot type the name in via the parser)
   if (optionalInitialValue != nullptr)
     this->Name.Location = optionalInitialValue->Location;
-  this->Name.Token =
-      String::Format("[%s%llu]", baseName.c_str(), (unsigned long long)parentProject->VariableUniqueIdCounter);
+  this->Name.Token = String::Format("[%s%llu]", baseName.c_str(), (unsigned long long)parentProject->VariableUniqueIdCounter);
   ++parentProject->VariableUniqueIdCounter;
 
   // This is entirely just to avoid a redudant copy into a local variable,
@@ -1157,11 +1136,7 @@ void GenericFunctionNode::PopulateChildren(NodeChildren& childrenOut)
   this->Attributes.Populate(childrenOut);
 }
 
-FunctionNode::FunctionNode() :
-    ReturnType(nullptr),
-    ExtensionOwner(nullptr),
-    IsStatic(false),
-    Virtualized(VirtualMode::NonVirtual)
+FunctionNode::FunctionNode() : ReturnType(nullptr), ExtensionOwner(nullptr), IsStatic(false), Virtualized(VirtualMode::NonVirtual)
 {
 }
 
@@ -1185,12 +1160,7 @@ ConstructorNode::ConstructorNode() : BaseInitializer(nullptr), ThisInitializer(n
 {
 }
 
-ClassNode::ClassNode() :
-    CopyMode(TypeCopyMode::ReferenceType),
-    Type(nullptr),
-    Destructor(nullptr),
-    PreConstructor(nullptr),
-    TemplateInstantiation(nullptr)
+ClassNode::ClassNode() : CopyMode(TypeCopyMode::ReferenceType), Type(nullptr), Destructor(nullptr), PreConstructor(nullptr), TemplateInstantiation(nullptr)
 {
 }
 

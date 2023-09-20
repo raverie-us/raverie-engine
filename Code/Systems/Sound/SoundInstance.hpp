@@ -85,15 +85,7 @@ public:
 class MusicNotificationObject
 {
 public:
-  MusicNotificationObject() :
-      mSecondsPerBeat(0),
-      mBeatsPerBar(0),
-      mBeatsCount(0),
-      mBeatNoteType(0),
-      mSecondsPerEighth(0),
-      mEighthNoteCount(0),
-      mTotalEighths(0),
-      mTotalBeats(0)
+  MusicNotificationObject() : mSecondsPerBeat(0), mBeatsPerBar(0), mBeatsCount(0), mBeatNoteType(0), mSecondsPerEighth(0), mEighthNoteCount(0), mTotalEighths(0), mTotalBeats(0)
   {
   }
 
@@ -248,20 +240,14 @@ public:
   void DispatchInstanceEventFromMixThread(const String eventID);
 
 private:
-  bool GetOutputSamples(BufferType* outputBuffer,
-                        const unsigned numberOfChannels,
-                        ListenerNode* listener,
-                        const bool firstRequest) override;
+  bool GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest) override;
   // Fills the provided buffer with the audio data for the current mix
   void AddSamplesToBufferThreaded(BufferType* buffer, unsigned outputFrames, unsigned outputChannels);
   // Resets back to the loop start point
   void LoopThreaded();
   // Translates the audio data in the array to the specified output channels,
   // and puts the data back into the array
-  static void TranslateChannelsThreaded(BufferType* inputSamples,
-                                        const unsigned inputFrames,
-                                        const unsigned inputChannels,
-                                        const unsigned outputChannels);
+  static void TranslateChannelsThreaded(BufferType* inputSamples, const unsigned inputFrames, const unsigned inputChannels, const unsigned outputChannels);
   // Sends notification and removes instance from any associated tags.
   void FinishedCleanUpThreaded();
   // Check for whether the total volume is lower than the minimum.

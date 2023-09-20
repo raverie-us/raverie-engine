@@ -18,10 +18,7 @@ Operand::Operand(OperandIndex local) : Type(OperandType::Local), HandleConstantL
 {
 }
 
-Operand::Operand(OperandIndex handleConstantLocal, size_t field, OperandType::Enum type) :
-    Type(type),
-    HandleConstantLocal(handleConstantLocal),
-    FieldOffset(field)
+Operand::Operand(OperandIndex handleConstantLocal, size_t field, OperandType::Enum type) : Type(type), HandleConstantLocal(handleConstantLocal), FieldOffset(field)
 {
 }
 
@@ -44,8 +41,7 @@ DebugInstruction::DebugInstruction() : IsCopy(false)
 {
 }
 
-#define RaverieOperand(array, type, member, primitive, isLocal)                                                          \
-  array.PushBack(DebugOperand(RaverieOffsetOf(type, member), primitive, isLocal, #member));
+#define RaverieOperand(array, type, member, primitive, isLocal) array.PushBack(DebugOperand(RaverieOffsetOf(type, member), primitive, isLocal, #member));
 
 void GenerateDebugInstructionInfo(Array<DebugInstruction>& debugOut)
 {
@@ -137,13 +133,8 @@ void GenerateDebugInstructionInfo(Array<DebugInstruction>& debugOut)
                                         Instruction::LogicalNotBoolean,
                                         Instruction::BitwiseNotInteger};
 
-    DebugPrimitive::Enum types[] = {DebugPrimitive::Integer,
-                                    DebugPrimitive::Real,
-                                    DebugPrimitive::Real2,
-                                    DebugPrimitive::Real3,
-                                    DebugPrimitive::Real4,
-                                    DebugPrimitive::Boolean,
-                                    DebugPrimitive::Integer};
+    DebugPrimitive::Enum types[] = {
+        DebugPrimitive::Integer, DebugPrimitive::Real, DebugPrimitive::Real2, DebugPrimitive::Real3, DebugPrimitive::Real4, DebugPrimitive::Boolean, DebugPrimitive::Integer};
 
     for (size_t i = 0; i < RaverieCArrayCount(instructions); ++i)
     {
@@ -164,8 +155,7 @@ void GenerateDebugInstructionInfo(Array<DebugInstruction>& debugOut)
         Instruction::DecrementReal,
     };
 
-    DebugPrimitive::Enum types[] = {
-        DebugPrimitive::Integer, DebugPrimitive::Real, DebugPrimitive::Integer, DebugPrimitive::Real};
+    DebugPrimitive::Enum types[] = {DebugPrimitive::Integer, DebugPrimitive::Real, DebugPrimitive::Integer, DebugPrimitive::Real};
 
     for (size_t i = 0; i < RaverieCArrayCount(instructions); ++i)
     {
@@ -215,16 +205,12 @@ void GenerateDebugInstructionInfo(Array<DebugInstruction>& debugOut)
                                         Instruction::PowReal4};
 
     DebugPrimitive::Enum types[] = {
-        DebugPrimitive::Integer, DebugPrimitive::Integer, DebugPrimitive::Integer, DebugPrimitive::Integer,
-        DebugPrimitive::Integer, DebugPrimitive::Boolean, DebugPrimitive::Boolean, DebugPrimitive::Integer,
-        DebugPrimitive::Real,    DebugPrimitive::Real2,   DebugPrimitive::Real3,   DebugPrimitive::Real4,
-        DebugPrimitive::Integer, DebugPrimitive::Real,    DebugPrimitive::Real2,   DebugPrimitive::Real3,
-        DebugPrimitive::Real4,   DebugPrimitive::Integer, DebugPrimitive::Real,    DebugPrimitive::Real2,
-        DebugPrimitive::Real3,   DebugPrimitive::Real4,   DebugPrimitive::Integer, DebugPrimitive::Real,
-        DebugPrimitive::Real2,   DebugPrimitive::Real3,   DebugPrimitive::Real4,   DebugPrimitive::Integer,
-        DebugPrimitive::Real,    DebugPrimitive::Real2,   DebugPrimitive::Real3,   DebugPrimitive::Real4,
-        DebugPrimitive::Integer, DebugPrimitive::Real,    DebugPrimitive::Real2,   DebugPrimitive::Real3,
-        DebugPrimitive::Real4,
+        DebugPrimitive::Integer, DebugPrimitive::Integer, DebugPrimitive::Integer, DebugPrimitive::Integer, DebugPrimitive::Integer, DebugPrimitive::Boolean, DebugPrimitive::Boolean,
+        DebugPrimitive::Integer, DebugPrimitive::Real,    DebugPrimitive::Real2,   DebugPrimitive::Real3,   DebugPrimitive::Real4,   DebugPrimitive::Integer, DebugPrimitive::Real,
+        DebugPrimitive::Real2,   DebugPrimitive::Real3,   DebugPrimitive::Real4,   DebugPrimitive::Integer, DebugPrimitive::Real,    DebugPrimitive::Real2,   DebugPrimitive::Real3,
+        DebugPrimitive::Real4,   DebugPrimitive::Integer, DebugPrimitive::Real,    DebugPrimitive::Real2,   DebugPrimitive::Real3,   DebugPrimitive::Real4,   DebugPrimitive::Integer,
+        DebugPrimitive::Real,    DebugPrimitive::Real2,   DebugPrimitive::Real3,   DebugPrimitive::Real4,   DebugPrimitive::Integer, DebugPrimitive::Real,    DebugPrimitive::Real2,
+        DebugPrimitive::Real3,   DebugPrimitive::Real4,
     };
 
     for (size_t i = 0; i < RaverieCArrayCount(instructions); ++i)
@@ -264,12 +250,10 @@ void GenerateDebugInstructionInfo(Array<DebugInstruction>& debugOut)
                                         Instruction::TestEqualityReal4};
 
     DebugPrimitive::Enum types[] = {
-        DebugPrimitive::Integer, DebugPrimitive::Real,    DebugPrimitive::Integer, DebugPrimitive::Real,
-        DebugPrimitive::Integer, DebugPrimitive::Real,    DebugPrimitive::Integer, DebugPrimitive::Real,
-        DebugPrimitive::Integer, DebugPrimitive::Real,    DebugPrimitive::Boolean, DebugPrimitive::Handle,
-        DebugPrimitive::Real2,   DebugPrimitive::Real3,   DebugPrimitive::Real4,   DebugPrimitive::Integer,
-        DebugPrimitive::Real,    DebugPrimitive::Boolean, DebugPrimitive::Handle,  DebugPrimitive::Real2,
-        DebugPrimitive::Real3,   DebugPrimitive::Real4,
+        DebugPrimitive::Integer, DebugPrimitive::Real,  DebugPrimitive::Integer, DebugPrimitive::Real,    DebugPrimitive::Integer, DebugPrimitive::Real,
+        DebugPrimitive::Integer, DebugPrimitive::Real,  DebugPrimitive::Integer, DebugPrimitive::Real,    DebugPrimitive::Boolean, DebugPrimitive::Handle,
+        DebugPrimitive::Real2,   DebugPrimitive::Real3, DebugPrimitive::Real4,   DebugPrimitive::Integer, DebugPrimitive::Real,    DebugPrimitive::Boolean,
+        DebugPrimitive::Handle,  DebugPrimitive::Real2, DebugPrimitive::Real3,   DebugPrimitive::Real4,
     };
 
     for (size_t i = 0; i < RaverieCArrayCount(instructions); ++i)
@@ -362,16 +346,12 @@ void GenerateDebugInstructionInfo(Array<DebugInstruction>& debugOut)
                                         Instruction::AssignmentPowReal3,
                                         Instruction::AssignmentPowReal4};
 
-    DebugPrimitive::Enum types[] = {
-        DebugPrimitive::Integer, DebugPrimitive::Integer, DebugPrimitive::Integer, DebugPrimitive::Integer,
-        DebugPrimitive::Integer, DebugPrimitive::Integer, DebugPrimitive::Real,    DebugPrimitive::Real2,
-        DebugPrimitive::Real3,   DebugPrimitive::Real4,   DebugPrimitive::Integer, DebugPrimitive::Real,
-        DebugPrimitive::Real2,   DebugPrimitive::Real3,   DebugPrimitive::Real4,   DebugPrimitive::Integer,
-        DebugPrimitive::Real,    DebugPrimitive::Real2,   DebugPrimitive::Real3,   DebugPrimitive::Real4,
-        DebugPrimitive::Integer, DebugPrimitive::Real,    DebugPrimitive::Real2,   DebugPrimitive::Real3,
-        DebugPrimitive::Real4,   DebugPrimitive::Integer, DebugPrimitive::Real,    DebugPrimitive::Real2,
-        DebugPrimitive::Real3,   DebugPrimitive::Real4,   DebugPrimitive::Integer, DebugPrimitive::Real,
-        DebugPrimitive::Real2,   DebugPrimitive::Real3,   DebugPrimitive::Real4};
+    DebugPrimitive::Enum types[] = {DebugPrimitive::Integer, DebugPrimitive::Integer, DebugPrimitive::Integer, DebugPrimitive::Integer, DebugPrimitive::Integer, DebugPrimitive::Integer,
+                                    DebugPrimitive::Real,    DebugPrimitive::Real2,   DebugPrimitive::Real3,   DebugPrimitive::Real4,   DebugPrimitive::Integer, DebugPrimitive::Real,
+                                    DebugPrimitive::Real2,   DebugPrimitive::Real3,   DebugPrimitive::Real4,   DebugPrimitive::Integer, DebugPrimitive::Real,    DebugPrimitive::Real2,
+                                    DebugPrimitive::Real3,   DebugPrimitive::Real4,   DebugPrimitive::Integer, DebugPrimitive::Real,    DebugPrimitive::Real2,   DebugPrimitive::Real3,
+                                    DebugPrimitive::Real4,   DebugPrimitive::Integer, DebugPrimitive::Real,    DebugPrimitive::Real2,   DebugPrimitive::Real3,   DebugPrimitive::Real4,
+                                    DebugPrimitive::Integer, DebugPrimitive::Real,    DebugPrimitive::Real2,   DebugPrimitive::Real3,   DebugPrimitive::Real4};
 
     for (size_t i = 0; i < RaverieCArrayCount(instructions); ++i)
     {

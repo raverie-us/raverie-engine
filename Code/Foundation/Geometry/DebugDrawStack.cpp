@@ -6,8 +6,8 @@ namespace Raverie
 
 void DebugDrawStep::Draw()
 {
-#define RaverieDebugPrimitive(DebugType)                                                                                  \
-  for (size_t i = 0; i < m##DebugType##List.Size(); ++i)                                                               \
+#define RaverieDebugPrimitive(DebugType)                                                                                                                                                               \
+  for (size_t i = 0; i < m##DebugType##List.Size(); ++i)                                                                                                                                               \
     gDebugDraw->Add(m##DebugType##List[i]);
 #include "DebugPrimitives.inl"
 #undef RaverieDebugPrimitive

@@ -5,19 +5,19 @@ namespace Raverie
 {
 
 // macro to define a function pointer for the simple collider types.
-#define GenerateCollisionLookups(FunctionName, array)                                                                  \
-  for (uint i = 0; i < (uint)Collider::cSize; ++i)                                                                     \
-    array[i] = nullptr;                                                                                                \
-  array[Collider::cBox] = FunctionName<ShapeType, Obb>;                                                                \
-  array[Collider::cCapsule] = FunctionName<ShapeType, Capsule>;                                                        \
-  array[Collider::cCylinder] = FunctionName<ShapeType, Cylinder>;                                                      \
-  array[Collider::cEllipsoid] = FunctionName<ShapeType, Ellipsoid>;                                                    \
-  array[Collider::cSphere] = FunctionName<ShapeType, Sphere>;                                                          \
+#define GenerateCollisionLookups(FunctionName, array)                                                                                                                                                  \
+  for (uint i = 0; i < (uint)Collider::cSize; ++i)                                                                                                                                                     \
+    array[i] = nullptr;                                                                                                                                                                                \
+  array[Collider::cBox] = FunctionName<ShapeType, Obb>;                                                                                                                                                \
+  array[Collider::cCapsule] = FunctionName<ShapeType, Capsule>;                                                                                                                                        \
+  array[Collider::cCylinder] = FunctionName<ShapeType, Cylinder>;                                                                                                                                      \
+  array[Collider::cEllipsoid] = FunctionName<ShapeType, Ellipsoid>;                                                                                                                                    \
+  array[Collider::cSphere] = FunctionName<ShapeType, Sphere>;                                                                                                                                          \
   array[Collider::cConvexMesh] = FunctionName<ShapeType, ConvexMeshShape>;
 
-#define GenerateComplexCollisionLookups(FunctionName, array)                                                           \
-  array[Collider::cMultiConvexMesh] = FunctionName<ShapeType, MultiConvexMeshCollider>;                                \
-  array[Collider::cMesh] = FunctionName<ShapeType, MeshCollider>;                                                      \
+#define GenerateComplexCollisionLookups(FunctionName, array)                                                                                                                                           \
+  array[Collider::cMultiConvexMesh] = FunctionName<ShapeType, MultiConvexMeshCollider>;                                                                                                                \
+  array[Collider::cMesh] = FunctionName<ShapeType, MeshCollider>;                                                                                                                                      \
   array[Collider::cHeightMap] = FunctionName<ShapeType, HeightMapCollider>;
 
 // generate the collide vs shape lookup array
@@ -69,20 +69,20 @@ void GenerateArrayCastLookup(ArrayType& array)
 
 // macro to set up the function pointers for the simple collider types in a
 // table.
-#define GenerateCollisionTables(FunctionName, table)                                                                   \
-  for (uint i = 0; i < (uint)Collider::cSize; ++i)                                                                     \
-    for (uint j = 0; j < (uint)Collider::cSize; ++j)                                                                   \
-      table[i][j] = nullptr;                                                                                           \
-  FunctionName<Obb>(table[Collider::cBox]);                                                                            \
-  FunctionName<Capsule>(table[Collider::cCapsule]);                                                                    \
-  FunctionName<Cylinder>(table[Collider::cCylinder]);                                                                  \
-  FunctionName<Ellipsoid>(table[Collider::cEllipsoid]);                                                                \
-  FunctionName<Sphere>(table[Collider::cSphere]);                                                                      \
+#define GenerateCollisionTables(FunctionName, table)                                                                                                                                                   \
+  for (uint i = 0; i < (uint)Collider::cSize; ++i)                                                                                                                                                     \
+    for (uint j = 0; j < (uint)Collider::cSize; ++j)                                                                                                                                                   \
+      table[i][j] = nullptr;                                                                                                                                                                           \
+  FunctionName<Obb>(table[Collider::cBox]);                                                                                                                                                            \
+  FunctionName<Capsule>(table[Collider::cCapsule]);                                                                                                                                                    \
+  FunctionName<Cylinder>(table[Collider::cCylinder]);                                                                                                                                                  \
+  FunctionName<Ellipsoid>(table[Collider::cEllipsoid]);                                                                                                                                                \
+  FunctionName<Sphere>(table[Collider::cSphere]);                                                                                                                                                      \
   FunctionName<ConvexMeshShape>(table[Collider::cConvexMesh]);
 
-#define GenerateComplexCollisionTables(FunctionName, table)                                                            \
-  FunctionName<MultiConvexMeshCollider>(table[Collider::cMultiConvexMesh]);                                            \
-  FunctionName<MeshCollider>(table[Collider::cMesh]);                                                                  \
+#define GenerateComplexCollisionTables(FunctionName, table)                                                                                                                                            \
+  FunctionName<MultiConvexMeshCollider>(table[Collider::cMultiConvexMesh]);                                                                                                                            \
+  FunctionName<MeshCollider>(table[Collider::cMesh]);                                                                                                                                                  \
   FunctionName<HeightMapCollider>(table[Collider::cHeightMap]);
 
 // generate the collision table for checking collision between two colliders
@@ -212,8 +212,7 @@ struct CollisionTableLookup
   template <typename ComplexColliderType>
   void OverrideComplexComplexDefaults(uint complexColliderType)
   {
-    OverrideComplexComplexPair<ComplexColliderType, MultiConvexMeshCollider>(complexColliderType,
-                                                                             Collider::cMultiConvexMesh);
+    OverrideComplexComplexPair<ComplexColliderType, MultiConvexMeshCollider>(complexColliderType, Collider::cMultiConvexMesh);
     OverrideComplexComplexPair<ComplexColliderType, MeshCollider>(complexColliderType, Collider::cMesh);
     OverrideComplexComplexPair<ComplexColliderType, HeightMapCollider>(complexColliderType, Collider::cHeightMap);
   }

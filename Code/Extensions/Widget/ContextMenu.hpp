@@ -337,10 +337,10 @@ public:
   String mMenuName;
 };
 
-#define ConnectMenu(menu, optionName, function, readOnly)                                                              \
-  {                                                                                                                    \
-    ContextMenuEntry* entry = menu->AddEntry(String(optionName), readOnly);                                            \
-    ConnectThisTo(entry, Raverie::Events::MenuItemSelected, function);                                                    \
+#define ConnectMenu(menu, optionName, function, readOnly)                                                                                                                                              \
+  {                                                                                                                                                                                                    \
+    ContextMenuEntry* entry = menu->AddEntry(String(optionName), readOnly);                                                                                                                            \
+    ConnectThisTo(entry, Raverie::Events::MenuItemSelected, function);                                                                                                                                 \
   }
 
 template <typename ContextType>

@@ -42,9 +42,7 @@ public:
 
 // A simple macro that we specle everywhere to ensure that the user initializes
 // Raverie
-#  define RaverieErrorIfNotStarted(Name)                                                                                 \
-    ErrorIf(RaverieSetup::Instance == nullptr,                                                                           \
-            "In order to use the Raverie " #Name " you must create the RaverieSetup type and hold on to it")
+#define RaverieErrorIfNotStarted(Name) ErrorIf(RaverieSetup::Instance == nullptr, "In order to use the Raverie " #Name " you must create the RaverieSetup type and hold on to it")
 
 // A convenient form of parsed main arguments (easily comparable and queryable)
 class MainArguments

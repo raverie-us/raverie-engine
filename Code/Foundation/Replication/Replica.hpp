@@ -213,11 +213,7 @@ public:
 
   /// Reacts to all replica channel properties that have been legitimately
   /// changed, determined using comparisons, since this function was last called
-  void ReactToChannelPropertyChanges(TimeMs timestamp,
-                                     ReplicationPhase::Enum replicationPhase,
-                                     TransmissionDirection::Enum direction,
-                                     bool generateNotifications = true,
-                                     bool setLastValues = true);
+  void ReactToChannelPropertyChanges(TimeMs timestamp, ReplicationPhase::Enum replicationPhase, TransmissionDirection::Enum direction, bool generateNotifications = true, bool setLastValues = true);
 
   /// Data
   CreateContext mCreateContext;              /// Create context

@@ -244,7 +244,7 @@ public:
   template <typename Derived, typename Base>
   static Derived DebugOnlyDynamicCast(Base baseClassPointer)
   {
-#  if RaverieDebug
+#if RaverieDebug
     if (baseClassPointer == nullptr)
       return nullptr;
 
@@ -253,9 +253,9 @@ public:
             "The debug only dynamic cast, which means the type was not what we "
             "expected");
     return derived;
-#  else
+#else
     return static_cast<Derived>(baseClassPointer);
-#  endif
+#endif
   }
 
   // Whether we can cast our type to another type
@@ -418,22 +418,12 @@ class MemberRange
 public:
   typedef MemberType* FrontResult;
 
-  MemberRange() :
-      IteratingType(nullptr),
-      DeclaredType(nullptr),
-      Options(Members::InheritedInstanceStatic),
-      MemberKind(nullptr),
-      CurrentMember(nullptr)
+  MemberRange() : IteratingType(nullptr), DeclaredType(nullptr), Options(Members::InheritedInstanceStatic), MemberKind(nullptr), CurrentMember(nullptr)
   {
   }
 
-  MemberRange(
-      BoundType* type, StringParam name, Type* declaredType, Members::Enum options, BoundType* memberKind = nullptr) :
-      IteratingType(type),
-      DerivedType(type),
-      Name(name),
-      DeclaredType(declaredType),
-      CurrentMember(nullptr)
+  MemberRange(BoundType* type, StringParam name, Type* declaredType, Members::Enum options, BoundType* memberKind = nullptr) :
+      IteratingType(type), DerivedType(type), Name(name), DeclaredType(declaredType), CurrentMember(nullptr)
   {
     // If neither instance or static is specified, then assume both
     if ((options & (Members::Static | Members::Instance)) == 0)
@@ -552,10 +542,7 @@ public:
   Composition* GetBaseComposition() override;
 
   // Finds a function by name given the type signature
-  Function* FindFunction(StringParam name,
-                         const Array<Type*>& parameters,
-                         Type* returnType,
-                         FindMemberOptions::Flags options) const;
+  Function* FindFunction(StringParam name, const Array<Type*>& parameters, Type* returnType, FindMemberOptions::Flags options) const;
 
   // Finds a function given a delegate type
   Function* FindFunction(StringParam name, DelegateType* type, FindMemberOptions::Flags options) const;

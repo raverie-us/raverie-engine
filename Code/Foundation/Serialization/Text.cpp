@@ -483,8 +483,7 @@ bool WriteArrayText(StringBuilder& os, type* data, uint numberOfElements)
   return result;
 }
 
-bool TextSaver::ArrayField(
-    cstr typeName, cstr fieldName, byte* data, ArrayType arrayType, uint numberOfElements, uint sizeOftype)
+bool TextSaver::ArrayField(cstr typeName, cstr fieldName, byte* data, ArrayType arrayType, uint numberOfElements, uint sizeOftype)
 {
   bool result = true;
 

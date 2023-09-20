@@ -129,7 +129,8 @@ void OsWindow::FillMouseEvent(IntVec2Param clientPosition, MouseButtons::Enum mo
   mouseEvent.MouseButton = mouseButton;
 }
 
-void RaverieExportNamed(ExportQuit)() {
+void RaverieExportNamed(ExportQuit)()
+{
   OsWindowEvent event;
   OsWindow::sInstance->DispatchEvent(Events::OsClose, &event);
 }
@@ -152,11 +153,13 @@ void RaverieExportNamed(ExportFocusChanged)(bool focused)
 }
 
 Array<String> gDroppedFiles;
-void RaverieExportNamed(ExportFileDropAdd)(const char* filePath) {
+void RaverieExportNamed(ExportFileDropAdd)(const char* filePath)
+{
   gDroppedFiles.PushBack(filePath);
 }
 
-void RaverieExportNamed(ExportFileDropFinish)(int32_t clientX, int32_t clientY) {
+void RaverieExportNamed(ExportFileDropFinish)(int32_t clientX, int32_t clientY)
+{
   IntVec2 clientPosition(clientX, clientY);
   OsMouseDropEvent mouseDrop;
   OsWindow::sInstance->FillMouseEvent(clientPosition, MouseButtons::None, mouseDrop);
@@ -201,7 +204,8 @@ void RaverieExportNamed(ExportMouseButtonChanged)(int32_t clientX, int32_t clien
   OsWindow::sInstance->SendMouseEvent(mouseEvent);
 }
 
-void RaverieExportNamed(ExportMouseMove)(int32_t clientX, int32_t clientY, int32_t dx, int32_t dy) {
+void RaverieExportNamed(ExportMouseMove)(int32_t clientX, int32_t clientY, int32_t dx, int32_t dy)
+{
   IntVec2 clientPosition(clientX, clientY);
   OsMouseEvent mouseEvent;
   OsWindow::sInstance->FillMouseEvent(clientPosition, MouseButtons::None, mouseEvent);
@@ -224,13 +228,17 @@ void RaverieExportNamed(ExportMouseScroll)(int32_t clientX, int32_t clientY, flo
   OsWindow::sInstance->SendMouseEvent(mouseEvent);
 }
 
-void RaverieExportNamed(ExportGamepadConnectionChanged)(uint32_t gamepadIndex, const char* id, bool connected) {
+void RaverieExportNamed(ExportGamepadConnectionChanged)(uint32_t gamepadIndex, const char* id, bool connected)
+{
   auto& gamepad = Shell::sInstance->GetOrCreateGamepad(gamepadIndex);
   gamepad.mConnected = connected;
 
-  if (connected) {
+  if (connected)
+  {
     gamepad.mId = id;
-  } else {
+  }
+  else
+  {
     gamepad.mId.Clear();
     gamepad.mButtons.Clear();
     gamepad.mAxes.Clear();
@@ -240,7 +248,8 @@ void RaverieExportNamed(ExportGamepadConnectionChanged)(uint32_t gamepadIndex, c
   OsWindow::sInstance->DispatchEvent(Events::OsDeviceChanged, &event);
 }
 
-void RaverieExportNamed(ExportGamepadButtonChanged)(uint32_t gamepadIndex, uint32_t buttonIndex, bool pressed, bool touched, float value) {
+void RaverieExportNamed(ExportGamepadButtonChanged)(uint32_t gamepadIndex, uint32_t buttonIndex, bool pressed, bool touched, float value)
+{
   auto& gamepad = Shell::sInstance->GetOrCreateGamepad(gamepadIndex);
   auto& button = gamepad.GetOrCreateButton(buttonIndex);
 
@@ -249,7 +258,8 @@ void RaverieExportNamed(ExportGamepadButtonChanged)(uint32_t gamepadIndex, uint3
   button.mValue = value;
 }
 
-void RaverieExportNamed(ExportGamepadAxisChanged)(uint32_t gamepadIndex, uint32_t axisIndex, float value) {
+void RaverieExportNamed(ExportGamepadAxisChanged)(uint32_t gamepadIndex, uint32_t axisIndex, float value)
+{
   auto& gamepad = Shell::sInstance->GetOrCreateGamepad(gamepadIndex);
   gamepad.GetOrCreateAxis(axisIndex).mValue = value;
 }
@@ -318,8 +328,7 @@ RaverieDefineType(OsWindowBorderHitTest, builder, type)
 {
 }
 
-OsWindowBorderHitTest::OsWindowBorderHitTest() :
-    ClientPosition(IntVec2::cZero)
+OsWindowBorderHitTest::OsWindowBorderHitTest() : ClientPosition(IntVec2::cZero)
 {
 }
 

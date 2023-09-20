@@ -10,11 +10,7 @@ template <typename VertexType>
 class PrimitiveBatcher
 {
 public:
-  void Begin(DrawContext* dc,
-             BatchBuffer* buffer,
-             const VertexLayouts::Element* layout,
-             uint vertexSize,
-             PrimitiveType::Enum type)
+  void Begin(DrawContext* dc, BatchBuffer* buffer, const VertexLayouts::Element* layout, uint vertexSize, PrimitiveType::Enum type)
   {
     mPrimtiveType = type;
     mBuffer = buffer;

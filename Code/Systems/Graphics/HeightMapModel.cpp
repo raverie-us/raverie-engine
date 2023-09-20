@@ -166,9 +166,7 @@ String HeightMapModel::GetDefaultMaterialName()
   return "DefaultHeightMapMaterial";
 }
 
-void HeightMapModel::AddGraphicalPatchEntry(Array<GraphicalEntry>& entries,
-                                            GraphicalHeightPatch& graphicalPatch,
-                                            PatchIndex index)
+void HeightMapModel::AddGraphicalPatchEntry(Array<GraphicalEntry>& entries, GraphicalHeightPatch& graphicalPatch, PatchIndex index)
 {
   GraphicalEntryData& entryData = graphicalPatch.mGraphicalEntryData;
   entryData.mGraphical = this;

@@ -16,13 +16,7 @@ bool ErrorProcessHandler(ErrorSignaler::ErrorData& errorData)
 {
   const int cDebugBufferLength = 1024;
   char buffer[cDebugBufferLength];
-  RaverieSPrintf(buffer,
-              cDebugBufferLength,
-              "%s(%d) : %s %s\n",
-              errorData.File,
-              errorData.Line,
-              errorData.Message,
-              errorData.Expression);
+  RaverieSPrintf(buffer, cDebugBufferLength, "%s(%d) : %s %s\n", errorData.File, errorData.Line, errorData.Message, errorData.Expression);
   Console::Print(Filter::ErrorFilter, buffer);
   return true;
 }

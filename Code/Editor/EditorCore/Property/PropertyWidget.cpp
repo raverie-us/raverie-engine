@@ -32,8 +32,7 @@ PropertyWidget::PropertyWidget(PropertyWidgetInitializer& init, StyleMode::Enum 
   {
     mCustomIcons = new Composite(this);
     mCustomIcons->SetMinSize(Pixels(0, 0));
-    mCustomIcons->SetLayout(
-        CreateStackLayout(LayoutDirection::LeftToRight, Pixels(5, 0), Thickness(Pixels(-3, 4, 2, 0))));
+    mCustomIcons->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Pixels(5, 0), Thickness(Pixels(-3, 4, 2, 0))));
 
     for (uint i = 0; i < customIconCallbacks.Size(); ++i)
     {

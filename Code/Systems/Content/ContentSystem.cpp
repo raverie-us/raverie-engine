@@ -387,8 +387,7 @@ ContentItem* ContentSystem::AddContentItemToLibrary(Status& status, AddContentIt
             // If there is a meta file it is most likely corrupted or failed to
             // load somehow
             String metaFile = FilePath::GetFileName(metaFilePath);
-            status.SetFailed(
-                String::Format("Meta file %s is corrupt or failed to load.", info.FileName.c_str(), metaFile.c_str()));
+            status.SetFailed(String::Format("Meta file %s is corrupt or failed to load.", info.FileName.c_str(), metaFile.c_str()));
           }
           else
           {
@@ -426,8 +425,7 @@ ContentItem* ContentSystem::AddContentItemToLibrary(Status& status, AddContentIt
     }
     else
     {
-      status.SetFailed(
-          String::Format("The content file named '%s' is already in the content library", info.FileName.c_str()));
+      status.SetFailed(String::Format("The content file named '%s' is already in the content library", info.FileName.c_str()));
       return nullptr;
     }
   }
@@ -522,8 +520,7 @@ ContentItem* ContentSystem::AddContentItemToLibrary(Status& status, AddContentIt
     // Adding new content item
     if (!contentFileExists)
     {
-      status.SetFailed(
-          String::Format("File %s is missing from content library %s ", fullPath.c_str(), library->Name.c_str()));
+      status.SetFailed(String::Format("File %s is missing from content library %s ", fullPath.c_str(), library->Name.c_str()));
       return nullptr;
     }
 
@@ -677,8 +674,7 @@ ContentItem* ContentSystem::CreateFromName(StringRange name)
   return nullptr;
 }
 
-HandleOf<ResourcePackage>
-ContentSystem::BuildContentItems(Status& status, ContentItemArray& toBuild, ContentLibrary* library, bool useJobs)
+HandleOf<ResourcePackage> ContentSystem::BuildContentItems(Status& status, ContentItemArray& toBuild, ContentLibrary* library, bool useJobs)
 {
   ProfileScopeFunctionArgs(library->Name);
   Z::gEngine->LoadingStart();
@@ -698,8 +694,7 @@ ContentSystem::BuildContentItems(Status& status, ContentItemArray& toBuild, Cont
     // Process from this contentItem down.
     ContentItem* contentItem = toBuild[i];
     static const String cProcessing("Processing");
-    Z::gEngine->LoadingUpdate(
-        cProcessing, library->Name, contentItem->Filename, ProgressType::Normal, (float)(i + 1) / toBuild.Size());
+    Z::gEngine->LoadingUpdate(cProcessing, library->Name, contentItem->Filename, ProgressType::Normal, (float)(i + 1) / toBuild.Size());
 
     contentItem->BuildContentItem(useJobs);
 

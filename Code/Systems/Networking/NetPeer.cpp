@@ -593,11 +593,7 @@ void NetPeer::ClearHostLists()
   }
 }
 
-bool NetPeer::RefreshHost(Network::Enum network,
-                          const IpAddress& ipAddress,
-                          bool getExtraHostInfo,
-                          bool allowDiscovery,
-                          bool removeStaleHosts)
+bool NetPeer::RefreshHost(Network::Enum network, const IpAddress& ipAddress, bool getExtraHostInfo, bool allowDiscovery, bool removeStaleHosts)
 {
   // Not open?
   if (!IsOpen())
@@ -1705,9 +1701,7 @@ void NetPeer::AddUserInternal(Cog* cog)
     // Assign net user ID
     if (!AssignNetUserId(netUser)) // Unable?
     {
-      DoNotifyWarning(
-          "Error Adding NetUser",
-          String::Format("Unable to add NetUser '%s' - Error assigning a net user ID", cog->GetDescription().c_str()));
+      DoNotifyWarning("Error Adding NetUser", String::Format("Unable to add NetUser '%s' - Error assigning a net user ID", cog->GetDescription().c_str()));
 
       // Remove this net object from it's family tree (if it hasn't been removed
       // already)
@@ -1796,8 +1790,7 @@ void NetPeer::RemoveUserInternal(Cog* cog)
   else
   {
     // Remove user from their added users set
-    NetUserSet::pointer_bool_pair result =
-        mTheirAddedUsers.FindOrInsert(netUser->mNetPeerId).EraseValue(cog->mObjectId);
+    NetUserSet::pointer_bool_pair result = mTheirAddedUsers.FindOrInsert(netUser->mNetPeerId).EraseValue(cog->mObjectId);
     // Assert(result.second); // (Erase should have succeeded)
   }
 
@@ -1965,9 +1958,7 @@ bool NetPeer::SendUserAddRequest(EventBundle* ourRequestBundle)
     return true;
   }
 }
-void NetPeer::HandleSentUserAddRequest(NetPeerId theirNetPeerId,
-                                       const IpAddress& theirIpAddress,
-                                       EventBundle* ourRequestBundle)
+void NetPeer::HandleSentUserAddRequest(NetPeerId theirNetPeerId, const IpAddress& theirIpAddress, EventBundle* ourRequestBundle)
 {
   // Is client?
   if (IsClient())
@@ -2010,8 +2001,7 @@ bool NetPeer::ReceiveUserAddRequest(NetPeerId theirNetPeerId, const IpAddress& t
 
   // Handle received network user add request
   EventBundle ourResponseBundle(static_cast<GameSession*>(GetOwner()));
-  NetUser* theirNetUser = HandleReceivedUserAddRequest(
-      theirNetPeerId, theirIpAddress, &theirRequestBundle, &ourResponseBundle, mNetUserIdStore.GetNextId());
+  NetUser* theirNetUser = HandleReceivedUserAddRequest(theirNetPeerId, theirIpAddress, &theirRequestBundle, &ourResponseBundle, mNetUserIdStore.GetNextId());
 
   // Send user add response
   if (!SendUserAddResponse(theirNetPeerId, theirNetUser, &theirRequestBundle,
@@ -2021,11 +2011,8 @@ bool NetPeer::ReceiveUserAddRequest(NetPeerId theirNetPeerId, const IpAddress& t
   // Success
   return true;
 }
-NetUser* NetPeer::HandleReceivedUserAddRequest(NetPeerId theirNetPeerId,
-                                               const IpAddress& theirIpAddress,
-                                               EventBundle* theirRequestBundle,
-                                               EventBundle* returnOurResponseBundle,
-                                               NetUserId theirNetUserId)
+NetUser*
+NetPeer::HandleReceivedUserAddRequest(NetPeerId theirNetPeerId, const IpAddress& theirIpAddress, EventBundle* theirRequestBundle, EventBundle* returnOurResponseBundle, NetUserId theirNetUserId)
 {
   Assert(IsOpen());
   Assert(IsServerOrOffline());
@@ -2126,10 +2113,7 @@ NetUser* NetPeer::HandleReceivedUserAddRequest(NetPeerId theirNetPeerId,
   return nullptr;
 }
 
-bool NetPeer::SendUserAddResponse(NetPeerId theirNetPeerId,
-                                  NetUser* theirNetUser,
-                                  EventBundle* theirRequestBundle,
-                                  EventBundle* ourResponseBundle)
+bool NetPeer::SendUserAddResponse(NetPeerId theirNetPeerId, NetUser* theirNetUser, EventBundle* theirRequestBundle, EventBundle* ourResponseBundle)
 {
   Assert(IsOpen());
   Assert(IsServerOrOffline());
@@ -2154,8 +2138,7 @@ bool NetPeer::SendUserAddResponse(NetPeerId theirNetPeerId,
     Assert(theirNetPeerId == 0);
 
     // Handle "sent" network user add response
-    HandleSentUserAddResponse(
-        0, IpAddress(), theirRequestBundle, netUserAddResponseData.mAddResponse, ourResponseBundle, theirNetUser);
+    HandleSentUserAddResponse(0, IpAddress(), theirRequestBundle, netUserAddResponseData.mAddResponse, ourResponseBundle, theirNetUser);
 
     // Receive network user add response directly
     ReceiveUserAddResponse(0, IpAddress(), netUserAddResponseMessage, theirRequestBundle);
@@ -2186,23 +2169,14 @@ bool NetPeer::SendUserAddResponse(NetPeerId theirNetPeerId,
     }
 
     // Handle sent network user add response
-    HandleSentUserAddResponse(theirNetPeerId,
-                              link->GetTheirIpAddress(),
-                              theirRequestBundle,
-                              netUserAddResponseData.mAddResponse,
-                              ourResponseBundle,
-                              theirNetUser);
+    HandleSentUserAddResponse(theirNetPeerId, link->GetTheirIpAddress(), theirRequestBundle, netUserAddResponseData.mAddResponse, ourResponseBundle, theirNetUser);
 
     // Success
     return true;
   }
 }
-void NetPeer::HandleSentUserAddResponse(NetPeerId theirNetPeerId,
-                                        const IpAddress& theirIpAddress,
-                                        EventBundle* theirRequestBundle,
-                                        NetUserAddResponse::Enum ourAddResponse,
-                                        EventBundle* ourResponseBundle,
-                                        NetUser* theirNetUser)
+void NetPeer::HandleSentUserAddResponse(
+    NetPeerId theirNetPeerId, const IpAddress& theirIpAddress, EventBundle* theirRequestBundle, NetUserAddResponse::Enum ourAddResponse, EventBundle* ourResponseBundle, NetUser* theirNetUser)
 {
   Assert(IsOpen());
   Assert(IsServerOrOffline());
@@ -2231,10 +2205,7 @@ void NetPeer::HandleSentUserAddResponse(NetPeerId theirNetPeerId,
   owner->DispatchEvent(Events::NetPeerSentUserAddResponse, &event);
 }
 
-bool NetPeer::ReceiveUserAddResponse(NetPeerId theirNetPeerId,
-                                     const IpAddress& theirIpAddress,
-                                     const Message& message,
-                                     EventBundle* ourRequestBundle)
+bool NetPeer::ReceiveUserAddResponse(NetPeerId theirNetPeerId, const IpAddress& theirIpAddress, const Message& message, EventBundle* ourRequestBundle)
 {
   Assert(IsOpen());
   Assert(theirNetPeerId == 0); // (The sender should always be the server or offline peer)
@@ -2251,26 +2222,16 @@ bool NetPeer::ReceiveUserAddResponse(NetPeerId theirNetPeerId,
   theirResponseBundle = RaverieMove(netUserAddResponseData.mEventBundleData);
 
   // (If accepted, we should have been provided a valid user ID)
-  Assert(netUserAddResponseData.mAddResponse == NetUserAddResponse::Accept ? netUserAddResponseData.mNetUserId != 0
-                                                                           : netUserAddResponseData.mNetUserId == 0);
+  Assert(netUserAddResponseData.mAddResponse == NetUserAddResponse::Accept ? netUserAddResponseData.mNetUserId != 0 : netUserAddResponseData.mNetUserId == 0);
 
   // Handle received user add response
-  HandleReceivedUserAddResponse(theirNetPeerId,
-                                theirIpAddress,
-                                ourRequestBundle,
-                                netUserAddResponseData.mAddResponse,
-                                &theirResponseBundle,
-                                netUserAddResponseData.mNetUserId);
+  HandleReceivedUserAddResponse(theirNetPeerId, theirIpAddress, ourRequestBundle, netUserAddResponseData.mAddResponse, &theirResponseBundle, netUserAddResponseData.mNetUserId);
 
   // Success
   return true;
 }
-void NetPeer::HandleReceivedUserAddResponse(NetPeerId theirNetPeerId,
-                                            const IpAddress& theirIpAddress,
-                                            EventBundle* ourRequestBundle,
-                                            NetUserAddResponse::Enum theirAddResponse,
-                                            EventBundle* theirResponseBundle,
-                                            NetUserId ourNetUserId)
+void NetPeer::HandleReceivedUserAddResponse(
+    NetPeerId theirNetPeerId, const IpAddress& theirIpAddress, EventBundle* ourRequestBundle, NetUserAddResponse::Enum theirAddResponse, EventBundle* theirResponseBundle, NetUserId ourNetUserId)
 {
   Assert(IsOpen());
 
@@ -2350,9 +2311,7 @@ bool NetPeer::SendUserRemoveRequest(NetUserId netUserId, EventBundle* ourRequest
     return true;
   }
 }
-bool NetPeer::ReceiveUserRemoveRequest(NetPeerId theirNetPeerId,
-                                       const IpAddress& theirIpAddress,
-                                       const Message& message)
+bool NetPeer::ReceiveUserRemoveRequest(NetPeerId theirNetPeerId, const IpAddress& theirIpAddress, const Message& message)
 {
   Assert(IsOpen());
   Assert(IsServerOrOffline());
@@ -2586,8 +2545,7 @@ bool NetPeer::ReceiveLevelLoadStarted(NetPeerId theirNetPeerId, const IpAddress&
   if (netLevelLoadStartedData.mLevelResourceId != 0)
   {
     // Get level resource
-    Level* level =
-        static_cast<Level*>(Z::gResources->GetResource((ResourceId)netLevelLoadStartedData.mLevelResourceId));
+    Level* level = static_cast<Level*>(Z::gResources->GetResource((ResourceId)netLevelLoadStartedData.mLevelResourceId));
     if (!level) // Unable?
     {
       DoNotifyError("Error receiving NetSpace level state", "Unable to find specified Level resource");
@@ -2639,9 +2597,7 @@ bool NetPeer::SendLevelLoadFinished(NetPeerId theirNetPeerId, Space* space)
   // Success
   return true;
 }
-bool NetPeer::ReceiveLevelLoadFinished(NetPeerId theirNetPeerId,
-                                       const IpAddress& theirIpAddress,
-                                       const Message& message)
+bool NetPeer::ReceiveLevelLoadFinished(NetPeerId theirNetPeerId, const IpAddress& theirIpAddress, const Message& message)
 {
   Assert(IsClient());
 
@@ -3003,9 +2959,7 @@ bool NetPeer::EmplaceNetObjectByGameSetup(Cog* cog)
   // Emplace net object with the "GameSetup" string as the emplace context
   bool result = Replicator::EmplaceReplica(cog->has(NetObject), EmplaceContext(cGameSetup));
   if (!result) // Unable?
-    DoNotifyWarning("Unable To Emplace NetObject By GameSetup",
-                    String::Format("There was an error emplacing the NetObject '%s' against GameSetup",
-                                   cog->GetDescription().c_str()));
+    DoNotifyWarning("Unable To Emplace NetObject By GameSetup", String::Format("There was an error emplacing the NetObject '%s' against GameSetup", cog->GetDescription().c_str()));
   return result;
 }
 bool NetPeer::EmplaceNetObjectBySpaceAndLevel(Cog* cog, Space* space, StringParam levelResourceIdName)
@@ -3016,8 +2970,7 @@ bool NetPeer::EmplaceNetObjectBySpaceAndLevel(Cog* cog, Space* space, StringPara
   Assert(space->has(NetObject)->IsOnline());
 
   // Create space net object ID and level resource ID name string
-  String spaceAndLevelName =
-      String::Format("NetSpace_%u_Level_%s", space->has(NetObject)->GetNetObjectId(), levelResourceIdName.c_str());
+  String spaceAndLevelName = String::Format("NetSpace_%u_Level_%s", space->has(NetObject)->GetNetObjectId(), levelResourceIdName.c_str());
 
   // Emplace net object with space net object ID and level resource ID name
   // string as the emplace context
@@ -3095,8 +3048,7 @@ bool NetPeer::SpawnNetObject(Cog* cog, const Route& route)
   // Spawn net object
   bool result = Replicator::SpawnReplica(cog->has(NetObject), route);
   if (!result) // Unable?
-    DoNotifyWarning("Unable To Spawn NetObject",
-                    String::Format("There was an error spawning the NetObject '%s'", cog->GetDescription().c_str()));
+    DoNotifyWarning("Unable To Spawn NetObject", String::Format("There was an error spawning the NetObject '%s'", cog->GetDescription().c_str()));
   return result;
 }
 bool NetPeer::CloneNetObject(Cog* cog, const Route& route)
@@ -3106,8 +3058,7 @@ bool NetPeer::CloneNetObject(Cog* cog, const Route& route)
   // Clone net object
   bool result = Replicator::CloneReplica(cog->has(NetObject), route);
   if (!result) // Unable?
-    DoNotifyWarning("Unable To Clone NetObject",
-                    String::Format("There was an error cloning the NetObject '%s'", cog->GetDescription().c_str()));
+    DoNotifyWarning("Unable To Clone NetObject", String::Format("There was an error cloning the NetObject '%s'", cog->GetDescription().c_str()));
   return result;
 }
 bool NetPeer::ForgetNetObject(Cog* cog, const Route& route)
@@ -3117,8 +3068,7 @@ bool NetPeer::ForgetNetObject(Cog* cog, const Route& route)
   // Forget net object
   bool result = Replicator::ForgetReplica(cog->has(NetObject), route);
   if (!result) // Unable?
-    DoNotifyWarning("Unable To Forget NetObject",
-                    String::Format("There was an error forgetting the NetObject '%s'", cog->GetDescription().c_str()));
+    DoNotifyWarning("Unable To Forget NetObject", String::Format("There was an error forgetting the NetObject '%s'", cog->GetDescription().c_str()));
   return result;
 }
 bool NetPeer::DestroyNetObject(Cog* cog, const Route& route)
@@ -3128,8 +3078,7 @@ bool NetPeer::DestroyNetObject(Cog* cog, const Route& route)
   // Destroy net object
   bool result = Replicator::DestroyReplica(cog->has(NetObject), route);
   if (!result) // Unable?
-    DoNotifyWarning("Unable To Destroy NetObject",
-                    String::Format("There was an error destroying the NetObject '%s'", cog->GetDescription().c_str()));
+    DoNotifyWarning("Unable To Destroy NetObject", String::Format("There was an error destroying the NetObject '%s'", cog->GetDescription().c_str()));
   return result;
 }
 
@@ -3408,8 +3357,7 @@ bool NetPeer::AddNetObjectToFamilyTree(NetObject* ancestor, NetObject* netObject
     }
 
     // Add new family tree with ancestor to family tree set
-    FamilyTreeSet::pointer_bool_pair result =
-        mFamilyTrees.Insert(FamilyTreePtr(new FamilyTree(familyTreeId, ancestor)));
+    FamilyTreeSet::pointer_bool_pair result = mFamilyTrees.Insert(FamilyTreePtr(new FamilyTree(familyTreeId, ancestor)));
     if (!result.second) // Unable?
     {
       Assert(false);
@@ -3506,10 +3454,7 @@ bool NetPeer::SerializeNetEvent(BitStreamExtended& bitStream, Event* netEvent, C
   // Write event
   return bitStream.WriteEvent(netEvent);
 }
-bool NetPeer::DeserializeNetEvent(const BitStreamExtended& bitStream,
-                                  Event*& netEvent,
-                                  Cog*& destination,
-                                  NetPeerId netPeerId)
+bool NetPeer::DeserializeNetEvent(const BitStreamExtended& bitStream, Event*& netEvent, Cog*& destination, NetPeerId netPeerId)
 {
   // Read destination net object ID
   // (Using ReplicaId to take advantage of ReadQuantized)
@@ -3840,8 +3785,7 @@ bool NetPeer::DispatchBroadcastInternal(StringParam netEventId, Event* netEvent,
 // Channel Type Management
 //
 
-NetChannelType* NetPeer::GetOrAddReplicaChannelType(const String& netChannelTypeName,
-                                                    NetChannelConfig* netChannelConfig)
+NetChannelType* NetPeer::GetOrAddReplicaChannelType(const String& netChannelTypeName, NetChannelConfig* netChannelConfig)
 {
   // Get net channel type (if it already exists)
   NetChannelType* netChannelType = static_cast<NetChannelType*>(Replicator::GetReplicaChannelType(netChannelTypeName));
@@ -3859,8 +3803,7 @@ NetChannelType* NetPeer::GetOrAddReplicaChannelType(const String& netChannelType
     }
 
     // Add net channel type
-    netChannelType =
-        static_cast<NetChannelType*>(Replicator::AddReplicaChannelType(ReplicaChannelTypePtr(netChannelType)));
+    netChannelType = static_cast<NetChannelType*>(Replicator::AddReplicaChannelType(ReplicaChannelTypePtr(netChannelType)));
     Assert(netChannelType->IsValid());
   }
 
@@ -3872,25 +3815,19 @@ NetChannelType* NetPeer::GetOrAddReplicaChannelType(const String& netChannelType
 // Property Type Management
 //
 
-NetPropertyType* NetPeer::GetOrAddReplicaPropertyType(const String& netPropertyTypeName,
-                                                      NativeType* nativeType,
-                                                      SerializeValueFn serializeValueFn,
-                                                      GetValueFn getValueFn,
-                                                      SetValueFn setValueFn,
-                                                      NetPropertyConfig* netPropertyConfig)
+NetPropertyType* NetPeer::GetOrAddReplicaPropertyType(
+    const String& netPropertyTypeName, NativeType* nativeType, SerializeValueFn serializeValueFn, GetValueFn getValueFn, SetValueFn setValueFn, NetPropertyConfig* netPropertyConfig)
 {
   // (TODO: Replace NativeType's unsafe DebugTypeName with a safe display name)
   // Get targeted net property name ("NetPropertyTypeName_NativeTypeName")
   String targetedNetPropertyTypeName = String::Format("%s_%s", netPropertyTypeName.c_str(), nativeType->mDebugTypeName);
 
   // Get net property type (if it already exists)
-  NetPropertyType* netPropertyType =
-      static_cast<NetPropertyType*>(Replicator::GetReplicaPropertyType(targetedNetPropertyTypeName));
+  NetPropertyType* netPropertyType = static_cast<NetPropertyType*>(Replicator::GetReplicaPropertyType(targetedNetPropertyTypeName));
   if (!netPropertyType) // Doesn't exist?
   {
     // Create net property type
-    netPropertyType =
-        new NetPropertyType(targetedNetPropertyTypeName, nativeType, serializeValueFn, getValueFn, setValueFn);
+    netPropertyType = new NetPropertyType(targetedNetPropertyTypeName, nativeType, serializeValueFn, getValueFn, setValueFn);
     Assert(!netPropertyType->IsValid());
 
     // Configuration provided?
@@ -3901,8 +3838,7 @@ NetPropertyType* NetPeer::GetOrAddReplicaPropertyType(const String& netPropertyT
     }
 
     // Add net property type
-    netPropertyType =
-        static_cast<NetPropertyType*>(Replicator::AddReplicaPropertyType(ReplicaPropertyTypePtr(netPropertyType)));
+    netPropertyType = static_cast<NetPropertyType*>(Replicator::AddReplicaPropertyType(ReplicaPropertyTypePtr(netPropertyType)));
     Assert(netPropertyType->IsValid());
   }
 
@@ -4006,8 +3942,7 @@ bool NetPeer::SerializeReplicas(const ReplicaArray& replicas, ReplicaStream& rep
   {
     // Is a reverse replica channels replica stream
     // And this replica doesn't use reverse replica channels?
-    if (replicaStream.GetReplicaStreamMode() == ReplicaStreamMode::ReverseReplicaChannels &&
-        !replica->UsesReverseReplicaChannels())
+    if (replicaStream.GetReplicaStreamMode() == ReplicaStreamMode::ReverseReplicaChannels && !replica->UsesReverseReplicaChannels())
       continue; // Skip
 
     // Write identification info
@@ -4096,11 +4031,7 @@ bool NetPeer::DeserializeReplicas(const ReplicaStream& replicaStream, ReplicaArr
       bool isEmplaced = false;
       EmplaceContext emplaceContext;
       EmplaceId emplaceId = 0;
-      if (!replicaStream.ReadIdentificationInfo(isAbsent,
-                                                replicaId,
-                                                isCloned,
-                                                isEmplaced,
-                                                emplaceContext,
+      if (!replicaStream.ReadIdentificationInfo(isAbsent, replicaId, isCloned, isEmplaced, emplaceContext,
                                                 emplaceId)) // Unable?
       {
         Assert(false);
@@ -4192,10 +4123,7 @@ bool NetPeer::DeserializeReplicas(const ReplicaStream& replicaStream, ReplicaArr
   return true;
 }
 
-bool NetPeer::CreateReplicas(const CreateContext& createContext,
-                             const ReplicaType& replicaType,
-                             const ReplicaStream& replicaStream,
-                             ReplicaArray& replicas)
+bool NetPeer::CreateReplicas(const CreateContext& createContext, const ReplicaType& replicaType, const ReplicaStream& replicaStream, ReplicaArray& replicas)
 {
   // Get owner as game session
   GameSession* owner = static_cast<GameSession*>(GetOwner());
@@ -4468,12 +4396,8 @@ void NetPeer::OnInvalidReplica(Replica* replica, bool isForget)
   }
 }
 
-void NetPeer::OnReplicaChannelPropertyChange(TimeMs timestamp,
-                                             ReplicationPhase::Enum replicationPhase,
-                                             Replica* replica,
-                                             ReplicaChannel* replicaChannel,
-                                             ReplicaProperty* replicaProperty,
-                                             TransmissionDirection::Enum direction)
+void NetPeer::OnReplicaChannelPropertyChange(
+    TimeMs timestamp, ReplicationPhase::Enum replicationPhase, Replica* replica, ReplicaChannel* replicaChannel, ReplicaProperty* replicaProperty, TransmissionDirection::Enum direction)
 {
   // (This should only be called on an actual property change)
   Assert(replicaProperty->GetValue() != replicaProperty->GetLastValue());
@@ -4669,9 +4593,7 @@ void NetPeer::ClientOnConnectConfirmation(ReplicatorLink* link, BitStream& conne
   // Handle net link connected
   HandleNetLinkConnected(link, connectConfirmationData, TransmissionDirection::Outgoing);
 }
-void NetPeer::ClientOnDisconnectNotice(ReplicatorLink* link,
-                                       DisconnectNoticeData& disconnectNoticeData,
-                                       TransmissionDirection::Enum direction)
+void NetPeer::ClientOnDisconnectNotice(ReplicatorLink* link, DisconnectNoticeData& disconnectNoticeData, TransmissionDirection::Enum direction)
 {
   // Handle net link disconnected
   HandleNetLinkDisconnected(link, disconnectNoticeData, direction);
@@ -4702,8 +4624,7 @@ Pair<bool, BitStream> NetPeer::ServerOnConnectRequest(ReplicatorLink* link, Conn
   owner->DispatchEvent(Events::NetPeerReceivedConnectRequest, &event);
 
   // Return accept decision and extra data
-  Pair<bool, BitStream> result(event.mReturnOurConnectResponse,
-                               RaverieMove(event.mReturnOurResponseBundle.GetBitStream()));
+  Pair<bool, BitStream> result(event.mReturnOurConnectResponse, RaverieMove(event.mReturnOurResponseBundle.GetBitStream()));
   return RaverieMove(result);
 }
 void NetPeer::ServerOnConnectResponse(ReplicatorLink* link, ConnectResponseData& connectResponseData)
@@ -4753,9 +4674,7 @@ void NetPeer::ServerOnConnectConfirmation(ReplicatorLink* link, BitStream& conne
   // Handle net link connected
   HandleNetLinkConnected(link, connectConfirmationData, TransmissionDirection::Incoming);
 }
-void NetPeer::ServerOnDisconnectNotice(ReplicatorLink* link,
-                                       DisconnectNoticeData& disconnectNoticeData,
-                                       TransmissionDirection::Enum direction)
+void NetPeer::ServerOnDisconnectNotice(ReplicatorLink* link, DisconnectNoticeData& disconnectNoticeData, TransmissionDirection::Enum direction)
 {
   // Handle net link disconnected
   HandleNetLinkDisconnected(link, disconnectNoticeData, direction);
@@ -4765,9 +4684,7 @@ void NetPeer::ServerOnDisconnectNotice(ReplicatorLink* link,
 // Internal
 //
 
-void NetPeer::HandleNetLinkConnected(ReplicatorLink* link,
-                                     BitStream& connectConfirmationData,
-                                     TransmissionDirection::Enum direction)
+void NetPeer::HandleNetLinkConnected(ReplicatorLink* link, BitStream& connectConfirmationData, TransmissionDirection::Enum direction)
 {
   // Get owner as game session
   GameSession* owner = static_cast<GameSession*>(GetOwner());
@@ -4781,9 +4698,7 @@ void NetPeer::HandleNetLinkConnected(ReplicatorLink* link,
   // Dispatch event
   owner->DispatchEvent(Events::NetLinkConnected, &event);
 }
-void NetPeer::HandleNetLinkDisconnected(ReplicatorLink* link,
-                                        DisconnectNoticeData& disconnectNoticeData,
-                                        TransmissionDirection::Enum direction)
+void NetPeer::HandleNetLinkDisconnected(ReplicatorLink* link, DisconnectNoticeData& disconnectNoticeData, TransmissionDirection::Enum direction)
 {
   // Get owner as game session
   GameSession* owner = static_cast<GameSession*>(GetOwner());
@@ -4944,9 +4859,7 @@ bool NetPeer::ProcessReceivedCustomMessage(PeerLink* link, Message& message)
       // Deserialize net event
       Event* netEvent = nullptr;
       Cog* destination = nullptr;
-      if (!netPeer->DeserializeNetEvent(static_cast<BitStreamExtended&>(message.GetData()),
-                                        netEvent,
-                                        destination,
+      if (!netPeer->DeserializeNetEvent(static_cast<BitStreamExtended&>(message.GetData()), netEvent, destination,
                                         theirNetPeerId)) // Unable?
       {
         // Continue
@@ -4991,10 +4904,7 @@ bool NetPeer::ProcessReceivedCustomMessage(PeerLink* link, Message& message)
         if (!netPeer->mPendingUserRequests.Empty())
         {
           // Receive network user add response
-          netPeer->ReceiveUserAddResponse(theirNetPeerId,
-                                          link->GetTheirIpAddress(),
-                                          message,
-                                          &netPeer->mPendingUserRequests.Front().mOurRequestBundle);
+          netPeer->ReceiveUserAddResponse(theirNetPeerId, link->GetTheirIpAddress(), message, &netPeer->mPendingUserRequests.Front().mOurRequestBundle);
 
           // Remove pending request (it's been handled)
           netPeer->mPendingUserRequests.PopFront();
@@ -5227,11 +5137,7 @@ bool NetPeer::HandlePing(IpAddress const& theirIpAddress, NetHostPingData& netHo
       refreshData.mBasicHostInfo = hostRecord->mBasicHostInfo.GetBitStream();
       masterServerPongResponseBundle.Write(refreshData);
 
-      mPingManager.SendHostPong(theirIpAddress,
-                                netHostPingData.mPingId,
-                                netHostPingData.mSendAttemptId,
-                                netHostPingData.mManagerId,
-                                masterServerPongResponseBundle);
+      mPingManager.SendHostPong(theirIpAddress, netHostPingData.mPingId, netHostPingData.mSendAttemptId, netHostPingData.mManagerId, masterServerPongResponseBundle);
     }
 
     return true;
@@ -5266,11 +5172,7 @@ bool NetPeer::HandlePing(IpAddress const& theirIpAddress, NetHostPingData& netHo
     Assert(basicNetHostInfo.GetBytesWritten() <= BasicNetHostInfoMaxSize);
 
     // Send host pong message reply
-    mPingManager.SendHostPong(theirIpAddress,
-                              netHostPingData.mPingId,
-                              netHostPingData.mSendAttemptId,
-                              netHostPingData.mManagerId,
-                              basicNetHostInfo);
+    mPingManager.SendHostPong(theirIpAddress, netHostPingData.mPingId, netHostPingData.mSendAttemptId, netHostPingData.mManagerId, basicNetHostInfo);
     return true;
   }
 
@@ -5284,9 +5186,7 @@ bool NetPeer::HandlePing(IpAddress const& theirIpAddress, NetHostPingData& netHo
 }
 
 // Master Servers handle ping.
-void NetPeer::MasterServerRecievePublish(const IpAddress& theirIpAddress,
-                                         EventBundle& basicHostInfo,
-                                         Guid const& thierProjectGuid)
+void NetPeer::MasterServerRecievePublish(const IpAddress& theirIpAddress, EventBundle& basicHostInfo, Guid const& thierProjectGuid)
 {
   // Have we received a ping from this server?
   // If yes, update that record.

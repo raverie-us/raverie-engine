@@ -230,16 +230,12 @@ CastResults::CastResults(uint amount, BaseCastFilter& filter) : mResults((ProxyC
   // Sanity check.  Can't cast a ray and get back 0 results.
   if (amount == 0)
   {
-    DoNotifyTimer(
-        "Ray/Volume Cast Error", "Cannot make a cast with 0 results.  Result count set to 1.", "Warning", 1.0f);
+    DoNotifyTimer("Ray/Volume Cast Error", "Cannot make a cast with 0 results.  Result count set to 1.", "Warning", 1.0f);
     amount = 1;
   }
   if (amount > maxResults)
   {
-    DoNotifyTimer("Ray/Volume Cast Error",
-                  String::Format("Cannot have %d results in a cast, clamping to %d", amount, maxResults),
-                  "Warning",
-                  1.0f);
+    DoNotifyTimer("Ray/Volume Cast Error", String::Format("Cannot have %d results in a cast, clamping to %d", amount, maxResults), "Warning", 1.0f);
     amount = maxResults;
   }
   mArray.Resize(amount);

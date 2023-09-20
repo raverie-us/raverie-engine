@@ -4,11 +4,7 @@
 namespace Raverie
 {
 
-WebRequest::WebRequest() :
-    mOnHeadersReceived(nullptr),
-    mOnDataReceived(nullptr),
-    mOnComplete(nullptr),
-    mUserData(nullptr)
+WebRequest::WebRequest() : mOnHeadersReceived(nullptr), mOnDataReceived(nullptr), mOnComplete(nullptr), mUserData(nullptr)
 {
 }
 

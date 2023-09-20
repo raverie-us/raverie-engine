@@ -25,8 +25,7 @@ void Peer::ResetSession()
   InitializeStats();
 }
 
-Peer::Peer(ProcessReceivedCustomPacketFn processReceivedCustomPacketFn,
-           ProcessReceivedCustomMessageFn processReceivedCustomMessageFn) :
+Peer::Peer(ProcessReceivedCustomPacketFn processReceivedCustomPacketFn, ProcessReceivedCustomMessageFn processReceivedCustomMessageFn) :
     BandwidthStats<true>(),
 
     /// Operating Data
@@ -140,8 +139,7 @@ const IpAddress& Peer::GetLocalIpv6Address() const
 
 bool Peer::IsOpen() const
 {
-  return mIpv4Socket.IsOpen() || mIpv6Socket.IsOpen() || !mIpv4ReceiveThread.IsCompleted() ||
-         !mIpv6ReceiveThread.IsCompleted();
+  return mIpv4Socket.IsOpen() || mIpv6Socket.IsOpen() || !mIpv4ReceiveThread.IsCompleted() || !mIpv6ReceiveThread.IsCompleted();
 }
 
 InternetProtocol::Enum Peer::GetInternetProtocol() const
@@ -154,10 +152,7 @@ TransportProtocol::Enum Peer::GetTransportProtocol() const
   return mTransportProtocol;
 }
 
-void Peer::Open(Status& status,
-                ushort port,
-                InternetProtocol::Enum internetProtocol,
-                TransportProtocol::Enum transportProtocol)
+void Peer::Open(Status& status, ushort port, InternetProtocol::Enum internetProtocol, TransportProtocol::Enum transportProtocol)
 {
   // TODO: Support TCP option
   UnusedParameter(transportProtocol);
@@ -271,8 +266,7 @@ void Peer::Open(Status& status,
   {
     // Launch IPv4 receive thread
     mExitIpv4ReceiveThread = false;
-    bool result = mIpv4ReceiveThread.Initialize(
-        Thread::ObjectEntryCreator<Peer, &Peer::Ipv4ReceiveThreadFn>, this, "PeerIpv4ReceiveThread");
+    bool result = mIpv4ReceiveThread.Initialize(Thread::ObjectEntryCreator<Peer, &Peer::Ipv4ReceiveThreadFn>, this, "PeerIpv4ReceiveThread");
     if (!result) // Unable?
     {
       status.SetFailed("Unable to launch peer IPv4 receive thread");
@@ -286,8 +280,7 @@ void Peer::Open(Status& status,
   {
     // Launch IPv6 receive thread
     mExitIpv6ReceiveThread = false;
-    bool result = mIpv6ReceiveThread.Initialize(
-        Thread::ObjectEntryCreator<Peer, &Peer::Ipv6ReceiveThreadFn>, this, "PeerIpv6ReceiveThread");
+    bool result = mIpv6ReceiveThread.Initialize(Thread::ObjectEntryCreator<Peer, &Peer::Ipv6ReceiveThreadFn>, this, "PeerIpv6ReceiveThread");
     if (!result) // Unable?
     {
       status.SetFailed("Unable to launch peer IPv6 receive thread");
@@ -802,13 +795,11 @@ bool Peer::SendPacket(OutPacket& outPacket)
   mSendBitStream.Write(outPacket);
 
   // Choose correct socket (IPv4 or IPv6)
-  Socket& socket =
-      outPacket.GetDestinationIpAddress().GetInternetProtocol() == InternetProtocol::V4 ? mIpv4Socket : mIpv6Socket;
+  Socket& socket = outPacket.GetDestinationIpAddress().GetInternetProtocol() == InternetProtocol::V4 ? mIpv4Socket : mIpv6Socket;
 
   // Send packet over socket
   Status status;
-  Bytes result = socket.SendTo(
-      status, mSendBitStream.GetData(), mSendBitStream.GetBytesWritten(), outPacket.GetDestinationIpAddress());
+  Bytes result = socket.SendTo(status, mSendBitStream.GetData(), mSendBitStream.GetBytesWritten(), outPacket.GetDestinationIpAddress());
   if (result) // Successful?
   {
     Assert(status.Succeeded());
@@ -831,8 +822,7 @@ void Peer::UpdateSendStats(Bytes sentPacketBytes)
 
   // Update stats
   UpdatePacketsSent();
-  UpdateOutgoingBandwidthUsage(double(BYTES_TO_BITS(sentPacketBytes)) / sendDt / double(1000) *
-                               double(cOneSecondTimeMs));
+  UpdateOutgoingBandwidthUsage(double(BYTES_TO_BITS(sentPacketBytes)) / sendDt / double(1000) * double(cOneSecondTimeMs));
   UpdateSendRate(uint(cOneSecondTimeMs / sendDt));
   UpdateSentPacketBytes(sentPacketBytes);
 }
@@ -847,8 +837,7 @@ void Peer::UpdateReceiveStats(Bytes receivedPacketBytes)
 
   // Update stats
   UpdatePacketsReceived();
-  UpdateIncomingBandwidthUsage(double(BYTES_TO_BITS(receivedPacketBytes)) / receiveDt / double(1000) *
-                               double(cOneSecondTimeMs));
+  UpdateIncomingBandwidthUsage(double(BYTES_TO_BITS(receivedPacketBytes)) / receiveDt / double(1000) * double(cOneSecondTimeMs));
   UpdateReceiveRate(uint(cOneSecondTimeMs / receiveDt));
   UpdateReceivedPacketBytes(receivedPacketBytes);
 
@@ -961,8 +950,7 @@ OsInt Peer::Ipv6ReceiveThreadFn()
     {
       // Wait to receive a packet over socket
       Status status;
-      Bytes result =
-          mIpv6Socket.ReceiveFrom(status, rawPacket.mData.GetDataExposed(), EthernetMtuBytes, rawPacket.mIpAddress);
+      Bytes result = mIpv6Socket.ReceiveFrom(status, rawPacket.mData.GetDataExposed(), EthernetMtuBytes, rawPacket.mIpAddress);
       rawPacket.mData.SetBytesWritten(result);
       if (result && IsValidRawPacket(rawPacket)) // Successful?
       {

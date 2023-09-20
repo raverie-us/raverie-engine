@@ -22,8 +22,7 @@ String RaverieShaderGlslBackend::GetExtension()
   return "glsl";
 }
 
-bool RaverieShaderGlslBackend::RunTranslationPass(ShaderTranslationPassResult& inputData,
-                                                ShaderTranslationPassResult& outputData)
+bool RaverieShaderGlslBackend::RunTranslationPass(ShaderTranslationPassResult& inputData, ShaderTranslationPassResult& outputData)
 {
   mErrorLog.Clear();
 
@@ -226,9 +225,7 @@ void RaverieShaderGlslBackend::HandleCompiledSampledImages(GlslBackendInternalDa
 // Any type that isn't a struct doesn't have a name returned from spirv_cross.
 // To generate this name (mostly for debug) we have to make a large conditional
 // table to map this to engine's names.
-void RaverieShaderGlslBackend::PopulateTypeName(GlslBackendInternalData& internalData,
-                                              spirv_cross::SPIRType& spirVType,
-                                              ShaderResourceReflectionData& reflectionData)
+void RaverieShaderGlslBackend::PopulateTypeName(GlslBackendInternalData& internalData, spirv_cross::SPIRType& spirVType, ShaderResourceReflectionData& reflectionData)
 {
   spirv_cross::CompilerGLSL* compiler = internalData.mCompiler;
 
@@ -295,11 +292,8 @@ void RaverieShaderGlslBackend::PopulateTypeName(GlslBackendInternalData& interna
   // @JoshD: Deal with arrays later?
 }
 
-void RaverieShaderGlslBackend::PopulateMemberTypeInfo(GlslBackendInternalData& internalData,
-                                                    spirv_cross::SPIRType& parentType,
-                                                    int memberIndex,
-                                                    ShaderResourceReflectionData& reflectionData,
-                                                    bool isInterfaceType)
+void RaverieShaderGlslBackend::PopulateMemberTypeInfo(
+    GlslBackendInternalData& internalData, spirv_cross::SPIRType& parentType, int memberIndex, ShaderResourceReflectionData& reflectionData, bool isInterfaceType)
 {
   spirv_cross::CompilerGLSL* compiler = internalData.mCompiler;
 
@@ -326,10 +320,7 @@ void RaverieShaderGlslBackend::PopulateMemberTypeInfo(GlslBackendInternalData& i
     reflectionData.mOffsetInBytes = compiler->type_struct_member_offset(parentType, memberIndex);
 }
 
-void RaverieShaderGlslBackend::PopulateTypeInfo(GlslBackendInternalData& internalData,
-                                              spirv_cross::SPIRType& spirvType,
-                                              ShaderResourceReflectionData& reflectionData,
-                                              bool isInterfaceType)
+void RaverieShaderGlslBackend::PopulateTypeInfo(GlslBackendInternalData& internalData, spirv_cross::SPIRType& spirvType, ShaderResourceReflectionData& reflectionData, bool isInterfaceType)
 {
   spirv_cross::CompilerGLSL* compiler = internalData.mCompiler;
   PopulateTypeName(internalData, spirvType, reflectionData);
@@ -346,10 +337,7 @@ void RaverieShaderGlslBackend::PopulateTypeInfo(GlslBackendInternalData& interna
     reflectionData.mSizeInBytes = compiler->get_declared_struct_size(spirvType);
 }
 
-void RaverieShaderGlslBackend::ExtractResourceReflection(GlslBackendInternalData& internalData,
-                                                       spirv_cross::Resource& resource,
-                                                       Array<ShaderStageResource>& results,
-                                                       bool isInterfaceType)
+void RaverieShaderGlslBackend::ExtractResourceReflection(GlslBackendInternalData& internalData, spirv_cross::Resource& resource, Array<ShaderStageResource>& results, bool isInterfaceType)
 {
   spirv_cross::CompilerGLSL* compiler = internalData.mCompiler;
   spirv_cross::ShaderResources* resources = internalData.mResources;
@@ -398,10 +386,7 @@ void RaverieShaderGlslBackend::ExtractResourceReflection(GlslBackendInternalData
 }
 
 template <typename VectorType>
-void RaverieShaderGlslBackend::ExtractResourcesReflection(GlslBackendInternalData& internalData,
-                                                        VectorType& resources,
-                                                        Array<ShaderStageResource>& results,
-                                                        bool isInterfaceType)
+void RaverieShaderGlslBackend::ExtractResourcesReflection(GlslBackendInternalData& internalData, VectorType& resources, Array<ShaderStageResource>& results, bool isInterfaceType)
 {
   // Extract each resource independently
   for (size_t i = 0; i < resources.size(); ++i)

@@ -39,9 +39,7 @@ RaverieDefineType(GeometryOptions, builder, type)
   RaverieBindExpanded();
 
   RaverieBindFieldProperty(mImportMeshes)->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  RaverieBindFieldProperty(mGenerateSmoothNormals)
-      ->AddAttributeChainable(PropertyAttributes::cInvalidatesObject)
-      ->RaverieFilterBool(mImportMeshes);
+  RaverieBindFieldProperty(mGenerateSmoothNormals)->AddAttributeChainable(PropertyAttributes::cInvalidatesObject)->RaverieFilterBool(mImportMeshes);
   RaverieBindFieldProperty(mSmoothingAngleDegreesThreshold)->Add(new ShowNormalGenerationOptionsFilter());
   RaverieBindFieldProperty(mGenerateTangentSpace)->RaverieFilterBool(mImportMeshes);
   RaverieBindFieldProperty(mInvertUvYAxis)->RaverieFilterBool(mImportMeshes);
@@ -55,8 +53,7 @@ RaverieDefineType(GeometryOptions, builder, type)
 
   RaverieBindFieldProperty(mOriginOffset);
   RaverieBindFieldProperty(mScaleConversion)->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  RaverieBindFieldProperty(mScaleFactor)
-      ->RaverieFilterEquality(mScaleConversion, ScaleConversion::Enum, ScaleConversion::Custom);
+  RaverieBindFieldProperty(mScaleFactor)->RaverieFilterEquality(mScaleConversion, ScaleConversion::Enum, ScaleConversion::Custom);
   RaverieBindFieldProperty(mChangeBasis)->AddAttribute(PropertyAttributes::cInvalidatesObject);
 
   RaverieBindFieldProperty(mXBasisTo)->RaverieFilterBool(mChangeBasis);
@@ -211,8 +208,7 @@ void ImportOptions::Initialize(Array<String>& files, ContentLibrary* library)
     for (unsigned i = 1; i < invalidFiles.Size(); ++i)
       builder.AppendFormat(", %s", invalidFiles[i].c_str());
 
-    String errorMessage =
-        String::Format("The following files do not contain any valid characters: %s", builder.ToString().c_str());
+    String errorMessage = String::Format("The following files do not contain any valid characters: %s", builder.ToString().c_str());
     DoNotifyError("File Import Failed", errorMessage);
   }
 

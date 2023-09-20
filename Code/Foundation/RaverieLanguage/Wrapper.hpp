@@ -24,8 +24,7 @@ public:
   // all the same constructors (and will forward the parameters to the wrapped
   // type upon construction) Note: The base class MUST have a default
   // constructor, as it is the only constructor that will be called
-  static BoundType*
-  Generate(LibraryBuilder& builder, Wrapper* wrapper, BoundType* innerType, BoundType* outerBaseType = nullptr);
+  static BoundType* Generate(LibraryBuilder& builder, Wrapper* wrapper, BoundType* innerType, BoundType* outerBaseType = nullptr);
 
   // Note that in PreFunction, the value will not have been returned yet (not
   // invoked for constructors or destructors)
@@ -41,4 +40,3 @@ public:
   BoundType* OuterType;
 };
 } // namespace Raverie
-

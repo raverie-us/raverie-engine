@@ -38,20 +38,7 @@ DeclareEnum3(LinePosition, Beginning, Middle, End);
 // CustomIndicator is always last.
 DeclareEnum7(Lexer, Text, Cpp, Python, Console, Shader, Raverie, SpirV);
 
-DeclareEnum13(IndicatorStyle,
-              Plain,
-              Squiggle,
-              Tt,
-              Diagonal,
-              Strike,
-              Hidden,
-              Box,
-              Roundbox,
-              Straightbox,
-              Dash,
-              Dots,
-              Squigglelow,
-              Dotbox);
+DeclareEnum13(IndicatorStyle, Plain, Squiggle, Tt, Diagonal, Strike, Hidden, Box, Roundbox, Straightbox, Dash, Dots, Squigglelow, Dotbox);
 
 /// Text editor widget.
 class TextEditor : public BaseScrollArea
@@ -267,12 +254,8 @@ public:
 
   // Create/Populate scroll-well indicators associated with this TextEditor.
   //   - Note: 'indicators' will be cleared the re-populated based on 'ranges'.
-  void UpdateIndicators(Array<Rectangle>& indicators,
-                        const std::vector<Scintilla::SelectionRange>& ranges,
-                        Vec4Param indicatorColor,
-                        Vec2Param minIndicatorHeight,
-                        float indicatorWidth,
-                        float indicatorOffsetX);
+  void UpdateIndicators(
+      Array<Rectangle>& indicators, const std::vector<Scintilla::SelectionRange>& ranges, Vec4Param indicatorColor, Vec2Param minIndicatorHeight, float indicatorWidth, float indicatorOffsetX);
 
   Vec3 GetScreenPositionOfCursor();
   Vec3 GetScreenPositionFromCursor(int cursor);

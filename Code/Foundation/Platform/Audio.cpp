@@ -22,10 +22,7 @@ StreamStatus::Enum AudioInputOutput::InitializeStream(StreamTypes::Enum whichStr
   return StreamStatus::Uninitialized;
 }
 
-StreamStatus::Enum AudioInputOutput::StartStream(StreamTypes::Enum whichStream,
-                                                 Raverie::String* resultMessage,
-                                                 IOCallbackType* callback,
-                                                 void* callbackData)
+StreamStatus::Enum AudioInputOutput::StartStream(StreamTypes::Enum whichStream, Raverie::String* resultMessage, IOCallbackType* callback, void* callbackData)
 {
   return StreamStatus::Uninitialized;
 }

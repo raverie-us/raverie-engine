@@ -168,22 +168,19 @@ public:
   /// all possible values) Returns the number of bits required to serialize the
   /// specified value
   template <typename R>
-  static R_ENABLE_IF(is_enum<R>::value&& is_enum_or_integral<R>::value, Bits)
-      MeasureQuantized(R minValue_, R maxValue_, R quantum_ = R(1));
+  static R_ENABLE_IF(is_enum<R>::value&& is_enum_or_integral<R>::value, Bits) MeasureQuantized(R minValue_, R maxValue_, R quantum_ = R(1));
   /// Measures an integral value bound within an inclusive range discretized to
   /// the nearest quantum interval value (using only the bits necessary to
   /// represent all possible values) Returns the number of bits required to
   /// serialize the specified value
   template <typename R>
-  static R_ENABLE_IF(is_integral<R>::value&& is_integral<R>::value, Bits)
-      MeasureQuantized(R minValue_, R maxValue_, R quantum_ = R(1));
+  static R_ENABLE_IF(is_integral<R>::value&& is_integral<R>::value, Bits) MeasureQuantized(R minValue_, R maxValue_, R quantum_ = R(1));
   /// Measures a floating-point value bound within an inclusive range
   /// discretized to the nearest quantum interval value (using only the bits
   /// necessary to represent all possible values) Returns the number of bits
   /// required to serialize the specified value
   template <typename R>
-  static R_ENABLE_IF(is_floating_point<R>::value, Bits)
-      MeasureQuantized(R minValue_, R maxValue_, R quantum_ = R(0.0001));
+  static R_ENABLE_IF(is_floating_point<R>::value, Bits) MeasureQuantized(R minValue_, R maxValue_, R quantum_ = R(0.0001));
   /// Measures a UintN value bound within an inclusive range discretized to the
   /// nearest quantum interval value (using only the bits necessary to represent
   /// all possible values) Returns the number of bits required to serialize the
@@ -195,8 +192,7 @@ public:
   /// represent all possible values) Returns the number of bits required to
   /// serialize the specified value
   template <typename R>
-  static R_ENABLE_IF(!is_scalar<R>::value, Bits)
-      MeasureQuantized(const R& minValue_, const R& maxValue_, const R& quantum_);
+  static R_ENABLE_IF(!is_scalar<R>::value, Bits) MeasureQuantized(const R& minValue_, const R& maxValue_, const R& quantum_);
 
   //
   // Serialize Operations
@@ -270,16 +266,14 @@ public:
   /// successful, else 0
   template <Bits N, bool WrapAware, typename R>
   R_ENABLE_IF(is_enum_or_integral<R>::value, Bits)
-  SerializeQuantized(
-      SerializeDirection::Enum direction, UintN<N, WrapAware>& value_, R minValue_, R maxValue_, R quantum_ = R(1));
+  SerializeQuantized(SerializeDirection::Enum direction, UintN<N, WrapAware>& value_, R minValue_, R maxValue_, R quantum_ = R(1));
   /// Serializes a user-defined value bound within an inclusive range
   /// discretized to the nearest quantum interval value (using only the bits
   /// necessary to represent all possible values) Returns the number of bits
   /// serialized if successful, else 0
   template <typename T, typename R>
   R_ENABLE_IF(!is_scalar<T>::value, Bits)
-  SerializeQuantized(
-      SerializeDirection::Enum direction, T& value_, const R& minValue_, const R& maxValue_, const R& quantum_);
+  SerializeQuantized(SerializeDirection::Enum direction, T& value_, const R& minValue_, const R& maxValue_, const R& quantum_);
 
   //
   // Write Operations

@@ -35,12 +35,10 @@ DataTreeGrammar::DataTreeGrammar()
   GrammarRule<Character>& False = mTokenGrammar["False"];
   GrammarRule<Character>& Var = mTokenGrammar["Var"];
 
-  TokenStart |= Enum | Float | Whitespace | StringLiteral | OpenBracket | CloseBracket | OpenCurley | CloseCurley |
-                Assignment | Comma | Colon;
+  TokenStart |= Enum | Float | Whitespace | StringLiteral | OpenBracket | CloseBracket | OpenCurley | CloseCurley | Assignment | Comma | Colon;
   Enum |= Identifier << T(".") << T("a-zA-Z_") << *T("a-zA-Z_0-9");
   Identifier |= T("a-zA-Z_") << *T("a-zA-Z_0-9");
-  Float |= ~Integer << (T(".") << +T("0-9") << ~(T("e") << ~T("-+") << +T("0-9")) | T("e") << ~T("-+") << +T("0-9"))
-                    << ~T("f");
+  Float |= ~Integer << (T(".") << +T("0-9") << ~(T("e") << ~T("-+") << +T("0-9")) | T("e") << ~T("-+") << +T("0-9")) << ~T("f");
   Integer |= ~T("-") << ((T("0") << (Hex | *T("0-9"))) | T("1-9") << *T("0-9"));
   Hex |= T("xX") << +T("0-9a-fA-F") << T();
   Whitespace |= +T(" \t\r\n\v\f");
@@ -67,10 +65,8 @@ DataTreeGrammar::DataTreeGrammar()
 
   // We're allowing any amount of file attributes at the start
   ParserStart |= *Attribute << +Object;
-  Object |= P("Identifier", P(Identifier))
-            << *Attribute << P(OpenCurley) << *((Property | Value | Object) << ~P(Comma)) << P(CloseCurley);
-  Attribute |= P(OpenBracket) << P("Name", P(Identifier)) << ~(P(Colon) << (P("Value", Value) | Object))
-                              << P(CloseBracket);
+  Object |= P("Identifier", P(Identifier)) << *Attribute << P(OpenCurley) << *((Property | Value | Object) << ~P(Comma)) << P(CloseCurley);
+  Attribute |= P(OpenBracket) << P("Name", P(Identifier)) << ~(P(Colon) << (P("Value", Value) | Object)) << P(CloseBracket);
   Property |= P(Var) << P("Name", P(Identifier)) << P(Assignment) << (P("Value", Value) | Object);
   Value |= P("Value", P(Integer) | P(Float) | P(Hex) | P(StringLiteral) | P(Enum) | P(True) | P(False));
 

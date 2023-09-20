@@ -802,9 +802,7 @@ bool FindTextDialog::GetSelectedTextRegions()
 }
 
 // Advance an input string to the end of a line
-const char* FindTextDialog::MoveToEol(StringRange wholeString,
-                                      const char* currentPosition,
-                                      EolDirection::Enum direction)
+const char* FindTextDialog::MoveToEol(StringRange wholeString, const char* currentPosition, EolDirection::Enum direction)
 {
   // Assume the direction is forward
   int walkOffset = 1;
@@ -820,8 +818,7 @@ const char* FindTextDialog::MoveToEol(StringRange wholeString,
   const char* lastPosition = currentPosition;
 
   // While we haven't hit the end of the line (or entire string)
-  while (wholeString.Contains(currentPosition) && *currentPosition != '\r' && *currentPosition != '\n' &&
-         *currentPosition != '\0')
+  while (wholeString.Contains(currentPosition) && *currentPosition != '\r' && *currentPosition != '\n' && *currentPosition != '\0')
   {
     // Store the last position
     lastPosition = currentPosition;
@@ -1444,8 +1441,7 @@ void FindTextDialog::DoReplacements(DocumentEditor* documentEditor, SearchResult
           result->PositionEnd += sizeDifference;
 
           // Update the line too (used in replace all cases)
-          result->Line =
-              CountLines(StringRange(region->WholeText.Begin(), region->WholeText.Begin() + result->PositionBegin)) + 1;
+          result->Line = CountLines(StringRange(region->WholeText.Begin(), region->WholeText.Begin() + result->PositionBegin)) + 1;
         }
 
         // Iterate to the next result

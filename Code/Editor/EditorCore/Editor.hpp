@@ -95,11 +95,7 @@ public:
   Widget* HideWindow(StringParam name);
   Window* AddManagedWidget(Widget* widget, DockArea::Enum dockArea, bool visible = true);
 
-  void CreateDockableWindow(StringParam windowName,
-                            CameraViewport* cameraViewport,
-                            Vec2Param initialSize,
-                            bool destroySpaceOnClose,
-                            DockArea::Enum dockMode = DockArea::Floating);
+  void CreateDockableWindow(StringParam windowName, CameraViewport* cameraViewport, Vec2Param initialSize, bool destroySpaceOnClose, DockArea::Enum dockMode = DockArea::Floating);
 
   // User Configuration object.
   Cog* mConfig;

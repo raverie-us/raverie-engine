@@ -12,11 +12,7 @@ public:
   float mLineWidth;
   ByteColor mLineColor;
 
-  ScratchboardDrawer(Composite* parent,
-                     float lineWidth = 0.75f,
-                     ByteColor lineColor = ToByteColor(Vec4(0, 0, 0, 0.1f)),
-                     float hashSize = Pixels(15)) :
-      Widget(parent, AttachType::Direct)
+  ScratchboardDrawer(Composite* parent, float lineWidth = 0.75f, ByteColor lineColor = ToByteColor(Vec4(0, 0, 0, 0.1f)), float hashSize = Pixels(15)) : Widget(parent, AttachType::Direct)
   {
     mOffset = Vec3::cZero;
     mHashSize = hashSize;
@@ -68,8 +64,7 @@ public:
   Vec3 mScrollDirection;
   Vec2 mLastLocalMousePos;
 
-  ScratchboardObjectMover(Mouse* mouse, Scratchboard* scratchBoard, Widget* widget, bool snapping, float snapFidelity) :
-      MouseManipulation(mouse, scratchBoard)
+  ScratchboardObjectMover(Mouse* mouse, Scratchboard* scratchBoard, Widget* widget, bool snapping, float snapFidelity) : MouseManipulation(mouse, scratchBoard)
   {
     mScratchboard = scratchBoard;
     mWidget = widget;

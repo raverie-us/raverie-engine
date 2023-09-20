@@ -89,8 +89,7 @@ DefineEvent(ComponentsModified);
 DefineEvent(ObjectModified);
 } // namespace Events
 
-void PropertyModifiedDefault(
-    HandleParam object, PropertyPathParam property, AnyParam oldValue, AnyParam newValue, bool intermediateChange)
+void PropertyModifiedDefault(HandleParam object, PropertyPathParam property, AnyParam oldValue, AnyParam newValue, bool intermediateChange)
 {
   if (Object* raverieObject = object.Get<Object*>())
   {
@@ -127,8 +126,7 @@ void ObjectModifiedDefault(HandleParam object)
 }
 
 // Meta Operations
-void MetaOperations::NotifyPropertyModified(
-    HandleParam object, PropertyPathParam property, AnyParam oldValue, AnyParam newValue, bool intermediateChange)
+void MetaOperations::NotifyPropertyModified(HandleParam object, PropertyPathParam property, AnyParam oldValue, AnyParam newValue, bool intermediateChange)
 {
   Array<Handle> instances;
 
@@ -195,8 +193,7 @@ Any MetaOperations::GetUndoData(HandleParam object)
   return Any();
 }
 
-void MetaOperations::PropertyModified(
-    HandleParam object, PropertyPathParam property, AnyParam oldValue, AnyParam newValue, bool intermediateChange)
+void MetaOperations::PropertyModified(HandleParam object, PropertyPathParam property, AnyParam oldValue, AnyParam newValue, bool intermediateChange)
 {
   PropertyModifiedDefault(object, property, oldValue, newValue, intermediateChange);
 }
@@ -218,11 +215,7 @@ RaverieDefineType(PropertyEvent, builder, type)
   RaverieBindEvent(Events::PropertyModifiedIntermediate, PropertyEvent);
 }
 
-PropertyEvent::PropertyEvent(HandleParam object, PropertyPathParam property, AnyParam oldValue, AnyParam newValue) :
-    mObject(object),
-    mProperty(property),
-    mOldValue(oldValue),
-    mNewValue(newValue)
+PropertyEvent::PropertyEvent(HandleParam object, PropertyPathParam property, AnyParam oldValue, AnyParam newValue) : mObject(object), mProperty(property), mOldValue(oldValue), mNewValue(newValue)
 {
 }
 

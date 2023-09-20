@@ -275,8 +275,7 @@ public:
 
           Node* movingNodePrimary = mTable + actualHash;
 
-          ErrorIf(movingNodePrimary->next == cHashOpenNode,
-                  "Bad hash function. Hash value has changed or other issue.");
+          ErrorIf(movingNodePrimary->next == cHashOpenNode, "Bad hash function. Hash value has changed or other issue.");
 
           Node* movingNodePrev = movingNodePrimary;
 

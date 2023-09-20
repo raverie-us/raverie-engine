@@ -31,14 +31,12 @@ RaverieDefineType(MainWindowTransformEvent, builder, type)
   RaverieBindFieldGetter(mNewScreenSize);
 }
 
-MainWindowTransformEvent::MainWindowTransformEvent(Vec2Param oldScreenSize,
-                                                   Vec2Param newScreenSize) :
-    mOldScreenSize(oldScreenSize),
-    mNewScreenSize(newScreenSize)
+MainWindowTransformEvent::MainWindowTransformEvent(Vec2Param oldScreenSize, Vec2Param newScreenSize) : mOldScreenSize(oldScreenSize), mNewScreenSize(newScreenSize)
 {
 }
 
-OsWindow* MainWindowTransformEvent::GetTargetWindow() {
+OsWindow* MainWindowTransformEvent::GetTargetWindow()
+{
   return OsWindow::sInstance;
 }
 

@@ -139,8 +139,7 @@ public:
   /// Changes the given property on the given object. This is considered the
   /// final commit of the property (not intermediate), and should
   /// be added to a queue for undo/redo if applicable.
-  virtual void
-  ChangeProperty(HandleParam object, PropertyPathParam property, PropertyState& state, PropertyAction::Enum action);
+  virtual void ChangeProperty(HandleParam object, PropertyPathParam property, PropertyState& state, PropertyAction::Enum action);
 
   virtual void MarkPropertyModified(HandleParam object, PropertyPathParam property);
   virtual void RevertProperty(HandleParam object, PropertyPathParam property);
@@ -163,9 +162,7 @@ public:
   /// are to be displayed in the property grid. Building the tree in the
   /// property interface allows custom behavior that the property view
   /// couldn't support by querying the objects meta directly.
-  virtual ObjectPropertyNode* BuildObjectTree(ObjectPropertyNode* parent,
-                                              HandleParam instance,
-                                              Property* objectProperty = nullptr);
+  virtual ObjectPropertyNode* BuildObjectTree(ObjectPropertyNode* parent, HandleParam instance, Property* objectProperty = nullptr);
 
   /// When the property view is looking at an object or multiple objects,
   /// it needs to know when the components have changed on the object
@@ -189,11 +186,7 @@ public:
   }
 
   /// Events for notifying the property grid of changes.
-  void SendPropertyModifiedOnGrid(HandleParam object,
-                                  PropertyPathParam property,
-                                  AnyParam oldValue,
-                                  AnyParam newValue,
-                                  PropertyAction::Enum action);
+  void SendPropertyModifiedOnGrid(HandleParam object, PropertyPathParam property, AnyParam oldValue, AnyParam newValue, PropertyAction::Enum action);
   void SendComponentsModifiedOnGrid(HandleParam object);
 
   PropertyView* mPropertyGrid;
@@ -206,11 +199,7 @@ public:
   EventMetaComposition(PropertyInterface* propertyInterface, BoundType* typeToWrap);
 
   // MetaComposition Interface.
-  void AddComponent(HandleParam owner,
-                    BoundType* typeToAdd,
-                    int index = -1,
-                    bool ignoreDependencies = false,
-                    MetaCreationContext* creationContext = nullptr) override;
+  void AddComponent(HandleParam owner, BoundType* typeToAdd, int index = -1, bool ignoreDependencies = false, MetaCreationContext* creationContext = nullptr) override;
   void RemoveComponent(HandleParam owner, HandleParam component, bool ignoreDependencies = false) override;
   void MoveComponent(HandleParam owner, HandleParam component, uint destination) override;
 

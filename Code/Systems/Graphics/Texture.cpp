@@ -2,14 +2,14 @@
 
 #include "Precompiled.hpp"
 
-#define CheckProtected()                                                                                               \
-  if (mProtected)                                                                                                      \
+#define CheckProtected()                                                                                                                                                                               \
+  if (mProtected)                                                                                                                                                                                      \
     return DoNotifyException("Error", "Cannot modify non-runtime Textures.");
 
-#define SetValue(member, value)                                                                                        \
-  if (value == member)                                                                                                 \
-    return;                                                                                                            \
-  member = value;                                                                                                      \
+#define SetValue(member, value)                                                                                                                                                                        \
+  if (value == member)                                                                                                                                                                                 \
+    return;                                                                                                                                                                                            \
+  member = value;                                                                                                                                                                                      \
   mDirty = true;
 
 namespace Raverie

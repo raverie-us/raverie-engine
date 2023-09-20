@@ -46,8 +46,7 @@ public:
 
 private:
   // Calculates gain for a specified speaker
-  void UpdateSpeaker(
-      SpeakerInfo* speaker, float* outputGains, float minRadians, float maxRadians, float leftAngle, float thisAngle);
+  void UpdateSpeaker(SpeakerInfo* speaker, float* outputGains, float minRadians, float maxRadians, float leftAngle, float thisAngle);
   // Calculates the panning for speakers which are 180 degrees apart
   float Calculate180Panning(SpeakerInfo* speaker, Math::Vec2& source, float gain);
 

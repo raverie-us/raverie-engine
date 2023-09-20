@@ -6,9 +6,7 @@
 namespace Raverie
 {
 
-void ValidateEntryPoint(RaverieSpirVFrontEnd* translator,
-                        Raverie::GenericFunctionNode* node,
-                        RaverieSpirVFrontEndContext* context)
+void ValidateEntryPoint(RaverieSpirVFrontEnd* translator, Raverie::GenericFunctionNode* node, RaverieSpirVFrontEndContext* context)
 {
   Raverie::DelegateType* functionType = node->DefinedFunction->FunctionType;
   if (functionType->Return != RaverieTypeId(void))
@@ -32,9 +30,7 @@ void ValidateEntryPoint(RaverieSpirVFrontEnd* translator,
     ValidateBasicEntryPoint(translator, node, context);
 }
 
-void ValidateBasicEntryPoint(RaverieSpirVFrontEnd* translator,
-                             Raverie::GenericFunctionNode* node,
-                             RaverieSpirVFrontEndContext* context)
+void ValidateBasicEntryPoint(RaverieSpirVFrontEnd* translator, Raverie::GenericFunctionNode* node, RaverieSpirVFrontEndContext* context)
 {
   // Vertex/Pixel entry points can't have any arguments.
   if (node->Parameters.Size() != 0)
@@ -44,9 +40,7 @@ void ValidateBasicEntryPoint(RaverieSpirVFrontEnd* translator,
   }
 }
 
-void ValidateGeometryEntryPoint(RaverieSpirVFrontEnd* translator,
-                                Raverie::GenericFunctionNode* node,
-                                RaverieSpirVFrontEndContext* context)
+void ValidateGeometryEntryPoint(RaverieSpirVFrontEnd* translator, Raverie::GenericFunctionNode* node, RaverieSpirVFrontEndContext* context)
 {
   SpirVNameSettings& nameSettings = translator->mSettings->mNameSettings;
 

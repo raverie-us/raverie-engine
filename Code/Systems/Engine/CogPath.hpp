@@ -12,13 +12,7 @@ DeclareEvent(CogPathCogChanged);
 
 class Cog;
 
-DeclareEnum6(StatusCodeCogPath,
-             OnlySupportsCogTypes,
-             SpaceNotNamed,
-             CogNotNamed,
-             CogsInDifferentSpaces,
-             RelativeToNotSet,
-             CogsDoNotShareRoots);
+DeclareEnum6(StatusCodeCogPath, OnlySupportsCogTypes, SpaceNotNamed, CogNotNamed, CogsInDifferentSpaces, RelativeToNotSet, CogsDoNotShareRoots);
 
 DeclareEnum8(CogPathTokenType, Invalid, Eof, Separator, Self, Parent, CurrentSpace, NamedCog, NamedSpace);
 
@@ -95,14 +89,7 @@ public:
   CogPathToken mToken;
 };
 
-DeclareBitField7(CogPathFlags,
-                 ErrorOnResolveToNull,
-                 ErrorOnPathCantCompute,
-                 ErrorOnDirectLinkFail,
-                 UpdateCogOnPathChange,
-                 UpdatePathOnCogChange,
-                 UpdateCogOnInitialize,
-                 ResolvedNullErrorOccurred);
+DeclareBitField7(CogPathFlags, ErrorOnResolveToNull, ErrorOnPathCantCompute, ErrorOnDirectLinkFail, UpdateCogOnPathChange, UpdatePathOnCogChange, UpdateCogOnInitialize, ResolvedNullErrorOccurred);
 DeclareEnum3(CogPathPreference, CogRelative, SpaceRelative, Absolute);
 
 // A reference counted node that cog paths can share.
@@ -228,13 +215,7 @@ public:
   /// return an empty string
   static String ComputePath(Cog* from, Cog* to, CogPathPreference::Enum pref);
 
-  static String ComputePath(Status& status,
-                            Cog* from,
-                            Cog* to,
-                            CogPathPreference::Enum pref0,
-                            CogPathPreference::Enum pref1,
-                            CogPathPreference::Enum pref2,
-                            bool ambiguityIsError);
+  static String ComputePath(Status& status, Cog* from, Cog* to, CogPathPreference::Enum pref0, CogPathPreference::Enum pref1, CogPathPreference::Enum pref2, bool ambiguityIsError);
   static String ComputePath(Status& status, Cog* from, Cog* to, CogPathPreference::Enum pref, bool ambiguityIsError);
 
   static Cog* Resolve(Status& status, Cog* startFrom, StringParam path, bool ambiguityIsError);

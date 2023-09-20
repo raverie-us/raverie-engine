@@ -118,14 +118,8 @@ public:
   void AddComposite(Material* material);
   void RemoveComposite(StringParam compositeName);
 
-  Shader*
-  GetOrCreateShader(StringParam coreVertex, StringParam composite, StringParam renderPass, ShaderMap& shaderMap);
-  void FindShadersToCompile(Array<String>& coreVertexRange,
-                            Array<String>& compositeRange,
-                            Array<String>& renderPassRange,
-                            ShaderSetMap& testMap,
-                            uint index,
-                            ShaderSet& shaders);
+  Shader* GetOrCreateShader(StringParam coreVertex, StringParam composite, StringParam renderPass, ShaderMap& shaderMap);
+  void FindShadersToCompile(Array<String>& coreVertexRange, Array<String>& compositeRange, Array<String>& renderPassRange, ShaderSetMap& testMap, uint index, ShaderSet& shaders);
   void FindShadersToRemove(Array<String>& elementRange, ShaderSetMap& testMap, ShaderSet& shaders);
 
   void AddToShaderMaps(ShaderSet& shaders);
@@ -138,10 +132,7 @@ public:
 
   RaverieFragmentType::Enum GetFragmentType(MaterialBlock* materialBlock);
 
-  HandleOf<RenderTarget> GetRenderTarget(uint width,
-                                         uint height,
-                                         TextureFormat::Enum format,
-                                         SamplerSettings samplerSettings = SamplerSettings());
+  HandleOf<RenderTarget> GetRenderTarget(uint width, uint height, TextureFormat::Enum format, SamplerSettings samplerSettings = SamplerSettings());
   HandleOf<RenderTarget> GetRenderTarget(HandleOf<Texture> texture);
   void ClearRenderTargets();
 

@@ -486,9 +486,7 @@ bool Replicator::ForgetReplicas(const ReplicaArray& replicas, const Route& route
   // (Hitting an assert here usually means an incorrect assumption was made in
   // the calling logic about a replica's state)
   AssertReplicas(replicas, GetRole() == Role::Client ? replica->IsValid() : replica->IsLive(), "");
-  AssertReplicas(replicas,
-                 GetRole() == Role::Client ? true : replica->GetInitializationTimestamp() != cInvalidMessageTimestamp,
-                 "");
+  AssertReplicas(replicas, GetRole() == Role::Client ? true : replica->GetInitializationTimestamp() != cInvalidMessageTimestamp, "");
   AssertReplicas(replicas, replica->GetUninitializationTimestamp() == cInvalidMessageTimestamp, "");
 
   // Create timestamp
@@ -661,14 +659,12 @@ bool Replicator::HasReplicaPropertyType(const String& replicaPropertyTypeName) c
 }
 const ReplicaPropertyType* Replicator::GetReplicaPropertyType(const String& replicaPropertyTypeName) const
 {
-  const ReplicaPropertyType* result =
-      mReplicaPropertyTypes.FindValue(replicaPropertyTypeName, ReplicaPropertyTypePtr());
+  const ReplicaPropertyType* result = mReplicaPropertyTypes.FindValue(replicaPropertyTypeName, ReplicaPropertyTypePtr());
   return result;
 }
 ReplicaPropertyType* Replicator::GetReplicaPropertyType(const String& replicaPropertyTypeName)
 {
-  const ReplicaPropertyType* result =
-      mReplicaPropertyTypes.FindValue(replicaPropertyTypeName, ReplicaPropertyTypePtr());
+  const ReplicaPropertyType* result = mReplicaPropertyTypes.FindValue(replicaPropertyTypeName, ReplicaPropertyTypePtr());
   return const_cast<ReplicaPropertyType*>(result);
 }
 const ReplicaPropertyTypeSet& Replicator::GetReplicaPropertyTypes() const
@@ -1176,8 +1172,7 @@ bool Replicator::ShouldIncludeAccurateTimestampOnUninitialization(const ReplicaA
 }
 bool Replicator::ShouldIncludeAccurateTimestampOnChange(ReplicaChannel* replicaChannel)
 {
-  return replicaChannel->GetReplica()->GetAccurateTimestampOnChange() ||
-         replicaChannel->GetReplicaChannelType()->GetAccurateTimestampOnChange();
+  return replicaChannel->GetReplica()->GetAccurateTimestampOnChange() || replicaChannel->GetReplicaChannelType()->GetAccurateTimestampOnChange();
 }
 
 TimeMs Replicator::GetInitializationTimestamp(const ReplicaArray& replicas)
@@ -1209,8 +1204,7 @@ TimeMs Replicator::GetUninitializationTimestamp(const ReplicaArray& replicas)
   // command, so we're assuming they're all the same!)
   forRange (Replica* replica1, replicas.All())
     forRange (Replica* replica2, replicas.All())
-      if ((replica1 && replica2) &&
-          (replica1->GetUninitializationTimestamp() != replica2->GetUninitializationTimestamp()))
+      if ((replica1 && replica2) && (replica1->GetUninitializationTimestamp() != replica2->GetUninitializationTimestamp()))
         Assert(false);
 
 #endif
@@ -1329,8 +1323,7 @@ bool Replicator::HandleEmplace(const ReplicaArray& replicas, const EmplaceContex
     // the server) (Because emplacements on the server make the object live
     // immediately, but not on the client where theirs occurs on receiving an
     // incoming clone)
-    replica->ReactToChannelPropertyChanges(
-        timestamp, ReplicationPhase::Initialization, TransmissionDirection::Outgoing, (GetRole() == Role::Server));
+    replica->ReactToChannelPropertyChanges(timestamp, ReplicationPhase::Initialization, TransmissionDirection::Outgoing, (GetRole() == Role::Server));
   }
 
   //
@@ -2015,14 +2008,11 @@ void Replicator::OnLinkRemove(PeerLink* link)
 
 String GetReplicatorDisplayName(Replicator* replicator)
 {
-  return GetReplicatorDisplayName(
-      replicator->GetPeer()->GetLocalIpv4Address(), replicator->GetRole(), replicator->GetReplicatorId());
+  return GetReplicatorDisplayName(replicator->GetPeer()->GetLocalIpv4Address(), replicator->GetRole(), replicator->GetReplicatorId());
 }
 String GetReplicatorDisplayName(ReplicatorLink* replicatorLink)
 {
-  return GetReplicatorDisplayName(replicatorLink->GetLink()->GetTheirIpAddress(),
-                                  replicatorLink->GetTheirRole(),
-                                  replicatorLink->GetReplicatorId());
+  return GetReplicatorDisplayName(replicatorLink->GetLink()->GetTheirIpAddress(), replicatorLink->GetTheirRole(), replicatorLink->GetReplicatorId());
 }
 String GetReplicatorDisplayName(const IpAddress& ipAddress, Role::Enum role, ReplicatorId replicatorId)
 {

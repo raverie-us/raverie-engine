@@ -75,8 +75,7 @@ public:
       }
       else
       {
-        ZPrint(
-            "To fix conflicting Ids, you can remove either '%s' or '%s'\n", prevFileName.c_str(), newFileName.c_str());
+        ZPrint("To fix conflicting Ids, you can remove either '%s' or '%s'\n", prevFileName.c_str(), newFileName.c_str());
       }
 
       DoNotifyError("Resource Id Conflict. ",
@@ -90,13 +89,7 @@ public:
     return Z::gEditor->GetEditLevel();
   }
 
-  Resource* NewResourceOnWrite(ResourceManager* resourceManager,
-                               BoundType* type,
-                               StringParam property,
-                               Space* space,
-                               Resource* resource,
-                               Archetype* archetype,
-                               bool modified) override
+  Resource* NewResourceOnWrite(ResourceManager* resourceManager, BoundType* type, StringParam property, Space* space, Resource* resource, Archetype* archetype, bool modified) override
   {
     return Raverie::NewResourceOnWrite(resourceManager, type, property, space, resource, archetype, modified);
   }
@@ -447,8 +440,7 @@ GameSession* Editor::EditorCreateGameSession(uint flags)
   }
   else
   {
-    game = (GameSession*)Z::gFactory->CreateCheckedType(
-        RaverieTypeId(GameSession), nullptr, CoreArchetypes::Game, flags, nullptr);
+    game = (GameSession*)Z::gFactory->CreateCheckedType(RaverieTypeId(GameSession), nullptr, CoreArchetypes::Game, flags, nullptr);
 
     // For some reason we failed to actually create a game session. Maybe the
     // archetype contained the wrong expected type?
@@ -607,9 +599,7 @@ Window* Editor::AddManagedWidget(Widget* widget, DockArea::Enum dockArea, bool v
 class SpaceViewport : public Composite
 {
 public:
-  SpaceViewport(Composite* parent, CameraViewport* cameraViewport, bool destroySpaceOnClose) :
-      Composite(parent),
-      mDestroySpaceOnClose(destroySpaceOnClose)
+  SpaceViewport(Composite* parent, CameraViewport* cameraViewport, bool destroySpaceOnClose) : Composite(parent), mDestroySpaceOnClose(destroySpaceOnClose)
   {
     // Fill the game widget
     SetLayout(CreateFillLayout());
@@ -631,11 +621,7 @@ public:
   HandleOf<Space> mSpace;
 };
 
-void Editor::CreateDockableWindow(StringParam windowName,
-                                  CameraViewport* cameraViewport,
-                                  Vec2Param initialSize,
-                                  bool destroySpaceOnClose,
-                                  DockArea::Enum dockMode)
+void Editor::CreateDockableWindow(StringParam windowName, CameraViewport* cameraViewport, Vec2Param initialSize, bool destroySpaceOnClose, DockArea::Enum dockMode)
 {
   Space* space = cameraViewport->GetSpace();
   SpaceViewport* viewport = new SpaceViewport(this, cameraViewport, destroySpaceOnClose);
@@ -867,8 +853,7 @@ void ArchiveLibraryOutput(Archive& archive, ContentLibrary* library)
       continue;
 
     archive.AddFile(fullPath, relativePath);
-    Z::gEngine->LoadingUpdate(
-        "Archive Library", library->Name, resource.Name, ProgressType::Normal, float(itemsDone) / librarySize);
+    Z::gEngine->LoadingUpdate("Archive Library", library->Name, resource.Name, ProgressType::Normal, float(itemsDone) / librarySize);
   }
 
   // Finally add the pack file
@@ -938,7 +923,8 @@ Status Editor::SaveAll(bool showNotify, bool externalSave)
   // Scripts need to be fully compiling before we run
   RaverieManager* raverieManager = RaverieManager::GetInstance();
   raverieManager->TriggerCompileExternally();
-  if (raverieManager->mLastCompileResult == CompileResult::CompilationFailed) {
+  if (raverieManager->mLastCompileResult == CompileResult::CompilationFailed)
+  {
     Z::gEngine->LoadingFinish();
     return Status(StatusState::Failure, "Failed to compile Raverie Scripts");
   }
@@ -952,7 +938,8 @@ Status Editor::SaveAll(bool showNotify, bool externalSave)
   if (showNotify)
     DoNotify("Saved", "Project and all scripts saved.", "Disk");
 
-  if (externalSave) {
+  if (externalSave)
+  {
     // Project archive
     Archive projectArchive(ArchiveMode::Compressing);
     Status projectStatus;
@@ -987,12 +974,7 @@ Status Editor::SaveAll(bool showNotify, bool externalSave)
     ByteBufferBlock contentBlock(contentArchive.ComputeZipSize());
     contentArchive.WriteBuffer(contentBlock);
 
-    ImportSaveProject(
-      projectSettings->ProjectName.c_str(),
-      projectBlock.GetBegin(),
-      projectBlock.Size(),
-      contentBlock.GetBegin(),
-      contentBlock.Size());
+    ImportSaveProject(projectSettings->ProjectName.c_str(), projectBlock.GetBegin(), projectBlock.Size(), contentBlock.GetBegin(), contentBlock.Size());
   }
 
   Z::gEngine->LoadingFinish();
@@ -1079,10 +1061,7 @@ void ReInitializeScriptsOnObject(Cog* cog, OperationQueue& queue, HashSet<Resour
   }
 }
 
-void ReInitializeScriptsOnGame(GameSession* game,
-                               OperationQueue& queue,
-                               HashMap<Space*, bool>& spaceModifiedStates,
-                               HashSet<ResourceLibrary*>& modifiedLibraries)
+void ReInitializeScriptsOnGame(GameSession* game, OperationQueue& queue, HashMap<Space*, bool>& spaceModifiedStates, HashSet<ResourceLibrary*>& modifiedLibraries)
 {
   // Game can be null if they failed to open a project (for instance, a project
   // created in a new version)
@@ -1646,8 +1625,7 @@ bool Editor::RequestQuit()
   {
     // If anything needs saving prompt the user
     const cstr saveQuitCancel[] = {"Save and Quit", "Quit without Saving", "Cancel", nullptr};
-    MessageBox* box = MessageBox::Show(
-        "Quit Confirmation", "Save all changes to levels, scripts, and resources?", saveQuitCancel);
+    MessageBox* box = MessageBox::Show("Quit Confirmation", "Save all changes to levels, scripts, and resources?", saveQuitCancel);
     ConnectThisTo(box, Events::MessageBoxResult, OnSaveQuitMessageBox);
     // Block the quit
     return false;

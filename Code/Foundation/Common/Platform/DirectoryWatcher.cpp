@@ -13,9 +13,7 @@ DirectoryWatcher::DirectoryWatcher(cstr directoryToWatch, CallbackFunction callb
 
   if (ThreadingEnabled)
   {
-    mWorkThread.Initialize(Thread::ObjectEntryCreator<DirectoryWatcher, &DirectoryWatcher::RunThreadEntryPoint>,
-                           this,
-                           "DirectoryWatcherWorker");
+    mWorkThread.Initialize(Thread::ObjectEntryCreator<DirectoryWatcher, &DirectoryWatcher::RunThreadEntryPoint>, this, "DirectoryWatcherWorker");
     mCancelEvent.Initialize(true, false);
   }
 }

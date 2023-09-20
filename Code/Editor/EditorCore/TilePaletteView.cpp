@@ -170,10 +170,7 @@ RaverieDefineType(TilePaletteView, builder, type)
   RaverieBindGetterSetterProperty(Mergeable);
 }
 
-TilePaletteView::TilePaletteView(Composite* parent, TileEditor2D* editor) :
-    Composite(parent),
-    mEditor(editor),
-    mShowCollision(true)
+TilePaletteView::TilePaletteView(Composite* parent, TileEditor2D* editor) : Composite(parent), mEditor(editor), mShowCollision(true)
 {
   mTileSize = 64;
   mSelectionStart = IntVec2(0, 0);
@@ -604,10 +601,8 @@ void TilePaletteView::UpdateTransform()
   mScrollArea->SetSize(mSize);
   mScrollArea->SetClientSize(Vec2(real(max.x + 0.5), real(max.y + 0.5)) * tileSize);
 
-  Vec2 minSelect =
-      Vec2(real(Math::Min(mSelectionStart.x, mSelectionEnd.x)), real(Math::Min(mSelectionStart.y, mSelectionEnd.y)));
-  Vec2 maxSelect =
-      Vec2(real(Math::Max(mSelectionStart.x, mSelectionEnd.x)), real(Math::Max(mSelectionStart.y, mSelectionEnd.y)));
+  Vec2 minSelect = Vec2(real(Math::Min(mSelectionStart.x, mSelectionEnd.x)), real(Math::Min(mSelectionStart.y, mSelectionEnd.y)));
+  Vec2 maxSelect = Vec2(real(Math::Max(mSelectionStart.x, mSelectionEnd.x)), real(Math::Max(mSelectionStart.y, mSelectionEnd.y)));
 
   mSelectionBorder->SetTranslation(Math::ToVector3(minSelect, 0) * tileSize);
   mSelectionBorder->SetSize((maxSelect - minSelect + Vec2(1, 1)) * real(mTileSize));
@@ -642,10 +637,8 @@ void TilePaletteView::RefreshSelection()
     return;
   }
 
-  IntVec2 minSelect =
-      IntVec2(Math::Min(mSelectionStart.x, mSelectionEnd.x), Math::Min(mSelectionStart.y, mSelectionEnd.y));
-  IntVec2 maxSelect =
-      IntVec2(Math::Max(mSelectionStart.x, mSelectionEnd.x), Math::Max(mSelectionStart.y, mSelectionEnd.y));
+  IntVec2 minSelect = IntVec2(Math::Min(mSelectionStart.x, mSelectionEnd.x), Math::Min(mSelectionStart.y, mSelectionEnd.y));
+  IntVec2 maxSelect = IntVec2(Math::Max(mSelectionStart.x, mSelectionEnd.x), Math::Max(mSelectionStart.y, mSelectionEnd.y));
 
   TileMapSelection selection;
   selection.Offset = IntVec2(0, 0);
@@ -916,10 +909,7 @@ void TilePaletteView::OnRightMouseDownArea(MouseEvent* event)
   RefreshSelection();
 }
 
-TilePaletteView::SelectionRange::SelectionRange(TilePaletteView::PaletteEntryMap* paletteTiles,
-                                                IntVec2 selectionStart,
-                                                IntVec2 selectionEnd) :
-    mPaletteTiles(paletteTiles)
+TilePaletteView::SelectionRange::SelectionRange(TilePaletteView::PaletteEntryMap* paletteTiles, IntVec2 selectionStart, IntVec2 selectionEnd) : mPaletteTiles(paletteTiles)
 {
   mSelectionMin = IntVec2(Math::Min(selectionStart.x, selectionEnd.x), Math::Min(selectionStart.y, selectionEnd.y));
   mSelectionMax = IntVec2(Math::Max(selectionStart.x, selectionEnd.x), Math::Max(selectionStart.y, selectionEnd.y));

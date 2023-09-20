@@ -80,8 +80,7 @@ void CommandSubItem::OnLeftClick(MouseEvent* e)
   mPopUp->Destroy();
 }
 
-ToolBarGroupPopUp::ToolBarGroupPopUp(Composite* parent, ToolBarGroup* group) :
-    PopUp(parent, PopUpCloseMode::MouseDistance)
+ToolBarGroupPopUp::ToolBarGroupPopUp(Composite* parent, ToolBarGroup* group) : PopUp(parent, PopUpCloseMode::MouseDistance)
 {
   Array<Command*>& commands = group->mCommands;
   mCommandWidgets.Reserve(commands.Size());

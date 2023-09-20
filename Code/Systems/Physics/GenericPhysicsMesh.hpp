@@ -94,8 +94,7 @@ public:
   /// RayCasts against the given triangle (the index is needed for the result's
   /// shape index) and fills out the appropriate info (t, points, normals,
   /// etc...)
-  bool
-  CastRayTriangle(const Ray& localRay, const Triangle& tri, int triIndex, ProxyResult& result, BaseCastFilter& filter);
+  bool CastRayTriangle(const Ray& localRay, const Triangle& tri, int triIndex, ProxyResult& result, BaseCastFilter& filter);
   /// RayCasts a local-space ray against the underlying vertex/index buffer. No
   /// mid-phase or optimizations are performed.
   bool CastRayGeneric(const Ray& localRay, ProxyResult& result, BaseCastFilter& filter);

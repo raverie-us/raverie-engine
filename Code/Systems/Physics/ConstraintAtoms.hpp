@@ -139,7 +139,8 @@ struct ConstraintAtom
 
   real mImpulse;
 
-  union {
+  union
+  {
     real mError;
     real mConstraintValue;
   };

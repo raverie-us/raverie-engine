@@ -4,9 +4,7 @@
 namespace Raverie
 {
 
-PhysicsMeshProcessor::PhysicsMeshProcessor(PhysicsMeshBuilder* physicsMeshBuilder, MeshDataMap& meshDataMap) :
-    mBuilder(physicsMeshBuilder),
-    mMeshDataMap(meshDataMap)
+PhysicsMeshProcessor::PhysicsMeshProcessor(PhysicsMeshBuilder* physicsMeshBuilder, MeshDataMap& meshDataMap) : mBuilder(physicsMeshBuilder), mMeshDataMap(meshDataMap)
 {
 }
 

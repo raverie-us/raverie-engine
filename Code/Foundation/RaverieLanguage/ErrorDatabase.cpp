@@ -30,11 +30,7 @@ ErrorEvent::ErrorEvent() : ErrorCode(ErrorCode::Invalid)
 }
 
 ErrorEvent::ErrorEvent(const ErrorInfo& info, const CodeLocation& location, ErrorCode::Enum code, va_list args) :
-    ErrorCode(code),
-    Location(location),
-    Reason(info.Reason),
-    ExactError(String::FormatArgs(info.Error.c_str(), args)),
-    Examples(info.Examples)
+    ErrorCode(code), Location(location), Reason(info.Reason), ExactError(String::FormatArgs(info.Error.c_str(), args)), Examples(info.Examples)
 {
 }
 

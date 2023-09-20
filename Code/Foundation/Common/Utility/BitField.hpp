@@ -61,7 +61,8 @@ public:
     U32Field = (u32)(-1);
   }
 
-  union {
+  union
+  {
     u32 U32Field;
     EnumType Field;
   };

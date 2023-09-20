@@ -316,10 +316,7 @@ private:
   /// Computes the patch's vertex data and stores it in outVertices
   /// outVertices must already be the correct size, it is assumed that not all
   /// vertices always need to be computed
-  void ComputePaddedHeightPatchVertices(HeightPatch* patch,
-                                        Array<Vec3>& outVertices,
-                                        CellIndex min = sCellIndexMin,
-                                        CellIndex max = sCellIndexMax);
+  void ComputePaddedHeightPatchVertices(HeightPatch* patch, Array<Vec3>& outVertices, CellIndex min = sCellIndexMin, CellIndex max = sCellIndexMax);
 
 public:
   friend struct CellRayRange;
@@ -444,8 +441,7 @@ struct HeightMapRayRange
   void SetLocal(HeightMap* map, const Ray& ray, float maxT = Math::PositiveMax());
   void SetWorld(HeightMap* map, const Ray& ray, float maxT = Math::PositiveMax());
   void SetUp(float maxT);
-  void GetTMinMaxRange(
-      Vec3Param localRayStart, Vec3Param localRayDir, Vec2Param rayStart, Vec2Param rayDir, float& minT, float& maxT);
+  void GetTMinMaxRange(Vec3Param localRayStart, Vec3Param localRayDir, Vec2Param rayStart, Vec2Param rayDir, float& minT, float& maxT);
 
   /// Range interface
   void PopFront();

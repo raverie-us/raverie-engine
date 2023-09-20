@@ -11,12 +11,9 @@ RaverieDefineType(Range<T>, builder, type)
   RaverieFullBindDestructor(builder, type, RaverieSelf);
   RaverieFullBindConstructor(builder, type, RaverieSelf, RaverieNoNames);
   RaverieFullBindGetterSetter(builder, type, &RaverieSelf::GetAll, RaverieNoOverload, RaverieNoSetter, RaverieNoOverload, "All");
-  RaverieFullBindGetterSetter(
-      builder, type, &RaverieSelf::GetCurrent, RaverieNoOverload, RaverieNoSetter, RaverieNoOverload, "Current");
-  RaverieFullBindGetterSetter(
-      builder, type, &RaverieSelf::IsEmpty, RaverieNoOverload, RaverieNoSetter, RaverieNoOverload, "IsEmpty");
-  RaverieFullBindGetterSetter(
-      builder, type, &RaverieSelf::IsNotEmpty, RaverieNoOverload, RaverieNoSetter, RaverieNoOverload, "IsNotEmpty");
+  RaverieFullBindGetterSetter(builder, type, &RaverieSelf::GetCurrent, RaverieNoOverload, RaverieNoSetter, RaverieNoOverload, "Current");
+  RaverieFullBindGetterSetter(builder, type, &RaverieSelf::IsEmpty, RaverieNoOverload, RaverieNoSetter, RaverieNoOverload, "IsEmpty");
+  RaverieFullBindGetterSetter(builder, type, &RaverieSelf::IsNotEmpty, RaverieNoOverload, RaverieNoSetter, RaverieNoOverload, "IsNotEmpty");
   RaverieFullBindMethod(builder, type, &RaverieSelf::MoveNext, RaverieNoOverload, "MoveNext", RaverieNoNames);
   RaverieFullBindMethod(builder, type, &RaverieSelf::Reset, RaverieNoOverload, "Reset", RaverieNoNames);
 }
@@ -73,37 +70,17 @@ public:
   }
 };
 
-#  define RaverieDeclareRange(RangeType) RaverieDeclareExternalType(RangeType)
-#  define RaverieDefineRange(RangeType)                                                                                  \
-    RaverieDefineExternalBaseType(RangeType, ::Raverie::TypeCopyMode::ReferenceType, builder, type)                             \
-    {                                                                                                                  \
-      RaverieBindDefaultCopyDestructor();                                                                                \
-      RaverieFullBindGetterSetter(                                                                                       \
-          builder, type, &::Raverie::RangeAdapter<RaverieSelf>::All, RaverieNoOverload, RaverieNoSetter, RaverieNoOverload, "All");   \
-      RaverieFullBindGetterSetter(builder,                                                                               \
-                                type,                                                                                  \
-                                &::Raverie::RangeAdapter<RaverieSelf>::Current,                                                 \
-                                RaverieNoOverload,                                                                       \
-                                RaverieNoSetter,                                                                         \
-                                RaverieNoOverload,                                                                       \
-                                "Current");                                                                            \
-      RaverieFullBindGetterSetter(builder,                                                                               \
-                                type,                                                                                  \
-                                &::Raverie::RangeAdapter<RaverieSelf>::IsNotEmpty,                                              \
-                                RaverieNoOverload,                                                                       \
-                                RaverieNoSetter,                                                                         \
-                                RaverieNoOverload,                                                                       \
-                                "IsNotEmpty");                                                                         \
-      RaverieFullBindGetterSetter(builder,                                                                               \
-                                type,                                                                                  \
-                                &::Raverie::RangeAdapter<RaverieSelf>::IsEmpty,                                                 \
-                                RaverieNoOverload,                                                                       \
-                                RaverieNoSetter,                                                                         \
-                                RaverieNoOverload,                                                                       \
-                                "IsEmpty");                                                                            \
-      RaverieFullBindMethod(                                                                                             \
-          builder, type, &::Raverie::RangeAdapter<RaverieSelf>::MoveNext, RaverieNoOverload, "MoveNext", RaverieNoNames);           \
-    }
-#  define RaverieInitializeRange(RangeType) RaverieInitializeExternalType(RangeType)
-#  define RaverieInitializeRangeAs(RangeType, Name) RaverieInitializeExternalTypeAs(RangeType, Name)
+#define RaverieDeclareRange(RangeType) RaverieDeclareExternalType(RangeType)
+#define RaverieDefineRange(RangeType)                                                                                                                                                                  \
+  RaverieDefineExternalBaseType(RangeType, ::Raverie::TypeCopyMode::ReferenceType, builder, type)                                                                                                      \
+  {                                                                                                                                                                                                    \
+    RaverieBindDefaultCopyDestructor();                                                                                                                                                                \
+    RaverieFullBindGetterSetter(builder, type, &::Raverie::RangeAdapter<RaverieSelf>::All, RaverieNoOverload, RaverieNoSetter, RaverieNoOverload, "All");                                              \
+    RaverieFullBindGetterSetter(builder, type, &::Raverie::RangeAdapter<RaverieSelf>::Current, RaverieNoOverload, RaverieNoSetter, RaverieNoOverload, "Current");                                      \
+    RaverieFullBindGetterSetter(builder, type, &::Raverie::RangeAdapter<RaverieSelf>::IsNotEmpty, RaverieNoOverload, RaverieNoSetter, RaverieNoOverload, "IsNotEmpty");                                \
+    RaverieFullBindGetterSetter(builder, type, &::Raverie::RangeAdapter<RaverieSelf>::IsEmpty, RaverieNoOverload, RaverieNoSetter, RaverieNoOverload, "IsEmpty");                                      \
+    RaverieFullBindMethod(builder, type, &::Raverie::RangeAdapter<RaverieSelf>::MoveNext, RaverieNoOverload, "MoveNext", RaverieNoNames);                                                              \
+  }
+#define RaverieInitializeRange(RangeType) RaverieInitializeExternalType(RangeType)
+#define RaverieInitializeRangeAs(RangeType, Name) RaverieInitializeExternalTypeAs(RangeType, Name)
 } // namespace Raverie

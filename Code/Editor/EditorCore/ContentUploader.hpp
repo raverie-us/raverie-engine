@@ -16,12 +16,7 @@ class ContentExportTile : public TileViewWidget
 {
 public:
   typedef ContentExportTile RaverieSelf;
-  ContentExportTile(Composite* parent,
-                    TileView* tileView,
-                    PreviewWidget* tileWidget,
-                    DataIndex dataIndex,
-                    ContentPackageExporter* exporter,
-                    ContentItem* contentItem);
+  ContentExportTile(Composite* parent, TileView* tileView, PreviewWidget* tileWidget, DataIndex dataIndex, ContentPackageExporter* exporter, ContentItem* contentItem);
 
   /// Widget Interface.
   void UpdateTransform() override;
@@ -51,11 +46,7 @@ public:
   typedef ContentExporterTileView RaverieSelf;
 
   ContentExporterTileView(ContentPackageExporter* parent);
-  TileViewWidget* CreateTileViewWidget(Composite* parent,
-                                       StringParam name,
-                                       HandleParam instance,
-                                       DataIndex index,
-                                       PreviewImportance::Enum minImportance = PreviewImportance::None) override;
+  TileViewWidget* CreateTileViewWidget(Composite* parent, StringParam name, HandleParam instance, DataIndex index, PreviewImportance::Enum minImportance = PreviewImportance::None) override;
 
   void OnMetaDrop(MetaDropEvent* e);
 

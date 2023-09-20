@@ -142,9 +142,7 @@ void RaverieScriptLoader::ReloadFromFile(Resource* resource, ResourceEntry& entr
 // RaverieScriptManager
 ImplementResourceManager(RaverieScriptManager, RaverieScript);
 
-RaverieScriptManager::RaverieScriptManager(BoundType* resourceType) :
-    ResourceManager(resourceType),
-    mLastExceptionVersion(-1)
+RaverieScriptManager::RaverieScriptManager(BoundType* resourceType) : ResourceManager(resourceType), mLastExceptionVersion(-1)
 {
   mCategory = "Code";
   mCanAddFile = true;
@@ -180,8 +178,7 @@ void RaverieScriptManager::ValidateRawName(Status& status, StringParam name, Bou
     // might conflict with an actual member of Cog (name a component 'Destroy',
     // what is Owner.Destroy?) We must do this for Space and GameSession also
     // (technically GameSession and Space doubly hit Cog, but that's fine).
-    bool hasMember = RaverieTypeId(Cog)->GetMember(name) || RaverieTypeId(GameSession)->GetMember(name) ||
-                     RaverieTypeId(Space)->GetMember(name) || RaverieTypeId(CogPath)->GetMember(name);
+    bool hasMember = RaverieTypeId(Cog)->GetMember(name) || RaverieTypeId(GameSession)->GetMember(name) || RaverieTypeId(Space)->GetMember(name) || RaverieTypeId(CogPath)->GetMember(name);
 
     if (hasMember)
     {
@@ -235,10 +232,7 @@ void RaverieScriptManager::OnResourceLibraryConstructed(ObjectEvent* e)
   EventConnect(&library->mScriptProject, Raverie::Events::CompilationError, ZeroRaverieErrorCallback);
 }
 
-void RaverieScriptManager::DispatchScriptError(StringParam eventId,
-                                             StringParam shortMessage,
-                                             StringParam fullMessage,
-                                             const CodeLocation& location)
+void RaverieScriptManager::DispatchScriptError(StringParam eventId, StringParam shortMessage, StringParam fullMessage, const CodeLocation& location)
 {
   RaverieScriptManager* instance = RaverieScriptManager::GetInstance();
   Resource* resource = (Resource*)location.CodeUserData;
@@ -264,9 +258,7 @@ void RaverieScriptManager::DispatchScriptError(StringParam eventId,
   Console::Print(Filter::DefaultFilter, "%s", fullMessage.c_str());
 }
 
-void RaverieScriptManager::DispatchZeroRaverieError(const CodeLocation& location,
-                                                StringParam message,
-                                                Project* buildingProject)
+void RaverieScriptManager::DispatchZeroRaverieError(const CodeLocation& location, StringParam message, Project* buildingProject)
 {
   String shortMessage = BuildString("Error: ", message);
   String fullMessage = location.GetFormattedStringWithMessage(MessageFormat::Python, shortMessage);

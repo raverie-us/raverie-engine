@@ -22,14 +22,14 @@ struct WatchEntry
   Array<WatchEntry*> Children;
 };
 
-#define AddEntry(varName, name, value, type, parent)                                                                   \
-  WatchEntry* varName = new WatchEntry();                                                                              \
-  varName->Name = name;                                                                                                \
-  varName->Value = value;                                                                                              \
-  varName->Type = type;                                                                                                \
-  varName->Parent = parent;                                                                                            \
-  if (parent)                                                                                                          \
-    parent->Children.PushBack(varName);                                                                                \
+#define AddEntry(varName, name, value, type, parent)                                                                                                                                                   \
+  WatchEntry* varName = new WatchEntry();                                                                                                                                                              \
+  varName->Name = name;                                                                                                                                                                                \
+  varName->Value = value;                                                                                                                                                                              \
+  varName->Type = type;                                                                                                                                                                                \
+  varName->Parent = parent;                                                                                                                                                                            \
+  if (parent)                                                                                                                                                                                          \
+    parent->Children.PushBack(varName);                                                                                                                                                                \
   mEntries.PushBack(varName);
 
 class WatchViewSource : public DataSource

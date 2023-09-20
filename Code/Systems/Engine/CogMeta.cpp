@@ -292,10 +292,7 @@ RaverieDefineType(CogMetaSerialization, builder, type)
 {
 }
 
-bool CogMetaSerialization::SerializeReferenceProperty(BoundType* propertyType,
-                                                      cstr fieldName,
-                                                      Any& value,
-                                                      Serializer& serializer)
+bool CogMetaSerialization::SerializeReferenceProperty(BoundType* propertyType, cstr fieldName, Any& value, Serializer& serializer)
 {
   Cog* cog = value.Get<Cog*>();
   ReturnIf(cog == nullptr, false, "Cog should never be null here");

@@ -28,13 +28,7 @@ QueryResult::QueryResult() : Expandable(false)
 {
 }
 
-Debugger::Debugger() :
-    Action(DebuggerAction::Resume),
-    LastCallStackDepth(0),
-    StepOutOverCallStackDepth(0),
-    IsAttached(false),
-    IsBreakpointed(false),
-    WasLastDisallowedBreak(false)
+Debugger::Debugger() : Action(DebuggerAction::Resume), LastCallStackDepth(0), StepOutOverCallStackDepth(0), IsAttached(false), IsBreakpointed(false), WasLastDisallowedBreak(false)
 {
   // We want to know when the console writes anything
   EventConnect(&ScriptConsole::Events, Events::ConsoleWrite, &Debugger::OnConsoleWrite, this);
@@ -420,10 +414,8 @@ void Debugger::OnOpcodePreStep(OpcodeEvent* e)
   }
 
   // Figure out if we changed to a new line by entering this opcode
-  bool isNewLineOrFileFromLastLocation =
-      location.StartLine != this->LastLocation.StartLine || location.Origin != this->LastLocation.Origin;
-  bool isNewLineOrFileFromStepLocation =
-      location.StartLine != this->StepLocation.StartLine || location.Origin != this->StepLocation.Origin;
+  bool isNewLineOrFileFromLastLocation = location.StartLine != this->LastLocation.StartLine || location.Origin != this->LastLocation.Origin;
+  bool isNewLineOrFileFromStepLocation = location.StartLine != this->StepLocation.StartLine || location.Origin != this->StepLocation.Origin;
 
   // Store the last code location so we can step by single lines
   this->LastLocation = location;

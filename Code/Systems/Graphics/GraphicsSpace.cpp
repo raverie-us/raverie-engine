@@ -154,8 +154,7 @@ void GraphicsSpace::OnFrameUpdate(float frameDt)
     Frustum frustum = camera.GetFrustum(camera.mViewportInterface->GetAspectRatio());
 
     // Visibility culled graphicals
-    forRangeBroadphaseTree(GraphicsBroadPhase, mBroadPhase, Frustum, frustum)
-        AddToVisibleGraphicals(*range.Front(), camera, cameraPos, cameraDir, &frustum);
+    forRangeBroadphaseTree(GraphicsBroadPhase, mBroadPhase, Frustum, frustum) AddToVisibleGraphicals(*range.Front(), camera, cameraPos, cameraDir, &frustum);
 
     // Not culled
     forRange (Graphical& graphical, mGraphicalsNeverCulled.All())
@@ -385,8 +384,7 @@ void GraphicsSpace::RenderQueuesUpdate(RenderTasks& renderTasks, RenderQueues& r
   SendVisibilityEvents();
 }
 
-void GraphicsSpace::AddToVisibleGraphicals(
-    Graphical& graphical, Camera& camera, Vec3 cameraPos, Vec3 cameraDir, Frustum* frustum)
+void GraphicsSpace::AddToVisibleGraphicals(Graphical& graphical, Camera& camera, Vec3 cameraPos, Vec3 cameraDir, Frustum* frustum)
 {
   if (GetOwner()->IsEditorMode() && graphical.GetOwner()->GetEditorViewportHidden())
     return;
@@ -421,8 +419,7 @@ void GraphicsSpace::AddToVisibleGraphicals(
       do
       {
         entry.SetRenderGroupSortValue(renderGroup->mSortId);
-        s32 graphicalSortValue =
-            GetGraphicalSortValue(graphical, renderGroup->mGraphicalSortMethod, pos, cameraPos, cameraDir);
+        s32 graphicalSortValue = GetGraphicalSortValue(graphical, renderGroup->mGraphicalSortMethod, pos, cameraPos, cameraDir);
         entry.SetGraphicalSortValue(graphicalSortValue);
 
         // Materials will not refer to RenderGroups that have not been given an

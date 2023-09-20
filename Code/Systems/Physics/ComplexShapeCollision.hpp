@@ -95,9 +95,7 @@ struct WorldFunctor
 /// an interface called GetOverlapRange(aabb) that returns a range
 /// of what shapes to check collision against.
 template <typename ColliderType, typename Shape2Type, typename SpaceFunctor>
-bool ComplexCollideCollidersInternal(Collider* complexCollider,
-                                     Collider* collider2,
-                                     PodArray<Physics::Manifold>* manifolds)
+bool ComplexCollideCollidersInternal(Collider* complexCollider, Collider* collider2, PodArray<Physics::Manifold>* manifolds)
 {
   Shape2Type shape2;
   ColliderToShape(collider2, shape2);
@@ -164,20 +162,14 @@ bool ComplexCollideCollidersInternal(Collider* complexCollider,
 
 /// Resolves the TrueType of RangeInLocalSpace to the LocalFunctor.
 template <typename ColliderType, typename Shape2Type>
-bool ComplexCollideCollidersResolveLocal(Collider* complexCollider,
-                                         Collider* collider2,
-                                         PodArray<Physics::Manifold>* manifolds,
-                                         TrueType)
+bool ComplexCollideCollidersResolveLocal(Collider* complexCollider, Collider* collider2, PodArray<Physics::Manifold>* manifolds, TrueType)
 {
   return ComplexCollideCollidersInternal<ColliderType, Shape2Type, LocalFunctor>(complexCollider, collider2, manifolds);
 }
 
 /// Resolves the FalseType of RangeInLocalSpace to the WorldFunctor.
 template <typename ColliderType, typename Shape2Type>
-bool ComplexCollideCollidersResolveLocal(Collider* complexCollider,
-                                         Collider* collider2,
-                                         PodArray<Physics::Manifold>* manifolds,
-                                         FalseType)
+bool ComplexCollideCollidersResolveLocal(Collider* complexCollider, Collider* collider2, PodArray<Physics::Manifold>* manifolds, FalseType)
 {
   return ComplexCollideCollidersInternal<ColliderType, Shape2Type, WorldFunctor>(complexCollider, collider2, manifolds);
 }
@@ -191,8 +183,7 @@ bool ComplexCollideCollidersA(Collider* complexCollider, Collider* collider2, Po
 {
   // let overloading based upon the RangeInLocalSpace type take care of the
   // functor
-  return ComplexCollideCollidersResolveLocal<ColliderType, Shape2Type>(
-      complexCollider, collider2, manifolds, typename ColliderType::RangeInLocalSpace());
+  return ComplexCollideCollidersResolveLocal<ColliderType, Shape2Type>(complexCollider, collider2, manifolds, typename ColliderType::RangeInLocalSpace());
 }
 
 /// Resolves the order when the complex collider is the second collider.
@@ -201,8 +192,7 @@ bool ComplexCollideCollidersB(Collider* collider1, Collider* complexCollider, Po
 {
   // let overloading based upon the RangeInLocalSpace type take care of the
   // functor
-  return ComplexCollideCollidersResolveLocal<ColliderType, Shape1Type>(
-      complexCollider, collider1, manifolds, typename ColliderType::RangeInLocalSpace());
+  return ComplexCollideCollidersResolveLocal<ColliderType, Shape1Type>(complexCollider, collider1, manifolds, typename ColliderType::RangeInLocalSpace());
 }
 
 template <typename ColliderType0, typename ColliderType1, typename SpaceFunctor0, typename SpaceFunctor1>
@@ -304,18 +294,14 @@ bool ComplexVsComplexColliders(Collider* collider0, Collider* collider1, PodArra
   if (type0Local)
   {
     if (type1Local)
-      return ComplexVsComplexCollidersInternal<ColliderType0, ColliderType1, LocalFunctor, LocalFunctor>(
-          collider0, collider1, manifolds);
+      return ComplexVsComplexCollidersInternal<ColliderType0, ColliderType1, LocalFunctor, LocalFunctor>(collider0, collider1, manifolds);
     else
-      return ComplexVsComplexCollidersInternal<ColliderType0, ColliderType1, LocalFunctor, WorldFunctor>(
-          collider0, collider1, manifolds);
+      return ComplexVsComplexCollidersInternal<ColliderType0, ColliderType1, LocalFunctor, WorldFunctor>(collider0, collider1, manifolds);
   }
   else if (type1Local)
-    return ComplexVsComplexCollidersInternal<ColliderType0, ColliderType1, WorldFunctor, LocalFunctor>(
-        collider0, collider1, manifolds);
+    return ComplexVsComplexCollidersInternal<ColliderType0, ColliderType1, WorldFunctor, LocalFunctor>(collider0, collider1, manifolds);
   else
-    return ComplexVsComplexCollidersInternal<ColliderType0, ColliderType1, WorldFunctor, WorldFunctor>(
-        collider0, collider1, manifolds);
+    return ComplexVsComplexCollidersInternal<ColliderType0, ColliderType1, WorldFunctor, WorldFunctor>(collider0, collider1, manifolds);
 }
 
 template <typename ColliderType0, typename ColliderType1>
@@ -327,10 +313,7 @@ bool OverlapComplexVsComplexColliders(Collider* collider0, Collider* collider1)
 /// The core logic of the complex shape cast. Helps to deal with the
 /// weirdness of getting a different shape type when going to local.
 template <typename CastType, typename RangeType, typename ColliderType>
-bool ComplexCastInternal(const CastType& castShape,
-                         ColliderType* complexCollider,
-                         RangeType& range,
-                         ProxyResult* result)
+bool ComplexCastInternal(const CastType& castShape, ColliderType* complexCollider, RangeType& range, ProxyResult* result)
 {
   bool hitItem = false;
   real closestTime = Math::PositiveMax();
@@ -388,10 +371,7 @@ bool ComplexCastInternal(const CastType& castShape,
 /// cast against certain shapes, then it should use SpecialComplexCastVsShape
 /// declared below.
 template <typename CastType, typename ColliderType>
-bool ComplexCastVsShape(const CastType& castShape,
-                        Collider* complexCollider,
-                        ProxyResult* result,
-                        BaseCastFilter& filter)
+bool ComplexCastVsShape(const CastType& castShape, Collider* complexCollider, ProxyResult* result, BaseCastFilter& filter)
 {
   ColliderType* castedCollider = static_cast<ColliderType*>(complexCollider);
 
@@ -503,10 +483,7 @@ bool ComplexOverlapVsShape(const ShapeType& shape, Collider* complexCollider)
 /// with the fact that the shape it will actually receive is an ellipsoid or
 /// obb.
 template <typename CastType, typename ColliderType>
-bool SpecialComplexCastVsShape(const CastType& castShape,
-                               Collider* complexCollider,
-                               ProxyResult* result,
-                               BaseCastFilter& filter)
+bool SpecialComplexCastVsShape(const CastType& castShape, Collider* complexCollider, ProxyResult* result, BaseCastFilter& filter)
 {
   ColliderType* castedCollider = static_cast<ColliderType*>(complexCollider);
 

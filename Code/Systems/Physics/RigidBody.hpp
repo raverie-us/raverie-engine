@@ -13,8 +13,7 @@ class PhysicsNode;
 class IgnoreSpaceEffects;
 
 // Internal states of a rigid body.
-DeclareBitField8(
-    RigidBodyStates, Static, Asleep, Kinematic, RotationLocked, Mode2D, AllowSleep, Inherit2DMode, SleepAccumulated);
+DeclareBitField8(RigidBodyStates, Static, Asleep, Kinematic, RotationLocked, Mode2D, AllowSleep, Inherit2DMode, SleepAccumulated);
 
 /// What kind of dynamics this body should have. Determines if forces are
 /// integrated and if collisions are resolved.

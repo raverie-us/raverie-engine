@@ -91,8 +91,7 @@ void DisplayCodeDefinition(CodeDefinition& definition)
   else if (resource == nullptr && definition.NameLocation.IsNative)
   {
     String extension = FileExtensionManager::GetRaverieScriptTypeEntry()->GetDefaultExtensionNoDot();
-    definitionDocument =
-        editor->OpenTextString(definition.NameLocation.Origin, definition.NameLocation.Code, extension);
+    definitionDocument = editor->OpenTextString(definition.NameLocation.Origin, definition.NameLocation.Code, extension);
   }
 
   if (definitionDocument)
@@ -233,8 +232,7 @@ void ExpandAabb(Cog* cog, Aabb& aabb, IncludeMode::Type includeMode, bool world,
     ExpandAabb(&child, aabb, includeMode, world, !world);
 }
 
-void ExpandAabb(
-    HandleParam instance, Aabb& aabb, IncludeMode::Type includeMode, bool world, bool toParent, bool expandTransform)
+void ExpandAabb(HandleParam instance, Aabb& aabb, IncludeMode::Type includeMode, bool world, bool toParent, bool expandTransform)
 {
   Cog* cog = instance.Get<Cog*>();
 

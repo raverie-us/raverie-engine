@@ -176,9 +176,7 @@ private:
   Array<TilePlacement> mPlacedTiles;
 };
 
-Layout* CreateStackLayout(LayoutDirection::Enum direction,
-                          Vec2Param spacing = Vec2::cZero,
-                          const Thickness& padding = Thickness::cZero);
+Layout* CreateStackLayout(LayoutDirection::Enum direction, Vec2Param spacing = Vec2::cZero, const Thickness& padding = Thickness::cZero);
 Layout* CreateStackLayout();
 Layout* CreateRowLayout();
 Layout* CreateFillLayout(Thickness padding = Thickness::cZero);

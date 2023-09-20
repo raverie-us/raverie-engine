@@ -7,25 +7,11 @@ namespace Raverie
 /// Most of these flags are internally used to store what the effect is
 /// operating on. The Active and WakeUpOnChange flags are exposed as base class
 /// properties though.
-DeclareBitField8(
-    EffectFlags, Active, WakeUpOnChange, DebugDraw, SpaceEffect, RegionEffect, BodyEffect, ColliderEffect, LevelEffect);
+DeclareBitField8(EffectFlags, Active, WakeUpOnChange, DebugDraw, SpaceEffect, RegionEffect, BodyEffect, ColliderEffect, LevelEffect);
 
 /// All physics effect types. Exposed on each physics effect to denote
 /// what kind of effect it is. Also used in IgnoreSpaceEffects.
-DeclareBitField13(PhysicsEffectType,
-                  Drag,
-                  Flow,
-                  Force,
-                  Gravity,
-                  Thrust,
-                  Vortex,
-                  Wind,
-                  Torque,
-                  PointGravity,
-                  PointForce,
-                  Buoyancy,
-                  Custom,
-                  Invalid);
+DeclareBitField13(PhysicsEffectType, Drag, Flow, Force, Gravity, Thrust, Vortex, Wind, Torque, PointGravity, PointForce, Buoyancy, Custom, Invalid);
 
 /// Describes how force values are interpolated between min/max values.
 /// <param name="Linear">Linearly interpolate between values.</param>

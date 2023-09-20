@@ -27,12 +27,7 @@ RaverieDefineType(NetSpace, builder, type)
   RaverieBindGetterProperty(NetUserCount)->Add(new EditInGameFilter);
 }
 
-NetSpace::NetSpace() :
-    NetObject(),
-    mPendingNetObjects(),
-    mPendingNetLevelStarted(false),
-    mReadyChildMap(),
-    mDelayedParentMap()
+NetSpace::NetSpace() : NetObject(), mPendingNetObjects(), mPendingNetLevelStarted(false), mReadyChildMap(), mDelayedParentMap()
 {
 }
 
@@ -120,8 +115,7 @@ void NetSpace::ServerOnEngineUpdate(UpdateEvent* event)
     {
       // Emplace net object by level now
       // (We clone later when replicating the entire net level state)
-      if (!netPeer->EmplaceNetObjectBySpaceAndLevel(cog,
-                                                    cog->GetSpace(),
+      if (!netPeer->EmplaceNetObjectBySpaceAndLevel(cog, cog->GetSpace(),
                                                     netObject->GetInitializationLevelResourceIdName())) // Unable?
         continue;                                                                                       // Skip
     }
@@ -381,8 +375,7 @@ void NetSpace::AddDelayedAttachment(NetObjectId readyChild, NetObjectId delayedP
   }
 
   // Add to ready child map
-  ArrayMap<NetObjectId, NetObjectId>::pointer_bool_pair result1 =
-      mReadyChildMap.InsertOrAssign(readyChild, delayedParent);
+  ArrayMap<NetObjectId, NetObjectId>::pointer_bool_pair result1 = mReadyChildMap.InsertOrAssign(readyChild, delayedParent);
   Assert(result1.second); // (Insertion should have occurred)
 
   // Add to ready child set in delayed parent map

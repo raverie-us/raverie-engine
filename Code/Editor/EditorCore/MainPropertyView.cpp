@@ -8,8 +8,7 @@ RaverieDefineType(MainPropertyView, builder, type)
 {
 }
 
-MainPropertyView::MainPropertyView(Composite* parent, MetaSelection* selection, OperationQueue* queue) :
-    Composite(parent)
+MainPropertyView::MainPropertyView(Composite* parent, MetaSelection* selection, OperationQueue* queue) : Composite(parent)
 {
   // The name of this widget
   SetName("Properties");
@@ -382,8 +381,7 @@ Handle MainPropertyView::PreviewResource(HandleParam object)
     return Handle();
 
   // Create the preview widget
-  PreviewWidget* tile =
-      ResourcePreview::CreatePreviewWidget(mPreviewArea, resource->Name, resource, PreviewImportance::High);
+  PreviewWidget* tile = ResourcePreview::CreatePreviewWidget(mPreviewArea, resource->Name, resource, PreviewImportance::High);
   mPreviewTile = tile;
 
   if (tile == nullptr)

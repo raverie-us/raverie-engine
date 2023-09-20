@@ -125,8 +125,7 @@ public:
   Widget* mDisplay;
   SetCallback mCallback;
 
-  SliderManipulator(Mouse* mouse, ColorPicker* owner, Widget* display, SetCallback callback) :
-      MouseManipulation(mouse, owner)
+  SliderManipulator(Mouse* mouse, ColorPicker* owner, Widget* display, SetCallback callback) : MouseManipulation(mouse, owner)
   {
     mColorPicker = owner;
     mDisplay = display;

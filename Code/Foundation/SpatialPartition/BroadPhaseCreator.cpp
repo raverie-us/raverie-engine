@@ -83,9 +83,7 @@ BroadPhaseCreator* BroadPhaseLibrary::GetCreatorBy(PolymorphicNode& broadPhaseNo
   {
     // Find the component's creator using the TypeId
     BroadPhaseIdMapType::range range = mBroadPhaseTypeMap.Find(broadPhaseNode.RuntimeType);
-    ErrorIf(range.Empty(),
-            "Could not find broad phase creator for '%s'. Bad file?",
-            broadPhaseNode.RuntimeType->Name.c_str());
+    ErrorIf(range.Empty(), "Could not find broad phase creator for '%s'. Bad file?", broadPhaseNode.RuntimeType->Name.c_str());
     if (!range.Empty())
       return range.Front().second;
     else

@@ -19,9 +19,7 @@ RaverieDefineType(CustomCollisionEventTracker, builder, type)
   RaverieBindMethod(SendEvents);
 }
 
-void CustomCollisionEventTracker::AddCollision(Collider* otherCollider,
-                                               Vec3Param worldPoint,
-                                               Vec3Param worldNormalTowardsOther)
+void CustomCollisionEventTracker::AddCollision(Collider* otherCollider, Vec3Param worldPoint, Vec3Param worldNormalTowardsOther)
 {
   if (otherCollider == nullptr)
   {

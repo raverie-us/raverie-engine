@@ -382,8 +382,7 @@ int Resource::Release()
     // Resources owned by a resource library should only be deleted by that
     // library. Library unloading flag will only be true while a library is
     // clearing its own handles.
-    ErrorIf(!IsRuntime() && !ResourceLibrary::IsLibraryUnloading(),
-            "A library resource is being removed but not by the library.");
+    ErrorIf(!IsRuntime() && !ResourceLibrary::IsLibraryUnloading(), "A library resource is being removed but not by the library.");
 
     mManager->Remove(this, RemoveMode::Deleted);
     delete this;

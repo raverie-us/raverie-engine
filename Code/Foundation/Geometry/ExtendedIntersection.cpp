@@ -53,8 +53,7 @@ bool Overlap(Vec3Param point, const Cylinder& cylinder)
 
 bool Overlap(Vec3Param point, const Ellipsoid& ellipsoid)
 {
-  return Intersection::PointEllipsoid(point, ellipsoid.Center, ellipsoid.Radii, ellipsoid.Basis) >=
-         (Intersection::Type)0;
+  return Intersection::PointEllipsoid(point, ellipsoid.Center, ellipsoid.Radii, ellipsoid.Basis) >= (Intersection::Type)0;
 }
 
 bool Overlap(Vec3Param point, const Frustum& frustum)
@@ -84,8 +83,7 @@ bool Overlap(Vec3Param point, const Triangle& triangle)
 
 bool Overlap(Vec3Param point, const Tetrahedron& tetrahedron)
 {
-  return Intersection::PointTetrahedron(point, tetrahedron.p0, tetrahedron.p1, tetrahedron.p2, tetrahedron.p3) >=
-         (Intersection::Type)0;
+  return Intersection::PointTetrahedron(point, tetrahedron.p0, tetrahedron.p1, tetrahedron.p2, tetrahedron.p3) >= (Intersection::Type)0;
 }
 
 bool Overlap(Vec3Param point, const ConvexMeshShape& supportShape)
@@ -123,20 +121,17 @@ bool Overlap(const Ray& ray, const Aabb& aabb)
 
 bool Overlap(const Ray& ray, const Capsule& capsule)
 {
-  return Intersection::RayCapsule(ray.Start, ray.Direction, capsule.PointA, capsule.PointB, capsule.Radius) >=
-         (Intersection::Type)0;
+  return Intersection::RayCapsule(ray.Start, ray.Direction, capsule.PointA, capsule.PointB, capsule.Radius) >= (Intersection::Type)0;
 }
 
 bool Overlap(const Ray& ray, const Cylinder& cylinder)
 {
-  return Intersection::RayCylinder(ray.Start, ray.Direction, cylinder.PointA, cylinder.PointB, cylinder.Radius) >=
-         (Intersection::Type)0;
+  return Intersection::RayCylinder(ray.Start, ray.Direction, cylinder.PointA, cylinder.PointB, cylinder.Radius) >= (Intersection::Type)0;
 }
 
 bool Overlap(const Ray& ray, const Ellipsoid& ellipsoid)
 {
-  return Intersection::RayEllipsoid(ray.Start, ray.Direction, ellipsoid.Center, ellipsoid.Radii, ellipsoid.Basis) >=
-         (Intersection::Type)0;
+  return Intersection::RayEllipsoid(ray.Start, ray.Direction, ellipsoid.Center, ellipsoid.Radii, ellipsoid.Basis) >= (Intersection::Type)0;
 }
 
 bool Overlap(const Ray& ray, const Frustum& frustum)
@@ -147,14 +142,12 @@ bool Overlap(const Ray& ray, const Frustum& frustum)
 
 bool Overlap(const Ray& ray, const Obb& obb)
 {
-  return Intersection::RayObb(ray.Start, ray.Direction, obb.Center, obb.HalfExtents, obb.Basis) >=
-         (Intersection::Type)0;
+  return Intersection::RayObb(ray.Start, ray.Direction, obb.Center, obb.HalfExtents, obb.Basis) >= (Intersection::Type)0;
 }
 
 bool Overlap(const Ray& ray, const Plane& plane)
 {
-  return Intersection::RayPlane(ray.Start, ray.Direction, plane.GetNormal(), plane.GetDistance()) >=
-         (Intersection::Type)0;
+  return Intersection::RayPlane(ray.Start, ray.Direction, plane.GetNormal(), plane.GetDistance()) >= (Intersection::Type)0;
 }
 
 bool Overlap(const Ray& ray, const Sphere& sphere)
@@ -164,15 +157,12 @@ bool Overlap(const Ray& ray, const Sphere& sphere)
 
 bool Overlap(const Ray& ray, const Triangle& triangle)
 {
-  return Intersection::RayTriangle(ray.Start, ray.Direction, triangle.p0, triangle.p1, triangle.p2) >=
-         (Intersection::Type)0;
+  return Intersection::RayTriangle(ray.Start, ray.Direction, triangle.p0, triangle.p1, triangle.p2) >= (Intersection::Type)0;
 }
 
 bool Overlap(const Ray& ray, const Tetrahedron& tetrahedron)
 {
-  return Intersection::RayTetrahedron(
-             ray.Start, ray.Direction, tetrahedron.p0, tetrahedron.p1, tetrahedron.p2, tetrahedron.p3) >=
-         (Intersection::Type)0;
+  return Intersection::RayTetrahedron(ray.Start, ray.Direction, tetrahedron.p0, tetrahedron.p1, tetrahedron.p2, tetrahedron.p3) >= (Intersection::Type)0;
 }
 
 bool Overlap(const Ray& ray, const ConvexMeshShape& supportShape)
@@ -211,14 +201,12 @@ bool Overlap(const Segment& segment, const Aabb& aabb)
 
 bool Overlap(const Segment& segment, const Capsule& capsule)
 {
-  return Intersection::SegmentCapsule(segment.Start, segment.End, capsule.PointA, capsule.PointB, capsule.Radius) >=
-         (Intersection::Type)0;
+  return Intersection::SegmentCapsule(segment.Start, segment.End, capsule.PointA, capsule.PointB, capsule.Radius) >= (Intersection::Type)0;
 }
 
 bool Overlap(const Segment& segment, const Cylinder& cylinder)
 {
-  return Intersection::SegmentCylinder(segment.Start, segment.End, cylinder.PointA, cylinder.PointB, cylinder.Radius) >=
-         (Intersection::Type)0;
+  return Intersection::SegmentCylinder(segment.Start, segment.End, cylinder.PointA, cylinder.PointB, cylinder.Radius) >= (Intersection::Type)0;
 }
 
 bool Overlap(const Segment& segment, const Ellipsoid& ellipsoid)
@@ -235,26 +223,22 @@ bool Overlap(const Segment& segment, const Frustum& frustum)
 
 bool Overlap(const Segment& segment, const Obb& obb)
 {
-  return Intersection::SegmentObb(segment.Start, segment.End, obb.Center, obb.HalfExtents, obb.Basis) >=
-         (Intersection::Type)0;
+  return Intersection::SegmentObb(segment.Start, segment.End, obb.Center, obb.HalfExtents, obb.Basis) >= (Intersection::Type)0;
 }
 
 bool Overlap(const Segment& segment, const Plane& plane)
 {
-  return Intersection::SegmentPlane(segment.Start, segment.End, plane.GetNormal(), plane.GetDistance()) >=
-         (Intersection::Type)0;
+  return Intersection::SegmentPlane(segment.Start, segment.End, plane.GetNormal(), plane.GetDistance()) >= (Intersection::Type)0;
 }
 
 bool Overlap(const Segment& segment, const Sphere& sphere)
 {
-  return Intersection::SegmentSphere(segment.Start, segment.End, sphere.mCenter, sphere.mRadius) >=
-         (Intersection::Type)0;
+  return Intersection::SegmentSphere(segment.Start, segment.End, sphere.mCenter, sphere.mRadius) >= (Intersection::Type)0;
 }
 
 bool Overlap(const Segment& segment, const Triangle& triangle)
 {
-  return Intersection::SegmentTriangle(segment.Start, segment.End, triangle.p0, triangle.p1, triangle.p2) >=
-         (Intersection::Type)0;
+  return Intersection::SegmentTriangle(segment.Start, segment.End, triangle.p0, triangle.p1, triangle.p2) >= (Intersection::Type)0;
 }
 
 bool Overlap(const Segment& segment, const Tetrahedron& tetrahedron)
@@ -344,8 +328,7 @@ bool Overlap(const Aabb& aabb, const Sphere& sphere)
 
 bool Overlap(const Aabb& aabb, const Triangle& triangle)
 {
-  return Intersection::AabbTriangle(aabb.mMin, aabb.mMax, triangle.p0, triangle.p1, triangle.p2) >=
-         (Intersection::Type)0;
+  return Intersection::AabbTriangle(aabb.mMin, aabb.mMax, triangle.p0, triangle.p1, triangle.p2) >= (Intersection::Type)0;
 }
 
 bool Overlap(const Aabb& aabb, const Tetrahedron& tetrahedron)
@@ -379,14 +362,12 @@ bool Overlap(const Capsule& capsule, Vec3Param point)
 
 bool Overlap(const Capsule& capsule, const Ray& ray)
 {
-  return Intersection::RayCapsule(ray.Start, ray.Direction, capsule.PointA, capsule.PointB, capsule.Radius) >=
-         (Intersection::Type)0;
+  return Intersection::RayCapsule(ray.Start, ray.Direction, capsule.PointA, capsule.PointB, capsule.Radius) >= (Intersection::Type)0;
 }
 
 bool Overlap(const Capsule& capsule, const Segment& segment)
 {
-  return Intersection::SegmentCapsule(segment.Start, segment.End, capsule.PointA, capsule.PointB, capsule.Radius) >=
-         (Intersection::Type)0;
+  return Intersection::SegmentCapsule(segment.Start, segment.End, capsule.PointA, capsule.PointB, capsule.Radius) >= (Intersection::Type)0;
 }
 
 bool Overlap(const Capsule& capsule, const Aabb& aabb)
@@ -399,9 +380,7 @@ bool Overlap(const Capsule& capsule, const Aabb& aabb)
 
 bool Overlap(const Capsule& capsule1, const Capsule& capsule2)
 {
-  return Intersection::CapsuleCapsule(
-             capsule1.PointA, capsule1.PointB, capsule1.Radius, capsule2.PointA, capsule2.PointB, capsule2.Radius) >=
-         (Intersection::Type)0;
+  return Intersection::CapsuleCapsule(capsule1.PointA, capsule1.PointB, capsule1.Radius, capsule2.PointA, capsule2.PointB, capsule2.Radius) >= (Intersection::Type)0;
 }
 
 bool Overlap(const Capsule& capsule, const Cylinder& cylinder)
@@ -444,8 +423,7 @@ bool Overlap(const Capsule& capsule, const Plane& plane)
 
 bool Overlap(const Capsule& capsule, const Sphere& sphere)
 {
-  return Intersection::CapsuleSphere(capsule.PointA, capsule.PointB, capsule.Radius, sphere.mCenter, sphere.mRadius) >=
-         (Intersection::Type)0;
+  return Intersection::CapsuleSphere(capsule.PointA, capsule.PointB, capsule.Radius, sphere.mCenter, sphere.mRadius) >= (Intersection::Type)0;
 }
 
 bool Overlap(const Capsule& capsule, const Triangle& triangle)
@@ -487,14 +465,12 @@ bool Overlap(const Cylinder& cylinder, Vec3Param point)
 
 bool Overlap(const Cylinder& cylinder, const Ray& ray)
 {
-  return Intersection::RayCylinder(ray.Start, ray.Direction, cylinder.PointA, cylinder.PointB, cylinder.Radius) >=
-         (Intersection::Type)0;
+  return Intersection::RayCylinder(ray.Start, ray.Direction, cylinder.PointA, cylinder.PointB, cylinder.Radius) >= (Intersection::Type)0;
 }
 
 bool Overlap(const Cylinder& cylinder, const Segment& segment)
 {
-  return Intersection::SegmentCylinder(segment.Start, segment.End, cylinder.PointA, cylinder.PointB, cylinder.Radius) >=
-         (Intersection::Type)0;
+  return Intersection::SegmentCylinder(segment.Start, segment.End, cylinder.PointA, cylinder.PointB, cylinder.Radius) >= (Intersection::Type)0;
 }
 
 bool Overlap(const Cylinder& cylinder, const Aabb& aabb)
@@ -593,14 +569,12 @@ bool Overlap(const Cylinder& cylinder, const SweptTriangle& sweptTri)
 
 bool Overlap(const Ellipsoid& ellipsoid, Vec3Param point)
 {
-  return Intersection::PointEllipsoid(point, ellipsoid.Center, ellipsoid.Radii, ellipsoid.Basis) >=
-         (Intersection::Type)0;
+  return Intersection::PointEllipsoid(point, ellipsoid.Center, ellipsoid.Radii, ellipsoid.Basis) >= (Intersection::Type)0;
 }
 
 bool Overlap(const Ellipsoid& ellipsoid, const Ray& ray)
 {
-  return Intersection::RayEllipsoid(ray.Start, ray.Direction, ellipsoid.Center, ellipsoid.Radii, ellipsoid.Basis) >=
-         (Intersection::Type)0;
+  return Intersection::RayEllipsoid(ray.Start, ray.Direction, ellipsoid.Center, ellipsoid.Radii, ellipsoid.Basis) >= (Intersection::Type)0;
 }
 
 bool Overlap(const Ellipsoid& ellipsoid, const Segment& segment)
@@ -821,14 +795,12 @@ bool Overlap(const Obb& obb, Vec3Param point)
 
 bool Overlap(const Obb& obb, const Ray& ray)
 {
-  return Intersection::RayObb(ray.Start, ray.Direction, obb.Center, obb.HalfExtents, obb.Basis) >=
-         (Intersection::Type)0;
+  return Intersection::RayObb(ray.Start, ray.Direction, obb.Center, obb.HalfExtents, obb.Basis) >= (Intersection::Type)0;
 }
 
 bool Overlap(const Obb& obb, const Segment& segment)
 {
-  return Intersection::SegmentObb(segment.Start, segment.End, obb.Center, obb.HalfExtents, obb.Basis) >=
-         (Intersection::Type)0;
+  return Intersection::SegmentObb(segment.Start, segment.End, obb.Center, obb.HalfExtents, obb.Basis) >= (Intersection::Type)0;
 }
 
 bool Overlap(const Obb& obb, const Aabb& aabb)
@@ -870,26 +842,22 @@ bool Overlap(const Obb& obb, const Frustum& frustum)
 
 bool Overlap(const Obb& obb1, const Obb& obb2)
 {
-  return Intersection::ObbObb(obb1.Center, obb1.HalfExtents, obb1.Basis, obb2.Center, obb2.HalfExtents, obb2.Basis) >=
-         (Intersection::Type)0;
+  return Intersection::ObbObb(obb1.Center, obb1.HalfExtents, obb1.Basis, obb2.Center, obb2.HalfExtents, obb2.Basis) >= (Intersection::Type)0;
 }
 
 bool Overlap(const Obb& obb, const Plane& plane)
 {
-  return Intersection::ObbPlane(obb.Center, obb.HalfExtents, obb.Basis, plane.GetNormal(), plane.GetDistance()) >=
-         (Intersection::Type)0;
+  return Intersection::ObbPlane(obb.Center, obb.HalfExtents, obb.Basis, plane.GetNormal(), plane.GetDistance()) >= (Intersection::Type)0;
 }
 
 bool Overlap(const Obb& obb, const Sphere& sphere)
 {
-  return Intersection::ObbSphere(obb.Center, obb.HalfExtents, obb.Basis, sphere.mCenter, sphere.mRadius) >=
-         (Intersection::Type)0;
+  return Intersection::ObbSphere(obb.Center, obb.HalfExtents, obb.Basis, sphere.mCenter, sphere.mRadius) >= (Intersection::Type)0;
 }
 
 bool Overlap(const Obb& obb, const Triangle& triangle)
 {
-  return Intersection::ObbTriangle(obb.Center, obb.HalfExtents, obb.Basis, triangle.p0, triangle.p1, triangle.p2) >=
-         (Intersection::Type)0;
+  return Intersection::ObbTriangle(obb.Center, obb.HalfExtents, obb.Basis, triangle.p0, triangle.p1, triangle.p2) >= (Intersection::Type)0;
 }
 
 bool Overlap(const Obb& obb, const Tetrahedron& tetrahedron)
@@ -923,14 +891,12 @@ bool Overlap(const Plane& plane, Vec3Param point)
 
 bool Overlap(const Plane& plane, const Ray& ray)
 {
-  return Intersection::RayPlane(ray.Start, ray.Direction, plane.GetNormal(), plane.GetDistance()) >=
-         (Intersection::Type)0;
+  return Intersection::RayPlane(ray.Start, ray.Direction, plane.GetNormal(), plane.GetDistance()) >= (Intersection::Type)0;
 }
 
 bool Overlap(const Plane& plane, const Segment& segment)
 {
-  return Intersection::SegmentPlane(segment.Start, segment.End, plane.GetNormal(), plane.GetDistance()) >=
-         (Intersection::Type)0;
+  return Intersection::SegmentPlane(segment.Start, segment.End, plane.GetNormal(), plane.GetDistance()) >= (Intersection::Type)0;
 }
 
 bool Overlap(const Plane& plane, const Aabb& aabb)
@@ -964,8 +930,7 @@ bool Overlap(const Plane& plane, const Frustum& frustum)
 
 bool Overlap(const Plane& plane, const Obb& obb)
 {
-  return Intersection::ObbPlane(obb.Center, obb.HalfExtents, obb.Basis, plane.GetNormal(), plane.GetDistance()) >=
-         (Intersection::Type)0;
+  return Intersection::ObbPlane(obb.Center, obb.HalfExtents, obb.Basis, plane.GetNormal(), plane.GetDistance()) >= (Intersection::Type)0;
 }
 
 bool Overlap(const Plane& plane1, const Plane& plane2)
@@ -976,8 +941,7 @@ bool Overlap(const Plane& plane1, const Plane& plane2)
 
 bool Overlap(const Plane& plane, const Sphere& sphere)
 {
-  return Intersection::PlaneSphere(plane.GetNormal(), plane.GetDistance(), sphere.mCenter, sphere.mRadius) >=
-         (Intersection::Type)0;
+  return Intersection::PlaneSphere(plane.GetNormal(), plane.GetDistance(), sphere.mCenter, sphere.mRadius) >= (Intersection::Type)0;
 }
 
 bool Overlap(const Plane& plane, const Triangle& triangle)
@@ -1016,8 +980,7 @@ bool Overlap(const Sphere& sphere, const Ray& ray)
 
 bool Overlap(const Sphere& sphere, const Segment& segment)
 {
-  return Intersection::SegmentSphere(segment.Start, segment.End, sphere.mCenter, sphere.mRadius) >=
-         (Intersection::Type)0;
+  return Intersection::SegmentSphere(segment.Start, segment.End, sphere.mCenter, sphere.mRadius) >= (Intersection::Type)0;
 }
 
 bool Overlap(const Sphere& sphere, const Aabb& aabb)
@@ -1027,8 +990,7 @@ bool Overlap(const Sphere& sphere, const Aabb& aabb)
 
 bool Overlap(const Sphere& sphere, const Capsule& capsule)
 {
-  return Intersection::CapsuleSphere(capsule.PointA, capsule.PointB, capsule.Radius, sphere.mCenter, sphere.mRadius) >=
-         (Intersection::Type)0;
+  return Intersection::CapsuleSphere(capsule.PointA, capsule.PointB, capsule.Radius, sphere.mCenter, sphere.mRadius) >= (Intersection::Type)0;
 }
 
 bool Overlap(const Sphere& sphere, const Cylinder& cylinder)
@@ -1057,26 +1019,22 @@ bool Overlap(const Sphere& sphere, const Frustum& frustum)
 
 bool Overlap(const Sphere& sphere, const Obb& obb)
 {
-  return Intersection::ObbSphere(obb.Center, obb.HalfExtents, obb.Basis, sphere.mCenter, sphere.mRadius) >=
-         (Intersection::Type)0;
+  return Intersection::ObbSphere(obb.Center, obb.HalfExtents, obb.Basis, sphere.mCenter, sphere.mRadius) >= (Intersection::Type)0;
 }
 
 bool Overlap(const Sphere& sphere, const Plane& plane)
 {
-  return Intersection::PlaneSphere(plane.GetNormal(), plane.GetDistance(), sphere.mCenter, sphere.mRadius) >=
-         (Intersection::Type)0;
+  return Intersection::PlaneSphere(plane.GetNormal(), plane.GetDistance(), sphere.mCenter, sphere.mRadius) >= (Intersection::Type)0;
 }
 
 bool Overlap(const Sphere& sphere1, const Sphere& sphere2)
 {
-  return Intersection::SphereSphere(sphere1.mCenter, sphere1.mRadius, sphere2.mCenter, sphere2.mRadius) >=
-         (Intersection::Type)0;
+  return Intersection::SphereSphere(sphere1.mCenter, sphere1.mRadius, sphere2.mCenter, sphere2.mRadius) >= (Intersection::Type)0;
 }
 
 bool Overlap(const Sphere& sphere, const Triangle& triangle)
 {
-  return Intersection::SphereTriangle(sphere.mCenter, sphere.mRadius, triangle.p0, triangle.p1, triangle.p2) >=
-         (Intersection::Type)0;
+  return Intersection::SphereTriangle(sphere.mCenter, sphere.mRadius, triangle.p0, triangle.p1, triangle.p2) >= (Intersection::Type)0;
 }
 
 bool Overlap(const Sphere& sphere, const Tetrahedron& tetrahedron)
@@ -1110,20 +1068,17 @@ bool Overlap(const Triangle& triangle, Vec3Param point)
 
 bool Overlap(const Triangle& triangle, const Ray& ray)
 {
-  return Intersection::RayTriangle(ray.Start, ray.Direction, triangle.p0, triangle.p1, triangle.p2) >=
-         (Intersection::Type)0;
+  return Intersection::RayTriangle(ray.Start, ray.Direction, triangle.p0, triangle.p1, triangle.p2) >= (Intersection::Type)0;
 }
 
 bool Overlap(const Triangle& triangle, const Segment& segment)
 {
-  return Intersection::SegmentTriangle(segment.Start, segment.End, triangle.p0, triangle.p1, triangle.p2) >=
-         (Intersection::Type)0;
+  return Intersection::SegmentTriangle(segment.Start, segment.End, triangle.p0, triangle.p1, triangle.p2) >= (Intersection::Type)0;
 }
 
 bool Overlap(const Triangle& triangle, const Aabb& aabb)
 {
-  return Intersection::AabbTriangle(aabb.mMin, aabb.mMax, triangle.p0, triangle.p1, triangle.p2) >=
-         (Intersection::Type)0;
+  return Intersection::AabbTriangle(aabb.mMin, aabb.mMax, triangle.p0, triangle.p1, triangle.p2) >= (Intersection::Type)0;
 }
 
 bool Overlap(const Triangle& triangle, const Capsule& capsule)
@@ -1160,8 +1115,7 @@ bool Overlap(const Triangle& triangle, const Frustum& frustum)
 
 bool Overlap(const Triangle& triangle, const Obb& obb)
 {
-  return Intersection::ObbTriangle(obb.Center, obb.HalfExtents, obb.Basis, triangle.p0, triangle.p1, triangle.p2) >=
-         (Intersection::Type)0;
+  return Intersection::ObbTriangle(obb.Center, obb.HalfExtents, obb.Basis, triangle.p0, triangle.p1, triangle.p2) >= (Intersection::Type)0;
 }
 
 bool Overlap(const Triangle& triangle, const Plane& plane)
@@ -1172,15 +1126,12 @@ bool Overlap(const Triangle& triangle, const Plane& plane)
 
 bool Overlap(const Triangle& triangle, const Sphere& sphere)
 {
-  return Intersection::SphereTriangle(sphere.mCenter, sphere.mRadius, triangle.p0, triangle.p1, triangle.p2) >=
-         (Intersection::Type)0;
+  return Intersection::SphereTriangle(sphere.mCenter, sphere.mRadius, triangle.p0, triangle.p1, triangle.p2) >= (Intersection::Type)0;
 }
 
 bool Overlap(const Triangle& triangle1, const Triangle& triangle2)
 {
-  return Intersection::TriangleTriangle(
-             triangle1.p0, triangle1.p1, triangle1.p2, triangle2.p0, triangle2.p1, triangle2.p2) >=
-         (Intersection::Type)0;
+  return Intersection::TriangleTriangle(triangle1.p0, triangle1.p1, triangle1.p2, triangle2.p0, triangle2.p1, triangle2.p2) >= (Intersection::Type)0;
 }
 
 bool Overlap(const Triangle& triangle, const Tetrahedron& tetrahedron)
@@ -1209,15 +1160,12 @@ bool Overlap(const Triangle& triangle, const SweptTriangle& sweptTri)
 
 bool Overlap(const Tetrahedron& tetrahedron, Vec3Param point)
 {
-  return Intersection::PointTetrahedron(point, tetrahedron.p0, tetrahedron.p1, tetrahedron.p2, tetrahedron.p3) >=
-         (Intersection::Type)0;
+  return Intersection::PointTetrahedron(point, tetrahedron.p0, tetrahedron.p1, tetrahedron.p2, tetrahedron.p3) >= (Intersection::Type)0;
 }
 
 bool Overlap(const Tetrahedron& tetrahedron, const Ray& ray)
 {
-  return Intersection::RayTetrahedron(
-             ray.Start, ray.Direction, tetrahedron.p0, tetrahedron.p1, tetrahedron.p2, tetrahedron.p3) >=
-         (Intersection::Type)0;
+  return Intersection::RayTetrahedron(ray.Start, ray.Direction, tetrahedron.p0, tetrahedron.p1, tetrahedron.p2, tetrahedron.p3) >= (Intersection::Type)0;
 }
 
 bool Overlap(const Tetrahedron& tetrahedron, const Segment& segment)

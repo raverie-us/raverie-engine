@@ -214,9 +214,8 @@ bool DataTreeParser::Value(bool createNode)
 {
   // Value |= P("Value", P(Integer) | P(Float) | P(Hex) | P(StringLiteral) |
   // P(Enum) | P(True) | P(False));
-  return AcceptValue(createNode, DataTokenType::Integer) || AcceptValue(createNode, DataTokenType::Float) ||
-         AcceptValue(createNode, DataTokenType::Hex) || AcceptValue(createNode, DataTokenType::StringLiteral) ||
-         AcceptValue(createNode, DataTokenType::Enumeration) || AcceptValue(createNode, DataTokenType::True) ||
+  return AcceptValue(createNode, DataTokenType::Integer) || AcceptValue(createNode, DataTokenType::Float) || AcceptValue(createNode, DataTokenType::Hex) ||
+         AcceptValue(createNode, DataTokenType::StringLiteral) || AcceptValue(createNode, DataTokenType::Enumeration) || AcceptValue(createNode, DataTokenType::True) ||
          AcceptValue(createNode, DataTokenType::False);
 }
 

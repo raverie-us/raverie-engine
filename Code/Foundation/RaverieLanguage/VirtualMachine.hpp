@@ -133,15 +133,9 @@ public:
   }
 
 // Define instruction functions for all of our opcodes
-#  define RaverieEnumValue(Name)                                                                                         \
-    static void Instruction##Name(ExecutableState* state,                                                              \
-                                  Call& call,                                                                          \
-                                  ExceptionReport& report,                                                             \
-                                  size_t& programCounter,                                                              \
-                                  PerFrameData* ourFrame,                                                              \
-                                  const Opcode& opcode);
-#  include "InstructionsEnum.inl"
-#  undef RaverieEnumValue
+#define RaverieEnumValue(Name) static void Instruction##Name(ExecutableState* state, Call& call, ExceptionReport& report, size_t& programCounter, PerFrameData* ourFrame, const Opcode& opcode);
+#include "InstructionsEnum.inl"
+#undef RaverieEnumValue
 };
 
 // Note: These HAVE to be declared in namespace scope according to the C++ spec
@@ -151,17 +145,11 @@ inline void VirtualMachine::GenericPow<Byte>(Byte& out, const Byte& base, const 
 template <>
 inline void VirtualMachine::GenericPow<Integer>(Integer& out, const Integer& base, const Integer& exponent);
 template <>
-inline void VirtualMachine::GenericPow<Integer2>(Integer2& out,
-                                                            const Integer2& base,
-                                                            const Integer2& exponent);
+inline void VirtualMachine::GenericPow<Integer2>(Integer2& out, const Integer2& base, const Integer2& exponent);
 template <>
-inline void VirtualMachine::GenericPow<Integer3>(Integer3& out,
-                                                            const Integer3& base,
-                                                            const Integer3& exponent);
+inline void VirtualMachine::GenericPow<Integer3>(Integer3& out, const Integer3& base, const Integer3& exponent);
 template <>
-inline void VirtualMachine::GenericPow<Integer4>(Integer4& out,
-                                                            const Integer4& base,
-                                                            const Integer4& exponent);
+inline void VirtualMachine::GenericPow<Integer4>(Integer4& out, const Integer4& base, const Integer4& exponent);
 template <>
 inline void VirtualMachine::GenericPow<Real2>(Real2& out, const Real2& base, const Real2& exponent);
 template <>
@@ -169,9 +157,7 @@ inline void VirtualMachine::GenericPow<Real3>(Real3& out, const Real3& base, con
 template <>
 inline void VirtualMachine::GenericPow<Real4>(Real4& out, const Real4& base, const Real4& exponent);
 template <>
-inline void VirtualMachine::GenericPow<DoubleInteger>(DoubleInteger& out,
-                                                                 const DoubleInteger& base,
-                                                                 const DoubleInteger& exponent);
+inline void VirtualMachine::GenericPow<DoubleInteger>(DoubleInteger& out, const DoubleInteger& base, const DoubleInteger& exponent);
 
 // Specializations for Mod
 template <>
@@ -183,35 +169,21 @@ inline void VirtualMachine::GenericMod<Real3>(Real3& out, const Real3& value, co
 template <>
 inline void VirtualMachine::GenericMod<Real4>(Real4& out, const Real4& value, const Real4& mod);
 template <>
-inline void VirtualMachine::GenericMod<DoubleReal>(DoubleReal& out,
-                                                              const DoubleReal& value,
-                                                              const DoubleReal& mod);
+inline void VirtualMachine::GenericMod<DoubleReal>(DoubleReal& out, const DoubleReal& value, const DoubleReal& mod);
 
 // Specializations for Scalar Pow
 template <>
-inline void VirtualMachine::GenericScalarPow<Integer2, Integer>(Integer2& out,
-                                                                           const Integer2& base,
-                                                                           const Integer& exponent);
+inline void VirtualMachine::GenericScalarPow<Integer2, Integer>(Integer2& out, const Integer2& base, const Integer& exponent);
 template <>
-inline void VirtualMachine::GenericScalarPow<Integer3, Integer>(Integer3& out,
-                                                                           const Integer3& base,
-                                                                           const Integer& exponent);
+inline void VirtualMachine::GenericScalarPow<Integer3, Integer>(Integer3& out, const Integer3& base, const Integer& exponent);
 template <>
-inline void VirtualMachine::GenericScalarPow<Integer4, Integer>(Integer4& out,
-                                                                           const Integer4& base,
-                                                                           const Integer& exponent);
+inline void VirtualMachine::GenericScalarPow<Integer4, Integer>(Integer4& out, const Integer4& base, const Integer& exponent);
 template <>
-inline void VirtualMachine::GenericScalarPow<Real2, Real>(Real2& out,
-                                                                     const Real2& base,
-                                                                     const Real& exponent);
+inline void VirtualMachine::GenericScalarPow<Real2, Real>(Real2& out, const Real2& base, const Real& exponent);
 template <>
-inline void VirtualMachine::GenericScalarPow<Real3, Real>(Real3& out,
-                                                                     const Real3& base,
-                                                                     const Real& exponent);
+inline void VirtualMachine::GenericScalarPow<Real3, Real>(Real3& out, const Real3& base, const Real& exponent);
 template <>
-inline void VirtualMachine::GenericScalarPow<Real4, Real>(Real4& out,
-                                                                     const Real4& base,
-                                                                     const Real& exponent);
+inline void VirtualMachine::GenericScalarPow<Real4, Real>(Real4& out, const Real4& base, const Real& exponent);
 
 // Specializations for Scalar Mod
 template <>
@@ -259,4 +231,3 @@ inline bool VirtualMachine::GenericIsZero<Real4>(const Real4& value);
 extern byte* RaverieLastRunningOpcode;
 extern Raverie::Function* RaverieLastRunningFunction;
 extern size_t RaverieLastRunningOpcodeLength;
-

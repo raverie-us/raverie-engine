@@ -404,10 +404,7 @@ CustomConstraintInfo* CustomJoint::GetConstraint(size_t index)
   // Verify the index
   if (index >= mConstraints.Size())
   {
-    DoNotifyException("Invalid Index",
-                      String::Format("Index '%d' is invalid. There are only '%d' constraints available.",
-                                     index,
-                                     mConstraints.Size()));
+    DoNotifyException("Invalid Index", String::Format("Index '%d' is invalid. There are only '%d' constraints available.", index, mConstraints.Size()));
     return nullptr;
   }
 

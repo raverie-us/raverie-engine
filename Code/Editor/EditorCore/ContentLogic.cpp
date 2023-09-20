@@ -32,10 +32,8 @@ void LoadContentConfig()
   // version selector goes live) set the content folder to a unique directory
   // based upon the version number
   String revisionChangesetName = BuildString("Version-", GetRevisionNumberString(), "-", GetChangeSetString());
-  contentSystem->ContentOutputPath =
-      FilePath::Combine(GetUserDocumentsApplicationDirectory(), "ContentOutput", revisionChangesetName);
-  contentSystem->PrebuiltContentPath =
-      FilePath::Combine(sourceDirectory, "Build", "PrebuiltContent", revisionChangesetName);
+  contentSystem->ContentOutputPath = FilePath::Combine(GetUserDocumentsApplicationDirectory(), "ContentOutput", revisionChangesetName);
+  contentSystem->PrebuiltContentPath = FilePath::Combine(sourceDirectory, "Build", "PrebuiltContent", revisionChangesetName);
   ZPrint("Content output directory '%s'\n", contentSystem->ContentOutputPath.c_str());
 }
 

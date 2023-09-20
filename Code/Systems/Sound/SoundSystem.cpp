@@ -129,14 +129,7 @@ RaverieDefineType(SoundSystem, builder, type)
 }
 
 SoundSystem::SoundSystem() :
-    mCounter(0),
-    mPreviewInstance(0),
-    mLatency(AudioLatency::Low),
-    mSendMicEvents(false),
-    mSendCompressedMicEvents(false),
-    mSoundSpaceCounter(0),
-    mUseRandomSeed(true),
-    mSeed(0)
+    mCounter(0), mPreviewInstance(0), mLatency(AudioLatency::Low), mSendMicEvents(false), mSendCompressedMicEvents(false), mSoundSpaceCounter(0), mUseRandomSeed(true), mSeed(0)
 {
 }
 
@@ -468,13 +461,7 @@ RaverieDefineType(AudioSettings, builder, type)
   RaverieBindGetterSetterProperty(LatencySetting);
 }
 
-AudioSettings::AudioSettings() :
-    mSystemVolume(1.0f),
-    mMinVolumeThreshold(0.015f),
-    mMixType(AudioMixTypes::AutoDetect),
-    mLatency(AudioLatency::Low),
-    mUseRandomSeed(true),
-    mSeed(0)
+AudioSettings::AudioSettings() : mSystemVolume(1.0f), mMinVolumeThreshold(0.015f), mMixType(AudioMixTypes::AutoDetect), mLatency(AudioLatency::Low), mUseRandomSeed(true), mSeed(0)
 {
 }
 

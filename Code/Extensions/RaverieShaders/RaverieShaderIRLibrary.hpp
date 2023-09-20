@@ -14,39 +14,20 @@ class RaverieSpirVFrontEndContext;
 
 typedef Pair<RaverieShaderIRType*, Raverie::Any> ConstantOpKeyType;
 
-typedef void (*DefaultConstructorResolverFn)(RaverieSpirVFrontEnd* translator,
-                                             Raverie::Type* resultType,
-                                             RaverieSpirVFrontEndContext* context);
-typedef void (*ConstructorCallResolverIRFn)(RaverieSpirVFrontEnd* translator,
-                                            Raverie::FunctionCallNode* fnCallNode,
-                                            Raverie::StaticTypeNode* staticTypeNode,
-                                            RaverieSpirVFrontEndContext* context);
-typedef void (*MemberAccessResolverIRFn)(RaverieSpirVFrontEnd* translator,
-                                         Raverie::MemberAccessNode* memberAccessNode,
-                                         RaverieSpirVFrontEndContext* context);
+typedef void (*DefaultConstructorResolverFn)(RaverieSpirVFrontEnd* translator, Raverie::Type* resultType, RaverieSpirVFrontEndContext* context);
+typedef void (*ConstructorCallResolverIRFn)(RaverieSpirVFrontEnd* translator, Raverie::FunctionCallNode* fnCallNode, Raverie::StaticTypeNode* staticTypeNode, RaverieSpirVFrontEndContext* context);
+typedef void (*MemberAccessResolverIRFn)(RaverieSpirVFrontEnd* translator, Raverie::MemberAccessNode* memberAccessNode, RaverieSpirVFrontEndContext* context);
 typedef void (*MemberFunctionResolverIRFn)(RaverieSpirVFrontEnd* translator,
                                            Raverie::FunctionCallNode* functionCallNode,
                                            Raverie::MemberAccessNode* memberAccessNode,
                                            RaverieSpirVFrontEndContext* context);
-typedef void (*MemberPropertySetterResolverIRFn)(RaverieSpirVFrontEnd* translator,
-                                                 Raverie::MemberAccessNode* memberAccessNode,
-                                                 RaverieShaderIROp* resultValue,
-                                                 RaverieSpirVFrontEndContext* context);
-typedef void (*BinaryOpResolverIRFn)(RaverieSpirVFrontEnd* translator,
-                                     Raverie::BinaryOperatorNode* binaryOpNode,
-                                     RaverieSpirVFrontEndContext* context);
-typedef void (*UnaryOpResolverIRFn)(RaverieSpirVFrontEnd* translator,
-                                    Raverie::UnaryOperatorNode* binaryOpNode,
-                                    RaverieSpirVFrontEndContext* context);
-typedef void (*TypeCastResolverIRFn)(RaverieSpirVFrontEnd* translator,
-                                     Raverie::TypeCastNode* binaryOpNode,
-                                     RaverieSpirVFrontEndContext* context);
+typedef void (*MemberPropertySetterResolverIRFn)(RaverieSpirVFrontEnd* translator, Raverie::MemberAccessNode* memberAccessNode, RaverieShaderIROp* resultValue, RaverieSpirVFrontEndContext* context);
+typedef void (*BinaryOpResolverIRFn)(RaverieSpirVFrontEnd* translator, Raverie::BinaryOperatorNode* binaryOpNode, RaverieSpirVFrontEndContext* context);
+typedef void (*UnaryOpResolverIRFn)(RaverieSpirVFrontEnd* translator, Raverie::UnaryOperatorNode* binaryOpNode, RaverieSpirVFrontEndContext* context);
+typedef void (*TypeCastResolverIRFn)(RaverieSpirVFrontEnd* translator, Raverie::TypeCastNode* binaryOpNode, RaverieSpirVFrontEndContext* context);
 typedef void (*TemplateTypeIRResloverFn)(RaverieSpirVFrontEnd* translator, Raverie::BoundType* boundType);
-typedef void (*ExpressionInitializerIRResolverFn)(RaverieSpirVFrontEnd* translator,
-                                                  Raverie::ExpressionInitializerNode*& node,
-                                                  RaverieSpirVFrontEndContext* context);
+typedef void (*ExpressionInitializerIRResolverFn)(RaverieSpirVFrontEnd* translator, Raverie::ExpressionInitializerNode*& node, RaverieSpirVFrontEndContext* context);
 
-//-------------------------------------------------------------------FragmentSharedKey
 /// Hash key used to lookup fields with the FragmentShared attribute. A shared field
 /// is uniquely described by its type and name (additionally include any storage
 /// class as this is technically part of the type, not sure if this is actually important).
@@ -118,10 +99,7 @@ class OperatorResolvers
 {
 public:
   /// Binary operators
-  void RegisterBinaryOpResolver(Raverie::Type* lhsType,
-                                Raverie::Type* rhsType,
-                                Raverie::Grammar::Enum op,
-                                BinaryOpResolverIRFn resolver);
+  void RegisterBinaryOpResolver(Raverie::Type* lhsType, Raverie::Type* rhsType, Raverie::Grammar::Enum op, BinaryOpResolverIRFn resolver);
   BinaryOpResolverIRFn FindOpResolver(BinaryOperatorKey& opId);
 
   /// Unary operators
@@ -199,8 +177,7 @@ public:
   // Constructor library replacements
   RaverieShaderIRFunction* FindFunction(Raverie::Function* raverieFunction, bool checkDependencies = true);
   SpirVExtensionInstruction* FindExtensionInstruction(Raverie::Function* raverieFunction, bool checkDependencies = true);
-  RaverieShaderExtensionImport* FindExtensionLibraryImport(SpirVExtensionLibrary* extensionLibrary,
-                                                         bool checkDependencies = true);
+  RaverieShaderExtensionImport* FindExtensionLibraryImport(SpirVExtensionLibrary* extensionLibrary, bool checkDependencies = true);
 
   RaverieShaderIRConstantLiteral* FindConstantLiteral(Raverie::Any& literalValue, bool checkDependencies = true);
   RaverieShaderIROp* FindConstantOp(ConstantOpKeyType& key, bool checkDependencies = true);
@@ -258,23 +235,14 @@ public:
   UnaryOpResolverIRFn FindOperatorResolver(UnaryOperatorKey& opId, bool checkDependencies = true);
   TypeCastResolverIRFn FindOperatorResolver(TypeCastKey& opId, bool checkDependencies = true);
 
-  MemberAccessResolverIRFn FindFieldResolver(Raverie::Type* raverieType,
-                                             Raverie::Field* raverieField,
-                                             bool checkDependencies = true);
-  MemberFunctionResolverIRFn FindFunctionResolver(Raverie::Type* raverieType,
-                                                  Raverie::Function* raverieFunction,
-                                                  bool checkDependencies = true);
-  MemberPropertySetterResolverIRFn FindSetterResolver(Raverie::Type* raverieType,
-                                                      Raverie::Function* raverieFunction,
-                                                      bool checkDependencies = true);
-  ConstructorCallResolverIRFn FindConstructorResolver(Raverie::Type* raverieType,
-                                                      Raverie::Function* raverieFunction,
-                                                      bool checkDependencies = true);
+  MemberAccessResolverIRFn FindFieldResolver(Raverie::Type* raverieType, Raverie::Field* raverieField, bool checkDependencies = true);
+  MemberFunctionResolverIRFn FindFunctionResolver(Raverie::Type* raverieType, Raverie::Function* raverieFunction, bool checkDependencies = true);
+  MemberPropertySetterResolverIRFn FindSetterResolver(Raverie::Type* raverieType, Raverie::Function* raverieFunction, bool checkDependencies = true);
+  ConstructorCallResolverIRFn FindConstructorResolver(Raverie::Type* raverieType, Raverie::Function* raverieFunction, bool checkDependencies = true);
 
   RaverieShaderIRFunction* FindFunction(Raverie::Function* raverieFunction, bool checkDependencies = true);
   SpirVExtensionInstruction* FindExtensionInstruction(Raverie::Function* raverieFunction, bool checkDependencies = true);
-  RaverieShaderExtensionImport* FindExtensionLibraryImport(SpirVExtensionLibrary* extensionLibrary,
-                                                         bool checkDependencies = true);
+  RaverieShaderExtensionImport* FindExtensionLibraryImport(SpirVExtensionLibrary* extensionLibrary, bool checkDependencies = true);
 
   RaverieShaderIRConstantLiteral* FindConstantLiteral(Raverie::Any& literalValue, bool checkDependencies = true);
 

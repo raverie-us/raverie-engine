@@ -209,9 +209,7 @@ public:
 
   /// Parses an argument list string into types and parameter names
   /// An argument list string takes the form of '(int lives, float speed)'
-  static void AddCallTipParametersFromArgumentString(CallTip& tip,
-                                                     StringRange arguments,
-                                                     ArgumentOptions::Type options);
+  static void AddCallTipParametersFromArgumentString(CallTip& tip, StringRange arguments, ArgumentOptions::Type options);
 };
 
 /// Resource that can be edited as text and is searchable.

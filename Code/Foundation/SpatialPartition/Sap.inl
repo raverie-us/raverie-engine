@@ -118,8 +118,7 @@ template <typename ClientDataType>
 void Sap<ClientDataType>::RemoveProxy(BroadPhaseProxy& proxy)
 {
   uint boxNum = proxy.ToU32();
-  ErrorIf(boxNum >= mBoxes.Size() || mBoxes[boxNum].mObj == nullptr,
-          "Invalid proxy removed. Proxy did not reference a valid object.");
+  ErrorIf(boxNum >= mBoxes.Size() || mBoxes[boxNum].mObj == nullptr, "Invalid proxy removed. Proxy did not reference a valid object.");
 
   // need to take care of the endpoints by setting them to infinity
   // and updating them. Doing this will properly move the endpoint to
@@ -148,8 +147,7 @@ void Sap<ClientDataType>::RemoveProxies(ProxyHandleArray& proxies)
   {
     BroadPhaseProxy& proxy = *range.Front();
     uint boxIndex = proxy.ToU32();
-    ErrorIf(boxIndex >= mBoxes.Size() || mBoxes[boxIndex].mObj == nullptr,
-            "Invalid proxy removed. Proxy did not reference a valid object.");
+    ErrorIf(boxIndex >= mBoxes.Size() || mBoxes[boxIndex].mObj == nullptr, "Invalid proxy removed. Proxy did not reference a valid object.");
     mBoxes[boxIndex].mObj = nullptr;
     mOpenIndices.PushBack(boxIndex);
   }
@@ -167,8 +165,7 @@ template <typename ClientDataType>
 void Sap<ClientDataType>::UpdateProxy(BroadPhaseProxy& proxy, DataType& data)
 {
   uint index = proxy.ToU32();
-  ErrorIf(index >= mBoxes.Size() || mBoxes[index].mObj == nullptr,
-          "Invalid proxy updated. Proxy did not reference a valid object.");
+  ErrorIf(index >= mBoxes.Size() || mBoxes[index].mObj == nullptr, "Invalid proxy updated. Proxy did not reference a valid object.");
 
   // there could be an update where our client data changed
   // so make sure to update it (ie. a remove->Insert)
@@ -344,14 +341,8 @@ void Sap<ClientDataType>::Validate()
         // validate correct sorting
         EndPointType& leftEndpoint = mAxes[axis][axisIndex - 1];
         EndPointType& rightEndpoint = mAxes[axis][axisIndex + 1];
-        ErrorIf(endPoint.mVal < leftEndpoint.mVal,
-                "Endpoint of box %d is smaller than the box %d to the left.",
-                endPoint.GetIndex() / 6,
-                leftEndpoint.GetIndex() / 6);
-        ErrorIf(endPoint.mVal > rightEndpoint.mVal,
-                "Endpoint of box %d is greater than the box %d to the right.",
-                endPoint.GetIndex() / 6,
-                rightEndpoint.GetIndex() / 6);
+        ErrorIf(endPoint.mVal < leftEndpoint.mVal, "Endpoint of box %d is smaller than the box %d to the left.", endPoint.GetIndex() / 6, leftEndpoint.GetIndex() / 6);
+        ErrorIf(endPoint.mVal > rightEndpoint.mVal, "Endpoint of box %d is greater than the box %d to the right.", endPoint.GetIndex() / 6, rightEndpoint.GetIndex() / 6);
       }
     }
   }

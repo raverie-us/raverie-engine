@@ -25,31 +25,31 @@ protected:
   }
 };
 
-#define RaverieDeclareExplicitSingletonContents(T)                                                                        \
-public:                                                                                                                \
-  static T* GetInstance()                                                                                              \
-  {                                                                                                                    \
-    return mInstance;                                                                                                  \
-  }                                                                                                                    \
-                                                                                                                       \
-  static void Initialize()                                                                                             \
-  {                                                                                                                    \
-    ReturnIf(mInstance != nullptr,                                                                                     \
-             ,                                                                                                         \
-             "The singleton is being "                                                                                 \
-             "initialized more than once");                                                                            \
-    mInstance = new T();                                                                                               \
-  }                                                                                                                    \
-                                                                                                                       \
-  static void Destroy()                                                                                                \
-  {                                                                                                                    \
-    delete mInstance;                                                                                                  \
-    mInstance = nullptr;                                                                                               \
-  }                                                                                                                    \
-                                                                                                                       \
-private:                                                                                                               \
-  static T* mInstance;                                                                                                 \
-                                                                                                                       \
+#define RaverieDeclareExplicitSingletonContents(T)                                                                                                                                                     \
+public:                                                                                                                                                                                                \
+  static T* GetInstance()                                                                                                                                                                              \
+  {                                                                                                                                                                                                    \
+    return mInstance;                                                                                                                                                                                  \
+  }                                                                                                                                                                                                    \
+                                                                                                                                                                                                       \
+  static void Initialize()                                                                                                                                                                             \
+  {                                                                                                                                                                                                    \
+    ReturnIf(mInstance != nullptr,                                                                                                                                                                     \
+             ,                                                                                                                                                                                         \
+             "The singleton is being "                                                                                                                                                                 \
+             "initialized more than once");                                                                                                                                                            \
+    mInstance = new T();                                                                                                                                                                               \
+  }                                                                                                                                                                                                    \
+                                                                                                                                                                                                       \
+  static void Destroy()                                                                                                                                                                                \
+  {                                                                                                                                                                                                    \
+    delete mInstance;                                                                                                                                                                                  \
+    mInstance = nullptr;                                                                                                                                                                               \
+  }                                                                                                                                                                                                    \
+                                                                                                                                                                                                       \
+private:                                                                                                                                                                                               \
+  static T* mInstance;                                                                                                                                                                                 \
+                                                                                                                                                                                                       \
 public:
 
 #define RaverieDefineExplicitSingletonContents(T) T* T::mInstance = nullptr;

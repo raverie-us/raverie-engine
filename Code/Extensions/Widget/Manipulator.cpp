@@ -224,15 +224,13 @@ void MoveUpperAxis(int a, Vec3& newObjectPos, Vec2& newObjectSize, Vec2Param min
   newObjectSize[a] -= moveAxis;
 }
 
-void MoveLowerAxis(
-    int a, Vec3& newObjectPos, Vec2& newObjectSize, Vec2Param minSize, Vec2Param maxSize, Vec2Param movement)
+void MoveLowerAxis(int a, Vec3& newObjectPos, Vec2& newObjectSize, Vec2Param minSize, Vec2Param maxSize, Vec2Param movement)
 {
   newObjectSize[a] += movement[a];
   newObjectSize[a] = Math::Clamp(newObjectSize[a], minSize[a], maxSize[a]);
 }
 
-SizingManipulation::SizingManipulation(Mouse* mouse, Widget* toBeSized, DockMode::Enum mode) :
-    MouseManipulation(mouse, toBeSized->GetParent())
+SizingManipulation::SizingManipulation(Mouse* mouse, Widget* toBeSized, DockMode::Enum mode) : MouseManipulation(mouse, toBeSized->GetParent())
 {
   mBeingSized = toBeSized;
   mTargetStartPosition = toBeSized->GetTranslation();

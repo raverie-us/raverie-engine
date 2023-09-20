@@ -129,8 +129,7 @@ struct WeightedProbabilityTable
       // now we removed some of the current probability from the large bucket,
       // so recompute what portion remains (could do large -= small,
       // but (large + small) - 1 is apparently more numerically stable.
-      mItems[largeIndex].mWeightedProbability =
-          (mItems[largeIndex].mWeightedProbability + mItems[smallIndex].mWeightedProbability) - 1;
+      mItems[largeIndex].mWeightedProbability = (mItems[largeIndex].mWeightedProbability + mItems[smallIndex].mWeightedProbability) - 1;
       // now we have to check to see if the large item is still large or not,
       // put it in the correct bucket
       if (mItems[largeIndex].mWeightedProbability < 1)

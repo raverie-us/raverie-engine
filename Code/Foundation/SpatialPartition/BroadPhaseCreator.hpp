@@ -61,8 +61,7 @@ namespace Z
 extern BroadPhaseLibrary* gBroadPhaseLibrary;
 } // namespace Z
 
-#define RegisterBroadPhase(type, canBeUsedAs)                                                                          \
-  Z::gBroadPhaseLibrary->RegisterBroadPhaseCreator(RaverieTypeId(type), new BroadPhaseCreatorType<type>(), canBeUsedAs);
+#define RegisterBroadPhase(type, canBeUsedAs) Z::gBroadPhaseLibrary->RegisterBroadPhaseCreator(RaverieTypeId(type), new BroadPhaseCreatorType<type>(), canBeUsedAs);
 
 /// A property editor for enumerating broadphase types
 /// (BroadPhaseType is used to distinguish between Static and Dynamic

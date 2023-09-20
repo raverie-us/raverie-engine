@@ -383,9 +383,7 @@ AnimationNode* SimpleAnimation::PlaySingle(Animation* animation, AnimationPlayMo
   return node;
 }
 
-AnimationNode* SimpleAnimation::DirectBlend(Animation* animation,
-                                            float transitionTime,
-                                            AnimationPlayMode::Enum playMode)
+AnimationNode* SimpleAnimation::DirectBlend(Animation* animation, float transitionTime, AnimationPlayMode::Enum playMode)
 {
   AnimationNode* activeNode = mAnimGraph->GetActiveNode();
 
@@ -415,9 +413,7 @@ AnimationNode* SimpleAnimation::CrossBlend(Animation* animation, float transitio
   return NULL;
 }
 
-AnimationNode* SimpleAnimation::PlayIsolatedAnimation(Animation* animation,
-                                                      Cog* rootBone,
-                                                      AnimationPlayMode::Enum playMode)
+AnimationNode* SimpleAnimation::PlayIsolatedAnimation(Animation* animation, Cog* rootBone, AnimationPlayMode::Enum playMode)
 {
   AnimationNode* activeNode = mAnimGraph->GetActiveNode();
 

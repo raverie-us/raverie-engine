@@ -110,8 +110,7 @@ struct CastData
   Frustum& GetFrustum();
   const Frustum& GetFrustum() const;
 
-  char bytes[Max<Max<Max<Max<sizeof(Ray), sizeof(Segment)>::Result, sizeof(Aabb)>::Result, sizeof(Sphere)>::Result,
-                 sizeof(Frustum)>::Result];
+  char bytes[Max<Max<Max<Max<sizeof(Ray), sizeof(Segment)>::Result, sizeof(Aabb)>::Result, sizeof(Sphere)>::Result, sizeof(Frustum)>::Result];
 };
 
 typedef const CastData& CastDataParam;
@@ -135,7 +134,8 @@ struct ProxyResult
   Vec3 mPoints[2];
   Vec3 mContactNormal;
 
-  union {
+  union
+  {
     /// Time of collision for a ray cast.
     real mTime;
 

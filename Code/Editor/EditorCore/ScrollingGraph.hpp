@@ -31,12 +31,7 @@ public:
   void PanToTranslation(Vec2Param graphPos, float animTime = 0.4f);
 
   /// Frames the given aabb in view.
-  void Frame(Vec2Param min,
-             Vec2Param max,
-             Vec2Param clientSize,
-             IntVec2 axes = IntVec2(1, 1),
-             Vec2 pixelPadding = Pixels(0, 0),
-             float animTime = 0.4f);
+  void Frame(Vec2Param min, Vec2Param max, Vec2Param clientSize, IntVec2 axes = IntVec2(1, 1), Vec2 pixelPadding = Pixels(0, 0), float animTime = 0.4f);
 
   struct HashMark
   {

@@ -348,8 +348,7 @@ void SoundEmitter::SetEmitAngle(float angleInDegrees)
 {
   mEmitAngle = Math::Clamp(angleInDegrees, 1.0f, 360.0f);
   EmitterNode* node = mEmitterObject;
-  Z::gSound->Mixer.AddTask(CreateFunctor(&EmitterNode::SetDirectionalAngleThreaded, node, mEmitAngle, mRearVolume),
-                           node);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&EmitterNode::SetDirectionalAngleThreaded, node, mEmitAngle, mRearVolume), node);
 }
 
 float SoundEmitter::GetRearVolume()
@@ -361,8 +360,7 @@ void SoundEmitter::SetRearVolume(float minimumVolume)
 {
   mRearVolume = Math::Clamp(minimumVolume, 0.0f, cMaxVolumeValue);
   EmitterNode* node = mEmitterObject;
-  Z::gSound->Mixer.AddTask(CreateFunctor(&EmitterNode::SetDirectionalAngleThreaded, node, mEmitAngle, mRearVolume),
-                           node);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&EmitterNode::SetDirectionalAngleThreaded, node, mEmitAngle, mRearVolume), node);
 }
 
 SoundAttenuator* SoundEmitter::GetAttenuator()

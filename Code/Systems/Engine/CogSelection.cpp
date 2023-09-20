@@ -112,9 +112,7 @@ void FilterChildrenAndProtected(const Array<CogId>& cogsIn, Array<Cog*>& cogsOut
   }
 }
 
-void FilterChildrenAndProtected(const Array<Handle>& objectsIn,
-                                Array<Handle>& objectsOut,
-                                Array<Handle>* filteredObjects)
+void FilterChildrenAndProtected(const Array<Handle>& objectsIn, Array<Handle>& objectsOut, Array<Handle>* filteredObjects)
 {
   forRange (Handle object, objectsIn.All())
   {

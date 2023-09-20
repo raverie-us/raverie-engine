@@ -246,8 +246,7 @@ void Regex::Search(StringRange text, Matches& matches, RegexFlags::Type flags) c
 String Regex::Replace(StringRange source, StringRange replaceWith) const
 {
   // Perform the replacement and get the result back
-  string result = regex_replace(
-      string(source.mBegin, source.mEnd), mPrivate->InternalRegex, string(replaceWith.mBegin, replaceWith.mEnd));
+  string result = regex_replace(string(source.mBegin, source.mEnd), mPrivate->InternalRegex, string(replaceWith.mBegin, replaceWith.mEnd));
 
   // Return that result as our string type
   return String(result.c_str(), result.size());

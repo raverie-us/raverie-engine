@@ -103,8 +103,7 @@ void GraphView::OnMouseScroll(MouseEvent* event)
 {
 }
 
-void GraphView::RenderUpdate(
-    ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
+void GraphView::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 
@@ -208,8 +207,7 @@ void GraphView::DrawLineGraph(Vec2Param size, ViewBlock& viewBlock, FrameBlock& 
   }
 }
 
-void GraphView::DrawGrid(
-    Vec2Param size, RenderFont* font, ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect)
+void GraphView::DrawGrid(Vec2Param size, RenderFont* font, ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect)
 {
   ViewNode& viewNode = AddRenderNodes(viewBlock, frameBlock, clipRect, font->mTexture);
   FontProcessor fontProcessor(frameBlock.mRenderQueues, &viewNode, ToFloatColor(Color::Black));
@@ -220,8 +218,7 @@ void GraphView::DrawGrid(
   {
     String num = String::Format("%d", i);
     Vec3 pos = Vec3(0, mSize.y - i * spacing * mSize.y, 0);
-    AddTextRange(
-        fontProcessor, font, num, ToVector2(mTranslation) + ToVector2(pos), TextAlign::Left, Vec2(1, 1), mSize, false);
+    AddTextRange(fontProcessor, font, num, ToVector2(mTranslation) + ToVector2(pos), TextAlign::Left, Vec2(1, 1), mSize, false);
   }
 
   static Array<StreamedVertex> lines;

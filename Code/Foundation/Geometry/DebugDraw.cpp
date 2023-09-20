@@ -650,13 +650,7 @@ void AddBox(DebugVertexArray& vertices, Vec4 color, Vec3 points[8], bool fill = 
   }
 }
 
-void AddBox(DebugVertexArray& vertices,
-            Vec4 color,
-            Vec3 center,
-            Vec3 extents,
-            Mat3 basis,
-            bool fill = false,
-            bool cornersOnly = false)
+void AddBox(DebugVertexArray& vertices, Vec4 color, Vec3 center, Vec3 extents, Mat3 basis, bool fill = false, bool cornersOnly = false)
 {
   Vec3 extentsX = basis.BasisX() * extents.x;
   Vec3 extentsY = basis.BasisY() * extents.y;
@@ -833,8 +827,7 @@ void AddArrowHeadFill(DebugVertexArray& vertices, Vec4 color, Vec3 tip, Vec3 bot
   }
 }
 
-void AddArrowHead(
-    DebugVertexArray& vertices, Vec4 color, Vec3 tip, Vec3 direction, float diameter, bool fill, Vec3 eyePos)
+void AddArrowHead(DebugVertexArray& vertices, Vec4 color, Vec3 tip, Vec3 direction, float diameter, bool fill, Vec3 eyePos)
 {
   if (direction.Length() < Math::Epsilon())
     return;
@@ -863,8 +856,7 @@ void AddArrowHead(
   AddCircle(vertices, color, bottom, radius, direction);
 }
 
-void AddCylinder(
-    DebugVertexArray& vertices, Vec4 color, Vec3 start, Vec3 end, float radius, uint lineCount, bool capsule = false)
+void AddCylinder(DebugVertexArray& vertices, Vec4 color, Vec3 start, Vec3 end, float radius, uint lineCount, bool capsule = false)
 {
   Vec3 axis = end - start;
   axis.AttemptNormalize();
@@ -1137,10 +1129,7 @@ void LineCross::GetVertices(const DebugViewData& viewData, DebugVertexArray& ver
 
   float axisSize = mHalfExtents * viewScale;
   for (uint i = 0; i < 3; ++i)
-    AddLine(vertices,
-            ToFloatColor(AxisColors[i]),
-            mPosition - Vec3::Axes[i] * axisSize,
-            mPosition + Vec3::Axes[i] * axisSize);
+    AddLine(vertices, ToFloatColor(AxisColors[i]), mPosition - Vec3::Axes[i] * axisSize, mPosition + Vec3::Axes[i] * axisSize);
 }
 
 void Obb::GetVertices(const DebugViewData& viewData, DebugVertexArray& vertices)

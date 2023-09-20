@@ -36,20 +36,12 @@ RaverieDefineType(SoundInstanceEvent, builder, type)
 
 // Cross Fade Object
 
-AudioFadeObject::AudioFadeObject() :
-    mFading(false),
-    mFrameIndex(0),
-    mStartFrame(0),
-    mDefaultFrames(cPropertyChangeFrames),
-    mCrossFade(false),
-    mAsset(nullptr),
-    mInstanceID(0)
+AudioFadeObject::AudioFadeObject() : mFading(false), mFrameIndex(0), mStartFrame(0), mDefaultFrames(cPropertyChangeFrames), mCrossFade(false), mAsset(nullptr), mInstanceID(0)
 {
   VolumeInterpolator.SetCurve(FalloffCurveType::Squared);
 }
 
-void AudioFadeObject::StartFade(
-    float startingVolume, unsigned startingIndex, unsigned fadeFrames, SoundAsset* asset, bool crossFade)
+void AudioFadeObject::StartFade(float startingVolume, unsigned startingIndex, unsigned fadeFrames, SoundAsset* asset, bool crossFade)
 {
   mFading = true;
   mFrameIndex = 0;
@@ -115,8 +107,7 @@ void AudioFadeObject::GetMoreSamples()
     newFramesToGet -= mFrameIndex + newFramesToGet - VolumeInterpolator.GetTotalFrames();
 
   // Add the new samples to the end of the sample array
-  mAsset->AppendSamplesThreaded(
-      &FadeSamples, mStartFrame + mFrameIndex, newFramesToGet * mAsset->mChannels, mInstanceID);
+  mAsset->AppendSamplesThreaded(&FadeSamples, mStartFrame + mFrameIndex, newFramesToGet * mAsset->mChannels, mInstanceID);
 }
 
 // Notification Object
@@ -144,13 +135,11 @@ void MusicNotificationObject::ProcessAndNotify(float currentTime, SoundInstance*
       mBeatsCount = 0;
 
       // Send notification
-      Z::gSound->Mixer.AddTaskThreaded(
-          CreateFunctor(&SoundInstance::DispatchInstanceEventFromMixThread, instance, Events::MusicBar), instance);
+      Z::gSound->Mixer.AddTaskThreaded(CreateFunctor(&SoundInstance::DispatchInstanceEventFromMixThread, instance, Events::MusicBar), instance);
     }
 
     // Send notification
-    Z::gSound->Mixer.AddTaskThreaded(
-        CreateFunctor(&SoundInstance::DispatchInstanceEventFromMixThread, instance, Events::MusicBeat), instance);
+    Z::gSound->Mixer.AddTaskThreaded(CreateFunctor(&SoundInstance::DispatchInstanceEventFromMixThread, instance, Events::MusicBeat), instance);
   }
 
   // Check for eighth notes
@@ -162,32 +151,26 @@ void MusicNotificationObject::ProcessAndNotify(float currentTime, SoundInstance*
     ++mEighthNoteCount;
 
     // Send notification for eighth note
-    Z::gSound->Mixer.AddTaskThreaded(
-        CreateFunctor(&SoundInstance::DispatchInstanceEventFromMixThread, instance, Events::MusicEighthNote), instance);
+    Z::gSound->Mixer.AddTaskThreaded(CreateFunctor(&SoundInstance::DispatchInstanceEventFromMixThread, instance, Events::MusicEighthNote), instance);
 
     // Check for other note values
 
     // Check for quarter note
     if (mEighthNoteCount % 2 == 0)
     {
-      Z::gSound->Mixer.AddTaskThreaded(
-          CreateFunctor(&SoundInstance::DispatchInstanceEventFromMixThread, instance, Events::MusicQuarterNote),
-          instance);
+      Z::gSound->Mixer.AddTaskThreaded(CreateFunctor(&SoundInstance::DispatchInstanceEventFromMixThread, instance, Events::MusicQuarterNote), instance);
     }
 
     // Check for half note
     if (mEighthNoteCount % 4 == 0)
     {
-      Z::gSound->Mixer.AddTaskThreaded(
-          CreateFunctor(&SoundInstance::DispatchInstanceEventFromMixThread, instance, Events::MusicHalfNote), instance);
+      Z::gSound->Mixer.AddTaskThreaded(CreateFunctor(&SoundInstance::DispatchInstanceEventFromMixThread, instance, Events::MusicHalfNote), instance);
     }
 
     // Check for whole note
     if (mEighthNoteCount % 8 == 0)
     {
-      Z::gSound->Mixer.AddTaskThreaded(
-          CreateFunctor(&SoundInstance::DispatchInstanceEventFromMixThread, instance, Events::MusicWholeNote),
-          instance);
+      Z::gSound->Mixer.AddTaskThreaded(CreateFunctor(&SoundInstance::DispatchInstanceEventFromMixThread, instance, Events::MusicWholeNote), instance);
     }
   }
 }
@@ -209,19 +192,12 @@ void MusicNotificationObject::ResetBeats(float currentTime, SoundInstance* insta
     mBeatsCount = 0;
     mEighthNoteCount = 0;
 
-    Z::gSound->Mixer.AddTaskThreaded(
-        CreateFunctor(&SoundInstance::DispatchInstanceEventFromMixThread, instance, Events::MusicBar), instance);
-    Z::gSound->Mixer.AddTaskThreaded(
-        CreateFunctor(&SoundInstance::DispatchInstanceEventFromMixThread, instance, Events::MusicBeat), instance);
-    Z::gSound->Mixer.AddTaskThreaded(
-        CreateFunctor(&SoundInstance::DispatchInstanceEventFromMixThread, instance, Events::MusicWholeNote), instance);
-    Z::gSound->Mixer.AddTaskThreaded(
-        CreateFunctor(&SoundInstance::DispatchInstanceEventFromMixThread, instance, Events::MusicEighthNote), instance);
-    Z::gSound->Mixer.AddTaskThreaded(
-        CreateFunctor(&SoundInstance::DispatchInstanceEventFromMixThread, instance, Events::MusicQuarterNote),
-        instance);
-    Z::gSound->Mixer.AddTaskThreaded(
-        CreateFunctor(&SoundInstance::DispatchInstanceEventFromMixThread, instance, Events::MusicHalfNote), instance);
+    Z::gSound->Mixer.AddTaskThreaded(CreateFunctor(&SoundInstance::DispatchInstanceEventFromMixThread, instance, Events::MusicBar), instance);
+    Z::gSound->Mixer.AddTaskThreaded(CreateFunctor(&SoundInstance::DispatchInstanceEventFromMixThread, instance, Events::MusicBeat), instance);
+    Z::gSound->Mixer.AddTaskThreaded(CreateFunctor(&SoundInstance::DispatchInstanceEventFromMixThread, instance, Events::MusicWholeNote), instance);
+    Z::gSound->Mixer.AddTaskThreaded(CreateFunctor(&SoundInstance::DispatchInstanceEventFromMixThread, instance, Events::MusicEighthNote), instance);
+    Z::gSound->Mixer.AddTaskThreaded(CreateFunctor(&SoundInstance::DispatchInstanceEventFromMixThread, instance, Events::MusicQuarterNote), instance);
+    Z::gSound->Mixer.AddTaskThreaded(CreateFunctor(&SoundInstance::DispatchInstanceEventFromMixThread, instance, Events::MusicHalfNote), instance);
   }
   else
   {
@@ -333,11 +309,7 @@ void SoundInstance::SetVolume(float newVolume)
 
 void SoundInstance::InterpolateVolume(float newVolume, float interpolationTime)
 {
-  Z::gSound->Mixer.AddTask(CreateFunctor(&SoundInstance::SetVolumeThreaded,
-                                         this,
-                                         Math::Clamp(newVolume, 0.0f, cMaxVolumeValue),
-                                         Math::Max(interpolationTime, 0.0f)),
-                           this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&SoundInstance::SetVolumeThreaded, this, Math::Clamp(newVolume, 0.0f, cMaxVolumeValue), Math::Max(interpolationTime, 0.0f)), this);
 }
 
 float SoundInstance::GetDecibels()
@@ -352,11 +324,7 @@ void SoundInstance::SetDecibels(float decibels)
 
 void SoundInstance::InterpolateDecibels(float decibels, float interpolationTime)
 {
-  Z::gSound->Mixer.AddTask(CreateFunctor(&SoundInstance::SetVolumeThreaded,
-                                         this,
-                                         Math::Clamp(DecibelsToVolume(decibels), 0.0f, cMaxVolumeValue),
-                                         Math::Max(interpolationTime, 0.0f)),
-                           this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&SoundInstance::SetVolumeThreaded, this, Math::Clamp(DecibelsToVolume(decibels), 0.0f, cMaxVolumeValue), Math::Max(interpolationTime, 0.0f)), this);
 }
 
 float SoundInstance::GetPitch()
@@ -371,11 +339,7 @@ void SoundInstance::SetPitch(float newPitch)
 
 void SoundInstance::InterpolatePitch(float newPitch, float interpolationTime)
 {
-  Z::gSound->Mixer.AddTask(CreateFunctor(&SoundInstance::SetPitchThreaded,
-                                         this,
-                                         Math::Clamp(newPitch, cMinPitchValue, cMaxPitchValue),
-                                         Math::Max(interpolationTime, 0.0f)),
-                           this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&SoundInstance::SetPitchThreaded, this, Math::Clamp(newPitch, cMinPitchValue, cMaxPitchValue), Math::Max(interpolationTime, 0.0f)), this);
 }
 
 float SoundInstance::GetSemitones()
@@ -393,8 +357,7 @@ void SoundInstance::InterpolateSemitones(float newSemitones, float interpolation
   if (interpolationTime == 0.0f)
     mPitchSemitones.Set(newSemitones, AudioThreads::MainThread);
 
-  Z::gSound->Mixer.AddTask(CreateFunctor(&SoundInstance::SetPitchThreaded, this, newSemitones, interpolationTime),
-                           this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&SoundInstance::SetPitchThreaded, this, newSemitones, interpolationTime), this);
 }
 
 bool SoundInstance::GetPaused()
@@ -542,8 +505,7 @@ void SoundInstance::SetLoopTailTime(float seconds)
 {
   mLoopTailTime = Math::Clamp(seconds, 0.0f, cMaxLoopTailTime);
 
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&SoundInstance::mLoopTailFramesThreaded, this, (int)(mLoopTailTime * cSystemSampleRate)), this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&SoundInstance::mLoopTailFramesThreaded, this, (int)(mLoopTailTime * cSystemSampleRate)), this);
 }
 
 bool SoundInstance::GetCrossFadeLoopTail()
@@ -635,18 +597,13 @@ bool SoundInstance::GetOutputForThisMixThreaded(BufferType* outputBuffer, const 
       // Need to get additional samples
       if (outputBuffer->Size() > mInputSamplesThreaded.Size())
       {
-        AddSamplesToBufferThreaded(&mInputSamplesThreaded,
-                                   (outputBuffer->Size() - mInputSamplesThreaded.Size()) / numberOfChannels,
-                                   numberOfChannels);
+        AddSamplesToBufferThreaded(&mInputSamplesThreaded, (outputBuffer->Size() - mInputSamplesThreaded.Size()) / numberOfChannels, numberOfChannels);
       }
       // Need to save samples for next time
       else
       {
         // Add the extra samples to the end of the SavedSamples buffer
-        AppendToBuffer(&SavedSamplesThreaded,
-                       mInputSamplesThreaded,
-                       outputBuffer->Size(),
-                       mInputSamplesThreaded.Size() - outputBuffer->Size());
+        AppendToBuffer(&SavedSamplesThreaded, mInputSamplesThreaded, outputBuffer->Size(), mInputSamplesThreaded.Size() - outputBuffer->Size());
 
         // Resize the InputSamples buffer to match the output buffer
         mInputSamplesThreaded.Resize(outputBuffer->Size());
@@ -720,10 +677,7 @@ void SoundInstance::DispatchInstanceEventFromMixThread(const String eventID)
   DispatchEvent(eventID, &event);
 }
 
-bool SoundInstance::GetOutputSamples(BufferType* outputBuffer,
-                                     const unsigned numberOfChannels,
-                                     ListenerNode* listener,
-                                     const bool firstRequest)
+bool SoundInstance::GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest)
 {
   // Get the audio output
   bool result = GetOutputForThisMixThreaded(outputBuffer, numberOfChannels);
@@ -778,8 +732,7 @@ void SoundInstance::AddSamplesToBufferThreaded(BufferType* buffer, unsigned outp
   mFrameIndexThreaded += inputFrames;
 
   // Check if we are looping and will reach the loop end frame
-  if (mLooping.Get() == cTrue &&
-      (mFrameIndexThreaded >= mLoopEndFrameThreaded || mFrameIndexThreaded >= mEndFrameThreaded))
+  if (mLooping.Get() == cTrue && (mFrameIndexThreaded >= mLoopEndFrameThreaded || mFrameIndexThreaded >= mEndFrameThreaded))
   {
     unsigned sectionFrames = 0;
 
@@ -807,10 +760,7 @@ void SoundInstance::AddSamplesToBufferThreaded(BufferType* buffer, unsigned outp
   {
     // Get the available samples
     if (startingFrameIndex < mEndFrameThreaded)
-      mAssetObject->AppendSamplesThreaded(&samples,
-                                          startingFrameIndex,
-                                          (inputFrames - (mFrameIndexThreaded - mEndFrameThreaded)) * inputChannels,
-                                          cNodeID);
+      mAssetObject->AppendSamplesThreaded(&samples, startingFrameIndex, (inputFrames - (mFrameIndexThreaded - mEndFrameThreaded)) * inputChannels, cNodeID);
 
     // Resize the array to full size, setting the rest of the samples to 0
     samples.Resize(inputFrames * inputChannels, 0.0f);
@@ -867,10 +817,7 @@ void SoundInstance::AddSamplesToBufferThreaded(BufferType* buffer, unsigned outp
         {
           mVolume.Set(volume, AudioThreads::MixThread);
 
-          Z::gSound->Mixer.AddTaskThreaded(CreateFunctor(&SoundInstance::DispatchEventFromMixThread,
-                                                         (SoundNode*)this,
-                                                         Events::AudioInterpolationDone),
-                                           this);
+          Z::gSound->Mixer.AddTaskThreaded(CreateFunctor(&SoundInstance::DispatchEventFromMixThread, (SoundNode*)this, Events::AudioInterpolationDone), this);
         }
       }
 
@@ -921,15 +868,10 @@ void SoundInstance::LoopThreaded()
     if (mLoopEndFrameThreaded + fadeSize > mEndFrameThreaded)
       fadeSize -= mLoopEndFrameThreaded + fadeSize - mEndFrameThreaded;
     // Start the cross-fade
-    Fade.StartFade(mVolume.Get(AudioThreads::MixThread),
-                   mLoopEndFrameThreaded,
-                   fadeSize,
-                   mAssetObject,
-                   mCrossFadeTail.Get() == cTrue);
+    Fade.StartFade(mVolume.Get(AudioThreads::MixThread), mLoopEndFrameThreaded, fadeSize, mAssetObject, mCrossFadeTail.Get() == cTrue);
   }
 
-  Z::gSound->Mixer.AddTaskThreaded(
-      CreateFunctor(&SoundInstance::DispatchInstanceEventFromMixThread, this, Events::SoundLooped), this);
+  Z::gSound->Mixer.AddTaskThreaded(CreateFunctor(&SoundInstance::DispatchInstanceEventFromMixThread, this, Events::SoundLooped), this);
 
   // Reset variables
   mFrameIndexThreaded = mLoopStartFrameThreaded;
@@ -941,17 +883,13 @@ void SoundInstance::LoopThreaded()
     mAssetObject->ResetStreamingFile(cNodeID);
 }
 
-void SoundInstance::TranslateChannelsThreaded(BufferType* inputSamples,
-                                              const unsigned inputFrames,
-                                              const unsigned inputChannels,
-                                              const unsigned outputChannels)
+void SoundInstance::TranslateChannelsThreaded(BufferType* inputSamples, const unsigned inputFrames, const unsigned inputChannels, const unsigned outputChannels)
 {
   // Temporary array for channel translation
   BufferType adjustedSamples(inputFrames * outputChannels);
 
   // Step through each frame of audio data
-  for (unsigned frame = 0, inputIndex = 0, outputIndex = 0; frame < inputFrames;
-       ++frame, inputIndex += inputChannels, outputIndex += outputChannels)
+  for (unsigned frame = 0, inputIndex = 0, outputIndex = 0; frame < inputFrames; ++frame, inputIndex += inputChannels, outputIndex += outputChannels)
   {
     // Create the AudioFrame object
     AudioFrame thisFrame(inputSamples->Data() + inputIndex, inputChannels);
@@ -974,8 +912,7 @@ void SoundInstance::FinishedCleanUpThreaded()
   forRange (TagObject* tag, TagListThreaded.All())
     tag->RemoveInstanceThreaded(this);
 
-  Z::gSound->Mixer.AddTaskThreaded(
-      CreateFunctor(&SoundInstance::DispatchInstanceEventFromMixThread, this, Events::SoundStopped), this);
+  Z::gSound->Mixer.AddTaskThreaded(CreateFunctor(&SoundInstance::DispatchInstanceEventFromMixThread, this, Events::SoundStopped), this);
   Z::gSound->Mixer.AddTaskThreaded(CreateFunctor(&SoundInstance::RemoveFromAllTagsThreaded, this), this);
   Z::gSound->Mixer.AddTaskThreaded(CreateFunctor(&SoundNode::RemoveAllOutputs, (SoundNode*)this), this);
 
@@ -1003,8 +940,7 @@ bool SoundInstance::BelowMinimumVolumeThreaded(unsigned frames)
   }
 
   // Return true if both volumes lower than minimum volume threshold
-  if (volume1 < Z::gSound->Mixer.mMinimumVolumeThresholdThreaded &&
-      volume2 < Z::gSound->Mixer.mMinimumVolumeThresholdThreaded)
+  if (volume1 < Z::gSound->Mixer.mMinimumVolumeThresholdThreaded && volume2 < Z::gSound->Mixer.mMinimumVolumeThresholdThreaded)
     return true;
   else
     return false;
@@ -1023,13 +959,11 @@ void SoundInstance::MusicNotificationsThreaded()
     return;
 
   // If there is a custom notification time set and we've hit that time
-  if (mNotifyTime.Get(AudioThreads::MixThread) > 0 && !mCustomNotifySent.Get(AudioThreads::MixThread) &&
-      mCurrentTime.Get(AudioThreads::MixThread) >= mNotifyTime.Get(AudioThreads::MixThread))
+  if (mNotifyTime.Get(AudioThreads::MixThread) > 0 && !mCustomNotifySent.Get(AudioThreads::MixThread) && mCurrentTime.Get(AudioThreads::MixThread) >= mNotifyTime.Get(AudioThreads::MixThread))
   {
     mCustomNotifySent.Set(true, AudioThreads::MixThread);
 
-    Z::gSound->Mixer.AddTaskThreaded(
-        CreateFunctor(&SoundInstance::DispatchInstanceEventFromMixThread, this, Events::MusicCustomTime), this);
+    Z::gSound->Mixer.AddTaskThreaded(CreateFunctor(&SoundInstance::DispatchInstanceEventFromMixThread, this, Events::MusicCustomTime), this);
   }
 
   MusicNotify.ProcessAndNotify((float)mCurrentTime.Get(AudioThreads::MixThread), this);
@@ -1102,8 +1036,7 @@ void SoundInstance::SetVolumeThreaded(float newVolume, float time)
     if (time < 0.02f)
       time = 0.02f;
 
-    VolumeInterpolatorThreaded.SetValues(
-        mVolume.Get(AudioThreads::MixThread), newVolume, (unsigned)(time * cSystemSampleRate));
+    VolumeInterpolatorThreaded.SetValues(mVolume.Get(AudioThreads::MixThread), newVolume, (unsigned)(time * cSystemSampleRate));
   }
 }
 
@@ -1138,8 +1071,7 @@ void SoundInstance::SetTimeThreaded(float seconds)
 void SoundInstance::SetBeatsPerMinuteThreaded(float beats)
 {
   MusicNotify.mSecondsPerBeat.Set(60.0f / Math::Max(beats, 0.0f), AudioThreads::MixThread);
-  MusicNotify.mSecondsPerEighth =
-      MusicNotify.mSecondsPerBeat.Get(AudioThreads::MixThread) * MusicNotify.mBeatNoteType / 8.0f;
+  MusicNotify.mSecondsPerEighth = MusicNotify.mSecondsPerBeat.Get(AudioThreads::MixThread) * MusicNotify.mBeatNoteType / 8.0f;
 }
 
 void SoundInstance::SetTimeSignatureThreaded(float beats, float noteType)
@@ -1153,8 +1085,7 @@ void SoundInstance::SetTimeSignatureThreaded(float beats, float noteType)
   }
   else
   {
-    MusicNotify.mSecondsPerEighth =
-        MusicNotify.mSecondsPerBeat.Get(AudioThreads::MixThread) * MusicNotify.mBeatNoteType / 8.0f;
+    MusicNotify.mSecondsPerEighth = MusicNotify.mSecondsPerBeat.Get(AudioThreads::MixThread) * MusicNotify.mBeatNoteType / 8.0f;
   }
 }
 

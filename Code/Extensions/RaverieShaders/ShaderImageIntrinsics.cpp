@@ -95,14 +95,7 @@ ParameterArray FourParameters(Type* type1, Type* type2, Type* type3, Type* type4
   return parameters;
 }
 
-ParameterArray FourParameters(Type* type1,
-                              StringParam name1,
-                              Type* type2,
-                              StringParam name2,
-                              Type* type3,
-                              StringParam name3,
-                              Type* type4,
-                              StringParam name4)
+ParameterArray FourParameters(Type* type1, StringParam name1, Type* type2, StringParam name2, Type* type3, StringParam name3, Type* type4, StringParam name4)
 {
   ParameterArray parameters;
   DelegateParameter& a = parameters.PushBack();
@@ -123,16 +116,7 @@ ParameterArray FourParameters(Type* type1,
   return parameters;
 }
 
-ParameterArray FiveParameters(Type* type1,
-                              StringParam name1,
-                              Type* type2,
-                              StringParam name2,
-                              Type* type3,
-                              StringParam name3,
-                              Type* type4,
-                              StringParam name4,
-                              Type* type5,
-                              StringParam name5)
+ParameterArray FiveParameters(Type* type1, StringParam name1, Type* type2, StringParam name2, Type* type3, StringParam name3, Type* type4, StringParam name4, Type* type5, StringParam name5)
 {
   ParameterArray parameters;
   DelegateParameter& a = parameters.PushBack();
@@ -157,12 +141,8 @@ ParameterArray FiveParameters(Type* type1,
   return parameters;
 }
 
-void WriteImageArguments(RaverieSpirVFrontEnd* translator,
-                         Raverie::FunctionCallNode* functionCallNode,
-                         RaverieShaderIROp* result,
-                         int index,
-                         ImageUserData& imageData,
-                         RaverieSpirVFrontEndContext* context)
+void WriteImageArguments(
+    RaverieSpirVFrontEnd* translator, Raverie::FunctionCallNode* functionCallNode, RaverieShaderIROp* result, int index, ImageUserData& imageData, RaverieSpirVFrontEndContext* context)
 {
   // Find out how many arguments we have to write out before optional image
   // operands
@@ -195,10 +175,8 @@ void WriteImageArguments(RaverieSpirVFrontEnd* translator,
 
 // Resolves an SampledImage function
 template <OpType opType>
-inline void ResolveCombinedSamplerFunction(RaverieSpirVFrontEnd* translator,
-                                           Raverie::FunctionCallNode* functionCallNode,
-                                           Raverie::MemberAccessNode* memberAccessNode,
-                                           RaverieSpirVFrontEndContext* context)
+inline void
+ResolveCombinedSamplerFunction(RaverieSpirVFrontEnd* translator, Raverie::FunctionCallNode* functionCallNode, Raverie::MemberAccessNode* memberAccessNode, RaverieSpirVFrontEndContext* context)
 {
   ImageUserData& imageData = memberAccessNode->AccessedFunction->ComplexUserData.ReadObject<ImageUserData>(0);
   RaverieShaderIRType* resultType = translator->FindType(functionCallNode->ResultType, functionCallNode);
@@ -214,10 +192,8 @@ inline void ResolveCombinedSamplerFunction(RaverieSpirVFrontEnd* translator,
 // Resolves a function that operates on a SampledImage but is given a Sampler
 // and an Image and must combine them into a temporary.
 template <OpType opType>
-inline void ResolveSplitImageSamplerFunction(RaverieSpirVFrontEnd* translator,
-                                             Raverie::FunctionCallNode* functionCallNode,
-                                             Raverie::MemberAccessNode* memberAccessNode,
-                                             RaverieSpirVFrontEndContext* context)
+inline void
+ResolveSplitImageSamplerFunction(RaverieSpirVFrontEnd* translator, Raverie::FunctionCallNode* functionCallNode, Raverie::MemberAccessNode* memberAccessNode, RaverieSpirVFrontEndContext* context)
 {
   ImageUserData& imageData = memberAccessNode->AccessedFunction->ComplexUserData.ReadObject<ImageUserData>(0);
   RaverieShaderIRType* resultType = translator->FindType(functionCallNode->ResultType, functionCallNode);
@@ -230,8 +206,7 @@ inline void ResolveSplitImageSamplerFunction(RaverieSpirVFrontEnd* translator,
   RaverieShaderIRType* sampledImageType = translator->FindType(imageData.mSampledImageType, functionCallNode);
   RaverieShaderIROp* imageValue = translator->WalkAndGetValueTypeResult(functionCallNode->Arguments[0], context);
   RaverieShaderIROp* samplerValue = translator->WalkAndGetValueTypeResult(functionCallNode->Arguments[1], context);
-  RaverieShaderIROp* sampledImageValue =
-      translator->BuildCurrentBlockIROp(OpType::OpSampledImage, sampledImageType, imageValue, samplerValue, context);
+  RaverieShaderIROp* sampledImageValue = translator->BuildCurrentBlockIROp(OpType::OpSampledImage, sampledImageType, imageValue, samplerValue, context);
   result->mArguments.PushBack(sampledImageValue);
 
   // Now write out any remaining image operands while skipping the first two
@@ -245,10 +220,7 @@ inline void ResolveSplitImageSamplerFunction(RaverieSpirVFrontEnd* translator,
 // Resolves a function that operates on an Image. If the input is a SampledImage
 // this will first grab the image from the sampler.
 template <OpType opType>
-inline void ResolveImageFunction(RaverieSpirVFrontEnd* translator,
-                                 Raverie::FunctionCallNode* functionCallNode,
-                                 Raverie::MemberAccessNode* memberAccessNode,
-                                 RaverieSpirVFrontEndContext* context)
+inline void ResolveImageFunction(RaverieSpirVFrontEnd* translator, Raverie::FunctionCallNode* functionCallNode, Raverie::MemberAccessNode* memberAccessNode, RaverieSpirVFrontEndContext* context)
 {
   ImageUserData& imageData = memberAccessNode->AccessedFunction->ComplexUserData.ReadObject<ImageUserData>(0);
   RaverieShaderIRType* resultType = translator->FindType(functionCallNode->ResultType, functionCallNode);
@@ -275,113 +247,71 @@ inline void ResolveImageFunction(RaverieSpirVFrontEnd* translator,
   context->PushIRStack(result);
 }
 
-void AddSampleImplicitLod(Raverie::LibraryBuilder& builder,
-                          Raverie::BoundType* type,
-                          SampledImageSet& set,
-                          Raverie::BoundType* coordinateType,
-                          Raverie::BoundType* returnType)
+void AddSampleImplicitLod(Raverie::LibraryBuilder& builder, Raverie::BoundType* type, SampledImageSet& set, Raverie::BoundType* coordinateType, Raverie::BoundType* returnType)
 {
   Raverie::Function* fn = nullptr;
   ParameterArray parameters;
 
   parameters = TwoParameters(set.mSampledImageType, "sampledImage", coordinateType, "coordinate");
-  fn = builder.AddBoundFunction(
-      type, "SampleImplicitLod", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
+  fn = builder.AddBoundFunction(type, "SampleImplicitLod", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
   fn->UserData = (void*)&ResolveSimpleFunction<OpType::OpImageSampleImplicitLod>;
   fn->AddAttribute(SpirVNameSettings::mRequiresPixelAttribute);
 
   parameters = ThreeParameters(set.mImageType, "image", set.mSamplerType, "sampler", coordinateType, "coordinate");
-  fn = builder.AddBoundFunction(
-      type, "SampleImplicitLod", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
+  fn = builder.AddBoundFunction(type, "SampleImplicitLod", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
   fn->UserData = (void*)&ResolveSplitImageSamplerFunction<OpType::OpImageSampleImplicitLod>;
   fn->ComplexUserData.WriteObject(ImageUserData(0, spv::ImageOperandsMaskNone, set.mSampledImageType));
   fn->AddAttribute(SpirVNameSettings::mRequiresPixelAttribute);
 }
 
-void AddSampleExplicitLod(Raverie::LibraryBuilder& builder,
-                          Raverie::BoundType* type,
-                          SampledImageSet& set,
-                          Raverie::BoundType* coordinateType,
-                          Raverie::BoundType* lodType,
-                          Raverie::BoundType* returnType)
+void AddSampleExplicitLod(
+    Raverie::LibraryBuilder& builder, Raverie::BoundType* type, SampledImageSet& set, Raverie::BoundType* coordinateType, Raverie::BoundType* lodType, Raverie::BoundType* returnType)
 {
   Raverie::Function* fn = nullptr;
   ParameterArray parameters;
 
   parameters = ThreeParameters(set.mSampledImageType, "sampledImage", coordinateType, "coordinate", lodType, "lod");
-  fn = builder.AddBoundFunction(
-      type, "SampleExplicitLod", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
+  fn = builder.AddBoundFunction(type, "SampleExplicitLod", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
   fn->UserData = (void*)&ResolveCombinedSamplerFunction<OpType::OpImageSampleExplicitLod>;
   fn->ComplexUserData.WriteObject(ImageUserData(1, spv::ImageOperandsLodMask));
 
-  parameters = FourParameters(
-      set.mImageType, "image", set.mSamplerType, "sampler", coordinateType, "coordinate", lodType, "lod");
-  fn = builder.AddBoundFunction(
-      type, "SampleExplicitLod", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
+  parameters = FourParameters(set.mImageType, "image", set.mSamplerType, "sampler", coordinateType, "coordinate", lodType, "lod");
+  fn = builder.AddBoundFunction(type, "SampleExplicitLod", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
   fn->UserData = (void*)&ResolveSplitImageSamplerFunction<OpType::OpImageSampleExplicitLod>;
   fn->ComplexUserData.WriteObject(ImageUserData(1, spv::ImageOperandsLodMask, set.mSampledImageType));
 }
 
-void AddSampleGradExplicitLod(Raverie::LibraryBuilder& builder,
-                              Raverie::BoundType* type,
-                              SampledImageSet& set,
-                              Raverie::BoundType* coordinateType,
-                              Raverie::BoundType* derivativeType,
-                              Raverie::BoundType* returnType)
+void AddSampleGradExplicitLod(
+    Raverie::LibraryBuilder& builder, Raverie::BoundType* type, SampledImageSet& set, Raverie::BoundType* coordinateType, Raverie::BoundType* derivativeType, Raverie::BoundType* returnType)
 {
   Raverie::Function* fn = nullptr;
   ParameterArray parameters;
 
-  parameters = FourParameters(set.mSampledImageType,
-                              "sampledImage",
-                              coordinateType,
-                              "coordinate",
-                              derivativeType,
-                              "ddx",
-                              derivativeType,
-                              "ddy");
-  fn = builder.AddBoundFunction(
-      type, "SampleGradExplicitLod", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
+  parameters = FourParameters(set.mSampledImageType, "sampledImage", coordinateType, "coordinate", derivativeType, "ddx", derivativeType, "ddy");
+  fn = builder.AddBoundFunction(type, "SampleGradExplicitLod", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
   fn->UserData = (void*)&ResolveCombinedSamplerFunction<OpType::OpImageSampleExplicitLod>;
   fn->ComplexUserData.WriteObject(ImageUserData(2, spv::ImageOperandsGradMask));
 
-  parameters = FiveParameters(set.mImageType,
-                              "image",
-                              set.mSamplerType,
-                              "sampler",
-                              coordinateType,
-                              "coordinate",
-                              derivativeType,
-                              "ddx",
-                              derivativeType,
-                              "ddy");
-  fn = builder.AddBoundFunction(
-      type, "SampleGradExplicitLod", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
+  parameters = FiveParameters(set.mImageType, "image", set.mSamplerType, "sampler", coordinateType, "coordinate", derivativeType, "ddx", derivativeType, "ddy");
+  fn = builder.AddBoundFunction(type, "SampleGradExplicitLod", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
   fn->UserData = (void*)&ResolveSplitImageSamplerFunction<OpType::OpImageSampleExplicitLod>;
   fn->ComplexUserData.WriteObject(ImageUserData(2, spv::ImageOperandsGradMask, set.mSampledImageType));
 }
 
-void AddSampleDrefImplicitLod(Raverie::LibraryBuilder& builder,
-                              Raverie::BoundType* type,
-                              SampledImageSet& set,
-                              Raverie::BoundType* coordinateType,
-                              Raverie::BoundType* depthType,
-                              Raverie::BoundType* returnType)
+void AddSampleDrefImplicitLod(
+    Raverie::LibraryBuilder& builder, Raverie::BoundType* type, SampledImageSet& set, Raverie::BoundType* coordinateType, Raverie::BoundType* depthType, Raverie::BoundType* returnType)
 {
   Raverie::Function* fn = nullptr;
   ParameterArray parameters;
 
   parameters = ThreeParameters(set.mSampledImageType, "sampledImage", coordinateType, "coordinate", depthType, "depth");
-  fn = builder.AddBoundFunction(
-      type, "SampleDRefImplicitLod", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
+  fn = builder.AddBoundFunction(type, "SampleDRefImplicitLod", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
   fn->UserData = (void*)&ResolveCombinedSamplerFunction<OpType::OpImageSampleDrefImplicitLod>;
   fn->ComplexUserData.WriteObject(ImageUserData(0, spv::ImageOperandsMaskNone));
   fn->AddAttribute(SpirVNameSettings::mRequiresPixelAttribute);
 
-  parameters = FourParameters(
-      set.mImageType, "image", set.mSamplerType, "sampler", coordinateType, "coordinate", depthType, "depth");
-  fn = builder.AddBoundFunction(
-      type, "SampleDRefImplicitLod", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
+  parameters = FourParameters(set.mImageType, "image", set.mSamplerType, "sampler", coordinateType, "coordinate", depthType, "depth");
+  fn = builder.AddBoundFunction(type, "SampleDRefImplicitLod", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
   fn->UserData = (void*)&ResolveSplitImageSamplerFunction<OpType::OpImageSampleDrefImplicitLod>;
   fn->ComplexUserData.WriteObject(ImageUserData(0, spv::ImageOperandsMaskNone, set.mSampledImageType));
   fn->AddAttribute(SpirVNameSettings::mRequiresPixelAttribute);
@@ -398,106 +328,66 @@ void AddSampleDrefExplicitLod(Raverie::LibraryBuilder& builder,
   Raverie::Function* fn = nullptr;
   ParameterArray parameters;
 
-  parameters = FourParameters(
-      set.mSampledImageType, "sampledImage", coordinateType, "coordinate", depthType, "depth", lodType, "lod");
-  fn = builder.AddBoundFunction(
-      type, "SampleDRefExplicitLod", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
+  parameters = FourParameters(set.mSampledImageType, "sampledImage", coordinateType, "coordinate", depthType, "depth", lodType, "lod");
+  fn = builder.AddBoundFunction(type, "SampleDRefExplicitLod", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
   fn->UserData = (void*)&ResolveCombinedSamplerFunction<OpType::OpImageSampleDrefExplicitLod>;
   fn->ComplexUserData.WriteObject(ImageUserData(1, spv::ImageOperandsLodMask));
 
-  parameters = FiveParameters(set.mImageType,
-                              "image",
-                              set.mSamplerType,
-                              "sampler",
-                              coordinateType,
-                              "coordinate",
-                              depthType,
-                              "depth",
-                              lodType,
-                              "lod");
-  fn = builder.AddBoundFunction(
-      type, "SampleDRefExplicitLod", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
+  parameters = FiveParameters(set.mImageType, "image", set.mSamplerType, "sampler", coordinateType, "coordinate", depthType, "depth", lodType, "lod");
+  fn = builder.AddBoundFunction(type, "SampleDRefExplicitLod", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
   fn->UserData = (void*)&ResolveSplitImageSamplerFunction<OpType::OpImageSampleDrefExplicitLod>;
   fn->ComplexUserData.WriteObject(ImageUserData(1, spv::ImageOperandsLodMask, set.mSampledImageType));
 }
 
-void AddSampleProjImplicitLod(Raverie::LibraryBuilder& builder,
-                              Raverie::BoundType* type,
-                              SampledImageSet& set,
-                              Raverie::BoundType* coordinateType,
-                              Raverie::BoundType* returnType)
+void AddSampleProjImplicitLod(Raverie::LibraryBuilder& builder, Raverie::BoundType* type, SampledImageSet& set, Raverie::BoundType* coordinateType, Raverie::BoundType* returnType)
 {
   Raverie::Function* fn = nullptr;
   ParameterArray parameters;
 
   parameters = TwoParameters(set.mSampledImageType, "sampledImage", coordinateType, "coordinate");
-  fn = builder.AddBoundFunction(
-      type, "SampleProjImplicitLod", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
+  fn = builder.AddBoundFunction(type, "SampleProjImplicitLod", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
   fn->UserData = (void*)&ResolveCombinedSamplerFunction<OpType::OpImageSampleProjImplicitLod>;
   fn->ComplexUserData.WriteObject(ImageUserData(0, spv::ImageOperandsMaskNone));
   fn->AddAttribute(SpirVNameSettings::mRequiresPixelAttribute);
 
   parameters = ThreeParameters(set.mImageType, "image", set.mSamplerType, "sampler", coordinateType, "coordinate");
-  fn = builder.AddBoundFunction(
-      type, "SampleProjImplicitLod", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
+  fn = builder.AddBoundFunction(type, "SampleProjImplicitLod", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
   fn->UserData = (void*)&ResolveSplitImageSamplerFunction<OpType::OpImageSampleProjImplicitLod>;
   fn->ComplexUserData.WriteObject(ImageUserData(0, spv::ImageOperandsMaskNone, set.mSampledImageType));
   fn->AddAttribute(SpirVNameSettings::mRequiresPixelAttribute);
 }
 
-void AddSampleProjExplicitLod(Raverie::LibraryBuilder& builder,
-                              Raverie::BoundType* type,
-                              SampledImageSet& set,
-                              Raverie::BoundType* coordinateType,
-                              Raverie::BoundType* lodType,
-                              Raverie::BoundType* returnType)
+void AddSampleProjExplicitLod(
+    Raverie::LibraryBuilder& builder, Raverie::BoundType* type, SampledImageSet& set, Raverie::BoundType* coordinateType, Raverie::BoundType* lodType, Raverie::BoundType* returnType)
 {
   Raverie::Function* fn = nullptr;
   ParameterArray parameters;
 
   parameters = ThreeParameters(set.mSampledImageType, "sampledImage", coordinateType, "coordinate", lodType, "lod");
-  fn = builder.AddBoundFunction(
-      type, "SampleProjExplicitLod", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
+  fn = builder.AddBoundFunction(type, "SampleProjExplicitLod", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
   fn->UserData = (void*)&ResolveCombinedSamplerFunction<OpType::OpImageSampleProjExplicitLod>;
   fn->ComplexUserData.WriteObject(ImageUserData(1, spv::ImageOperandsLodMask));
 
-  parameters = FourParameters(
-      set.mImageType, "image", set.mSamplerType, "sampler", coordinateType, "coordinate", lodType, "lod");
-  fn = builder.AddBoundFunction(
-      type, "SampleProjExplicitLod", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
+  parameters = FourParameters(set.mImageType, "image", set.mSamplerType, "sampler", coordinateType, "coordinate", lodType, "lod");
+  fn = builder.AddBoundFunction(type, "SampleProjExplicitLod", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
   fn->UserData = (void*)&ResolveSplitImageSamplerFunction<OpType::OpImageSampleProjExplicitLod>;
   fn->ComplexUserData.WriteObject(ImageUserData(1, spv::ImageOperandsLodMask, set.mSampledImageType));
 }
 
-void AddSampleProjDrefImplicitLod(Raverie::LibraryBuilder& builder,
-                                  Raverie::BoundType* type,
-                                  SampledImageSet& set,
-                                  Raverie::BoundType* coordinateType,
-                                  Raverie::BoundType* depthType,
-                                  Raverie::BoundType* returnType)
+void AddSampleProjDrefImplicitLod(
+    Raverie::LibraryBuilder& builder, Raverie::BoundType* type, SampledImageSet& set, Raverie::BoundType* coordinateType, Raverie::BoundType* depthType, Raverie::BoundType* returnType)
 {
   Raverie::Function* fn = nullptr;
   ParameterArray parameters;
 
   parameters = ThreeParameters(set.mSampledImageType, "sampledImage", coordinateType, "coordinate", depthType, "depth");
-  fn = builder.AddBoundFunction(type,
-                                "SampleProjDRefImplicitLod",
-                                UnTranslatedBoundFunction,
-                                parameters,
-                                returnType,
-                                Raverie::FunctionOptions::Static);
+  fn = builder.AddBoundFunction(type, "SampleProjDRefImplicitLod", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
   fn->UserData = (void*)&ResolveCombinedSamplerFunction<OpType::OpImageSampleProjDrefImplicitLod>;
   fn->ComplexUserData.WriteObject(ImageUserData(0, spv::ImageOperandsMaskNone));
   fn->AddAttribute(SpirVNameSettings::mRequiresPixelAttribute);
 
-  parameters = FourParameters(
-      set.mImageType, "image", set.mSamplerType, "sampler", coordinateType, "coordinate", depthType, "depth");
-  fn = builder.AddBoundFunction(type,
-                                "SampleProjDRefImplicitLod",
-                                UnTranslatedBoundFunction,
-                                parameters,
-                                returnType,
-                                Raverie::FunctionOptions::Static);
+  parameters = FourParameters(set.mImageType, "image", set.mSamplerType, "sampler", coordinateType, "coordinate", depthType, "depth");
+  fn = builder.AddBoundFunction(type, "SampleProjDRefImplicitLod", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
   fn->UserData = (void*)&ResolveSplitImageSamplerFunction<OpType::OpImageSampleProjDrefImplicitLod>;
   fn->ComplexUserData.WriteObject(ImageUserData(0, spv::ImageOperandsMaskNone, set.mSampledImageType));
   fn->AddAttribute(SpirVNameSettings::mRequiresPixelAttribute);
@@ -514,108 +404,66 @@ void AddSampleProjDrefExplicitLod(Raverie::LibraryBuilder& builder,
   Raverie::Function* fn = nullptr;
   ParameterArray parameters;
 
-  parameters = FourParameters(
-      set.mSampledImageType, "sampledImage", coordinateType, "coordinate", depthType, "depth", lodType, "lod");
-  fn = builder.AddBoundFunction(type,
-                                "SampleProjDRefExplicitLod",
-                                UnTranslatedBoundFunction,
-                                parameters,
-                                returnType,
-                                Raverie::FunctionOptions::Static);
+  parameters = FourParameters(set.mSampledImageType, "sampledImage", coordinateType, "coordinate", depthType, "depth", lodType, "lod");
+  fn = builder.AddBoundFunction(type, "SampleProjDRefExplicitLod", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
   fn->UserData = (void*)&ResolveCombinedSamplerFunction<OpType::OpImageSampleProjDrefExplicitLod>;
   fn->ComplexUserData.WriteObject(ImageUserData(1, spv::ImageOperandsLodMask));
 
-  parameters = FiveParameters(set.mImageType,
-                              "image",
-                              set.mSamplerType,
-                              "sampler",
-                              coordinateType,
-                              "coordinate",
-                              depthType,
-                              "depth",
-                              lodType,
-                              "lod");
-  fn = builder.AddBoundFunction(type,
-                                "SampleProjDRefExplicitLod",
-                                UnTranslatedBoundFunction,
-                                parameters,
-                                returnType,
-                                Raverie::FunctionOptions::Static);
+  parameters = FiveParameters(set.mImageType, "image", set.mSamplerType, "sampler", coordinateType, "coordinate", depthType, "depth", lodType, "lod");
+  fn = builder.AddBoundFunction(type, "SampleProjDRefExplicitLod", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
   fn->UserData = (void*)&ResolveSplitImageSamplerFunction<OpType::OpImageSampleProjDrefExplicitLod>;
   fn->ComplexUserData.WriteObject(ImageUserData(1, spv::ImageOperandsLodMask, set.mSampledImageType));
 }
 
-void AddImageFetch(Raverie::LibraryBuilder& builder,
-                   Raverie::BoundType* type,
-                   SampledImageSet& set,
-                   Raverie::BoundType* coordianteType,
-                   Raverie::BoundType* returnType)
+void AddImageFetch(Raverie::LibraryBuilder& builder, Raverie::BoundType* type, SampledImageSet& set, Raverie::BoundType* coordianteType, Raverie::BoundType* returnType)
 {
   Raverie::Function* fn = nullptr;
   ParameterArray parameters;
 
   parameters = TwoParameters(set.mImageType, "image", coordianteType, "coordinate");
-  fn = builder.AddBoundFunction(
-      type, "ImageFetch", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
+  fn = builder.AddBoundFunction(type, "ImageFetch", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
   fn->UserData = (void*)&ResolveImageFunction<OpType::OpImageFetch>;
   fn->ComplexUserData.WriteObject(ImageUserData(0, spv::ImageOperandsMaskNone));
 
   parameters = TwoParameters(set.mSampledImageType, "sampledImage", coordianteType, "coordinate");
-  fn = builder.AddBoundFunction(
-      type, "ImageFetch", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
+  fn = builder.AddBoundFunction(type, "ImageFetch", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
   fn->UserData = (void*)&ResolveImageFunction<OpType::OpImageFetch>;
   fn->ComplexUserData.WriteObject(ImageUserData(0, spv::ImageOperandsMaskNone));
 }
 
-void AddImageFetchLod(Raverie::LibraryBuilder& builder,
-                      Raverie::BoundType* type,
-                      SampledImageSet& set,
-                      Raverie::BoundType* coordianteType,
-                      Raverie::BoundType* lodType,
-                      Raverie::BoundType* returnType)
+void AddImageFetchLod(Raverie::LibraryBuilder& builder, Raverie::BoundType* type, SampledImageSet& set, Raverie::BoundType* coordianteType, Raverie::BoundType* lodType, Raverie::BoundType* returnType)
 {
   Raverie::Function* fn = nullptr;
   ParameterArray parameters;
 
   parameters = ThreeParameters(set.mImageType, "image", coordianteType, "coordinate", lodType, "lod");
-  fn = builder.AddBoundFunction(
-      type, "ImageFetch", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
+  fn = builder.AddBoundFunction(type, "ImageFetch", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
   fn->UserData = (void*)&ResolveImageFunction<OpType::OpImageFetch>;
   fn->ComplexUserData.WriteObject(ImageUserData(1, spv::ImageOperandsLodMask));
 
   parameters = ThreeParameters(set.mSampledImageType, "sampledImage", coordianteType, "coordinate", lodType, "lod");
-  fn = builder.AddBoundFunction(
-      type, "ImageFetch", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
+  fn = builder.AddBoundFunction(type, "ImageFetch", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
   fn->UserData = (void*)&ResolveImageFunction<OpType::OpImageFetch>;
   fn->ComplexUserData.WriteObject(ImageUserData(1, spv::ImageOperandsLodMask));
 }
 
-void AddImageQuerySizeLod(Raverie::LibraryBuilder& builder,
-                          Raverie::BoundType* type,
-                          SampledImageSet& set,
-                          Raverie::BoundType* lodType,
-                          Raverie::BoundType* returnType)
+void AddImageQuerySizeLod(Raverie::LibraryBuilder& builder, Raverie::BoundType* type, SampledImageSet& set, Raverie::BoundType* lodType, Raverie::BoundType* returnType)
 {
   Raverie::Function* fn = nullptr;
   ParameterArray parameters;
 
   parameters = TwoParameters(set.mImageType, "image", lodType, "lod");
-  fn = builder.AddBoundFunction(
-      type, "ImageQuerySize", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
+  fn = builder.AddBoundFunction(type, "ImageQuerySize", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
   fn->UserData = (void*)&ResolveImageFunction<OpType::OpImageQuerySizeLod>;
   fn->ComplexUserData.WriteObject(ImageUserData(0, spv::ImageOperandsMaskNone));
 
   parameters = TwoParameters(set.mSampledImageType, "sampledImage", lodType, "lod");
-  fn = builder.AddBoundFunction(
-      type, "ImageQuerySize", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
+  fn = builder.AddBoundFunction(type, "ImageQuerySize", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
   fn->UserData = (void*)&ResolveImageFunction<OpType::OpImageQuerySizeLod>;
   fn->ComplexUserData.WriteObject(ImageUserData(0, spv::ImageOperandsMaskNone));
 }
 
-void AddImageQuerySize(Raverie::LibraryBuilder& builder,
-                       Raverie::BoundType* type,
-                       SampledImageSet& set,
-                       Raverie::BoundType* returnType)
+void AddImageQuerySize(Raverie::LibraryBuilder& builder, Raverie::BoundType* type, SampledImageSet& set, Raverie::BoundType* returnType)
 {
   Raverie::Function* fn = nullptr;
   ParameterArray parameters;
@@ -624,8 +472,7 @@ void AddImageQuerySize(Raverie::LibraryBuilder& builder,
   if (imageType != nullptr)
   {
     parameters = OneParameter(imageType, "image");
-    fn = builder.AddBoundFunction(
-        type, "ImageQuerySize", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
+    fn = builder.AddBoundFunction(type, "ImageQuerySize", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
     fn->UserData = (void*)&ResolveImageFunction<OpType::OpImageQuerySize>;
     fn->ComplexUserData.WriteObject(ImageUserData(0, spv::ImageOperandsMaskNone));
   }
@@ -634,63 +481,47 @@ void AddImageQuerySize(Raverie::LibraryBuilder& builder,
   if (sampledImageType != nullptr)
   {
     parameters = OneParameter(sampledImageType, "sampledImage");
-    fn = builder.AddBoundFunction(
-        type, "ImageQuerySize", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
+    fn = builder.AddBoundFunction(type, "ImageQuerySize", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
     fn->UserData = (void*)&ResolveImageFunction<OpType::OpImageQuerySize>;
     fn->ComplexUserData.WriteObject(ImageUserData(0, spv::ImageOperandsMaskNone));
   }
 }
 
-void AddImageQueryLod(Raverie::LibraryBuilder& builder,
-                      Raverie::BoundType* type,
-                      SampledImageSet& set,
-                      Raverie::BoundType* coordinateType,
-                      Raverie::BoundType* returnType)
+void AddImageQueryLod(Raverie::LibraryBuilder& builder, Raverie::BoundType* type, SampledImageSet& set, Raverie::BoundType* coordinateType, Raverie::BoundType* returnType)
 {
   Raverie::Function* fn = nullptr;
   ParameterArray parameters;
 
   parameters = TwoParameters(set.mSampledImageType, "sampledImage", coordinateType, "coordinate");
-  fn = builder.AddBoundFunction(
-      type, "ImageQueryLod", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
+  fn = builder.AddBoundFunction(type, "ImageQueryLod", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
   fn->UserData = (void*)&ResolveCombinedSamplerFunction<OpType::OpImageQueryLod>;
   fn->ComplexUserData.WriteObject(ImageUserData(0, spv::ImageOperandsMaskNone, set.mSampledImageType));
   fn->AddAttribute(SpirVNameSettings::mRequiresPixelAttribute);
 
   parameters = ThreeParameters(set.mImageType, "image", set.mSamplerType, "sampler", coordinateType, "coordinate");
-  fn = builder.AddBoundFunction(
-      type, "ImageQueryLod", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
+  fn = builder.AddBoundFunction(type, "ImageQueryLod", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
   fn->UserData = (void*)&ResolveSplitImageSamplerFunction<OpType::OpImageQueryLod>;
   fn->ComplexUserData.WriteObject(ImageUserData(0, spv::ImageOperandsMaskNone, set.mSampledImageType));
   fn->AddAttribute(SpirVNameSettings::mRequiresPixelAttribute);
 }
 
-void AddImageQueryLevels(Raverie::LibraryBuilder& builder,
-                         Raverie::BoundType* type,
-                         SampledImageSet& set,
-                         Raverie::BoundType* returnType)
+void AddImageQueryLevels(Raverie::LibraryBuilder& builder, Raverie::BoundType* type, SampledImageSet& set, Raverie::BoundType* returnType)
 {
   Raverie::Function* fn = nullptr;
   ParameterArray parameters;
 
   parameters = OneParameter(set.mImageType, "image");
-  fn = builder.AddBoundFunction(
-      type, "ImageQueryLevels", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
+  fn = builder.AddBoundFunction(type, "ImageQueryLevels", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
   fn->UserData = (void*)&ResolveImageFunction<OpType::OpImageQueryLevels>;
   fn->ComplexUserData.WriteObject(ImageUserData(0, spv::ImageOperandsMaskNone));
 
   parameters = OneParameter(set.mSampledImageType, "sampledImage");
-  fn = builder.AddBoundFunction(
-      type, "ImageQueryLevels", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
+  fn = builder.AddBoundFunction(type, "ImageQueryLevels", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
   fn->UserData = (void*)&ResolveImageFunction<OpType::OpImageQueryLevels>;
   fn->ComplexUserData.WriteObject(ImageUserData(0, spv::ImageOperandsMaskNone));
 }
 
-void AddImageRead(Raverie::LibraryBuilder& builder,
-                  Raverie::BoundType* type,
-                  SampledImageSet& set,
-                  Raverie::BoundType* coordinateType,
-                  Raverie::BoundType* returnType)
+void AddImageRead(Raverie::LibraryBuilder& builder, Raverie::BoundType* type, SampledImageSet& set, Raverie::BoundType* coordinateType, Raverie::BoundType* returnType)
 {
   Raverie::BoundType* imageType = set.mImageType;
   if (imageType == nullptr)
@@ -700,17 +531,12 @@ void AddImageRead(Raverie::LibraryBuilder& builder,
   ParameterArray parameters;
 
   parameters = TwoParameters(imageType, "image", coordinateType, "coordinate");
-  fn = builder.AddBoundFunction(
-      type, "ImageRead", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
+  fn = builder.AddBoundFunction(type, "ImageRead", UnTranslatedBoundFunction, parameters, returnType, Raverie::FunctionOptions::Static);
   fn->UserData = (void*)&ResolveImageFunction<OpType::OpImageRead>;
   fn->ComplexUserData.WriteObject(ImageUserData(0, spv::ImageOperandsMaskNone, nullptr));
 }
 
-void AddImageWrite(Raverie::LibraryBuilder& builder,
-                   Raverie::BoundType* type,
-                   SampledImageSet& set,
-                   Raverie::BoundType* coordinateType,
-                   Raverie::BoundType* texelType)
+void AddImageWrite(Raverie::LibraryBuilder& builder, Raverie::BoundType* type, SampledImageSet& set, Raverie::BoundType* coordinateType, Raverie::BoundType* texelType)
 {
   Raverie::BoundType* imageType = set.mImageType;
   if (imageType == nullptr)
@@ -720,8 +546,7 @@ void AddImageWrite(Raverie::LibraryBuilder& builder,
   ParameterArray parameters;
 
   parameters = ThreeParameters(imageType, "image", coordinateType, "coordinate", texelType, "texel");
-  fn = builder.AddBoundFunction(
-      type, "ImageWrite", UnTranslatedBoundFunction, parameters, RaverieTypeId(void), Raverie::FunctionOptions::Static);
+  fn = builder.AddBoundFunction(type, "ImageWrite", UnTranslatedBoundFunction, parameters, RaverieTypeId(void), Raverie::FunctionOptions::Static);
   fn->UserData = (void*)&ResolveImageFunction<OpType::OpImageWrite>;
   fn->ComplexUserData.WriteObject(ImageUserData(0, spv::ImageOperandsMaskNone, nullptr));
 }

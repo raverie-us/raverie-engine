@@ -83,8 +83,7 @@ private:
 
 #  define DebugPrintFilter(filter, ...) ::Raverie::Console::Print(filter, __VA_ARGS__)
 #  define DebugPrint(...) ::Raverie::Console::Print(Raverie::Filter::DefaultFilter, __VA_ARGS__)
-#  define DebugTrace(format, ...)                                                                                      \
-    ::Raverie::Console::Print(Raverie::Filter::DefaultFilter, "%s(%d) : " format, __FILE__, __LINE__, __VA_ARGS__)
+#  define DebugTrace(format, ...) ::Raverie::Console::Print(Raverie::Filter::DefaultFilter, "%s(%d) : " format, __FILE__, __LINE__, __VA_ARGS__)
 
 #else
 

@@ -49,8 +49,7 @@ Pair<StringRange, StringRange> SplitOnLast(StringRange input, Rune delimiter)
   if (lastOf.SizeInBytes() == numRunes - 1)
     return Pair<StringRange, StringRange>(input.SubString(input.Begin(), input.End()), StringRange());
 
-  return Pair<StringRange, StringRange>(input.SubString(input.Begin(), lastOf.End()),
-                                        input.SubString(lastOf.Begin() + 1, lastOf.End()));
+  return Pair<StringRange, StringRange>(input.SubString(input.Begin(), lastOf.End()), input.SubString(lastOf.Begin() + 1, lastOf.End()));
 }
 
 Pair<StringRange, StringRange> SplitOnFirst(StringRange input, Rune delimiter)

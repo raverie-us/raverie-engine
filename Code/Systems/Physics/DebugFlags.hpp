@@ -4,13 +4,6 @@
 namespace Raverie
 {
 
-DeclareBitField7(PhysicsSpaceDebugDrawFlags,
-                 DrawDebug,
-                 DrawOnTop,
-                 DrawBroadPhase,
-                 DrawConstraints,
-                 DrawSleeping,
-                 DrawSleepPreventors,
-                 DrawCenterMass);
+DeclareBitField7(PhysicsSpaceDebugDrawFlags, DrawDebug, DrawOnTop, DrawBroadPhase, DrawConstraints, DrawSleeping, DrawSleepPreventors, DrawCenterMass);
 
 } // namespace Raverie

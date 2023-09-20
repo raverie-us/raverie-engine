@@ -151,12 +151,7 @@ public:
   // Inserts a vertex into the tree/graph dividing space vertically
   void InsertVertex(NodeId rootId, VertexId vertexId);
 
-  bool UpdateAbove(Region* originalCopy,
-                   RegionId indexL,
-                   RegionId indexR,
-                   VertexId topEdgeIndex,
-                   RegionId leftParent,
-                   RegionId rightParent);
+  bool UpdateAbove(Region* originalCopy, RegionId indexL, RegionId indexR, VertexId topEdgeIndex, RegionId leftParent, RegionId rightParent);
 
   bool UpdateBelow(Region* O, RegionId indexL, RegionId indexR, EdgeId botEdgeIndex, RegionId*, RegionId*, bool isLast);
 

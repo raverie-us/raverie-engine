@@ -67,9 +67,9 @@ namespace Z
 Shortcuts* gShortcutsDoc = nullptr;
 }
 
-#define IF_ROOT(r)                                                                                                     \
-  DataEntry* root = &mSet;                                                                                             \
-  if (dataEntry == root)                                                                                               \
+#define IF_ROOT(r)                                                                                                                                                                                     \
+  DataEntry* root = &mSet;                                                                                                                                                                             \
+  if (dataEntry == root)                                                                                                                                                                               \
     return r;
 
 ShortcutSource::ShortcutSource()

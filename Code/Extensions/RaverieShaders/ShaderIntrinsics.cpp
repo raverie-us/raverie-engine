@@ -4,11 +4,7 @@
 namespace Raverie
 {
 
-RaverieShaderIROp* GetOrCreateLanguageSpecConstant(RaverieSpirVFrontEnd* translator,
-                                                 void* specKey,
-                                                 int defaultValue,
-                                                 StringParam specName,
-                                                 RaverieSpirVFrontEndContext* context)
+RaverieShaderIROp* GetOrCreateLanguageSpecConstant(RaverieSpirVFrontEnd* translator, void* specKey, int defaultValue, StringParam specName, RaverieSpirVFrontEndContext* context)
 {
   // Check if this constant already exists
   RaverieShaderIROp* specConstantOp = translator->mLibrary->FindSpecializationConstantOp(specKey);
@@ -40,28 +36,20 @@ RaverieShaderIROp* GetLanguageVersionSpecConstant(RaverieSpirVFrontEnd* translat
   return GetOrCreateLanguageSpecConstant(translator, languageVersionKey, 150, languageVersionName, context);
 }
 
-void ResolveIsLanguage(RaverieSpirVFrontEnd* translator,
-                       Raverie::FunctionCallNode* functionCallNode,
-                       Raverie::MemberAccessNode* memberAccessNode,
-                       RaverieSpirVFrontEndContext* context)
+void ResolveIsLanguage(RaverieSpirVFrontEnd* translator, Raverie::FunctionCallNode* functionCallNode, Raverie::MemberAccessNode* memberAccessNode, RaverieSpirVFrontEndContext* context)
 {
   RaverieShaderIRType* boolType = translator->mLibrary->FindType(RaverieTypeId(bool));
 
   // Get the specialization constant for the language id (is this glsl?)
   RaverieShaderIROp* languageSpecConst = GetLanguageSpecConstant(translator, context);
   // Check if the given language id is equal to the current language
-  RaverieShaderIROp* comparisonLanguageOp =
-      translator->WalkAndGetValueTypeResult(functionCallNode->Arguments[0], context);
-  RaverieShaderIROp* result =
-      translator->BuildCurrentBlockIROp(OpType::OpIEqual, boolType, languageSpecConst, comparisonLanguageOp, context);
+  RaverieShaderIROp* comparisonLanguageOp = translator->WalkAndGetValueTypeResult(functionCallNode->Arguments[0], context);
+  RaverieShaderIROp* result = translator->BuildCurrentBlockIROp(OpType::OpIEqual, boolType, languageSpecConst, comparisonLanguageOp, context);
 
   context->PushIRStack(result);
 }
 
-void ResolveIsLanguageMinMaxVersion(RaverieSpirVFrontEnd* translator,
-                                    Raverie::FunctionCallNode* functionCallNode,
-                                    Raverie::MemberAccessNode* memberAccessNode,
-                                    RaverieSpirVFrontEndContext* context)
+void ResolveIsLanguageMinMaxVersion(RaverieSpirVFrontEnd* translator, Raverie::FunctionCallNode* functionCallNode, Raverie::MemberAccessNode* memberAccessNode, RaverieSpirVFrontEndContext* context)
 {
   RaverieShaderIRType* boolType = translator->mLibrary->FindType(RaverieTypeId(bool));
 
@@ -71,24 +59,18 @@ void ResolveIsLanguageMinMaxVersion(RaverieSpirVFrontEnd* translator,
   // hlsl 100?)
   RaverieShaderIROp* languageVersionSpecConst = GetLanguageVersionSpecConstant(translator, context);
   // Read all of the arguments
-  RaverieShaderIROp* comparisonLanguageOp =
-      translator->WalkAndGetValueTypeResult(functionCallNode->Arguments[0], context);
+  RaverieShaderIROp* comparisonLanguageOp = translator->WalkAndGetValueTypeResult(functionCallNode->Arguments[0], context);
   RaverieShaderIROp* minVersionOp = translator->WalkAndGetValueTypeResult(functionCallNode->Arguments[1], context);
   RaverieShaderIROp* maxVersionOp = translator->WalkAndGetValueTypeResult(functionCallNode->Arguments[2], context);
 
   // Check the language id
-  RaverieShaderIROp* isLanguageOp =
-      translator->BuildCurrentBlockIROp(OpType::OpIEqual, boolType, languageSpecConst, comparisonLanguageOp, context);
+  RaverieShaderIROp* isLanguageOp = translator->BuildCurrentBlockIROp(OpType::OpIEqual, boolType, languageSpecConst, comparisonLanguageOp, context);
   // Check the minVersion <= languageVersion <= maxVersion
-  RaverieShaderIROp* isGreaterThanMinOp = translator->BuildCurrentBlockIROp(
-      OpType::OpSLessThanEqual, boolType, minVersionOp, languageVersionSpecConst, context);
-  RaverieShaderIROp* isLessThanMaxOp = translator->BuildCurrentBlockIROp(
-      OpType::OpSLessThanEqual, boolType, languageVersionSpecConst, maxVersionOp, context);
+  RaverieShaderIROp* isGreaterThanMinOp = translator->BuildCurrentBlockIROp(OpType::OpSLessThanEqual, boolType, minVersionOp, languageVersionSpecConst, context);
+  RaverieShaderIROp* isLessThanMaxOp = translator->BuildCurrentBlockIROp(OpType::OpSLessThanEqual, boolType, languageVersionSpecConst, maxVersionOp, context);
   // Combine the comparisons together into one bool
-  RaverieShaderIROp* isInVersionRange =
-      translator->BuildCurrentBlockIROp(OpType::OpLogicalAnd, boolType, isGreaterThanMinOp, isLessThanMaxOp, context);
-  RaverieShaderIROp* result =
-      translator->BuildCurrentBlockIROp(OpType::OpLogicalAnd, boolType, isLanguageOp, isInVersionRange, context);
+  RaverieShaderIROp* isInVersionRange = translator->BuildCurrentBlockIROp(OpType::OpLogicalAnd, boolType, isGreaterThanMinOp, isLessThanMaxOp, context);
+  RaverieShaderIROp* result = translator->BuildCurrentBlockIROp(OpType::OpLogicalAnd, boolType, isLanguageOp, isInVersionRange, context);
 
   context->PushIRStack(result);
 }
@@ -96,8 +78,7 @@ void ResolveIsLanguageMinMaxVersion(RaverieSpirVFrontEnd* translator,
 void RegisterShaderIntrinsics(RaverieSpirVFrontEnd* translator, RaverieShaderIRLibrary* shaderLibrary)
 {
   // Find the shader intrinsics type
-  Raverie::BoundType* shaderIntrinsicsType =
-      shaderLibrary->mRaverieLibrary->BoundTypes.FindValue("ShaderIntrinsics", nullptr);
+  Raverie::BoundType* shaderIntrinsicsType = shaderLibrary->mRaverieLibrary->BoundTypes.FindValue("ShaderIntrinsics", nullptr);
   TypeResolvers& typeResolver = shaderLibrary->mTypeResolvers[shaderIntrinsicsType];
 
   // Walk all functions and register any resolvers if they exist

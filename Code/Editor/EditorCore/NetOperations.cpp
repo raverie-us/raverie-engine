@@ -15,29 +15,20 @@ namespace Raverie
 void AddNetPropertyInfo(OperationQueue* queue, NetObject* netObject, BoundType* componentType, StringParam propertyName)
 {
   // Create and perform the Add NetPropertyInfo operation
-  Operation* op =
-      new AddRemoveNetPropertyInfoOperation(netObject, componentType, propertyName, NetPropertyInfoAction::Add);
+  Operation* op = new AddRemoveNetPropertyInfoOperation(netObject, componentType, propertyName, NetPropertyInfoAction::Add);
   op->Redo();
   queue->Queue(op);
 }
 
-void RemoveNetPropertyInfo(OperationQueue* queue,
-                           NetObject* netObject,
-                           BoundType* componentType,
-                           StringParam propertyName)
+void RemoveNetPropertyInfo(OperationQueue* queue, NetObject* netObject, BoundType* componentType, StringParam propertyName)
 {
   // Create and perform the Remove NetPropertyInfo operation
-  Operation* op =
-      new AddRemoveNetPropertyInfoOperation(netObject, componentType, propertyName, NetPropertyInfoAction::Remove);
+  Operation* op = new AddRemoveNetPropertyInfoOperation(netObject, componentType, propertyName, NetPropertyInfoAction::Remove);
   op->Redo();
   queue->Queue(op);
 }
 
-void SetNetPropertyInfoChannel(OperationQueue* queue,
-                               NetObject* netObject,
-                               BoundType* componentType,
-                               StringParam propertyName,
-                               NetChannelConfig* netChannelConfig)
+void SetNetPropertyInfoChannel(OperationQueue* queue, NetObject* netObject, BoundType* componentType, StringParam propertyName, NetChannelConfig* netChannelConfig)
 {
   // Create and perform the Set NetPropertyInfo Channel operation
   Operation* op = new SetNetPropertyInfoChannelOperation(netObject, componentType, propertyName, netChannelConfig);
@@ -47,13 +38,8 @@ void SetNetPropertyInfoChannel(OperationQueue* queue,
 
 //                      AddRemoveNetPropertyInfoOperation //
 
-AddRemoveNetPropertyInfoOperation::AddRemoveNetPropertyInfoOperation(NetObject* netObject,
-                                                                     BoundType* componentType,
-                                                                     StringParam propertyName,
-                                                                     NetPropertyInfoAction::Enum action) :
-    mComponentType(componentType),
-    mPropertyName(propertyName),
-    mAction(action)
+AddRemoveNetPropertyInfoOperation::AddRemoveNetPropertyInfoOperation(NetObject* netObject, BoundType* componentType, StringParam propertyName, NetPropertyInfoAction::Enum action) :
+    mComponentType(componentType), mPropertyName(propertyName), mAction(action)
 
 {
   ErrorIf(netObject->GetOwner() == nullptr, "NetObject doesn't have an Owner");
@@ -78,8 +64,7 @@ void AddRemoveNetPropertyInfoOperation::Undo()
 {
   // Add if we're undoing a remove operation
   // Remove if we're undoing an add operation
-  NetPropertyInfoAction::Enum action =
-      (mAction == NetPropertyInfoAction::Remove) ? NetPropertyInfoAction::Add : NetPropertyInfoAction::Remove;
+  NetPropertyInfoAction::Enum action = (mAction == NetPropertyInfoAction::Remove) ? NetPropertyInfoAction::Add : NetPropertyInfoAction::Remove;
 
   // Perform net property info action
   SetNetPropertyInfo(action);
@@ -121,14 +106,8 @@ void AddRemoveNetPropertyInfoOperation::SetNetPropertyInfo(NetPropertyInfoAction
 
 //                      SetNetPropertyInfoChannelOperation //
 
-SetNetPropertyInfoChannelOperation::SetNetPropertyInfoChannelOperation(NetObject* netObject,
-                                                                       BoundType* componentType,
-                                                                       StringParam propertyName,
-                                                                       NetChannelConfig* netChannelConfig) :
-    mComponentType(componentType),
-    mPropertyName(propertyName),
-    mLastNetChannelConfig(),
-    mCurrentNetChannelConfig()
+SetNetPropertyInfoChannelOperation::SetNetPropertyInfoChannelOperation(NetObject* netObject, BoundType* componentType, StringParam propertyName, NetChannelConfig* netChannelConfig) :
+    mComponentType(componentType), mPropertyName(propertyName), mLastNetChannelConfig(), mCurrentNetChannelConfig()
 {
   ErrorIf(netObject->GetOwner() == nullptr, "NetObject doesn't have an Owner");
 

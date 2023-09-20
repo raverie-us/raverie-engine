@@ -9,23 +9,18 @@ namespace Raverie
 /// provided QueryType using the provided policy. This range becomes invalidated
 /// when the BroadPhase is changed.
 template <typename ClientDataType, typename QueryType, typename PolicyType = BroadPhasePolicy<QueryType, Sphere>>
-struct BoundingSphereRange : public BroadPhaseArrayRange<ClientDataType,
-                                                         QueryType,
-                                                         PolicyType,
-                                                         SphereQueryCheck<ClientDataType, QueryType, PolicyType>>
+struct BoundingSphereRange : public BroadPhaseArrayRange<ClientDataType, QueryType, PolicyType, SphereQueryCheck<ClientDataType, QueryType, PolicyType>>
 {
   typedef SphereQueryCheck<ClientDataType, QueryType, PolicyType> QueryCheck;
   typedef BroadPhaseArrayRange<ClientDataType, QueryType, PolicyType, QueryCheck> BaseType;
 
   /// Constructs a range using the default Policy.
-  BoundingSphereRange(typename BaseType::ObjectArray* data, const QueryType& queryObj) :
-      BaseType(data, queryObj, PolicyType())
+  BoundingSphereRange(typename BaseType::ObjectArray* data, const QueryType& queryObj) : BaseType(data, queryObj, PolicyType())
   {
   }
 
   /// Constructs a range using the policy type passed in.
-  BoundingSphereRange(typename BaseType::ObjectArray* data, const QueryType& queryObj, PolicyType policy) :
-      BaseType(data, queryObj, policy)
+  BoundingSphereRange(typename BaseType::ObjectArray* data, const QueryType& queryObj, PolicyType policy) : BaseType(data, queryObj, policy)
   {
   }
 };

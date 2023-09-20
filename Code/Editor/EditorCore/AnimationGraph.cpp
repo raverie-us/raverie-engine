@@ -158,8 +158,7 @@ float AnimationCurveEditor::DisplayTextToGraphX(StringParam displayText)
   return position / settings->mEditFps;
 }
 
-AnimationCurveObject::AnimationCurveObject(AnimationGraphEditor* editor, TrackNode* track) :
-    CurveObject(editor->mCurveEditor)
+AnimationCurveObject::AnimationCurveObject(AnimationGraphEditor* editor, TrackNode* track) : CurveObject(editor->mCurveEditor)
 {
   mGraph = editor;
   mIgnoreAnimationEvents = false;
@@ -418,8 +417,7 @@ public:
   //  }
   //}
 
-  void RenderUpdate(
-      ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
+  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
   {
     Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 
@@ -437,8 +435,7 @@ public:
     CreateRenderData(viewBlock, frameBlock, clipRect, lines, PrimitiveType::Lines);
   }
 
-  void
-  DrawVerticalLines(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Array<StreamedVertex>& lines)
+  void DrawVerticalLines(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Array<StreamedVertex>& lines)
   {
     Vec4 color = AnimGraphUi::GridLineColor;
 
@@ -481,8 +478,7 @@ public:
     }
   }
 
-  void
-  DrawHorizontalLines(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Array<StreamedVertex>& lines)
+  void DrawHorizontalLines(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Array<StreamedVertex>& lines)
   {
     Vec4 color = AnimGraphUi::GridLineColor;
 
@@ -530,8 +526,7 @@ public:
     }
   }
 
-  void
-  DrawGhostPlayHead(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Array<StreamedVertex>& lines)
+  void DrawGhostPlayHead(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Array<StreamedVertex>& lines)
   {
     if (!mScrub->mShowGhostPlayHead)
       return;
@@ -583,8 +578,7 @@ public:
   }
 };
 
-AnimationGraphEditor::AnimationGraphEditor(Composite* parent, AnimationEditor* editor, ScrollingGraph* graphData) :
-    Composite(parent)
+AnimationGraphEditor::AnimationGraphEditor(Composite* parent, AnimationEditor* editor, ScrollingGraph* graphData) : Composite(parent)
 {
   mScrubber = NULL;
   mEditor = editor;

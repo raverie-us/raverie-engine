@@ -6,9 +6,7 @@ namespace Raverie
 
 inline void CommandFailed(Command* command, BoundType* contextType)
 {
-  String message = String::Format("There is no '%s' available to run the command '%s'",
-                                  contextType->Name.c_str(),
-                                  command->GetDisplayName().c_str());
+  String message = String::Format("There is no '%s' available to run the command '%s'", contextType->Name.c_str(), command->GetDisplayName().c_str());
   DoNotifyWarning("Command Not Run", message);
 }
 

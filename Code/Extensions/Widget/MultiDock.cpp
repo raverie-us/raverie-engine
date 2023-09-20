@@ -146,8 +146,7 @@ public:
   HintRegion* GetHint();
 };
 
-DockMovingManipulation::DockMovingManipulation(Mouse* mouse, MultiDock* dockOwner, Widget* target) :
-    MouseManipulation(mouse, dockOwner)
+DockMovingManipulation::DockMovingManipulation(Mouse* mouse, MultiDock* dockOwner, Widget* target) : MouseManipulation(mouse, dockOwner)
 {
   mTargetStartPosition = target->GetTranslation();
   mTargetStartSize = target->GetSize();
@@ -570,8 +569,7 @@ public:
   DockingArea* mArea0;
   DockingArea* mArea1;
 
-  DockedSizingManipuation(Mouse* mouse, MultiDock* multiDock, Widget* widgetToSize, DockMode::Enum direction) :
-      MouseManipulation(mouse, multiDock)
+  DockedSizingManipuation(Mouse* mouse, MultiDock* multiDock, Widget* widgetToSize, DockMode::Enum direction) : MouseManipulation(mouse, multiDock)
   {
     mSized0 = widgetToSize;
     mDockMode = direction;
@@ -947,11 +945,7 @@ struct SortByDockIndex
 
 // Compute the layout for all widget in the docking area. Area used is removed
 // from area parameter
-void LayoutDockingArea(MultiDock* dock,
-                       DockingArea& dockArea,
-                       DockArea::Enum areaIndex,
-                       Array<LayoutResult>& results,
-                       LayoutArea& layoutArea)
+void LayoutDockingArea(MultiDock* dock, DockingArea& dockArea, DockArea::Enum areaIndex, Array<LayoutResult>& results, LayoutArea& layoutArea)
 {
   // If there is no widgets set the dock size to zero
   // and return

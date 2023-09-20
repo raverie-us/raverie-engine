@@ -195,8 +195,7 @@ void BindDocumentationCommands(Cog* config, CommandManager* commands)
   if (Z::gEngine->GetConfigCog()->has(Raverie::DeveloperConfig))
   {
     commands->AddCommand("SaveDocumentation", BindCommandFunction(SaveDocumentation))->DevOnly = true;
-    commands->AddCommand("SaveNonRaverieDocumentation", BindCommandFunction(SaveNonRaverieMetaDocumentation))->DevOnly =
-        true;
+    commands->AddCommand("SaveNonRaverieDocumentation", BindCommandFunction(SaveNonRaverieMetaDocumentation))->DevOnly = true;
     commands->AddCommand("SaveEventList", BindCommandFunction(SaveEventList))->DevOnly = true;
     commands->AddCommand("SaveCommandList", BindCommandFunction(SaveListOfCommands))->DevOnly = true;
   }

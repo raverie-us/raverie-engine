@@ -28,14 +28,12 @@ Atlas::Atlas()
 
 bool Atlas::AddSpriteSource(SpriteSource* source, Image* image)
 {
-  TextureFiltering::Enum filtering =
-      source->Sampling == SpriteSampling::Nearest ? TextureFiltering::Nearest : TextureFiltering::Trilinear;
+  TextureFiltering::Enum filtering = source->Sampling == SpriteSampling::Nearest ? TextureFiltering::Nearest : TextureFiltering::Trilinear;
 
   if (mAabbTreeProxies.Empty())
   {
     mTexture->mFiltering = filtering;
-    mTexture->mMipMapping =
-        filtering == TextureFiltering::Nearest ? TextureMipMapping::None : TextureMipMapping::GpuGenerated;
+    mTexture->mMipMapping = filtering == TextureFiltering::Nearest ? TextureMipMapping::None : TextureMipMapping::GpuGenerated;
     mTexture->mMaxMipOverride = Atlas::sMaxMipLevel;
     mTexture->mAddressingX = TextureAddressing::Clamp;
     mTexture->mAddressingY = TextureAddressing::Clamp;

@@ -60,8 +60,7 @@ LayoutResult AspectLayout(Vec2 aspect, Vec2 size)
   LayoutResult lr;
   float sourceRatio = aspect.x / aspect.y;
   float screenRatio = size.x / size.y;
-  Vec2 scaleAspect =
-      sourceRatio < screenRatio ? Vec2(sourceRatio / screenRatio, 1) : Vec2(1, screenRatio / sourceRatio);
+  Vec2 scaleAspect = sourceRatio < screenRatio ? Vec2(sourceRatio / screenRatio, 1) : Vec2(1, screenRatio / sourceRatio);
   lr.Size = size * scaleAspect;
   lr.Translation = ToVector3((size - lr.Size) * 0.5f);
   return lr;
@@ -82,8 +81,7 @@ Vec2 MaxMeasure(Composite* widget, LayoutArea data)
   return neededSize;
 }
 
-void CalculateAlignment(
-    SizeAxis::Type axis, uint alignment, Vec2 areaSize, Vec3 areaPos, Vec2& childSize, Vec3& childTranslation)
+void CalculateAlignment(SizeAxis::Type axis, uint alignment, Vec2 areaSize, Vec3 areaPos, Vec2& childSize, Vec3& childTranslation)
 {
   switch (alignment)
   {
@@ -508,8 +506,7 @@ Vec2 DockLayout::DoLayout(Composite* widget, LayoutArea data)
     if (lastControl)
     {
       areaPos = Vec3(area[SlicesIndex::Left], area[SlicesIndex::Top], 0.0f);
-      areaSize =
-          Vec2(area[SlicesIndex::Right] - area[SlicesIndex::Left], area[SlicesIndex::Bottom] - area[SlicesIndex::Top]);
+      areaSize = Vec2(area[SlicesIndex::Right] - area[SlicesIndex::Left], area[SlicesIndex::Bottom] - area[SlicesIndex::Top]);
     }
     else
     {
@@ -627,8 +624,7 @@ Vec2 RatioLayout::DoLayout(Composite* widget, LayoutArea data)
 
     float sourceRatio = childSize.x / childSize.y;
 
-    Vec2 scaleAspect =
-        sourceRatio < screenRatio ? Vec2(sourceRatio / screenRatio, 1) : Vec2(1, screenRatio / sourceRatio);
+    Vec2 scaleAspect = sourceRatio < screenRatio ? Vec2(sourceRatio / screenRatio, 1) : Vec2(1, screenRatio / sourceRatio);
 
     Vec2 newSize = size * scaleAspect;
 

@@ -73,8 +73,7 @@ void StaticAabbTreeBroadPhase::SelfQuery(ClientPairArray& results)
 
 void StaticAabbTreeBroadPhase::Query(BroadPhaseData& data, ClientPairArray& results)
 {
-  forRangeBroadphaseTree(TreeType, mTree, Aabb, data.mAabb)
-      results.PushBack(ClientPair(data.mClientData, range.Front()));
+  forRangeBroadphaseTree(TreeType, mTree, Aabb, data.mAabb) results.PushBack(ClientPair(data.mClientData, range.Front()));
 }
 
 void StaticAabbTreeBroadPhase::BatchQuery(BroadPhaseDataArray& data, ClientPairArray& results)

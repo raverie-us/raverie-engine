@@ -66,10 +66,7 @@ void UiLegacyToolTip::SetPlacement(CameraViewport* viewport, RectangleParam loca
   mToolTip->SetArrowTipTranslation(placement);
 }
 
-void UiLegacyToolTip::SetPriority(IndicatorSide::Enum p0,
-                                  IndicatorSide::Enum p1,
-                                  IndicatorSide::Enum p2,
-                                  IndicatorSide::Enum p3)
+void UiLegacyToolTip::SetPriority(IndicatorSide::Enum p0, IndicatorSide::Enum p1, IndicatorSide::Enum p2, IndicatorSide::Enum p3)
 {
   mPriority[0] = p0;
   mPriority[1] = p1;

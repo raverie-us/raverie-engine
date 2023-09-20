@@ -9,8 +9,7 @@ DeclareBitField3(CollisionBlockStates, SendEventsToA, SendEventsToB, SendEventsT
 /// What kind of filter block this is. These blocks are used to send
 /// out/override collision group events of certain types (collision started,
 /// etc...)
-DeclareEnum4(
-    CollisionFilterBlockType, CollisionStartedBlock, CollisionPersistedBlock, CollisionEndedBlock, PreSolveBlock);
+DeclareEnum4(CollisionFilterBlockType, CollisionStartedBlock, CollisionPersistedBlock, CollisionEndedBlock, PreSolveBlock);
 
 /// Used to specify which collision group events should be sent out for a
 /// CollisionFilter. Allows customizing who gets events (in the filter pair) and

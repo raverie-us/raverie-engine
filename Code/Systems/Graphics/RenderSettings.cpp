@@ -415,10 +415,7 @@ RaverieDefineType(MultiRenderTarget, builder, type)
   RaverieBindGetterSetter(BlendSettings7);
 }
 
-MultiRenderTarget::MultiRenderTarget(HandleOf<GraphicsRenderSettings> renderSettings) :
-    mRenderSettings(renderSettings),
-    mColorTargetMrt(renderSettings),
-    mBlendSettingsMrt(renderSettings)
+MultiRenderTarget::MultiRenderTarget(HandleOf<GraphicsRenderSettings> renderSettings) : mRenderSettings(renderSettings), mColorTargetMrt(renderSettings), mBlendSettingsMrt(renderSettings)
 {
 }
 

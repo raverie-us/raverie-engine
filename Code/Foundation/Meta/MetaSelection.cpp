@@ -17,9 +17,9 @@ RaverieDefineType(MetaSelection, builder, type)
 {
   RaverieBindMethod(Count);
   RaverieBindMethod(Empty);
-  RaverieFullBindMethod(builder, type, &MetaSelection::Clear, (void (MetaSelection::*)()), "Clear", RaverieNoNames);
+  RaverieFullBindMethod(builder, type, &MetaSelection::Clear, (void(MetaSelection::*)()), "Clear", RaverieNoNames);
   RaverieBindMethod(SelectOnly);
-  RaverieFullBindMethod(builder, type, &MetaSelection::Add, (void (MetaSelection::*)(HandleParam)), "Add", RaverieNoNames);
+  RaverieFullBindMethod(builder, type, &MetaSelection::Add, (void(MetaSelection::*)(HandleParam)), "Add", RaverieNoNames);
   RaverieBindMethod(Remove);
   RaverieBindMethod(Replace);
   RaverieBindMethod(Contains);

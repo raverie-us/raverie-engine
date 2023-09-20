@@ -6,28 +6,12 @@ namespace Raverie
 
 //                               ReplicaStream //
 
-ReplicaStream::ReplicaStream(Replicator* replicator,
-                             ReplicatorLink* replicatorLink,
-                             BitStream& bitStream,
-                             ReplicaStreamMode::Enum replicaStreamMode,
-                             TimeMs timestamp) :
-    mReplicator(replicator),
-    mReplicatorLink(replicatorLink),
-    mBitStream(bitStream),
-    mReplicaStreamMode(replicaStreamMode),
-    mTimestamp(timestamp)
+ReplicaStream::ReplicaStream(Replicator* replicator, ReplicatorLink* replicatorLink, BitStream& bitStream, ReplicaStreamMode::Enum replicaStreamMode, TimeMs timestamp) :
+    mReplicator(replicator), mReplicatorLink(replicatorLink), mBitStream(bitStream), mReplicaStreamMode(replicaStreamMode), mTimestamp(timestamp)
 {
 }
-ReplicaStream::ReplicaStream(Replicator* replicator,
-                             ReplicatorLink* replicatorLink,
-                             const BitStream& bitStream,
-                             ReplicaStreamMode::Enum replicaStreamMode,
-                             TimeMs timestamp) :
-    mReplicator(replicator),
-    mReplicatorLink(replicatorLink),
-    mBitStream(const_cast<BitStream&>(bitStream)),
-    mReplicaStreamMode(replicaStreamMode),
-    mTimestamp(timestamp)
+ReplicaStream::ReplicaStream(Replicator* replicator, ReplicatorLink* replicatorLink, const BitStream& bitStream, ReplicaStreamMode::Enum replicaStreamMode, TimeMs timestamp) :
+    mReplicator(replicator), mReplicatorLink(replicatorLink), mBitStream(const_cast<BitStream&>(bitStream)), mReplicaStreamMode(replicaStreamMode), mTimestamp(timestamp)
 {
 }
 
@@ -172,11 +156,9 @@ bool ReplicaStream::WriteIdentificationInfo(bool isAbsent, const Replica* replic
   if (!replica)
     return WriteIdentificationInfo(isAbsent);
   else
-    return WriteIdentificationInfo(
-        isAbsent, replica->mReplicaId, replica->IsEmplaced(), replica->mEmplaceContext, replica->mEmplaceId);
+    return WriteIdentificationInfo(isAbsent, replica->mReplicaId, replica->IsEmplaced(), replica->mEmplaceContext, replica->mEmplaceId);
 }
-bool ReplicaStream::WriteIdentificationInfo(
-    bool isAbsent, ReplicaId replicaId, bool isEmplaced, const EmplaceContext& emplaceContext, EmplaceId emplaceId)
+bool ReplicaStream::WriteIdentificationInfo(bool isAbsent, ReplicaId replicaId, bool isEmplaced, const EmplaceContext& emplaceContext, EmplaceId emplaceId)
 {
   // Get item cachers
   Replicator::EmplaceContextCacher& emplaceContextCacher = GetReplicator()->mEmplaceContextCacher;
@@ -287,16 +269,10 @@ bool ReplicaStream::ReadIdentificationInfo(bool& isAbsent, Replica* replica) con
   else
   {
     bool isEmplaced = false;
-    return ReadIdentificationInfo(
-        isAbsent, replica->mReplicaId, replica->mIsCloned, isEmplaced, replica->mEmplaceContext, replica->mEmplaceId);
+    return ReadIdentificationInfo(isAbsent, replica->mReplicaId, replica->mIsCloned, isEmplaced, replica->mEmplaceContext, replica->mEmplaceId);
   }
 }
-bool ReplicaStream::ReadIdentificationInfo(bool& isAbsent,
-                                           ReplicaId& replicaId,
-                                           bool& isCloned,
-                                           bool& isEmplaced,
-                                           EmplaceContext& emplaceContext,
-                                           EmplaceId& emplaceId) const
+bool ReplicaStream::ReadIdentificationInfo(bool& isAbsent, ReplicaId& replicaId, bool& isCloned, bool& isEmplaced, EmplaceContext& emplaceContext, EmplaceId& emplaceId) const
 {
   // Get item cachers
   Replicator::EmplaceContextCacher& emplaceContextCacher = GetReplicator()->mEmplaceContextCacher;
@@ -440,14 +416,12 @@ bool ReplicaStream::WriteChannelData(const Replica* replica)
   {
     // Is this the replication initialization phase? (We are creating an
     // object?)
-    bool isInitializationPhase =
-        (GetReplicaStreamMode() == ReplicaStreamMode::Spawn || GetReplicaStreamMode() == ReplicaStreamMode::Clone);
+    bool isInitializationPhase = (GetReplicaStreamMode() == ReplicaStreamMode::Spawn || GetReplicaStreamMode() == ReplicaStreamMode::Clone);
     if (!isInitializationPhase)
     {
       // (If this is not the initialization phase, it should be the
       // uninitialization phase)
-      Assert(GetReplicaStreamMode() == ReplicaStreamMode::Forget ||
-             GetReplicaStreamMode() == ReplicaStreamMode::Destroy);
+      Assert(GetReplicaStreamMode() == ReplicaStreamMode::Forget || GetReplicaStreamMode() == ReplicaStreamMode::Destroy);
     }
 
     // Is this the replication initialization phase? (We are creating an
@@ -523,10 +497,7 @@ bool ReplicaStream::WriteChannelData(const Replica* replica)
       }
 
       // Write replica channel
-      bool result = replicaChannel->Serialize(
-          mBitStream,
-          (isInitializationPhase ? ReplicationPhase::Initialization : ReplicationPhase::Uninitialization),
-          GetTimestamp());
+      bool result = replicaChannel->Serialize(mBitStream, (isInitializationPhase ? ReplicationPhase::Initialization : ReplicationPhase::Uninitialization), GetTimestamp());
       if (!result) // Unable?
       {
         // Error writing replica data
@@ -565,14 +536,12 @@ bool ReplicaStream::ReadChannelData(Replica* replica) const
   {
     // Is this the replication initialization phase? (We are creating an
     // object?)
-    bool isInitializationPhase =
-        (GetReplicaStreamMode() == ReplicaStreamMode::Spawn || GetReplicaStreamMode() == ReplicaStreamMode::Clone);
+    bool isInitializationPhase = (GetReplicaStreamMode() == ReplicaStreamMode::Spawn || GetReplicaStreamMode() == ReplicaStreamMode::Clone);
     if (!isInitializationPhase)
     {
       // (If this is not the initialization phase, it should be the
       // uninitialization phase)
-      Assert(GetReplicaStreamMode() == ReplicaStreamMode::Forget ||
-             GetReplicaStreamMode() == ReplicaStreamMode::Destroy);
+      Assert(GetReplicaStreamMode() == ReplicaStreamMode::Forget || GetReplicaStreamMode() == ReplicaStreamMode::Destroy);
     }
 
     // Is this the replication initialization phase? (We are creating an
@@ -648,10 +617,7 @@ bool ReplicaStream::ReadChannelData(Replica* replica) const
       }
 
       // Read replica channel
-      bool result = replicaChannel->Deserialize(
-          mBitStream,
-          (isInitializationPhase ? ReplicationPhase::Initialization : ReplicationPhase::Uninitialization),
-          GetTimestamp());
+      bool result = replicaChannel->Deserialize(mBitStream, (isInitializationPhase ? ReplicationPhase::Initialization : ReplicationPhase::Uninitialization), GetTimestamp());
       if (!result) // Unable?
       {
         // Error reading replica data

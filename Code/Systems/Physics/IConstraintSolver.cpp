@@ -16,8 +16,7 @@ size_t GetMaxSolverSize()
   return Math::Max(basicSolver, Math::Max(normalSolver, basicGenericSolver));
 }
 
-Memory::Pool* IConstraintSolver::sPool =
-    new Memory::Pool("Solvers", Memory::GetNamedHeap("Physics"), GetMaxSolverSize(), 512);
+Memory::Pool* IConstraintSolver::sPool = new Memory::Pool("Solvers", Memory::GetNamedHeap("Physics"), GetMaxSolverSize(), 512);
 
 ImplementOverloadedNewWithAllocator(IConstraintSolver, IConstraintSolver::sPool);
 

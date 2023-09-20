@@ -16,8 +16,7 @@ public:
 /// Builds an Aabb tree using the passed in partition axis method.
 /// NOTE*  ObjectType must have a public Aabb member named mAabb.
 template <typename NodeType>
-NodeType* BuildTreeTopDownNodes(Array<NodeType*>& leafNodes,
-                                typename PartitionNodeMethod<NodeType>::PartitionNodeAxisMethod partitionMethod);
+NodeType* BuildTreeTopDownNodes(Array<NodeType*>& leafNodes, typename PartitionNodeMethod<NodeType>::PartitionNodeAxisMethod partitionMethod);
 
 /// Calculates an Aabb encompassing all objects passed in.
 template <typename NodeType>
@@ -46,8 +45,7 @@ public:
 /// Builds an Aabb tree using the passed in partition axis method.
 /// NOTE*  ObjectType must have a public Aabb member named mAabb.
 template <typename NodeType, typename ObjectType>
-NodeType* BuildTreeTopDown(Array<ObjectType>& proxies,
-                           typename PartitionMethod<ObjectType>::PartitionAxisMethod partitionMethod);
+NodeType* BuildTreeTopDown(Array<ObjectType>& proxies, typename PartitionMethod<ObjectType>::PartitionAxisMethod partitionMethod);
 
 /// Calculates an Aabb encompassing all objects passed in.
 template <typename ObjectType>

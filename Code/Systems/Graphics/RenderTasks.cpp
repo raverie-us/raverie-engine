@@ -48,8 +48,7 @@ RaverieDefineType(SubRenderGroupPass, builder, type)
   RaverieBindMethod(ExcludeSubRenderGroup);
 }
 
-SubRenderGroupPass::SubRenderGroupPass(RenderTasksEvent* renderTasksEvent, RenderGroup& baseRenderGroup) :
-    mRenderTasksEvent(renderTasksEvent)
+SubRenderGroupPass::SubRenderGroupPass(RenderTasksEvent* renderTasksEvent, RenderGroup& baseRenderGroup) : mRenderTasksEvent(renderTasksEvent)
 {
   Reset(baseRenderGroup);
 }
@@ -79,9 +78,7 @@ void SubRenderGroupPass::SetDefaultSettings(GraphicsRenderSettings& defaultSetti
   subData.mRender = true;
 }
 
-void SubRenderGroupPass::AddSubSettings(GraphicsRenderSettings& subSettings,
-                                        RenderGroup& subGroup,
-                                        MaterialBlock& subPass)
+void SubRenderGroupPass::AddSubSettings(GraphicsRenderSettings& subSettings, RenderGroup& subGroup, MaterialBlock& subPass)
 {
   if (!ValidateRenderGroup(subGroup))
     return;
@@ -130,19 +127,12 @@ bool SubRenderGroupPass::ValidateSettings(GraphicsRenderSettings& renderSettings
 bool SubRenderGroupPass::ValidateRenderGroup(RenderGroup& renderGroup)
 {
   if (!mBaseRenderGroup->IsSubRenderGroup(&renderGroup))
-    return DoNotifyException("Error",
-                             String::Format("'%s' is not a child of the base RenderGroup '%s'.",
-                                            renderGroup.Name.c_str(),
-                                            mBaseRenderGroup->Name.c_str())),
-           false;
+    return DoNotifyException("Error", String::Format("'%s' is not a child of the base RenderGroup '%s'.", renderGroup.Name.c_str(), mBaseRenderGroup->Name.c_str())), false;
 
   for (size_t i = 1; i < mSubData.Size(); ++i)
   {
     if (&renderGroup == *mSubData[i].mRenderGroup)
-      return DoNotifyException(
-                 "Error",
-                 String::Format("Settings or exclusion for '%s' have already been added.", renderGroup.Name.c_str())),
-             false;
+      return DoNotifyException("Error", String::Format("Settings or exclusion for '%s' have already been added.", renderGroup.Name.c_str())), false;
   }
 
   return true;
@@ -156,10 +146,8 @@ RaverieDefineType(RenderTasksEvent, builder, type)
   RaverieBindGetter(ViewportSize);
   RaverieBindGetter(CameraViewportCog);
 
-  RaverieBindOverloadedMethod(GetRenderTarget,
-                            RaverieInstanceOverload(HandleOf<RenderTarget>, IntVec2, TextureFormat::Enum));
-  RaverieBindOverloadedMethod(
-      GetRenderTarget, RaverieInstanceOverload(HandleOf<RenderTarget>, IntVec2, TextureFormat::Enum, SamplerSettings&));
+  RaverieBindOverloadedMethod(GetRenderTarget, RaverieInstanceOverload(HandleOf<RenderTarget>, IntVec2, TextureFormat::Enum));
+  RaverieBindOverloadedMethod(GetRenderTarget, RaverieInstanceOverload(HandleOf<RenderTarget>, IntVec2, TextureFormat::Enum, SamplerSettings&));
   RaverieBindOverloadedMethod(GetRenderTarget, RaverieInstanceOverload(HandleOf<RenderTarget>, HandleOf<Texture>));
 
   RaverieBindMethod(CreateSubRenderGroupPass);
@@ -168,46 +156,29 @@ RaverieDefineType(RenderTasksEvent, builder, type)
   RaverieBindOverloadedMethod(AddRenderTaskClearTarget, RaverieInstanceOverload(void, RenderTarget*, float));
   RaverieBindOverloadedMethod(AddRenderTaskClearTarget, RaverieInstanceOverload(void, RenderTarget*, float, uint));
   RaverieBindOverloadedMethod(AddRenderTaskClearTarget, RaverieInstanceOverload(void, RenderTarget*, float, uint, uint));
-  RaverieBindOverloadedMethod(AddRenderTaskClearTarget,
-                            RaverieInstanceOverload(void, RenderTarget*, RenderTarget*, Vec4, float));
-  RaverieBindOverloadedMethod(AddRenderTaskClearTarget,
-                            RaverieInstanceOverload(void, RenderTarget*, RenderTarget*, Vec4, float, uint));
-  RaverieBindOverloadedMethod(AddRenderTaskClearTarget,
-                            RaverieInstanceOverload(void, RenderTarget*, RenderTarget*, Vec4, float, uint, uint));
+  RaverieBindOverloadedMethod(AddRenderTaskClearTarget, RaverieInstanceOverload(void, RenderTarget*, RenderTarget*, Vec4, float));
+  RaverieBindOverloadedMethod(AddRenderTaskClearTarget, RaverieInstanceOverload(void, RenderTarget*, RenderTarget*, Vec4, float, uint));
+  RaverieBindOverloadedMethod(AddRenderTaskClearTarget, RaverieInstanceOverload(void, RenderTarget*, RenderTarget*, Vec4, float, uint, uint));
   RaverieBindOverloadedMethod(AddRenderTaskClearTarget, RaverieInstanceOverload(void, GraphicsRenderSettings&, Vec4));
-  RaverieBindOverloadedMethod(AddRenderTaskClearTarget,
-                            RaverieInstanceOverload(void, GraphicsRenderSettings&, Vec4, float));
-  RaverieBindOverloadedMethod(AddRenderTaskClearTarget,
-                            RaverieInstanceOverload(void, GraphicsRenderSettings&, Vec4, float, uint));
-  RaverieBindOverloadedMethod(AddRenderTaskClearTarget,
-                            RaverieInstanceOverload(void, GraphicsRenderSettings&, Vec4, float, uint, uint));
+  RaverieBindOverloadedMethod(AddRenderTaskClearTarget, RaverieInstanceOverload(void, GraphicsRenderSettings&, Vec4, float));
+  RaverieBindOverloadedMethod(AddRenderTaskClearTarget, RaverieInstanceOverload(void, GraphicsRenderSettings&, Vec4, float, uint));
+  RaverieBindOverloadedMethod(AddRenderTaskClearTarget, RaverieInstanceOverload(void, GraphicsRenderSettings&, Vec4, float, uint, uint));
 
-  RaverieBindOverloadedMethod(AddRenderTaskRenderPass,
-                            RaverieInstanceOverload(void, GraphicsRenderSettings&, RenderGroup&, MaterialBlock&));
-  RaverieBindOverloadedMethod(
-      AddRenderTaskRenderPass,
-      RaverieInstanceOverload(void, GraphicsRenderSettings&, GraphicalRangeInterface&, MaterialBlock&));
+  RaverieBindOverloadedMethod(AddRenderTaskRenderPass, RaverieInstanceOverload(void, GraphicsRenderSettings&, RenderGroup&, MaterialBlock&));
+  RaverieBindOverloadedMethod(AddRenderTaskRenderPass, RaverieInstanceOverload(void, GraphicsRenderSettings&, GraphicalRangeInterface&, MaterialBlock&));
 
   RaverieBindMethod(AddRenderTaskSubRenderGroupPass);
 
   RaverieBindOverloadedMethod(AddRenderTaskPostProcess, RaverieInstanceOverload(void, RenderTarget*, Material&));
   RaverieBindOverloadedMethod(AddRenderTaskPostProcess, RaverieInstanceOverload(void, RenderTarget*, MaterialBlock&));
   RaverieBindOverloadedMethod(AddRenderTaskPostProcess, RaverieInstanceOverload(void, GraphicsRenderSettings&, Material&));
-  RaverieBindOverloadedMethod(AddRenderTaskPostProcess,
-                            RaverieInstanceOverload(void, GraphicsRenderSettings&, MaterialBlock&));
+  RaverieBindOverloadedMethod(AddRenderTaskPostProcess, RaverieInstanceOverload(void, GraphicsRenderSettings&, MaterialBlock&));
 
-  RaverieBindOverloadedMethod(GetFinalTarget,
-                            RaverieInstanceOverload(HandleOf<RenderTarget>, IntVec2, TextureFormat::Enum));
-  RaverieBindOverloadedMethod(
-      GetFinalTarget, RaverieInstanceOverload(HandleOf<RenderTarget>, IntVec2, TextureFormat::Enum, SamplerSettings&));
+  RaverieBindOverloadedMethod(GetFinalTarget, RaverieInstanceOverload(HandleOf<RenderTarget>, IntVec2, TextureFormat::Enum));
+  RaverieBindOverloadedMethod(GetFinalTarget, RaverieInstanceOverload(HandleOf<RenderTarget>, IntVec2, TextureFormat::Enum, SamplerSettings&));
 }
 
-RenderTasksEvent::RenderTasksEvent() :
-    mViewportSize(IntVec2::cZero),
-    mRenderTasks(nullptr),
-    mFinalTexture(nullptr),
-    mGraphicsSpace(nullptr),
-    mCamera(nullptr)
+RenderTasksEvent::RenderTasksEvent() : mViewportSize(IntVec2::cZero), mRenderTasks(nullptr), mFinalTexture(nullptr), mGraphicsSpace(nullptr), mCamera(nullptr)
 {
 }
 
@@ -233,9 +204,7 @@ HandleOf<RenderTarget> RenderTasksEvent::GetRenderTarget(IntVec2 size, TextureFo
   return GetRenderTarget(size, format, samplerSettings);
 }
 
-HandleOf<RenderTarget> RenderTasksEvent::GetRenderTarget(IntVec2 size,
-                                                         TextureFormat::Enum format,
-                                                         SamplerSettings& samplerSettings)
+HandleOf<RenderTarget> RenderTasksEvent::GetRenderTarget(IntVec2 size, TextureFormat::Enum format, SamplerSettings& samplerSettings)
 {
   // need to determine a good size limit
   size = Math::Clamp(size, IntVec2(1, 1), IntVec2(4096, 4096));
@@ -275,20 +244,14 @@ void RenderTasksEvent::AddRenderTaskClearTarget(RenderTarget* depthTarget, float
   AddRenderTaskClearTarget(renderSettings, Vec4::cZero, depth, stencil, 0xFF);
 }
 
-void RenderTasksEvent::AddRenderTaskClearTarget(RenderTarget* depthTarget,
-                                                float depth,
-                                                uint stencil,
-                                                uint stencilWriteMask)
+void RenderTasksEvent::AddRenderTaskClearTarget(RenderTarget* depthTarget, float depth, uint stencil, uint stencilWriteMask)
 {
   GraphicsRenderSettings renderSettings;
   renderSettings.SetDepthTarget(depthTarget);
   AddRenderTaskClearTarget(renderSettings, Vec4::cZero, depth, stencil, stencilWriteMask);
 }
 
-void RenderTasksEvent::AddRenderTaskClearTarget(RenderTarget* colorTarget,
-                                                RenderTarget* depthTarget,
-                                                Vec4 color,
-                                                float depth)
+void RenderTasksEvent::AddRenderTaskClearTarget(RenderTarget* colorTarget, RenderTarget* depthTarget, Vec4 color, float depth)
 {
   GraphicsRenderSettings renderSettings;
   renderSettings.SetColorTarget(colorTarget);
@@ -296,8 +259,7 @@ void RenderTasksEvent::AddRenderTaskClearTarget(RenderTarget* colorTarget,
   AddRenderTaskClearTarget(renderSettings, color, depth, 0, 0xFF);
 }
 
-void RenderTasksEvent::AddRenderTaskClearTarget(
-    RenderTarget* colorTarget, RenderTarget* depthTarget, Vec4 color, float depth, uint stencil)
+void RenderTasksEvent::AddRenderTaskClearTarget(RenderTarget* colorTarget, RenderTarget* depthTarget, Vec4 color, float depth, uint stencil)
 {
   GraphicsRenderSettings renderSettings;
   renderSettings.SetColorTarget(colorTarget);
@@ -305,8 +267,7 @@ void RenderTasksEvent::AddRenderTaskClearTarget(
   AddRenderTaskClearTarget(renderSettings, color, depth, stencil, 0xFF);
 }
 
-void RenderTasksEvent::AddRenderTaskClearTarget(
-    RenderTarget* colorTarget, RenderTarget* depthTarget, Vec4 color, float depth, uint stencil, uint stencilWriteMask)
+void RenderTasksEvent::AddRenderTaskClearTarget(RenderTarget* colorTarget, RenderTarget* depthTarget, Vec4 color, float depth, uint stencil, uint stencilWriteMask)
 {
   GraphicsRenderSettings renderSettings;
   renderSettings.SetColorTarget(colorTarget);
@@ -324,24 +285,17 @@ void RenderTasksEvent::AddRenderTaskClearTarget(GraphicsRenderSettings& renderSe
   AddRenderTaskClearTarget(renderSettings, color, depth, 0, 0xFF);
 }
 
-void RenderTasksEvent::AddRenderTaskClearTarget(GraphicsRenderSettings& renderSettings,
-                                                Vec4 color,
-                                                float depth,
-                                                uint stencil)
+void RenderTasksEvent::AddRenderTaskClearTarget(GraphicsRenderSettings& renderSettings, Vec4 color, float depth, uint stencil)
 {
   AddRenderTaskClearTarget(renderSettings, color, depth, stencil, 0xFF);
 }
 
-void RenderTasksEvent::AddRenderTaskClearTarget(
-    GraphicsRenderSettings& renderSettings, Vec4 color, float depth, uint stencil, uint stencilWriteMask)
+void RenderTasksEvent::AddRenderTaskClearTarget(GraphicsRenderSettings& renderSettings, Vec4 color, float depth, uint stencil, uint stencilWriteMask)
 {
-  RenderTaskHelper(mRenderTasks->mRenderTaskBuffer)
-      .AddRenderTaskClearTarget(renderSettings, color, depth, stencil, stencilWriteMask);
+  RenderTaskHelper(mRenderTasks->mRenderTaskBuffer).AddRenderTaskClearTarget(renderSettings, color, depth, stencil, stencilWriteMask);
 }
 
-void RenderTasksEvent::AddRenderTaskRenderPass(GraphicsRenderSettings& renderSettings,
-                                               RenderGroup& renderGroup,
-                                               MaterialBlock& renderPass)
+void RenderTasksEvent::AddRenderTaskRenderPass(GraphicsRenderSettings& renderSettings, RenderGroup& renderGroup, MaterialBlock& renderPass)
 {
   RaverieFragmentType::Enum fragmentType = Z::gEngine->has(GraphicsEngine)->GetFragmentType(&renderPass);
   if (fragmentType != RaverieFragmentType::RenderPass)
@@ -359,8 +313,7 @@ void RenderTasksEvent::AddRenderTaskRenderPass(GraphicsRenderSettings& renderSet
   AddShaderInputs(renderSettings.mGlobalShaderInputs, shaderInputsId);
 
   String renderPassName = RaverieVirtualTypeId(&renderPass)->Name;
-  RenderTaskHelper(mRenderTasks->mRenderTaskBuffer)
-      .AddRenderTaskRenderPass(renderSettings, renderGroup.mSortId, renderPassName, shaderInputsId);
+  RenderTaskHelper(mRenderTasks->mRenderTaskBuffer).AddRenderTaskRenderPass(renderSettings, renderGroup.mSortId, renderPassName, shaderInputsId);
 
   mCamera->mUsedRenderGroupIds.Insert(renderGroup.mSortId);
 }
@@ -396,12 +349,7 @@ void RenderTasksEvent::AddRenderTaskSubRenderGroupPass(SubRenderGroupPass& subRe
     }
 
     String renderPassName = RaverieVirtualTypeId((MaterialBlock*)subData.mRenderPass)->Name;
-    renderTaskHelper.AddRenderTaskRenderPass(subData.mRenderSettings,
-                                             subData.mRenderGroup->mSortId,
-                                             renderPassName,
-                                             shaderInputsId,
-                                             subGroupCount,
-                                             subData.mRender);
+    renderTaskHelper.AddRenderTaskRenderPass(subData.mRenderSettings, subData.mRenderGroup->mSortId, renderPassName, shaderInputsId, subGroupCount, subData.mRender);
 
     // Only set the sub count for the first task.
     subGroupCount = 0;
@@ -412,9 +360,7 @@ void RenderTasksEvent::AddRenderTaskSubRenderGroupPass(SubRenderGroupPass& subRe
   mCamera->mUsedRenderGroupIds.Insert(subRenderGroupPass.mBaseRenderGroup->mSortId);
 }
 
-void RenderTasksEvent::AddRenderTaskRenderPass(GraphicsRenderSettings& renderSettings,
-                                               GraphicalRangeInterface& graphicalRange,
-                                               MaterialBlock& renderPass)
+void RenderTasksEvent::AddRenderTaskRenderPass(GraphicsRenderSettings& renderSettings, GraphicalRangeInterface& graphicalRange, MaterialBlock& renderPass)
 {
   RaverieFragmentType::Enum fragmentType = Z::gEngine->has(GraphicsEngine)->GetFragmentType(&renderPass);
   if (fragmentType != RaverieFragmentType::RenderPass)
@@ -460,8 +406,7 @@ void RenderTasksEvent::AddRenderTaskRenderPass(GraphicsRenderSettings& renderSet
   AddShaderInputs(renderSettings.mGlobalShaderInputs, shaderInputsId);
 
   String renderPassName = RaverieVirtualTypeId(&renderPass)->Name;
-  RenderTaskHelper(mRenderTasks->mRenderTaskBuffer)
-      .AddRenderTaskRenderPass(renderSettings, groupId, renderPassName, shaderInputsId);
+  RenderTaskHelper(mRenderTasks->mRenderTaskBuffer).AddRenderTaskRenderPass(renderSettings, groupId, renderPassName, shaderInputsId);
 
   mCamera->mUsedRenderGroupIds.Insert(groupId);
 }
@@ -487,8 +432,7 @@ void RenderTasksEvent::AddRenderTaskPostProcess(GraphicsRenderSettings& renderSe
 
   AddShaderInputs(renderSettings.mGlobalShaderInputs.Dereference(), shaderInputsId);
 
-  RenderTaskHelper(mRenderTasks->mRenderTaskBuffer)
-      .AddRenderTaskPostProcess(renderSettings, material.mRenderData, shaderInputsId);
+  RenderTaskHelper(mRenderTasks->mRenderTaskBuffer).AddRenderTaskPostProcess(renderSettings, material.mRenderData, shaderInputsId);
 }
 
 void RenderTasksEvent::AddRenderTaskPostProcess(GraphicsRenderSettings& renderSettings, MaterialBlock& postProcess)
@@ -503,8 +447,7 @@ void RenderTasksEvent::AddRenderTaskPostProcess(GraphicsRenderSettings& renderSe
   AddShaderInputs(renderSettings.mGlobalShaderInputs, shaderInputsId);
 
   String postProcessName = RaverieVirtualTypeId(&postProcess)->Name;
-  RenderTaskHelper(mRenderTasks->mRenderTaskBuffer)
-      .AddRenderTaskPostProcess(renderSettings, postProcessName, shaderInputsId);
+  RenderTaskHelper(mRenderTasks->mRenderTaskBuffer).AddRenderTaskPostProcess(renderSettings, postProcessName, shaderInputsId);
 }
 
 void RenderTasksEvent::AddRenderTaskBackBufferBlit(RenderTarget* colorTarget, ScreenViewport viewport)
@@ -518,9 +461,7 @@ HandleOf<RenderTarget> RenderTasksEvent::GetFinalTarget(IntVec2 size, TextureFor
   return GetFinalTarget(size, format, samplerSettings);
 }
 
-HandleOf<RenderTarget> RenderTasksEvent::GetFinalTarget(IntVec2 size,
-                                                        TextureFormat::Enum format,
-                                                        SamplerSettings& samplerSettings)
+HandleOf<RenderTarget> RenderTasksEvent::GetFinalTarget(IntVec2 size, TextureFormat::Enum format, SamplerSettings& samplerSettings)
 {
   size = Math::Clamp(size, IntVec2(1, 1), IntVec2(4096, 4096));
 
@@ -588,8 +529,7 @@ RenderTaskHelper::RenderTaskHelper(RenderTaskBuffer& buffer) : mBuffer(buffer)
 {
 }
 
-void RenderTaskHelper::AddRenderTaskClearTarget(
-    RenderSettings& renderSettings, Vec4 color, float depth, uint stencil, uint stencilWriteMask)
+void RenderTaskHelper::AddRenderTaskClearTarget(RenderSettings& renderSettings, Vec4 color, float depth, uint stencil, uint stencilWriteMask)
 {
   if (!ValidateRenderTargets(renderSettings))
     return;
@@ -603,12 +543,7 @@ void RenderTaskHelper::AddRenderTaskClearTarget(
   renderTask->mStencilWriteMask = stencilWriteMask;
 }
 
-void RenderTaskHelper::AddRenderTaskRenderPass(RenderSettings& renderSettings,
-                                               uint renderGroupIndex,
-                                               StringParam renderPassName,
-                                               uint shaderInputsId,
-                                               uint subRenderGroupCount,
-                                               bool render)
+void RenderTaskHelper::AddRenderTaskRenderPass(RenderSettings& renderSettings, uint renderGroupIndex, StringParam renderPassName, uint shaderInputsId, uint subRenderGroupCount, bool render)
 {
   // Don't validate targets if not rendering this group, none of the settings
   // are made or used in this case.
@@ -625,9 +560,7 @@ void RenderTaskHelper::AddRenderTaskRenderPass(RenderSettings& renderSettings,
   renderTask->mRender = render;
 }
 
-void RenderTaskHelper::AddRenderTaskPostProcess(RenderSettings& renderSettings,
-                                                StringParam postProcessName,
-                                                uint shaderInputsId)
+void RenderTaskHelper::AddRenderTaskPostProcess(RenderSettings& renderSettings, StringParam postProcessName, uint shaderInputsId)
 {
   if (!ValidateRenderTargets(renderSettings))
     return;
@@ -640,9 +573,7 @@ void RenderTaskHelper::AddRenderTaskPostProcess(RenderSettings& renderSettings,
   renderTask->mShaderInputsId = shaderInputsId;
 }
 
-void RenderTaskHelper::AddRenderTaskPostProcess(RenderSettings& renderSettings,
-                                                MaterialRenderData* materialRenderData,
-                                                uint shaderInputsId)
+void RenderTaskHelper::AddRenderTaskPostProcess(RenderSettings& renderSettings, MaterialRenderData* materialRenderData, uint shaderInputsId)
 {
   if (!ValidateRenderTargets(renderSettings))
     return;

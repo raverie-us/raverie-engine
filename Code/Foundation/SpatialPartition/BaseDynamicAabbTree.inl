@@ -12,8 +12,7 @@ static const real cAabbFatScaleFactor = real(1.2);
 } // namespace BaseDynamicTreeInternal
 
 template <typename NodeType>
-typename BaseDynamicTreePolicy<NodeType>::NodeTypeDef* BaseDynamicTreePolicy<NodeType>::SelectNode(NodeType* parent,
-                                                                                                   NodeType* newLeaf)
+typename BaseDynamicTreePolicy<NodeType>::NodeTypeDef* BaseDynamicTreePolicy<NodeType>::SelectNode(NodeType* parent, NodeType* newLeaf)
 {
   // if there is no child 2 then we have to select child1
   if (parent->mChild2 == nullptr)
@@ -31,8 +30,7 @@ typename BaseDynamicTreePolicy<NodeType>::NodeTypeDef* BaseDynamicTreePolicy<Nod
 }
 
 template <typename NodeType>
-typename BaseDynamicTreePolicy<NodeType>::NodeTypeDef*
-BaseDynamicTreePolicy<NodeType>::CreateInternalNode(NodeType* oldParent, NodeType* oldChild, NodeType* newChild)
+typename BaseDynamicTreePolicy<NodeType>::NodeTypeDef* BaseDynamicTreePolicy<NodeType>::CreateInternalNode(NodeType* oldParent, NodeType* oldChild, NodeType* newChild)
 {
   NodeType* internalNode = new NodeType();
 
@@ -97,8 +95,7 @@ void BaseDynamicAabbTree<PolicyType>::CreateProxy(BroadPhaseProxy& proxy, DataTy
   node->mClientData = data.mClientData;
   node->mAabb = aabb;
   Vec3 halfExtents = aabb.GetHalfExtents();
-  halfExtents = Math::Min(halfExtents + BaseDynamicTreeInternal::cAabbFatFactor,
-                          halfExtents * BaseDynamicTreeInternal::cAabbFatScaleFactor);
+  halfExtents = Math::Min(halfExtents + BaseDynamicTreeInternal::cAabbFatFactor, halfExtents * BaseDynamicTreeInternal::cAabbFatScaleFactor);
   node->mAabb.SetCenterAndHalfExtents(aabb.GetCenter(), halfExtents);
 
   PolicyType::InsertNode(mRoot, node, mRoot);
@@ -135,8 +132,7 @@ void BaseDynamicAabbTree<PolicyType>::UpdateProxy(BroadPhaseProxy& proxy, DataTy
 }
 
 template <typename PolicyType>
-typename BaseDynamicAabbTree<PolicyType>::ClientDataType&
-BaseDynamicAabbTree<PolicyType>::GetClientData(BroadPhaseProxy& proxy)
+typename BaseDynamicAabbTree<PolicyType>::ClientDataType& BaseDynamicAabbTree<PolicyType>::GetClientData(BroadPhaseProxy& proxy)
 {
   NodeType* node = static_cast<NodeType*>(proxy.ToVoidPointer());
   return node->mClientData;
@@ -239,10 +235,8 @@ void BaseDynamicAabbTree<PolicyType>::Validate()
       Aabb& parent = node->mAabb;
       Aabb& child1 = node->mChild1->mAabb;
       Aabb& child2 = node->mChild2->mAabb;
-      ErrorIf(!parent.ContainsPoint(child1.mMax) || !parent.ContainsPoint(child1.mMin),
-              "Parent Aabb does not contain child 1.");
-      ErrorIf(!parent.ContainsPoint(child2.mMax) || !parent.ContainsPoint(child2.mMin),
-              "Parent Aabb does not contain child 2.");
+      ErrorIf(!parent.ContainsPoint(child1.mMax) || !parent.ContainsPoint(child1.mMin), "Parent Aabb does not contain child 1.");
+      ErrorIf(!parent.ContainsPoint(child2.mMax) || !parent.ContainsPoint(child2.mMin), "Parent Aabb does not contain child 2.");
       nodes.PushBack(node->mChild1);
       nodes.PushBack(node->mChild2);
     }
@@ -274,8 +268,7 @@ void BaseDynamicAabbTree<PolicyType>::QueryTree(CallbackType* callback, const Ba
 }
 
 template <typename PolicyType>
-typename BaseDynamicAabbTree<PolicyType>::SelfQueryRange
-BaseDynamicAabbTree<PolicyType>::QuerySelf(NodePairArray& scratchBuffer)
+typename BaseDynamicAabbTree<PolicyType>::SelfQueryRange BaseDynamicAabbTree<PolicyType>::QuerySelf(NodePairArray& scratchBuffer)
 {
   return SelfQueryRange(scratchBuffer, mRoot);
 }
@@ -295,8 +288,7 @@ void BaseDynamicAabbTree<PolicyType>::Update(NodeType* leafNode, Aabb& aabb)
   // set the new fattened aabb
   Vec3 center = aabb.GetCenter();
   Vec3 halfExtents = aabb.GetHalfExtents();
-  halfExtents = Math::Min(halfExtents + BaseDynamicTreeInternal::cAabbFatFactor,
-                          halfExtents * BaseDynamicTreeInternal::cAabbFatScaleFactor);
+  halfExtents = Math::Min(halfExtents + BaseDynamicTreeInternal::cAabbFatFactor, halfExtents * BaseDynamicTreeInternal::cAabbFatScaleFactor);
   leafNode->mAabb.SetCenterAndHalfExtents(center, halfExtents);
 
   // we could update at the last unaffected node, but there is no guarantee that

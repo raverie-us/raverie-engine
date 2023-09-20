@@ -28,4 +28,3 @@ private:
   int StepCount;
 };
 } // namespace Raverie
-

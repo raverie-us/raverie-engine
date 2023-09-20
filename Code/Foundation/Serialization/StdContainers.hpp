@@ -106,8 +106,7 @@ void StdSaveSequence(Serializer& serializer, containerType& container)
 {
   uint containerSize = container.size();
   serializer.ArraySize(containerSize);
-  std::for_each(
-      container.begin(), container.end(), StdSerializeFunctor<typename containerType::value_type>(serializer));
+  std::for_each(container.begin(), container.end(), StdSerializeFunctor<typename containerType::value_type>(serializer));
 }
 
 template <typename containerType>
@@ -116,8 +115,7 @@ void StdLoadSequence(Serializer& serializer, containerType& container)
   uint containerSize = 0;
   serializer.ArraySize(containerSize);
   container.resize(containerSize);
-  std::for_each(
-      container.begin(), container.end(), StdSerializeFunctor<typename containerType::value_type>(serializer));
+  std::for_each(container.begin(), container.end(), StdSerializeFunctor<typename containerType::value_type>(serializer));
 }
 
 template <typename containerType>

@@ -80,10 +80,7 @@ void AttenuatorNode::SetCurveType(const FalloffCurveType::Enum type, Array<Math:
   if (customCurveData)
     // Interpolator will delete curve on destruction or when replaced with
     // another curve
-    Z::gSound->Mixer.AddTask(CreateFunctor(&InterpolatingObject::SetCustomCurve,
-                                           &DistanceInterpolator,
-                                           new Array<Math::Vec3>(*customCurveData)),
-                             this);
+    Z::gSound->Mixer.AddTask(CreateFunctor(&InterpolatingObject::SetCustomCurve, &DistanceInterpolator, new Array<Math::Vec3>(*customCurveData)), this);
   else
     Z::gSound->Mixer.AddTask(CreateFunctor(&InterpolatingObject::SetCurve, &DistanceInterpolator, type), this);
 }
@@ -105,10 +102,7 @@ void AttenuatorNode::SetLowPassCutoffFreq(const float frequency)
   Z::gSound->Mixer.AddTask(CreateFunctor(&AttenuatorNode::UpdateLowPassInterpolator, this), this);
 }
 
-bool AttenuatorNode::GetOutputSamples(BufferType* outputBuffer,
-                                      const unsigned numberOfChannels,
-                                      ListenerNode* listener,
-                                      const bool firstRequest)
+bool AttenuatorNode::GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest)
 {
   unsigned bufferSize = outputBuffer->Size();
 
@@ -189,8 +183,7 @@ bool AttenuatorNode::GetOutputSamples(BufferType* outputBuffer,
     listenerData.LowPass.SetCutoffFrequency(cutoffFreq);
 
     // Apply the filter to each frame of audio samples
-    listenerData.LowPass.ProcessBuffer(
-        outputBuffer->Data(), outputBuffer->Data(), numberOfChannels, outputBuffer->Size());
+    listenerData.LowPass.ProcessBuffer(outputBuffer->Data(), outputBuffer->Data(), numberOfChannels, outputBuffer->Size());
   }
 
   AddBypassThreaded(outputBuffer);
@@ -230,18 +223,12 @@ void AttenuatorNode::RemoveListenerThreaded(SoundEvent* event)
 
 void AttenuatorNode::UpdateDistanceInterpolator()
 {
-  DistanceInterpolator.SetValues(1.0f,
-                                 mMinimumVolume.Get(AudioThreads::MixThread),
-                                 mAttenEndDist.Get(AudioThreads::MixThread) -
-                                     mAttenStartDist.Get(AudioThreads::MixThread));
+  DistanceInterpolator.SetValues(1.0f, mMinimumVolume.Get(AudioThreads::MixThread), mAttenEndDist.Get(AudioThreads::MixThread) - mAttenStartDist.Get(AudioThreads::MixThread));
 }
 
 void AttenuatorNode::UpdateLowPassInterpolator()
 {
-  LowPassInterpolator.SetValues(cLowPassCutoffHighValue,
-                                mLowPassCutoff.Get(AudioThreads::MixThread),
-                                mAttenEndDist.Get(AudioThreads::MixThread) -
-                                    mAttenStartDist.Get(AudioThreads::MixThread));
+  LowPassInterpolator.SetValues(cLowPassCutoffHighValue, mLowPassCutoff.Get(AudioThreads::MixThread), mAttenEndDist.Get(AudioThreads::MixThread) - mAttenStartDist.Get(AudioThreads::MixThread));
 }
 
 } // namespace Raverie

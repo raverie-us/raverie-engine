@@ -71,26 +71,18 @@ ShaderInterfaceField* ShaderInterfaceStruct::GetField(const ShaderFieldKey& fiel
   return nullptr;
 }
 
-RaverieShaderIROp* ShaderInterfaceStruct::GetFieldPointerByIndex(size_t index,
-                                                               EntryPointGeneration* entryPointGeneration,
-                                                               BasicBlock* block,
-                                                               spv::StorageClass storageClass)
+RaverieShaderIROp* ShaderInterfaceStruct::GetFieldPointerByIndex(size_t index, EntryPointGeneration* entryPointGeneration, BasicBlock* block, spv::StorageClass storageClass)
 {
   return GetFieldPointerByIndex(mInstance, index, entryPointGeneration, block, storageClass);
 }
 
-RaverieShaderIROp* ShaderInterfaceStruct::GetFieldPointerByIndex(RaverieShaderIROp* instance,
-                                                               size_t index,
-                                                               EntryPointGeneration* entryPointGeneration,
-                                                               BasicBlock* block,
-                                                               spv::StorageClass storageClass)
+RaverieShaderIROp*
+ShaderInterfaceStruct::GetFieldPointerByIndex(RaverieShaderIROp* instance, size_t index, EntryPointGeneration* entryPointGeneration, BasicBlock* block, spv::StorageClass storageClass)
 {
   return entryPointGeneration->GetMemberInstanceFrom(block, instance, index, storageClass);
 }
 
-void ShaderInterfaceStruct::DeclareInterfaceType(EntryPointGeneration* entryPointGeneration,
-                                                 InterfaceInfoGroup& interfaceGroup,
-                                                 EntryPointInfo* entryPointInfo)
+void ShaderInterfaceStruct::DeclareInterfaceType(EntryPointGeneration* entryPointGeneration, InterfaceInfoGroup& interfaceGroup, EntryPointInfo* entryPointInfo)
 {
   InterfaceInfoGroup::FieldList& fieldList = interfaceGroup.mFields;
   if (fieldList.Size() == 0)
@@ -103,8 +95,7 @@ void ShaderInterfaceStruct::DeclareInterfaceType(EntryPointGeneration* entryPoin
   // Create the interface struct's type
   String fullBlockName = BuildString(currentType->mName, interfaceGroup.mName);
   String blockTypeName = BuildString(fullBlockName, "Block");
-  RaverieShaderIRType* blockType =
-      translator->MakeStructType(translator->mLibrary, blockTypeName, nullptr, interfaceGroup.mStorageClass);
+  RaverieShaderIRType* blockType = translator->MakeStructType(translator->mLibrary, blockTypeName, nullptr, interfaceGroup.mStorageClass);
   translator->MakeShaderTypeMeta(blockType, nullptr);
   blockType->mDebugResultName = fullBlockName;
 
@@ -127,9 +118,7 @@ void ShaderInterfaceStruct::DeclareInterfaceType(EntryPointGeneration* entryPoin
   mType = blockType;
 }
 
-void ShaderInterfaceStruct::DecorateInterfaceType(EntryPointGeneration* entryPointGeneration,
-                                                  InterfaceInfoGroup& interfaceGroup,
-                                                  EntryPointInfo* entryPointInfo)
+void ShaderInterfaceStruct::DecorateInterfaceType(EntryPointGeneration* entryPointGeneration, InterfaceInfoGroup& interfaceGroup, EntryPointInfo* entryPointInfo)
 {
   if (interfaceGroup.mFields.Size() == 0)
     return;
@@ -151,8 +140,7 @@ void ShaderInterfaceStruct::DecorateInterfaceType(EntryPointGeneration* entryPoi
     // Write any decorations that belong to this member type (e.g. fixed arrays
     // need custom decorations on the type itself and we only create the type
     // here).
-    entryPointGeneration->WriteTypeDecorations(
-        fieldInfo.mTypeDecorations, decorationBlock, memberInterfaceType->mDereferenceType);
+    entryPointGeneration->WriteTypeDecorations(fieldInfo.mTypeDecorations, decorationBlock, memberInterfaceType->mDereferenceType);
   }
 
   // Write decorations for each parameter in the block (not on the type, but the
@@ -166,9 +154,7 @@ void ShaderInterfaceStruct::DecorateInterfaceType(EntryPointGeneration* entryPoi
   }
 }
 
-void ShaderInterfaceStruct::DefineInterfaceType(EntryPointGeneration* entryPointGeneration,
-                                                InterfaceInfoGroup& interfaceGroup,
-                                                EntryPointInfo* entryPointInfo)
+void ShaderInterfaceStruct::DefineInterfaceType(EntryPointGeneration* entryPointGeneration, InterfaceInfoGroup& interfaceGroup, EntryPointInfo* entryPointInfo)
 {
   RaverieSpirVFrontEnd* translator = entryPointGeneration->mTranslator;
   RaverieSpirVFrontEndContext* context = entryPointGeneration->mContext;
@@ -176,8 +162,7 @@ void ShaderInterfaceStruct::DefineInterfaceType(EntryPointGeneration* entryPoint
 
   // Create the variable instance
   RaverieShaderIRType* interfaceType = mType;
-  RaverieShaderIROp* interfaceInstance = translator->BuildOpVariable(
-      &entryPointInfo->mVariables, interfaceType->mPointerType, interfaceGroup.mStorageClass, context);
+  RaverieShaderIROp* interfaceInstance = translator->BuildOpVariable(&entryPointInfo->mVariables, interfaceType->mPointerType, interfaceGroup.mStorageClass, context);
   interfaceInstance->mDebugResultName = interfaceGroup.mName;
   mInstance = interfaceInstance;
 
@@ -228,13 +213,11 @@ void ShaderInterfaceStruct::CopyInterfaceType(EntryPointGeneration* entryPointGe
 
       // Get a pointer to the field on the block
       RaverieShaderIROp* blockIndexConstant = translator->GetIntegerConstant(blockMemberIndex, context);
-      RaverieShaderIROp* blockAccessChainOp = translator->BuildIROp(
-          targetFnBlock, OpType::OpAccessChain, blockFieldMemberType, blockVarOp, blockIndexConstant, context);
+      RaverieShaderIROp* blockAccessChainOp = translator->BuildIROp(targetFnBlock, OpType::OpAccessChain, blockFieldMemberType, blockVarOp, blockIndexConstant, context);
 
       // Get a pointer to the field on 'this'
       RaverieShaderIROp* selfIndexConstant = translator->GetIntegerConstant(memberIndex, context);
-      RaverieShaderIROp* selfAccessChainOp = translator->BuildIROp(
-          targetFnBlock, OpType::OpAccessChain, memberPtrType, copyHelperData.mSelfParam, selfIndexConstant, context);
+      RaverieShaderIROp* selfAccessChainOp = translator->BuildIROp(targetFnBlock, OpType::OpAccessChain, memberPtrType, copyHelperData.mSelfParam, selfIndexConstant, context);
 
       // Copy the data between the block/self depending on the storage type of
       // this class (write to outputs, otherwise read)
@@ -284,17 +267,12 @@ ShaderInterfaceField* ShaderInterfaceGlobals::GetField(const ShaderFieldKey& fie
   return nullptr;
 }
 
-RaverieShaderIROp* ShaderInterfaceGlobals::GetFieldPointerByIndex(size_t index,
-                                                                EntryPointGeneration* entryPointGeneration,
-                                                                BasicBlock* block,
-                                                                spv::StorageClass storageClass)
+RaverieShaderIROp* ShaderInterfaceGlobals::GetFieldPointerByIndex(size_t index, EntryPointGeneration* entryPointGeneration, BasicBlock* block, spv::StorageClass storageClass)
 {
   return mFieldInstances[index];
 }
 
-void ShaderInterfaceGlobals::DeclareInterfaceType(EntryPointGeneration* entryPointGeneration,
-                                                  InterfaceInfoGroup& interfaceGroup,
-                                                  EntryPointInfo* entryPointInfo)
+void ShaderInterfaceGlobals::DeclareInterfaceType(EntryPointGeneration* entryPointGeneration, InterfaceInfoGroup& interfaceGroup, EntryPointInfo* entryPointInfo)
 {
   // Declare interface variables but don't group them together into a struct
   // (e.g. vertex inputs)
@@ -316,9 +294,7 @@ void ShaderInterfaceGlobals::DeclareInterfaceType(EntryPointGeneration* entryPoi
   }
 }
 
-void ShaderInterfaceGlobals::DecorateInterfaceType(EntryPointGeneration* entryPointGeneration,
-                                                   InterfaceInfoGroup& interfaceGroup,
-                                                   EntryPointInfo* entryPointInfo)
+void ShaderInterfaceGlobals::DecorateInterfaceType(EntryPointGeneration* entryPointGeneration, InterfaceInfoGroup& interfaceGroup, EntryPointInfo* entryPointInfo)
 {
   if (interfaceGroup.mFields.Size() == 0)
     return;
@@ -334,14 +310,11 @@ void ShaderInterfaceGlobals::DecorateInterfaceType(EntryPointGeneration* entryPo
     // Write any decorations that belong to this member type (e.g. fixed arrays
     // need custom decorations on the type itself and we only create the type
     // here).
-    entryPointGeneration->WriteTypeDecorations(
-        fieldList[i].mTypeDecorations, decorationBlock, interfaceFieldMemberType->mDereferenceType);
+    entryPointGeneration->WriteTypeDecorations(fieldList[i].mTypeDecorations, decorationBlock, interfaceFieldMemberType->mDereferenceType);
   }
 }
 
-void ShaderInterfaceGlobals::DefineInterfaceType(EntryPointGeneration* entryPointGeneration,
-                                                 InterfaceInfoGroup& interfaceGroup,
-                                                 EntryPointInfo* entryPointInfo)
+void ShaderInterfaceGlobals::DefineInterfaceType(EntryPointGeneration* entryPointGeneration, InterfaceInfoGroup& interfaceGroup, EntryPointInfo* entryPointInfo)
 {
   // Declare interface variables but don't group them together into a struct
   // (e.g. vertex inputs)
@@ -364,8 +337,7 @@ void ShaderInterfaceGlobals::DefineInterfaceType(EntryPointGeneration* entryPoin
     RaverieShaderIRType* interfaceFieldMemberType = interfaceField.mFieldType;
 
     // Create the variable instance in the entry point
-    RaverieShaderIROp* varOp = translator->BuildOpVariable(
-        &entryPointInfo->mVariables, interfaceFieldMemberType, interfaceGroup.mStorageClass, context);
+    RaverieShaderIROp* varOp = translator->BuildOpVariable(&entryPointInfo->mVariables, interfaceFieldMemberType, interfaceGroup.mStorageClass, context);
     varOp->mDebugResultName = interfaceField.mFieldName;
     mFieldInstances.PushBack(varOp);
 
@@ -374,8 +346,7 @@ void ShaderInterfaceGlobals::DefineInterfaceType(EntryPointGeneration* entryPoin
 
     // Add this variable to the entry point's interface
     // (required to declare OpEntryPoint) if it's an input or output
-    if (interfaceGroup.mStorageClass == spv::StorageClassInput ||
-        interfaceGroup.mStorageClass == spv::StorageClassOutput)
+    if (interfaceGroup.mStorageClass == spv::StorageClassInput || interfaceGroup.mStorageClass == spv::StorageClassOutput)
     {
       entryPointInfo->mInterface.PushBack(varOp);
       entryPointGeneration->mUniqueOps.Insert(varOp);
@@ -419,8 +390,7 @@ void ShaderInterfaceGlobals::CopyInterfaceType(EntryPointGeneration* entryPointG
 
       // Get a pointer to the field on 'this'
       RaverieShaderIROp* selfIndexConstant = translator->GetIntegerConstant(memberIndex, context);
-      RaverieShaderIROp* selfAccessChainOp = translator->BuildIROp(
-          targetFnBlock, OpType::OpAccessChain, memberPtrType, functionData.mSelfParam, selfIndexConstant, context);
+      RaverieShaderIROp* selfAccessChainOp = translator->BuildIROp(targetFnBlock, OpType::OpAccessChain, memberPtrType, functionData.mSelfParam, selfIndexConstant, context);
 
       // Copy the data between the interface var/self depending on the storage
       // type of this class (write to outputs, otherwise read)
@@ -456,15 +426,11 @@ bool ShaderInterfaceStructArray::ContainsField(const ShaderFieldKey& fieldKey)
   return mStructType->GetField(fieldKey) != nullptr;
 }
 
-RaverieShaderIROp* ShaderInterfaceStructArray::GetPointerByIndex(IRaverieShaderIR* index,
-                                                               ShaderFieldKey& fieldKey,
-                                                               EntryPointGeneration* entryPointGeneration,
-                                                               BasicBlock* block,
-                                                               spv::StorageClass storageClass)
+RaverieShaderIROp*
+ShaderInterfaceStructArray::GetPointerByIndex(IRaverieShaderIR* index, ShaderFieldKey& fieldKey, EntryPointGeneration* entryPointGeneration, BasicBlock* block, spv::StorageClass storageClass)
 {
   RaverieShaderIRType* shaderSubType = mStructType->mType;
-  RaverieShaderIROp* itemInstance = entryPointGeneration->mTranslator->BuildIROp(
-      block, OpType::OpAccessChain, shaderSubType->mPointerType, mInstance, index, entryPointGeneration->mContext);
+  RaverieShaderIROp* itemInstance = entryPointGeneration->mTranslator->BuildIROp(block, OpType::OpAccessChain, shaderSubType->mPointerType, mInstance, index, entryPointGeneration->mContext);
 
   // Find the field
   ShaderInterfaceField* fieldInfo = mStructType->GetField(fieldKey);
@@ -475,9 +441,7 @@ RaverieShaderIROp* ShaderInterfaceStructArray::GetPointerByIndex(IRaverieShaderI
   return nullptr;
 }
 
-GeometryStageInfo::GeometryStageInfo(RaverieSpirVFrontEnd* translator,
-                                     RaverieShaderIRType* shaderType,
-                                     Raverie::GenericFunctionNode* node)
+GeometryStageInfo::GeometryStageInfo(RaverieSpirVFrontEnd* translator, RaverieShaderIRType* shaderType, Raverie::GenericFunctionNode* node)
 {
   mShaderType = shaderType;
   mInputStreamType = translator->FindType(node->Parameters[0]);
@@ -499,10 +463,7 @@ EntryPointGeneration::~EntryPointGeneration()
   Clear();
 }
 
-void EntryPointGeneration::DeclareVertexInterface(RaverieSpirVFrontEnd* translator,
-                                                  Raverie::GenericFunctionNode* node,
-                                                  RaverieShaderIRFunction* function,
-                                                  RaverieSpirVFrontEndContext* context)
+void EntryPointGeneration::DeclareVertexInterface(RaverieSpirVFrontEnd* translator, Raverie::GenericFunctionNode* node, RaverieShaderIRFunction* function, RaverieSpirVFrontEndContext* context)
 {
   Clear();
 
@@ -544,20 +505,15 @@ void EntryPointGeneration::DeclareVertexInterface(RaverieSpirVFrontEnd* translat
   DeclareStageBlocks(interfaceInfo, entryPointInfo, copyInputsData, copyOutputsData);
 
   // Make sure to add the terminator op for both functions
-  copyInputsData.mBlock->mTerminatorOp =
-      translator->BuildIROp(copyInputsData.mBlock, OpType::OpReturn, nullptr, context);
-  copyOutputsData.mBlock->mTerminatorOp =
-      translator->BuildIROp(copyOutputsData.mBlock, OpType::OpReturn, nullptr, context);
+  copyInputsData.mBlock->mTerminatorOp = translator->BuildIROp(copyInputsData.mBlock, OpType::OpReturn, nullptr, context);
+  copyOutputsData.mBlock->mTerminatorOp = translator->BuildIROp(copyOutputsData.mBlock, OpType::OpReturn, nullptr, context);
 
   FindAndDecorateGlobals(currentType, entryPointInfo);
   CopyReflectionDataToEntryPoint(entryPointInfo, interfaceInfo);
   entryPointInfo->mFragmentType = FragmentType::Vertex;
 }
 
-void EntryPointGeneration::DeclareGeometryInterface(RaverieSpirVFrontEnd* translator,
-                                                    Raverie::GenericFunctionNode* node,
-                                                    RaverieShaderIRFunction* function,
-                                                    RaverieSpirVFrontEndContext* context)
+void EntryPointGeneration::DeclareGeometryInterface(RaverieSpirVFrontEnd* translator, Raverie::GenericFunctionNode* node, RaverieShaderIRFunction* function, RaverieSpirVFrontEndContext* context)
 {
   Clear();
 
@@ -569,8 +525,7 @@ void EntryPointGeneration::DeclareGeometryInterface(RaverieSpirVFrontEnd* transl
   GeometryStageInfo stageInfo(translator, currentType, node);
 
   RaverieShaderIROp* copyInputsStreamVar;
-  EntryPointHelperFunctionData copyInputsData =
-      GenerateGeometryCopyHelper(function, "CopyInputs", stageInfo.mInputStreamType, copyInputsStreamVar);
+  EntryPointHelperFunctionData copyInputsData = GenerateGeometryCopyHelper(function, "CopyInputs", stageInfo.mInputStreamType, copyInputsStreamVar);
 
   RaverieShaderIROp* selfVar;
   BasicBlock* currentBlock;
@@ -599,7 +554,7 @@ void EntryPointGeneration::DeclareGeometryInterface(RaverieSpirVFrontEnd* transl
 
     // Create the function call to the entry point
     translator->BuildIROp(currentBlock, OpType::OpFunctionCall, voidType, copyInputsData.mFunction, selfVar, inputVar, context);
-    
+
     // Call the generated entry point function
     translator->WriteFunctionCall(entryPointArguments, function, context);
 
@@ -619,11 +574,9 @@ void EntryPointGeneration::DeclareGeometryInterface(RaverieSpirVFrontEnd* transl
   ShaderIRAttribute* geometryAttribute = currentType->FindFirstAttribute(nameSettings.mGeometryAttribute);
   ShaderIRAttributeParameter* maxVerticesParam = geometryAttribute->FindFirstParameter(nameSettings.mMaxVerticesParam);
   int maxVertices = maxVerticesParam->GetIntValue();
-  RaverieShaderIRConstantLiteral* modeLiteral =
-      translator->GetOrCreateConstantIntegerLiteral(spv::ExecutionModeOutputVertices);
+  RaverieShaderIRConstantLiteral* modeLiteral = translator->GetOrCreateConstantIntegerLiteral(spv::ExecutionModeOutputVertices);
   RaverieShaderIRConstantLiteral* vertexCountLiteral = translator->GetOrCreateConstantIntegerLiteral(maxVertices);
-  translator->BuildIROp(
-      executionModes, OpType::OpExecutionMode, nullptr, entryPointFn, modeLiteral, vertexCountLiteral, context);
+  translator->BuildIROp(executionModes, OpType::OpExecutionMode, nullptr, entryPointFn, modeLiteral, vertexCountLiteral, context);
 
   // Write out the input stream execution type (e.g. Points/Lines)
   modeLiteral = translator->GetOrCreateConstantIntegerLiteral(stageInfo.mInputStreamUserData->mExecutionMode);
@@ -635,10 +588,7 @@ void EntryPointGeneration::DeclareGeometryInterface(RaverieSpirVFrontEnd* transl
   entryPointInfo->mFragmentType = FragmentType::Geometry;
 }
 
-void EntryPointGeneration::DeclarePixelInterface(RaverieSpirVFrontEnd* translator,
-                                                 Raverie::GenericFunctionNode* node,
-                                                 RaverieShaderIRFunction* function,
-                                                 RaverieSpirVFrontEndContext* context)
+void EntryPointGeneration::DeclarePixelInterface(RaverieSpirVFrontEnd* translator, Raverie::GenericFunctionNode* node, RaverieShaderIRFunction* function, RaverieSpirVFrontEndContext* context)
 {
   Clear();
 
@@ -681,10 +631,8 @@ void EntryPointGeneration::DeclarePixelInterface(RaverieSpirVFrontEnd* translato
   DeclareStageBlocks(interfaceInfo, entryPointInfo, copyInputsData, copyOutputsData);
 
   // Make sure to add the terminator op for both functions
-  copyInputsData.mBlock->mTerminatorOp =
-      translator->BuildIROp(copyInputsData.mBlock, OpType::OpReturn, nullptr, context);
-  copyOutputsData.mBlock->mTerminatorOp =
-      translator->BuildIROp(copyOutputsData.mBlock, OpType::OpReturn, nullptr, context);
+  copyInputsData.mBlock->mTerminatorOp = translator->BuildIROp(copyInputsData.mBlock, OpType::OpReturn, nullptr, context);
+  copyOutputsData.mBlock->mTerminatorOp = translator->BuildIROp(copyOutputsData.mBlock, OpType::OpReturn, nullptr, context);
 
   FindAndDecorateGlobals(currentType, entryPointInfo);
   CopyReflectionDataToEntryPoint(entryPointInfo, interfaceInfo);
@@ -692,10 +640,7 @@ void EntryPointGeneration::DeclarePixelInterface(RaverieSpirVFrontEnd* translato
   entryPointInfo->mFragmentType = FragmentType::Pixel;
 }
 
-void EntryPointGeneration::DeclareComputeInterface(RaverieSpirVFrontEnd* translator,
-                                                   Raverie::GenericFunctionNode* node,
-                                                   RaverieShaderIRFunction* function,
-                                                   RaverieSpirVFrontEndContext* context)
+void EntryPointGeneration::DeclareComputeInterface(RaverieSpirVFrontEnd* translator, Raverie::GenericFunctionNode* node, RaverieShaderIRFunction* function, RaverieSpirVFrontEndContext* context)
 {
   Clear();
 
@@ -741,10 +686,8 @@ void EntryPointGeneration::DeclareComputeInterface(RaverieSpirVFrontEnd* transla
   DeclareStageBlocks(interfaceInfo, entryPointInfo, copyInputsData, copyOutputsData);
 
   // Make sure to add the terminator op for both functions
-  copyInputsData.mBlock->mTerminatorOp =
-      translator->BuildIROp(copyInputsData.mBlock, OpType::OpReturn, nullptr, context);
-  copyOutputsData.mBlock->mTerminatorOp =
-      translator->BuildIROp(copyOutputsData.mBlock, OpType::OpReturn, nullptr, context);
+  copyInputsData.mBlock->mTerminatorOp = translator->BuildIROp(copyInputsData.mBlock, OpType::OpReturn, nullptr, context);
+  copyOutputsData.mBlock->mTerminatorOp = translator->BuildIROp(copyOutputsData.mBlock, OpType::OpReturn, nullptr, context);
 
   FindAndDecorateGlobals(currentType, entryPointInfo);
   CopyReflectionDataToEntryPoint(entryPointInfo, interfaceInfo);
@@ -753,8 +696,7 @@ void EntryPointGeneration::DeclareComputeInterface(RaverieSpirVFrontEnd* transla
   Raverie::ComputeFragmentUserData* computeUserData = currentType->mRaverieType->Has<Raverie::ComputeFragmentUserData>();
   // Write out the local size execution mode
   BasicBlock* block = &entryPointInfo->mExecutionModes;
-  RaverieShaderIROp* executionModeOp =
-      mTranslator->BuildIROp(block, OpType::OpExecutionMode, nullptr, entryPointInfo->mEntryPointFn, context);
+  RaverieShaderIROp* executionModeOp = mTranslator->BuildIROp(block, OpType::OpExecutionMode, nullptr, entryPointInfo->mEntryPointFn, context);
   executionModeOp->mArguments.PushBack(translator->GetOrCreateConstantIntegerLiteral(spv::ExecutionModeLocalSize));
   executionModeOp->mArguments.PushBack(translator->GetOrCreateConstantIntegerLiteral(computeUserData->mLocalSizeX));
   executionModeOp->mArguments.PushBack(translator->GetOrCreateConstantIntegerLiteral(computeUserData->mLocalSizeY));
@@ -773,10 +715,7 @@ void EntryPointGeneration::Clear()
   mUsedBindingIds.Clear();
 }
 
-void EntryPointGeneration::CreateEntryPointFunction(Raverie::GenericFunctionNode* node,
-                                                    RaverieShaderIRFunction* function,
-                                                    RaverieShaderIROp*& selfVarOp,
-                                                    BasicBlock*& entryPointBlock)
+void EntryPointGeneration::CreateEntryPointFunction(Raverie::GenericFunctionNode* node, RaverieShaderIRFunction* function, RaverieShaderIROp*& selfVarOp, BasicBlock*& entryPointBlock)
 {
   RaverieSpirVFrontEnd* translator = mTranslator;
   RaverieSpirVFrontEndContext* context = mContext;
@@ -822,14 +761,10 @@ void EntryPointGeneration::CreateEntryPointFunction(Raverie::GenericFunctionNode
 
   // Invoke the default constructor
   RaverieShaderIRType* defaultConstructorReturnType = defaultConstructorFn->GetReturnType();
-  RaverieShaderIROp* constructorOp = translator->BuildIROp(
-      entryPointBlock, OpType::OpFunctionCall, defaultConstructorReturnType, defaultConstructorFn, selfVarOp, context);
+  RaverieShaderIROp* constructorOp = translator->BuildIROp(entryPointBlock, OpType::OpFunctionCall, defaultConstructorReturnType, defaultConstructorFn, selfVarOp, context);
 }
 
-void EntryPointGeneration::BuildBasicEntryPoint(Raverie::GenericFunctionNode* node,
-                                                RaverieShaderIRFunction* function,
-                                                RaverieShaderIRFunction* copyInputsFn,
-                                                RaverieShaderIRFunction* copyOutputsFn)
+void EntryPointGeneration::BuildBasicEntryPoint(Raverie::GenericFunctionNode* node, RaverieShaderIRFunction* function, RaverieShaderIRFunction* copyInputsFn, RaverieShaderIRFunction* copyOutputsFn)
 {
   RaverieSpirVFrontEnd* translator = mTranslator;
   RaverieSpirVFrontEndContext* context = mContext;
@@ -875,8 +810,7 @@ RaverieShaderIRFunction* EntryPointGeneration::CreateGlobalsInitializerFunction(
   return initializeGlobalsFunction;
 }
 
-EntryPointHelperFunctionData EntryPointGeneration::GenerateCopyHelper(RaverieShaderIRFunction* userMainFn,
-                                                                      StringParam name)
+EntryPointHelperFunctionData EntryPointGeneration::GenerateCopyHelper(RaverieShaderIRFunction* userMainFn, StringParam name)
 {
   RaverieSpirVFrontEnd* translator = mTranslator;
   RaverieSpirVFrontEndContext* context = mContext;
@@ -892,8 +826,7 @@ EntryPointHelperFunctionData EntryPointGeneration::GenerateCopyHelper(RaverieSha
   helperFn->mDebugResultName = BuildString(name, "_", userMainFn->mName);
 
   // Create the self parameter
-  RaverieShaderIROp* selfParam = translator->BuildIROp(
-      &helperFn->mParameterBlock, OpType::OpFunctionParameter, currentType->mPointerType, context);
+  RaverieShaderIROp* selfParam = translator->BuildIROp(&helperFn->mParameterBlock, OpType::OpFunctionParameter, currentType->mPointerType, context);
   selfParam->mDebugResultName = "self";
   // Create the initial block to add all further instructions to
   BasicBlock* currentBlock = translator->BuildBlock(String(), context);
@@ -906,10 +839,8 @@ EntryPointHelperFunctionData EntryPointGeneration::GenerateCopyHelper(RaverieSha
   return result;
 }
 
-EntryPointHelperFunctionData EntryPointGeneration::GenerateGeometryCopyHelper(RaverieShaderIRFunction* userMainFn,
-                                                                              StringParam name,
-                                                                              RaverieShaderIRType* inputStreamType,
-                                                                              RaverieShaderIROp*& inputStreamVar)
+EntryPointHelperFunctionData
+EntryPointGeneration::GenerateGeometryCopyHelper(RaverieShaderIRFunction* userMainFn, StringParam name, RaverieShaderIRType* inputStreamType, RaverieShaderIROp*& inputStreamVar)
 {
   // Geometry shader's copy helper is different than everything else because it
   // has to take the stream type
@@ -932,12 +863,10 @@ EntryPointHelperFunctionData EntryPointGeneration::GenerateGeometryCopyHelper(Ra
   // Create the function parameters
   BasicBlock* parameterBlock = &helperFn->mParameterBlock;
   // Create the self parameter
-  RaverieShaderIROp* selfParam = translator->BuildIROp(
-      &helperFn->mParameterBlock, OpType::OpFunctionParameter, currentType->mPointerType, context);
+  RaverieShaderIROp* selfParam = translator->BuildIROp(&helperFn->mParameterBlock, OpType::OpFunctionParameter, currentType->mPointerType, context);
   selfParam->mDebugResultName = "self";
   // Create the stream parameter
-  inputStreamVar =
-      translator->BuildIROp(parameterBlock, OpType::OpFunctionParameter, inputStreamType->mPointerType, context);
+  inputStreamVar = translator->BuildIROp(parameterBlock, OpType::OpFunctionParameter, inputStreamType->mPointerType, context);
   inputStreamVar->mDebugResultName = "inputStream";
 
   // Create the initial block to add all further instructions to
@@ -952,11 +881,8 @@ EntryPointHelperFunctionData EntryPointGeneration::GenerateGeometryCopyHelper(Ra
   return result;
 }
 
-void EntryPointGeneration::WriteGeometryStageInterface(RaverieShaderIRFunction* function,
-                                                       GeometryStageInfo& stageInfo,
-                                                       EntryPointInfo* entryPointInfo,
-                                                       EntryPointHelperFunctionData& copyInputsData,
-                                                       RaverieShaderIROp* copyInputsStreamVar)
+void EntryPointGeneration::WriteGeometryStageInterface(
+    RaverieShaderIRFunction* function, GeometryStageInfo& stageInfo, EntryPointInfo* entryPointInfo, EntryPointHelperFunctionData& copyInputsData, RaverieShaderIROp* copyInputsStreamVar)
 {
   RaverieSpirVFrontEnd* translator = mTranslator;
   RaverieSpirVFrontEndContext* context = mContext;
@@ -968,8 +894,7 @@ void EntryPointGeneration::WriteGeometryStageInterface(RaverieShaderIRFunction* 
   // Collect input/output variables on the stream types (the per vertex data)
   ShaderInterfaceInfo vertexInputInterfaceInfo, vertexOutputInterfaceInfo;
   CollectInputInterfaceVariables(function, vertexInputInterfaceInfo, stageInfo.mInputVertexType, ShaderStage::Geometry);
-  CollectOutputInterfaceVariables(
-      function, vertexOutputInterfaceInfo, stageInfo.mOutputVertexType, ShaderStage::Geometry);
+  CollectOutputInterfaceVariables(function, vertexOutputInterfaceInfo, stageInfo.mOutputVertexType, ShaderStage::Geometry);
 
   // Collect builtIn-inputs/uniforms on the composite itself (per instance run).
   // There are no outputs available here.
@@ -984,13 +909,7 @@ void EntryPointGeneration::WriteGeometryStageInterface(RaverieShaderIRFunction* 
 
   // Write the inputs/outputs for the vertex type
   Array<ShaderInterfaceType*> inputStreamInterfaceTypes, inputVertexInterfaceTypes;
-  DeclareGeometryVertexInputs(stageInfo,
-                              entryPointInfo,
-                              vertexInputInterfaceInfo,
-                              copyInputsData,
-                              copyInputsStreamVar,
-                              inputStreamInterfaceTypes,
-                              inputVertexInterfaceTypes);
+  DeclareGeometryVertexInputs(stageInfo, entryPointInfo, vertexInputInterfaceInfo, copyInputsData, copyInputsStreamVar, inputStreamInterfaceTypes, inputVertexInterfaceTypes);
   DeclareGeometryVertexOutputs(stageInfo, entryPointInfo, vertexOutputInterfaceInfo, inputStreamInterfaceTypes);
 
   // Write the copy inputs terminator
@@ -1028,8 +947,7 @@ void EntryPointGeneration::CollectGeometryStreamTypes(RaverieShaderIRFunction* f
         continue;
 
       RaverieShaderIRType* streamPointerType = op->mResultType;
-      Raverie::GeometryStreamUserData* streamUserData =
-          streamPointerType->mRaverieType->Has<Raverie::GeometryStreamUserData>();
+      Raverie::GeometryStreamUserData* streamUserData = streamPointerType->mRaverieType->Has<Raverie::GeometryStreamUserData>();
       if (streamUserData == nullptr || streamUserData->mInput == true)
         continue;
 
@@ -1071,15 +989,9 @@ void EntryPointGeneration::DeclareGeometryVertexInputs(GeometryStageInfo& stageI
     geometryInfo.mArrayTypeName = BuildString("VertexInStreamType", baseShaderName);
     geometryInfo.mInstanceName = "In";
 
-    ShaderInterfaceStructArray* arrayInterfaceType = DeclareGeometryVertexInput(
-        interfaceGroup, entryPointInfo, geometryInfo, inputStreamInterfaceTypes, inputVertexInterfaceTypes);
+    ShaderInterfaceStructArray* arrayInterfaceType = DeclareGeometryVertexInput(interfaceGroup, entryPointInfo, geometryInfo, inputStreamInterfaceTypes, inputVertexInterfaceTypes);
     if (arrayInterfaceType != nullptr)
-      CopyFromInterfaceType(copyInputsBlock,
-                            copyInputsStreamVar,
-                            arrayInterfaceType->mInstance,
-                            arrayInterfaceType,
-                            spv::StorageClassFunction,
-                            spv::StorageClassInput);
+      CopyFromInterfaceType(copyInputsBlock, copyInputsStreamVar, arrayInterfaceType->mInstance, arrayInterfaceType, spv::StorageClassFunction, spv::StorageClassInput);
   }
 
   // Declare the per-vertex built-ins (constants like position, point size,
@@ -1100,24 +1012,17 @@ void EntryPointGeneration::DeclareGeometryVertexInputs(GeometryStageInfo& stageI
     // won't work
     geometryInfo.mInstanceName = "gl_in";
 
-    ShaderInterfaceStructArray* arrayInterfaceType = DeclareGeometryVertexInput(
-        interfaceGroup, entryPointInfo, geometryInfo, inputStreamInterfaceTypes, inputVertexInterfaceTypes);
+    ShaderInterfaceStructArray* arrayInterfaceType = DeclareGeometryVertexInput(interfaceGroup, entryPointInfo, geometryInfo, inputStreamInterfaceTypes, inputVertexInterfaceTypes);
     if (arrayInterfaceType != nullptr)
-      CopyFromInterfaceType(copyInputsBlock,
-                            copyInputsStreamVar,
-                            arrayInterfaceType->mInstance,
-                            arrayInterfaceType,
-                            spv::StorageClassFunction,
-                            spv::StorageClassInput);
+      CopyFromInterfaceType(copyInputsBlock, copyInputsStreamVar, arrayInterfaceType->mInstance, arrayInterfaceType, spv::StorageClassFunction, spv::StorageClassInput);
   }
 }
 
-ShaderInterfaceStructArray*
-EntryPointGeneration::DeclareGeometryVertexInput(InterfaceInfoGroup& interfaceGroup,
-                                                 EntryPointInfo* entryPointInfo,
-                                                 GeometryInOutTypeInfo& info,
-                                                 Array<ShaderInterfaceType*>& inputStreamInterfaceTypes,
-                                                 Array<ShaderInterfaceType*>& inputVertexInterfaceTypes)
+ShaderInterfaceStructArray* EntryPointGeneration::DeclareGeometryVertexInput(InterfaceInfoGroup& interfaceGroup,
+                                                                             EntryPointInfo* entryPointInfo,
+                                                                             GeometryInOutTypeInfo& info,
+                                                                             Array<ShaderInterfaceType*>& inputStreamInterfaceTypes,
+                                                                             Array<ShaderInterfaceType*>& inputVertexInterfaceTypes)
 {
   RaverieSpirVFrontEnd* translator = mTranslator;
   RaverieSpirVFrontEndContext* context = mContext;
@@ -1138,11 +1043,7 @@ EntryPointGeneration::DeclareGeometryVertexInput(InterfaceInfoGroup& interfaceGr
   inputVertexInterface->DecorateInterfaceType(this, interfaceGroup, entryPointInfo);
 
   // Create the input stream (array) type.
-  RaverieShaderIRType* arrayType = translator->MakeTypeAndPointer(translator->mLibrary,
-                                                                ShaderIRTypeBaseType::FixedArray,
-                                                                info.mArrayTypeName,
-                                                                nullptr,
-                                                                interfaceGroup.mStorageClass);
+  RaverieShaderIRType* arrayType = translator->MakeTypeAndPointer(translator->mLibrary, ShaderIRTypeBaseType::FixedArray, info.mArrayTypeName, nullptr, interfaceGroup.mStorageClass);
   arrayType->mDebugResultName = info.mArrayTypeName;
   arrayType->mParameters.PushBack(arrayItemType);
   arrayType->mParameters.PushBack(info.mArraySize);
@@ -1197,9 +1098,7 @@ void EntryPointGeneration::DeclareGeometryVertexOutputs(GeometryStageInfo& stage
   DeleteObjectsIn(outputVertexInterfaceTypes);
 }
 
-void EntryPointGeneration::WriteGeometryInterfaceOutput(InterfaceInfoGroup& interfaceGroup,
-                                                        EntryPointInfo* entryPointInfo,
-                                                        Array<ShaderInterfaceType*>& interfaceTypes)
+void EntryPointGeneration::WriteGeometryInterfaceOutput(InterfaceInfoGroup& interfaceGroup, EntryPointInfo* entryPointInfo, Array<ShaderInterfaceType*>& interfaceTypes)
 {
   if (interfaceGroup.mFields.Empty())
     return;
@@ -1247,8 +1146,7 @@ void EntryPointGeneration::WriteGeometryAppendFunctions(GeometryStageInfo& stage
     GeometryAppendFunctionData& appendFnData = appendFunctions[i];
 
     for (size_t j = 0; j < outputVertexInterfaceTypes.Size(); ++j)
-      CopyGeometryOutputInterface(
-          stageInfo, entryPointInfo, appendFnData, *outputVertexInterfaceTypes[j], inputStreamInterfaceTypes);
+      CopyGeometryOutputInterface(stageInfo, entryPointInfo, appendFnData, *outputVertexInterfaceTypes[j], inputStreamInterfaceTypes);
 
     // Invoke the append callback if it exists (allows custom api transform
     // logic)
@@ -1281,10 +1179,7 @@ void EntryPointGeneration::WriteGeometryAppendFunctions(GeometryStageInfo& stage
   }
 }
 
-void EntryPointGeneration::GenerateProvokingVertexAppend(GeometryStageInfo& stageInfo,
-                                                         EntryPointInfo* entryPointInfo,
-                                                         GeometryAppendFunctionData& appendFnData,
-                                                         RaverieShaderIRType* outputStreamType)
+void EntryPointGeneration::GenerateProvokingVertexAppend(GeometryStageInfo& stageInfo, EntryPointInfo* entryPointInfo, GeometryAppendFunctionData& appendFnData, RaverieShaderIRType* outputStreamType)
 {
   // A 'provoking vertex' append function is one that takes a provoking vertex
   // index and uses that to generate any missing data for pass-through.
@@ -1297,8 +1192,7 @@ void EntryPointGeneration::GenerateProvokingVertexAppend(GeometryStageInfo& stag
   // function that we need to late bind.
   RaverieShaderIRType* intType = translator->FindType(RaverieTypeId(int), nullptr);
   Raverie::BoundType* raverieStreamType = outputStreamType->mRaverieType;
-  Raverie::Function* raverieAppendFn =
-      GetMemberOverloadedFunction(raverieStreamType, "Append", outputVertexType->mName, "Integer");
+  Raverie::Function* raverieAppendFn = GetMemberOverloadedFunction(raverieStreamType, "Append", outputVertexType->mName, "Integer");
   RaverieShaderIRFunction* originalAppendFn = translator->mLibrary->FindFunction(raverieAppendFn);
 
   // Generate the a copy of the original append function
@@ -1319,8 +1213,7 @@ void EntryPointGeneration::GenerateProvokingVertexAppend(GeometryStageInfo& stag
   // To make copying code easier, always generate a local variable that we store
   // the input value type into
   RaverieShaderIRType* outVertexPtrType = outputVertexType->mPointerType;
-  RaverieShaderIROp* outVertexInstance =
-      translator->BuildOpVariable(firstBlock, outVertexPtrType, spv::StorageClassFunction, context);
+  RaverieShaderIROp* outVertexInstance = translator->BuildOpVariable(firstBlock, outVertexPtrType, spv::StorageClassFunction, context);
   outVertexInstance->mDebugResultName = "outDataLocal";
   translator->BuildIROp(firstBlock, OpType::OpStore, nullptr, outVertexInstance, outDataValueInstance, context);
 
@@ -1353,8 +1246,7 @@ RaverieShaderIRFunction* EntryPointGeneration::CloneAppendFn(RaverieShaderIRFunc
   for (size_t i = 0; i < originalParameterBlock->mLines.Size(); ++i)
   {
     RaverieShaderIROp* originalParameterOp = originalParameterBlock->mLines[i]->As<RaverieShaderIROp>();
-    RaverieShaderIROp* newParameterOp = translator->BuildIROp(
-        newParameterBlock, OpType::OpFunctionParameter, originalParameterOp->mResultType, context);
+    RaverieShaderIROp* newParameterOp = translator->BuildIROp(newParameterBlock, OpType::OpFunctionParameter, originalParameterOp->mResultType, context);
     // Name the parameter the same
     newParameterOp->mDebugResultName = originalParameterOp->mDebugResultName;
   }
@@ -1366,11 +1258,8 @@ RaverieShaderIRFunction* EntryPointGeneration::CloneAppendFn(RaverieShaderIRFunc
   return newAppendFn;
 }
 
-void EntryPointGeneration::CopyGeometryOutputInterface(GeometryStageInfo& stageInfo,
-                                                       EntryPointInfo* entryPointInfo,
-                                                       GeometryAppendFunctionData& appendFnData,
-                                                       ShaderInterfaceType& interfaceType,
-                                                       Array<ShaderInterfaceType*>& inputStreamInterfaceTypes)
+void EntryPointGeneration::CopyGeometryOutputInterface(
+    GeometryStageInfo& stageInfo, EntryPointInfo* entryPointInfo, GeometryAppendFunctionData& appendFnData, ShaderInterfaceType& interfaceType, Array<ShaderInterfaceType*>& inputStreamInterfaceTypes)
 {
   SpirVNameSettings& nameSettings = mTranslator->mSettings->mNameSettings;
 
@@ -1387,8 +1276,7 @@ void EntryPointGeneration::CopyGeometryOutputInterface(GeometryStageInfo& stageI
     for (size_t j = 0; j < fieldMeta->mAttributes.Size(); ++j)
     {
       ShaderIRAttribute* attribute = fieldMeta->mAttributes.GetAtIndex(j);
-      if (attribute->mAttributeName == nameSettings.mStageOutputAttribute ||
-          attribute->mAttributeName == nameSettings.mHardwareBuiltInOutputAttribute)
+      if (attribute->mAttributeName == nameSettings.mStageOutputAttribute || attribute->mAttributeName == nameSettings.mHardwareBuiltInOutputAttribute)
       {
         ShaderFieldKey fieldKey = fieldMeta->MakeFieldKey(attribute);
         keyMap[fieldKey] = fieldMeta->mRaverieName;
@@ -1410,8 +1298,7 @@ void EntryPointGeneration::CopyGeometryOutputInterface(GeometryStageInfo& stageI
     for (size_t j = 0; j < fieldMeta->mAttributes.Size(); ++j)
     {
       ShaderIRAttribute* attribute = fieldMeta->mAttributes.GetAtIndex(j);
-      if (attribute->mAttributeName != nameSettings.mStageOutputAttribute &&
-          attribute->mAttributeName != nameSettings.mHardwareBuiltInOutputAttribute)
+      if (attribute->mAttributeName != nameSettings.mStageOutputAttribute && attribute->mAttributeName != nameSettings.mHardwareBuiltInOutputAttribute)
         continue;
 
       // Get the output field key corresponding to this output
@@ -1423,8 +1310,7 @@ void EntryPointGeneration::CopyGeometryOutputInterface(GeometryStageInfo& stageI
       if (!fieldName.Empty())
       {
         RaverieShaderIROp* dest = interfaceType.GetFieldPointerByIndex(i, this, block, spv::StorageClassOutput);
-        RaverieShaderIROp* source =
-            GetNamedMemberInstanceFrom(block, appendFnData.mOutputDataInstance, fieldName, spv::StorageClassFunction);
+        RaverieShaderIROp* source = GetNamedMemberInstanceFrom(block, appendFnData.mOutputDataInstance, fieldName, spv::StorageClassFunction);
         ErrorIf(source == nullptr, "Source should never be null");
         CopyField(block, source->mResultType->mDereferenceType, source, dest);
       }
@@ -1445,8 +1331,7 @@ void EntryPointGeneration::CopyGeometryOutputInterface(GeometryStageInfo& stageI
             // index and copy from it.
             // @JoshD: This doesn't seem like it would ever need to deal with
             // attribute name overrides. Is this true?
-            RaverieShaderIROp* inputInstance = inputStreamType->GetPointerByIndex(
-                appendFnData.mDefaultVertexId, fieldKey, this, block, spv::StorageClassInput);
+            RaverieShaderIROp* inputInstance = inputStreamType->GetPointerByIndex(appendFnData.mDefaultVertexId, fieldKey, this, block, spv::StorageClassInput);
             CopyField(block, inputInstance->mResultType->mDereferenceType, inputInstance, dest);
           }
         }
@@ -1455,9 +1340,7 @@ void EntryPointGeneration::CopyGeometryOutputInterface(GeometryStageInfo& stageI
   }
 }
 
-void EntryPointGeneration::CollectInterfaceVariables(RaverieShaderIRFunction* function,
-                                                     ShaderInterfaceInfo& interfaceInfo,
-                                                     ShaderStage::Enum shaderStage)
+void EntryPointGeneration::CollectInterfaceVariables(RaverieShaderIRFunction* function, ShaderInterfaceInfo& interfaceInfo, ShaderStage::Enum shaderStage)
 {
   RaverieSpirVFrontEndContext* context = mContext;
   RaverieShaderIRType* currentType = context->mCurrentType;
@@ -1467,10 +1350,7 @@ void EntryPointGeneration::CollectInterfaceVariables(RaverieShaderIRFunction* fu
   CollectUniformInterfaceVariables(function, interfaceInfo, currentType, shaderStage);
 }
 
-void EntryPointGeneration::CollectInputInterfaceVariables(RaverieShaderIRFunction* function,
-                                                          ShaderInterfaceInfo& interfaceInfo,
-                                                          RaverieShaderIRType* type,
-                                                          ShaderStage::Enum shaderStage)
+void EntryPointGeneration::CollectInputInterfaceVariables(RaverieShaderIRFunction* function, ShaderInterfaceInfo& interfaceInfo, RaverieShaderIRType* type, ShaderStage::Enum shaderStage)
 {
   SpirVNameSettings& nameSettings = mTranslator->mSettings->mNameSettings;
 
@@ -1480,8 +1360,7 @@ void EntryPointGeneration::CollectInputInterfaceVariables(RaverieShaderIRFunctio
     ShaderIRFieldMeta* fieldMeta = typeMeta->mFields[i];
 
     // If this is a stage input
-    ShaderIRAttribute* stageInputAttribute =
-        fieldMeta->mAttributes.FindFirstAttribute(nameSettings.mStageInputAttribute);
+    ShaderIRAttribute* stageInputAttribute = fieldMeta->mAttributes.FindFirstAttribute(nameSettings.mStageInputAttribute);
     if (stageInputAttribute != nullptr)
     {
       // Create the field info
@@ -1498,19 +1377,12 @@ void EntryPointGeneration::CollectInputInterfaceVariables(RaverieShaderIRFunctio
       fieldInfo->mLinkedFields.PushBack(fieldMeta);
     }
     // If this is a hardware built-in input
-    ShaderIRAttribute* hardwareBuiltInAttribute =
-        fieldMeta->mAttributes.FindFirstAttribute(nameSettings.mHardwareBuiltInInputAttribute);
+    ShaderIRAttribute* hardwareBuiltInAttribute = fieldMeta->mAttributes.FindFirstAttribute(nameSettings.mHardwareBuiltInInputAttribute);
     if (hardwareBuiltInAttribute != nullptr)
     {
       // Process the built-in. This should always return the info group that the
       // this maps to (unless an error happens)
-      InterfaceInfoGroup* builtInGroup = ProcessBuiltIn(function,
-                                                        interfaceInfo,
-                                                        shaderStage,
-                                                        fieldMeta,
-                                                        hardwareBuiltInAttribute,
-                                                        spv::StorageClassInput,
-                                                        "PerVertexIn");
+      InterfaceInfoGroup* builtInGroup = ProcessBuiltIn(function, interfaceInfo, shaderStage, fieldMeta, hardwareBuiltInAttribute, spv::StorageClassInput, "PerVertexIn");
       if (builtInGroup != nullptr)
       {
         // On the field info, add the given field's meta as someone to write to
@@ -1522,10 +1394,7 @@ void EntryPointGeneration::CollectInputInterfaceVariables(RaverieShaderIRFunctio
   }
 }
 
-void EntryPointGeneration::CollectOutputInterfaceVariables(RaverieShaderIRFunction* function,
-                                                           ShaderInterfaceInfo& interfaceInfo,
-                                                           RaverieShaderIRType* type,
-                                                           ShaderStage::Enum shaderStage)
+void EntryPointGeneration::CollectOutputInterfaceVariables(RaverieShaderIRFunction* function, ShaderInterfaceInfo& interfaceInfo, RaverieShaderIRType* type, ShaderStage::Enum shaderStage)
 {
   SpirVNameSettings& nameSettings = mTranslator->mSettings->mNameSettings;
   ShaderIRTypeMeta* typeMeta = type->mMeta;
@@ -1537,8 +1406,7 @@ void EntryPointGeneration::CollectOutputInterfaceVariables(RaverieShaderIRFuncti
     // names by iterating on attributes
 
     // If this is a stage output
-    ShaderIRAttribute* stageOutputAttribute =
-        fieldMeta->mAttributes.FindFirstAttribute(nameSettings.mStageOutputAttribute);
+    ShaderIRAttribute* stageOutputAttribute = fieldMeta->mAttributes.FindFirstAttribute(nameSettings.mStageOutputAttribute);
     if (stageOutputAttribute != nullptr)
     {
       // Create the field info
@@ -1555,19 +1423,12 @@ void EntryPointGeneration::CollectOutputInterfaceVariables(RaverieShaderIRFuncti
       fieldInfo->mLinkedFields.PushBack(fieldMeta);
     }
     // If this is a hardware built-in output
-    ShaderIRAttribute* hardwareBuiltInAttribute =
-        fieldMeta->mAttributes.FindFirstAttribute(nameSettings.mHardwareBuiltInOutputAttribute);
+    ShaderIRAttribute* hardwareBuiltInAttribute = fieldMeta->mAttributes.FindFirstAttribute(nameSettings.mHardwareBuiltInOutputAttribute);
     if (hardwareBuiltInAttribute != nullptr)
     {
       // Process the built-in. This should always return the info group that the
       // this maps to (unless an error happens)
-      InterfaceInfoGroup* builtInGroup = ProcessBuiltIn(function,
-                                                        interfaceInfo,
-                                                        shaderStage,
-                                                        fieldMeta,
-                                                        hardwareBuiltInAttribute,
-                                                        spv::StorageClassOutput,
-                                                        "PerVertexOut");
+      InterfaceInfoGroup* builtInGroup = ProcessBuiltIn(function, interfaceInfo, shaderStage, fieldMeta, hardwareBuiltInAttribute, spv::StorageClassOutput, "PerVertexOut");
       if (builtInGroup != nullptr)
       {
         // On the field info, add the given field's meta as someone to read from
@@ -1579,10 +1440,7 @@ void EntryPointGeneration::CollectOutputInterfaceVariables(RaverieShaderIRFuncti
   }
 }
 
-void EntryPointGeneration::CollectUniformInterfaceVariables(RaverieShaderIRFunction* function,
-                                                            ShaderInterfaceInfo& interfaceInfo,
-                                                            RaverieShaderIRType* type,
-                                                            ShaderStage::Enum shaderStage)
+void EntryPointGeneration::CollectUniformInterfaceVariables(RaverieShaderIRFunction* function, ShaderInterfaceInfo& interfaceInfo, RaverieShaderIRType* type, ShaderStage::Enum shaderStage)
 {
   SpirVNameSettings& nameSettings = mTranslator->mSettings->mNameSettings;
 
@@ -1603,8 +1461,7 @@ void EntryPointGeneration::CollectUniformInterfaceVariables(RaverieShaderIRFunct
     for (size_t j = 0; j < fieldMeta->mAttributes.Size(); ++j)
     {
       ShaderIRAttribute* attribute = fieldMeta->mAttributes.GetAtIndex(j);
-      if (attribute->mAttributeName == nameSettings.mAppBuiltInInputAttribute ||
-          attribute->mAttributeName == nameSettings.mPropertyInputAttribute)
+      if (attribute->mAttributeName == nameSettings.mAppBuiltInInputAttribute || attribute->mAttributeName == nameSettings.mPropertyInputAttribute)
       {
         // Don't include non-copyable types in the uniform buffer (these were
         // declared globally).
@@ -1613,8 +1470,7 @@ void EntryPointGeneration::CollectUniformInterfaceVariables(RaverieShaderIRFunct
         if (fieldMeta->mRaverieType->HasAttribute(nameSettings.mNonCopyableAttributeName))
           continue;
 
-        InterfaceInfoGroup* interfaceGroup =
-            ProcessUniformBlock(function, interfaceInfo, fieldMeta, attribute, mapping);
+        InterfaceInfoGroup* interfaceGroup = ProcessUniformBlock(function, interfaceInfo, fieldMeta, attribute, mapping);
 
         ShaderFieldKey fieldKey = fieldMeta->MakeFieldKey(attribute);
         // Store the name of the resolved field on the resultant field info
@@ -1626,8 +1482,7 @@ void EntryPointGeneration::CollectUniformInterfaceVariables(RaverieShaderIRFunct
   }
 }
 
-void EntryPointGeneration::ProcessUniformBlockSettings(ShaderStage::Enum stageToProcess,
-                                                       HashMap<ShaderFieldKey, UniformBufferDescription*>& mapping)
+void EntryPointGeneration::ProcessUniformBlockSettings(ShaderStage::Enum stageToProcess, HashMap<ShaderFieldKey, UniformBufferDescription*>& mapping)
 {
   RaverieSpirVFrontEnd* translator = mTranslator;
   RaverieSpirVFrontEndContext* context = mContext;
@@ -1683,8 +1538,7 @@ InterfaceInfoGroup* EntryPointGeneration::ProcessBuiltIn(RaverieShaderIRFunction
   BuiltInBlockDescription* block = mappings->FindValue(fieldKey, nullptr);
   if (block == nullptr)
   {
-    String fullMsg = String::Format(
-        "BuiltIn '%s' is not valid in shader stage %s", fieldKey.mKey.c_str(), FragmentType::Names[fragmentType]);
+    String fullMsg = String::Format("BuiltIn '%s' is not valid in shader stage %s", fieldKey.mKey.c_str(), FragmentType::Names[fragmentType]);
     if (fieldMeta->mRaverieProperty != nullptr)
       translator->SendTranslationError(fieldMeta->mRaverieProperty->Location, "Invalid BuiltIn", fullMsg);
     return nullptr;
@@ -1746,20 +1600,15 @@ InterfaceInfoGroup* EntryPointGeneration::ProcessBuiltIn(RaverieShaderIRFunction
         // If not, create and fill out the field info
         fieldInfo = group.FindOrCreateFieldInfo(fieldKey);
         fieldInfo->mFieldMeta = foundBuiltInMeta->mMeta;
-        fieldInfo->mDecorations.PushBack(
-            InterfaceInfoGroup::DecorationParam(spv::DecorationBuiltIn, foundBuiltInMeta->mId));
+        fieldInfo->mDecorations.PushBack(InterfaceInfoGroup::DecorationParam(spv::DecorationBuiltIn, foundBuiltInMeta->mId));
       }
     }
   }
   return &group;
 }
 
-InterfaceInfoGroup*
-EntryPointGeneration::ProcessUniformBlock(RaverieShaderIRFunction* function,
-                                          ShaderInterfaceInfo& interfaceInfo,
-                                          ShaderIRFieldMeta* fieldMeta,
-                                          ShaderIRAttribute* attribute,
-                                          HashMap<ShaderFieldKey, UniformBufferDescription*>& mapping)
+InterfaceInfoGroup* EntryPointGeneration::ProcessUniformBlock(
+    RaverieShaderIRFunction* function, ShaderInterfaceInfo& interfaceInfo, ShaderIRFieldMeta* fieldMeta, ShaderIRAttribute* attribute, HashMap<ShaderFieldKey, UniformBufferDescription*>& mapping)
 {
   RaverieSpirVFrontEnd* translator = mTranslator;
   RaverieSpirVFrontEndContext* context = mContext;
@@ -1802,8 +1651,7 @@ EntryPointGeneration::ProcessUniformBlock(RaverieShaderIRFunction* function,
     if (isDefaultBuffer && !settings->mAllowUniformMaterialBufferIndexOverap)
       bindingId += context->mCurrentType->mMeta->mFragmentType;
 
-    uniformGroup.mInstanceDecorations.PushBack(
-        InterfaceInfoGroup::DecorationParam(spv::DecorationDescriptorSet, uniformBlock->mDescriptorSetId));
+    uniformGroup.mInstanceDecorations.PushBack(InterfaceInfoGroup::DecorationParam(spv::DecorationDescriptorSet, uniformBlock->mDescriptorSetId));
     uniformGroup.mInstanceDecorations.PushBack(InterfaceInfoGroup::DecorationParam(spv::DecorationBinding, bindingId));
     // Set the reflection data for the buffer
     ShaderResourceReflectionData& reflectionData = uniformGroup.mReflectionData;
@@ -1874,10 +1722,7 @@ void EntryPointGeneration::DeclareGroupBlocks(ShaderInterfaceInfo::InterfaceGrou
   }
 }
 
-void EntryPointGeneration::DeclareBlock(InterfaceInfoGroup& interfaceGroup,
-                                        EntryPointInfo* entryPointInfo,
-                                        EntryPointHelperFunctionData& copyHelperData,
-                                        Array<ShaderInterfaceType*>& outArray)
+void EntryPointGeneration::DeclareBlock(InterfaceInfoGroup& interfaceGroup, EntryPointInfo* entryPointInfo, EntryPointHelperFunctionData& copyHelperData, Array<ShaderInterfaceType*>& outArray)
 {
   if (interfaceGroup.mFields.Size() == 0)
     return;
@@ -1888,10 +1733,7 @@ void EntryPointGeneration::DeclareBlock(InterfaceInfoGroup& interfaceGroup,
     DeclareBlockNoStruct(interfaceGroup, entryPointInfo, copyHelperData, outArray);
 }
 
-void EntryPointGeneration::DeclareBlockStruct(InterfaceInfoGroup& interfaceGroup,
-                                              EntryPointInfo* entryPointInfo,
-                                              EntryPointHelperFunctionData& copyHelperData,
-                                              Array<ShaderInterfaceType*>& outArray)
+void EntryPointGeneration::DeclareBlockStruct(InterfaceInfoGroup& interfaceGroup, EntryPointInfo* entryPointInfo, EntryPointHelperFunctionData& copyHelperData, Array<ShaderInterfaceType*>& outArray)
 {
   ShaderInterfaceStruct* interfaceStruct = new ShaderInterfaceStruct();
   interfaceStruct->DeclareInterfaceType(this, interfaceGroup, entryPointInfo);
@@ -1901,10 +1743,7 @@ void EntryPointGeneration::DeclareBlockStruct(InterfaceInfoGroup& interfaceGroup
   outArray.PushBack(interfaceStruct);
 }
 
-void EntryPointGeneration::DeclareBlockNoStruct(InterfaceInfoGroup& interfaceGroup,
-                                                EntryPointInfo* entryPointInfo,
-                                                EntryPointHelperFunctionData& copyHelperData,
-                                                Array<ShaderInterfaceType*>& outArray)
+void EntryPointGeneration::DeclareBlockNoStruct(InterfaceInfoGroup& interfaceGroup, EntryPointInfo* entryPointInfo, EntryPointHelperFunctionData& copyHelperData, Array<ShaderInterfaceType*>& outArray)
 {
   ShaderInterfaceGlobals* interfaceGlobals = new ShaderInterfaceGlobals();
   ;
@@ -1915,10 +1754,7 @@ void EntryPointGeneration::DeclareBlockNoStruct(InterfaceInfoGroup& interfaceGro
   outArray.PushBack(interfaceGlobals);
 }
 
-void EntryPointGeneration::CopyField(BasicBlock* targetFnBlock,
-                                     RaverieShaderIRType* sourceLoadType,
-                                     RaverieShaderIROp* source,
-                                     RaverieShaderIROp* dest)
+void EntryPointGeneration::CopyField(BasicBlock* targetFnBlock, RaverieShaderIRType* sourceLoadType, RaverieShaderIROp* source, RaverieShaderIROp* dest)
 {
   RaverieSpirVFrontEnd* translator = mTranslator;
   RaverieSpirVFrontEndContext* context = mContext;
@@ -1936,18 +1772,15 @@ void EntryPointGeneration::CopyField(BasicBlock* targetFnBlock,
     // To make copying easier, we use CompositeExtract to get element values
     // instead of pointers. This is so we don't have to worry about the storage
     // class on the type.
-    RaverieShaderIROp* sourceValue =
-        translator->BuildIROp(targetFnBlock, OpType::OpLoad, sourceValueType, source, context);
+    RaverieShaderIROp* sourceValue = translator->BuildIROp(targetFnBlock, OpType::OpLoad, sourceValueType, source, context);
     for (size_t i = 0; i < sourceValueType->mComponents; ++i)
     {
       // Extract from the source (by value)
       RaverieShaderIRConstantLiteral* indexLiteral = translator->GetOrCreateConstantIntegerLiteral(i);
-      RaverieShaderIROp* sourceElement = translator->BuildIROp(
-          targetFnBlock, OpType::OpCompositeExtract, sourceElementType, sourceValue, indexLiteral, context);
+      RaverieShaderIROp* sourceElement = translator->BuildIROp(targetFnBlock, OpType::OpCompositeExtract, sourceElementType, sourceValue, indexLiteral, context);
       // Get the destination element (by pointer)
       RaverieShaderIROp* indexConstant = translator->GetIntegerConstant(i, context);
-      RaverieShaderIROp* destElement = translator->BuildIROp(
-          targetFnBlock, OpType::OpAccessChain, destElementType->mPointerType, dest, indexConstant, context);
+      RaverieShaderIROp* destElement = translator->BuildIROp(targetFnBlock, OpType::OpAccessChain, destElementType->mPointerType, dest, indexConstant, context);
       // Store to the destination
       translator->BuildStoreOp(targetFnBlock, destElement, sourceElement, context);
     }
@@ -1963,8 +1796,7 @@ void EntryPointGeneration::CopyField(BasicBlock* targetFnBlock,
     if (sourceBaseType == ShaderIRTypeBaseType::Int && destBaseType == ShaderIRTypeBaseType::Bool)
     {
       RaverieShaderIROp* sourceValue = translator->GetOrGenerateValueTypeFromIR(targetFnBlock, source, context);
-      RaverieShaderIROp* result =
-          translator->GenerateIntegerToBoolCast(targetFnBlock, sourceValue, destValueType, context);
+      RaverieShaderIROp* result = translator->GenerateIntegerToBoolCast(targetFnBlock, sourceValue, destValueType, context);
       translator->BuildStoreOp(targetFnBlock, dest, result, context);
       return;
     }
@@ -1973,8 +1805,7 @@ void EntryPointGeneration::CopyField(BasicBlock* targetFnBlock,
     {
       // Cast the bool to an integer (selection between 0 and 1)
       RaverieShaderIROp* sourceValue = translator->GetOrGenerateValueTypeFromIR(targetFnBlock, source, context);
-      RaverieShaderIROp* result =
-          translator->GenerateBoolToIntegerCast(targetFnBlock, sourceValue, destValueType, context);
+      RaverieShaderIROp* result = translator->GenerateBoolToIntegerCast(targetFnBlock, sourceValue, destValueType, context);
       translator->BuildStoreOp(targetFnBlock, dest, result, context);
       return;
     }
@@ -1983,12 +1814,8 @@ void EntryPointGeneration::CopyField(BasicBlock* targetFnBlock,
   }
 }
 
-void EntryPointGeneration::CopyFromInterfaceType(BasicBlock* block,
-                                                 RaverieShaderIROp* dest,
-                                                 RaverieShaderIROp* source,
-                                                 ShaderInterfaceType* sourceInterface,
-                                                 spv::StorageClass destStorageClass,
-                                                 spv::StorageClass sourceStorageClass)
+void EntryPointGeneration::CopyFromInterfaceType(
+    BasicBlock* block, RaverieShaderIROp* dest, RaverieShaderIROp* source, ShaderInterfaceType* sourceInterface, spv::StorageClass destStorageClass, spv::StorageClass sourceStorageClass)
 {
   RaverieSpirVFrontEnd* translator = mTranslator;
   RaverieSpirVFrontEndContext* context = mContext;
@@ -2016,12 +1843,9 @@ void EntryPointGeneration::CopyFromInterfaceType(BasicBlock* block,
       RaverieShaderIROp* indexConstant = translator->GetIntegerConstant(index, context);
       RaverieShaderIRType* sourceArrayItemType = sourceValueType->mParameters[0]->As<RaverieShaderIRType>();
       RaverieShaderIRType* destArrayItemType = destValueType->mParameters[0]->As<RaverieShaderIRType>();
-      RaverieShaderIROp* sourceItem = translator->BuildIROp(
-          block, OpType::OpAccessChain, sourceArrayItemType->mPointerType, source, indexConstant, context);
-      RaverieShaderIROp* destItem = translator->BuildIROp(
-          block, OpType::OpAccessChain, destArrayItemType->mPointerType, dest, indexConstant, context);
-      CopyFromInterfaceType(
-          block, destItem, sourceItem, arrayInterface->mStructType, destStorageClass, sourceStorageClass);
+      RaverieShaderIROp* sourceItem = translator->BuildIROp(block, OpType::OpAccessChain, sourceArrayItemType->mPointerType, source, indexConstant, context);
+      RaverieShaderIROp* destItem = translator->BuildIROp(block, OpType::OpAccessChain, destArrayItemType->mPointerType, dest, indexConstant, context);
+      CopyFromInterfaceType(block, destItem, sourceItem, arrayInterface->mStructType, destStorageClass, sourceStorageClass);
     }
   }
   else if (sourceBaseType == ShaderIRTypeBaseType::Struct)
@@ -2042,8 +1866,7 @@ void EntryPointGeneration::CopyFromInterfaceType(BasicBlock* block,
         ShaderIRFieldMeta* linkedFieldMeta = interfaceField->mLinkedFields[j];
 
         // Get the location to copy to.
-        RaverieShaderIROp* destMemberPtr =
-            GetNamedMemberInstanceFrom(block, dest, linkedFieldMeta->mRaverieName, destStorageClass);
+        RaverieShaderIROp* destMemberPtr = GetNamedMemberInstanceFrom(block, dest, linkedFieldMeta->mRaverieName, destStorageClass);
         // Note: The source was generated from the target and should have linked
         // fields that always match. If this name is missing then the
         // source/dest didn't form a valid pair to copy between.
@@ -2054,18 +1877,14 @@ void EntryPointGeneration::CopyFromInterfaceType(BasicBlock* block,
         }
 
         // Get the source field instance to copy from given the source instance
-        RaverieShaderIROp* sourceMemberPtr =
-            structInterface->GetFieldPointerByIndex(source, i, this, block, sourceStorageClass);
+        RaverieShaderIROp* sourceMemberPtr = structInterface->GetFieldPointerByIndex(source, i, this, block, sourceStorageClass);
         CopyField(block, sourceMemberPtr->mResultType->mDereferenceType, sourceMemberPtr, destMemberPtr);
       }
     }
   }
 }
 
-RaverieShaderIROp* EntryPointGeneration::GetMemberInstanceFrom(BasicBlock* block,
-                                                             RaverieShaderIROp* source,
-                                                             int sourceOffset,
-                                                             spv::StorageClass sourceStorageClass)
+RaverieShaderIROp* EntryPointGeneration::GetMemberInstanceFrom(BasicBlock* block, RaverieShaderIROp* source, int sourceOffset, spv::StorageClass sourceStorageClass)
 {
   RaverieSpirVFrontEnd* translator = mTranslator;
   RaverieSpirVFrontEndContext* context = mContext;
@@ -2081,20 +1900,15 @@ RaverieShaderIROp* EntryPointGeneration::GetMemberInstanceFrom(BasicBlock* block
   RaverieShaderIRType* sourceMemberValueType = sourceValueType->GetSubType(sourceOffset);
   RaverieShaderIRType* sourceMemberPtrType = sourceMemberValueType->mPointerType;
   if (sourceStorageClass != spv::StorageClassFunction)
-    sourceMemberPtrType =
-        translator->FindOrCreatePointerInterfaceType(translator->mLibrary, sourceMemberValueType, sourceStorageClass);
+    sourceMemberPtrType = translator->FindOrCreatePointerInterfaceType(translator->mLibrary, sourceMemberValueType, sourceStorageClass);
 
   // Get the member pointer to the source struct's member
   RaverieShaderIROp* sourceOffsetConstant = translator->GetIntegerConstant(sourceOffset, context);
-  RaverieShaderIROp* sourceMemberPtr =
-      translator->BuildIROp(block, OpType::OpAccessChain, sourceMemberPtrType, source, sourceOffsetConstant, context);
+  RaverieShaderIROp* sourceMemberPtr = translator->BuildIROp(block, OpType::OpAccessChain, sourceMemberPtrType, source, sourceOffsetConstant, context);
   return sourceMemberPtr;
 }
 
-RaverieShaderIROp* EntryPointGeneration::GetNamedMemberInstanceFrom(BasicBlock* block,
-                                                                  RaverieShaderIROp* source,
-                                                                  StringParam memberName,
-                                                                  spv::StorageClass sourceStorageClass)
+RaverieShaderIROp* EntryPointGeneration::GetNamedMemberInstanceFrom(BasicBlock* block, RaverieShaderIROp* source, StringParam memberName, spv::StorageClass sourceStorageClass)
 {
   ErrorIf(!source->mResultType->IsPointerType(), "Source must be a pointer type");
 
@@ -2109,10 +1923,7 @@ RaverieShaderIROp* EntryPointGeneration::GetNamedMemberInstanceFrom(BasicBlock* 
   return GetMemberInstanceFrom(block, source, sourceOffset, sourceStorageClass);
 }
 
-RaverieShaderIROp* EntryPointGeneration::GetNamedMemberInstanceFrom(BasicBlock* block,
-                                                                  RaverieShaderIROp* source,
-                                                                  const ShaderFieldKey& fieldKey,
-                                                                  spv::StorageClass sourceStorageClass)
+RaverieShaderIROp* EntryPointGeneration::GetNamedMemberInstanceFrom(BasicBlock* block, RaverieShaderIROp* source, const ShaderFieldKey& fieldKey, spv::StorageClass sourceStorageClass)
 {
   ErrorIf(!source->mResultType->IsPointerType(), "Source must be a pointer type");
 
@@ -2186,9 +1997,7 @@ void EntryPointGeneration::AddOffsetDecorations(InterfaceInfoGroup& infoGroup)
   infoGroup.mReflectionData.mSizeInBytes = currentByteOffset;
 }
 
-void EntryPointGeneration::AddMemberTypeDecorations(RaverieShaderIRType* memberType,
-                                                    InterfaceInfoGroup::FieldInfo& fieldInfo,
-                                                    ShaderResourceReflectionData& memberReflection)
+void EntryPointGeneration::AddMemberTypeDecorations(RaverieShaderIRType* memberType, InterfaceInfoGroup::FieldInfo& fieldInfo, ShaderResourceReflectionData& memberReflection)
 {
   // Matrices require the row/column decoration and their stride
   if (memberType->mBaseType == ShaderIRTypeBaseType::Matrix)
@@ -2303,9 +2112,7 @@ void EntryPointGeneration::AddFlatDecorations(InterfaceInfoGroup& infoGroup)
   }
 }
 
-void EntryPointGeneration::WriteTypeDecorations(Array<InterfaceInfoGroup::DecorationParam>& decorations,
-                                                BasicBlock* decorationBlock,
-                                                IRaverieShaderIR* toDecorate)
+void EntryPointGeneration::WriteTypeDecorations(Array<InterfaceInfoGroup::DecorationParam>& decorations, BasicBlock* decorationBlock, IRaverieShaderIR* toDecorate)
 {
   RaverieSpirVFrontEnd* translator = mTranslator;
   RaverieSpirVFrontEndContext* context = mContext;
@@ -2316,17 +2123,14 @@ void EntryPointGeneration::WriteTypeDecorations(Array<InterfaceInfoGroup::Decora
     InterfaceInfoGroup::DecorationParam decoration = decorations[i];
 
     // Write out the basic decoration
-    RaverieShaderIRConstantLiteral* builtInDecoration =
-        translator->GetOrCreateConstantIntegerLiteral(decoration.mDecorationType);
-    RaverieShaderIROp* decorationOp =
-        translator->BuildIROp(decorationBlock, OpType::OpDecorate, nullptr, toDecorate, builtInDecoration, context);
+    RaverieShaderIRConstantLiteral* builtInDecoration = translator->GetOrCreateConstantIntegerLiteral(decoration.mDecorationType);
+    RaverieShaderIROp* decorationOp = translator->BuildIROp(decorationBlock, OpType::OpDecorate, nullptr, toDecorate, builtInDecoration, context);
 
     // If the decoration has additional parameters then write them out (limit 1
     // for now)
     if (decoration.mValue >= 0)
     {
-      RaverieShaderIRConstantLiteral* builtInKindLiteral =
-          translator->GetOrCreateConstantIntegerLiteral(decoration.mValue);
+      RaverieShaderIRConstantLiteral* builtInKindLiteral = translator->GetOrCreateConstantIntegerLiteral(decoration.mValue);
       decorationOp->mArguments.PushBack(builtInKindLiteral);
     }
   }
@@ -2346,18 +2150,15 @@ void EntryPointGeneration::WriteMemberDecorations(Array<InterfaceInfoGroup::Deco
     InterfaceInfoGroup::DecorationParam& decoration = decorations[i];
 
     // Write out the basic decoration
-    RaverieShaderIRConstantLiteral* builtInDecoration =
-        translator->GetOrCreateConstantIntegerLiteral(decoration.mDecorationType);
-    RaverieShaderIROp* decorationOp = translator->BuildIROp(
-        decorationBlock, OpType::OpMemberDecorate, nullptr, toDecorate, memberIndexLiteral, context);
+    RaverieShaderIRConstantLiteral* builtInDecoration = translator->GetOrCreateConstantIntegerLiteral(decoration.mDecorationType);
+    RaverieShaderIROp* decorationOp = translator->BuildIROp(decorationBlock, OpType::OpMemberDecorate, nullptr, toDecorate, memberIndexLiteral, context);
     decorationOp->mArguments.PushBack(builtInDecoration);
 
     // If the decoration has additional parameters then write them out (limit 1
     // for now)
     if (decoration.mValue >= 0)
     {
-      RaverieShaderIRConstantLiteral* builtInKindLiteral =
-          translator->GetOrCreateConstantIntegerLiteral(decoration.mValue);
+      RaverieShaderIRConstantLiteral* builtInKindLiteral = translator->GetOrCreateConstantIntegerLiteral(decoration.mValue);
       decorationOp->mArguments.PushBack(builtInKindLiteral);
     }
   }
@@ -2385,8 +2186,7 @@ void EntryPointGeneration::FindAndDecorateGlobals(RaverieShaderIRType* currentTy
   DecorateRuntimeArrays(collector, entryPointInfo);
 }
 
-void EntryPointGeneration::AddInterfaceTypesToEntryPoint(TypeDependencyCollector& collector,
-                                                         EntryPointInfo* entryPointInfo)
+void EntryPointGeneration::AddInterfaceTypesToEntryPoint(TypeDependencyCollector& collector, EntryPointInfo* entryPointInfo)
 {
   auto range = collector.mReferencedGlobals.All();
   for (; !range.Empty(); range.PopFront())
@@ -2460,10 +2260,8 @@ void EntryPointGeneration::DecorateImagesAndSamplers(TypeDependencyCollector& co
     int descriptorSetId = 0;
     // Add the binding and descriptor set decorations to the instance
     BasicBlock* decorationBlock = &entryPointInfo->mDecorations;
-    translator->BuildDecorationOp(
-        decorationBlock, globalVarInstance, spv::DecorationBinding, resourceBindingId, context);
-    translator->BuildDecorationOp(
-        decorationBlock, globalVarInstance, spv::DecorationDescriptorSet, descriptorSetId, context);
+    translator->BuildDecorationOp(decorationBlock, globalVarInstance, spv::DecorationBinding, resourceBindingId, context);
+    translator->BuildDecorationOp(decorationBlock, globalVarInstance, spv::DecorationDescriptorSet, descriptorSetId, context);
 
     // Generate the reflection data
     resourceInfo->mReflectionData.mInstanceName = resourceName;
@@ -2505,8 +2303,7 @@ void EntryPointGeneration::DecorateRuntimeArrays(TypeDependencyCollector& collec
     // Decorate the instance with the correct binding and descriptor set
     u32 bindingId = FindBindingId();
     translator->BuildDecorationOp(decorationBlock, globalVarInstance, spv::DecorationBinding, bindingId, context);
-    translator->BuildDecorationOp(
-        decorationBlock, globalVarInstance, spv::DecorationDescriptorSet, descriptorSetId, context);
+    translator->BuildDecorationOp(decorationBlock, globalVarInstance, spv::DecorationDescriptorSet, descriptorSetId, context);
 
     // Decorate the struct wrapper type. This requires marking it as a block and
     // adding the offset of the actual runtime array. Make sure this decoration is unique
@@ -2528,18 +2325,14 @@ void EntryPointGeneration::DecorateRuntimeArrays(TypeDependencyCollector& collec
 
     // Now actually recurse on the runtime array declarations as
     // this can be a struct of structs or other complicated things.
-    AddRuntimeArrayDecorations(
-        decorationBlock, raverieRuntimeArrayType, spirvRuntimeArrayType, elementType, stageResource);
+    AddRuntimeArrayDecorations(decorationBlock, raverieRuntimeArrayType, spirvRuntimeArrayType, elementType, stageResource);
     // Finally mark that we've visited this array type so we don't duplicately decorate it.
     mUniqueTypes.Insert(spirvRuntimeArrayType);
   }
 }
 
-void EntryPointGeneration::AddRuntimeArrayDecorations(BasicBlock* decorationBlock,
-                                                      RaverieShaderIRType* raverieRuntimeArrayType,
-                                                      RaverieShaderIRType* spirvRuntimeArrayType,
-                                                      RaverieShaderIRType* elementType,
-                                                      ShaderStageResource& stageResource)
+void EntryPointGeneration::AddRuntimeArrayDecorations(
+    BasicBlock* decorationBlock, RaverieShaderIRType* raverieRuntimeArrayType, RaverieShaderIRType* spirvRuntimeArrayType, RaverieShaderIRType* elementType, ShaderStageResource& stageResource)
 {
   RaverieSpirVFrontEnd* translator = mTranslator;
   RaverieSpirVFrontEndContext* context = mContext;
@@ -2581,8 +2374,7 @@ void EntryPointGeneration::AddRuntimeArrayDecorations(BasicBlock* decorationBloc
     // Hardcode stride to size of a vec4 for performance reasons.
     // @JoshD: Maybe make a packing option for this later?
     int matrixStride = 16;
-    translator->BuildMemberDecorationOp(
-        decorationBlock, raverieRuntimeArrayType, 0, spv::DecorationMatrixStride, matrixStride, context);
+    translator->BuildMemberDecorationOp(decorationBlock, raverieRuntimeArrayType, 0, spv::DecorationMatrixStride, matrixStride, context);
     translator->BuildMemberDecorationOp(decorationBlock, raverieRuntimeArrayType, 0, spv::DecorationColMajor, context);
     break;
   }
@@ -2599,7 +2391,7 @@ void EntryPointGeneration::AddRuntimeArrayDecorations(BasicBlock* decorationBloc
   int stride = GetSizeAfterAlignment(totalSize, maxAlignment);
   reflectionData.mSizeInBytes = totalSize;
   reflectionData.mStride = stride;
-  
+
   // Now we can actually decorate the runtime array's stride (make sure to only decorate a type once)
   if (!mUniqueTypes.Contains(spirvRuntimeArrayType))
   {
@@ -2607,9 +2399,7 @@ void EntryPointGeneration::AddRuntimeArrayDecorations(BasicBlock* decorationBloc
   }
 }
 
-void EntryPointGeneration::RecursivelyDecorateStructType(BasicBlock* decorationBlock,
-                                                         RaverieShaderIRType* structType,
-                                                         ShaderStageResource& stageResource)
+void EntryPointGeneration::RecursivelyDecorateStructType(BasicBlock* decorationBlock, RaverieShaderIRType* structType, ShaderStageResource& stageResource)
 {
   // This function is nearly a copy of another one but it operates on different
   // types. This was created to deal with runtime array, but really needs to be
@@ -2644,8 +2434,7 @@ void EntryPointGeneration::RecursivelyDecorateStructType(BasicBlock* decorationB
     // This has to be uniquely defined per type (no duplicatees).
     if (!mUniqueTypes.Contains(structType))
     {
-      translator->BuildMemberDecorationOp(
-          decorationBlock, structType, i, spv::DecorationOffset, currentByteOffset, context);
+      translator->BuildMemberDecorationOp(decorationBlock, structType, i, spv::DecorationOffset, currentByteOffset, context);
     }
 
     // Store the offset and size of this field in the reflection data
@@ -2661,8 +2450,7 @@ void EntryPointGeneration::RecursivelyDecorateStructType(BasicBlock* decorationB
       // Hardcode stride to size of a vec4 for performance reasons.
       // @JoshD: Maybe make a packing option for this later?
       int matrixStride = 16;
-      translator->BuildMemberDecorationOp(
-          decorationBlock, structType, i, spv::DecorationMatrixStride, matrixStride, context);
+      translator->BuildMemberDecorationOp(decorationBlock, structType, i, spv::DecorationMatrixStride, matrixStride, context);
       translator->BuildMemberDecorationOp(decorationBlock, structType, i, spv::DecorationColMajor, context);
       fieldReflectionData.mStride = matrixStride;
     }
@@ -2726,8 +2514,7 @@ u32 EntryPointGeneration::FindBindingId()
   return 0;
 }
 
-void EntryPointGeneration::CopyReflectionDataToEntryPoint(EntryPointInfo* entryPointInfo,
-                                                          ShaderInterfaceInfo& interfaceInfo)
+void EntryPointGeneration::CopyReflectionDataToEntryPoint(EntryPointInfo* entryPointInfo, ShaderInterfaceInfo& interfaceInfo)
 {
   ShaderStageInterfaceReflection& reflection = entryPointInfo->mStageReflectionData;
   // Save the type name
@@ -2744,9 +2531,7 @@ void EntryPointGeneration::CopyReflectionDataToEntryPoint(EntryPointInfo* entryP
   CopyReflectionData(reflection.mStageOutputs, interfaceInfo, interfaceInfo.mOutputs);
 }
 
-void EntryPointGeneration::CopyReflectionData(Array<ShaderStageResource>& resourceList,
-                                              ShaderInterfaceInfo& interfaceInfo,
-                                              InterfaceInfoGroup& group)
+void EntryPointGeneration::CopyReflectionData(Array<ShaderStageResource>& resourceList, ShaderInterfaceInfo& interfaceInfo, InterfaceInfoGroup& group)
 {
   if (group.mIsStruct)
     CopyReflectionDataStruct(resourceList, interfaceInfo, group);
@@ -2754,9 +2539,7 @@ void EntryPointGeneration::CopyReflectionData(Array<ShaderStageResource>& resour
     CopyReflectionDataGlobals(resourceList, interfaceInfo, interfaceInfo.mInputs);
 }
 
-void EntryPointGeneration::CopyReflectionDataStruct(Array<ShaderStageResource>& resourceList,
-                                                    ShaderInterfaceInfo& interfaceInfo,
-                                                    InterfaceInfoGroup& group)
+void EntryPointGeneration::CopyReflectionDataStruct(Array<ShaderStageResource>& resourceList, ShaderInterfaceInfo& interfaceInfo, InterfaceInfoGroup& group)
 {
   // Create one new stage resource for the entire group
   ShaderStageResource& stageResource = resourceList.PushBack();
@@ -2772,9 +2555,7 @@ void EntryPointGeneration::CopyReflectionDataStruct(Array<ShaderStageResource>& 
   }
 }
 
-void EntryPointGeneration::CopyReflectionDataGlobals(Array<ShaderStageResource>& resourceList,
-                                                     ShaderInterfaceInfo& interfaceInfo,
-                                                     InterfaceInfoGroup& group)
+void EntryPointGeneration::CopyReflectionDataGlobals(Array<ShaderStageResource>& resourceList, ShaderInterfaceInfo& interfaceInfo, InterfaceInfoGroup& group)
 {
   // Copy each field to a separate stage resource
   for (size_t i = 0; i < group.mFields.Size(); ++i)
@@ -2784,9 +2565,7 @@ void EntryPointGeneration::CopyReflectionDataGlobals(Array<ShaderStageResource>&
   }
 }
 
-void EntryPointGeneration::CreateShaderInterfaceField(ShaderInterfaceField& interfaceField,
-                                                      InterfaceInfoGroup& interfaceGroup,
-                                                      int index)
+void EntryPointGeneration::CreateShaderInterfaceField(ShaderInterfaceField& interfaceField, InterfaceInfoGroup& interfaceGroup, int index)
 {
   // @JoshD: Potentially make the interface group store shader interface fields
   // at some point?
@@ -2822,14 +2601,12 @@ void EntryPointGeneration::CreateShaderInterfaceField(ShaderInterfaceField& inte
 
   // Mark the actual type of this field and create its interface type (interface
   // types require unique storage class)
-  interfaceField.mFieldType =
-      translator->FindOrCreateInterfaceType(library, actualRaverieType, ShaderIRTypeBaseType::Pointer, storageClass);
+  interfaceField.mFieldType = translator->FindOrCreateInterfaceType(library, actualRaverieType, ShaderIRTypeBaseType::Pointer, storageClass);
   interfaceField.mFieldType->mDereferenceType = translator->FindType(actualRaverieType, nullptr, true);
 
   // Also mark the original raverie type in case this changes due to interfaces
   // (needed to know how to map things like bool to int)
-  interfaceField.mOriginalFieldType =
-      translator->FindOrCreateInterfaceType(library, originalRaverieType, ShaderIRTypeBaseType::Pointer, storageClass);
+  interfaceField.mOriginalFieldType = translator->FindOrCreateInterfaceType(library, originalRaverieType, ShaderIRTypeBaseType::Pointer, storageClass);
   interfaceField.mOriginalFieldType->mDereferenceType = translator->FindType(originalRaverieType, nullptr, true);
 }
 
@@ -2849,15 +2626,11 @@ Raverie::BoundType* EntryPointGeneration::ConvertInterfaceType(Raverie::BoundTyp
 void EntryPointGeneration::WriteExecutionModeOriginUpperLeft(EntryPointInfo* entryPointInfo)
 {
   BasicBlock* block = &entryPointInfo->mExecutionModes;
-  RaverieShaderIRConstantLiteral* literalOp =
-      mTranslator->GetOrCreateConstantIntegerLiteral(spv::ExecutionModeOriginUpperLeft);
+  RaverieShaderIRConstantLiteral* literalOp = mTranslator->GetOrCreateConstantIntegerLiteral(spv::ExecutionModeOriginUpperLeft);
   mTranslator->BuildIROp(block, OpType::OpExecutionMode, nullptr, entryPointInfo->mEntryPointFn, literalOp, mContext);
 }
 
-RaverieShaderIROp* EntryPointGeneration::FindField(ShaderFieldKey& fieldKey,
-                                                 Array<ShaderInterfaceType*>& interfaces,
-                                                 BasicBlock* block,
-                                                 spv::StorageClass storageClass)
+RaverieShaderIROp* EntryPointGeneration::FindField(ShaderFieldKey& fieldKey, Array<ShaderInterfaceType*>& interfaces, BasicBlock* block, spv::StorageClass storageClass)
 {
   // Walk all interfaces trying
   for (size_t i = 0; i < interfaces.Size(); ++i)
@@ -2881,9 +2654,7 @@ RaverieShaderIROp* EntryPointGeneration::FindField(ShaderFieldKey& fieldKey,
   return nullptr;
 }
 
-ShaderIRFieldMeta* EntryPointGeneration::FindFieldViaAttribute(ShaderIRTypeMeta* typeMeta,
-                                                               StringParam attributeName,
-                                                               ShaderFieldKey& fieldKey)
+ShaderIRFieldMeta* EntryPointGeneration::FindFieldViaAttribute(ShaderIRTypeMeta* typeMeta, StringParam attributeName, ShaderFieldKey& fieldKey)
 {
   SpirVNameSettings& nameSettings = mTranslator->mSettings->mNameSettings;
   for (size_t i = 0; i < typeMeta->mFields.Size(); ++i)
@@ -2915,8 +2686,7 @@ void EntryPointGeneration::PerspectiveTransformAppendVertexCallback(AppendCallba
   // overrides.
   ShaderFieldKey perspectivePositionKey("PerspectivePosition", real4TypeName);
   RaverieShaderIRType* appendVertexDataType = outDataInstance->mResultType->mDereferenceType;
-  ShaderIRFieldMeta* perspectivePositionFieldMeta = self->FindFieldViaAttribute(
-      appendVertexDataType->mMeta, nameSettings.mStageOutputAttribute, perspectivePositionKey);
+  ShaderIRFieldMeta* perspectivePositionFieldMeta = self->FindFieldViaAttribute(appendVertexDataType->mMeta, nameSettings.mStageOutputAttribute, perspectivePositionKey);
   if (perspectivePositionFieldMeta == nullptr)
     return;
 
@@ -2926,14 +2696,12 @@ void EntryPointGeneration::PerspectiveTransformAppendVertexCallback(AppendCallba
   // Find the api perspective position field pointer from the output interface
   // types (should find the hardware built-in interface block)
   ShaderFieldKey apiPerspectivePositionKey(nameSettings.mApiPerspectivePositionName, real4TypeName);
-  RaverieShaderIROp* apiPerspectivePosition = self->FindField(
-      apiPerspectivePositionKey, *callbackData.mOutputVertexInterfaceTypes, block, spv::StorageClassOutput);
+  RaverieShaderIROp* apiPerspectivePosition = self->FindField(apiPerspectivePositionKey, *callbackData.mOutputVertexInterfaceTypes, block, spv::StorageClassOutput);
 
   // Find the api perspective transform matrix from all of the uniform buffers
   // available
   ShaderFieldKey perspectiveTransformKey(nameSettings.mPerspectiveToApiPerspectiveName, real4x4TypeName);
-  RaverieShaderIROp* transformMatrixOp =
-      self->FindField(perspectiveTransformKey, self->mUniforms, block, spv::StorageClassUniform);
+  RaverieShaderIROp* transformMatrixOp = self->FindField(perspectiveTransformKey, self->mUniforms, block, spv::StorageClassUniform);
 
   // If we have all three variables then we can write a transform
   if (apiPerspectivePosition != nullptr && transformMatrixOp != nullptr && index != nullptr)
@@ -2943,14 +2711,12 @@ void EntryPointGeneration::PerspectiveTransformAppendVertexCallback(AppendCallba
 
     // Matrix multiplication needs value types not pointers, so make sure to
     // dereference if necessary
-    RaverieShaderIROp* valueMatrix =
-        self->mTranslator->GetOrGenerateValueTypeFromIR(block, transformMatrixOp, self->mContext);
+    RaverieShaderIROp* valueMatrix = self->mTranslator->GetOrGenerateValueTypeFromIR(block, transformMatrixOp, self->mContext);
     RaverieShaderIROp* valueVector = self->mTranslator->GetOrGenerateValueTypeFromIR(block, source, self->mContext);
     // Get the result type of the transform (should always be Real4)
     RaverieShaderIRType* resultType = apiPerspectivePosition->mResultType->mDereferenceType;
     // Write Multiply(PerspectiveToApiPerspective, PerspectivePosition)
-    RaverieShaderIROp* result = self->mTranslator->BuildIROp(
-        block, OpType::OpMatrixTimesVector, resultType, valueMatrix, valueVector, self->mContext);
+    RaverieShaderIROp* result = self->mTranslator->BuildIROp(block, OpType::OpMatrixTimesVector, resultType, valueMatrix, valueVector, self->mContext);
     // Store the result into the final ApiPerspectivePosition output
     self->mTranslator->BuildStoreOp(block, apiPerspectivePosition, result, self->mContext);
   }

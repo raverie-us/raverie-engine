@@ -29,11 +29,7 @@ MultiPropertyInterface::MultiPropertyInterface(OperationQueue* queue, MetaSelect
   mSelection = selection;
 }
 
-void ChangeRotationValue(OperationQueue* queue,
-                         HandleParam actingObject,
-                         PropertyPathParam property,
-                         PropertyState& state,
-                         PropertyAction::Type action)
+void ChangeRotationValue(OperationQueue* queue, HandleParam actingObject, PropertyPathParam property, PropertyState& state, PropertyAction::Type action)
 {
   Quat oldQuat = property.GetValue(actingObject).Get<Quat>();
   Vec3 oldEuler = Math::QuatToEulerDegrees(oldQuat);
@@ -59,11 +55,7 @@ void ChangeRotationValue(OperationQueue* queue,
 }
 
 template <typename VectorType, uint Dimensions>
-void ChangeVectorValue(OperationQueue* queue,
-                       HandleParam actingObject,
-                       PropertyPathParam property,
-                       PropertyState& state,
-                       PropertyAction::Type action)
+void ChangeVectorValue(OperationQueue* queue, HandleParam actingObject, PropertyPathParam property, PropertyState& state, PropertyAction::Type action)
 {
 
   VectorType oldVec = property.GetValue(actingObject).Get<VectorType>();
@@ -87,10 +79,7 @@ void ChangeVectorValue(OperationQueue* queue,
     ChangeAndQueueProperty(queue, actingObject, property, newValue);
 }
 
-void MultiPropertyInterface::ChangeProperty(HandleParam object,
-                                            PropertyPathParam property,
-                                            PropertyState& state,
-                                            PropertyAction::Enum action)
+void MultiPropertyInterface::ChangeProperty(HandleParam object, PropertyPathParam property, PropertyState& state, PropertyAction::Enum action)
 {
   // We want all the property changes to be part of the same operation group
   if (action == PropertyAction::Commit)
@@ -183,8 +172,7 @@ void FinalizeVectorState(PropertyState& state, uint dimensions)
 }
 
 template <typename VectorType, uint Dimensions>
-PropertyState
-GetVectorValue(MetaSelection* selection, AnyParam firstValue, HandleParam object, PropertyPathParam property)
+PropertyState GetVectorValue(MetaSelection* selection, AnyParam firstValue, HandleParam object, PropertyPathParam property)
 {
   // Compare each value with the value of the first object
   VectorType firstVec = firstValue.Get<VectorType>();
@@ -214,8 +202,7 @@ GetVectorValue(MetaSelection* selection, AnyParam firstValue, HandleParam object
   return state;
 }
 
-PropertyState
-GetRotationValue(MetaSelection* selection, Any& firstValue, HandleParam object, PropertyPathParam property)
+PropertyState GetRotationValue(MetaSelection* selection, Any& firstValue, HandleParam object, PropertyPathParam property)
 {
   /// For rotations, we can only resolve partial conflicts as Euler Angles,
   /// not as quaternions, so we must convert
@@ -328,9 +315,7 @@ HandleOf<MetaComposition> MultiPropertyInterface::GetMetaComposition(BoundType* 
   return nullptr;
 }
 
-ObjectPropertyNode* MultiPropertyInterface::BuildObjectTree(ObjectPropertyNode* parent,
-                                                            HandleParam object,
-                                                            Property* objectProperty)
+ObjectPropertyNode* MultiPropertyInterface::BuildObjectTree(ObjectPropertyNode* parent, HandleParam object, Property* objectProperty)
 {
   // We only want to special case this if it's the selection object
   if (!object.Get<MetaSelection*>())
@@ -351,8 +336,7 @@ ObjectPropertyNode* MultiPropertyInterface::BuildObjectTree(ObjectPropertyNode* 
   // implies displayed)
   forRange (Property* property, targetType->GetProperties())
   {
-    if (property->HasAttribute(PropertyAttributes::cProperty) || property->HasAttribute(PropertyAttributes::cDisplay) ||
-        property->HasAttribute(PropertyAttributes::cDeprecatedEditable))
+    if (property->HasAttribute(PropertyAttributes::cProperty) || property->HasAttribute(PropertyAttributes::cDisplay) || property->HasAttribute(PropertyAttributes::cDeprecatedEditable))
     {
       if (EditorPropertyExtension* extension = property->HasInherited<EditorPropertyExtension>())
         node->mProperties.PushBack(new ObjectPropertyNode(node, property));
@@ -424,9 +408,7 @@ void MultiPropertyInterface::Redo()
   mOperationQueue->Redo();
 }
 
-void MultiPropertyInterface::CaptureState(PropertyStateCapture& capture,
-                                          HandleParam multiObject,
-                                          PropertyPathParam property)
+void MultiPropertyInterface::CaptureState(PropertyStateCapture& capture, HandleParam multiObject, PropertyPathParam property)
 {
   // For every selected object capture the state
   forRange (Object* objectInstance, mSelection->AllOfType<Object>())
@@ -441,10 +423,7 @@ void MultiPropertyInterface::CaptureState(PropertyStateCapture& capture,
 }
 
 // Multi Meta Composition
-MultiMetaComposition::MultiMetaComposition(PropertyInterface* propertyInterface,
-                                           BoundType* objectType,
-                                           OperationQueue* opQueue) :
-    UndoMetaComposition(propertyInterface, objectType, opQueue)
+MultiMetaComposition::MultiMetaComposition(PropertyInterface* propertyInterface, BoundType* objectType, OperationQueue* opQueue) : UndoMetaComposition(propertyInterface, objectType, opQueue)
 {
   mSupportsComponentReorder = false;
 }
@@ -500,8 +479,7 @@ bool MultiMetaComposition::CanAddComponent(HandleParam object, BoundType* typeTo
   return true;
 }
 
-void MultiMetaComposition::AddComponent(
-    HandleParam object, BoundType* typeToAdd, int index, bool ignoreDependencies, MetaCreationContext* creationContext)
+void MultiMetaComposition::AddComponent(HandleParam object, BoundType* typeToAdd, int index, bool ignoreDependencies, MetaCreationContext* creationContext)
 {
   // Add the component to each object in the selection
   MetaSelection* selection = object.Get<MetaSelection*>();
@@ -586,9 +564,7 @@ void MultiMetaComposition::Enumerate(Array<BoundType*>& addTypes, EnumerateActio
   }
 }
 
-BoundType* FindCommonInterface(HashMap<BoundType*, uint>& sharedComponentMap,
-                               uint selectionCount,
-                               BoundType* componentType)
+BoundType* FindCommonInterface(HashMap<BoundType*, uint>& sharedComponentMap, uint selectionCount, BoundType* componentType)
 {
   forRange (CogComponentMeta* meta, componentType->HasAll<CogComponentMeta>())
   {

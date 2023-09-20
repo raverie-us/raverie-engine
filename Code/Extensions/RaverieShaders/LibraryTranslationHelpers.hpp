@@ -7,25 +7,15 @@ namespace Raverie
 Raverie::Function* GetMemberOverloadedFunction(Raverie::Type* type, StringParam fnName);
 Raverie::Function* GetMemberOverloadedFunction(Raverie::Type* type, StringParam fnName, StringParam p0);
 Raverie::Function* GetMemberOverloadedFunction(Raverie::Type* type, StringParam fnName, StringParam p0, StringParam p1);
-Raverie::Function*
-GetMemberOverloadedFunction(Raverie::Type* type, StringParam fnName, StringParam p0, StringParam p1, StringParam p2);
-Raverie::Function* GetMemberOverloadedFunction(
-    Raverie::Type* type, StringParam fnName, StringParam p0, StringParam p1, StringParam p2, StringParam p3);
+Raverie::Function* GetMemberOverloadedFunction(Raverie::Type* type, StringParam fnName, StringParam p0, StringParam p1, StringParam p2);
+Raverie::Function* GetMemberOverloadedFunction(Raverie::Type* type, StringParam fnName, StringParam p0, StringParam p1, StringParam p2, StringParam p3);
 
 Raverie::Function* GetStaticFunction(Raverie::Type* type, StringParam fnName);
 Raverie::Function* GetStaticFunction(Raverie::Type* type, StringParam fnName, StringParam p0);
 Raverie::Function* GetStaticFunction(Raverie::Type* type, StringParam fnName, StringParam p0, StringParam p1);
-Raverie::Function*
-GetStaticFunction(Raverie::Type* type, StringParam fnName, StringParam p0, StringParam p1, StringParam p2);
-Raverie::Function* GetStaticFunction(
-    Raverie::Type* type, StringParam fnName, StringParam p0, StringParam p1, StringParam p2, StringParam p3);
-Raverie::Function* GetStaticFunction(Raverie::Type* type,
-                                   StringParam fnName,
-                                   StringParam p0,
-                                   StringParam p1,
-                                   StringParam p2,
-                                   StringParam p3,
-                                   StringParam p4);
+Raverie::Function* GetStaticFunction(Raverie::Type* type, StringParam fnName, StringParam p0, StringParam p1, StringParam p2);
+Raverie::Function* GetStaticFunction(Raverie::Type* type, StringParam fnName, StringParam p0, StringParam p1, StringParam p2, StringParam p3);
+Raverie::Function* GetStaticFunction(Raverie::Type* type, StringParam fnName, StringParam p0, StringParam p1, StringParam p2, StringParam p3, StringParam p4);
 
 Raverie::Function* GetConstructor(Raverie::Type* type, StringParam p0);
 Raverie::Function* GetConstructor(Raverie::Type* type, Array<String>& params);

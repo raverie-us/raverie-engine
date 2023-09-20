@@ -36,18 +36,8 @@ public:
   /// Change the maximum number of items that can be held.
   void SetCapacity(size_t capacity);
   /// Add an item to be sorted.
-  void AddMetaItem(HandleParam object,
-                   float t,
-                   Vec3Param worldPosition,
-                   Vec3Param worldNormal,
-                   Vec2Param uv = Vec2::cZero,
-                   bool uvProvided = false);
-  void AddItem(Cog* hitCog,
-               float t,
-               Vec3Param worldPosition,
-               Vec3Param worldNormal,
-               Vec2Param uv = Vec2::cZero,
-               bool uvProvided = false);
+  void AddMetaItem(HandleParam object, float t, Vec3Param worldPosition, Vec3Param worldNormal, Vec2Param uv = Vec2::cZero, bool uvProvided = false);
+  void AddItem(Cog* hitCog, float t, Vec3Param worldPosition, Vec3Param worldNormal, Vec2Param uv = Vec2::cZero, bool uvProvided = false);
   void AddItem(RayCastEntry& entry);
   /// Merge the passed in list with this list.
   void AddList(RaycastResultList& list);

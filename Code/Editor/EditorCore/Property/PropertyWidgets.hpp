@@ -23,10 +23,7 @@ class AddObjectWidget : public PropertyWidget
 {
 public:
   RaverieDeclareType(AddObjectWidget, TypeCopyMode::ReferenceType);
-  AddObjectWidget(PropertyWidgetInitializer& init,
-                  PropertyWidgetObject* parentNode,
-                  PropertyView* grid,
-                  HandleParam instance);
+  AddObjectWidget(PropertyWidgetInitializer& init, PropertyWidgetObject* parentNode, PropertyView* grid, HandleParam instance);
 
   void UpdateTransform() override;
 

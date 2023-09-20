@@ -32,7 +32,8 @@ struct BoolVector3
   /// Set all of the values of this vector at once.
   void Set(bool x, bool y, bool z);
 
-  union {
+  union
+  {
     struct
     {
       bool x, y, z;

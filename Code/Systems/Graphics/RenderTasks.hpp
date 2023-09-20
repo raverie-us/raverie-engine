@@ -120,15 +120,9 @@ public:
   /// Initializes all the internal texture data for the given RenderTargets.
   void AddRenderTaskClearTarget(RenderTarget* colorTarget, RenderTarget* depthTarget, Vec4 color, float depth);
   /// Initializes all the internal texture data for the given RenderTargets.
-  void
-  AddRenderTaskClearTarget(RenderTarget* colorTarget, RenderTarget* depthTarget, Vec4 color, float depth, uint stencil);
+  void AddRenderTaskClearTarget(RenderTarget* colorTarget, RenderTarget* depthTarget, Vec4 color, float depth, uint stencil);
   /// Initializes all the internal texture data for the given RenderTargets.
-  void AddRenderTaskClearTarget(RenderTarget* colorTarget,
-                                RenderTarget* depthTarget,
-                                Vec4 color,
-                                float depth,
-                                uint stencil,
-                                uint stencilWriteMask);
+  void AddRenderTaskClearTarget(RenderTarget* colorTarget, RenderTarget* depthTarget, Vec4 color, float depth, uint stencil, uint stencilWriteMask);
   /// Initializes all the internal texture data for the given RenderTargets.
   void AddRenderTaskClearTarget(GraphicsRenderSettings& renderSettings, Vec4 color);
   /// Initializes all the internal texture data for the given RenderTargets.
@@ -136,19 +130,14 @@ public:
   /// Initializes all the internal texture data for the given RenderTargets.
   void AddRenderTaskClearTarget(GraphicsRenderSettings& renderSettings, Vec4 color, float depth, uint stencil);
   /// Initializes all the internal texture data for the given RenderTargets.
-  void AddRenderTaskClearTarget(
-      GraphicsRenderSettings& renderSettings, Vec4 color, float depth, uint stencil, uint stencilWriteMask);
+  void AddRenderTaskClearTarget(GraphicsRenderSettings& renderSettings, Vec4 color, float depth, uint stencil, uint stencilWriteMask);
 
   /// Renders a group of objects with the given settings. The RenderPass
   /// fragment defines what data is written to RenderTargets.
-  void AddRenderTaskRenderPass(GraphicsRenderSettings& renderSettings,
-                               RenderGroup& renderGroup,
-                               MaterialBlock& renderPass);
+  void AddRenderTaskRenderPass(GraphicsRenderSettings& renderSettings, RenderGroup& renderGroup, MaterialBlock& renderPass);
   /// Renders a group of objects with the given settings. The RenderPass
   /// fragment defines what data is written to RenderTargets.
-  void AddRenderTaskRenderPass(GraphicsRenderSettings& renderSettings,
-                               GraphicalRangeInterface& graphicalRange,
-                               MaterialBlock& renderPass);
+  void AddRenderTaskRenderPass(GraphicsRenderSettings& renderSettings, GraphicalRangeInterface& graphicalRange, MaterialBlock& renderPass);
 
   /// Renders all objects within a RenderGroup hierarchy, sorted in the order
   /// defined by the base RenderGroup, and can use unique render settings for
@@ -202,18 +191,10 @@ public:
   template <typename T>
   T* NewRenderTask();
 
-  void AddRenderTaskClearTarget(
-      RenderSettings& renderSettings, Vec4 color, float depth, uint stencil, uint stencilWriteMask);
-  void AddRenderTaskRenderPass(RenderSettings& renderSettings,
-                               uint renderGroupIndex,
-                               StringParam renderPassName,
-                               uint shaderInputRangesId,
-                               uint subRenderGroupCount = 0,
-                               bool render = true);
+  void AddRenderTaskClearTarget(RenderSettings& renderSettings, Vec4 color, float depth, uint stencil, uint stencilWriteMask);
+  void AddRenderTaskRenderPass(RenderSettings& renderSettings, uint renderGroupIndex, StringParam renderPassName, uint shaderInputRangesId, uint subRenderGroupCount = 0, bool render = true);
   void AddRenderTaskPostProcess(RenderSettings& renderSettings, StringParam postProcessName, uint shaderInputsId);
-  void AddRenderTaskPostProcess(RenderSettings& renderSettings,
-                                MaterialRenderData* materialRenderData,
-                                uint shaderInputsId);
+  void AddRenderTaskPostProcess(RenderSettings& renderSettings, MaterialRenderData* materialRenderData, uint shaderInputsId);
   void AddRenderTaskBackBufferBlit(RenderTarget* colorTarget, ScreenViewport viewport);
   void AddRenderTaskTextureUpdate(Texture* texture);
 

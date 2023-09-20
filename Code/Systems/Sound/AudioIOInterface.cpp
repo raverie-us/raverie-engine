@@ -7,10 +7,7 @@ namespace Raverie
 
 // Audio IO Interface
 
-AudioIOInterface::AudioIOInterface() :
-    MixedOutputBuffer(nullptr),
-    InputBuffer(nullptr),
-    mOutputStreamLatency(AudioLatency::Low)
+AudioIOInterface::AudioIOInterface() : MixedOutputBuffer(nullptr), InputBuffer(nullptr), mOutputStreamLatency(AudioLatency::Low)
 {
   memset(OutputBufferSizePerLatency, 0, sizeof(unsigned) * AudioLatency::Size);
 }
@@ -85,8 +82,7 @@ bool AudioIOInterface::StartStreams(bool startOutput, bool startInput)
   {
     // Start the stream, passing in the IOCallback function and this object as
     // the data
-    StreamInfoList[StreamTypes::Output].mStatus =
-        AudioIO.StartStream(StreamTypes::Output, &StreamInfoList[StreamTypes::Output].mErrorMessage, IOCallback, this);
+    StreamInfoList[StreamTypes::Output].mStatus = AudioIO.StartStream(StreamTypes::Output, &StreamInfoList[StreamTypes::Output].mErrorMessage, IOCallback, this);
 
     // Check if it was started successfully
     if (StreamInfoList[StreamTypes::Output].mStatus != StreamStatus::Started)
@@ -98,8 +94,7 @@ bool AudioIOInterface::StartStreams(bool startOutput, bool startInput)
   {
     // Start the stream, passing in the IOCallback function and this object as
     // the data
-    StreamInfoList[StreamTypes::Input].mStatus =
-        AudioIO.StartStream(StreamTypes::Input, &StreamInfoList[StreamTypes::Input].mErrorMessage, IOCallback, this);
+    StreamInfoList[StreamTypes::Input].mStatus = AudioIO.StartStream(StreamTypes::Input, &StreamInfoList[StreamTypes::Input].mErrorMessage, IOCallback, this);
 
     // Check if it was started successfully
     if (StreamInfoList[StreamTypes::Input].mStatus != StreamStatus::Started)
@@ -116,8 +111,7 @@ bool AudioIOInterface::StopStreams(bool stopOutput, bool stopInput)
   // Stop output stream if requested
   if (stopOutput)
   {
-    StreamInfoList[StreamTypes::Output].mStatus =
-        AudioIO.StopStream(StreamTypes::Output, &StreamInfoList[StreamTypes::Output].mErrorMessage);
+    StreamInfoList[StreamTypes::Output].mStatus = AudioIO.StopStream(StreamTypes::Output, &StreamInfoList[StreamTypes::Output].mErrorMessage);
 
     // Check if it was stopped successfully
     if (StreamInfoList[StreamTypes::Output].mStatus != StreamStatus::Stopped)
@@ -127,8 +121,7 @@ bool AudioIOInterface::StopStreams(bool stopOutput, bool stopInput)
   // Stop input stream if requested
   if (stopInput)
   {
-    StreamInfoList[StreamTypes::Input].mStatus =
-        AudioIO.StopStream(StreamTypes::Input, &StreamInfoList[StreamTypes::Input].mErrorMessage);
+    StreamInfoList[StreamTypes::Input].mStatus = AudioIO.StopStream(StreamTypes::Input, &StreamInfoList[StreamTypes::Input].mErrorMessage);
 
     // Check if it was stopped successfully
     if (StreamInfoList[StreamTypes::Input].mStatus != StreamStatus::Stopped)
@@ -197,14 +190,12 @@ void AudioIOInterface::SetOutputLatencyThreaded(AudioLatency::Enum newLatency)
   InitializeRingBuffer(OutputRingBuffer, MixedOutputBuffer, OutputBufferSizePerLatency[mOutputStreamLatency]);
   // Restart the audio output
   AudioIO.InitializeStream(StreamTypes::Output, nullptr);
-  StreamInfoList[StreamTypes::Output].mStatus =
-      AudioIO.StartStream(StreamTypes::Output, &StreamInfoList[StreamTypes::Output].mErrorMessage, IOCallback, this);
+  StreamInfoList[StreamTypes::Output].mStatus = AudioIO.StartStream(StreamTypes::Output, &StreamInfoList[StreamTypes::Output].mErrorMessage, IOCallback, this);
 }
 
 void AudioIOInterface::InitializeOutputBuffers()
 {
-  unsigned size =
-      GetBufferSize(AudioIO.GetStreamSampleRate(StreamTypes::Output), AudioIO.GetStreamChannels(StreamTypes::Output));
+  unsigned size = GetBufferSize(AudioIO.GetStreamSampleRate(StreamTypes::Output), AudioIO.GetStreamChannels(StreamTypes::Output));
 
   OutputBufferSizePerLatency[AudioLatency::Low] = size;
   OutputBufferSizePerLatency[AudioLatency::High] = size * 4;
@@ -214,8 +205,7 @@ void AudioIOInterface::InitializeOutputBuffers()
 
 void AudioIOInterface::InitializeInputBuffers()
 {
-  unsigned size =
-      GetBufferSize(AudioIO.GetStreamSampleRate(StreamTypes::Input), AudioIO.GetStreamChannels(StreamTypes::Input));
+  unsigned size = GetBufferSize(AudioIO.GetStreamSampleRate(StreamTypes::Input), AudioIO.GetStreamChannels(StreamTypes::Input));
 
   InitializeRingBuffer(InputRingBuffer, InputBuffer, size * 2);
 }

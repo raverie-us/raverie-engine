@@ -10,9 +10,7 @@ StageRequirementsGatherer::StageRequirementsGatherer(RaverieShaderSpirVSettings*
   mSettings = settings;
 }
 
-bool StageRequirementsGatherer::Run(Raverie::SyntaxTree& syntaxTree,
-                                    RaverieShaderIRLibrary* library,
-                                    ShaderCompilationErrors* errors)
+bool StageRequirementsGatherer::Run(Raverie::SyntaxTree& syntaxTree, RaverieShaderIRLibrary* library, ShaderCompilationErrors* errors)
 {
   mErrors = errors;
   StageRequirementsGathererContext context;
@@ -57,20 +55,17 @@ void StageRequirementsGatherer::PreWalkClassNode(Raverie::ClassNode*& node, Stag
   context->Walker->Walk(this, node->Variables, context);
 }
 
-void StageRequirementsGatherer::PreWalkConstructor(Raverie::ConstructorNode*& node,
-                                                   StageRequirementsGathererContext* context)
+void StageRequirementsGatherer::PreWalkConstructor(Raverie::ConstructorNode*& node, StageRequirementsGathererContext* context)
 {
   context->mConstructorMap[node->DefinedFunction] = node;
 }
 
-void StageRequirementsGatherer::PreWalkClassFunction(Raverie::FunctionNode*& node,
-                                                     StageRequirementsGathererContext* context)
+void StageRequirementsGatherer::PreWalkClassFunction(Raverie::FunctionNode*& node, StageRequirementsGathererContext* context)
 {
   context->mFunctionMap[node->DefinedFunction] = node;
 }
 
-void StageRequirementsGatherer::PreWalkClassMemberVariable(Raverie::MemberVariableNode*& node,
-                                                           StageRequirementsGathererContext* context)
+void StageRequirementsGatherer::PreWalkClassMemberVariable(Raverie::MemberVariableNode*& node, StageRequirementsGathererContext* context)
 {
   context->mVariableMap[node->CreatedProperty] = node;
   // Additionally handle get/set functions.
@@ -88,8 +83,7 @@ void StageRequirementsGatherer::WalkClassNode(Raverie::ClassNode*& node, StageRe
   context->Walker->Walk(this, node->Functions, context);
 }
 
-void StageRequirementsGatherer::WalkClassPreconstructor(Raverie::ClassNode*& node,
-                                                        StageRequirementsGathererContext* context)
+void StageRequirementsGatherer::WalkClassPreconstructor(Raverie::ClassNode*& node, StageRequirementsGathererContext* context)
 {
   // Only walk the pre-constructor if it exists and we haven't already processed
   // it
@@ -131,8 +125,7 @@ void StageRequirementsGatherer::WalkClassPreconstructor(Raverie::ClassNode*& nod
   context->mCurrentRequirements = prevRequirements;
 }
 
-void StageRequirementsGatherer::WalkClassPreconstructor(Raverie::Function* preConstructor,
-                                                        StageRequirementsGathererContext* context)
+void StageRequirementsGatherer::WalkClassPreconstructor(Raverie::Function* preConstructor, StageRequirementsGathererContext* context)
 {
   // Pre-constructors require walking the class node.
   Raverie::ClassNode* classNode = context->mTypeMap.FindValue(preConstructor->Owner, nullptr);
@@ -140,8 +133,7 @@ void StageRequirementsGatherer::WalkClassPreconstructor(Raverie::Function* preCo
     WalkClassPreconstructor(classNode, context);
 }
 
-void StageRequirementsGatherer::WalkClassConstructor(Raverie::ConstructorNode*& node,
-                                                     StageRequirementsGathererContext* context)
+void StageRequirementsGatherer::WalkClassConstructor(Raverie::ConstructorNode*& node, StageRequirementsGathererContext* context)
 {
   // Only walk a constructor once
   Raverie::Function* raverieFunction = node->DefinedFunction;
@@ -202,8 +194,7 @@ void StageRequirementsGatherer::WalkClassFunction(Raverie::FunctionNode*& node, 
   context->mCurrentRequirements = prevRequirements;
 }
 
-void StageRequirementsGatherer::WalkClassMemberVariable(Raverie::MemberVariableNode*& node,
-                                                        StageRequirementsGathererContext* context)
+void StageRequirementsGatherer::WalkClassMemberVariable(Raverie::MemberVariableNode*& node, StageRequirementsGathererContext* context)
 {
   // Only walk members once
   Raverie::Property* raverieProperty = node->CreatedProperty;
@@ -232,8 +223,7 @@ void StageRequirementsGatherer::WalkClassMemberVariable(Raverie::MemberVariableN
   context->mCurrentRequirements = prevRequirements;
 }
 
-void StageRequirementsGatherer::WalkMemberAccessNode(Raverie::MemberAccessNode*& node,
-                                                     StageRequirementsGathererContext* context)
+void StageRequirementsGatherer::WalkMemberAccessNode(Raverie::MemberAccessNode*& node, StageRequirementsGathererContext* context)
 {
   // Find the actual accessed function/property
   Raverie::Function* raverieFunction = nullptr;
@@ -289,8 +279,7 @@ void StageRequirementsGatherer::WalkMemberAccessNode(Raverie::MemberAccessNode*&
   }
 }
 
-void StageRequirementsGatherer::WalkStaticTypeNode(Raverie::StaticTypeNode*& node,
-                                                   StageRequirementsGathererContext* context)
+void StageRequirementsGatherer::WalkStaticTypeNode(Raverie::StaticTypeNode*& node, StageRequirementsGathererContext* context)
 {
   // If there's a constructor function then walk its dependencies
   Raverie::Function* constructor = node->ConstructorFunction;
@@ -326,10 +315,7 @@ void StageRequirementsGatherer::WalkStaticTypeNode(Raverie::StaticTypeNode*& nod
   }
 }
 
-void StageRequirementsGatherer::MergeCurrent(RaverieShaderIRLibrary* shaderLibrary,
-                                             Raverie::Member* raverieMember,
-                                             Raverie::SyntaxNode* node,
-                                             StageRequirementsGathererContext* context)
+void StageRequirementsGatherer::MergeCurrent(RaverieShaderIRLibrary* shaderLibrary, Raverie::Member* raverieMember, Raverie::SyntaxNode* node, StageRequirementsGathererContext* context)
 {
   // If the given member has any stage requirements then merge them into the
   // context's requirements
@@ -338,8 +324,7 @@ void StageRequirementsGatherer::MergeCurrent(RaverieShaderIRLibrary* shaderLibra
     context->mCurrentRequirements.Combine(raverieMember, node->Location, newState->mRequiredStages);
 }
 
-void StageRequirementsGatherer::BuildLibraryMap(RaverieShaderIRLibrary* library,
-                                                StageRequirementsGathererContext* context)
+void StageRequirementsGatherer::BuildLibraryMap(RaverieShaderIRLibrary* library, StageRequirementsGathererContext* context)
 {
   // Map the raverie library to the shader library
   context->mRaverieLibraryToShaderLibraryMap[library->mRaverieLibrary] = library;
@@ -352,8 +337,7 @@ void StageRequirementsGatherer::BuildLibraryMap(RaverieShaderIRLibrary* library,
     BuildLibraryMap(range.Front(), context);
 }
 
-ShaderStage::Enum StageRequirementsGatherer::GetRequiredStages(Raverie::Member* raverieObject,
-                                                               Raverie::ReflectionObject* owner)
+ShaderStage::Enum StageRequirementsGatherer::GetRequiredStages(Raverie::Member* raverieObject, Raverie::ReflectionObject* owner)
 {
   SpirVNameSettings& nameSettings = mSettings->mNameSettings;
   ShaderStage::Enum stage = (ShaderStage::Enum)ShaderStage::None;
@@ -391,9 +375,7 @@ String StageRequirementsGatherer::GetStageName(ShaderStage::Enum stage)
   return String();
 }
 
-void StageRequirementsGatherer::CheckAndDispatchErrors(Raverie::Member* raverieObject,
-                                                       Raverie::ReflectionObject* owner,
-                                                       StageRequirementsGathererContext* context)
+void StageRequirementsGatherer::CheckAndDispatchErrors(Raverie::Member* raverieObject, Raverie::ReflectionObject* owner, StageRequirementsGathererContext* context)
 {
   ShaderStage::Enum currentRequiredStages = context->mCurrentRequirements.mRequiredStages;
   // If no shader stages are required for the current context then there's
@@ -437,8 +419,7 @@ void StageRequirementsGatherer::CheckAndDispatchErrors(Raverie::Member* raverieO
       raverieSourceLibrary = fn->SourceLibrary;
 
     // Lookup the object's shader source library from the raverie library
-    RaverieShaderIRLibrary* objectLibrary =
-        context->mRaverieLibraryToShaderLibraryMap.FindValue(raverieSourceLibrary, nullptr);
+    RaverieShaderIRLibrary* objectLibrary = context->mRaverieLibraryToShaderLibraryMap.FindValue(raverieSourceLibrary, nullptr);
 
     // Find the cached requirements data for this object. If it doesn't exist or
     // this object has no dependencies then we've reached the end of the

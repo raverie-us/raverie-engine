@@ -35,7 +35,8 @@ struct ContactEdge
   ContactEdge();
 
   // clean up to not be a union later
-  union {
+  union
+  {
     Contact* mContact;
     Contact* mJoint;
   };

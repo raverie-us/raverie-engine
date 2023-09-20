@@ -337,11 +337,7 @@ public:
     RMS
   };
 
-  void Initialize(const float attackMSec,
-                  const float releaseMSec,
-                  const bool analogTC,
-                  const DetectModes detectMode,
-                  const bool logDetector);
+  void Initialize(const float attackMSec, const float releaseMSec, const bool analogTC, const DetectModes detectMode, const bool logDetector);
 
   void SetTCModeAnalog(const bool analogTC);
   void SetAttackTime(const float attackMSec);
@@ -388,20 +384,9 @@ public:
   };
 
   DynamicsProcessor();
-  DynamicsProcessor(const float inputGain,
-                    const float threshold,
-                    const float attack,
-                    const float release,
-                    const float ratio,
-                    const float outputGain,
-                    const float knee,
-                    const ProcessorTypes type);
+  DynamicsProcessor(const float inputGain, const float threshold, const float attack, const float release, const float ratio, const float outputGain, const float knee, const ProcessorTypes type);
 
-  void ProcessBuffer(const float* input,
-                     const float* envelopeInput,
-                     float* output,
-                     const unsigned numChannels,
-                     const unsigned bufferSize);
+  void ProcessBuffer(const float* input, const float* envelopeInput, float* output, const unsigned numChannels, const unsigned bufferSize);
 
   float GetInputGain()
   {
@@ -496,8 +481,7 @@ class Equalizer
 {
 public:
   Equalizer();
-  Equalizer(
-      const float below80Hz, const float at150Hz, const float at600Hz, const float at2500Hz, const float above5000Hz);
+  Equalizer(const float below80Hz, const float at150Hz, const float at600Hz, const float at2500Hz, const float above5000Hz);
   Equalizer(const Equalizer& copy);
   Equalizer(float* values);
 
@@ -661,23 +645,11 @@ static int NextPowerOf2(const int& value);
 class EnvelopeSettings
 {
 public:
-  EnvelopeSettings() :
-      mDelayTime(0.0f),
-      mAttackTime(0.02f),
-      mDecayTime(0.0f),
-      mSustainTime(0.0f),
-      mSustainLevel(1.0f),
-      mReleaseTime(0.02f)
+  EnvelopeSettings() : mDelayTime(0.0f), mAttackTime(0.02f), mDecayTime(0.0f), mSustainTime(0.0f), mSustainLevel(1.0f), mReleaseTime(0.02f)
   {
   }
-  EnvelopeSettings(
-      float delayTime, float attackTime, float decayTime, float sustainTime, float sustainLevel, float releaseTime) :
-      mDelayTime(delayTime),
-      mAttackTime(attackTime),
-      mDecayTime(decayTime),
-      mSustainTime(sustainTime),
-      mSustainLevel(sustainLevel),
-      mReleaseTime(releaseTime)
+  EnvelopeSettings(float delayTime, float attackTime, float decayTime, float sustainTime, float sustainLevel, float releaseTime) :
+      mDelayTime(delayTime), mAttackTime(attackTime), mDecayTime(decayTime), mSustainTime(sustainTime), mSustainLevel(sustainLevel), mReleaseTime(releaseTime)
   {
   }
 

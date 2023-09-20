@@ -101,28 +101,20 @@ public:
   /// Build the cached reflection data for quick access for a shader.
   /// This will walk all of the results from the passes and 'merge' them
   /// together to get a quick jump table.
-  void CreateReflectionData(RaverieShaderIRLibrary* shaderLibrary,
-                            ShaderStageDescription& stageDef,
-                            Array<PassResultRef>& passResults);
+  void CreateReflectionData(RaverieShaderIRLibrary* shaderLibrary, ShaderStageDescription& stageDef, Array<PassResultRef>& passResults);
 
   /// Find the reflection data for a uniform given the fragment and property.
   /// Returns null if the property can't be found.
   ShaderResourceReflectionData* FindUniformReflectionData(RaverieShaderIRType* fragmentType, StringParam propertyName);
   /// Finds all potential images, samplers, and sampled images that the given
   /// SampledImage property results in.
-  void FindSampledImageReflectionData(RaverieShaderIRType* fragmentType,
-                                      StringParam propertyName,
-                                      Array<ShaderResourceReflectionData*>& results);
+  void FindSampledImageReflectionData(RaverieShaderIRType* fragmentType, StringParam propertyName, Array<ShaderResourceReflectionData*>& results);
   /// Finds all potential images and sampled images that the given Image
   /// property results in.
-  void FindImageReflectionData(RaverieShaderIRType* fragmentType,
-                               StringParam propertyName,
-                               Array<ShaderResourceReflectionData*>& results);
+  void FindImageReflectionData(RaverieShaderIRType* fragmentType, StringParam propertyName, Array<ShaderResourceReflectionData*>& results);
   /// Finds all potential samplers and sampled images that the given Sampler
   /// property results in.
-  void FindSamplerReflectionData(RaverieShaderIRType* fragmentType,
-                                 StringParam propertyName,
-                                 Array<ShaderResourceReflectionData*>& results);
+  void FindSamplerReflectionData(RaverieShaderIRType* fragmentType, StringParam propertyName, Array<ShaderResourceReflectionData*>& results);
   /// Find the reflection data for a storage image given the fragment and
   /// property. Returns null if the property can't be found.
   ShaderResourceReflectionData* FindStorageImage(RaverieShaderIRType* fragmentType, StringParam propertyName);
@@ -149,41 +141,27 @@ private:
   };
 
   // Creates the final mapped data for uniform buffers.
-  void CreateUniformReflectionData(RaverieShaderIRLibrary* shaderLibrary,
-                                   ShaderStageDescription& stageDef,
-                                   Array<PassResultRef>& passResults);
+  void CreateUniformReflectionData(RaverieShaderIRLibrary* shaderLibrary, ShaderStageDescription& stageDef, Array<PassResultRef>& passResults);
 
   // Creates the final mapped data for samplers, images, and sampled images.
-  void CreateSamplerAndImageReflectionData(RaverieShaderIRLibrary* shaderLibrary,
-                                           ShaderStageDescription& stageDef,
-                                           Array<PassResultRef>& passResults);
+  void CreateSamplerAndImageReflectionData(RaverieShaderIRLibrary* shaderLibrary, ShaderStageDescription& stageDef, Array<PassResultRef>& passResults);
   // Given an array of pass results, this recursively walks from the current
   // pass following where all of the input mappings end up at and puts the
   // results in the output mappings.
-  void RecursivelyBuildSamplerAndImageMappings(Array<PassResultRef>& passResults,
-                                               size_t passIndex,
-                                               SampledImageRemappings& inputMappings,
-                                               SampledImageRemappings& outputMappings);
+  void RecursivelyBuildSamplerAndImageMappings(Array<PassResultRef>& passResults, size_t passIndex, SampledImageRemappings& inputMappings, SampledImageRemappings& outputMappings);
   // Merges the source image mappings into the destination image mappings.
   void MergeRemappings(SampledImageRemappings& dest, SampledImageRemappings& source);
   /// Convert the final name mappings to actual indices in the reflection data.
-  void BuildFinalSampledImageMappings(SampledImageRemappings* resourceMappings,
-                                      NameToIndexMap& samplerIndices,
-                                      NameToIndexMap& imageIndices,
-                                      NameToIndexMap& sampledImageIndices,
-                                      SampledImageRemappingData& results);
+  void BuildFinalSampledImageMappings(
+      SampledImageRemappings* resourceMappings, NameToIndexMap& samplerIndices, NameToIndexMap& imageIndices, NameToIndexMap& sampledImageIndices, SampledImageRemappingData& results);
 
   /// Fills out information for an individual search map (e.g. sampler/image)
   /// given the property name.
-  void PopulateSamplerAndImageData(HashMap<String, SampledImageRemappingData>& searchMap,
-                                   StringParam propertyName,
-                                   Array<ShaderResourceReflectionData*>& results);
+  void PopulateSamplerAndImageData(HashMap<String, SampledImageRemappingData>& searchMap, StringParam propertyName, Array<ShaderResourceReflectionData*>& results);
 
   /// Create reflectiond ata for simple opaque types (e.g. storage image and
   /// ssbos).
-  void CreateSimpleOpaqueTypeReflectionData(RaverieShaderIRLibrary* shaderLibrary,
-                                            ShaderStageDescription& stageDef,
-                                            Array<PassResultRef>& passResults);
+  void CreateSimpleOpaqueTypeReflectionData(RaverieShaderIRLibrary* shaderLibrary, ShaderStageDescription& stageDef, Array<PassResultRef>& passResults);
 };
 
 /// This class is basically a helper wrapper around projects, libraries, the
@@ -227,9 +205,7 @@ public:
   /// raverie shader code in the given definition object. The raverie shader code is also cached internally.
   /// Compute properties (such as the local workgroup size) should be passed through (can optionally be
   /// null to use the first fragment's properties).
-  bool ComposeComputeShader(RaverieShaderIRCompositor::ShaderDefinition& shaderDef,
-                            ShaderCapabilities& capabilities,
-                            RaverieShaderIRCompositor::ComputeShaderProperties* computeProperties = nullptr);
+  bool ComposeComputeShader(RaverieShaderIRCompositor::ShaderDefinition& shaderDef, ShaderCapabilities& capabilities, RaverieShaderIRCompositor::ComputeShaderProperties* computeProperties = nullptr);
 
   void AddShaderCode(StringParam shaderCode, StringParam fileName, void* userData);
   /// Compiles shaders and translates them to an internal representation
@@ -279,10 +255,7 @@ public:
   /// the debug passes in the pipeline. A debug pass will run on the last pass
   /// (before the backend) and typically is used for the validator or
   /// disassembler.
-  bool CompilePipeline(RaverieShaderIRType* shaderType,
-                       ShaderPipelineDescription& pipeline,
-                       Array<TranslationPassResultRef>& pipelineResults,
-                       Array<TranslationPassResultRef>& debugResults);
+  bool CompilePipeline(RaverieShaderIRType* shaderType, ShaderPipelineDescription& pipeline, Array<TranslationPassResultRef>& pipelineResults, Array<TranslationPassResultRef>& debugResults);
 
   void RecursivelyLoadDirectory(StringParam path, RaverieShaderIRProject& project);
 

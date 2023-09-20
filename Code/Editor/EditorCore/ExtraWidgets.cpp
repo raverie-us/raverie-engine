@@ -14,8 +14,7 @@ void AddLine(Vec3 pos0, Vec3 pos1, Vec4 color, Array<StreamedVertex>& vertices)
   vertices.PushBack(StreamedVertex(pos1, Vec2(), color));
 }
 
-void PerformanceGraphWidget::RenderUpdate(
-    ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
+void PerformanceGraphWidget::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 
@@ -85,31 +84,13 @@ void PerformanceGraphWidget::RenderUpdate(
   AddTextRange(fontProcessor, font, text, Vec2(0, 0), TextAlign::Left, Vec2(1, 1), mSize, true);
 
   text = String("25.0ms (40fps) ");
-  ProcessTextRange(fontProcessor,
-                   font,
-                   text,
-                   ToVector2(mGraphPos),
-                   TextAlign::Right,
-                   Vec2(1, 1),
-                   Vec2(mGraphSize.x, font->mLineHeight));
+  ProcessTextRange(fontProcessor, font, text, ToVector2(mGraphPos), TextAlign::Right, Vec2(1, 1), Vec2(mGraphSize.x, font->mLineHeight));
 
   text = String("16.7ms (60fps) ");
-  ProcessTextRange(fontProcessor,
-                   font,
-                   text,
-                   ToVector2(mGraphPos) + Vec2(0, Math::Round(mGraphSize.y * 0.333f)),
-                   TextAlign::Right,
-                   Vec2(1, 1),
-                   Vec2(mGraphSize.x, font->mLineHeight));
+  ProcessTextRange(fontProcessor, font, text, ToVector2(mGraphPos) + Vec2(0, Math::Round(mGraphSize.y * 0.333f)), TextAlign::Right, Vec2(1, 1), Vec2(mGraphSize.x, font->mLineHeight));
 
   text = String("8.3ms (120fps) ");
-  ProcessTextRange(fontProcessor,
-                   font,
-                   text,
-                   ToVector2(mGraphPos) + Vec2(0, Math::Round(mGraphSize.y * 0.667f)),
-                   TextAlign::Right,
-                   Vec2(1, 1),
-                   Vec2(mGraphSize.x, font->mLineHeight));
+  ProcessTextRange(fontProcessor, font, text, ToVector2(mGraphPos) + Vec2(0, Math::Round(mGraphSize.y * 0.667f)), TextAlign::Right, Vec2(1, 1), Vec2(mGraphSize.x, font->mLineHeight));
 
   Vec2 namePos = Vec2(0, 20.0f * recordCount);
   forRange (Profile::Record& record, mainRecord->GetChildren())
@@ -124,8 +105,7 @@ void PerformanceGraphWidget::RenderUpdate(
   // total
   {
     Profile::Record& record = *mainRecord;
-    float seconds = Profile::ProfileSystem::Instance->GetTimeInSeconds(
-        (Profile::ProfileTime)samplesTotal[Profile::Record::sSampleIndex - 1]);
+    float seconds = Profile::ProfileSystem::Instance->GetTimeInSeconds((Profile::ProfileTime)samplesTotal[Profile::Record::sSampleIndex - 1]);
     text = String::Format(" %0.1fms %s Total", seconds * 1000.0f, record.GetName().c_str());
     fontProcessor.mVertexColor = ToFloatColor(record.GetColor());
     AddTextRange(fontProcessor, font, text, namePos, TextAlign::Left, Vec2(1, 1), mSize, true);
@@ -145,13 +125,8 @@ Vec3 PerformanceGraphWidget::GetPosition(float sample, uint sampleNumber)
   return Vec3(x, y, 0);
 }
 
-void PerformanceGraphWidget::DrawSamples(ViewBlock& viewBlock,
-                                         FrameBlock& frameBlock,
-                                         Array<StreamedVertex>& lines,
-                                         Array<StreamedVertex>& triangles,
-                                         float* samples,
-                                         ByteColor byteColor,
-                                         bool linesOnly)
+void PerformanceGraphWidget::DrawSamples(
+    ViewBlock& viewBlock, FrameBlock& frameBlock, Array<StreamedVertex>& lines, Array<StreamedVertex>& triangles, float* samples, ByteColor byteColor, bool linesOnly)
 {
   const uint sampleCount = Profile::Record::cSampleCount;
   uint sampleIndex = Profile::Record::sSampleIndex;
@@ -187,14 +162,8 @@ void PerformanceGraphWidget::DrawSamples(ViewBlock& viewBlock,
   }
 }
 
-float PerformanceGraphWidget::DrawProfileGraph(ViewBlock& viewBlock,
-                                               FrameBlock& frameBlock,
-                                               WidgetRect clipRect,
-                                               Vec3 position,
-                                               Profile::Record* record,
-                                               float parentSize,
-                                               float parentTotal,
-                                               int level)
+float PerformanceGraphWidget::DrawProfileGraph(
+    ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Vec3 position, Profile::Record* record, float parentSize, float parentTotal, int level)
 {
   float average = (float)record->SmoothAverage();
   float timeInS = Profile::ProfileSystem::Instance->GetTimeInSeconds((Profile::ProfileTime)record->SmoothAverage());
@@ -272,18 +241,13 @@ MemoryGraphWidget::MemoryGraphWidget(Composite* parent) : Widget(parent)
 {
 }
 
-void MemoryGraphWidget::RenderUpdate(
-    ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
+void MemoryGraphWidget::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
   DrawMemoryGraph(Vec3(1, 0, 0), Memory::GetRoot(), mSize.x, 0, viewBlock, frameBlock, parentTx, clipRect);
 }
 
-void DrawRect(const WidgetRect& rect,
-              Array<StreamedVertex>& triangles,
-              Vec4Param solidColor,
-              Array<StreamedVertex>& lines,
-              Vec4Param lineColor)
+void DrawRect(const WidgetRect& rect, Array<StreamedVertex>& triangles, Vec4Param solidColor, Array<StreamedVertex>& lines, Vec4Param lineColor)
 {
   Vec3 bl = Vec3(rect.BottomLeft());
   Vec3 br = Vec3(rect.BottomRight());
@@ -310,14 +274,8 @@ void DrawRect(const WidgetRect& rect,
   lines.PushBack(StreamedVertex(bl, Vec2::cZero, lineColor));
 }
 
-float MemoryGraphWidget::DrawMemoryGraph(Vec3 position,
-                                         Memory::Graph* memoryNode,
-                                         float parentSize,
-                                         float parentTotal,
-                                         ViewBlock& viewBlock,
-                                         FrameBlock& frameBlock,
-                                         Mat4Param parentTx,
-                                         WidgetRect clipRect)
+float MemoryGraphWidget::DrawMemoryGraph(
+    Vec3 position, Memory::Graph* memoryNode, float parentSize, float parentTotal, ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, WidgetRect clipRect)
 {
   float ysize = Pixels(20);
   Memory::Stats stat;

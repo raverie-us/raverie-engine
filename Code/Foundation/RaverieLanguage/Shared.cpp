@@ -93,13 +93,7 @@ bool BinaryOperator::operator==(const BinaryOperator& rhs) const
   return (this->Lhs == rhs.Lhs) && (this->Rhs == rhs.Rhs);
 }
 
-UnaryOperator::UnaryOperator() :
-    IsValid(false),
-    Operand(nullptr),
-    Result(nullptr),
-    Operator(Grammar::Invalid),
-    Instruction(Instruction::InvalidInstruction),
-    Io(IoMode::NotSet)
+UnaryOperator::UnaryOperator() : IsValid(false), Operand(nullptr), Result(nullptr), Operator(Grammar::Invalid), Instruction(Instruction::InvalidInstruction), Io(IoMode::NotSet)
 {
 }
 
@@ -128,22 +122,12 @@ bool UnaryOperator::operator==(const UnaryOperator& rhs) const
   return this->Operand == rhs.Operand;
 }
 
-UntypedOperator::UntypedOperator() :
-    IsValid(false),
-    Operator(Grammar::Invalid),
-    Precedence(0),
-    Associativity(OperatorAssociativity::LeftToRight)
+UntypedOperator::UntypedOperator() : IsValid(false), Operator(Grammar::Invalid), Precedence(0), Associativity(OperatorAssociativity::LeftToRight)
 {
 }
 
 CastOperator::CastOperator() :
-    IsValid(false),
-    From(nullptr),
-    To(nullptr),
-    Operation(CastOperation::Invalid),
-    PrimitiveInstruction(Instruction::InvalidInstruction),
-    CanBeImplicit(false),
-    RequiresCodeGeneration(false)
+    IsValid(false), From(nullptr), To(nullptr), Operation(CastOperation::Invalid), PrimitiveInstruction(Instruction::InvalidInstruction), CanBeImplicit(false), RequiresCodeGeneration(false)
 {
 }
 
@@ -430,14 +414,12 @@ Shared::Shared()
   this->AddPrimitiveCast(core.DoubleIntegerType, core.BooleanType, Instruction::ConvertDoubleIntegerToBoolean, false);
   this->AddPrimitiveCast(core.DoubleIntegerType, core.ByteType, Instruction::ConvertDoubleIntegerToByte, false);
   this->AddPrimitiveCast(core.DoubleIntegerType, core.IntegerType, Instruction::ConvertDoubleIntegerToInteger, false);
-  this->AddPrimitiveCast(
-      core.DoubleIntegerType, core.DoubleRealType, Instruction::ConvertDoubleIntegerToDoubleReal, true);
+  this->AddPrimitiveCast(core.DoubleIntegerType, core.DoubleRealType, Instruction::ConvertDoubleIntegerToDoubleReal, true);
   this->AddPrimitiveCast(core.DoubleRealType, core.RealType, Instruction::ConvertDoubleRealToReal, false);
   this->AddPrimitiveCast(core.DoubleRealType, core.BooleanType, Instruction::ConvertDoubleRealToBoolean, false);
   this->AddPrimitiveCast(core.DoubleRealType, core.ByteType, Instruction::ConvertDoubleRealToByte, false);
   this->AddPrimitiveCast(core.DoubleRealType, core.IntegerType, Instruction::ConvertDoubleRealToInteger, false);
-  this->AddPrimitiveCast(
-      core.DoubleRealType, core.DoubleIntegerType, Instruction::ConvertDoubleRealToDoubleInteger, false);
+  this->AddPrimitiveCast(core.DoubleRealType, core.DoubleIntegerType, Instruction::ConvertDoubleRealToDoubleInteger, false);
 
   // The 2-dimensional cases
   this->AddPrimitiveCast(core.Integer2Type, core.Real2Type, Instruction::ConvertInteger2ToReal2, true);
@@ -470,196 +452,92 @@ Shared::Shared()
 // (for generation of instructions)
 
 // Copy
-#define RaverieCopyOperators(WithType)                                                                                   \
-  {                                                                                                                    \
-    BoundType* type = core.WithType##Type;                                                                             \
-    this->AddBinary(type, core.VoidType, Grammar::Assignment, Instruction::Copy##WithType, IoMode::WriteLValue);       \
+#define RaverieCopyOperators(WithType)                                                                                                                                                                 \
+  {                                                                                                                                                                                                    \
+    BoundType* type = core.WithType##Type;                                                                                                                                                             \
+    this->AddBinary(type, core.VoidType, Grammar::Assignment, Instruction::Copy##WithType, IoMode::WriteLValue);                                                                                       \
   }
 
 // Equality and inequality
-#define RaverieEqualityOperators(WithType, ResultType)                                                                   \
-  {                                                                                                                    \
-    BoundType* type = core.WithType##Type;                                                                             \
-    this->AddBinary(                                                                                                   \
-        type, core.ResultType##Type, Grammar::Inequality, Instruction::TestInequality##WithType, IoMode::ReadRValue);  \
-    this->AddBinary(                                                                                                   \
-        type, core.ResultType##Type, Grammar::Equality, Instruction::TestEquality##WithType, IoMode::ReadRValue);      \
+#define RaverieEqualityOperators(WithType, ResultType)                                                                                                                                                 \
+  {                                                                                                                                                                                                    \
+    BoundType* type = core.WithType##Type;                                                                                                                                                             \
+    this->AddBinary(type, core.ResultType##Type, Grammar::Inequality, Instruction::TestInequality##WithType, IoMode::ReadRValue);                                                                      \
+    this->AddBinary(type, core.ResultType##Type, Grammar::Equality, Instruction::TestEquality##WithType, IoMode::ReadRValue);                                                                          \
   }
 
 // Less and greater comparison
-#define RaverieComparisonOperators(WithType, ResultType)                                                                 \
-  {                                                                                                                    \
-    BoundType* type = core.WithType##Type;                                                                             \
-    this->AddBinary(                                                                                                   \
-        type, core.ResultType##Type, Grammar::LessThan, Instruction::TestLessThan##WithType, IoMode::ReadRValue);      \
-    this->AddBinary(type,                                                                                              \
-                    core.ResultType##Type,                                                                             \
-                    Grammar::LessThanOrEqualTo,                                                                        \
-                    Instruction::TestLessThanOrEqualTo##WithType,                                                      \
-                    IoMode::ReadRValue);                                                                               \
-    this->AddBinary(type,                                                                                              \
-                    core.ResultType##Type,                                                                             \
-                    Grammar::GreaterThan,                                                                              \
-                    Instruction::TestGreaterThan##WithType,                                                            \
-                    IoMode::ReadRValue);                                                                               \
-    this->AddBinary(type,                                                                                              \
-                    core.ResultType##Type,                                                                             \
-                    Grammar::GreaterThanOrEqualTo,                                                                     \
-                    Instruction::TestGreaterThanOrEqualTo##WithType,                                                   \
-                    IoMode::ReadRValue);                                                                               \
+#define RaverieComparisonOperators(WithType, ResultType)                                                                                                                                               \
+  {                                                                                                                                                                                                    \
+    BoundType* type = core.WithType##Type;                                                                                                                                                             \
+    this->AddBinary(type, core.ResultType##Type, Grammar::LessThan, Instruction::TestLessThan##WithType, IoMode::ReadRValue);                                                                          \
+    this->AddBinary(type, core.ResultType##Type, Grammar::LessThanOrEqualTo, Instruction::TestLessThanOrEqualTo##WithType, IoMode::ReadRValue);                                                        \
+    this->AddBinary(type, core.ResultType##Type, Grammar::GreaterThan, Instruction::TestGreaterThan##WithType, IoMode::ReadRValue);                                                                    \
+    this->AddBinary(type, core.ResultType##Type, Grammar::GreaterThanOrEqualTo, Instruction::TestGreaterThanOrEqualTo##WithType, IoMode::ReadRValue);                                                  \
   }
 
 // Generic numeric operators, copy, equality
-#define RaverieNumericOperators(WithType, ComparisonType)                                                                \
-  RaverieCopyOperators(WithType) RaverieEqualityOperators(WithType, ComparisonType)                                        \
-  {                                                                                                                    \
-    BoundType* type = core.WithType##Type;                                                                             \
-    this->AddUnary(type, type, Grammar::Positive, Instruction::InvalidInstruction, IoMode::ReadRValue);                \
-    this->AddUnary(type, type, Grammar::Negative, Instruction::Negate##WithType, IoMode::ReadRValue);                  \
-    this->AddUnary(type,                                                                                               \
-                   core.VoidType,                                                                                      \
-                   Grammar::Increment,                                                                                 \
-                   Instruction::Increment##WithType,                                                                   \
-                   (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                                          \
-    this->AddUnary(type,                                                                                               \
-                   core.VoidType,                                                                                      \
-                   Grammar::Decrement,                                                                                 \
-                   Instruction::Decrement##WithType,                                                                   \
-                   (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                                          \
-    this->AddBinary(type, type, Grammar::Add, Instruction::Add##WithType, IoMode::ReadRValue);                         \
-    this->AddBinary(type, type, Grammar::Subtract, Instruction::Subtract##WithType, IoMode::ReadRValue);               \
-    this->AddBinary(type, type, Grammar::Multiply, Instruction::Multiply##WithType, IoMode::ReadRValue);               \
-    this->AddBinary(type, type, Grammar::Divide, Instruction::Divide##WithType, IoMode::ReadRValue);                   \
-    this->AddBinary(type, type, Grammar::Modulo, Instruction::Modulo##WithType, IoMode::ReadRValue);                   \
-    this->AddBinary(type, type, Grammar::Exponent, Instruction::Pow##WithType, IoMode::ReadRValue);                    \
-    this->AddBinary(type,                                                                                              \
-                    core.VoidType,                                                                                     \
-                    Grammar::AssignmentAdd,                                                                            \
-                    Instruction::AssignmentAdd##WithType,                                                              \
-                    (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                                         \
-    this->AddBinary(type,                                                                                              \
-                    core.VoidType,                                                                                     \
-                    Grammar::AssignmentSubtract,                                                                       \
-                    Instruction::AssignmentSubtract##WithType,                                                         \
-                    (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                                         \
-    this->AddBinary(type,                                                                                              \
-                    core.VoidType,                                                                                     \
-                    Grammar::AssignmentMultiply,                                                                       \
-                    Instruction::AssignmentMultiply##WithType,                                                         \
-                    (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                                         \
-    this->AddBinary(type,                                                                                              \
-                    core.VoidType,                                                                                     \
-                    Grammar::AssignmentDivide,                                                                         \
-                    Instruction::AssignmentDivide##WithType,                                                           \
-                    (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                                         \
-    this->AddBinary(type,                                                                                              \
-                    core.VoidType,                                                                                     \
-                    Grammar::AssignmentModulo,                                                                         \
-                    Instruction::AssignmentModulo##WithType,                                                           \
-                    (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                                         \
-    this->AddBinary(type,                                                                                              \
-                    core.VoidType,                                                                                     \
-                    Grammar::AssignmentExponent,                                                                       \
-                    Instruction::AssignmentPow##WithType,                                                              \
-                    (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                                         \
+#define RaverieNumericOperators(WithType, ComparisonType)                                                                                                                                              \
+  RaverieCopyOperators(WithType) RaverieEqualityOperators(WithType, ComparisonType)                                                                                                                    \
+  {                                                                                                                                                                                                    \
+    BoundType* type = core.WithType##Type;                                                                                                                                                             \
+    this->AddUnary(type, type, Grammar::Positive, Instruction::InvalidInstruction, IoMode::ReadRValue);                                                                                                \
+    this->AddUnary(type, type, Grammar::Negative, Instruction::Negate##WithType, IoMode::ReadRValue);                                                                                                  \
+    this->AddUnary(type, core.VoidType, Grammar::Increment, Instruction::Increment##WithType, (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                                               \
+    this->AddUnary(type, core.VoidType, Grammar::Decrement, Instruction::Decrement##WithType, (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                                               \
+    this->AddBinary(type, type, Grammar::Add, Instruction::Add##WithType, IoMode::ReadRValue);                                                                                                         \
+    this->AddBinary(type, type, Grammar::Subtract, Instruction::Subtract##WithType, IoMode::ReadRValue);                                                                                               \
+    this->AddBinary(type, type, Grammar::Multiply, Instruction::Multiply##WithType, IoMode::ReadRValue);                                                                                               \
+    this->AddBinary(type, type, Grammar::Divide, Instruction::Divide##WithType, IoMode::ReadRValue);                                                                                                   \
+    this->AddBinary(type, type, Grammar::Modulo, Instruction::Modulo##WithType, IoMode::ReadRValue);                                                                                                   \
+    this->AddBinary(type, type, Grammar::Exponent, Instruction::Pow##WithType, IoMode::ReadRValue);                                                                                                    \
+    this->AddBinary(type, core.VoidType, Grammar::AssignmentAdd, Instruction::AssignmentAdd##WithType, (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                                      \
+    this->AddBinary(type, core.VoidType, Grammar::AssignmentSubtract, Instruction::AssignmentSubtract##WithType, (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                            \
+    this->AddBinary(type, core.VoidType, Grammar::AssignmentMultiply, Instruction::AssignmentMultiply##WithType, (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                            \
+    this->AddBinary(type, core.VoidType, Grammar::AssignmentDivide, Instruction::AssignmentDivide##WithType, (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                                \
+    this->AddBinary(type, core.VoidType, Grammar::AssignmentModulo, Instruction::AssignmentModulo##WithType, (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                                \
+    this->AddBinary(type, core.VoidType, Grammar::AssignmentExponent, Instruction::AssignmentPow##WithType, (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                                 \
   }
 
 // Generic numeric operators, copy, equality, comparison
-#define RaverieScalarOperators(WithType)                                                                                 \
-  RaverieNumericOperators(WithType, Boolean) RaverieComparisonOperators(WithType, Boolean)
+#define RaverieScalarOperators(WithType) RaverieNumericOperators(WithType, Boolean) RaverieComparisonOperators(WithType, Boolean)
 
 // Vector operations, generic numeric operators, copy, equality
-#define RaverieVectorOperators(VectorType, ScalarType, ComparisonType)                                                   \
-  RaverieNumericOperators(VectorType, Boolean) RaverieComparisonOperators(VectorType, ComparisonType)                      \
-  {                                                                                                                    \
-    BoundType* vectorType = core.VectorType##Type;                                                                     \
-    BoundType* scalarType = core.ScalarType##Type;                                                                     \
-    this->AddBinaryCommunative(vectorType,                                                                             \
-                               scalarType,                                                                             \
-                               vectorType,                                                                             \
-                               Grammar::Multiply,                                                                      \
-                               Instruction::ScalarMultiply##VectorType,                                                \
-                               IoMode::ReadRValue);                                                                    \
-    this->AddBinaryNonCommunative(vectorType,                                                                          \
-                                  scalarType,                                                                          \
-                                  vectorType,                                                                          \
-                                  Grammar::Divide,                                                                     \
-                                  Instruction::ScalarDivide##VectorType,                                               \
-                                  IoMode::ReadRValue);                                                                 \
-    this->AddBinaryNonCommunative(vectorType,                                                                          \
-                                  scalarType,                                                                          \
-                                  vectorType,                                                                          \
-                                  Grammar::Modulo,                                                                     \
-                                  Instruction::ScalarModulo##VectorType,                                               \
-                                  IoMode::ReadRValue);                                                                 \
-    this->AddBinaryNonCommunative(vectorType,                                                                          \
-                                  scalarType,                                                                          \
-                                  vectorType,                                                                          \
-                                  Grammar::Exponent,                                                                   \
-                                  Instruction::ScalarPow##VectorType,                                                  \
-                                  IoMode::ReadRValue);                                                                 \
-    this->AddBinaryNonCommunative(vectorType,                                                                          \
-                                  scalarType,                                                                          \
-                                  core.VoidType,                                                                       \
-                                  Grammar::AssignmentMultiply,                                                         \
-                                  Instruction::AssignmentScalarMultiply##VectorType,                                   \
-                                  (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                           \
-    this->AddBinaryNonCommunative(vectorType,                                                                          \
-                                  scalarType,                                                                          \
-                                  core.VoidType,                                                                       \
-                                  Grammar::AssignmentDivide,                                                           \
-                                  Instruction::AssignmentScalarDivide##VectorType,                                     \
-                                  (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                           \
-    this->AddBinaryNonCommunative(vectorType,                                                                          \
-                                  scalarType,                                                                          \
-                                  core.VoidType,                                                                       \
-                                  Grammar::AssignmentModulo,                                                           \
-                                  Instruction::AssignmentScalarModulo##VectorType,                                     \
-                                  (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                           \
-    this->AddBinaryNonCommunative(vectorType,                                                                          \
-                                  scalarType,                                                                          \
-                                  core.VoidType,                                                                       \
-                                  Grammar::AssignmentExponent,                                                         \
-                                  Instruction::AssignmentScalarPow##VectorType,                                        \
-                                  (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                           \
+#define RaverieVectorOperators(VectorType, ScalarType, ComparisonType)                                                                                                                                 \
+  RaverieNumericOperators(VectorType, Boolean) RaverieComparisonOperators(VectorType, ComparisonType)                                                                                                  \
+  {                                                                                                                                                                                                    \
+    BoundType* vectorType = core.VectorType##Type;                                                                                                                                                     \
+    BoundType* scalarType = core.ScalarType##Type;                                                                                                                                                     \
+    this->AddBinaryCommunative(vectorType, scalarType, vectorType, Grammar::Multiply, Instruction::ScalarMultiply##VectorType, IoMode::ReadRValue);                                                    \
+    this->AddBinaryNonCommunative(vectorType, scalarType, vectorType, Grammar::Divide, Instruction::ScalarDivide##VectorType, IoMode::ReadRValue);                                                     \
+    this->AddBinaryNonCommunative(vectorType, scalarType, vectorType, Grammar::Modulo, Instruction::ScalarModulo##VectorType, IoMode::ReadRValue);                                                     \
+    this->AddBinaryNonCommunative(vectorType, scalarType, vectorType, Grammar::Exponent, Instruction::ScalarPow##VectorType, IoMode::ReadRValue);                                                      \
+    this->AddBinaryNonCommunative(                                                                                                                                                                     \
+        vectorType, scalarType, core.VoidType, Grammar::AssignmentMultiply, Instruction::AssignmentScalarMultiply##VectorType, (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));              \
+    this->AddBinaryNonCommunative(                                                                                                                                                                     \
+        vectorType, scalarType, core.VoidType, Grammar::AssignmentDivide, Instruction::AssignmentScalarDivide##VectorType, (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                  \
+    this->AddBinaryNonCommunative(                                                                                                                                                                     \
+        vectorType, scalarType, core.VoidType, Grammar::AssignmentModulo, Instruction::AssignmentScalarModulo##VectorType, (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                  \
+    this->AddBinaryNonCommunative(                                                                                                                                                                     \
+        vectorType, scalarType, core.VoidType, Grammar::AssignmentExponent, Instruction::AssignmentScalarPow##VectorType, (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                   \
   }
 
 // Special integral operators, generic numeric operators, copy, equality, and
 // comparison
-#define RaverieIntegralOperators(WithType)                                                                               \
-  {                                                                                                                    \
-    BoundType* type = core.WithType##Type;                                                                             \
-    this->AddUnary(type, type, Grammar::BitwiseNot, Instruction::BitwiseNot##WithType, IoMode::ReadRValue);            \
-    this->AddBinary(type, type, Grammar::BitshiftLeft, Instruction::BitshiftLeft##WithType, IoMode::ReadRValue);       \
-    this->AddBinary(type, type, Grammar::BitshiftRight, Instruction::BitshiftRight##WithType, IoMode::ReadRValue);     \
-    this->AddBinary(type, type, Grammar::BitwiseOr, Instruction::BitwiseOr##WithType, IoMode::ReadRValue);             \
-    this->AddBinary(type, type, Grammar::BitwiseXor, Instruction::BitwiseXor##WithType, IoMode::ReadRValue);           \
-    this->AddBinary(type, type, Grammar::BitwiseAnd, Instruction::BitwiseAnd##WithType, IoMode::ReadRValue);           \
-    this->AddBinary(type,                                                                                              \
-                    core.VoidType,                                                                                     \
-                    Grammar::AssignmentLeftShift,                                                                      \
-                    Instruction::AssignmentBitshiftLeft##WithType,                                                     \
-                    (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                                         \
-    this->AddBinary(type,                                                                                              \
-                    core.VoidType,                                                                                     \
-                    Grammar::AssignmentRightShift,                                                                     \
-                    Instruction::AssignmentBitshiftRight##WithType,                                                    \
-                    (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                                         \
-    this->AddBinary(type,                                                                                              \
-                    core.VoidType,                                                                                     \
-                    Grammar::AssignmentBitwiseOr,                                                                      \
-                    Instruction::AssignmentBitwiseOr##WithType,                                                        \
-                    (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                                         \
-    this->AddBinary(type,                                                                                              \
-                    core.VoidType,                                                                                     \
-                    Grammar::AssignmentBitwiseXor,                                                                     \
-                    Instruction::AssignmentBitwiseXor##WithType,                                                       \
-                    (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                                         \
-    this->AddBinary(type,                                                                                              \
-                    core.VoidType,                                                                                     \
-                    Grammar::AssignmentBitwiseAnd,                                                                     \
-                    Instruction::AssignmentBitwiseAnd##WithType,                                                       \
-                    (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                                         \
+#define RaverieIntegralOperators(WithType)                                                                                                                                                             \
+  {                                                                                                                                                                                                    \
+    BoundType* type = core.WithType##Type;                                                                                                                                                             \
+    this->AddUnary(type, type, Grammar::BitwiseNot, Instruction::BitwiseNot##WithType, IoMode::ReadRValue);                                                                                            \
+    this->AddBinary(type, type, Grammar::BitshiftLeft, Instruction::BitshiftLeft##WithType, IoMode::ReadRValue);                                                                                       \
+    this->AddBinary(type, type, Grammar::BitshiftRight, Instruction::BitshiftRight##WithType, IoMode::ReadRValue);                                                                                     \
+    this->AddBinary(type, type, Grammar::BitwiseOr, Instruction::BitwiseOr##WithType, IoMode::ReadRValue);                                                                                             \
+    this->AddBinary(type, type, Grammar::BitwiseXor, Instruction::BitwiseXor##WithType, IoMode::ReadRValue);                                                                                           \
+    this->AddBinary(type, type, Grammar::BitwiseAnd, Instruction::BitwiseAnd##WithType, IoMode::ReadRValue);                                                                                           \
+    this->AddBinary(type, core.VoidType, Grammar::AssignmentLeftShift, Instruction::AssignmentBitshiftLeft##WithType, (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                       \
+    this->AddBinary(type, core.VoidType, Grammar::AssignmentRightShift, Instruction::AssignmentBitshiftRight##WithType, (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                     \
+    this->AddBinary(type, core.VoidType, Grammar::AssignmentBitwiseOr, Instruction::AssignmentBitwiseOr##WithType, (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                          \
+    this->AddBinary(type, core.VoidType, Grammar::AssignmentBitwiseXor, Instruction::AssignmentBitwiseXor##WithType, (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                        \
+    this->AddBinary(type, core.VoidType, Grammar::AssignmentBitwiseAnd, Instruction::AssignmentBitwiseAnd##WithType, (IoMode::Enum)(IoMode::ReadRValue | IoMode::WriteLValue));                        \
   }
 
   RaverieIntegralOperators(Byte);
@@ -688,20 +566,16 @@ Shared::Shared()
   // specially above
 
   // Boolean operators
-  this->AddUnary(
-      core.BooleanType, core.BooleanType, Grammar::LogicalNot, Instruction::LogicalNotBoolean, IoMode::ReadRValue);
+  this->AddUnary(core.BooleanType, core.BooleanType, Grammar::LogicalNot, Instruction::LogicalNotBoolean, IoMode::ReadRValue);
 
   // Note: These operators have instructions marked as invalid because short
   // circuit is handled specially There is not actually an opcode/instruction
   // that performs logical or/and
-  this->AddBinary(
-      core.BooleanType, core.BooleanType, Grammar::LogicalAnd, Instruction::InvalidInstruction, IoMode::ReadRValue);
-  this->AddBinary(
-      core.BooleanType, core.BooleanType, Grammar::LogicalOr, Instruction::InvalidInstruction, IoMode::ReadRValue);
+  this->AddBinary(core.BooleanType, core.BooleanType, Grammar::LogicalAnd, Instruction::InvalidInstruction, IoMode::ReadRValue);
+  this->AddBinary(core.BooleanType, core.BooleanType, Grammar::LogicalOr, Instruction::InvalidInstruction, IoMode::ReadRValue);
 }
 
-void Shared::AddBinary(
-    Type* lhs, Type* rhs, Type* result, Grammar::Enum oper, Instruction::Enum instruction, IoMode::Enum io, bool flip)
+void Shared::AddBinary(Type* lhs, Type* rhs, Type* result, Grammar::Enum oper, Instruction::Enum instruction, IoMode::Enum io, bool flip)
 {
   // Generate the operator information
   BinaryOperator info;
@@ -718,8 +592,7 @@ void Shared::AddBinary(
   this->BinaryOperators.InsertOrError(info, "Two unary operators inserted with the same types and operator");
 }
 
-void Shared::AddBinaryCommunative(
-    Type* type1, Type* type2, Type* result, Grammar::Enum oper, Instruction::Enum instruction, IoMode::Enum io)
+void Shared::AddBinaryCommunative(Type* type1, Type* type2, Type* result, Grammar::Enum oper, Instruction::Enum instruction, IoMode::Enum io)
 {
   // The arguments only need flipping if they're not of the same type
   bool needsFlip = !Type::IsSame(type1, type2);
@@ -731,8 +604,7 @@ void Shared::AddBinaryCommunative(
   this->AddBinary(type2, type1, result, oper, instruction, io, needsFlip);
 }
 
-void Shared::AddBinaryNonCommunative(
-    Type* lhs, Type* rhs, Type* result, Grammar::Enum oper, Instruction::Enum instruction, IoMode::Enum io)
+void Shared::AddBinaryNonCommunative(Type* lhs, Type* rhs, Type* result, Grammar::Enum oper, Instruction::Enum instruction, IoMode::Enum io)
 {
   // Since the order they added it was type1, type2, then it needs no flip
   this->AddBinary(lhs, rhs, result, oper, instruction, io, false);
@@ -776,10 +648,7 @@ void Shared::AddPrimitiveCast(Type* fromType, Type* toType, Instruction::Enum in
   this->PrimitiveCastOperatorsFrom[fromType].PushBack(info);
 }
 
-void Shared::AddPrecedence(size_t precedence,
-                           OperatorAssociativity::Enum associativity,
-                           OperatorArity::Enum arity,
-                           Grammar::Enum oper)
+void Shared::AddPrecedence(size_t precedence, OperatorAssociativity::Enum associativity, OperatorArity::Enum arity, Grammar::Enum oper)
 {
   // Create a structure that describes everything we need to know generically
   // about the operator

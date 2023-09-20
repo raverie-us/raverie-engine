@@ -76,10 +76,7 @@ private:
 
   Threaded<States> mState;
 
-  bool GetOutputSamples(BufferType* outputBuffer,
-                        const unsigned numberOfChannels,
-                        ListenerNode* listener,
-                        const bool firstRequest) override;
+  bool GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest) override;
   void InterpolateFrequencyThreaded(float frequency, float time);
   void InterpolateVolumeThreaded(float volume, float time);
 };
@@ -92,13 +89,7 @@ class AdsrEnvelope
 public:
   RaverieDeclareType(AdsrEnvelope, TypeCopyMode::ValueType);
 
-  AdsrEnvelope() :
-      mDelayTime(0.0f),
-      mAttackTime(0.02f),
-      mDecayTime(0.0f),
-      mSustainTime(1.0f),
-      mSustainLevel(1.0f),
-      mReleaseTime(0.5f)
+  AdsrEnvelope() : mDelayTime(0.0f), mAttackTime(0.02f), mDecayTime(0.0f), mSustainTime(1.0f), mSustainLevel(1.0f), mReleaseTime(0.5f)
   {
   }
 
@@ -127,11 +118,7 @@ public:
 class HarmonicData
 {
 public:
-  HarmonicData(float multiplier, float volume, EnvelopeSettings& envelope, SynthWaveType::Enum type) :
-      mFrequencyMultiplier(multiplier),
-      mVolume(volume),
-      mEnvelope(envelope),
-      mWaveType(type)
+  HarmonicData(float multiplier, float volume, EnvelopeSettings& envelope, SynthWaveType::Enum type) : mFrequencyMultiplier(multiplier), mVolume(volume), mEnvelope(envelope), mWaveType(type)
   {
   }
   HarmonicData() : mFrequencyMultiplier(0.0f), mVolume(0.0f)
@@ -212,10 +199,7 @@ public:
   void StopAllNotes();
 
 private:
-  bool GetOutputSamples(BufferType* outputBuffer,
-                        const unsigned numberOfChannels,
-                        ListenerNode* listener,
-                        const bool firstRequest) override;
+  bool GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest) override;
   void AddHarmonicThreaded(HarmonicData data);
   void NoteOnThreaded(int midiNote, float volume);
   void NoteOffThreaded(int midiNote);
@@ -254,10 +238,7 @@ public:
   void SetActive(bool active);
 
 private:
-  bool GetOutputSamples(BufferType* outputBuffer,
-                        const unsigned numberOfChannels,
-                        ListenerNode* listener,
-                        const bool firstRequest) override;
+  bool GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest) override;
 
   Threaded<bool> mActive;
   Threaded<float> mVolume;
@@ -487,10 +468,7 @@ public:
   void SetWindowRelease(int releaseMS);
 
 private:
-  bool GetOutputSamples(BufferType* outputBuffer,
-                        const unsigned numberOfChannels,
-                        ListenerNode* listener,
-                        const bool firstRequest) override;
+  bool GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest) override;
   void ValidateLengthsThreaded();
   unsigned GetValueThreaded(unsigned base, unsigned variance);
   float GetValueThreaded(float base, float variance);

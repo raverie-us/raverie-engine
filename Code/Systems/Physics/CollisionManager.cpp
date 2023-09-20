@@ -75,8 +75,7 @@ CollisionManager::CollisionManager()
   mInternals->OverrideCastsWithComplex<MeshCollider>(Collider::cMesh);
   mInternals->OverrideCastsWithComplex<HeightMapCollider>(Collider::cHeightMap);
   // special override so it goes through the mesh's midphase
-  mInternals->mRayCastLookup.OverrideLookup(SpecialComplexCastVsShape<Ray, MultiConvexMeshCollider>,
-                                            Collider::cMultiConvexMesh);
+  mInternals->mRayCastLookup.OverrideLookup(SpecialComplexCastVsShape<Ray, MultiConvexMeshCollider>, Collider::cMultiConvexMesh);
   mInternals->mRayCastLookup.OverrideLookup(SpecialComplexCastVsShape<Ray, MeshCollider>, Collider::cMesh);
   mInternals->mRayCastLookup.OverrideLookup(SpecialComplexCastVsShape<Ray, HeightMapCollider>, Collider::cHeightMap);
   // override the complex collision tests for the world mesh and multi collider
@@ -128,20 +127,14 @@ bool CollisionManager::TestIntersection(Collider* collider, const Aabb& aabb)
   return mInternals->mAabbOverlapLookups.Collide(aabb, collider);
 }
 
-bool CollisionManager::TestRayVsObject(void* userData,
-                                       CastDataParam castData,
-                                       ProxyResult& result,
-                                       BaseCastFilter& filter)
+bool CollisionManager::TestRayVsObject(void* userData, CastDataParam castData, ProxyResult& result, BaseCastFilter& filter)
 {
   // Cast the data to a collider.
   Collider* collider = static_cast<Collider*>(userData);
   return mInternals->mRayCastLookup.Cast(castData.GetRay(), collider, &result, filter);
 }
 
-bool CollisionManager::TestSegmentVsObject(void* userData,
-                                           CastDataParam castData,
-                                           ProxyResult& result,
-                                           BaseCastFilter& filter)
+bool CollisionManager::TestSegmentVsObject(void* userData, CastDataParam castData, ProxyResult& result, BaseCastFilter& filter)
 {
   // Cast the data to a collider.
   Collider* collider = static_cast<Collider*>(userData);
@@ -149,10 +142,7 @@ bool CollisionManager::TestSegmentVsObject(void* userData,
 }
 
 // Tests a given collider (userData) against an AABB.
-bool CollisionManager::TestAabbVsObject(void* userData,
-                                        CastDataParam castData,
-                                        ProxyResult& result,
-                                        BaseCastFilter& filter)
+bool CollisionManager::TestAabbVsObject(void* userData, CastDataParam castData, ProxyResult& result, BaseCastFilter& filter)
 {
   // Cast the data to a collider.
   Collider* collider = static_cast<Collider*>(userData);
@@ -160,10 +150,7 @@ bool CollisionManager::TestAabbVsObject(void* userData,
 }
 
 // Tests a given collider (userData) against a Sphere.
-bool CollisionManager::TestSphereVsObject(void* userData,
-                                          CastDataParam castData,
-                                          ProxyResult& result,
-                                          BaseCastFilter& filter)
+bool CollisionManager::TestSphereVsObject(void* userData, CastDataParam castData, ProxyResult& result, BaseCastFilter& filter)
 {
   // Cast the data to a collider.
   Collider* collider = static_cast<Collider*>(userData);
@@ -172,10 +159,7 @@ bool CollisionManager::TestSphereVsObject(void* userData,
 
 // Casts a Frustum against an object. Distance is the distance to the first
 // plane.
-bool CollisionManager::TestFrustumVsObject(void* userData,
-                                           CastDataParam castData,
-                                           ProxyResult& result,
-                                           BaseCastFilter& filter)
+bool CollisionManager::TestFrustumVsObject(void* userData, CastDataParam castData, ProxyResult& result, BaseCastFilter& filter)
 {
   // Cast the data to a collider.
   Collider* collider = static_cast<Collider*>(userData);

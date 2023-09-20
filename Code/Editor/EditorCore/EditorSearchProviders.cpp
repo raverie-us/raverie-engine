@@ -7,10 +7,7 @@ namespace Raverie
 static const String cResourcesTag = "Resources";
 
 ResourceSearchProvider::ResourceSearchProvider(ResourceLibrary* library, bool showHidden, ResourceLibrary* defaultLib) :
-    SearchProvider("Resource"),
-    mDefaultLibrary(defaultLib),
-    mResourceLibrary(library),
-    mShowHidden(showHidden)
+    SearchProvider("Resource"), mDefaultLibrary(defaultLib), mResourceLibrary(library), mShowHidden(showHidden)
 {
 }
 
@@ -134,8 +131,7 @@ Composite* ResourceSearchProvider::CreatePreview(Composite* parent, SearchViewRe
 {
   // Use the general resource preview
   Resource* resource = (Resource*)element.Data;
-  PreviewWidget* preview =
-      ResourcePreview::CreatePreviewWidget(parent, resource->Name, resource, PreviewImportance::High);
+  PreviewWidget* preview = ResourcePreview::CreatePreviewWidget(parent, resource->Name, resource, PreviewImportance::High);
 
   if (preview)
   {
@@ -328,10 +324,7 @@ String ObjectSearchProvider::GetElementType(SearchViewResult& element)
   return ObjectName;
 }
 
-ComponentSearchProvider::ComponentSearchProvider(HandleParam object, HandleOf<MetaComposition>& composition) :
-    SearchProvider("Component"),
-    mObject(object),
-    mComposition(composition)
+ComponentSearchProvider::ComponentSearchProvider(HandleParam object, HandleOf<MetaComposition>& composition) : SearchProvider("Component"), mObject(object), mComposition(composition)
 {
   mResultsContainExactMatch = false;
 }

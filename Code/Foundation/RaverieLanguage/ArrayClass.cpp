@@ -240,8 +240,7 @@ public:
     ArrayUserData& userData = call.GetFunction()->ComplexUserData.ReadObject<ArrayUserData>(0);
 
     // Create the new array
-    Handle arrayHandle =
-        call.GetState()->AllocateDefaultConstructedHeapObject(userData.SelfType, report, HeapFlags::ReferenceCounted);
+    Handle arrayHandle = call.GetState()->AllocateDefaultConstructedHeapObject(userData.SelfType, report, HeapFlags::ReferenceCounted);
 
     // If we threw an exception, we need to early out and let the stack unroll
     if (report.HasThrownExceptions())
@@ -466,10 +465,7 @@ public:
   class DelegateCompare
   {
   public:
-    DelegateCompare(ExecutableState* state, ExceptionReport& report, Delegate& comparer) :
-        State(state),
-        Report(&report),
-        Comparer(&comparer)
+    DelegateCompare(ExecutableState* state, ExceptionReport& report, Delegate& comparer) : State(state), Report(&report), Comparer(&comparer)
     {
     }
 
@@ -521,15 +517,13 @@ public:
     Sort(self->NativeArray.All(), DelegateCompare<ComparisonMode::CompareMode>(call.GetState(), report, comparer));
   }
 
-  static void
-  ArrayReturnIndexedRange(Call& call, ExceptionReport& report, ArrayTemplate* self, Integer start, Integer count)
+  static void ArrayReturnIndexedRange(Call& call, ExceptionReport& report, ArrayTemplate* self, Integer start, Integer count)
   {
     // Read the element size from the current function's user-data
     ArrayUserData& userData = call.GetFunction()->ComplexUserData.ReadObject<ArrayUserData>(0);
 
     // Create the range type that we will return
-    Handle rangeHandle =
-        call.GetState()->AllocateDefaultConstructedHeapObject(userData.RangeType, report, HeapFlags::ReferenceCounted);
+    Handle rangeHandle = call.GetState()->AllocateDefaultConstructedHeapObject(userData.RangeType, report, HeapFlags::ReferenceCounted);
 
     // If we threw an exception, we need to early out and let the stack unroll
     if (report.HasThrownExceptions())
@@ -756,8 +750,7 @@ public:
     if (array == nullptr || self->ModifyId != array->ModifyId)
     {
       // It was modified, so throw an exception and early out
-      ExecutableState::CallingState->ThrowException(
-          "The collection was modified and therefore the range cannot be used");
+      ExecutableState::CallingState->ThrowException("The collection was modified and therefore the range cannot be used");
       return String();
     }
 
@@ -793,11 +786,7 @@ public:
 };
 
 template <typename T>
-BoundType* InstantiateArray(LibraryBuilder& builder,
-                            StringParam baseName,
-                            StringParam fullyQualifiedName,
-                            const Array<Constant>& templateTypes,
-                            const void* userData)
+BoundType* InstantiateArray(LibraryBuilder& builder, StringParam baseName, StringParam fullyQualifiedName, const Array<Constant>& templateTypes, const void* userData)
 {
   // Error checking
   ErrorIf(templateTypes.Size() != 1, "The Array template should only take one template argument");
@@ -816,16 +805,14 @@ BoundType* InstantiateArray(LibraryBuilder& builder,
   String fullyQualifiedRangeName = rangeName.ToString();
 
   RaverieTodo("The range type must have a valid destructor the decrements the "
-           "reference count on the 'array' handle");
-  BoundType* rangeType = builder.AddBoundType(
-      "ArrayRange", fullyQualifiedRangeName, TypeCopyMode::ReferenceType, sizeof(ArrayRangeTemplate<T>));
+              "reference count on the 'array' handle");
+  BoundType* rangeType = builder.AddBoundType("ArrayRange", fullyQualifiedRangeName, TypeCopyMode::ReferenceType, sizeof(ArrayRangeTemplate<T>));
 
   rangeType->ToStringFunction = ArrayRangeTemplate<T>::ArrayRangeToString;
 
   // Create the array type instance (arrays and any other containers should be
   // reference types!)
-  BoundType* arrayType =
-      builder.AddBoundType(baseName, fullyQualifiedName, TypeCopyMode::ReferenceType, sizeof(ArrayTemplate<T>));
+  BoundType* arrayType = builder.AddBoundType(baseName, fullyQualifiedName, TypeCopyMode::ReferenceType, sizeof(ArrayTemplate<T>));
 
   arrayType->ToStringFunction = ArrayTemplate<T>::ArrayToString;
 
@@ -844,210 +831,96 @@ BoundType* InstantiateArray(LibraryBuilder& builder,
   RaverieFullBindDestructor(builder, arrayType, ArrayTemplate<T>);
   RaverieFullBindConstructor(builder, arrayType, ArrayTemplate<T>, RaverieNoNames);
 
-  f = builder.AddBoundConstructor(
-      arrayType, ArrayTemplate<T>::ArrayConstructorResize, OneParameter(core.IntegerType, "size"));
+  f = builder.AddBoundConstructor(arrayType, ArrayTemplate<T>::ArrayConstructorResize, OneParameter(core.IntegerType, "size"));
   f->ComplexUserData.WriteObject(arrayUserData);
 
-  f = builder.AddBoundConstructor(arrayType,
-                                  ArrayTemplate<T>::ArrayConstructorResizeDefault,
-                                  TwoParameters(core.IntegerType, "size", containedType, "defaultValue"));
+  f = builder.AddBoundConstructor(arrayType, ArrayTemplate<T>::ArrayConstructorResizeDefault, TwoParameters(core.IntegerType, "size", containedType, "defaultValue"));
   f->ComplexUserData.WriteObject(arrayUserData);
 
-  f = builder.AddBoundFunction(arrayType,
-                               OperatorGet,
-                               ArrayTemplate<T>::ArrayGet,
-                               OneParameter(core.IntegerType, "index"),
-                               containedType,
-                               FunctionOptions::None);
+  f = builder.AddBoundFunction(arrayType, OperatorGet, ArrayTemplate<T>::ArrayGet, OneParameter(core.IntegerType, "index"), containedType, FunctionOptions::None);
   f->ComplexUserData.WriteObject(arrayUserData);
 
-  f = builder.AddBoundFunction(arrayType,
-                               OperatorSet,
-                               ArrayTemplate<T>::ArraySet,
-                               TwoParameters(core.IntegerType, "index", containedType, "value"),
-                               core.VoidType,
-                               FunctionOptions::None);
+  f = builder.AddBoundFunction(arrayType, OperatorSet, ArrayTemplate<T>::ArraySet, TwoParameters(core.IntegerType, "index", containedType, "value"), core.VoidType, FunctionOptions::None);
   f->ComplexUserData.WriteObject(arrayUserData);
 
-  f = builder.AddBoundFunction(arrayType,
-                               OperatorInsert,
-                               ArrayTemplate<T>::ArrayPush,
-                               OneParameter(containedType),
-                               core.VoidType,
-                               FunctionOptions::None);
+  f = builder.AddBoundFunction(arrayType, OperatorInsert, ArrayTemplate<T>::ArrayPush, OneParameter(containedType), core.VoidType, FunctionOptions::None);
   f->ComplexUserData.WriteObject(arrayUserData);
 
-  f = builder.AddBoundFunction(arrayType,
-                               "Reserve",
-                               ArrayTemplate<T>::ArrayReserve,
-                               OneParameter(core.IntegerType, "capacity"),
-                               core.VoidType,
-                               FunctionOptions::None);
+  f = builder.AddBoundFunction(arrayType, "Reserve", ArrayTemplate<T>::ArrayReserve, OneParameter(core.IntegerType, "capacity"), core.VoidType, FunctionOptions::None);
   f->ComplexUserData.WriteObject(arrayUserData);
 
-  f = builder.AddBoundFunction(arrayType,
-                               "Resize",
-                               ArrayTemplate<T>::ArrayResize,
-                               OneParameter(core.IntegerType, "size"),
-                               core.VoidType,
-                               FunctionOptions::None);
+  f = builder.AddBoundFunction(arrayType, "Resize", ArrayTemplate<T>::ArrayResize, OneParameter(core.IntegerType, "size"), core.VoidType, FunctionOptions::None);
   f->ComplexUserData.WriteObject(arrayUserData);
 
-  f = builder.AddBoundFunction(arrayType,
-                               "Resize",
-                               ArrayTemplate<T>::ArrayResizeDefault,
-                               TwoParameters(core.IntegerType, "size", containedType, "defaultValue"),
-                               core.VoidType,
-                               FunctionOptions::None);
+  f = builder.AddBoundFunction(arrayType, "Resize", ArrayTemplate<T>::ArrayResizeDefault, TwoParameters(core.IntegerType, "size", containedType, "defaultValue"), core.VoidType, FunctionOptions::None);
   f->ComplexUserData.WriteObject(arrayUserData);
 
-  f = builder.AddBoundFunction(arrayType,
-                               "Push",
-                               ArrayTemplate<T>::ArrayPush,
-                               OneParameter(containedType),
-                               core.VoidType,
-                               FunctionOptions::None);
+  f = builder.AddBoundFunction(arrayType, "Push", ArrayTemplate<T>::ArrayPush, OneParameter(containedType), core.VoidType, FunctionOptions::None);
   f->ComplexUserData.WriteObject(arrayUserData);
 
-  f = builder.AddBoundFunction(
-      arrayType, "Pop", ArrayTemplate<T>::ArrayPop, ParameterArray(), containedType, FunctionOptions::None);
+  f = builder.AddBoundFunction(arrayType, "Pop", ArrayTemplate<T>::ArrayPop, ParameterArray(), containedType, FunctionOptions::None);
   f->ComplexUserData.WriteObject(arrayUserData);
 
-  f = builder.AddBoundFunction(arrayType,
-                               "Insert",
-                               ArrayTemplate<T>::ArrayInsert,
-                               TwoParameters(core.IntegerType, "index", containedType, "value"),
-                               core.VoidType,
-                               FunctionOptions::None);
+  f = builder.AddBoundFunction(arrayType, "Insert", ArrayTemplate<T>::ArrayInsert, TwoParameters(core.IntegerType, "index", containedType, "value"), core.VoidType, FunctionOptions::None);
   f->ComplexUserData.WriteObject(arrayUserData);
 
-  f = builder.AddBoundFunction(arrayType,
-                               "RemoveAt",
-                               ArrayTemplate<T>::ArrayRemoveAt,
-                               OneParameter(core.IntegerType, "index"),
-                               core.VoidType,
-                               FunctionOptions::None);
+  f = builder.AddBoundFunction(arrayType, "RemoveAt", ArrayTemplate<T>::ArrayRemoveAt, OneParameter(core.IntegerType, "index"), core.VoidType, FunctionOptions::None);
   f->ComplexUserData.WriteObject(arrayUserData);
 
-  f = builder.AddBoundFunction(arrayType,
-                               "RemoveFirst",
-                               ArrayTemplate<T>::ArrayRemoveFirst,
-                               OneParameter(containedType, "value"),
-                               core.BooleanType,
-                               FunctionOptions::None);
+  f = builder.AddBoundFunction(arrayType, "RemoveFirst", ArrayTemplate<T>::ArrayRemoveFirst, OneParameter(containedType, "value"), core.BooleanType, FunctionOptions::None);
   f->ComplexUserData.WriteObject(arrayUserData);
 
-  f = builder.AddBoundFunction(arrayType,
-                               "RemoveAll",
-                               ArrayTemplate<T>::ArrayRemoveAll,
-                               OneParameter(containedType, "value"),
-                               core.IntegerType,
-                               FunctionOptions::None);
+  f = builder.AddBoundFunction(arrayType, "RemoveAll", ArrayTemplate<T>::ArrayRemoveAll, OneParameter(containedType, "value"), core.IntegerType, FunctionOptions::None);
   f->ComplexUserData.WriteObject(arrayUserData);
 
-  f = builder.AddBoundFunction(arrayType,
-                               "RemoveSwap",
-                               ArrayTemplate<T>::ArrayRemoveSwap,
-                               OneParameter(core.IntegerType, "index"),
-                               core.VoidType,
-                               FunctionOptions::None);
+  f = builder.AddBoundFunction(arrayType, "RemoveSwap", ArrayTemplate<T>::ArrayRemoveSwap, OneParameter(core.IntegerType, "index"), core.VoidType, FunctionOptions::None);
   f->ComplexUserData.WriteObject(arrayUserData);
 
-  f = builder.AddBoundFunction(arrayType,
-                               "Range",
-                               ArrayTemplate<T>::ArrayRange,
-                               TwoParameters(core.IntegerType, "start", core.IntegerType, "count"),
-                               rangeType,
-                               FunctionOptions::None);
+  f = builder.AddBoundFunction(arrayType, "Range", ArrayTemplate<T>::ArrayRange, TwoParameters(core.IntegerType, "start", core.IntegerType, "count"), rangeType, FunctionOptions::None);
   f->ComplexUserData.WriteObject(arrayUserData);
 
-  f = builder.AddBoundFunction(
-      arrayType, "Copy", ArrayTemplate<T>::ArrayCopy, ParameterArray(), arrayType, FunctionOptions::None);
+  f = builder.AddBoundFunction(arrayType, "Copy", ArrayTemplate<T>::ArrayCopy, ParameterArray(), arrayType, FunctionOptions::None);
   f->ComplexUserData.WriteObject(arrayUserData);
 
-  f = builder.AddBoundFunction(
-      arrayType, "Clear", ArrayTemplate<T>::ArrayClear, ParameterArray(), core.VoidType, FunctionOptions::None);
+  f = builder.AddBoundFunction(arrayType, "Clear", ArrayTemplate<T>::ArrayClear, ParameterArray(), core.VoidType, FunctionOptions::None);
   f->ComplexUserData.WriteObject(arrayUserData);
 
-  f = builder.AddBoundFunction(arrayType,
-                               "FindFirstIndex",
-                               ArrayTemplate<T>::ArrayFindFirstIndex,
-                               OneParameter(containedType, "value"),
-                               core.IntegerType,
-                               FunctionOptions::None);
+  f = builder.AddBoundFunction(arrayType, "FindFirstIndex", ArrayTemplate<T>::ArrayFindFirstIndex, OneParameter(containedType, "value"), core.IntegerType, FunctionOptions::None);
   f->ComplexUserData.WriteObject(arrayUserData);
 
-  DelegateType* binaryCompare =
-      builder.GetDelegateType(TwoParameters(containedType, "left", containedType, "right"), core.BooleanType);
-  f = builder.AddBoundFunction(arrayType,
-                               "Sort",
-                               ArrayTemplate<T>::ArraySortDelegate,
-                               OneParameter(binaryCompare, "compare"),
-                               core.VoidType,
-                               FunctionOptions::None);
+  DelegateType* binaryCompare = builder.GetDelegateType(TwoParameters(containedType, "left", containedType, "right"), core.BooleanType);
+  f = builder.AddBoundFunction(arrayType, "Sort", ArrayTemplate<T>::ArraySortDelegate, OneParameter(binaryCompare, "compare"), core.VoidType, FunctionOptions::None);
   f->ComplexUserData.WriteObject(arrayUserData);
 
-  DelegateType* binaryCompareTo =
-      builder.GetDelegateType(TwoParameters(containedType, "left", containedType, "right"), core.IntegerType);
-  f = builder.AddBoundFunction(arrayType,
-                               "Sort",
-                               ArrayTemplate<T>::ArraySortCompareToDelegate,
-                               OneParameter(binaryCompareTo, "compare"),
-                               core.VoidType,
-                               FunctionOptions::None);
+  DelegateType* binaryCompareTo = builder.GetDelegateType(TwoParameters(containedType, "left", containedType, "right"), core.IntegerType);
+  f = builder.AddBoundFunction(arrayType, "Sort", ArrayTemplate<T>::ArraySortCompareToDelegate, OneParameter(binaryCompareTo, "compare"), core.VoidType, FunctionOptions::None);
   f->ComplexUserData.WriteObject(arrayUserData);
 
-  builder.AddBoundGetterSetter(
-      arrayType, "Count", core.IntegerType, nullptr, ArrayTemplate<T>::ArrayCount, MemberOptions::None);
-  builder.AddBoundGetterSetter(
-      arrayType, "Capacity", core.IntegerType, nullptr, ArrayTemplate<T>::ArrayCapacity, MemberOptions::None);
-  builder.AddBoundGetterSetter(
-      arrayType, "LastIndex", core.IntegerType, nullptr, ArrayTemplate<T>::ArrayLastIndex, MemberOptions::None);
+  builder.AddBoundGetterSetter(arrayType, "Count", core.IntegerType, nullptr, ArrayTemplate<T>::ArrayCount, MemberOptions::None);
+  builder.AddBoundGetterSetter(arrayType, "Capacity", core.IntegerType, nullptr, ArrayTemplate<T>::ArrayCapacity, MemberOptions::None);
+  builder.AddBoundGetterSetter(arrayType, "LastIndex", core.IntegerType, nullptr, ArrayTemplate<T>::ArrayLastIndex, MemberOptions::None);
 
-  p = builder.AddBoundGetterSetter(
-      arrayType, "All", rangeType, nullptr, ArrayTemplate<T>::ArrayAll, MemberOptions::None);
+  p = builder.AddBoundGetterSetter(arrayType, "All", rangeType, nullptr, ArrayTemplate<T>::ArrayAll, MemberOptions::None);
   p->Get->ComplexUserData.WriteObject(arrayUserData);
 
   builder.AddBoundConstructor(rangeType, ArrayRangeTemplate<T>::ArrayRangeConstructor, ParameterArray());
   builder.AddBoundDestructor(rangeType, ArrayRangeTemplate<T>::ArrayRangeDestructor);
 
-  builder.AddBoundFunction(rangeType,
-                           "MoveNext",
-                           ArrayRangeTemplate<T>::ArrayRangeMoveNext,
-                           ParameterArray(),
-                           core.VoidType,
-                           FunctionOptions::None);
-  builder.AddBoundFunction(rangeType,
-                           "Reset",
-                           ArrayRangeTemplate<T>::ArrayRangeReset,
-                           ParameterArray(),
-                           core.VoidType,
-                           FunctionOptions::None);
+  builder.AddBoundFunction(rangeType, "MoveNext", ArrayRangeTemplate<T>::ArrayRangeMoveNext, ParameterArray(), core.VoidType, FunctionOptions::None);
+  builder.AddBoundFunction(rangeType, "Reset", ArrayRangeTemplate<T>::ArrayRangeReset, ParameterArray(), core.VoidType, FunctionOptions::None);
 
-  p = builder.AddBoundGetterSetter(
-      rangeType, "Current", containedType, nullptr, ArrayRangeTemplate<T>::ArrayRangeCurrent, MemberOptions::None);
+  p = builder.AddBoundGetterSetter(rangeType, "Current", containedType, nullptr, ArrayRangeTemplate<T>::ArrayRangeCurrent, MemberOptions::None);
   p->Get->ComplexUserData.WriteObject(arrayUserData);
 
-  builder.AddBoundGetterSetter(
-      rangeType, "IsEmpty", core.BooleanType, nullptr, ArrayRangeTemplate<T>::ArrayRangeIsEmpty, MemberOptions::None);
-  builder.AddBoundGetterSetter(rangeType,
-                               "IsNotEmpty",
-                               core.BooleanType,
-                               nullptr,
-                               ArrayRangeTemplate<T>::ArrayRangeIsNotEmpty,
-                               MemberOptions::None);
-  builder.AddBoundGetterSetter(
-      rangeType, "All", rangeType, nullptr, ArrayRangeTemplate<T>::ArrayRangeAll, MemberOptions::None);
+  builder.AddBoundGetterSetter(rangeType, "IsEmpty", core.BooleanType, nullptr, ArrayRangeTemplate<T>::ArrayRangeIsEmpty, MemberOptions::None);
+  builder.AddBoundGetterSetter(rangeType, "IsNotEmpty", core.BooleanType, nullptr, ArrayRangeTemplate<T>::ArrayRangeIsNotEmpty, MemberOptions::None);
+  builder.AddBoundGetterSetter(rangeType, "All", rangeType, nullptr, ArrayRangeTemplate<T>::ArrayRangeAll, MemberOptions::None);
 
   // Return the array type we instantiated
   return arrayType;
 }
 
-BoundType* InstantiateArray(LibraryBuilder& builder,
-                            StringParam baseName,
-                            StringParam fullyQualifiedName,
-                            const Array<Constant>& templateTypes,
-                            const void* userData)
+BoundType* InstantiateArray(LibraryBuilder& builder, StringParam baseName, StringParam fullyQualifiedName, const Array<Constant>& templateTypes, const void* userData)
 {
   // Get the type our array is containing
   Type* containedType = templateTypes.Front().TypeValue;

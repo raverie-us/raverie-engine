@@ -166,17 +166,11 @@ void CreateTeeter(Space* space, Vec3Param pos, Vec3Param size, uint levels, uint
 
   // Create base
   Vec3 halfSize = size * 0.5f;
-  Cog* cog = CreateFromArchetype(
-      queue, space, CoreArchetypes::Cube, Vec3(0, halfSize.y, 0) + pos, orientation, Vec3(size.x, size.y, size.x));
+  Cog* cog = CreateFromArchetype(queue, space, CoreArchetypes::Cube, Vec3(0, halfSize.y, 0) + pos, orientation, Vec3(size.x, size.y, size.x));
   cog->ClearArchetype();
   cog->AttachTo(root);
 
-  cog = CreateFromArchetype(queue,
-                            space,
-                            CoreArchetypes::Cube,
-                            Vec3(0, size.y + halfSize.x, 0) + pos,
-                            orientation,
-                            Vec3(size.y * 2, size.x, size.x));
+  cog = CreateFromArchetype(queue, space, CoreArchetypes::Cube, Vec3(0, size.y + halfSize.x, 0) + pos, orientation, Vec3(size.y * 2, size.x, size.x));
   cog->ClearArchetype();
   cog->AttachTo(root);
 
@@ -184,24 +178,14 @@ void CreateTeeter(Space* space, Vec3Param pos, Vec3Param size, uint levels, uint
 
   for (uint i = 0; i < levels; ++i)
   {
-    cog = CreateFromArchetype(queue,
-                              space,
-                              CoreArchetypes::Cube,
-                              Vec3(-size.y + halfSize.z, newGround + halfSize.z + size.z * float(i), 0) + pos,
-                              orientation,
-                              Vec3(size.z, size.z, size.z));
+    cog = CreateFromArchetype(queue, space, CoreArchetypes::Cube, Vec3(-size.y + halfSize.z, newGround + halfSize.z + size.z * float(i), 0) + pos, orientation, Vec3(size.z, size.z, size.z));
     cog->ClearArchetype();
     cog->AttachTo(root);
   }
 
   float big = size.z * float(levels);
 
-  cog = CreateFromArchetype(queue,
-                            space,
-                            CoreArchetypes::Cube,
-                            Vec3(size.y + -halfSize.z, newGround + big * 0.5f, 0) + pos,
-                            orientation,
-                            Vec3(size.z, big, size.z));
+  cog = CreateFromArchetype(queue, space, CoreArchetypes::Cube, Vec3(size.y + -halfSize.z, newGround + big * 0.5f, 0) + pos, orientation, Vec3(size.z, big, size.z));
   cog->ClearArchetype();
   cog->AttachTo(root);
 
@@ -230,8 +214,7 @@ void CreateTower(Space* space, Vec3Param pos, Vec3Param size, uint levels, uint 
       for (uint depth = 0; depth < width; ++depth)
       {
         float z = (float)depth * size.x;
-        Cog* cog = CreateFromArchetype(
-            queue, space, CoreArchetypes::Cube, Vec3(x, y, z) + pos, orientation, Vec3(size.x, size.x, size.x));
+        Cog* cog = CreateFromArchetype(queue, space, CoreArchetypes::Cube, Vec3(x, y, z) + pos, orientation, Vec3(size.x, size.x, size.x));
         cog->ClearArchetype();
         cog->AttachTo(root);
       }
@@ -333,8 +316,7 @@ void BindCreationCommands(Cog* configCog, CommandManager* commands)
   commands->AddCommand("CreateTransform", new EditorCreateObjectCommand(CoreArchetypes::Transform));
   commands->AddCommand("CreateCamera", new EditorCreateObjectCommand(CoreArchetypes::Camera));
   commands->AddCommand("CreateDirectionalLight", new EditorCreateObjectCommand(CoreArchetypes::DirectionalLight));
-  commands->AddCommand("CreateDirectionalLightShadows",
-                       new EditorCreateObjectCommand(CoreArchetypes::DirectionalLightShadows));
+  commands->AddCommand("CreateDirectionalLightShadows", new EditorCreateObjectCommand(CoreArchetypes::DirectionalLightShadows));
   commands->AddCommand("CreatePointLight", new EditorCreateObjectCommand(CoreArchetypes::PointLight));
   commands->AddCommand("CreateSpotLight", new EditorCreateObjectCommand(CoreArchetypes::SpotLight));
   commands->AddCommand("CreateSpotLightShadows", new EditorCreateObjectCommand(CoreArchetypes::SpotLightShadows));
@@ -347,8 +329,7 @@ void BindCreationCommands(Cog* configCog, CommandManager* commands)
   commands->AddCommand("CreateSpriteText", new EditorCreateObjectCommand(CoreArchetypes::SpriteText));
   commands->AddCommand("CreateSpriteParticles", new EditorCreateObjectCommand(CoreArchetypes::SpriteParticles));
   commands->AddCommand("CreateSpline", new EditorCreateObjectCommand(CoreArchetypes::Spline));
-  commands->AddCommand("CreateSplineParticleSystem",
-                       new EditorCreateObjectCommand(CoreArchetypes::SplineParticleSystem));
+  commands->AddCommand("CreateSplineParticleSystem", new EditorCreateObjectCommand(CoreArchetypes::SplineParticleSystem));
 
   commands->AddCommand("CreateGrid", new EditorCreateObjectCommand(CoreArchetypes::Grid));
 

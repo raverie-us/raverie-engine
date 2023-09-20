@@ -30,14 +30,7 @@ RaverieDefineType(GjkDebug, builder, type)
   RaverieBindMethodProperty(ToggleAnimation);
 }
 
-GjkDebug::GjkDebug(void) :
-    mShowCSO(true),
-    mSubdivisions(24.0f),
-    mOpacityCSO(50.0f),
-    mOpacitySimplex(50.0f),
-    mAnimate(false),
-    mMaxExpands(20),
-    mDt(1.0)
+GjkDebug::GjkDebug(void) : mShowCSO(true), mSubdivisions(24.0f), mOpacityCSO(50.0f), mOpacitySimplex(50.0f), mAnimate(false), mMaxExpands(20), mDt(1.0)
 {
 }
 
@@ -166,9 +159,7 @@ void GjkDebug::DebugDraw(void)
     gDebugDraw->Add(Debug::Sphere(manifold.Points[0].Points[0], 0.01f).Color(Color::Red).OnTop(true));
     gDebugDraw->Add(Debug::Sphere(manifold.Points[0].Points[1], 0.01f).Color(Color::Red).OnTop(true));
 
-    gDebugDraw->Add(Debug::Line(manifold.Points[0].Points[0], manifold.Points[0].Points[0] + manifold.Normal)
-                        .Color(Color::Red)
-                        .OnTop(true));
+    gDebugDraw->Add(Debug::Line(manifold.Points[0].Points[0], manifold.Points[0].Points[0] + manifold.Normal).Color(Color::Red).OnTop(true));
   }
   else
   {
@@ -187,28 +178,13 @@ void GjkDebug::DebugDraw(void)
       gDebugDraw->Add(Debug::Line(points[0].cso, points[1].cso).Color(simplexColor));
       break;
     case 3:
-      gDebugDraw->Add(Debug::Triangle(points[0].cso, points[1].cso, points[2].cso)
-                          .Color(simplexColor)
-                          .Border(true)
-                          .Alpha((unsigned)mOpacitySimplex));
+      gDebugDraw->Add(Debug::Triangle(points[0].cso, points[1].cso, points[2].cso).Color(simplexColor).Border(true).Alpha((unsigned)mOpacitySimplex));
       break;
     case 4:
-      gDebugDraw->Add(Debug::Triangle(points[0].cso, points[1].cso, points[2].cso)
-                          .Color(simplexColor)
-                          .Border(true)
-                          .Alpha((unsigned)mOpacitySimplex));
-      gDebugDraw->Add(Debug::Triangle(points[0].cso, points[2].cso, points[3].cso)
-                          .Color(simplexColor)
-                          .Border(true)
-                          .Alpha((unsigned)mOpacitySimplex));
-      gDebugDraw->Add(Debug::Triangle(points[0].cso, points[3].cso, points[1].cso)
-                          .Color(simplexColor)
-                          .Border(true)
-                          .Alpha((unsigned)mOpacitySimplex));
-      gDebugDraw->Add(Debug::Triangle(points[1].cso, points[2].cso, points[3].cso)
-                          .Color(simplexColor)
-                          .Border(true)
-                          .Alpha((unsigned)mOpacitySimplex));
+      gDebugDraw->Add(Debug::Triangle(points[0].cso, points[1].cso, points[2].cso).Color(simplexColor).Border(true).Alpha((unsigned)mOpacitySimplex));
+      gDebugDraw->Add(Debug::Triangle(points[0].cso, points[2].cso, points[3].cso).Color(simplexColor).Border(true).Alpha((unsigned)mOpacitySimplex));
+      gDebugDraw->Add(Debug::Triangle(points[0].cso, points[3].cso, points[1].cso).Color(simplexColor).Border(true).Alpha((unsigned)mOpacitySimplex));
+      gDebugDraw->Add(Debug::Triangle(points[1].cso, points[2].cso, points[3].cso).Color(simplexColor).Border(true).Alpha((unsigned)mOpacitySimplex));
       break;
     }
   }

@@ -17,24 +17,14 @@ namespace Raverie
 
 /// Adds a net property info (specified by component type and property name) to
 /// the given net object
-void AddNetPropertyInfo(OperationQueue* queue,
-                        NetObject* netObject,
-                        BoundType* componentType,
-                        StringParam propertyName);
+void AddNetPropertyInfo(OperationQueue* queue, NetObject* netObject, BoundType* componentType, StringParam propertyName);
 
 /// Removes a net property info (specified by component type and property name)
 /// from the given net object
-void RemoveNetPropertyInfo(OperationQueue* queue,
-                           NetObject* netObject,
-                           BoundType* componentType,
-                           StringParam propertyName);
+void RemoveNetPropertyInfo(OperationQueue* queue, NetObject* netObject, BoundType* componentType, StringParam propertyName);
 
 /// Sets a net property info's net channel config resource
-void SetNetPropertyInfoChannel(OperationQueue* queue,
-                               NetObject* netObject,
-                               BoundType* componentType,
-                               StringParam propertyName,
-                               NetChannelConfig* netChannelConfig);
+void SetNetPropertyInfoChannel(OperationQueue* queue, NetObject* netObject, BoundType* componentType, StringParam propertyName, NetChannelConfig* netChannelConfig);
 
 //                      AddRemoveNetPropertyInfoOperation //
 
@@ -48,10 +38,7 @@ class AddRemoveNetPropertyInfoOperation : public Operation
 {
 public:
   /// Constructor
-  AddRemoveNetPropertyInfoOperation(NetObject* netObject,
-                                    BoundType* componentType,
-                                    StringParam propertyName,
-                                    NetPropertyInfoAction::Enum action);
+  AddRemoveNetPropertyInfoOperation(NetObject* netObject, BoundType* componentType, StringParam propertyName, NetPropertyInfoAction::Enum action);
 
   //
   // Operation Interface
@@ -85,10 +72,7 @@ class SetNetPropertyInfoChannelOperation : public Operation
 {
 public:
   /// Constructor
-  SetNetPropertyInfoChannelOperation(NetObject* netObject,
-                                     BoundType* componentType,
-                                     StringParam propertyName,
-                                     NetChannelConfig* netChannelConfig);
+  SetNetPropertyInfoChannelOperation(NetObject* netObject, BoundType* componentType, StringParam propertyName, NetChannelConfig* netChannelConfig);
 
   //
   // Operation Interface

@@ -184,9 +184,7 @@ void BroadPhasePackage::CastRay(Vec3Param startPos, Vec3Param direction, ProxyCa
 {
   CastData rayData(startPos, direction);
   BaseCastFilter& filter = results.Filter;
-  const bool ignoreDynamic = filter.IsSet(BaseCastFilterFlags::IgnoreDynamic) &&
-                             filter.IsSet(BaseCastFilterFlags::IgnoreKinematic) &&
-                             filter.IsSet(BaseCastFilterFlags::IgnoreStatic);
+  const bool ignoreDynamic = filter.IsSet(BaseCastFilterFlags::IgnoreDynamic) && filter.IsSet(BaseCastFilterFlags::IgnoreKinematic) && filter.IsSet(BaseCastFilterFlags::IgnoreStatic);
   const bool ignoreStatic = filter.IsSet(BaseCastFilterFlags::IgnoreStatic);
 
   // If we aren't refining the ray, simply cast into both.
@@ -238,9 +236,7 @@ void BroadPhasePackage::CastSegment(Vec3Param startPos, Vec3Param endPos, ProxyC
   CastData data(startPos, endPos);
 
   BaseCastFilter& filter = results.Filter;
-  const bool ignoreDynamic = filter.IsSet(BaseCastFilterFlags::IgnoreDynamic) &&
-                             filter.IsSet(BaseCastFilterFlags::IgnoreKinematic) &&
-                             filter.IsSet(BaseCastFilterFlags::IgnoreStatic);
+  const bool ignoreDynamic = filter.IsSet(BaseCastFilterFlags::IgnoreDynamic) && filter.IsSet(BaseCastFilterFlags::IgnoreKinematic) && filter.IsSet(BaseCastFilterFlags::IgnoreStatic);
 
   // Cast into the dynamic objects.
   if (!ignoreDynamic)
@@ -260,9 +256,7 @@ void BroadPhasePackage::CastAabb(const Aabb& aabb, ProxyCastResults& results)
   CastData data(aabb);
 
   BaseCastFilter& filter = results.Filter;
-  const bool ignoreDynamic = filter.IsSet(BaseCastFilterFlags::IgnoreDynamic) &&
-                             filter.IsSet(BaseCastFilterFlags::IgnoreKinematic) &&
-                             filter.IsSet(BaseCastFilterFlags::IgnoreStatic);
+  const bool ignoreDynamic = filter.IsSet(BaseCastFilterFlags::IgnoreDynamic) && filter.IsSet(BaseCastFilterFlags::IgnoreKinematic) && filter.IsSet(BaseCastFilterFlags::IgnoreStatic);
 
   // Cast into the dynamic objects.
   if (!ignoreDynamic)
@@ -282,9 +276,7 @@ void BroadPhasePackage::CastSphere(const Sphere& sphere, ProxyCastResults& resul
   CastData data(sphere);
 
   BaseCastFilter& filter = results.Filter;
-  const bool ignoreDynamic = filter.IsSet(BaseCastFilterFlags::IgnoreDynamic) &&
-                             filter.IsSet(BaseCastFilterFlags::IgnoreKinematic) &&
-                             filter.IsSet(BaseCastFilterFlags::IgnoreStatic);
+  const bool ignoreDynamic = filter.IsSet(BaseCastFilterFlags::IgnoreDynamic) && filter.IsSet(BaseCastFilterFlags::IgnoreKinematic) && filter.IsSet(BaseCastFilterFlags::IgnoreStatic);
 
   // Cast into the dynamic objects.
   if (!ignoreDynamic)
@@ -304,9 +296,7 @@ void BroadPhasePackage::CastFrustum(const Frustum& frustum, ProxyCastResults& re
   CastData data(frustum);
 
   BaseCastFilter& filter = results.Filter;
-  const bool ignoreDynamic = filter.IsSet(BaseCastFilterFlags::IgnoreDynamic) &&
-                             filter.IsSet(BaseCastFilterFlags::IgnoreKinematic) &&
-                             filter.IsSet(BaseCastFilterFlags::IgnoreStatic);
+  const bool ignoreDynamic = filter.IsSet(BaseCastFilterFlags::IgnoreDynamic) && filter.IsSet(BaseCastFilterFlags::IgnoreKinematic) && filter.IsSet(BaseCastFilterFlags::IgnoreStatic);
 
   // Cast into the dynamic objects.
   if (!ignoreDynamic)
@@ -321,10 +311,7 @@ void BroadPhasePackage::CastFrustum(const Frustum& frustum, ProxyCastResults& re
   }
 }
 
-void BroadPhasePackage::CastIntoBroadphase(uint broadPhaseType,
-                                           CastDataParam data,
-                                           ProxyCastResults& results,
-                                           CastFunction func)
+void BroadPhasePackage::CastIntoBroadphase(uint broadPhaseType, CastDataParam data, ProxyCastResults& results, CastFunction func)
 {
   (mBroadPhases[broadPhaseType]->*func)(data, results);
 }

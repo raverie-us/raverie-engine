@@ -138,10 +138,7 @@ Cog* RestoreLink(CogId* id, CogCreationContext* context, Component* component, S
     {
       BoundType* componentType = RaverieVirtualTypeId(component);
       Property* metaProperty = componentType->GetProperty(propertyName);
-      ErrorIf(metaProperty == nullptr,
-              String::Format(
-                  "Property '%s' doesn't exist on component '%s'", propertyName.c_str(), componentType->Name.c_str())
-                  .c_str());
+      ErrorIf(metaProperty == nullptr, String::Format("Property '%s' doesn't exist on component '%s'", propertyName.c_str(), componentType->Name.c_str()).c_str());
       if (metaProperty && metaProperty->HasAttribute(PropertyAttributes::cLocalModificationOverride))
         r0 = context->mContextIdMap.Find(id->Id);
     }
@@ -163,8 +160,7 @@ Cog* RestoreLink(CogId* id, CogCreationContext* context, Component* component, S
       if (component)
       {
         String componentName = component->GetDescription();
-        errorMessage = String::Format(
-            "Failed to restore direct id link '%s for property %s'", componentName.c_str(), propertyName.c_str());
+        errorMessage = String::Format("Failed to restore direct id link '%s for property %s'", componentName.c_str(), propertyName.c_str());
       }
       else if (!propertyName.Empty())
       {

@@ -297,9 +297,7 @@ void Download(StringParam fileName, const ByteBufferBlock& binaryData)
 
 void Download(StringParam filePath)
 {
-  Download(FilePath::GetFileNameWithoutExtension(filePath),
-           FilePath::GetDirectoryPath(filePath),
-           Array<String>(RaverieInit, filePath));
+  Download(FilePath::GetFileNameWithoutExtension(filePath), FilePath::GetDirectoryPath(filePath), Array<String>(RaverieInit, filePath));
 }
 
 void Download(StringParam suggestedNameWithoutExtension, StringParam workingDirectory, const Array<String>& filePaths)
@@ -325,8 +323,7 @@ void Download(StringParam suggestedNameWithoutExtension, StringParam workingDire
       String normalized = FilePath::Normalize(filePath);
       if (normalized.StartsWith(workingDirectoryNormalized))
       {
-        String relativePath =
-            normalized.SubStringFromByteIndices(workingDirectoryNormalized.SizeInBytes(), normalized.SizeInBytes());
+        String relativePath = normalized.SubStringFromByteIndices(workingDirectoryNormalized.SizeInBytes(), normalized.SizeInBytes());
 
         if (FileExists(filePath))
         {

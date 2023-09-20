@@ -223,13 +223,7 @@ bool PeerLink::Disconnect(const BitStream& extraData)
   return true;
 }
 
-MessageReceiptId PeerLink::Send(Status& status,
-                                const Message& message,
-                                bool reliable,
-                                MessageChannelId channelId,
-                                bool receipt,
-                                MessagePriority priority,
-                                TimeMs lifetime)
+MessageReceiptId PeerLink::Send(Status& status, const Message& message, bool reliable, MessageChannelId channelId, bool receipt, MessagePriority priority, TimeMs lifetime)
 {
   // Relative message type outside of user range?
   if (message.GetType() >= GetUserMessageTypeCount())
@@ -248,13 +242,7 @@ MessageReceiptId PeerLink::Send(Status& status,
   // Send message
   return SendInternal(status, RaverieMove(messageCopy), reliable, channelId, receipt, priority, lifetime, false);
 }
-MessageReceiptId PeerLink::Send(Status& status,
-                                MoveReference<Message> message,
-                                bool reliable,
-                                MessageChannelId channelId,
-                                bool receipt,
-                                MessagePriority priority,
-                                TimeMs lifetime)
+MessageReceiptId PeerLink::Send(Status& status, MoveReference<Message> message, bool reliable, MessageChannelId channelId, bool receipt, MessagePriority priority, TimeMs lifetime)
 {
   // Relative message type outside of user range?
   if (message->GetType() >= GetUserMessageTypeCount())
@@ -475,8 +463,7 @@ void PeerLink::SetSendRate(uint sendRate)
   // TODO: Update this after implementing AIMD
   // Separate this out into OutgoingBandwidth AND OutgoingDataBandwidth (for
   // messages) Update outgoing bandwidth
-  SetOutgoingBandwidth((double(GetSendRate()) * double(BYTES_TO_BITS(GetPacketDataBytes()) + MaxPacketHeaderBits)) /
-                       double(1000));
+  SetOutgoingBandwidth((double(GetSendRate()) * double(BYTES_TO_BITS(GetPacketDataBytes()) + MaxPacketHeaderBits)) / double(1000));
 }
 uint PeerLink::GetSendRate() const
 {
@@ -490,8 +477,7 @@ void PeerLink::SetPacketDataBytes(Bytes packetDataBytes)
   // TODO: Update this after implementing AIMD
   // Separate this out into OutgoingBandwidth AND OutgoingDataBandwidth (for
   // messages) Update outgoing bandwidth
-  SetOutgoingBandwidth((double(GetSendRate()) * double(BYTES_TO_BITS(GetPacketDataBytes()) + MaxPacketHeaderBits)) /
-                       double(1000));
+  SetOutgoingBandwidth((double(GetSendRate()) * double(BYTES_TO_BITS(GetPacketDataBytes()) + MaxPacketHeaderBits)) / double(1000));
 }
 Bytes PeerLink::GetPacketDataBytes() const
 {
@@ -692,8 +678,7 @@ void PeerLink::ResetStats()
   // TODO: Update this after implementing AIMD
   // Separate this out into OutgoingBandwidth AND OutgoingDataBandwidth (for
   // messages) Update outgoing bandwidth
-  SetOutgoingBandwidth((double(GetSendRate()) * double(BYTES_TO_BITS(GetPacketDataBytes()) + MaxPacketHeaderBits)) /
-                       double(1000));
+  SetOutgoingBandwidth((double(GetSendRate()) * double(BYTES_TO_BITS(GetPacketDataBytes()) + MaxPacketHeaderBits)) / double(1000));
 }
 
 void PeerLink::InitializeStats()
@@ -727,17 +712,10 @@ void PeerLink::UpdateRoundTripTime(TimeMs sample, TimeMs floor)
   mInternalRoundTripTimeMax = std::max(std::max(mInternalRoundTripTimeMax, sample), floor);
 }
 
-MessageReceiptId PeerLink::SendInternal(Status& status,
-                                        MoveReference<Message> message,
-                                        bool reliable,
-                                        MessageChannelId channelId,
-                                        bool receipt,
-                                        MessagePriority priority,
-                                        TimeMs lifetime,
-                                        bool isProtocol)
+MessageReceiptId
+PeerLink::SendInternal(Status& status, MoveReference<Message> message, bool reliable, MessageChannelId channelId, bool receipt, MessagePriority priority, TimeMs lifetime, bool isProtocol)
 {
-  MessageReceiptId receiptId =
-      mOutbox.PushMessage(status, RaverieMove(message), reliable, channelId, receipt, priority, lifetime, isProtocol);
+  MessageReceiptId receiptId = mOutbox.PushMessage(status, RaverieMove(message), reliable, channelId, receipt, priority, lifetime, isProtocol);
   Assert(isProtocol ? status.Succeeded() : true); // (All protocol sends should succeed)
   Assert(receipt ? receiptId : true);             // (All receipted messages should be given
                                                   // a non-zero receipt ID)
@@ -809,8 +787,7 @@ void PeerLink::ReceivePacket(MoveReference<InPacket> inPacket)
   // Update Stats
   UpdatePacketsReceived();
   TimeMs lastReceiveDuration = std::max(mInbox.GetLastReceiveDuration(), TimeMs(1));
-  UpdateIncomingBandwidthUsage((double(inPacket->GetTotalBits()) / double(1000)) *
-                               (double(cOneSecondTimeMs) / double(lastReceiveDuration)));
+  UpdateIncomingBandwidthUsage((double(inPacket->GetTotalBits()) / double(1000)) * (double(cOneSecondTimeMs) / double(lastReceiveDuration)));
   UpdateReceiveRate(uint(cOneSecondTimeMs / lastReceiveDuration));
   UpdateReceivedPacketBytes(BITS_TO_BYTES(inPacket->GetTotalBits()));
 
@@ -833,8 +810,7 @@ void PeerLink::SendPacket(OutPacket& outPacket)
   // Update Stats
   UpdatePacketsSent();
   TimeMs lastSendDuration = std::max(mOutbox.GetLastSendDuration(), TimeMs(1));
-  UpdateOutgoingBandwidthUsage((double(outPacketBits) / double(1000)) *
-                               (double(cOneSecondTimeMs) / double(lastSendDuration)));
+  UpdateOutgoingBandwidthUsage((double(outPacketBits) / double(1000)) * (double(cOneSecondTimeMs) / double(lastSendDuration)));
   UpdateSendRate(uint(cOneSecondTimeMs / lastSendDuration));
   UpdateSentPacketBytes(BITS_TO_BYTES(outPacketBits));
 
@@ -937,8 +913,7 @@ UpdateLinkState:
       if (message.GetType() == ProtocolMessageType::ConnectRequest)
       {
         // Connection limit has not been reached?
-        if ((GetPeer()->GetLinkCount(LinkStatus::Connected) +
-             GetPeer()->GetLinkCount(LinkStatus::AttemptingConnection)) < GetPeer()->GetConnectionLimit())
+        if ((GetPeer()->GetLinkCount(LinkStatus::Connected) + GetPeer()->GetLinkCount(LinkStatus::AttemptingConnection)) < GetPeer()->GetConnectionLimit())
         {
           // Read connect request message
           ConnectRequestData connectRequestData;
@@ -1213,9 +1188,7 @@ UpdateLinkState:
         Message connectResponseMessage(ProtocolMessageType::ConnectResponse);
 
         ConnectResponseData connectResponseData;
-        connectResponseData.mIpAddress = GetInternetProtocol() == InternetProtocol::V4
-                                             ? GetPeer()->GetLocalIpv4Address()
-                                             : GetPeer()->GetLocalIpv6Address();
+        connectResponseData.mIpAddress = GetInternetProtocol() == InternetProtocol::V4 ? GetPeer()->GetLocalIpv4Address() : GetPeer()->GetLocalIpv6Address();
         connectResponseData.mTimestamp = now;
         connectResponseData.mConnectResponse = ConnectResponse::DenyTimeout;
 
@@ -1272,8 +1245,7 @@ UpdateLinkState:
       ConnectResponseData connectResponseData;
       connectResponseData.mIpAddress = GetTheirIpAddress();
       connectResponseData.mTimestamp = now;
-      connectResponseData.mConnectResponse =
-          (response == UserConnectResponse::Accept) ? ConnectResponse::Accept : ConnectResponse::Deny;
+      connectResponseData.mConnectResponse = (response == UserConnectResponse::Accept) ? ConnectResponse::Accept : ConnectResponse::Deny;
       connectResponseData.mExtraData = extraData;
 
       connectResponseMessage.GetData().Write(connectResponseData);
@@ -1310,8 +1282,7 @@ UpdateLinkState:
     // Else, Disconnect requested or (RTT/2) * ConnectAttemptFactor has elapsed?
     if (mState == LinkState::ReceivedConnectRequest)
     {
-      if (mDisconnectRequested ||
-          GetStateDuration() > ((GetAvgInternalRoundTripTime() / 2) * GetConnectAttemptFactor()))
+      if (mDisconnectRequested || GetStateDuration() > ((GetAvgInternalRoundTripTime() / 2) * GetConnectAttemptFactor()))
       {
         // Change link state
         SetState(LinkState::Disconnected);
@@ -1657,8 +1628,7 @@ bool PeerLink::AttemptPluginMessageReceive(MoveReference<Message> message, bool&
   return false;
 }
 
-void PeerLink::LinkEventConnectRequested(TransmissionDirection::Enum direction,
-                                         const ConnectRequestData& connectRequestData)
+void PeerLink::LinkEventConnectRequested(TransmissionDirection::Enum direction, const ConnectRequestData& connectRequestData)
 {
   // Create connect requested event message
   Message connectRequestedMessage(LinkEventMessageType::ConnectRequested);
@@ -1672,8 +1642,7 @@ void PeerLink::LinkEventConnectRequested(TransmissionDirection::Enum direction,
   // Push connect requested event message
   PushUserEventMessage(RaverieMove(connectRequestedMessage));
 }
-void PeerLink::LinkEventConnectResponded(TransmissionDirection::Enum direction,
-                                         const ConnectResponseData& connectResponseData)
+void PeerLink::LinkEventConnectResponded(TransmissionDirection::Enum direction, const ConnectResponseData& connectResponseData)
 {
   // Create connect responded event message
   Message connectRespondedMessage(LinkEventMessageType::ConnectResponded);
@@ -1687,8 +1656,7 @@ void PeerLink::LinkEventConnectResponded(TransmissionDirection::Enum direction,
   // Push connect responded event message
   PushUserEventMessage(RaverieMove(connectRespondedMessage));
 }
-void PeerLink::LinkEventDisconnectNoticed(TransmissionDirection::Enum direction,
-                                          const DisconnectNoticeData& disconnectNoticeData)
+void PeerLink::LinkEventDisconnectNoticed(TransmissionDirection::Enum direction, const DisconnectNoticeData& disconnectNoticeData)
 {
   // Create disconnect noticed event message
   Message disconnectNoticedMessage(LinkEventMessageType::DisconnectNoticed);
@@ -1832,13 +1800,7 @@ PeerLink* LinkPlugin::GetLink() const
   return mLink;
 }
 
-MessageReceiptId LinkPlugin::Send(Status& status,
-                                  const Message& message,
-                                  bool reliable,
-                                  MessageChannelId channelId,
-                                  bool receipt,
-                                  MessagePriority priority,
-                                  TimeMs lifetime)
+MessageReceiptId LinkPlugin::Send(Status& status, const Message& message, bool reliable, MessageChannelId channelId, bool receipt, MessagePriority priority, TimeMs lifetime)
 {
   // Plugin not initialized?
   if (!IsInitialized())
@@ -1865,13 +1827,7 @@ MessageReceiptId LinkPlugin::Send(Status& status,
   // Send message
   return mLink->SendInternal(status, RaverieMove(messageCopy), reliable, channelId, receipt, priority, lifetime, false);
 }
-MessageReceiptId LinkPlugin::Send(Status& status,
-                                  MoveReference<Message> message,
-                                  bool reliable,
-                                  MessageChannelId channelId,
-                                  bool receipt,
-                                  MessagePriority priority,
-                                  TimeMs lifetime)
+MessageReceiptId LinkPlugin::Send(Status& status, MoveReference<Message> message, bool reliable, MessageChannelId channelId, bool receipt, MessagePriority priority, TimeMs lifetime)
 {
   // Plugin not initialized?
   if (!IsInitialized())
@@ -1896,11 +1852,7 @@ MessageReceiptId LinkPlugin::Send(Status& status,
   return mLink->SendInternal(status, RaverieMove(message), reliable, channelId, receipt, priority, lifetime, false);
 }
 
-LinkPlugin::LinkPlugin(size_t messageTypeCount) :
-    mName(),
-    mLink(nullptr),
-    mMessageTypeStart(0),
-    mMessageTypeCount(MessageType(messageTypeCount))
+LinkPlugin::LinkPlugin(size_t messageTypeCount) : mName(), mLink(nullptr), mMessageTypeStart(0), mMessageTypeCount(MessageType(messageTypeCount))
 {
 }
 

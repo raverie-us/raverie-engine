@@ -378,13 +378,11 @@ private:
       if (mNodes[i] != nullptr)
       {
         size_t childLeftIndex = 2 * i;
-        if (childLeftIndex < mNodes.Size() && mNodes[childLeftIndex] != nullptr &&
-            HasHigherPriority(mNodes[childLeftIndex], mNodes[i]))
+        if (childLeftIndex < mNodes.Size() && mNodes[childLeftIndex] != nullptr && HasHigherPriority(mNodes[childLeftIndex], mNodes[i]))
           return false;
 
         size_t childRightIndex = childLeftIndex + 1;
-        if (childRightIndex < mNodes.Size() && mNodes[childRightIndex] != nullptr &&
-            HasHigherPriority(mNodes[childRightIndex], mNodes[i]))
+        if (childRightIndex < mNodes.Size() && mNodes[childRightIndex] != nullptr && HasHigherPriority(mNodes[childRightIndex], mNodes[i]))
           return false;
       }
     }

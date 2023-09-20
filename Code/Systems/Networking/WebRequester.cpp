@@ -446,12 +446,7 @@ RaverieDefineType(WebResponseEvent, builder, type)
   RaverieBindFieldGetterProperty(mError);
 }
 
-WebResponseEvent::WebResponseEvent() :
-    mResponseCode(WebResponseCode::NoServerResponse),
-    mTotalDownloaded(0),
-    mTotalExpected(0),
-    mProgress(0.0f),
-    mProgressType(ProgressType::None)
+WebResponseEvent::WebResponseEvent() : mResponseCode(WebResponseCode::NoServerResponse), mTotalDownloaded(0), mTotalExpected(0), mProgress(0.0f), mProgressType(ProgressType::None)
 {
 }
 

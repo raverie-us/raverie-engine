@@ -80,10 +80,7 @@ public:
   void SendMicCompressedData(const HandleOf<ArrayClass<byte>>& audioData);
 
 private:
-  bool GetOutputSamples(BufferType* outputBuffer,
-                        const unsigned numberOfChannels,
-                        ListenerNode* listener,
-                        const bool firstRequest) override;
+  bool GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest) override;
 
   class SampleBuffer
   {

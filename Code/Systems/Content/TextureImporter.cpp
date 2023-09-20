@@ -2,11 +2,11 @@
 
 #include "Precompiled.hpp"
 
-#define ReturnStatusIf(condition, string)                                                                              \
-  if ((condition))                                                                                                     \
-  {                                                                                                                    \
-    status.SetFailed((string));                                                                                        \
-    return;                                                                                                            \
+#define ReturnStatusIf(condition, string)                                                                                                                                                              \
+  if ((condition))                                                                                                                                                                                     \
+  {                                                                                                                                                                                                    \
+    status.SetFailed((string));                                                                                                                                                                        \
+    return;                                                                                                                                                                                            \
   }
 
 namespace Raverie
@@ -31,13 +31,7 @@ T* GetPixelClamped(T* image, int width, int height, uint numChannels, int x, int
 }
 
 template <typename T, unsigned Channels>
-void ResizeImage(const byte* srcImage,
-                 uint srcWidth,
-                 uint srcHeight,
-                 byte* dstImage,
-                 uint dstWidth,
-                 uint dstHeight,
-                 void (*ClampFunc)(float&))
+void ResizeImage(const byte* srcImage, uint srcWidth, uint srcHeight, byte* dstImage, uint dstWidth, uint dstHeight, void (*ClampFunc)(float&))
 {
   T* src = (T*)srcImage;
   T* dst = (T*)dstImage;
@@ -88,13 +82,7 @@ void ShortClamp(float& value)
   value = Math::Clamp(value, 0.0f, 65535.0f);
 }
 
-void ResizeImage(TextureFormat::Enum format,
-                 const byte* srcImage,
-                 uint srcWidth,
-                 uint srcHeight,
-                 byte* dstImage,
-                 uint dstWidth,
-                 uint dstHeight)
+void ResizeImage(TextureFormat::Enum format, const byte* srcImage, uint srcWidth, uint srcHeight, byte* dstImage, uint dstWidth, uint dstHeight)
 {
   if (format == TextureFormat::RGB32f)
     ResizeImage<float, 3>(srcImage, srcWidth, srcHeight, dstImage, dstWidth, dstHeight, FloatClamp);
@@ -264,8 +252,7 @@ void ToNvttSurface(nvtt::Surface& surface, uint width, uint height, TextureForma
       Math::Swap(convertedImage[i], convertedImage[i + 2]);
   }
 
-  nvtt::InputFormat inputFormat =
-      format == TextureFormat::RGB32f ? nvtt::InputFormat_RGBA_32F : nvtt::InputFormat_BGRA_8UB;
+  nvtt::InputFormat inputFormat = format == TextureFormat::RGB32f ? nvtt::InputFormat_RGBA_32F : nvtt::InputFormat_BGRA_8UB;
   surface.setImage(inputFormat, width, height, 1, convertedImage);
 
   delete[] convertedImage;
@@ -304,13 +291,7 @@ void FromNvttSurface(const nvtt::Surface& surface, uint& width, uint& height, Te
 }
 
 TextureImporter::TextureImporter(StringParam inputFile, StringParam outputFile, StringParam metaFile) :
-    mInputFile(inputFile),
-    mOutputFile(outputFile),
-    mMetaFile(metaFile),
-    mLoadFormat(TextureFormat::None),
-    mImageContent(nullptr),
-    mBuilder(nullptr),
-    mMetaChanged(false)
+    mInputFile(inputFile), mOutputFile(outputFile), mMetaFile(metaFile), mLoadFormat(TextureFormat::None), mImageContent(nullptr), mBuilder(nullptr), mMetaChanged(false)
 {
   if (metaFile.Empty())
     mMetaFile = BuildString(inputFile, ".meta");
@@ -562,13 +543,7 @@ ImageProcessorCodes::Enum TextureImporter::ProcessTexture(Status& status)
       dataOffset += mBackupMipHeaders[i].mDataSize;
 
       mBackupImageData[i] = new byte[mBackupMipHeaders[i].mDataSize];
-      ResizeImage(mLoadFormat,
-                  mImageData[i],
-                  mMipHeaders[i].mWidth,
-                  mMipHeaders[i].mHeight,
-                  mBackupImageData[i],
-                  mBackupMipHeaders[i].mWidth,
-                  mBackupMipHeaders[i].mHeight);
+      ResizeImage(mLoadFormat, mImageData[i], mMipHeaders[i].mWidth, mMipHeaders[i].mHeight, mBackupImageData[i], mBackupMipHeaders[i].mWidth, mBackupMipHeaders[i].mHeight);
     }
   }
 
@@ -677,8 +652,7 @@ ImageProcessorCodes::Enum TextureImporter::ProcessTexture(Status& status)
     mImageContent->AddComponent(info);
   }
 
-  if (info->mFileType != fileType || info->mLoadFormat != loadFormat || info->mDimensions != dimensions ||
-      info->mSize != size)
+  if (info->mFileType != fileType || info->mLoadFormat != loadFormat || info->mDimensions != dimensions || info->mSize != size)
   {
     info->mFileType = fileType;
     info->mLoadFormat = loadFormat;

@@ -22,8 +22,7 @@ Guid ReadHexString(const StringRange& range);
 
 // Basic conversion function (input must be UTF-16/2) DestAscii must
 // unicodeLength +1 (for null terminator)
-void
-ConvertUnicodeToAscii(char* destAscii, uint destAsciiLength, const wchar_t* unicodeData, size_t unicodeLength);
+void ConvertUnicodeToAscii(char* destAscii, uint destAsciiLength, const wchar_t* unicodeData, size_t unicodeLength);
 
 //
 // ToValue Functions
@@ -117,8 +116,7 @@ struct has_global_to_value_helper
   template <typename T2>
   static inline no Test4(...);
 
-  static const bool value = (sizeof(Test1<T>(0)) == sizeof(yes)) || (sizeof(Test2<T>(0)) == sizeof(yes)) ||
-                            (sizeof(Test3<T>(0)) == sizeof(yes)) || (sizeof(Test4<T>(0)) == sizeof(yes));
+  static const bool value = (sizeof(Test1<T>(0)) == sizeof(yes)) || (sizeof(Test2<T>(0)) == sizeof(yes)) || (sizeof(Test3<T>(0)) == sizeof(yes)) || (sizeof(Test4<T>(0)) == sizeof(yes));
 };
 
 /// Provides a constant defined as true if T has a global "ToValue" function,

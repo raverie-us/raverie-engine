@@ -28,9 +28,7 @@ public:
   {
     mName = "ResourceTableEntryChange";
   };
-  ResourceTableEntryChangeOp(ResourceTableEditor* editor,
-                             ResourceTableEntry* oldEntry,
-                             const ResourceTable::ValueType& newValue);
+  ResourceTableEntryChangeOp(ResourceTableEditor* editor, ResourceTableEntry* oldEntry, const ResourceTable::ValueType& newValue);
   ResourceTableEntryChangeOp(ResourceTableEditor* editor, ResourceTableEntry* oldEntry);
   void Undo() override;
   void Redo() override;
@@ -173,10 +171,7 @@ public:
 class WeightedTableBarDragManipulation : public MouseManipulation
 {
 public:
-  WeightedTableBarDragManipulation(MouseEvent* e,
-                                   Composite* parent,
-                                   WeightedTableBar* bar,
-                                   ResourceTableEditor* editor);
+  WeightedTableBarDragManipulation(MouseEvent* e, Composite* parent, WeightedTableBar* bar, ResourceTableEditor* editor);
 
   void OnMouseMove(MouseEvent* e) override;
   void OnMouseUp(MouseEvent* e) override;

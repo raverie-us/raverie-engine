@@ -381,16 +381,16 @@ public:
 
 // A macro that creates an intrusive reference link
 // This is typically placed at the end of your class
-#  define RaverieRefLink(type)                                                                                           \
-  public:                                                                                                              \
-    typedef ::Raverie::RefLink<const type> RefLinkType;                                                                  \
-    mutable RefLinkType Referencers;
+#define RaverieRefLink(type)                                                                                                                                                                           \
+public:                                                                                                                                                                                                \
+  typedef ::Raverie::RefLink<const type> RefLinkType;                                                                                                                                                  \
+  mutable RefLinkType Referencers;
 
 // If a particular object is going to be used as a referencer,
 // we use a trick that lets the debugger show our
 // object, but it needs to be virtual for the trick to work
-#  define RaverieDebuggableReferencer()                                                                                  \
-    virtual void z() const                                                                                             \
-    {                                                                                                                  \
-    }
+#define RaverieDebuggableReferencer()                                                                                                                                                                  \
+  virtual void z() const                                                                                                                                                                               \
+  {                                                                                                                                                                                                    \
+  }
 } // namespace Raverie

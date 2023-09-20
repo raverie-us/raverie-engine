@@ -352,12 +352,8 @@ void Gjk::CompleteSimplex(void)
     // It is possible for up to two of these permutations to be degenerate,
     // that case is handled in the loop
     Vec3 lineDir = mSimplex.mPoints[1].cso - mSimplex.mPoints[0].cso;
-    Vec3 perpVectors[6] = {Vec3(lineDir.y, -lineDir.x, 0),
-                           Vec3(lineDir.z, 0, -lineDir.x),
-                           Vec3(0, lineDir.z, -lineDir.y),
-                           Vec3(-lineDir.y, lineDir.x, 0),
-                           Vec3(-lineDir.z, 0, lineDir.x),
-                           Vec3(0, -lineDir.z, lineDir.y)};
+    Vec3 perpVectors[6] = {
+        Vec3(lineDir.y, -lineDir.x, 0), Vec3(lineDir.z, 0, -lineDir.x), Vec3(0, lineDir.z, -lineDir.y), Vec3(-lineDir.y, lineDir.x, 0), Vec3(-lineDir.z, 0, lineDir.x), Vec3(0, -lineDir.z, lineDir.y)};
 
     // No way to intelligently expand a line segment when the origin is on it,
     // so expand until we find a valid support point that can create a triangle
@@ -399,9 +395,7 @@ void Gjk::CompleteSimplex(void)
     {
       normal *= -1.0f;
       support = ComputeSupport(normal);
-      ReturnIf(normal.Dot(support.cso - mSimplex.mPoints[0].cso) <= sEpsilon,
-               ,
-               "Failed to complete simplex, possibly a degenerate CSO.");
+      ReturnIf(normal.Dot(support.cso - mSimplex.mPoints[0].cso) <= sEpsilon, , "Failed to complete simplex, possibly a degenerate CSO.");
 
       CSOVertex temp = mSimplex.mPoints[1];
       mSimplex.mPoints[1] = mSimplex.mPoints[2];

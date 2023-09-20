@@ -18,14 +18,10 @@ DeclareEnum3(DataFileFormat,
 Serializer* GetLoaderStreamDataBlock(Status& status, DataBlock block, DataFileFormat::Enum format);
 
 /// Create loading serializer for file with given format.
-Serializer* GetLoaderStreamFile(Status& status,
-                                StringParam fileName,
-                                DataFileFormat::Enum format = DataFileFormat::Text);
+Serializer* GetLoaderStreamFile(Status& status, StringParam fileName, DataFileFormat::Enum format = DataFileFormat::Text);
 
 /// Create saving serializer for file with given format.
-Serializer* GetSaverStreamFile(Status& status,
-                               StringParam fileName,
-                               DataFileFormat::Enum format = DataFileFormat::Text);
+Serializer* GetSaverStreamFile(Status& status, StringParam fileName, DataFileFormat::Enum format = DataFileFormat::Text);
 
 /// Create saving serialize
 Serializer* GetSaverStreamBlock(Status& status, DataFileFormat::Enum format = DataFileFormat::Text);
@@ -59,10 +55,7 @@ bool SaveToDataFile(type& object, StringParam fileName, DataFileFormat::Enum for
 
 // Load an object to a data file.
 template <typename type>
-bool LoadFromDataFile(type& object,
-                      StringParam fileName,
-                      DataFileFormat::Enum format = DataFileFormat::Text,
-                      bool checkTypename = true)
+bool LoadFromDataFile(type& object, StringParam fileName, DataFileFormat::Enum format = DataFileFormat::Text, bool checkTypename = true)
 {
   Status status;
   UniquePointer<Serializer> stream(GetLoaderStreamFile(status, fileName, format));
@@ -155,8 +148,7 @@ void SavePolymorphicSerialize(cstr Name, cstr FieldName, Serializer& serializer,
 }
 
 template <typename containerType, typename factoryType>
-void LoadPolymorphicSerialize(
-    cstr Name, cstr FieldName, Serializer& stream, containerType& container, factoryType* factory)
+void LoadPolymorphicSerialize(cstr Name, cstr FieldName, Serializer& stream, containerType& container, factoryType* factory)
 {
   stream.Start(Name, FieldName, StructureType::Object);
 

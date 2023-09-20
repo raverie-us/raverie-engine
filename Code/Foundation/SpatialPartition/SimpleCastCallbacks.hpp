@@ -81,15 +81,13 @@ struct SimpleAabbCallback
 
   bool CastVsAabb(Aabb& aabb, CastDataParam castData)
   {
-    Intersection::Type testResult =
-        Intersection::AabbAabb(aabb.mMin, aabb.mMax, castData.GetAabb().mMin, castData.GetAabb().mMax, nullptr);
+    Intersection::Type testResult = Intersection::AabbAabb(aabb.mMin, aabb.mMax, castData.GetAabb().mMin, castData.GetAabb().mMax, nullptr);
     return testResult != Intersection::None;
   }
 
   bool CastVsSphere(Sphere& sphere, CastDataParam castData)
   {
-    Intersection::Type testResult = Intersection::AabbSphere(
-        castData.GetAabb().mMin, castData.GetAabb().mMax, sphere.mCenter, sphere.mRadius, nullptr);
+    Intersection::Type testResult = Intersection::AabbSphere(castData.GetAabb().mMin, castData.GetAabb().mMax, sphere.mCenter, sphere.mRadius, nullptr);
     return testResult != Intersection::None;
   }
 
@@ -117,15 +115,13 @@ struct SimpleSphereCallback
 
   bool CastVsAabb(Aabb& aabb, CastDataParam castData)
   {
-    Intersection::Type testResult = Intersection::AabbSphere(
-        aabb.mMin, aabb.mMax, castData.GetSphere().mCenter, castData.GetSphere().mRadius, nullptr);
+    Intersection::Type testResult = Intersection::AabbSphere(aabb.mMin, aabb.mMax, castData.GetSphere().mCenter, castData.GetSphere().mRadius, nullptr);
     return testResult != Intersection::None;
   }
 
   bool CastVsSphere(Sphere& sphere, CastDataParam castData)
   {
-    Intersection::Type testResult = Intersection::SphereSphere(
-        castData.GetSphere().mCenter, castData.GetSphere().mRadius, sphere.mCenter, sphere.mRadius, nullptr);
+    Intersection::Type testResult = Intersection::SphereSphere(castData.GetSphere().mCenter, castData.GetSphere().mRadius, sphere.mCenter, sphere.mRadius, nullptr);
     return testResult != Intersection::None;
   }
 
@@ -153,16 +149,14 @@ struct SimpleFrustumCallback
 
   bool CastVsAabb(Aabb& aabb, CastDataParam castData)
   {
-    Intersection::Type testResult = Intersection::AabbFrustumApproximation(
-        aabb.mMin, aabb.mMax, &castData.GetFrustum().Planes[0].GetData(), nullptr);
+    Intersection::Type testResult = Intersection::AabbFrustumApproximation(aabb.mMin, aabb.mMax, &castData.GetFrustum().Planes[0].GetData(), nullptr);
     return testResult != Intersection::None;
   }
 
   bool CastVsSphere(Sphere& sphere, CastDataParam castData)
   {
     using namespace Intersection;
-    Intersection::Type testResult = FrustumSphereApproximation(
-        castData.GetFrustum().GetIntersectionData(), sphere.mCenter, sphere.mRadius, nullptr);
+    Intersection::Type testResult = FrustumSphereApproximation(castData.GetFrustum().GetIntersectionData(), sphere.mCenter, sphere.mRadius, nullptr);
     return testResult != Intersection::None;
   }
 
@@ -194,8 +188,7 @@ struct BroadPhasePolicy<Frustum, Aabb>
 {
   bool Overlap(Frustum& frustum, Aabb& aabb)
   {
-    return Intersection::AabbFrustumApproximation(aabb.mMin, aabb.mMax, frustum.GetIntersectionData()) >=
-           (Intersection::Type)0;
+    return Intersection::AabbFrustumApproximation(aabb.mMin, aabb.mMax, frustum.GetIntersectionData()) >= (Intersection::Type)0;
   }
 };
 
@@ -204,8 +197,7 @@ struct BroadPhasePolicy<Frustum, Sphere>
 {
   bool Overlap(Frustum& frustum, Sphere& sphere)
   {
-    return Intersection::FrustumSphereApproximation(frustum.GetIntersectionData(), sphere.mCenter, sphere.mRadius) >=
-           (Intersection::Type)0;
+    return Intersection::FrustumSphereApproximation(frustum.GetIntersectionData(), sphere.mCenter, sphere.mRadius) >= (Intersection::Type)0;
   }
 };
 

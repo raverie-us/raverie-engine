@@ -113,16 +113,8 @@ public:
 
   bool PrioritizeUiWidget(Array<Handle>::range& range);
   bool CheckAlignment(Array<Handle>::range& range, Vec3Param toolNormal);
-  void ComputeWorldToolRect(Array<Handle>::range& range,
-                            Vec3Param toolPosition,
-                            bool includeChildren,
-                            bool childPass = false);
-  void ComputeLocalToolRect(Array<Handle>::range& range,
-                            Vec3Param toolNormal,
-                            Vec3Param pointOnToolPlane,
-                            Aabb* aabbOut,
-                            bool includeChildren,
-                            bool childPass = false);
+  void ComputeWorldToolRect(Array<Handle>::range& range, Vec3Param toolPosition, bool includeChildren, bool childPass = false);
+  void ComputeLocalToolRect(Array<Handle>::range& range, Vec3Param toolNormal, Vec3Param pointOnToolPlane, Aabb* aabbOut, bool includeChildren, bool childPass = false);
 
   void ExtractPrimary(Array<Handle>::range& range, Handle& primaryOut);
   void CompileChildObjects(Cog* parent, Array<Handle>& children);

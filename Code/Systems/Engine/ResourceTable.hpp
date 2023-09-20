@@ -171,8 +171,7 @@ public:
   void ValidateEntries();
   bool ValidateEntry(ResourceTableEntry* entry);
   bool ValidateEntryType(ResourceTableEntry* entry, bool throwException);
-  Resource* GetResource(StringParam resourceIdName,
-                        ResourceNotFound::Enum notFoundMode = ResourceNotFound::ReturnDefault);
+  Resource* GetResource(StringParam resourceIdName, ResourceNotFound::Enum notFoundMode = ResourceNotFound::ReturnDefault);
 
   /// List used to lookup entries by index.
   EntryList mEntryList;

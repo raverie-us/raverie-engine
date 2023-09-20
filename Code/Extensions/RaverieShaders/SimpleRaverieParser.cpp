@@ -87,13 +87,11 @@ void SimpleRaverieParser::WalkLocalVariable(Raverie::LocalVariableNode*& node, S
   }
   context->mBuilder << ";";
 }
-void SimpleRaverieParser::WalkStaticTypeOrCreationCallNode(Raverie::StaticTypeNode*& node,
-                                                         SimpleRaverieParserContext* context)
+void SimpleRaverieParser::WalkStaticTypeOrCreationCallNode(Raverie::StaticTypeNode*& node, SimpleRaverieParserContext* context)
 {
   context->mBuilder << node->ReferencedType->Name;
 }
-void SimpleRaverieParser::WalkExpressionInitializerNode(Raverie::ExpressionInitializerNode*& node,
-                                                      SimpleRaverieParserContext* context)
+void SimpleRaverieParser::WalkExpressionInitializerNode(Raverie::ExpressionInitializerNode*& node, SimpleRaverieParserContext* context)
 {
 }
 void SimpleRaverieParser::WalkUnaryOperationNode(Raverie::UnaryOperatorNode*& node, SimpleRaverieParserContext* context)
@@ -137,9 +135,7 @@ void SimpleRaverieParser::WalkLocalRef(Raverie::LocalVariableReferenceNode*& nod
 {
   context->mBuilder << node->AccessedVariable->Name;
 }
-void SimpleRaverieParser::WalkGetterSetter(Raverie::MemberAccessNode*& node,
-                                         Raverie::GetterSetter* getSet,
-                                         SimpleRaverieParserContext* context)
+void SimpleRaverieParser::WalkGetterSetter(Raverie::MemberAccessNode*& node, Raverie::GetterSetter* getSet, SimpleRaverieParserContext* context)
 {
 }
 void SimpleRaverieParser::WalkMemberAccessNode(Raverie::MemberAccessNode*& node, SimpleRaverieParserContext* context)

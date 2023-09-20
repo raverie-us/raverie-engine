@@ -154,11 +154,9 @@ RaverieDefineType(PhysicsSpace, builder, type)
   RaverieBindOverloadedMethod(CastCollider, RaverieInstanceOverload(CastResultsRange, Vec3Param, Collider*, CastFilter&));
   // Event Dispatching in Region
   RaverieBindOverloadedMethod(DispatchWithinSphere, RaverieInstanceOverload(void, const Sphere&, StringParam, Event*));
-  RaverieBindOverloadedMethod(DispatchWithinSphere,
-                            RaverieInstanceOverload(void, const Sphere&, CastFilter&, StringParam, Event*));
+  RaverieBindOverloadedMethod(DispatchWithinSphere, RaverieInstanceOverload(void, const Sphere&, CastFilter&, StringParam, Event*));
   RaverieBindOverloadedMethod(DispatchWithinAabb, RaverieInstanceOverload(void, const Aabb&, StringParam, Event*));
-  RaverieBindOverloadedMethod(DispatchWithinAabb,
-                            RaverieInstanceOverload(void, const Aabb&, CastFilter&, StringParam, Event*));
+  RaverieBindOverloadedMethod(DispatchWithinAabb, RaverieInstanceOverload(void, const Aabb&, CastFilter&, StringParam, Event*));
 
   // Extra collider detection methods
   RaverieBindMethod(SweepCollider);
@@ -1025,10 +1023,7 @@ CastResultsRange PhysicsSpace::CastFrustum(const Frustum& frustum, uint maxCount
   return CastResultsRange(results);
 }
 
-void PhysicsSpace::CastCollider(Vec3Param offset,
-                                Collider* testCollider,
-                                Physics::ManifoldArray& results,
-                                CastFilter& filter)
+void PhysicsSpace::CastCollider(Vec3Param offset, Collider* testCollider, Physics::ManifoldArray& results, CastFilter& filter)
 {
   // Set the offset variable on the collider (total hack variable!!)
   testCollider->mCollisionOffset = offset;
@@ -1171,8 +1166,7 @@ SweepResultRange PhysicsSpace::SweepCollider(Collider* collider, Vec3Param veloc
     if (otherCollider == collider)
       continue;
     // Not done by the broadphase query, probably should be
-    if (filter.IsSet(BaseCastFilterFlags::IgnoreChildren) &&
-        collider->GetOwner()->IsDescendant(otherCollider->GetOwner()))
+    if (filter.IsSet(BaseCastFilterFlags::IgnoreChildren) && collider->GetOwner()->IsDescendant(otherCollider->GetOwner()))
       continue;
 
     SweepResult impact;

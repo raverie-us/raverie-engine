@@ -41,12 +41,8 @@ void Statistics::PrintResults()
 {
   DebugPrintFilter(Filter::PhysicsFilter, "%s Results:", Name.c_str());
 
-  DebugPrintFilter(Filter::PhysicsFilter,
-                   "| Accuracy:  %.2f%%",
-                   (real(ActualCollisions) / real(PossibleCollisionsReturned)) / real(100.0));
-  DebugPrintFilter(Filter::PhysicsFilter,
-                   "| Collision Time Taken:  %.2fms",
-                   Profile::ProfileSystem::Instance->GetTimeInSeconds(UpdateTime.GetTotalTime()));
+  DebugPrintFilter(Filter::PhysicsFilter, "| Accuracy:  %.2f%%", (real(ActualCollisions) / real(PossibleCollisionsReturned)) / real(100.0));
+  DebugPrintFilter(Filter::PhysicsFilter, "| Collision Time Taken:  %.2fms", Profile::ProfileSystem::Instance->GetTimeInSeconds(UpdateTime.GetTotalTime()));
   DebugPrintFilter(Filter::PhysicsFilter, "| Update Time Taken:  %.2fms", UpdateTime.GetTotalTime());
   DebugPrintFilter(Filter::PhysicsFilter, "| Ray Cast Time Taken:  %.2fms", RayCastTime.GetTotalTime());
   DebugPrintFilter(Filter::PhysicsFilter, "| Insertion Time Taken:  %.2fms", InsertionTime.GetTotalTime());

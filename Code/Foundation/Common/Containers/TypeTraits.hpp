@@ -378,8 +378,7 @@ struct is_member_pointer_helper<T U::*> : public TrueType
 /// Provides a constant defined as true if T is a member pointer type, else
 /// defined as false
 template <typename T>
-struct is_member_pointer
-    : public integral_constant<bool, (is_member_pointer_helper<typename remove_const_and_volatile<T>::type>::value)>
+struct is_member_pointer : public integral_constant<bool, (is_member_pointer_helper<typename remove_const_and_volatile<T>::type>::value)>
 {
 };
 
@@ -418,26 +417,24 @@ struct is_union_or_class : public integral_constant<bool, (is_union_or_class_hel
 /// Provides a constant defined as true if T is an enum type, else defined as
 /// false
 template <typename T>
-struct is_enum
-    : public integral_constant<bool,
-                               (!is_void<T>::value && !is_integral<T>::value && !is_floating_point<T>::value &&
-                                !is_array<T>::value && !is_pointer<T>::value && !is_reference<T>::value &&
-                                !is_member_pointer<T>::value && !is_union_or_class<T>::value
-                                /*&& !is_function< T >::value*/)>
+struct is_enum : public integral_constant<bool,
+                                          (!is_void<T>::value && !is_integral<T>::value && !is_floating_point<T>::value && !is_array<T>::value && !is_pointer<T>::value && !is_reference<T>::value &&
+                                           !is_member_pointer<T>::value && !is_union_or_class<T>::value
+                                           /*&& !is_function< T >::value*/)>
 {
 };
 
 /// Use SFINAE to detect if we have a member
 /// This must be a macro because the name of the member cannot be provided as a
 /// template argument
-#define RaverieDeclareHasMemberTrait(TypeTraitName, MemberName)                                                           \
-  template <typename RaverieT>                                                                                           \
-  static ::Raverie::TrueType check_##TypeTraitName(decltype(&RaverieT::MemberName)*);                                       \
-  template <typename RaverieT>                                                                                           \
-  static ::Raverie::FalseType check_##TypeTraitName(...);                                                                 \
-  template <typename RaverieT>                                                                                           \
-  struct TypeTraitName : public decltype(check_##TypeTraitName<RaverieT>(nullptr))                                       \
-  {                                                                                                                    \
+#define RaverieDeclareHasMemberTrait(TypeTraitName, MemberName)                                                                                                                                        \
+  template <typename RaverieT>                                                                                                                                                                         \
+  static ::Raverie::TrueType check_##TypeTraitName(decltype(&RaverieT::MemberName)*);                                                                                                                  \
+  template <typename RaverieT>                                                                                                                                                                         \
+  static ::Raverie::FalseType check_##TypeTraitName(...);                                                                                                                                              \
+  template <typename RaverieT>                                                                                                                                                                         \
+  struct TypeTraitName : public decltype(check_##TypeTraitName<RaverieT>(nullptr))                                                                                                                     \
+  {                                                                                                                                                                                                    \
   };
 
 /// Provides a constant defined as true if T is an enum or integral type, else
@@ -457,17 +454,14 @@ struct is_arithmetic : public integral_constant<bool, (is_integral<T>::value || 
 /// Provides a constant defined as true if T is a fundamental (arithmetic, void,
 /// or nullptr_t) type, else defined as false
 template <typename T>
-struct is_fundamental
-    : public integral_constant<bool, (is_arithmetic<T>::value || is_void<T>::value || is_null_pointer<T>::value)>
+struct is_fundamental : public integral_constant<bool, (is_arithmetic<T>::value || is_void<T>::value || is_null_pointer<T>::value)>
 {
 };
 
 /// Provides a constant defined as true if T is a scalar (arithmetic, enum,
 /// pointer, or nullptr_t) type, else defined as false
 template <typename T>
-struct is_scalar : public integral_constant<bool,
-                                            (is_arithmetic<T>::value || is_enum<T>::value || is_pointer<T>::value ||
-                                             is_null_pointer<T>::value)>
+struct is_scalar : public integral_constant<bool, (is_arithmetic<T>::value || is_enum<T>::value || is_pointer<T>::value || is_null_pointer<T>::value)>
 {
 };
 
@@ -580,11 +574,9 @@ struct disable_if<false, Type>
 
 /// Enable If via Function Template Parameter (Declaration)
 #define TF_ENABLE_IF(Condition) typename Raverie::enable_if<(Condition)>::type* = nullptr
-#define TF_ENABLE_IF_IS_SAME(TypeA, TypeB)                                                                             \
-  typename Raverie::enable_if<(Raverie::is_same<TypeA, TypeB>::value)>::type* = nullptr
+#define TF_ENABLE_IF_IS_SAME(TypeA, TypeB) typename Raverie::enable_if<(Raverie::is_same<TypeA, TypeB>::value)>::type* = nullptr
 #define TF_DISABLE_IF(Condition) typename Raverie::disable_if<(Condition)>::type* = nullptr
-#define TF_DISABLE_IF_IS_SAME(TypeA, TypeB)                                                                            \
-  typename Raverie::disable_if<(Raverie::is_same<TypeA, TypeB>::value)>::type* = nullptr
+#define TF_DISABLE_IF_IS_SAME(TypeA, TypeB) typename Raverie::disable_if<(Raverie::is_same<TypeA, TypeB>::value)>::type* = nullptr
 
 /// Enable If via Function Template Parameter (Definition)
 #define TF_ENABLE_IF_DEF(Condition) typename Raverie::enable_if<(Condition)>::type*
@@ -598,11 +590,9 @@ struct disable_if<false, Type>
 
 /// Enable If via Function Parameter (Declaration)
 #define P_ENABLE_IF(Condition) typename Raverie::enable_if<(Condition)>::type* = nullptr
-#define P_ENABLE_IF_IS_SAME(TypeA, TypeB)                                                                              \
-  typename Raverie::enable_if<(Raverie::is_same<TypeA, TypeB>::value)>::type* = nullptr
+#define P_ENABLE_IF_IS_SAME(TypeA, TypeB) typename Raverie::enable_if<(Raverie::is_same<TypeA, TypeB>::value)>::type* = nullptr
 #define P_DISABLE_IF(Condition) typename Raverie::disable_if<(Condition)>::type* = nullptr
-#define P_DISABLE_IF_IS_SAME(TypeA, TypeB)                                                                             \
-  typename Raverie::disable_if<(Raverie::is_same<TypeA, TypeB>::value)>::type* = nullptr
+#define P_DISABLE_IF_IS_SAME(TypeA, TypeB) typename Raverie::disable_if<(Raverie::is_same<TypeA, TypeB>::value)>::type* = nullptr
 
 /// Enable If via Function Parameter (Definition)
 #define P_ENABLE_IF_DEF(Condition) typename Raverie::enable_if<(Condition)>::type*

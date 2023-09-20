@@ -36,11 +36,7 @@ public:
   }
 
   template <typename T>
-  Any(const T& value,
-      ExecutableState* state = nullptr,
-      P_DISABLE_IF((Raverie::is_base_of<
-                    Type,
-                    typename Raverie::remove_pointer<typename Raverie::remove_const_and_volatile<T>::type>::type>::value)))
+  Any(const T& value, ExecutableState* state = nullptr, P_DISABLE_IF((Raverie::is_base_of<Type, typename Raverie::remove_pointer<typename Raverie::remove_const_and_volatile<T>::type>::type>::value)))
   {
     typedef typename TypeBinding::StripQualifiers<T>::Type UnqualifiedType;
     const UnqualifiedType* pointer = TypeBinding::ReferenceCast<T&, const UnqualifiedType*>::Cast((T&)value);
@@ -213,7 +209,8 @@ public:
   // The delegate stores the handle, so we know delegate is the biggest
   // If the size of the type is bigger then can fit here, then we allocate a
   // pointer instead
-  union {
+  union
+  {
     byte Data[sizeof(Delegate)];
 
     // Ensure alignment on all platforms.
@@ -264,4 +261,3 @@ void CopyFromAnyOrActualType(const T& value, byte* to)
 template <>
 void CopyFromAnyOrActualType<Any>(const Any& any, byte* to);
 } // namespace Raverie
-

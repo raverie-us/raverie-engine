@@ -63,11 +63,7 @@ public:
   GradientKeyDrawer(ColorGradientEditor* gradientEditor);
 
   /// Draw the widget.
-  void RenderUpdate(ViewBlock& viewBlock,
-                    FrameBlock& frameBlock,
-                    Mat4Param parentTx,
-                    ColorTransform colorTx,
-                    WidgetRect clipRect) override;
+  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect) override;
 
 private:
   ColorGradientEditor* mGradientEditor;

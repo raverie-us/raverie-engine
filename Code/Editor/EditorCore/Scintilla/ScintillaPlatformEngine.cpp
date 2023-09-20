@@ -89,8 +89,7 @@ void SurfaceImpl::LineTo(int x_, int y_)
   mFrameBlock->mRenderQueues->mStreamedVertices.PushBack(v0);
   mFrameBlock->mRenderQueues->mStreamedVertices.PushBack(v1);
 
-  mViewNode->mStreamedVertexCount =
-      mFrameBlock->mRenderQueues->mStreamedVertices.Size() - mViewNode->mStreamedVertexStart;
+  mViewNode->mStreamedVertexCount = mFrameBlock->mRenderQueues->mStreamedVertices.Size() - mViewNode->mStreamedVertexStart;
 }
 
 void SurfaceImpl::Polygon(Point* pts, int npts, ColourDesired fore, ColourDesired back)
@@ -132,8 +131,7 @@ void SurfaceImpl::Polygon(Point* pts, int npts, ColourDesired fore, ColourDesire
     }
   }
 
-  mViewNode->mStreamedVertexCount =
-      mFrameBlock->mRenderQueues->mStreamedVertices.Size() - mViewNode->mStreamedVertexStart;
+  mViewNode->mStreamedVertexCount = mFrameBlock->mRenderQueues->mStreamedVertices.Size() - mViewNode->mStreamedVertexStart;
 }
 
 void SurfaceImpl::RectangleDraw(PRectangle rc, ColourDesired fore, ColourDesired back)
@@ -168,13 +166,7 @@ void SurfaceImpl::RoundedRectangle(PRectangle rc, ColourDesired fore, ColourDesi
   RectangleDraw(rc, fore, back);
 }
 
-void SurfaceImpl::AlphaRectangle(PRectangle rc,
-                                 int cornerSize,
-                                 ColourDesired fill,
-                                 int alphaFill,
-                                 ColourDesired outline,
-                                 int alphaOutline,
-                                 int flags)
+void SurfaceImpl::AlphaRectangle(PRectangle rc, int cornerSize, ColourDesired fill, int alphaFill, ColourDesired outline, int alphaOutline, int flags)
 {
   RoundedLineRectHelper(rc, cornerSize, fill, alphaFill, outline, alphaOutline, flags);
 
@@ -218,8 +210,7 @@ void SurfaceImpl::Copy(PRectangle rc, Point from, Surface& surfaceSource)
   ErrorIf(true, "Not available in hardware accelerated version.");
 }
 
-void SurfaceImpl::DrawTextNoClip(
-    PRectangle rc, Font& font_, XYPOSITION ybase, const char* s, int len, ColourDesired fore, ColourDesired back)
+void SurfaceImpl::DrawTextNoClip(PRectangle rc, Font& font_, XYPOSITION ybase, const char* s, int len, ColourDesired fore, ColourDesired back)
 {
   if (len == 0)
     return;
@@ -237,14 +228,12 @@ void SurfaceImpl::DrawTextNoClip(
   AddTextRange(fontProcessor, font, text, textStart, Raverie::TextAlign::Left, Vec2(1, 1), size);
 }
 
-void SurfaceImpl::DrawTextClipped(
-    PRectangle rc, Font& font_, XYPOSITION ybase, const char* s, int len, ColourDesired fore, ColourDesired back)
+void SurfaceImpl::DrawTextClipped(PRectangle rc, Font& font_, XYPOSITION ybase, const char* s, int len, ColourDesired fore, ColourDesired back)
 {
   ErrorIf(true, "Not implemented.");
 }
 
-void SurfaceImpl::DrawTextTransparent(
-    PRectangle rc, Font& font_, XYPOSITION ybase, const char* s, int len, ColourDesired fore)
+void SurfaceImpl::DrawTextTransparent(PRectangle rc, Font& font_, XYPOSITION ybase, const char* s, int len, ColourDesired fore)
 {
   if (len == 0)
     return;
@@ -374,13 +363,7 @@ void SurfaceImpl::SetDBCSMode(int codePage)
 // style == INDIC_ROUNDBOX [ie, Raverie's IndicatorStyle::Roundbox]
 //
 // then: 'cornerSize' is 1, and thus 'cornerEmulation' is 1.
-void SurfaceImpl::RoundedLineRectHelper(PRectangle rc,
-                                        int cornerEmulation,
-                                        ColourDesired fill,
-                                        int alphaFill,
-                                        ColourDesired outline,
-                                        int alphaOutline,
-                                        int flags)
+void SurfaceImpl::RoundedLineRectHelper(PRectangle rc, int cornerEmulation, ColourDesired fill, int alphaFill, ColourDesired outline, int alphaOutline, int flags)
 {
   MakeViewNode(Raverie::PrimitiveType::Lines, White);
   /*
@@ -415,15 +398,9 @@ void SurfaceImpl::RoundedLineRectHelper(PRectangle rc,
   float leftX = pos0.x;
   float rightX = pos1.x + ce;
   Raverie::StreamedVertex v0(Math::TransformPoint(mViewNode->mLocalToView, Vec3(leftX, pos0.y, 0)), uv0, color, uv0);
-  Raverie::StreamedVertex v1(Math::TransformPoint(mViewNode->mLocalToView, Vec3(leftX, pos1.y, 0)),
-                          Vec2(uv0.x, uv1.y),
-                          color,
-                          Vec2(uv0.x, uv1.y));
+  Raverie::StreamedVertex v1(Math::TransformPoint(mViewNode->mLocalToView, Vec3(leftX, pos1.y, 0)), Vec2(uv0.x, uv1.y), color, Vec2(uv0.x, uv1.y));
   Raverie::StreamedVertex v2(Math::TransformPoint(mViewNode->mLocalToView, Vec3(pos1.x, pos1.y, 0)), uv1, color, uv1);
-  Raverie::StreamedVertex v3(Math::TransformPoint(mViewNode->mLocalToView, Vec3(rightX, pos0.y, 0)),
-                          Vec2(uv1.x, uv0.y),
-                          color,
-                          Vec2(uv1.x, uv0.y));
+  Raverie::StreamedVertex v3(Math::TransformPoint(mViewNode->mLocalToView, Vec3(rightX, pos0.y, 0)), Vec2(uv1.x, uv0.y), color, Vec2(uv1.x, uv0.y));
 
   Raverie::RenderQueues* queue = mFrameBlock->mRenderQueues;
 
@@ -456,9 +433,7 @@ void SurfaceImpl::MakeViewNode(Raverie::PrimitiveType::Enum primitive, StringPar
 
 void SurfaceImpl::MakeViewNode(Raverie::PrimitiveType::Enum primitive, Raverie::Texture* texture)
 {
-  bool needsNewViewNode =
-      mViewNode == nullptr || mViewNode->mStreamedVertexType != primitive ||
-      mFrameBlock->mFrameNodes[mViewNode->mFrameNodeIndex].mTextureRenderData != texture->mRenderData;
+  bool needsNewViewNode = mViewNode == nullptr || mViewNode->mStreamedVertexType != primitive || mFrameBlock->mFrameNodes[mViewNode->mFrameNodeIndex].mTextureRenderData != texture->mRenderData;
 
   if (needsNewViewNode)
   {

@@ -21,8 +21,7 @@ RaverieDefineType(ObjectTransformGizmoEvent, builder, type)
   RaverieBindGetterSetter(FinalLocalRotation);
 }
 
-ObjectTransformGizmoEvent::ObjectTransformGizmoEvent(Component* sourceGizmo, Cog* owner, ViewportMouseEvent* base) :
-    GizmoEvent(owner, base)
+ObjectTransformGizmoEvent::ObjectTransformGizmoEvent(Component* sourceGizmo, Cog* owner, ViewportMouseEvent* base) : GizmoEvent(owner, base)
 {
   mSource = sourceGizmo;
   mGizmoType = sourceGizmo->RaverieGetDerivedType();
@@ -689,8 +688,7 @@ void ObjectTranslateGizmo::OnGizmoModified(TranslateGizmoUpdateEvent* event)
     // space.
     if (multiTransform)
     {
-      objectState.EndTranslation = baseGizmo->TranslateFromDrag(
-          gizmoDrag, objectState.StartTranslation, localMovement, objectState.StartRotation);
+      objectState.EndTranslation = baseGizmo->TranslateFromDrag(gizmoDrag, objectState.StartTranslation, localMovement, objectState.StartRotation);
     }
     else // If single object, then the final movement will already be snapped.
     {
@@ -709,8 +707,7 @@ void ObjectTranslateGizmo::OnGizmoModified(TranslateGizmoUpdateEvent* event)
 
     if (dispatcher != nullptr)
     {
-      PropertyEvent propertyEvent(
-          transform.mInstance, transform.mLocalTranslation, objectState.StartTranslation, objectState.EndTranslation);
+      PropertyEvent propertyEvent(transform.mInstance, transform.mLocalTranslation, objectState.StartTranslation, objectState.EndTranslation);
 
       dispatcher->Dispatch(Events::PropertyModifiedIntermediate, &propertyEvent);
     }
@@ -856,8 +853,7 @@ void ObjectScaleGizmo::OnGizmoModified(ScaleGizmoUpdateEvent* event)
     if (transform.mLocalScale == nullptr)
       continue;
 
-    Vec3 newScale =
-        baseGizmo->ScaleFromDrag(mBasis, gizmoDrag, distance, worldMovement, objectState.StartScale, transform);
+    Vec3 newScale = baseGizmo->ScaleFromDrag(mBasis, gizmoDrag, distance, worldMovement, objectState.StartScale, transform);
 
     Vec3 newPosition = objectState.EndTranslation;
     if (multiTransform && mAffectTranslation)
@@ -902,8 +898,7 @@ void ObjectScaleGizmo::OnGizmoModified(ScaleGizmoUpdateEvent* event)
 
       if (dispatcher != nullptr)
       {
-        PropertyEvent propertyEvent(
-            transform.mInstance, transform.mLocalScale, objectState.StartScale, objectState.EndScale);
+        PropertyEvent propertyEvent(transform.mInstance, transform.mLocalScale, objectState.StartScale, objectState.EndScale);
 
         dispatcher->Dispatch(Events::PropertyModifiedIntermediate, &propertyEvent);
       }
@@ -916,8 +911,7 @@ void ObjectScaleGizmo::OnGizmoModified(ScaleGizmoUpdateEvent* event)
 
       if (dispatcher != nullptr)
       {
-        PropertyEvent propertyEvent(
-            transform.mInstance, transform.mLocalTranslation, objectState.StartTranslation, objectState.EndTranslation);
+        PropertyEvent propertyEvent(transform.mInstance, transform.mLocalTranslation, objectState.StartTranslation, objectState.EndTranslation);
 
         dispatcher->Dispatch(Events::PropertyModifiedIntermediate, &propertyEvent);
       }
@@ -1059,8 +1053,7 @@ void ObjectRotateGizmo::OnGizmoModified(RotateGizmoUpdateEvent* event)
 
       if (dispatcher != nullptr)
       {
-        PropertyEvent propertyEvent(
-            transform.mInstance, transform.mLocalRotation, objectState.StartRotation, objectState.EndRotation);
+        PropertyEvent propertyEvent(transform.mInstance, transform.mLocalRotation, objectState.StartRotation, objectState.EndRotation);
 
         dispatcher->Dispatch(Events::PropertyModifiedIntermediate, &propertyEvent);
       }
@@ -1073,8 +1066,7 @@ void ObjectRotateGizmo::OnGizmoModified(RotateGizmoUpdateEvent* event)
 
       if (dispatcher != nullptr)
       {
-        PropertyEvent propertyEvent(
-            transform.mInstance, transform.mLocalTranslation, objectState.StartTranslation, objectState.EndTranslation);
+        PropertyEvent propertyEvent(transform.mInstance, transform.mLocalTranslation, objectState.StartTranslation, objectState.EndTranslation);
 
         dispatcher->Dispatch(Events::PropertyModifiedIntermediate, &propertyEvent);
       }

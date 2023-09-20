@@ -48,10 +48,7 @@ public:
   // Internals
   void OnResourceLibraryConstructed(ObjectEvent* e);
 
-  static void DispatchScriptError(StringParam eventId,
-                                  StringParam shortMessage,
-                                  StringParam fullMessage,
-                                  const CodeLocation& location);
+  static void DispatchScriptError(StringParam eventId, StringParam shortMessage, StringParam fullMessage, const CodeLocation& location);
   static void DispatchZeroRaverieError(const CodeLocation& location, StringParam message, Project* buildingProject);
 
   static void OnMemoryLeak(MemoryLeakEvent* event);

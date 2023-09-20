@@ -4,8 +4,7 @@
 namespace Raverie
 {
 
-DeclareBitField6(
-    FilterFlags, SkipResolution, SkipDetectingCollision, StartEvent, EndEvent, PersistedEvent, PreSolveEvent);
+DeclareBitField6(FilterFlags, SkipResolution, SkipDetectingCollision, StartEvent, EndEvent, PersistedEvent, PreSolveEvent);
 
 /// Controls what parts of collision detection/resolution are run for a
 /// CollisionGroup pair. <param name="SkipDetection">Don't run collision

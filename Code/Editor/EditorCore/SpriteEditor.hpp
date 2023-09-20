@@ -130,11 +130,7 @@ public:
   SpriteFrameTileView(Composite* parent) : TileView(parent)
   {
   }
-  TileViewWidget* CreateTileViewWidget(Composite* parent,
-                                       StringParam name,
-                                       HandleParam instance,
-                                       DataIndex index,
-                                       PreviewImportance::Enum minImportance = PreviewImportance::None) override;
+  TileViewWidget* CreateTileViewWidget(Composite* parent, StringParam name, HandleParam instance, DataIndex index, PreviewImportance::Enum minImportance = PreviewImportance::None) override;
 
   void OnMouseScroll(MouseEvent* event) override;
   void OnLeftMouseDrag(MouseDragEvent* e) override;

@@ -71,10 +71,7 @@ String GetDescriptorFromObject(ReflectionObject* object)
   return String();
 }
 
-void AttributeExtensions::ProcessObject(AttributeStatus& status,
-                                        ReflectionObject* object,
-                                        ExtensionMap& extensionMap,
-                                        bool ignoreUnkownAttributes)
+void AttributeExtensions::ProcessObject(AttributeStatus& status, ReflectionObject* object, ExtensionMap& extensionMap, bool ignoreUnkownAttributes)
 {
   // Used to keep track of duplicate attributes
   HashSet<String> processedAttributes;
@@ -90,8 +87,7 @@ void AttributeExtensions::ProcessObject(AttributeStatus& status,
         continue;
 
       String message;
-      if (mClassExtensions.ContainsKey(attribute.Name) || mPropertyExtensions.ContainsKey(attribute.Name) ||
-          mFunctionExtensions.ContainsKey(attribute.Name))
+      if (mClassExtensions.ContainsKey(attribute.Name) || mPropertyExtensions.ContainsKey(attribute.Name) || mFunctionExtensions.ContainsKey(attribute.Name))
       {
         String descriptor = GetDescriptorFromObject(object);
         message = String::Format("Attribute '%s' is not valid on a %s", attribute.Name.c_str(), descriptor.c_str());
@@ -168,11 +164,7 @@ AttributeExtension* AttributeExtensions::RegisterExtension(AttributeExtension* e
 }
 
 // Attribute Extension
-AttributeExtension::AttributeExtension(StringParam name) :
-    mAttributeName(name),
-    mMustBeType(nullptr),
-    mAllowStatic(false),
-    mAllowMultiple(false)
+AttributeExtension::AttributeExtension(StringParam name) : mAttributeName(name), mMustBeType(nullptr), mAllowStatic(false), mAllowMultiple(false)
 {
 }
 
@@ -237,14 +229,11 @@ void AttributeExtension::ValidateType(Status& status, ReflectionObject* object)
     String message;
     if (Type::DynamicCast<Property*>(object))
     {
-      message = String::Format("Attribute '%s' can only exist on a property of type '%s'",
-                               mAttributeName.c_str(),
-                               mMustBeType->Name.c_str());
+      message = String::Format("Attribute '%s' can only exist on a property of type '%s'", mAttributeName.c_str(), mMustBeType->Name.c_str());
     }
     else
     {
-      message =
-          String::Format("Attribute '%s' can only exist on a '%s'", mAttributeName.c_str(), mMustBeType->Name.c_str());
+      message = String::Format("Attribute '%s' can only exist on a '%s'", mAttributeName.c_str(), mMustBeType->Name.c_str());
     }
     status.SetFailed(message);
   }
@@ -427,10 +416,7 @@ void AttributeExtension::ValidateParameters(Status& status, HandleParam componen
       }
       else
       {
-        String message = String::Format("Attribute '%s' expected the parameter '%s' to be a '%s'",
-                                        attribute.Name.c_str(),
-                                        name.c_str(),
-                                        propertyType->Name.c_str());
+        String message = String::Format("Attribute '%s' expected the parameter '%s' to be a '%s'", attribute.Name.c_str(), name.c_str(), propertyType->Name.c_str());
 
         // If the parameter was a bound type, append to the message
         if (BoundType* parameterType = Type::GetBoundType(parameterValue.StoredType))
@@ -445,10 +431,7 @@ void AttributeExtension::ValidateParameters(Status& status, HandleParam componen
     // If it's a required property, it should be an error
     else if (property->HasAttribute(PropertyAttributes::cOptional) == nullptr)
     {
-      String message = String::Format("Attribute '%s' must have a parameter called '%s' of type '%s'.",
-                                      attribute.Name.c_str(),
-                                      name.c_str(),
-                                      propertyType->Name.c_str());
+      String message = String::Format("Attribute '%s' must have a parameter called '%s' of type '%s'.", attribute.Name.c_str(), name.c_str(), propertyType->Name.c_str());
       AppendMissingParametersError(message, componentType, attribute.Name);
       status.SetFailed(message);
       return;
@@ -463,8 +446,7 @@ void AttributeExtension::ValidateParameters(Status& status, HandleParam componen
     if (namedParameters)
     {
       AttributeParameter& parameter = attribute.Parameters[currentParameter];
-      message = String::Format(
-          "Attribute '%s' has an invalid parameter '%s'.", attribute.Name.c_str(), parameter.Name.c_str());
+      message = String::Format("Attribute '%s' has an invalid parameter '%s'.", attribute.Name.c_str(), parameter.Name.c_str());
     }
     else
     {

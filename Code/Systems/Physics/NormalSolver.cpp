@@ -19,11 +19,11 @@ NormalSolver::~NormalSolver()
 }
 
 // define a case statement for each joint type
-#define JointType(type)                                                                                                \
-  case JointEnums::type##Type:                                                                                         \
-  {                                                                                                                    \
-    m##type##List.PushBack(joint);                                                                                     \
-    break;                                                                                                             \
+#define JointType(type)                                                                                                                                                                                \
+  case JointEnums::type##Type:                                                                                                                                                                         \
+  {                                                                                                                                                                                                    \
+    m##type##List.PushBack(joint);                                                                                                                                                                     \
+    break;                                                                                                                                                                                             \
   }
 
 void NormalSolver::AddJoint(Joint* joint)
@@ -141,8 +141,8 @@ void NormalSolver::IterateVelocities(uint iteration)
 void NormalSolver::SolvePositions()
 {
   // get a list of all joints that actually need position correction
-#define JointType(type)                                                                                                \
-  type##List type##ToSolve;                                                                                            \
+#define JointType(type)                                                                                                                                                                                \
+  type##List type##ToSolve;                                                                                                                                                                            \
   CollectJointsToSolve(m##type##List, type##ToSolve);
 
 #include "JointList.hpp"
@@ -164,8 +164,8 @@ void NormalSolver::SolvePositions()
   }
 
   // splice each list of joints we solved back into the main list
-#define JointType(type)                                                                                                \
-  if (!type##ToSolve.Empty())                                                                                          \
+#define JointType(type)                                                                                                                                                                                \
+  if (!type##ToSolve.Empty())                                                                                                                                                                          \
     m##type##List.Splice(m##type##List.End(), type##ToSolve.All());
 
 #include "JointList.hpp"

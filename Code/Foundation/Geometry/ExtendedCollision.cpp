@@ -11,9 +11,7 @@ void FlipManifoldInfo(Intersection::Manifold* manifold)
     Math::Swap(manifold->Points[i].Points[0], manifold->Points[i].Points[1]);
 }
 
-void FlipSupportShapeManifoldInfo(const Intersection::SupportShape& a,
-                                  const Intersection::SupportShape& b,
-                                  Intersection::Manifold* manifold)
+void FlipSupportShapeManifoldInfo(const Intersection::SupportShape& a, const Intersection::SupportShape& b, Intersection::Manifold* manifold)
 {
   Vec3 aCenter, bCenter;
   a.GetCenter(&aCenter);
@@ -24,9 +22,7 @@ void FlipSupportShapeManifoldInfo(const Intersection::SupportShape& a,
     manifold->Normal *= real(-1.0);
 }
 
-bool SupportShapeCollide(const Intersection::SupportShape& a,
-                         const Intersection::SupportShape& b,
-                         Intersection::Manifold* manifold)
+bool SupportShapeCollide(const Intersection::SupportShape& a, const Intersection::SupportShape& b, Intersection::Manifold* manifold)
 {
   // Test for collision.
   Intersection::Gjk gjk;
@@ -60,8 +56,7 @@ bool Collide(const Ray& ray, const Aabb& aabb, Intersection::Manifold* manifold)
 bool Collide(const Ray& ray, const Capsule& capsule, Intersection::Manifold* manifold)
 {
   Intersection::IntersectionPoint point;
-  Intersection::Type ret =
-      Intersection::RayCapsule(ray.Start, ray.Direction, capsule.PointA, capsule.PointB, capsule.Radius, &point);
+  Intersection::Type ret = Intersection::RayCapsule(ray.Start, ray.Direction, capsule.PointA, capsule.PointB, capsule.Radius, &point);
   if (ret < (Intersection::Type)0)
     return false;
   if (manifold != NULL)
@@ -79,8 +74,7 @@ bool Collide(const Ray& ray, const Capsule& capsule, Intersection::Manifold* man
 bool Collide(const Ray& ray, const Cylinder& cylinder, Intersection::Manifold* manifold)
 {
   Intersection::IntersectionPoint point;
-  Intersection::Type ret =
-      Intersection::RayCylinder(ray.Start, ray.Direction, cylinder.PointA, cylinder.PointB, cylinder.Radius, &point);
+  Intersection::Type ret = Intersection::RayCylinder(ray.Start, ray.Direction, cylinder.PointA, cylinder.PointB, cylinder.Radius, &point);
   if (ret < (Intersection::Type)0)
     return false;
   if (manifold != NULL)
@@ -98,8 +92,7 @@ bool Collide(const Ray& ray, const Cylinder& cylinder, Intersection::Manifold* m
 bool Collide(const Ray& ray, const Ellipsoid& ellipsoid, Intersection::Manifold* manifold)
 {
   Intersection::IntersectionPoint point;
-  Intersection::Type ret =
-      Intersection::RayEllipsoid(ray.Start, ray.Direction, ellipsoid.Center, ellipsoid.Radii, ellipsoid.Basis, &point);
+  Intersection::Type ret = Intersection::RayEllipsoid(ray.Start, ray.Direction, ellipsoid.Center, ellipsoid.Radii, ellipsoid.Basis, &point);
   if (ret < (Intersection::Type)0)
     return false;
   if (manifold != NULL)
@@ -123,8 +116,7 @@ bool Collide(const Ray& ray, const Frustum& frustum, Intersection::Manifold* man
 bool Collide(const Ray& ray, const Obb& obb, Intersection::Manifold* manifold)
 {
   Intersection::IntersectionPoint point;
-  Intersection::Type ret =
-      Intersection::RayObb(ray.Start, ray.Direction, obb.Center, obb.HalfExtents, obb.Basis, &point);
+  Intersection::Type ret = Intersection::RayObb(ray.Start, ray.Direction, obb.Center, obb.HalfExtents, obb.Basis, &point);
   if (ret < (Intersection::Type)0)
     return false;
   if (manifold != NULL)
@@ -142,8 +134,7 @@ bool Collide(const Ray& ray, const Obb& obb, Intersection::Manifold* manifold)
 bool Collide(const Ray& ray, const Plane& plane, Intersection::Manifold* manifold)
 {
   Intersection::IntersectionPoint point;
-  Intersection::Type ret =
-      Intersection::RayPlane(ray.Start, ray.Direction, plane.GetNormal(), plane.GetDistance(), &point);
+  Intersection::Type ret = Intersection::RayPlane(ray.Start, ray.Direction, plane.GetNormal(), plane.GetDistance(), &point);
   if (ret < (Intersection::Type)0)
     return false;
   if (manifold != NULL)
@@ -179,8 +170,7 @@ bool Collide(const Ray& ray, const Sphere& sphere, Intersection::Manifold* manif
 bool Collide(const Ray& ray, const Triangle& triangle, Intersection::Manifold* manifold)
 {
   Intersection::IntersectionPoint point;
-  Intersection::Type ret =
-      Intersection::RayTriangle(ray.Start, ray.Direction, triangle.p0, triangle.p1, triangle.p2, &point);
+  Intersection::Type ret = Intersection::RayTriangle(ray.Start, ray.Direction, triangle.p0, triangle.p1, triangle.p2, &point);
   if (ret < (Intersection::Type)0)
     return false;
   if (manifold != NULL)
@@ -198,8 +188,7 @@ bool Collide(const Ray& ray, const Triangle& triangle, Intersection::Manifold* m
 bool Collide(const Ray& ray, const Tetrahedron& tetrahedron, Intersection::Manifold* manifold)
 {
   Intersection::IntersectionPoint point;
-  Intersection::Type ret = Intersection::RayTetrahedron(
-      ray.Start, ray.Direction, tetrahedron.p0, tetrahedron.p1, tetrahedron.p2, tetrahedron.p3, &point);
+  Intersection::Type ret = Intersection::RayTetrahedron(ray.Start, ray.Direction, tetrahedron.p0, tetrahedron.p1, tetrahedron.p2, tetrahedron.p3, &point);
   if (ret < (Intersection::Type)0)
     return false;
   if (manifold != NULL)
@@ -247,8 +236,7 @@ bool Collide(const Segment& segment, const Aabb& aabb, Intersection::Manifold* m
 bool Collide(const Segment& segment, const Capsule& capsule, Intersection::Manifold* manifold)
 {
   Intersection::IntersectionPoint point;
-  Intersection::Type ret =
-      Intersection::SegmentCapsule(segment.Start, segment.End, capsule.PointA, capsule.PointB, capsule.Radius, &point);
+  Intersection::Type ret = Intersection::SegmentCapsule(segment.Start, segment.End, capsule.PointA, capsule.PointB, capsule.Radius, &point);
   if (ret < (Intersection::Type)0)
     return false;
   if (manifold != NULL)
@@ -266,8 +254,7 @@ bool Collide(const Segment& segment, const Capsule& capsule, Intersection::Manif
 bool Collide(const Segment& segment, const Cylinder& cylinder, Intersection::Manifold* manifold)
 {
   Intersection::IntersectionPoint point;
-  Intersection::Type ret = Intersection::SegmentCylinder(
-      segment.Start, segment.End, cylinder.PointA, cylinder.PointB, cylinder.Radius, &point);
+  Intersection::Type ret = Intersection::SegmentCylinder(segment.Start, segment.End, cylinder.PointA, cylinder.PointB, cylinder.Radius, &point);
   if (ret < (Intersection::Type)0)
     return false;
   if (manifold != NULL)
@@ -297,8 +284,7 @@ bool Collide(const Segment& segment, const Frustum& frustum, Intersection::Manif
 bool Collide(const Segment& segment, const Obb& obb, Intersection::Manifold* manifold)
 {
   Intersection::IntersectionPoint point;
-  Intersection::Type ret =
-      Intersection::SegmentObb(segment.Start, segment.End, obb.Center, obb.HalfExtents, obb.Basis, &point);
+  Intersection::Type ret = Intersection::SegmentObb(segment.Start, segment.End, obb.Center, obb.HalfExtents, obb.Basis, &point);
   if (ret < (Intersection::Type)0)
     return false;
   if (manifold != NULL)
@@ -316,8 +302,7 @@ bool Collide(const Segment& segment, const Obb& obb, Intersection::Manifold* man
 bool Collide(const Segment& segment, const Plane& plane, Intersection::Manifold* manifold)
 {
   Intersection::IntersectionPoint point;
-  Intersection::Type ret =
-      Intersection::SegmentPlane(segment.Start, segment.End, plane.GetNormal(), plane.GetDistance(), &point);
+  Intersection::Type ret = Intersection::SegmentPlane(segment.Start, segment.End, plane.GetNormal(), plane.GetDistance(), &point);
   if (ret < (Intersection::Type)0)
     return false;
   if (manifold != NULL)
@@ -335,8 +320,7 @@ bool Collide(const Segment& segment, const Plane& plane, Intersection::Manifold*
 bool Collide(const Segment& segment, const Sphere& sphere, Intersection::Manifold* manifold)
 {
   Intersection::IntersectionPoint point;
-  Intersection::Type ret =
-      Intersection::SegmentSphere(segment.Start, segment.End, sphere.mCenter, sphere.mRadius, &point);
+  Intersection::Type ret = Intersection::SegmentSphere(segment.Start, segment.End, sphere.mCenter, sphere.mRadius, &point);
   if (ret < (Intersection::Type)0)
     return false;
   if (manifold != NULL)
@@ -354,8 +338,7 @@ bool Collide(const Segment& segment, const Sphere& sphere, Intersection::Manifol
 bool Collide(const Segment& segment, const Triangle& triangle, Intersection::Manifold* manifold)
 {
   Intersection::IntersectionPoint point;
-  Intersection::Type ret =
-      Intersection::SegmentTriangle(segment.Start, segment.End, triangle.p0, triangle.p1, triangle.p2, &point);
+  Intersection::Type ret = Intersection::SegmentTriangle(segment.Start, segment.End, triangle.p0, triangle.p1, triangle.p2, &point);
   if (ret < (Intersection::Type)0)
     return false;
   if (manifold != NULL)
@@ -466,8 +449,7 @@ bool Collide(const Aabb& aabb, const Frustum& frustum, Intersection::Manifold* m
 
 bool Collide(const Aabb& aabb, const Obb& obb, Intersection::Manifold* manifold)
 {
-  Intersection::Type ret =
-      Intersection::AabbObb(aabb.mMin, aabb.mMax, obb.Center, obb.HalfExtents, obb.Basis, manifold);
+  Intersection::Type ret = Intersection::AabbObb(aabb.mMin, aabb.mMax, obb.Center, obb.HalfExtents, obb.Basis, manifold);
   if (ret < (Intersection::Type)0)
     return false;
   return true;
@@ -475,8 +457,7 @@ bool Collide(const Aabb& aabb, const Obb& obb, Intersection::Manifold* manifold)
 
 bool Collide(const Aabb& aabb, const Plane& plane, Intersection::Manifold* manifold)
 {
-  Intersection::Type ret =
-      Intersection::AabbPlane(aabb.mMin, aabb.mMax, plane.GetNormal(), plane.GetDistance(), manifold);
+  Intersection::Type ret = Intersection::AabbPlane(aabb.mMin, aabb.mMax, plane.GetNormal(), plane.GetDistance(), manifold);
   if (ret < (Intersection::Type)0)
     return false;
   return true;
@@ -492,8 +473,7 @@ bool Collide(const Aabb& aabb, const Sphere& sphere, Intersection::Manifold* man
 
 bool Collide(const Aabb& aabb, const Triangle& triangle, Intersection::Manifold* manifold)
 {
-  Intersection::Type ret =
-      Intersection::AabbTriangle(aabb.mMin, aabb.mMax, triangle.p0, triangle.p1, triangle.p2, manifold);
+  Intersection::Type ret = Intersection::AabbTriangle(aabb.mMin, aabb.mMax, triangle.p0, triangle.p1, triangle.p2, manifold);
   if (ret < (Intersection::Type)0)
     return false;
   return true;
@@ -526,8 +506,7 @@ bool Collide(const Aabb& aabb, const SweptTriangle& sweptTri, Intersection::Mani
 bool Collide(const Capsule& capsule, const Ray& ray, Intersection::Manifold* manifold)
 {
   Intersection::IntersectionPoint point;
-  Intersection::Type ret =
-      Intersection::RayCapsule(ray.Start, ray.Direction, capsule.PointA, capsule.PointB, capsule.Radius, &point);
+  Intersection::Type ret = Intersection::RayCapsule(ray.Start, ray.Direction, capsule.PointA, capsule.PointB, capsule.Radius, &point);
   if (ret < Intersection::None)
     return false;
   if (manifold != NULL)
@@ -545,8 +524,7 @@ bool Collide(const Capsule& capsule, const Ray& ray, Intersection::Manifold* man
 bool Collide(const Capsule& capsule, const Segment& segment, Intersection::Manifold* manifold)
 {
   Intersection::IntersectionPoint point;
-  Intersection::Type ret =
-      Intersection::SegmentCapsule(segment.Start, segment.End, capsule.PointA, capsule.PointB, capsule.Radius, &point);
+  Intersection::Type ret = Intersection::SegmentCapsule(segment.Start, segment.End, capsule.PointA, capsule.PointB, capsule.Radius, &point);
   if (ret < Intersection::None)
     return false;
   if (manifold != NULL)
@@ -571,8 +549,7 @@ bool Collide(const Capsule& capsule, const Aabb& aabb, Intersection::Manifold* m
 
 bool Collide(const Capsule& capsule1, const Capsule& capsule2, Intersection::Manifold* manifold)
 {
-  Intersection::Type ret = Intersection::CapsuleCapsule(
-      capsule1.PointA, capsule1.PointB, capsule1.Radius, capsule2.PointA, capsule2.PointB, capsule2.Radius, manifold);
+  Intersection::Type ret = Intersection::CapsuleCapsule(capsule1.PointA, capsule1.PointB, capsule1.Radius, capsule2.PointA, capsule2.PointB, capsule2.Radius, manifold);
   if (ret < (Intersection::Type)0)
     return false;
   return true;
@@ -618,8 +595,7 @@ bool Collide(const Capsule& capsule, const Plane& plane, Intersection::Manifold*
 
 bool Collide(const Capsule& capsule, const Sphere& sphere, Intersection::Manifold* manifold)
 {
-  Intersection::Type ret = Intersection::CapsuleSphere(
-      capsule.PointA, capsule.PointB, capsule.Radius, sphere.mCenter, sphere.mRadius, manifold);
+  Intersection::Type ret = Intersection::CapsuleSphere(capsule.PointA, capsule.PointB, capsule.Radius, sphere.mCenter, sphere.mRadius, manifold);
   if (ret < (Intersection::Type)0)
     return false;
   return true;
@@ -660,8 +636,7 @@ bool Collide(const Capsule& capsule, const SweptTriangle& sweptTri, Intersection
 bool Collide(const Cylinder& cylinder, const Ray& ray, Intersection::Manifold* manifold)
 {
   Intersection::IntersectionPoint point;
-  Intersection::Type ret =
-      Intersection::RayCylinder(ray.Start, ray.Direction, cylinder.PointA, cylinder.PointB, cylinder.Radius, &point);
+  Intersection::Type ret = Intersection::RayCylinder(ray.Start, ray.Direction, cylinder.PointA, cylinder.PointB, cylinder.Radius, &point);
   if (ret < Intersection::None)
     return false;
   if (manifold != NULL)
@@ -679,8 +654,7 @@ bool Collide(const Cylinder& cylinder, const Ray& ray, Intersection::Manifold* m
 bool Collide(const Cylinder& cylinder, const Segment& segment, Intersection::Manifold* manifold)
 {
   Intersection::IntersectionPoint point;
-  Intersection::Type ret = Intersection::SegmentCylinder(
-      segment.Start, segment.End, cylinder.PointA, cylinder.PointB, cylinder.Radius, &point);
+  Intersection::Type ret = Intersection::SegmentCylinder(segment.Start, segment.End, cylinder.PointA, cylinder.PointB, cylinder.Radius, &point);
   if (ret < Intersection::None)
     return false;
   if (manifold != NULL)
@@ -792,8 +766,7 @@ bool Collide(const Cylinder& cylinder, const SweptTriangle& sweptTri, Intersecti
 bool Collide(const Ellipsoid& ellipsoid, const Ray& ray, Intersection::Manifold* manifold)
 {
   Intersection::IntersectionPoint point;
-  Intersection::Type ret =
-      Intersection::RayEllipsoid(ray.Start, ray.Direction, ellipsoid.Center, ellipsoid.Radii, ellipsoid.Basis, &point);
+  Intersection::Type ret = Intersection::RayEllipsoid(ray.Start, ray.Direction, ellipsoid.Center, ellipsoid.Radii, ellipsoid.Basis, &point);
   if (ret < Intersection::None)
     return false;
   if (manifold != NULL)
@@ -1017,8 +990,7 @@ bool Collide(const Frustum& frustum, const SweptTriangle& sweptTri, Intersection
 bool Collide(const Obb& obb, const Ray& ray, Intersection::Manifold* manifold)
 {
   Intersection::IntersectionPoint point;
-  Intersection::Type ret =
-      Intersection::RayObb(ray.Start, ray.Direction, obb.Center, obb.HalfExtents, obb.Basis, &point);
+  Intersection::Type ret = Intersection::RayObb(ray.Start, ray.Direction, obb.Center, obb.HalfExtents, obb.Basis, &point);
   if (ret < Intersection::None)
     return false;
   if (manifold != NULL)
@@ -1036,8 +1008,7 @@ bool Collide(const Obb& obb, const Ray& ray, Intersection::Manifold* manifold)
 bool Collide(const Obb& obb, const Segment& segment, Intersection::Manifold* manifold)
 {
   Intersection::IntersectionPoint point;
-  Intersection::Type ret =
-      Intersection::SegmentObb(segment.Start, segment.End, obb.Center, obb.HalfExtents, obb.Basis, &point);
+  Intersection::Type ret = Intersection::SegmentObb(segment.Start, segment.End, obb.Center, obb.HalfExtents, obb.Basis, &point);
   if (ret < Intersection::None)
     return false;
   if (manifold != NULL)
@@ -1096,8 +1067,7 @@ bool Collide(const Obb& obb, const Frustum& frustum, Intersection::Manifold* man
 
 bool Collide(const Obb& obb1, const Obb& obb2, Intersection::Manifold* manifold)
 {
-  Intersection::Type ret = Intersection::ObbObb(
-      obb1.Center, obb1.HalfExtents, obb1.Basis, obb2.Center, obb2.HalfExtents, obb2.Basis, manifold);
+  Intersection::Type ret = Intersection::ObbObb(obb1.Center, obb1.HalfExtents, obb1.Basis, obb2.Center, obb2.HalfExtents, obb2.Basis, manifold);
   if (ret < (Intersection::Type)0)
     return false;
   return true;
@@ -1105,8 +1075,7 @@ bool Collide(const Obb& obb1, const Obb& obb2, Intersection::Manifold* manifold)
 
 bool Collide(const Obb& obb, const Plane& plane, Intersection::Manifold* manifold)
 {
-  Intersection::Type ret =
-      Intersection::ObbPlane(obb.Center, obb.HalfExtents, obb.Basis, plane.GetNormal(), plane.GetDistance(), manifold);
+  Intersection::Type ret = Intersection::ObbPlane(obb.Center, obb.HalfExtents, obb.Basis, plane.GetNormal(), plane.GetDistance(), manifold);
   if (ret < (Intersection::Type)0)
     return false;
   return true;
@@ -1114,8 +1083,7 @@ bool Collide(const Obb& obb, const Plane& plane, Intersection::Manifold* manifol
 
 bool Collide(const Obb& obb, const Sphere& sphere, Intersection::Manifold* manifold)
 {
-  Intersection::Type ret =
-      Intersection::ObbSphere(obb.Center, obb.HalfExtents, obb.Basis, sphere.mCenter, sphere.mRadius, manifold);
+  Intersection::Type ret = Intersection::ObbSphere(obb.Center, obb.HalfExtents, obb.Basis, sphere.mCenter, sphere.mRadius, manifold);
   if (ret < (Intersection::Type)0)
     return false;
   return true;
@@ -1123,8 +1091,7 @@ bool Collide(const Obb& obb, const Sphere& sphere, Intersection::Manifold* manif
 
 bool Collide(const Obb& obb, const Triangle& triangle, Intersection::Manifold* manifold)
 {
-  Intersection::Type ret = Intersection::ObbTriangle(
-      obb.Center, obb.HalfExtents, obb.Basis, triangle.p0, triangle.p1, triangle.p2, manifold);
+  Intersection::Type ret = Intersection::ObbTriangle(obb.Center, obb.HalfExtents, obb.Basis, triangle.p0, triangle.p1, triangle.p2, manifold);
   if (ret < (Intersection::Type)0)
     return false;
   return true;
@@ -1157,8 +1124,7 @@ bool Collide(const Obb& obb, const SweptTriangle& sweptTri, Intersection::Manifo
 bool Collide(const Plane& plane, const Ray& ray, Intersection::Manifold* manifold)
 {
   Intersection::IntersectionPoint point;
-  Intersection::Type ret =
-      Intersection::RayPlane(ray.Start, ray.Direction, plane.GetNormal(), plane.GetDistance(), &point);
+  Intersection::Type ret = Intersection::RayPlane(ray.Start, ray.Direction, plane.GetNormal(), plane.GetDistance(), &point);
   if (ret < Intersection::None)
     return false;
   if (manifold != NULL)
@@ -1176,8 +1142,7 @@ bool Collide(const Plane& plane, const Ray& ray, Intersection::Manifold* manifol
 bool Collide(const Plane& plane, const Segment& segment, Intersection::Manifold* manifold)
 {
   Intersection::IntersectionPoint point;
-  Intersection::Type ret =
-      Intersection::SegmentPlane(segment.Start, segment.End, plane.GetNormal(), plane.GetDistance(), &point);
+  Intersection::Type ret = Intersection::SegmentPlane(segment.Start, segment.End, plane.GetNormal(), plane.GetDistance(), &point);
   if (ret < Intersection::None)
     return false;
   if (manifold != NULL)
@@ -1244,8 +1209,7 @@ bool Collide(const Plane& plane1, const Plane& plane2, Intersection::Manifold* m
 
 bool Collide(const Plane& plane, const Sphere& sphere, Intersection::Manifold* manifold)
 {
-  Intersection::Type ret =
-      Intersection::PlaneSphere(plane.GetNormal(), plane.GetDistance(), sphere.mCenter, sphere.mRadius, manifold);
+  Intersection::Type ret = Intersection::PlaneSphere(plane.GetNormal(), plane.GetDistance(), sphere.mCenter, sphere.mRadius, manifold);
   if (ret < (Intersection::Type)0)
     return false;
   return true;
@@ -1296,8 +1260,7 @@ bool Collide(const Sphere& sphere, const Ray& ray, Intersection::Manifold* manif
 bool Collide(const Sphere& sphere, const Segment& segment, Intersection::Manifold* manifold)
 {
   Intersection::IntersectionPoint point;
-  Intersection::Type ret =
-      Intersection::SegmentSphere(segment.Start, segment.End, sphere.mCenter, sphere.mRadius, &point);
+  Intersection::Type ret = Intersection::SegmentSphere(segment.Start, segment.End, sphere.mCenter, sphere.mRadius, &point);
   if (ret < Intersection::None)
     return false;
   if (manifold != NULL)
@@ -1378,8 +1341,7 @@ bool Collide(const Sphere& sphere, const Plane& plane, Intersection::Manifold* m
 
 bool Collide(const Sphere& sphere1, const Sphere& sphere2, Intersection::Manifold* manifold)
 {
-  Intersection::Type ret =
-      Intersection::SphereSphere(sphere1.mCenter, sphere1.mRadius, sphere2.mCenter, sphere2.mRadius, manifold);
+  Intersection::Type ret = Intersection::SphereSphere(sphere1.mCenter, sphere1.mRadius, sphere2.mCenter, sphere2.mRadius, manifold);
   if (ret < (Intersection::Type)0)
     return false;
   return true;
@@ -1387,8 +1349,7 @@ bool Collide(const Sphere& sphere1, const Sphere& sphere2, Intersection::Manifol
 
 bool Collide(const Sphere& sphere, const Triangle& triangle, Intersection::Manifold* manifold)
 {
-  Intersection::Type ret =
-      Intersection::SphereTriangle(sphere.mCenter, sphere.mRadius, triangle.p0, triangle.p1, triangle.p2, manifold);
+  Intersection::Type ret = Intersection::SphereTriangle(sphere.mCenter, sphere.mRadius, triangle.p0, triangle.p1, triangle.p2, manifold);
   if (ret < (Intersection::Type)0)
     return false;
   return true;
@@ -1421,8 +1382,7 @@ bool Collide(const Sphere& sphere, const SweptTriangle& sweptTri, Intersection::
 bool Collide(const Triangle& triangle, const Ray& ray, Intersection::Manifold* manifold)
 {
   Intersection::IntersectionPoint point;
-  Intersection::Type ret =
-      Intersection::RayTriangle(ray.Start, ray.Direction, triangle.p0, triangle.p1, triangle.p2, &point);
+  Intersection::Type ret = Intersection::RayTriangle(ray.Start, ray.Direction, triangle.p0, triangle.p1, triangle.p2, &point);
   if (ret < Intersection::None)
     return false;
   if (manifold != NULL)
@@ -1440,8 +1400,7 @@ bool Collide(const Triangle& triangle, const Ray& ray, Intersection::Manifold* m
 bool Collide(const Triangle& triangle, const Segment& segment, Intersection::Manifold* manifold)
 {
   Intersection::IntersectionPoint point;
-  Intersection::Type ret =
-      Intersection::SegmentTriangle(segment.Start, segment.End, triangle.p0, triangle.p1, triangle.p2, &point);
+  Intersection::Type ret = Intersection::SegmentTriangle(segment.Start, segment.End, triangle.p0, triangle.p1, triangle.p2, &point);
   if (ret < Intersection::None)
     return false;
   if (manifold != NULL)
@@ -1526,8 +1485,7 @@ bool Collide(const Triangle& triangle, const Sphere& sphere, Intersection::Manif
 
 bool Collide(const Triangle& triangle1, const Triangle& triangle2, Intersection::Manifold* manifold)
 {
-  Intersection::Type ret = Intersection::TriangleTriangle(
-      triangle1.p0, triangle1.p1, triangle1.p2, triangle2.p0, triangle2.p1, triangle2.p2, manifold);
+  Intersection::Type ret = Intersection::TriangleTriangle(triangle1.p0, triangle1.p1, triangle1.p2, triangle2.p0, triangle2.p1, triangle2.p2, manifold);
   if (ret < (Intersection::Type)0)
     return false;
   return true;
@@ -1560,8 +1518,7 @@ bool Collide(const Triangle& triangle, const SweptTriangle& sweptTri, Intersecti
 bool Collide(const Tetrahedron& tetrahedron, const Ray& ray, Intersection::Manifold* manifold)
 {
   Intersection::IntersectionPoint point;
-  Intersection::Type ret = Intersection::RayTetrahedron(
-      ray.Start, ray.Direction, tetrahedron.p0, tetrahedron.p1, tetrahedron.p2, tetrahedron.p3, &point);
+  Intersection::Type ret = Intersection::RayTetrahedron(ray.Start, ray.Direction, tetrahedron.p0, tetrahedron.p1, tetrahedron.p2, tetrahedron.p3, &point);
   if (ret < Intersection::None)
     return false;
   if (manifold != NULL)
@@ -1766,9 +1723,7 @@ bool Collide(const ConvexMeshShape& supportShape, const Tetrahedron& tetrahedron
   return SupportShapeCollide(a, b, manifold);
 }
 
-bool Collide(const ConvexMeshShape& supportShape1,
-             const ConvexMeshShape& supportShape2,
-             Intersection::Manifold* manifold)
+bool Collide(const ConvexMeshShape& supportShape1, const ConvexMeshShape& supportShape2, Intersection::Manifold* manifold)
 {
   // Test for collision.
   const Intersection::SupportShape& a = supportShape1.mSupport;

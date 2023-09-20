@@ -70,13 +70,7 @@ public:
 
   // Determines if a new resource should be created, otherwise returns the
   // original
-  virtual Resource* NewResourceOnWrite(ResourceManager* resourceManager,
-                                       BoundType* type,
-                                       StringParam propertyName,
-                                       Space* space,
-                                       Resource* resource,
-                                       Archetype* archetype,
-                                       bool modified) = 0;
+  virtual Resource* NewResourceOnWrite(ResourceManager* resourceManager, BoundType* type, StringParam propertyName, Space* space, Resource* resource, Archetype* archetype, bool modified) = 0;
 
   // If there is a resource id conflict notify the editor
   virtual void OnResourceIdConflict(ResourceEntry& resourceEntry, Resource* previous) = 0;

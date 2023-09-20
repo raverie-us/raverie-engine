@@ -31,11 +31,7 @@ public:
   Handle GetComponentAt(HandleParam instance, uint index) override;
   Handle GetComponent(HandleParam instance, BoundType* boundType) override;
   uint GetComponentIndex(HandleParam instance, BoundType* boundType) override;
-  void AddComponent(HandleParam instance,
-                    HandleParam subObject,
-                    int index,
-                    bool ignoreDependencies,
-                    MetaCreationContext* creationContext) override;
+  void AddComponent(HandleParam instance, HandleParam subObject, int index, bool ignoreDependencies, MetaCreationContext* creationContext) override;
   void RemoveComponent(HandleParam instance, HandleParam subObject, bool ignoreDependencies) override;
 };
 

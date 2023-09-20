@@ -20,8 +20,7 @@ float HalfFloatConverter::ToFloat(u16 float16)
   HalfFloatConverter& converter = HalfFloatConverter::GetInstance();
 
   u16 h = float16;
-  u32 f =
-      converter.mMantissaTable[converter.mOffsetTable[(h >> 10)] + (h & 0x3FF)] + converter.mExponentTable[(h >> 10)];
+  u32 f = converter.mMantissaTable[converter.mOffsetTable[(h >> 10)] + (h & 0x3FF)] + converter.mExponentTable[(h >> 10)];
   return *(float*)(void*)&f;
 }
 

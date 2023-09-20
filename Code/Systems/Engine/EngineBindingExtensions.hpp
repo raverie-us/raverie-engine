@@ -5,8 +5,8 @@ namespace Raverie
 {
 
 // All Components need to call this in their meta initialization
-#define RaverieBindComponent()                                                                                            \
-  RaverieBindDefaultConstructor();                                                                                       \
+#define RaverieBindComponent()                                                                                                                                                                         \
+  RaverieBindDefaultConstructor();                                                                                                                                                                     \
   RaverieBindDestructor();
 
 // Meta Resource

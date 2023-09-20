@@ -26,8 +26,7 @@ void Epa::Init(const Simplex& simplex)
   for (unsigned i = 0; i < mFaces.Size(); ++i)
   {
     Face& face = mFaces[i];
-    face.normal =
-        (mVertices[face.p1].cso - mVertices[face.p0].cso).Cross(mVertices[face.p2].cso - mVertices[face.p0].cso);
+    face.normal = (mVertices[face.p1].cso - mVertices[face.p0].cso).Cross(mVertices[face.p2].cso - mVertices[face.p0].cso);
     face.normal.AttemptNormalize();
   }
 
@@ -135,8 +134,7 @@ bool Epa::Expand(CSOVertex newPoint)
   {
     Edge& edge = mEdges[i];
     Face newFace(edge.p0, edge.p1, index);
-    newFace.normal = (mVertices[newFace.p1].cso - mVertices[newFace.p0].cso)
-                         .Cross(mVertices[newFace.p2].cso - mVertices[newFace.p0].cso);
+    newFace.normal = (mVertices[newFace.p1].cso - mVertices[newFace.p0].cso).Cross(mVertices[newFace.p2].cso - mVertices[newFace.p0].cso);
     float length = newFace.normal.AttemptNormalize();
     if (length != 0)
       mFaces.PushBack(newFace);
@@ -206,8 +204,7 @@ bool Epa::DebugStep(void)
   {
     Edge& edge = mEdges[i];
     Face newFace(edge.p0, edge.p1, index);
-    newFace.normal = (mVertices[newFace.p1].cso - mVertices[newFace.p0].cso)
-                         .Cross(mVertices[newFace.p2].cso - mVertices[newFace.p0].cso);
+    newFace.normal = (mVertices[newFace.p1].cso - mVertices[newFace.p0].cso).Cross(mVertices[newFace.p2].cso - mVertices[newFace.p0].cso);
     newFace.normal.AttemptNormalize();
     mFaces.PushBack(newFace);
   }
@@ -238,10 +235,7 @@ void Epa::DrawDebug(void)
       color = Color::Red;
     else
       color = Color::Blue;
-    Raverie::gDebugDraw->Add(Raverie::Debug::Triangle(mVertices[face.p0].cso, mVertices[face.p1].cso, mVertices[face.p2].cso)
-                              .Color(color)
-                              .Border(true)
-                              .Alpha(50));
+    Raverie::gDebugDraw->Add(Raverie::Debug::Triangle(mVertices[face.p0].cso, mVertices[face.p1].cso, mVertices[face.p2].cso).Color(color).Border(true).Alpha(50));
   }
 }
 

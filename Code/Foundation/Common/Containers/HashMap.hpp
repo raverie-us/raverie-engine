@@ -41,12 +41,8 @@ struct PairHashAdapter
 /// Hash Map is an Associative Hashed Container.
 // Stores values by hashing keys providing constant insertion, removal, and
 // searching. Iteration is not in done is sort order.
-template <typename KeyType,
-          typename DataType,
-          typename Hasher = HashPolicy<KeyType>,
-          typename Allocator = DefaultAllocator>
-class HashMap
-    : public HashedContainer<Pair<KeyType, DataType>, PairHashAdapter<Hasher, KeyType, DataType>, Allocator>
+template <typename KeyType, typename DataType, typename Hasher = HashPolicy<KeyType>, typename Allocator = DefaultAllocator>
+class HashMap : public HashedContainer<Pair<KeyType, DataType>, PairHashAdapter<Hasher, KeyType, DataType>, Allocator>
 {
 public:
   typedef KeyType key_type;

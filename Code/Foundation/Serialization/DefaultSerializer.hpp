@@ -58,10 +58,10 @@ public:
     return false;
   }
 
-#define FUNDAMENTAL(type)                                                                                              \
-  bool FundamentalField(cstr fieldName, type& value) override                                                          \
-  {                                                                                                                    \
-    return false;                                                                                                      \
+#define FUNDAMENTAL(type)                                                                                                                                                                              \
+  bool FundamentalField(cstr fieldName, type& value) override                                                                                                                                          \
+  {                                                                                                                                                                                                    \
+    return false;                                                                                                                                                                                      \
   };
 #include "FundamentalTypes.hpp"
 #undef FUNDAMENTAL

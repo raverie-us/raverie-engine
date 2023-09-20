@@ -102,8 +102,7 @@ void EngineLibraryExtensions::AddResourceExtensions(LibraryBuilder& builder, Res
 
     String resourceName = resource->Name;
 
-    Property* property = builder.AddExtensionGetterSetter(
-        resourceType, resourceName, resourceType, nullptr, FindNamedResource, MemberOptions::Static);
+    Property* property = builder.AddExtensionGetterSetter(resourceType, resourceName, resourceType, nullptr, FindNamedResource, MemberOptions::Static);
 
     property->Get->ComplexUserData.WriteObject(resourceName);
     property->Get->UserData = resource->GetManager();
@@ -126,8 +125,7 @@ bool FindResourceMode(Call& call, ExceptionReport& report, ResourceNotFound::Enu
   // Guard against the user passing in null
   if (name == nullptr)
   {
-    call.GetState()->ThrowNullReferenceException(report,
-                                                 "The string that was passed in was null. Please provide a name.");
+    call.GetState()->ThrowNullReferenceException(report, "The string that was passed in was null. Please provide a name.");
     return false;
   }
 
@@ -181,16 +179,13 @@ void AddResourceFind(LibraryBuilder& builder, BoundType* resourceType)
   p0.Name = "name";
 
   // Find
-  Function* function = builder.AddExtensionFunction(
-      resourceType, "FindOrDefault", FindResourceOrDefault, params, resourceType, FunctionOptions::Static);
+  Function* function = builder.AddExtensionFunction(resourceType, "FindOrDefault", FindResourceOrDefault, params, resourceType, FunctionOptions::Static);
 
   // Find or null
-  function = builder.AddExtensionFunction(
-      resourceType, "FindOrNull", FindResourceOrNull, params, resourceType, FunctionOptions::Static);
+  function = builder.AddExtensionFunction(resourceType, "FindOrNull", FindResourceOrNull, params, resourceType, FunctionOptions::Static);
 
   // Find or error
-  function = builder.AddExtensionFunction(
-      resourceType, "FindOrError", FindResourceOrError, params, resourceType, FunctionOptions::Static);
+  function = builder.AddExtensionFunction(resourceType, "FindOrError", FindResourceOrError, params, resourceType, FunctionOptions::Static);
 }
 
 void FindNamedResource(Call& call, ExceptionReport& report)

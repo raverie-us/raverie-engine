@@ -36,7 +36,7 @@ public:
 };
 
 template <typename Parent, typename Member>
-__attribute__ ((optnone)) inline ptrdiff_t PointerToMemberOffset(const Member Parent::*ptrToMember)
+__attribute__((optnone)) inline ptrdiff_t PointerToMemberOffset(const Member Parent::*ptrToMember)
 {
   return (ptrdiff_t)RaverieOffsetOfHelper(Parent, ->*, ptrToMember);
 }
@@ -749,9 +749,7 @@ void DeleteObjectsIn(BaseInList<baseLinkType, type>& container)
 }
 
 template <typename baseLinkType, typename type>
-void DeleteObjectsInRange(BaseInList<baseLinkType, type>& container,
-                          typename BaseInList<baseLinkType, type>::iterator& begin,
-                          typename BaseInList<baseLinkType, type>::iterator& end)
+void DeleteObjectsInRange(BaseInList<baseLinkType, type>& container, typename BaseInList<baseLinkType, type>::iterator& begin, typename BaseInList<baseLinkType, type>::iterator& end)
 {
   container.SafeForEach(begin, end, EraseAndDeleteBase<baseLinkType, type>);
 }

@@ -15,9 +15,7 @@ class FragmentSearchProvider : public SearchProvider
 public:
   FragmentSearchProvider(StringParam attribute);
   void Search(SearchData& search) override;
-  void Search(SearchData& search,
-              RaverieShaderIRLibrary* shaderLibrary,
-              HashSet<RaverieShaderIRLibrary*>& visitedLibraries);
+  void Search(SearchData& search, RaverieShaderIRLibrary* shaderLibrary, HashSet<RaverieShaderIRLibrary*>& visitedLibraries);
 
   // The attribute to filter fragments by
   String mAttribute;
@@ -90,12 +88,8 @@ private:
   void OnRunTranslation(Event* e);
   void OnScriptDisplayChanged(Event* e);
 
-  RaverieShaderIRLibraryRef BuildShaderLibrary(RaverieShaderGenerator& generator,
-                                             RaverieShaderIRCompositor::ShaderDefinition& shaderDef);
-  bool CompilePipeline(RaverieShaderIRType* shaderType,
-                       ShaderPipelineDescription& pipeline,
-                       Array<TranslationPassResultRef>& pipelineResults,
-                       Array<TranslationPassResultRef>& debugPipelineResults);
+  RaverieShaderIRLibraryRef BuildShaderLibrary(RaverieShaderGenerator& generator, RaverieShaderIRCompositor::ShaderDefinition& shaderDef);
+  bool CompilePipeline(RaverieShaderIRType* shaderType, ShaderPipelineDescription& pipeline, Array<TranslationPassResultRef>& pipelineResults, Array<TranslationPassResultRef>& debugPipelineResults);
 
   TextBox* mCoreVertexTextBox;
   TextBox* mMaterialTextBox;

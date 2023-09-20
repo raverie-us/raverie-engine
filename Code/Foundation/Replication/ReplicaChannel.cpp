@@ -175,8 +175,7 @@ bool ReplicaChannel::ObserveAndReplicateChanges(bool forceObservation, bool forc
   // Observe and replicate changes
   return ObserveAndReplicateChanges(timestamp, frameId, forceObservation, forceReplication, isRelay);
 }
-bool ReplicaChannel::ObserveAndReplicateChanges(
-    TimeMs timestamp, uint64 frameId, bool forceObservation, bool forceReplication, bool isRelay)
+bool ReplicaChannel::ObserveAndReplicateChanges(TimeMs timestamp, uint64 frameId, bool forceObservation, bool forceReplication, bool isRelay)
 {
   // Get replica channel type
   ReplicaChannelType* replicaChannelType = GetReplicaChannelType();
@@ -304,8 +303,7 @@ bool ReplicaChannel::ShouldRelay() const
   //     Is server?
   // AND Replica channel has client change authority?
   // AND Replica channel type allows change relays?
-  return GetReplicator()->GetRole() == Role::Server && GetAuthority() == Authority::Client &&
-         GetReplicaChannelType()->GetAllowRelay();
+  return GetReplicator()->GetRole() == Role::Server && GetAuthority() == Authority::Client && GetReplicaChannelType()->GetAllowRelay();
 }
 
 void ReplicaChannel::SetAuthority(Authority::Enum authority)
@@ -412,11 +410,7 @@ void ReplicaChannel::ClearReplicaProperties()
   mReplicaProperties.Clear();
 }
 
-void ReplicaChannel::ReactToPropertyChanges(TimeMs timestamp,
-                                            ReplicationPhase::Enum replicationPhase,
-                                            TransmissionDirection::Enum direction,
-                                            bool generateNotifications,
-                                            bool setLastValues)
+void ReplicaChannel::ReactToPropertyChanges(TimeMs timestamp, ReplicationPhase::Enum replicationPhase, TransmissionDirection::Enum direction, bool generateNotifications, bool setLastValues)
 {
   // For all replica properties
   forRange (ReplicaProperty* replicaProperty, GetReplicaProperties().All())
@@ -480,8 +474,7 @@ bool ReplicaChannel::Serialize(BitStream& bitStream, ReplicationPhase::Enum repl
   //    Serialize all replica properties?
   // OR There is only a single replica property?
   // OR Force serialization of all replica properties?
-  if (replicaChannelType->GetSerializationMode() == SerializationMode::All || GetReplicaProperties().Size() == 1 ||
-      forceAll)
+  if (replicaChannelType->GetSerializationMode() == SerializationMode::All || GetReplicaProperties().Size() == 1 || forceAll)
   {
     // For all replica properties
     forRange (ReplicaProperty* replicaProperty, GetReplicaProperties().All())
@@ -534,8 +527,7 @@ bool ReplicaChannel::Deserialize(const BitStream& bitStream, ReplicationPhase::E
   //    Serialize all replica properties?
   // OR There is only a single replica property?
   // OR Force serialization of all replica properties?
-  if (replicaChannelType->GetSerializationMode() == SerializationMode::All || GetReplicaProperties().Size() == 1 ||
-      forceAll)
+  if (replicaChannelType->GetSerializationMode() == SerializationMode::All || GetReplicaProperties().Size() == 1 || forceAll)
   {
     // For all replica properties
     forRange (ReplicaProperty* replicaProperty, GetReplicaProperties().All())
@@ -781,9 +773,7 @@ void ReplicaChannelType::ObserveAndReplicateChanges()
   // Observe napping replica channels
   ObserveAndReplicateChanges(mNappingChannelIndex, timestamp, frameId);
 }
-void ReplicaChannelType::ObserveAndReplicateChanges(ReplicaChannelIndex& replicaChannelIndex,
-                                                    TimeMs timestamp,
-                                                    uint64 frameId)
+void ReplicaChannelType::ObserveAndReplicateChanges(ReplicaChannelIndex& replicaChannelIndex, TimeMs timestamp, uint64 frameId)
 {
   // (Should be valid)
   Assert(IsValid());

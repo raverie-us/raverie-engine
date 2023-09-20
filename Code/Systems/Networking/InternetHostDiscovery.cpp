@@ -4,11 +4,7 @@
 namespace Raverie
 {
 
-InternetHostDiscovery::InternetHostDiscovery(NetPeer* netPeer) :
-    NetDiscoveryInterface(netPeer),
-    mCurrentMasterServerIndex(0),
-    mMasterServerConnectionIp(),
-    mInternetHostListTimer(0)
+InternetHostDiscovery::InternetHostDiscovery(NetPeer* netPeer) : NetDiscoveryInterface(netPeer), mCurrentMasterServerIndex(0), mMasterServerConnectionIp(), mInternetHostListTimer(0)
 {
 }
 
@@ -151,17 +147,13 @@ void InternetHostDiscovery::RefreshAll(bool allowDiscovery, bool getExtraHostInf
   mInternetHostListTimer = 0.0f;
 }
 
-void InternetHostDiscovery::SingleHostRefresh(IpAddress const& thierIp,
-                                              bool allowDiscovery,
-                                              bool getExtraHostInfo,
-                                              bool removeStaleHosts)
+void InternetHostDiscovery::SingleHostRefresh(IpAddress const& thierIp, bool allowDiscovery, bool getExtraHostInfo, bool removeStaleHosts)
 {
   CancelIfRefreshingList();
 
   mDiscoveryMode = NetDiscoveryMode::Refresh;
 
-  SingleHostRequest* hostRequest =
-      CreateSingleHostRequest(Network::Internet, allowDiscovery, thierIp, removeStaleHosts, getExtraHostInfo);
+  SingleHostRequest* hostRequest = CreateSingleHostRequest(Network::Internet, allowDiscovery, thierIp, removeStaleHosts, getExtraHostInfo);
 
   // Can we possibly get a response with these parameters? (single refresh on
   // not previously known host without discovery? no point...)
@@ -182,11 +174,7 @@ void InternetHostDiscovery::SingleHostRefresh(IpAddress const& thierIp,
   refreshHostRequestInfo.GetBitStream().Write(request);
 
   // Send off ping
-  mPingManager.PingHost(Network::Internet,
-                        mNetPeer->mMasterServerSubscriptions,
-                        HostPingType::MasterServerRefreshHost,
-                        FloatSecondsToTimeMs(mNetPeer->mBasicHostInfoTimeout),
-                        refreshHostRequestInfo);
+  mPingManager.PingHost(Network::Internet, mNetPeer->mMasterServerSubscriptions, HostPingType::MasterServerRefreshHost, FloatSecondsToTimeMs(mNetPeer->mBasicHostInfoTimeout), refreshHostRequestInfo);
 }
 
 void InternetHostDiscovery::HandleCancelSingleHostRequest(SingleHostRequest& singleHostRequest)
@@ -283,9 +271,7 @@ void InternetHostDiscovery::HandlePingTimeout(PendingHostPing& pendingHostPing)
   }
 }
 
-void InternetHostDiscovery::HandlePong(IpAddress const& theirIpAddress,
-                                       NetHostPongData& netHostPongData,
-                                       PendingHostPing& pendingHostPing)
+void InternetHostDiscovery::HandlePong(IpAddress const& theirIpAddress, NetHostPongData& netHostPongData, PendingHostPing& pendingHostPing)
 {
   // if ping from a game server:
   // read out ping data save it. update level of refresh.
@@ -350,11 +336,7 @@ void InternetHostDiscovery::HandlePong(IpAddress const& theirIpAddress,
     // We got indirect host info back from master server.
     if (isFirstResponse)
     {
-      mPingManager.PingHost(Network::Internet,
-                            pingedHost,
-                            HostPingType::Refresh,
-                            FloatSecondsToTimeMs(mNetPeer->GetBasicHostInfoTimeout()),
-                            EventBundle());
+      mPingManager.PingHost(Network::Internet, pingedHost, HostPingType::Refresh, FloatSecondsToTimeMs(mNetPeer->GetBasicHostInfoTimeout()), EventBundle());
     }
   }
   break;
@@ -466,11 +448,7 @@ void InternetHostDiscovery::ReceiveNetHostRecordList(IpAddress const& theirIpAdd
 
   // TODO HANDLE PINGS
   // Ping hosts who responded.
-  mPingManager.PingHost(Network::Internet,
-                        hostRequest->mRespondingHosts,
-                        HostPingType::RefreshList,
-                        FloatSecondsToTimeMs(mNetPeer->GetBasicHostInfoTimeout()),
-                        EventBundle());
+  mPingManager.PingHost(Network::Internet, hostRequest->mRespondingHosts, HostPingType::RefreshList, FloatSecondsToTimeMs(mNetPeer->GetBasicHostInfoTimeout()), EventBundle());
   // Now we wait till this ping expires. When it does we check if they want
   // extra host info or not. if they don't then the event is dispatched.
 

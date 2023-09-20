@@ -172,14 +172,9 @@ private:
   /// Find the horizon boundary given a conflict vertex. The resultant edges
   /// will be in counter-clockwise order and are the edges belonging to the
   /// visible faces.
-  void IdentifyHorizon(QuickHullVertex* conflictVertex,
-                       QuickHullFace* conflictFace,
-                       Array<QuickHullEdge*>& horizonEdges,
-                       Array<QuickHullFace*>& internalFaces);
+  void IdentifyHorizon(QuickHullVertex* conflictVertex, QuickHullFace* conflictFace, Array<QuickHullEdge*>& horizonEdges, Array<QuickHullFace*>& internalFaces);
   /// Creates the new faces from the horizon edge to the conflict face.
-  void CreateNewHorizonFaces(QuickHullVertex* conflictVertex,
-                             Array<QuickHullEdge*>& horizon,
-                             Array<QuickHullFace*>& newFaces);
+  void CreateNewHorizonFaces(QuickHullVertex* conflictVertex, Array<QuickHullEdge*>& horizon, Array<QuickHullFace*>& newFaces);
 
   /// Partitions all of the conflict vertices on the given faces to new faces.
   void PartitionOldFaceConflictLists(Array<QuickHullFace*>& faces);
@@ -199,13 +194,10 @@ private:
   QuickHullEdge* FindQuickHullMergeFace(QuickHullFace* face);
   /// Absorb the adjacent face into face across the provided shared edge and
   /// twin.
-  void
-  AbsorbFace(QuickHullFace* face, QuickHullFace* adjacentFace, QuickHullEdge* sharedEdge, QuickHullEdge* sharedTwin);
+  void AbsorbFace(QuickHullFace* face, QuickHullFace* adjacentFace, QuickHullEdge* sharedEdge, QuickHullEdge* sharedTwin);
   /// Insert a range of edges into a face after a given edge. Returns the last
   /// edge where we inserted after.
-  QuickHullEdge* InsertEdgeRangeAfter(QuickHullFace* face,
-                                      QuickHullEdge* edgeToInsertAfter,
-                                      EdgeList::range& edgesToInsert);
+  QuickHullEdge* InsertEdgeRangeAfter(QuickHullFace* face, QuickHullEdge* edgeToInsertAfter, EdgeList::range& edgesToInsert);
 
   /// Find if a topological invariant exists and if so fix it. This function
   /// must be iteratively called
@@ -268,14 +260,9 @@ private:
   void DrawRemainingVertices(DebugDrawStep& step, Vec4Param color = ToFloatColor(Color::Gray));
   void DrawPoint(DebugDrawStep& step, Vec3Param p0, Vec4Param color = ToFloatColor(Color::White));
   void DrawLine(DebugDrawStep& step, Vec3Param p0, Vec3Param p1, Vec4Param color = ToFloatColor(Color::White));
-  void
-  DrawRay(DebugDrawStep& step, Vec3Param p0, Vec3Param p1, real headSize, Vec4Param color = ToFloatColor(Color::White));
+  void DrawRay(DebugDrawStep& step, Vec3Param p0, Vec3Param p1, real headSize, Vec4Param color = ToFloatColor(Color::White));
   void DrawEdge(DebugDrawStep& step, QuickHullEdge* edge, Vec4Param color = ToFloatColor(Color::White));
-  void DrawFace(DebugDrawStep& step,
-                QuickHullFace* face,
-                Vec4Param color = ToFloatColor(Color::White),
-                bool drawEdges = false,
-                bool drawFaceVec = false);
+  void DrawFace(DebugDrawStep& step, QuickHullFace* face, Vec4Param color = ToFloatColor(Color::White), bool drawEdges = false, bool drawFaceVec = false);
   void DrawInitialSpan(QuickHullVertex* v0, QuickHullVertex* v1);
   void DrawInitialTriangle(QuickHullVertex* v0, QuickHullVertex* v1, QuickHullVertex* v2);
   void DrawInitialTetrahedron(QuickHullVertex* v0, QuickHullVertex* v1, QuickHullVertex* v2, QuickHullVertex* v3);
@@ -286,8 +273,7 @@ private:
   void DrawNonConvexFaces(QuickHullFace* face0, QuickHullFace* face1);
   void DrawHullWithFace(StringParam text, QuickHullFace* face, Vec4Param color = ToFloatColor(Color::Red));
   void DrawFaceMerge(QuickHullFace* face0, QuickHullFace* face1, Vec4Param color = ToFloatColor(Color::Red));
-  void DrawTopologicalFix(
-      StringParam text, QuickHullFace* face0, QuickHullFace* face1, QuickHullEdge* edge0, QuickHullEdge* edge1);
+  void DrawTopologicalFix(StringParam text, QuickHullFace* face0, QuickHullFace* face1, QuickHullEdge* edge0, QuickHullEdge* edge1);
   void DrawExpandedHull();
   void DrawHullWithDescription(StringParam text);
   void DrawFinalHull(const Array<Vec3>& points);

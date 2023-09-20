@@ -83,8 +83,7 @@ public:
   }
 
   // Serialization
-  bool ArrayField(
-      cstr typeName, cstr fieldName, byte* data, ArrayType arrayType, uint numberOfElements, uint sizeOftype) override
+  bool ArrayField(cstr typeName, cstr fieldName, byte* data, ArrayType arrayType, uint numberOfElements, uint sizeOftype) override
   {
     BinaryType()->Data((byte*)data, sizeOftype * numberOfElements);
     return true;
@@ -104,10 +103,10 @@ public:
   {
   }
 
-#define FUNDAMENTAL(type)                                                                                              \
-  bool FundamentalField(cstr fieldName, type& value) override                                                          \
-  {                                                                                                                    \
-    return FundamentalType(value);                                                                                     \
+#define FUNDAMENTAL(type)                                                                                                                                                                              \
+  bool FundamentalField(cstr fieldName, type& value) override                                                                                                                                          \
+  {                                                                                                                                                                                                    \
+    return FundamentalType(value);                                                                                                                                                                     \
   }
 #include "FundamentalTypes.hpp"
 #undef FUNDAMENTAL
@@ -180,8 +179,7 @@ public:
   }
 
   // Serialization
-  bool ArrayField(
-      cstr typeName, cstr fieldName, byte* data, ArrayType arrayType, uint numberOfElements, uint sizeOftype) override
+  bool ArrayField(cstr typeName, cstr fieldName, byte* data, ArrayType arrayType, uint numberOfElements, uint sizeOftype) override
   {
     BinaryType()->Data((byte*)data, sizeOftype * numberOfElements);
     return true;
@@ -208,10 +206,10 @@ public:
   {
   }
 
-#define FUNDAMENTAL(type)                                                                                              \
-  bool FundamentalField(cstr fieldName, type& value) override                                                          \
-  {                                                                                                                    \
-    return FundamentalType(value);                                                                                     \
+#define FUNDAMENTAL(type)                                                                                                                                                                              \
+  bool FundamentalField(cstr fieldName, type& value) override                                                                                                                                          \
+  {                                                                                                                                                                                                    \
+    return FundamentalType(value);                                                                                                                                                                     \
   }
 #include "FundamentalTypes.hpp"
 #undef FUNDAMENTAL

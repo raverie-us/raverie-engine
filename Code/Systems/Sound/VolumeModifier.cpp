@@ -10,9 +10,7 @@ InstanceVolumeModifier::InstanceVolumeModifier() : mCurrentVolume(1.0f), mLifeti
 {
 }
 
-void InstanceVolumeModifier::ApplyVolume(float* sampleBuffer,
-                                         const unsigned bufferSize,
-                                         const unsigned numberOfChannels)
+void InstanceVolumeModifier::ApplyVolume(float* sampleBuffer, const unsigned bufferSize, const unsigned numberOfChannels)
 {
   if (!Active)
     return;
@@ -48,21 +46,12 @@ void InstanceVolumeModifier::ApplyVolume(float* sampleBuffer,
   }
 }
 
-void InstanceVolumeModifier::Reset(const float startVolume,
-                                   const float endVolume,
-                                   const float time,
-                                   const float lifetime)
+void InstanceVolumeModifier::Reset(const float startVolume, const float endVolume, const float time, const float lifetime)
 {
-  Reset(startVolume,
-        endVolume,
-        (unsigned)(time * AudioConstants::cSystemSampleRate),
-        (unsigned)(lifetime * AudioConstants::cSystemSampleRate));
+  Reset(startVolume, endVolume, (unsigned)(time * AudioConstants::cSystemSampleRate), (unsigned)(lifetime * AudioConstants::cSystemSampleRate));
 }
 
-void InstanceVolumeModifier::Reset(const float startVolume,
-                                   const float endVolume,
-                                   const unsigned frames,
-                                   const unsigned lifetimeFrames)
+void InstanceVolumeModifier::Reset(const float startVolume, const float endVolume, const unsigned frames, const unsigned lifetimeFrames)
 {
   mCurrentVolume = startVolume;
   Interpolator.SetValues(startVolume, endVolume, frames);

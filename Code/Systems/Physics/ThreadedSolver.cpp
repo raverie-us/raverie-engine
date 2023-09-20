@@ -150,10 +150,8 @@ void ThreadedSolver::IterateVelocities(uint iteration)
 {
   MoleculeWalker molecules(mMolecules.Data(), sizeof(ConstraintMolecule), 0);
 
-  GroupOperationTwoParamFragment<ContactList>(
-      mContactPhases, molecules, iteration, IterateVelocitiesFragmentList<ContactList>);
-  GroupOperationTwoParamFragment<JointList>(
-      mJointPhases, molecules, iteration, IterateVelocitiesFragmentList<JointList>);
+  GroupOperationTwoParamFragment<ContactList>(mContactPhases, molecules, iteration, IterateVelocitiesFragmentList<ContactList>);
+  GroupOperationTwoParamFragment<JointList>(mJointPhases, molecules, iteration, IterateVelocitiesFragmentList<JointList>);
 }
 
 void ThreadedSolver::SolvePositions()

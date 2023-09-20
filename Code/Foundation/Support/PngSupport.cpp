@@ -50,13 +50,13 @@ bool ReadPngInfo(Stream* stream, ImageInfo& info)
   png_structp pngPtr = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
   png_infop infoPtr = png_create_info_struct(pngPtr);
 
-  //TODO(trevor): Handle setjmp
-  //if (setjmp(png_jmpbuf(pngPtr)))
+  // TODO(trevor): Handle setjmp
+  // if (setjmp(png_jmpbuf(pngPtr)))
   //{
-  //  png_destroy_read_struct(&pngPtr, &infoPtr, nullptr);
-  //  stream->Seek(0);
-  //  return false;
-  //}
+  //   png_destroy_read_struct(&pngPtr, &infoPtr, nullptr);
+  //   stream->Seek(0);
+  //   return false;
+  // }
 
   // Set up custom read to read from the file object
   png_set_read_fn(pngPtr, (png_voidp)stream, StreamReadData);
@@ -94,13 +94,7 @@ bool IsPngSaveFormat(TextureFormat::Enum format)
   return format == TextureFormat::RGBA8 || format == TextureFormat::RGBA16;
 }
 
-void LoadPng(Status& status,
-             Stream* stream,
-             byte** output,
-             uint* width,
-             uint* height,
-             TextureFormat::Enum* format,
-             TextureFormat::Enum requireFormat)
+void LoadPng(Status& status, Stream* stream, byte** output, uint* width, uint* height, TextureFormat::Enum* format, TextureFormat::Enum requireFormat)
 {
   if (!IsPngLoadFormat(requireFormat))
   {
@@ -133,20 +127,20 @@ void LoadPng(Status& status,
     return;
   }
 
-  //TODO(trevor): Handle setjmp
-  // Set error handling if you are using the setjmp/longjmp method (this is
-  // the normal method of doing things with libpng).  REQUIRED unless you
-  // set up your own error handlers in the png_create_read_struct() earlier.
-  //if (setjmp(png_jmpbuf(pngPtr)))
+  // TODO(trevor): Handle setjmp
+  //  Set error handling if you are using the setjmp/longjmp method (this is
+  //  the normal method of doing things with libpng).  REQUIRED unless you
+  //  set up your own error handlers in the png_create_read_struct() earlier.
+  // if (setjmp(png_jmpbuf(pngPtr)))
   //{
-  //  // Clean up memory
-  //  zDeallocate(imageData);
-  //  // Free all of the memory associated with the pngPtr and infoPtr
-  //  png_destroy_read_struct(&pngPtr, &infoPtr, nullptr);
-  //  // If we get here, we had a problem reading the file
-  //  status.SetFailed("Can not read png file");
-  //  return;
-  //}
+  //   // Clean up memory
+  //   zDeallocate(imageData);
+  //   // Free all of the memory associated with the pngPtr and infoPtr
+  //   png_destroy_read_struct(&pngPtr, &infoPtr, nullptr);
+  //   // If we get here, we had a problem reading the file
+  //   status.SetFailed("Can not read png file");
+  //   return;
+  // }
 
   // If you are using replacement read functions, instead of calling
   // png_init_io()
@@ -256,7 +250,7 @@ void SavePng(Status& status, Stream* stream, const byte* image, uint width, uint
 
   // TODO(trevor): Handle setjmp removal
   // Set up error handling.
-  //if (setjmp(png_jmpbuf(png_ptr)))
+  // if (setjmp(png_jmpbuf(png_ptr)))
   //{
   //  png_destroy_write_struct(&png_ptr, &pngInfo);
   //  status.SetFailed("Internal Png Error");
@@ -268,15 +262,7 @@ void SavePng(Status& status, Stream* stream, const byte* image, uint width, uint
     bitDepth = 16;
 
   // Set image attributes
-  png_set_IHDR(png_ptr,
-               pngInfo,
-               width,
-               height,
-               bitDepth,
-               PNG_COLOR_TYPE_RGB_ALPHA,
-               PNG_INTERLACE_NONE,
-               PNG_COMPRESSION_TYPE_DEFAULT,
-               PNG_FILTER_TYPE_DEFAULT);
+  png_set_IHDR(png_ptr, pngInfo, width, height, bitDepth, PNG_COLOR_TYPE_RGB_ALPHA, PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
 
   png_set_write_fn(png_ptr, (png_voidp)stream, StreamWriteData, CustomFlush);
 

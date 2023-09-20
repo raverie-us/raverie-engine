@@ -119,8 +119,7 @@ void TextureView::SizeToContents()
     mSize = Math::ToVec2(texture->GetSize());
 }
 
-void TextureView::RenderUpdate(
-    ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
+void TextureView::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 
@@ -143,11 +142,9 @@ void TextureView::RenderUpdate(
 
     // Add our custom shader inputs
     RaverieShaderGenerator* shaderGenerator = Z::gEngine->has(GraphicsEngine)->mShaderGenerator;
-    ShaderInput input = shaderGenerator->CreateShaderInput(
-        "TextureCubePreview", "SkyboxPreviewInput", ShaderInputType::Vec4, mSkyboxInput);
+    ShaderInput input = shaderGenerator->CreateShaderInput("TextureCubePreview", "SkyboxPreviewInput", ShaderInputType::Vec4, mSkyboxInput);
     shaderInputs.PushBack(input);
-    input =
-        shaderGenerator->CreateShaderInput("TextureCubePreview", "TextureViewResolution", ShaderInputType::Vec2, size);
+    input = shaderGenerator->CreateShaderInput("TextureCubePreview", "TextureViewResolution", ShaderInputType::Vec2, size);
     shaderInputs.PushBack(input);
 
     // Store the ending point
@@ -161,8 +158,7 @@ void TextureView::RenderUpdate(
       mSkyboxInput.w += 0.016f * Math::Min((mTimeSinceLastDrag - 2.0f), 1.0f);
   }
 
-  frameBlock.mRenderQueues->AddStreamedQuad(
-      viewNode, Vec3(0, 0, 0), Vec3(size, 0), mUv0, mUv1, color * colorTx.ColorMultiply);
+  frameBlock.mRenderQueues->AddStreamedQuad(viewNode, Vec3(0, 0, 0), Vec3(size, 0), mUv0, mUv1, color * colorTx.ColorMultiply);
 }
 
 } // namespace Raverie

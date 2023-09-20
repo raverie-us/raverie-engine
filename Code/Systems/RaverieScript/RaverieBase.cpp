@@ -35,10 +35,8 @@ void RestoreCogPathLinks(HandleParam object, Cog* owner, CogInitializer& initial
     if (propertyType == nullptr || propertyType->CopyMode != TypeCopyMode::ReferenceType)
       continue;
 
-    if (field->HasAttribute(PropertyAttributes::cProperty) || field->HasAttribute(PropertyAttributes::cDisplay) ||
-        field->HasAttribute(PropertyAttributes::cDeprecatedEditable) ||
-        field->HasAttribute(PropertyAttributes::cSerialize) ||
-        field->HasAttribute(PropertyAttributes::cDeprecatedSerialized))
+    if (field->HasAttribute(PropertyAttributes::cProperty) || field->HasAttribute(PropertyAttributes::cDisplay) || field->HasAttribute(PropertyAttributes::cDeprecatedEditable) ||
+        field->HasAttribute(PropertyAttributes::cSerialize) || field->HasAttribute(PropertyAttributes::cDeprecatedSerialized))
     {
       Any value = field->GetValue(object);
       if (propertyType == cogPathType)
@@ -143,17 +141,12 @@ void RaverieComponent::ScriptInitialize(CogInitializer& initializer)
     BoundType* boundPropertyType = Type::GetBoundType(propertyType);
     if (boundPropertyType)
     {
-      bool isProperty = prop->HasAttribute(PropertyAttributes::cProperty) ||
-                        prop->HasAttribute(PropertyAttributes::cDisplay) ||
-                        prop->HasAttribute(PropertyAttributes::cDeprecatedEditable) ||
-                        prop->HasAttribute(PropertyAttributes::cSerialize) ||
-                        prop->HasAttribute(PropertyAttributes::cDeprecatedSerialized);
+      bool isProperty = prop->HasAttribute(PropertyAttributes::cProperty) || prop->HasAttribute(PropertyAttributes::cDisplay) || prop->HasAttribute(PropertyAttributes::cDeprecatedEditable) ||
+                        prop->HasAttribute(PropertyAttributes::cSerialize) || prop->HasAttribute(PropertyAttributes::cDeprecatedSerialized);
 
       bool isGetSetProperty = isProperty && prop->Get && prop->Set;
 
-      bool isHandleWithDefaultConstructor = boundPropertyType->CopyMode == TypeCopyMode::ReferenceType &&
-                                            boundPropertyType->CreatableInScript &&
-                                            boundPropertyType->IsDefaultConstructable();
+      bool isHandleWithDefaultConstructor = boundPropertyType->CopyMode == TypeCopyMode::ReferenceType && boundPropertyType->CreatableInScript && boundPropertyType->IsDefaultConstructable();
 
       if (isGetSetProperty && isHandleWithDefaultConstructor)
       {
@@ -230,8 +223,7 @@ void RaverieComponent::DebugDraw()
 
   Raverie::Core& core = Raverie::Core::GetInstance();
   static String FunctionName("DebugDraw");
-  Raverie::Function* function =
-      thisType->FindFunction(FunctionName, Array<Raverie::Type*>(), core.VoidType, Raverie::FindMemberOptions::None);
+  Raverie::Function* function = thisType->FindFunction(FunctionName, Array<Raverie::Type*>(), core.VoidType, Raverie::FindMemberOptions::None);
 
   // Do not want to re-invoke Component's DebugDraw, will not find
   // RaverieComponent's DebugDraw because it is not bound Still want find to look

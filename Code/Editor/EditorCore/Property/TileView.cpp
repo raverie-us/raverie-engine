@@ -49,9 +49,7 @@ public:
   /// Displays the drag selection
   Element* mSelectBox;
 
-  TileSelector(MouseDragEvent* dragEvent, TileView* tree) :
-      MouseManipulation(dragEvent->GetMouse(), tree),
-      mTileView(tree)
+  TileSelector(MouseDragEvent* dragEvent, TileView* tree) : MouseManipulation(dragEvent->GetMouse(), tree), mTileView(tree)
   {
     mClientArea = tree->mArea->GetClientWidget();
 
@@ -144,9 +142,7 @@ void ItemPopUp::UpdateTransform()
   PopUp::UpdateTransform();
 }
 
-TileViewWidget::TileViewWidget(Composite* parent, TileView* tileView, PreviewWidget* tileWidget, DataIndex dataIndex) :
-    Composite(parent),
-    mTileView(tileView)
+TileViewWidget::TileViewWidget(Composite* parent, TileView* tileView, PreviewWidget* tileWidget, DataIndex dataIndex) : Composite(parent), mTileView(tileView)
 {
   mDefSet = parent->GetDefinitionSet()->GetDefinitionSet("ItemGrid");
   mBackground = CreateAttached<Element>(cWhiteSquare);
@@ -520,8 +516,7 @@ void TileView::GetSelectionRange(uint* minIndex, uint* maxIndex)
   }
 }
 
-TileViewWidget* TileView::CreateTileViewWidget(
-    Composite* parent, StringParam name, HandleParam instance, DataIndex index, PreviewImportance::Enum minImportance)
+TileViewWidget* TileView::CreateTileViewWidget(Composite* parent, StringParam name, HandleParam instance, DataIndex index, PreviewImportance::Enum minImportance)
 {
   PreviewWidget* tileWidget = ResourcePreview::CreatePreviewWidget(parent, name, instance, minImportance);
   if (tileWidget == NULL)

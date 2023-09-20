@@ -85,8 +85,7 @@ bool WidgetRect::Contains(Vec2Param point) const
 
 bool WidgetRect::Overlap(const WidgetRect& other) const
 {
-  bool nooverlap =
-      (X > other.X + other.SizeX) || (Y > other.Y + other.SizeY) || (other.X > X + SizeX) || (other.Y > Y + SizeY);
+  bool nooverlap = (X > other.X + other.SizeX) || (Y > other.Y + other.SizeY) || (other.X > X + SizeX) || (other.Y > Y + SizeY);
 
   return !nooverlap;
 }

@@ -131,10 +131,7 @@ void RecordingNode::SetStreamToDisk(bool stream)
   mStreaming = stream;
 }
 
-bool RecordingNode::GetOutputSamples(BufferType* outputBuffer,
-                                     const unsigned numberOfChannels,
-                                     ListenerNode* listener,
-                                     const bool firstRequest)
+bool RecordingNode::GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest)
 {
   // Get input
   bool isThereOutput = AccumulateInputSamples(outputBuffer->Size(), numberOfChannels, listener);
@@ -201,11 +198,7 @@ RaverieDefineType(SaveAudioNode, builder, type)
   RaverieBindMethod(ClearSavedAudio);
 }
 
-SaveAudioNode::SaveAudioNode(StringParam name, unsigned ID) :
-    SimpleCollapseNode(name, ID, false, false),
-    mSaveData(false),
-    mPlayData(false),
-    mPlaybackIndexThreaded(0)
+SaveAudioNode::SaveAudioNode(StringParam name, unsigned ID) : SimpleCollapseNode(name, ID, false, false), mSaveData(false), mPlayData(false), mPlaybackIndexThreaded(0)
 {
 }
 
@@ -240,10 +233,7 @@ void SaveAudioNode::ClearSavedAudio()
   Z::gSound->Mixer.AddTask(CreateFunctor(&SaveAudioNode::ClearSavedAudioThreaded, this), this);
 }
 
-bool SaveAudioNode::GetOutputSamples(BufferType* outputBuffer,
-                                     const unsigned numberOfChannels,
-                                     ListenerNode* listener,
-                                     const bool firstRequest)
+bool SaveAudioNode::GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest)
 {
   // Get input data
   bool isInputData = AccumulateInputSamples(outputBuffer->Size(), numberOfChannels, listener);
@@ -265,8 +255,7 @@ bool SaveAudioNode::GetOutputSamples(BufferType* outputBuffer,
     // If there's no input data, copy the saved samples into the output buffer
     if (!isInputData)
     {
-      memcpy(
-          outputBuffer->Data(), mSavedSamplesThreaded.Data() + mPlaybackIndexThreaded, sizeof(float) * samplesToCopy);
+      memcpy(outputBuffer->Data(), mSavedSamplesThreaded.Data() + mPlaybackIndexThreaded, sizeof(float) * samplesToCopy);
 
       // If there are extra samples in the output buffer, set them all to zero
       if (samplesToCopy < outputBuffer->Size())

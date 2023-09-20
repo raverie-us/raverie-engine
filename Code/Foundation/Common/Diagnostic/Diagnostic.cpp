@@ -6,8 +6,7 @@ namespace Raverie
 
 ErrorSignaler::ErrorHandler ErrorSignaler::sActiveErrorHandler = Os::ErrorProcessHandler;
 
-bool ErrorSignaler::SignalError(
-    SignalErrorType signalType, cstr exp, cstr file, int line, bool& ignore, cstr msgFormat, ...)
+bool ErrorSignaler::SignalError(SignalErrorType signalType, cstr exp, cstr file, int line, bool& ignore, cstr msgFormat, ...)
 {
   if (ignore)
     return false;

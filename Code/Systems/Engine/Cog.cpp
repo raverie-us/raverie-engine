@@ -9,11 +9,7 @@ const bool cBindCogChildrenReverseRange = false;
 // Helpers
 void SetCogFlag(Cog* cog, CogFlags::Enum flag, cstr flagName, bool state);
 bool CogIsModifiedFromArchetype(Cog* cog, bool ignoreOverrideProperties);
-void ClearCogModifications(Cog* rootCog,
-                           Cog* cog,
-                           ObjectState::ModifiedProperties& cachedMemory,
-                           bool retainOverrideProperties,
-                           bool retainChildArchetypeModifications);
+void ClearCogModifications(Cog* rootCog, Cog* cog, ObjectState::ModifiedProperties& cachedMemory, bool retainOverrideProperties, bool retainChildArchetypeModifications);
 void ClearCogModifications(Cog* root, bool retainChildArchetypeModifications);
 template <typename type>
 void eraseEqualValues(Array<type>& mArray, type value);
@@ -380,9 +376,7 @@ void Cog::Serialize(Serializer& stream)
   {
     Component* component = range.Front();
     // Should we serialize the component?
-    bool shouldSerialize =
-        range.Front()->ShouldSerialize() &&
-        (!shouldSerializeCallback || shouldSerializeCallback(this, component) == SerializeCheck::Serialized);
+    bool shouldSerialize = range.Front()->ShouldSerialize() && (!shouldSerializeCallback || shouldSerializeCallback(this, component) == SerializeCheck::Serialized);
 
     if (shouldSerialize)
       stream.SerializePolymorphic(*component);
@@ -391,8 +385,7 @@ void Cog::Serialize(Serializer& stream)
   // Always save hierarchy last.
   if (Hierarchy* hierarchy = has(Hierarchy))
   {
-    bool shouldSerialize =
-        !shouldSerializeCallback || shouldSerializeCallback(this, hierarchy) == SerializeCheck::Serialized;
+    bool shouldSerialize = !shouldSerializeCallback || shouldSerializeCallback(this, hierarchy) == SerializeCheck::Serialized;
 
     if (shouldSerialize)
     {
@@ -619,8 +612,7 @@ bool Cog::AddComponentByType(BoundType* componentType)
   // proxied and they're trying to create it by name.
   if (component == nullptr)
   {
-    String msg = String::Format("Cannot add component '%s', component has most likely been proxied.",
-                                componentType->Name.c_str());
+    String msg = String::Format("Cannot add component '%s', component has most likely been proxied.", componentType->Name.c_str());
     DoNotifyException("Invalid component addition", msg);
     return false;
   }
@@ -2213,11 +2205,7 @@ bool CogIsModifiedFromArchetype(Cog* cog, bool ignoreOverrideProperties)
 // reverted. If the enemy is holding a gun and we move the gun, we want the gun
 // to go back to its original position relative to the enemy when reverted. This
 // could possibly be made generic in meta.
-void ClearCogModifications(Cog* rootCog,
-                           Cog* cog,
-                           ObjectState::ModifiedProperties& cachedMemory,
-                           bool retainOverrideProperties,
-                           bool retainChildArchetypeModifications)
+void ClearCogModifications(Cog* rootCog, Cog* cog, ObjectState::ModifiedProperties& cachedMemory, bool retainOverrideProperties, bool retainChildArchetypeModifications)
 {
   LocalModifications* modifications = LocalModifications::GetInstance();
 

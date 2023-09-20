@@ -129,12 +129,7 @@ public:
 
   /// Constructors.
   TrackNode();
-  TrackNode(StringParam name,
-            StringParam path,
-            TrackType::Enum type,
-            BoundType* targetMeta,
-            TrackNode* parent,
-            RichAnimation* richAnim);
+  TrackNode(StringParam name, StringParam path, TrackType::Enum type, BoundType* targetMeta, TrackNode* parent, RichAnimation* richAnim);
   ~TrackNode();
 
   /// Serialized the track to the given stream.
@@ -301,11 +296,9 @@ public:
 
   /// Searches the direct children of the given track
   TrackNode* GetDirectChildTrack(TrackNode* parent, StringParam path);
-  TrackNode*
-  GetComponentTrack(TrackNode* objectTrack, StringParam component, BoundType* targetMeta, bool createNew = true);
+  TrackNode* GetComponentTrack(TrackNode* objectTrack, StringParam component, BoundType* targetMeta, bool createNew = true);
 
-  TrackNode* GetPropertyTrack(
-      Cog* object, Cog* animGraphObject, BoundType* componentType, StringParam propertyName, bool createNew = true);
+  TrackNode* GetPropertyTrack(Cog* object, Cog* animGraphObject, BoundType* componentType, StringParam propertyName, bool createNew = true);
 
   /// Returns a key frame from the given id.
   KeyFrame* GetKeyFrame(TrackKeyFrameId id);

@@ -341,8 +341,7 @@ void SoundNodeGraph::PositionCleanUp(Array<NodeInfoListType>& infoByLevel, int l
 
       // Does this node have one parent, the parent has other children,
       // the node has one child, and the child has other parents?
-      if (node->mParents.Size() == 1 && node->mParents[0]->mChildren.Size() > 1 && node->mChildren.Size() == 1 &&
-          node->mChildren[0]->mParents.Size() > 1)
+      if (node->mParents.Size() == 1 && node->mParents[0]->mChildren.Size() > 1 && node->mChildren.Size() == 1 && node->mChildren[0]->mParents.Size() > 1)
       {
         NodePrintInfo* child = node->mChildren[0];
         NodePrintInfo* parent = node->mParents[0];

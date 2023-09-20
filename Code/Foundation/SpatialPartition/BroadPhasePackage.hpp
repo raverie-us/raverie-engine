@@ -98,8 +98,7 @@ public:
 
 protected:
   typedef void (IBroadPhase::*CastFunction)(CastDataParam, ProxyCastResults&);
-  virtual void
-  CastIntoBroadphase(uint broadPhaseType, CastDataParam data, ProxyCastResults& results, CastFunction func);
+  virtual void CastIntoBroadphase(uint broadPhaseType, CastDataParam data, ProxyCastResults& results, CastFunction func);
 
   bool GetFirstContactInStatic(CastDataParam rayData, Vec3& point, ProxyCastResults& results);
 

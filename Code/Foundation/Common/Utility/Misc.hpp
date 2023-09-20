@@ -75,8 +75,7 @@ public:
     *variable = setToValue;
   }
 
-  SetAndRecallOnDestruction(T* variable, T setToValue, T recallToValue) :
-      RecallOnDestruction<T>(variable, recallToValue)
+  SetAndRecallOnDestruction(T* variable, T setToValue, T recallToValue) : RecallOnDestruction<T>(variable, recallToValue)
   {
     *variable = setToValue;
   }

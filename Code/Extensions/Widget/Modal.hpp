@@ -149,18 +149,10 @@ public:
   typedef ModalButtonsAction RaverieSelf;
 
   /// Construct an with an array of buttons
-  ModalButtonsAction(Composite* parent,
-                     StringParam title,
-                     Array<String>& buttonNames,
-                     StringParam extraText = String(),
-                     float fadeInTime = 0.25f);
+  ModalButtonsAction(Composite* parent, StringParam title, Array<String>& buttonNames, StringParam extraText = String(), float fadeInTime = 0.25f);
   /// Construct with the given string as the only button (just a helper to make
   /// construction easier)
-  ModalButtonsAction(Composite* parent,
-                     StringParam title,
-                     StringParam buttonName,
-                     StringParam extraText = String(),
-                     float fadeInTime = 0.25f);
+  ModalButtonsAction(Composite* parent, StringParam title, StringParam buttonName, StringParam extraText = String(), float fadeInTime = 0.25f);
 
   /// The actual helper that makes the buttons (do not call directly)
   void CreateButtons(StringParam title, Array<String>& buttonNames, StringParam extraText);

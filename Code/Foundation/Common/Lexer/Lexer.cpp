@@ -158,13 +158,7 @@ Token::Token() : mEnd(true), mError(false), mRule(nullptr), mStartInclusive(0), 
 {
 }
 
-Token::Token(GrammarRule<Character>* rule) :
-    mEnd(false),
-    mError(false),
-    mRule(rule),
-    mStartInclusive(0),
-    mEndExclusive(0),
-    mStream(nullptr)
+Token::Token(GrammarRule<Character>* rule) : mEnd(false), mError(false), mRule(rule), mStartInclusive(0), mEndExclusive(0), mStream(nullptr)
 {
 }
 
@@ -230,11 +224,7 @@ bool Token::operator>=(const Token& rhs) const
   return this->mRule->mOrderId >= rhs.mRule->mOrderId;
 }
 
-ReplacementNode::ReplacementNode() :
-    mType(ReplacementNodeType::Text),
-    mCaptureReference(nullptr),
-    mLhs(nullptr),
-    mRhs(nullptr)
+ReplacementNode::ReplacementNode() : mType(ReplacementNodeType::Text), mCaptureReference(nullptr), mLhs(nullptr), mRhs(nullptr)
 {
 }
 
@@ -442,12 +432,7 @@ AutoIncrement::~AutoIncrement()
   --*this->mIncrement;
 }
 
-CaptureExpressionNode::CaptureExpressionNode() :
-    mType(CaptureExpressionNodeType::NamedCapture),
-    mLhs(nullptr),
-    mRhs(nullptr),
-    mStartIndexInclusive(0),
-    mEndIndexInclusive(0)
+CaptureExpressionNode::CaptureExpressionNode() : mType(CaptureExpressionNodeType::NamedCapture), mLhs(nullptr), mRhs(nullptr), mStartIndexInclusive(0), mEndIndexInclusive(0)
 {
 }
 

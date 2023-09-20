@@ -72,11 +72,7 @@ uint PingManager::AcquireNextRandomIncrementalId()
   return (mNextRandomId += uint(Math::Random().IntRangeInIn(0, 1024)));
 }
 
-bool PingManager::PingHost(Network::Enum network,
-                           const IpAddress& theirIpAddress,
-                           HostPingType::Enum hostPingType,
-                           TimeMs timeout,
-                           const EventBundle& pingBundle)
+bool PingManager::PingHost(Network::Enum network, const IpAddress& theirIpAddress, HostPingType::Enum hostPingType, TimeMs timeout, const EventBundle& pingBundle)
 {
   Array<IpAddress> ips;
   ips.PushBack(theirIpAddress);
@@ -84,11 +80,7 @@ bool PingManager::PingHost(Network::Enum network,
   return PingHost(network, ips, hostPingType, timeout, pingBundle);
 }
 
-bool PingManager::PingHost(Network::Enum network,
-                           const Array<IpAddress>& theirIpAddresses,
-                           HostPingType::Enum hostPingType,
-                           TimeMs timeout,
-                           const EventBundle& pingBundle)
+bool PingManager::PingHost(Network::Enum network, const Array<IpAddress>& theirIpAddresses, HostPingType::Enum hostPingType, TimeMs timeout, const EventBundle& pingBundle)
 {
   // Get current time
   TimeMs now = mTimer.UpdateAndGetTimeMilliseconds();
@@ -114,8 +106,7 @@ bool PingManager::PingHost(Network::Enum network,
   // Get next unique ping ID
   uint pingId = AcquireNextRandomIncrementalId();
 
-  PendingHostPing* newPing =
-      new PendingHostPing(network, now, timeout, hostPingType, theirIpAddresses, pingId, pingBundle);
+  PendingHostPing* newPing = new PendingHostPing(network, now, timeout, hostPingType, theirIpAddresses, pingId, pingBundle);
 
   // Add to pending host pings set
   PendingHostPingSet::pointer_bool_pair result = mPendingHostPings.Insert(UniquePointer<PendingHostPing>(newPing));
@@ -224,8 +215,7 @@ bool PingManager::ReceiveHostPing(const IpAddress& theirIpAddress, const Message
   return handled;
 }
 
-bool PingManager::SendHostPong(
-    const IpAddress& theirIpAddress, uint pingId, uint sendAttemptId, uint theirManagerId, BitStream& pongData)
+bool PingManager::SendHostPong(const IpAddress& theirIpAddress, uint pingId, uint sendAttemptId, uint theirManagerId, BitStream& pongData)
 {
   Assert(mNetPeer != nullptr);
   Assert(mNetPeer->IsOpen());
@@ -311,8 +301,7 @@ bool PingManager::ReceiveHostPong(const IpAddress& theirIpAddress, const Message
 
   // Individual refreshes get auto removed. multi-host refreshes generally go to
   // timeout.
-  if (pendingPingRef.mHostPingType == HostPingType::Refresh ||
-      pendingPingRef.mHostPingType == HostPingType::MasterServerRefreshHost)
+  if (pendingPingRef.mHostPingType == HostPingType::Refresh || pendingPingRef.mHostPingType == HostPingType::MasterServerRefreshHost)
   {
     mPendingHostPings.EraseValue(pendingPingRef);
   }

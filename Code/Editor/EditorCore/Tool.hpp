@@ -80,8 +80,7 @@ class Tool : public EventObject
 public:
   RaverieDeclareType(Tool, TypeCopyMode::ReferenceType);
 
-  static Component* GetOrCreateEditComponent(
-      BoundType* meta, StringParam defaultName, StringParam defaultArchetype, CogId& lastEdited, bool canCreate = true);
+  static Component* GetOrCreateEditComponent(BoundType* meta, StringParam defaultName, StringParam defaultArchetype, CogId& lastEdited, bool canCreate = true);
   static ViewportTextWidget* CreateViewportTextWidget(StringParam text);
 
   virtual void Initialize()
@@ -189,10 +188,7 @@ struct BaseCastFilter;
 
 // Ray cast using the current options on the selection tool.
 SelectionResult EditorRayCast(Viewport* viewport, Vec2 mousePosition);
-void ColliderRayCast(Viewport* viewport,
-                     Vec2Param mousePosition,
-                     ColliderRayCastResult& result,
-                     BaseCastFilter* filter = nullptr);
+void ColliderRayCast(Viewport* viewport, Vec2Param mousePosition, ColliderRayCastResult& result, BaseCastFilter* filter = nullptr);
 void BeginSelectDrag(EditorViewport* viewport, MouseEvent* event, SelectTool* tool);
 
 } // namespace Raverie

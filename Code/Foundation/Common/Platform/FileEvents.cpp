@@ -28,8 +28,7 @@ bool FileModifiedState::HasModifiedSinceTime(StringParam filePath, TimeType time
   String fileId = UniqueFileId(filePath);
 
   // Prefer the fileId over the file path
-  TimeType modifiedTime =
-      instance->mFileLastModified.FindValue(fileId, instance->mFileLastModified.FindValue(canonicalPath, 0));
+  TimeType modifiedTime = instance->mFileLastModified.FindValue(fileId, instance->mFileLastModified.FindValue(canonicalPath, 0));
 
   instance->mThreadLock.Unlock();
 

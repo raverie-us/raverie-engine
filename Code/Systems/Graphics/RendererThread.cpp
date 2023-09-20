@@ -226,13 +226,7 @@ void SaveImageToFileJob::ReturnExecute()
 }
 
 RepeatingJob::RepeatingJob(RendererThreadJobQueue* jobQueue) :
-    mRendererJobQueue(jobQueue),
-    mExecuteDelay(16),
-    mStartCount(0),
-    mEndCount(0),
-    mShouldRun(false),
-    mDelayTerminate(false),
-    mForceTerminate(false)
+    mRendererJobQueue(jobQueue), mExecuteDelay(16), mStartCount(0), mEndCount(0), mShouldRun(false), mDelayTerminate(false), mForceTerminate(false)
 {
 }
 

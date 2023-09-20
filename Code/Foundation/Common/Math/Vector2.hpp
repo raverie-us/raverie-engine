@@ -185,7 +185,8 @@ struct Vector2
   /// Flips this vector so it's pointing in the opposite direction.
   Vec2Ref Negate();
 
-  union {
+  union
+  {
     struct
     {
       real x, y;

@@ -117,10 +117,8 @@ void OrientationGizmoViewport::OnMouseUp(MouseEvent* event)
     newH = oldH + deltaH;
 
     ActionGroup* actionGroup = new ActionGroup(controller->GetOwner(), ActionExecuteMode::FrameUpdate);
-    actionGroup->Add(
-        AnimatePropertyGetSet(EditorCameraController, HorizontalAngle, Ease::Quad::InOut, controller, 0.5f, newH));
-    actionGroup->Add(
-        AnimatePropertyGetSet(EditorCameraController, VerticalAngle, Ease::Quad::InOut, controller, 0.5f, newV));
+    actionGroup->Add(AnimatePropertyGetSet(EditorCameraController, HorizontalAngle, Ease::Quad::InOut, controller, 0.5f, newH));
+    actionGroup->Add(AnimatePropertyGetSet(EditorCameraController, VerticalAngle, Ease::Quad::InOut, controller, 0.5f, newV));
 
     event->Terminate();
   }

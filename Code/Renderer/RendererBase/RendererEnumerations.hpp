@@ -28,18 +28,7 @@ DeclareEnum5(BlendEquation, Add, Subtract, ReverseSubtract, Min, Max);
 /// channel of the destination value.</param> <param
 /// name="SourceAlphaSaturate">Minimum of source alpha and one minus destination
 /// alpha.</param>
-DeclareEnum11(BlendFactor,
-              Zero,
-              One,
-              SourceColor,
-              InvSourceColor,
-              DestColor,
-              InvDestColor,
-              SourceAlpha,
-              InvSourceAlpha,
-              DestAlpha,
-              InvDestAlpha,
-              SourceAlphaSaturate);
+DeclareEnum11(BlendFactor, Zero, One, SourceColor, InvSourceColor, DestColor, InvDestColor, SourceAlpha, InvSourceAlpha, DestAlpha, InvDestAlpha, SourceAlphaSaturate);
 
 /// If blend equations are applied when writing to a render target.
 /// <param name="Disabled">Blending is not used.</param>
@@ -103,21 +92,7 @@ DeclareEnum5(RenderTaskType, ClearTarget, RenderPass, PostProcess, BackBufferBli
 
 DeclareEnum2(ScissorMode, Disabled, Enabled);
 
-DeclareEnum14(ShaderInputType,
-              Invalid,
-              Bool,
-              Int,
-              IntVec2,
-              IntVec3,
-              IntVec4,
-              Float,
-              Vec2,
-              Vec3,
-              Vec4,
-              Mat3,
-              Mat4,
-              Texture,
-              Count);
+DeclareEnum14(ShaderInputType, Invalid, Bool, Int, IntVec2, IntVec3, IntVec4, Float, Vec2, Vec3, Vec4, Mat3, Mat4, Texture, Count);
 
 /// How the sprite quad is aligned in 3D space.
 /// <param name="ZPlane">Aligned with the object's z axis.</param>

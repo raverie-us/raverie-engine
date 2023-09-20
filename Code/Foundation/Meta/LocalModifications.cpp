@@ -155,9 +155,7 @@ void ObjectState::ClearModifications(HandleParam object, bool retainOverrideProp
   ClearModifications(retainOverrideProperties, object, cachedMemory);
 }
 
-void ObjectState::ClearModifications(bool retainOverrideProperties,
-                                     HandleParam object,
-                                     ModifiedProperties& cachedMemory)
+void ObjectState::ClearModifications(bool retainOverrideProperties, HandleParam object, ModifiedProperties& cachedMemory)
 {
   if (retainOverrideProperties)
   {
@@ -351,10 +349,7 @@ void LocalModifications::ClearModifications(HandleParam object, bool clearChildr
   ClearModifications(object, clearChildren, retainOverrideProperties, cachedMemory);
 }
 
-void LocalModifications::ClearModifications(HandleParam object,
-                                            bool clearChildren,
-                                            bool retainOverrideProperties,
-                                            ObjectState::ModifiedProperties& cachedMemory)
+void LocalModifications::ClearModifications(HandleParam object, bool clearChildren, bool retainOverrideProperties, ObjectState::ModifiedProperties& cachedMemory)
 {
   if (object == nullptr)
     return;
@@ -586,10 +581,7 @@ bool ObjectContainsProperty(HandleParam object, Property* property)
   return false;
 }
 
-bool LocalModifications::IsModified(HandleParam object,
-                                    HandleParam propertyPathParent,
-                                    bool checkHierarchy,
-                                    bool ignoreOverrideProperties)
+bool LocalModifications::IsModified(HandleParam object, HandleParam propertyPathParent, bool checkHierarchy, bool ignoreOverrideProperties)
 {
   if (object == propertyPathParent)
     return IsModified(object, checkHierarchy, ignoreOverrideProperties);

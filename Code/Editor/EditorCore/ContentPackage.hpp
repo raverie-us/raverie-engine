@@ -44,8 +44,6 @@ void ExportContentPackageListing(ContentPackageListing& listing, ByteBuffer& buf
 void BuildContentPackageListingFromLibrary(ContentPackageListing& listing, ContentLibrary* library);
 
 // Import a content package listing from a sourcePackageFile
-void ImportContentPackageListing(ContentPackageListing& listing,
-                                 ContentLibrary* library,
-                                 StringParam sourcePackageFile);
+void ImportContentPackageListing(ContentPackageListing& listing, ContentLibrary* library, StringParam sourcePackageFile);
 
 } // namespace Raverie

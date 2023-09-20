@@ -33,15 +33,13 @@ public:
   void SaveFullObject(Object* object);
 
 private:
-  void SaveObject(
-      Object* object, Object* propertyPathParent, PropertyPath& path, bool patching, InheritIdContext::Enum context);
+  void SaveObject(Object* object, Object* propertyPathParent, PropertyPath& path, bool patching, InheritIdContext::Enum context);
 
   /// Save out the entire object.
   void SaveFullObjectInternal(Object* object);
 
   /// Save out only properties / child objects that are locally modified.
-  void
-  SaveModifications(Object* object, Object* propertyPathParent, PropertyPath& path, InheritIdContext::Enum context);
+  void SaveModifications(Object* object, Object* propertyPathParent, PropertyPath& path, InheritIdContext::Enum context);
 
   void SaveProperties(Object* object, Object* propertyPathParent, PropertyPath& path, bool onlyModifiedProperties);
   void SaveChildren(Object* object, Object* propertyPathParent, PropertyPath& path, bool onlyModifiedChildren);

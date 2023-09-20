@@ -56,8 +56,7 @@ int CompletionDataSource::Modified()
     return -1;
   }
 
-  auto filterResults =
-      FilterStrings(mAll.All(), mPartialText, [](Completion& completion) -> String { return completion.Name; });
+  auto filterResults = FilterStrings(mAll.All(), mPartialText, [](Completion& completion) -> String { return completion.Name; });
 
   if (!filterResults.mFiltered.Empty())
   {
@@ -205,8 +204,7 @@ void AppendResourcePreviewToToolTip(Composite* tooltip, Resource* resource, floa
 
   // We specify high importance because there is no need to show an icon
   // or any preview for resources that don't support it
-  PreviewWidget* preview =
-      ResourcePreview::CreatePreviewWidget(tooltip, resource->Name, resource, PreviewImportance::High);
+  PreviewWidget* preview = ResourcePreview::CreatePreviewWidget(tooltip, resource->Name, resource, PreviewImportance::High);
 
   if (preview)
   {
@@ -986,9 +984,7 @@ void ScriptEditor::OnTextModified(Event* event)
   }
 }
 
-void ScriptEditor::ShowAutoComplete(Array<Completion>& completions,
-                                    int cursorOffset,
-                                    CompletionConfidence::Enum confidence)
+void ScriptEditor::ShowAutoComplete(Array<Completion>& completions, int cursorOffset, CompletionConfidence::Enum confidence)
 {
   if (completions.Empty())
     return;
@@ -1457,8 +1453,7 @@ void ScriptEditor::OnCharacterAdded(TextEditorEvent* event)
   {
     // If we allow confident completion on other symbols, and we have a
     // confident auto-complete
-    bool shouldFinish =
-        GetConfig()->ConfidentAutoCompleteOnSymbols && autoComplete->mConfidence == CompletionConfidence::Perfect;
+    bool shouldFinish = GetConfig()->ConfidentAutoCompleteOnSymbols && autoComplete->mConfidence == CompletionConfidence::Perfect;
 
     if (shouldFinish)
     {
@@ -1646,8 +1641,7 @@ bool ScriptEditor::GetCompleteRaverieConnectInfo(String& eventNameOut, String& i
 
       code->FindPositionToGenerateFunction(this, functionPositionOut, indentOut);
 
-      ReturnIf(
-          functionPositionOut <= GetCurrentPosition(), false, "The function must be inserted after the cursor (below)");
+      ReturnIf(functionPositionOut <= GetCurrentPosition(), false, "The function must be inserted after the cursor (below)");
 
       if (functionPositionOut != -1)
       {

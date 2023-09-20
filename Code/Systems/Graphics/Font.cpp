@@ -19,13 +19,7 @@ bool IsPrintable(Rune rune)
 }
 
 RenderFont::RenderFont(Font* fontObject, int fontHeight) :
-    mFont(fontObject),
-    mFontHeight(fontHeight),
-    mTextureSize(cDefaultFontTextureSize),
-    mTexPosX(cFontSpacing),
-    mTexPosY(cFontSpacing),
-    mMaxWidthInPixels(1),
-    mMaxHeightInPixels(1)
+    mFont(fontObject), mFontHeight(fontHeight), mTextureSize(cDefaultFontTextureSize), mTexPosX(cFontSpacing), mTexPosY(cFontSpacing), mMaxWidthInPixels(1), mMaxHeightInPixels(1)
 {
 }
 
@@ -646,8 +640,7 @@ void FontRasterizer::ComputeGlyphTextureCoordinates()
     r->Advance = float(curGlyph.AdvanceX);
 
     r->Rect.TopLeft = Vec2(float(curGlyph.X) / texSize, float(curGlyph.Y) / texSize);
-    r->Rect.BotRight =
-        Vec2(float(curGlyph.X + curGlyph.Width) / texSize, float(curGlyph.Y + curGlyph.Height) / texSize);
+    r->Rect.BotRight = Vec2(float(curGlyph.X + curGlyph.Width) / texSize, float(curGlyph.Y + curGlyph.Height) / texSize);
   }
 }
 

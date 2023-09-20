@@ -16,10 +16,7 @@ class CollisionMatrixItem : public Composite
 {
 public:
   typedef CollisionMatrixItem RaverieSelf;
-  CollisionMatrixItem(Composite* parent,
-                      CollisionTableEditor* tableEditor,
-                      CollisionFilter* filter,
-                      CollisionFilter& searchFilter);
+  CollisionMatrixItem(Composite* parent, CollisionTableEditor* tableEditor, CollisionFilter* filter, CollisionFilter& searchFilter);
 
   /// Update the internal elements size when the transform is update.
   void UpdateTransform() override;
@@ -66,10 +63,7 @@ class CollisionGroupLabel : public Composite
 {
 public:
   typedef CollisionGroupLabel RaverieSelf;
-  CollisionGroupLabel(Composite* parent,
-                      CollisionTableEditor* tableEditor,
-                      CollisionGroup* group,
-                      bool vertical = false);
+  CollisionGroupLabel(Composite* parent, CollisionTableEditor* tableEditor, CollisionGroup* group, bool vertical = false);
 
   /// Update the internal elements size when the transform is update.
   void UpdateTransform() override;

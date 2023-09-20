@@ -80,7 +80,6 @@ public:
   RenderGroup* mRenderGroup;
 };
 
-s32 GetGraphicalSortValue(
-    Graphical& graphical, GraphicalSortMethod::Enum sortMethod, Vec3 pos, Vec3 camPos, Vec3 camDir);
+s32 GetGraphicalSortValue(Graphical& graphical, GraphicalSortMethod::Enum sortMethod, Vec3 pos, Vec3 camPos, Vec3 camDir);
 
 } // namespace Raverie

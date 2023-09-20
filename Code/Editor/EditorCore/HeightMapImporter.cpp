@@ -389,8 +389,7 @@ Vec2 PatchGridArea::GetGridSize()
   return mGridSize;
 }
 
-void PatchGridArea::RenderUpdate(
-    ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
+void PatchGridArea::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 
@@ -415,8 +414,7 @@ void PatchGridArea::SetupGrid(FrameBlock& frameBlock, Math::Mat4Param localToVie
   SetupLines(frameBlock, 1, spacing.y, mGridSize, localToView, PatchColumns);
 }
 
-void PatchGridArea::SetupLines(
-    FrameBlock& frameBlock, uint axis, float spacing, Vec2 totalSize, Mat4Param localToView, uint lineCount)
+void PatchGridArea::SetupLines(FrameBlock& frameBlock, uint axis, float spacing, Vec2 totalSize, Mat4Param localToView, uint lineCount)
 {
   for (uint line = 0; line < lineCount + 1; ++line)
   {
@@ -436,8 +434,7 @@ void PatchGridArea::SetupLines(
   }
 }
 
-DragSizeManipulator::DragSizeManipulator(Mouse* mouse, Composite* relative, HeightMapImporter* importer) :
-    MouseManipulation(mouse, relative)
+DragSizeManipulator::DragSizeManipulator(Mouse* mouse, Composite* relative, HeightMapImporter* importer) : MouseManipulation(mouse, relative)
 {
   mImporter = importer;
   mPrevY = mouse->GetClientPosition().y;

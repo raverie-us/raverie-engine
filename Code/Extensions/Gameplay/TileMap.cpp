@@ -339,13 +339,7 @@ RaverieDefineType(TileMap, builder, type)
   RaverieBindFieldProperty(mMeshThickness);
 }
 
-TileMap::TileMap() :
-    mModified(false),
-    mDirtySprites(false),
-    mDirtyContours(false),
-    mBadTile(false),
-    mMergeCounter(0),
-    mTestSpace(nullptr)
+TileMap::TileMap() : mModified(false), mDirtySprites(false), mDirtyContours(false), mBadTile(false), mMergeCounter(0), mTestSpace(nullptr)
 {
 }
 
@@ -366,8 +360,7 @@ TileMap::Tile::Tile(ResourceId archetype, ResourceId sprite, ResourceId collisio
 
 bool TileMap::Tile::operator==(const Tile& tile) const
 {
-  return (ArchetypeResource == tile.ArchetypeResource && SpriteResource == tile.SpriteResource &&
-          CollisionResource == tile.CollisionResource);
+  return (ArchetypeResource == tile.ArchetypeResource && SpriteResource == tile.SpriteResource && CollisionResource == tile.CollisionResource);
 }
 
 size_t TileMap::Tile::Hash() const
@@ -381,20 +374,17 @@ size_t TileMap::Tile::Hash() const
 
 Archetype* TileMap::Tile::GetArchetypeResource() const
 {
-  return (Archetype*)Z::gResources->GetResourceManager(RaverieTypeId(Archetype))
-      ->GetResource(ArchetypeResource, ResourceNotFound::ReturnNull);
+  return (Archetype*)Z::gResources->GetResourceManager(RaverieTypeId(Archetype))->GetResource(ArchetypeResource, ResourceNotFound::ReturnNull);
 }
 
 SpriteSource* TileMap::Tile::GetSpriteResource() const
 {
-  return (SpriteSource*)Z::gResources->GetResourceManager(RaverieTypeId(SpriteSource))
-      ->GetResource(SpriteResource, ResourceNotFound::ReturnNull);
+  return (SpriteSource*)Z::gResources->GetResourceManager(RaverieTypeId(SpriteSource))->GetResource(SpriteResource, ResourceNotFound::ReturnNull);
 }
 
 PhysicsMesh* TileMap::Tile::GetCollisionResource() const
 {
-  return (PhysicsMesh*)Z::gResources->GetResourceManager(RaverieTypeId(PhysicsMesh))
-      ->GetResource(CollisionResource, ResourceNotFound::ReturnNull);
+  return (PhysicsMesh*)Z::gResources->GetResourceManager(RaverieTypeId(PhysicsMesh))->GetResource(CollisionResource, ResourceNotFound::ReturnNull);
 }
 
 TileMap::~TileMap()
@@ -567,8 +557,7 @@ void TileMap::SaveToTileMapSource(Serializer& stream)
 
   // Will return a new resource if it needs to be copied for any reason
   if (Z::gRuntimeEditor)
-    mSource = (TileMapSource*)Z::gRuntimeEditor->NewResourceOnWrite(
-        TileMapSourceManager::GetInstance(), RaverieTypeId(TileMap), "Source", GetSpace(), mSource, archetype, mModified);
+    mSource = (TileMapSource*)Z::gRuntimeEditor->NewResourceOnWrite(TileMapSourceManager::GetInstance(), RaverieTypeId(TileMap), "Source", GetSpace(), mSource, archetype, mModified);
 
   if (mSource)
   {

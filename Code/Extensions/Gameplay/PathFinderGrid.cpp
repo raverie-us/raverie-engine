@@ -13,12 +13,7 @@ static const float cSqrt1 = (float)sqrt(1);
 static const float cSqrt2 = (float)sqrt(2);
 static const float cSqrt3 = (float)sqrt(3);
 
-PathFinderGridNodeRange::PathFinderGridNodeRange(PathFinderAlgorithmGrid* grid, IntVec3Param center) :
-    mGrid(grid),
-    mCenter(center),
-    mIndex(0),
-    mCurrentCost(0),
-    mCurrentIntVec3(IntVec3::cZero)
+PathFinderGridNodeRange::PathFinderGridNodeRange(PathFinderAlgorithmGrid* grid, IntVec3Param center) : mGrid(grid), mCenter(center), mIndex(0), mCurrentCost(0), mCurrentIntVec3(IntVec3::cZero)
 {
   PopUntilValid();
 }
@@ -222,10 +217,8 @@ RaverieDefineType(PathFinderGrid, builder, type)
 
   RaverieBindOverloadedMethod(FindPath, RaverieInstanceOverload(HandleOf<ArrayClass<IntVec3>>, IntVec3Param, IntVec3Param));
   RaverieBindOverloadedMethod(FindPath, RaverieInstanceOverload(HandleOf<ArrayClass<Real3>>, Real3Param, Real3Param));
-  RaverieBindOverloadedMethod(FindPathThreaded,
-                            RaverieInstanceOverload(HandleOf<PathFinderRequest>, IntVec3Param, IntVec3Param));
-  RaverieBindOverloadedMethod(FindPathThreaded,
-                            RaverieInstanceOverload(HandleOf<PathFinderRequest>, Real3Param, Real3Param));
+  RaverieBindOverloadedMethod(FindPathThreaded, RaverieInstanceOverload(HandleOf<PathFinderRequest>, IntVec3Param, IntVec3Param));
+  RaverieBindOverloadedMethod(FindPathThreaded, RaverieInstanceOverload(HandleOf<PathFinderRequest>, Real3Param, Real3Param));
 
   RaverieBindMethod(SetCollision);
   RaverieBindMethod(GetCollision);
@@ -241,10 +234,7 @@ RaverieDefineType(PathFinderGrid, builder, type)
   RaverieBindMethod(CellIndexToLocalPosition);
 }
 
-PathFinderGrid::PathFinderGrid() :
-    mTransform(nullptr),
-    mLocalCellSize(Vec3(1)),
-    mGrid(new CopyOnWriteData<PathFinderAlgorithmGrid>())
+PathFinderGrid::PathFinderGrid() : mTransform(nullptr), mLocalCellSize(Vec3(1)), mGrid(new CopyOnWriteData<PathFinderAlgorithmGrid>())
 {
 }
 
@@ -340,9 +330,7 @@ IntVec3 PathFinderGrid::LocalPositionToCellIndex(Vec3Param localPosition)
 {
   Vec3 indexFloats = localPosition / mLocalCellSize;
 
-  IntVec3 cellIndex(int(indexFloats.x) + ((indexFloats.x < 0) ? -1 : 0),
-                    int(indexFloats.y) + ((indexFloats.y < 0) ? -1 : 0),
-                    int(indexFloats.z) + ((indexFloats.z < 0) ? -1 : 0));
+  IntVec3 cellIndex(int(indexFloats.x) + ((indexFloats.x < 0) ? -1 : 0), int(indexFloats.y) + ((indexFloats.y < 0) ? -1 : 0), int(indexFloats.z) + ((indexFloats.z < 0) ? -1 : 0));
   return cellIndex;
 }
 

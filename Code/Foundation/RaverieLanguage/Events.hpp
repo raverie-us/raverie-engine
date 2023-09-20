@@ -6,10 +6,10 @@ namespace Raverie
 {
 // Declares an event to be sent by an EventHandler
 // The typical pattern in C++ is to declare these within the Events namespace
-#  define RaverieDeclareEvent(EventName, EventType) extern const String EventName;
+#define RaverieDeclareEvent(EventName, EventType) extern const String EventName;
 
 // Defines the event so only cpp uint allocates the string
-#  define RaverieDefineEvent(EventName) const String EventName = #  EventName;
+#define RaverieDefineEvent(EventName) const String EventName = #EventName;
 
 // All events that are sent must be derived from this type
 class EventData : public IRaverieObject
@@ -75,16 +75,16 @@ public:
 // When we create new event delegates, we put this at the top to automatically
 // implement 'GetSize' and 'CopyInto' Our implementation of 'CopyInto' just
 // invokes the copy constructor via placement new
-#  define RaverieDefineEventDelegateHelpers(SelfType)                                                                    \
-    void CopyInto(byte* destination) override                                                                          \
-    {                                                                                                                  \
-      static_assert(sizeof(SelfType) <= MaxEventDelegateSize,                                                          \
-                    "The size of the event delegate must not exceed "                                                  \
-                    "MaxEventDelegateSize");                                                                           \
-      SelfType* copy = new (destination) SelfType(*this);                                                              \
-      copy->OutgoingLink.Next = nullptr;                                                                               \
-      copy->IncomingLink.Next = nullptr;                                                                               \
-    }
+#define RaverieDefineEventDelegateHelpers(SelfType)                                                                                                                                                    \
+  void CopyInto(byte* destination) override                                                                                                                                                            \
+  {                                                                                                                                                                                                    \
+    static_assert(sizeof(SelfType) <= MaxEventDelegateSize,                                                                                                                                            \
+                  "The size of the event delegate must not exceed "                                                                                                                                    \
+                  "MaxEventDelegateSize");                                                                                                                                                             \
+    SelfType* copy = new (destination) SelfType(*this);                                                                                                                                                \
+    copy->OutgoingLink.Next = nullptr;                                                                                                                                                                 \
+    copy->IncomingLink.Next = nullptr;                                                                                                                                                                 \
+  }
 
 // We use dual intrusively linked lists with the delegate to ensure that
 // events get destroyed when either the sender or receiver dies
@@ -153,16 +153,14 @@ void EventSwapAll(EventHandler* a, EventHandler* b);
 
 // Connects a sender and receiver event handler for a particular event, given an
 // event connection
-void
-EventConnect(EventHandler* sender, StringParam eventName, EventDelegate* delegate, EventHandler* receiver);
+void EventConnect(EventHandler* sender, StringParam eventName, EventDelegate* delegate, EventHandler* receiver);
 
 // Disconnect an event that we previously connected to
 // Disconnecting can also be done by storing the event delegate and deleting it
 // Returns the number of connections that were disconnected
 // Note: There can be more than one disconnected, but only if someone connected
 // to the same event twice on the same object
-int
-EventDisconnect(EventHandler* sender, EventHandler* receiver, StringParam eventName, void* thisPointerOrUniqueId);
+int EventDisconnect(EventHandler* sender, EventHandler* receiver, StringParam eventName, void* thisPointerOrUniqueId);
 
 // Invokes the event handler for anyone listening to this event name on our
 // object Returns how many receiver callbacks were successfully invoked
@@ -184,9 +182,7 @@ public:
 
   // Construct a member function delegate from a class instance and member
   // function pointer
-  MemberFunctionEventDelegate(FunctionType function, ClassType* instance) :
-      FunctionPointer(function),
-      ThisPointer(instance)
+  MemberFunctionEventDelegate(FunctionType function, ClassType* instance) : FunctionPointer(function), ThisPointer(instance)
   {
     this->Type = RaverieTypeId(EventType);
   }
@@ -212,8 +208,7 @@ public:
 // A special template helper that can infer template arguments to make member
 // function connecting easier
 template <typename ClassType, typename EventType>
-void
-EventConnect(EventHandler* sender, StringParam eventName, void (ClassType::*function)(EventType*), ClassType* receiver)
+void EventConnect(EventHandler* sender, StringParam eventName, void (ClassType::*function)(EventType*), ClassType* receiver)
 {
   // Create a member function delegate
   typedef MemberFunctionEventDelegate<ClassType, EventType> EventDelegateType;
@@ -226,11 +221,7 @@ EventConnect(EventHandler* sender, StringParam eventName, void (ClassType::*func
 // A special template helper that can infer template arguments to make member
 // function connecting easier (receiver is different frmo the class)
 template <typename ClassType, typename EventType>
-void EventConnect(EventHandler* sender,
-                                     StringParam eventName,
-                                     void (ClassType::*function)(EventType*),
-                                     ClassType* selfPointer,
-                                     EventHandler* receiver)
+void EventConnect(EventHandler* sender, StringParam eventName, void (ClassType::*function)(EventType*), ClassType* selfPointer, EventHandler* receiver)
 {
   // Create a member function delegate
   typedef MemberFunctionEventDelegate<ClassType, EventType> EventDelegateType;
@@ -281,10 +272,7 @@ public:
 // A special template helper that can infer template arguments to make static
 // function connecting easier
 template <typename EventType>
-void EventConnect(EventHandler* sender,
-                                     StringParam eventName,
-                                     void (*function)(EventType*),
-                                     EventHandler* receiver = nullptr)
+void EventConnect(EventHandler* sender, StringParam eventName, void (*function)(EventType*), EventHandler* receiver = nullptr)
 {
   // We use the global event handler here (if there is no receiver...)
   if (receiver == nullptr)
@@ -315,9 +303,7 @@ public:
 
   // Construct a member function delegate from a class instance and member
   // function pointer
-  StaticFunctionUserDataEventDelegate(FunctionType function, void* userData) :
-      FunctionPointer(function),
-      UserData(userData)
+  StaticFunctionUserDataEventDelegate(FunctionType function, void* userData) : FunctionPointer(function), UserData(userData)
   {
     this->Type = RaverieTypeId(EventType);
   }
@@ -342,11 +328,7 @@ public:
 // A special template helper that can infer template arguments to make static
 // function connecting easier (with user-data)
 template <typename EventType>
-void EventConnect(EventHandler* sender,
-                                     StringParam eventName,
-                                     void (*function)(EventType*, void*),
-                                     void* userData = nullptr,
-                                     EventHandler* receiver = nullptr)
+void EventConnect(EventHandler* sender, StringParam eventName, void (*function)(EventType*, void*), void* userData = nullptr, EventHandler* receiver = nullptr)
 {
   // We use the global event handler here (if there is no receiver...)
   if (receiver == nullptr)

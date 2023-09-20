@@ -75,10 +75,7 @@ Thickness GetBorderThickness()
 Thickness GetClientPadding()
 {
   // Remove custom padding for the client area
-  return Thickness(WindowUi::BorderSize.mValue.x,
-                   WindowUi::BorderSize.mValue.y,
-                   WindowUi::BorderSize.mValue.x,
-                   WindowUi::BorderSize.mValue.y);
+  return Thickness(WindowUi::BorderSize.mValue.x, WindowUi::BorderSize.mValue.y, WindowUi::BorderSize.mValue.x, WindowUi::BorderSize.mValue.y);
 }
 
 Thickness TitleBarPadding()

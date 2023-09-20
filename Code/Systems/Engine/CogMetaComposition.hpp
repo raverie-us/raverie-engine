@@ -32,11 +32,7 @@ public:
   BoundType* MakeProxy(StringParam typeName, ProxyReason::Enum reason) override;
 
   MetaCreationContext* GetCreationContext() override;
-  void AddComponent(HandleParam owner,
-                    HandleParam component,
-                    int index = -1,
-                    bool ignoreDependencies = false,
-                    MetaCreationContext* creationContext = nullptr) override;
+  void AddComponent(HandleParam owner, HandleParam component, int index = -1, bool ignoreDependencies = false, MetaCreationContext* creationContext = nullptr) override;
   void FinalizeCreation(MetaCreationContext* context) override;
 
   bool CanRemoveComponent(HandleParam owner, HandleParam component, String& reason) override;

@@ -52,12 +52,7 @@ public:
   bool StringField(cstr typeName, cstr fieldName, StringRange& stringRange) override;
 
   /// Array Serialization
-  bool ArrayField(cstr typeName,
-                  cstr fieldName,
-                  byte* data,
-                  ArrayType simpleTypeId,
-                  uint numberOfElements,
-                  uint sizeOftype) override;
+  bool ArrayField(cstr typeName, cstr fieldName, byte* data, ArrayType simpleTypeId, uint numberOfElements, uint sizeOftype) override;
   void ArraySize(uint& arraySize) override;
 
   /// Enum Serialization
@@ -77,8 +72,7 @@ public:
 
   virtual PatchResolveMethod::Enum ResolveInheritedData(StringRange inheritId, DataNode*& result);
   /// Returns whether or not the
-  virtual DependencyAction::Enum
-  ResolveDependencies(DataNode* parent, DataNode* newChild, DataNode** toReplace, Status& status);
+  virtual DependencyAction::Enum ResolveDependencies(DataNode* parent, DataNode* newChild, DataNode** toReplace, Status& status);
 
   uint mLoadedFileVersion;
 

@@ -142,10 +142,7 @@ private:
   bool mGeneratorThreaded;
 
   // Must be implemented to provide the output of this sound node
-  virtual bool GetOutputSamples(BufferType* outputBuffer,
-                                const unsigned numberOfChannels,
-                                ListenerNode* listener,
-                                const bool firstRequest) = 0;
+  virtual bool GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest) = 0;
   // Called on the non-threaded node when the last input is removed
   virtual void CollapseNode()
   {
@@ -160,8 +157,7 @@ class SimpleCollapseNode : public SoundNode
 public:
   RaverieDeclareType(SimpleCollapseNode, TypeCopyMode::ReferenceType);
 
-  SimpleCollapseNode(Raverie::StringParam name, unsigned ID, bool listenerDependent, bool generator) :
-      SoundNode(name, ID, listenerDependent, generator)
+  SimpleCollapseNode(Raverie::StringParam name, unsigned ID, bool listenerDependent, bool generator) : SoundNode(name, ID, listenerDependent, generator)
   {
   }
   virtual ~SimpleCollapseNode()
@@ -184,10 +180,7 @@ public:
 
   float GetVolumeChangeFromOutputsThreaded() override;
 
-  bool GetOutputSamples(BufferType* outputBuffer,
-                        const unsigned numberOfChannels,
-                        ListenerNode* listener,
-                        const bool firstRequest) override;
+  bool GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest) override;
 };
 
 // Combine Node
@@ -203,10 +196,7 @@ public:
   }
 
 private:
-  bool GetOutputSamples(BufferType* outputBuffer,
-                        const unsigned numberOfChannels,
-                        ListenerNode* listener,
-                        const bool firstRequest) override;
+  bool GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest) override;
 };
 
 // Combine And Pause Node
@@ -227,10 +217,7 @@ public:
   void SetMuted(bool muted);
 
 private:
-  bool GetOutputSamples(BufferType* outputBuffer,
-                        const unsigned numberOfChannels,
-                        ListenerNode* listener,
-                        const bool firstRequest) override;
+  bool GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest) override;
   void SetPausedThreaded(const bool paused);
   void SetMutedThreaded(const bool muted);
 

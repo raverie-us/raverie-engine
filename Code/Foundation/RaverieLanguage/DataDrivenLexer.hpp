@@ -95,13 +95,9 @@ private:
   void EndParsing();
 
   template <typename TokenType>
-  void StartRule(GrammarRule<Token>* rule,
-                 GrammarSet<TokenType>& grammar,
-                 Array<Array<GrammarNode<TokenType>*>>& nodes);
+  void StartRule(GrammarRule<Token>* rule, GrammarSet<TokenType>& grammar, Array<Array<GrammarNode<TokenType>*>>& nodes);
   template <typename TokenType>
-  void EndRule(ParseNodeInfo<Token>* info,
-               GrammarSet<TokenType>& grammar,
-               Array<Array<GrammarNode<TokenType>*>>& nodes);
+  void EndRule(ParseNodeInfo<Token>* info, GrammarSet<TokenType>& grammar, Array<Array<GrammarNode<TokenType>*>>& nodes);
 
   // We specialize these functions
   // For example, it is only legal to add a string literal in the tokenizer, and
@@ -123,5 +119,4 @@ template <>
 void DataDrivenLexer::AddTokenLiteralNode<Token>(StringParam string, Array<GrammarNode<Token>*>& nodes);
 } // namespace Raverie
 
-#  include "DataDrivenLexer.inl"
-
+#include "DataDrivenLexer.inl"

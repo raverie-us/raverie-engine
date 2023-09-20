@@ -70,9 +70,7 @@ private:
   void GenerateStatements(GeneratorContext* context, ScopeNode* node);
 
   // Generate the backwards jump that most loops use to go back to the beginning
-  void GenerateBackwardsLoopJump(GeneratorContext* context,
-                                 size_t backwardsJumpInstructionIndex,
-                                 const CodeLocation& debugLocation);
+  void GenerateBackwardsLoopJump(GeneratorContext* context, size_t backwardsJumpInstructionIndex, const CodeLocation& debugLocation);
 
   // Generate the code for break statements in the loop
   void GenerateLoopBreaks(GeneratorContext* context, LoopScopeNode* node);
@@ -131,37 +129,20 @@ private:
 
   // Allocate a delegate opcode of type T
   template <typename T>
-  T& DelegateOpcode(Function* caller,
-                    Function* toCall,
-                    OperandIndex delegateDest,
-                    const CodeLocation& location,
-                    Instruction::Enum instruction,
-                    DebugOrigin::Enum debug);
+  T& DelegateOpcode(Function* caller, Function* toCall, OperandIndex delegateDest, const CodeLocation& location, Instruction::Enum instruction, DebugOrigin::Enum debug);
 
   // Create an instance delegate for the given type or source (the this handle
   // will be created)
-  void CreateInstanceDelegateAndThisHandle(Function* caller,
-                                           Function* toCall,
-                                           Type* thisType,
-                                           const Operand& thisSource,
-                                           Operand& delegateDestOut,
-                                           bool canBeVirtual,
-                                           const CodeLocation& location,
-                                           DebugOrigin::Enum debug);
+  void CreateInstanceDelegateAndThisHandle(
+      Function* caller, Function* toCall, Type* thisType, const Operand& thisSource, Operand& delegateDestOut, bool canBeVirtual, const CodeLocation& location, DebugOrigin::Enum debug);
 
   // Create an instance delegate for the given type or source (we provide the
   // this handle)
-  void CreateInstanceDelegateWithThisHandle(Function* caller,
-                                            Function* toCall,
-                                            const Operand& thisHandle,
-                                            Operand& delegateDestOut,
-                                            bool canBeVirtual,
-                                            const CodeLocation& location,
-                                            DebugOrigin::Enum debug);
+  void CreateInstanceDelegateWithThisHandle(
+      Function* caller, Function* toCall, const Operand& thisHandle, Operand& delegateDestOut, bool canBeVirtual, const CodeLocation& location, DebugOrigin::Enum debug);
 
   // Create a static delegate for the given type or source
-  void CreateStaticDelegate(
-      Function* caller, Function* toCall, Operand& delegateDest, const CodeLocation& location, DebugOrigin::Enum debug);
+  void CreateStaticDelegate(Function* caller, Function* toCall, Operand& delegateDest, const CodeLocation& location, DebugOrigin::Enum debug);
 
   // Generate opcode for type-casts
   void GenerateTypeCast(TypeCastNode*& node, GeneratorContext* context);
@@ -183,19 +164,11 @@ private:
 
   // Generate the opcode for a function call (*before* opcode for argument
   // copying)
-  void GenerateCallOpcodePreArgs(Function* caller,
-                                 DelegateType* delegateTypeToCall,
-                                 const Operand& delegateLocal,
-                                 const CodeLocation& location,
-                                 DebugOrigin::Enum debugOrigin);
+  void GenerateCallOpcodePreArgs(Function* caller, DelegateType* delegateTypeToCall, const Operand& delegateLocal, const CodeLocation& location, DebugOrigin::Enum debugOrigin);
 
   // Generate the opcode for a function call (*after* opcode for argument
   // copying)
-  void GenerateCallOpcodePostArgs(Function* caller,
-                                  DelegateType* delegateTypeToCall,
-                                  Operand* returnAccessOut,
-                                  const CodeLocation& location,
-                                  DebugOrigin::Enum debugOrigin);
+  void GenerateCallOpcodePostArgs(Function* caller, DelegateType* delegateTypeToCall, Operand* returnAccessOut, const CodeLocation& location, DebugOrigin::Enum debugOrigin);
 
   // Collect all the values used in expressions
   void CollectValue(ValueNode*& node, GeneratorContext* context);
@@ -223,22 +196,13 @@ private:
   void CreateLocal(Function* function, size_t size, Operand& accessOut);
 
   // Create a r-value unary operator opcode
-  void CreateRValueUnaryOpcode(Function* function,
-                               UnaryOperatorNode& node,
-                               Instruction::Enum instruction,
-                               DebugOrigin::Enum debugOrigin);
+  void CreateRValueUnaryOpcode(Function* function, UnaryOperatorNode& node, Instruction::Enum instruction, DebugOrigin::Enum debugOrigin);
 
   // Create a l-value unary operator opcode
-  void CreateLValueUnaryOpcode(Function* function,
-                               UnaryOperatorNode& node,
-                               Instruction::Enum instruction,
-                               DebugOrigin::Enum debugOrigin);
+  void CreateLValueUnaryOpcode(Function* function, UnaryOperatorNode& node, Instruction::Enum instruction, DebugOrigin::Enum debugOrigin);
 
   // Create a conversion opcode
-  void CreateConversionOpcode(Function* function,
-                              TypeCastNode& node,
-                              Instruction::Enum instruction,
-                              DebugOrigin::Enum debugOrigin);
+  void CreateConversionOpcode(Function* function, TypeCastNode& node, Instruction::Enum instruction, DebugOrigin::Enum debugOrigin);
 
   // Determine the proper opcode for unary operations
   void GenerateUnaryOp(Function* function, UnaryOperatorNode& node, DebugOrigin::Enum debugOrigin);
@@ -247,54 +211,23 @@ private:
   void GenerateConversion(Function* function, TypeCastNode& node, DebugOrigin::Enum debugOrigin);
 
   // Create a copy opcode
-  void CreateCopyOpcode(Function* function,
-                        CopyMode::Enum mode,
-                        Type* type,
-                        const Operand& source,
-                        const Operand& destination,
-                        DebugOrigin::Enum debugOrigin,
-                        const CodeLocation& location);
+  void CreateCopyOpcode(Function* function, CopyMode::Enum mode, Type* type, const Operand& source, const Operand& destination, DebugOrigin::Enum debugOrigin, const CodeLocation& location);
 
   // Determine the proper opcode for copy operations (we're initializing the
   // return value)
-  void GenerateCopyToReturn(Function* function,
-                            Type* type,
-                            const Operand& source,
-                            const Operand& destination,
-                            DebugOrigin::Enum debugOrigin,
-                            const CodeLocation& location);
+  void GenerateCopyToReturn(Function* function, Type* type, const Operand& source, const Operand& destination, DebugOrigin::Enum debugOrigin, const CodeLocation& location);
 
   // Determine the proper opcode for copy operations (we're initializing memory)
-  void GenerateCopyInitialize(Function* function,
-                              Type* type,
-                              const Operand& source,
-                              const Operand& destination,
-                              DebugOrigin::Enum debugOrigin,
-                              const CodeLocation& location);
+  void GenerateCopyInitialize(Function* function, Type* type, const Operand& source, const Operand& destination, DebugOrigin::Enum debugOrigin, const CodeLocation& location);
 
   // Determine the proper opcode for copy parameter operations
-  void GenerateCopyToParameter(Function* function,
-                               Type* type,
-                               const Operand& source,
-                               OperandIndex destRegister,
-                               DebugOrigin::Enum debugOrigin,
-                               const CodeLocation& location);
+  void GenerateCopyToParameter(Function* function, Type* type, const Operand& source, OperandIndex destRegister, DebugOrigin::Enum debugOrigin, const CodeLocation& location);
 
   // Determine the proper opcode for copy return operations
-  void GenerateCopyFromReturn(Function* function,
-                              Type* type,
-                              OperandIndex sourceRegister,
-                              OperandIndex destRegister,
-                              DebugOrigin::Enum debugOrigin,
-                              const CodeLocation& location);
+  void GenerateCopyFromReturn(Function* function, Type* type, OperandIndex sourceRegister, OperandIndex destRegister, DebugOrigin::Enum debugOrigin, const CodeLocation& location);
 
   // Determine the proper opcode for creating a handle
-  void GenerateHandleInitialize(Function* function,
-                                Type* type,
-                                const Operand& source,
-                                const Operand& destination,
-                                DebugOrigin::Enum debugOrigin,
-                                const CodeLocation& location);
+  void GenerateHandleInitialize(Function* function, Type* type, const Operand& source, const Operand& destination, DebugOrigin::Enum debugOrigin, const CodeLocation& location);
 
 private:
   // Store all the walkers
@@ -305,4 +238,3 @@ private:
   LibraryBuilder* Builder;
 };
 } // namespace Raverie
-

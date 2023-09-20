@@ -83,8 +83,7 @@ void RaycastResultList::AddItem(RayCastEntry& inputEntry)
   }
 }
 
-void RaycastResultList::AddItem(
-    Cog* hitCog, float t, Vec3Param worldPosition, Vec3Param worldNormal, Vec2Param uv, bool uvProvided)
+void RaycastResultList::AddItem(Cog* hitCog, float t, Vec3Param worldPosition, Vec3Param worldNormal, Vec2Param uv, bool uvProvided)
 {
   RayCastEntry entry;
   entry.HitCog = hitCog;
@@ -97,8 +96,7 @@ void RaycastResultList::AddItem(
   AddItem(entry);
 }
 
-void RaycastResultList::AddMetaItem(
-    HandleParam object, float t, Vec3Param worldPosition, Vec3Param worldNormal, Vec2Param uv, bool uvProvided)
+void RaycastResultList::AddMetaItem(HandleParam object, float t, Vec3Param worldPosition, Vec3Param worldNormal, Vec2Param uv, bool uvProvided)
 {
   RayCastEntry entry;
   entry.Instance = object;

@@ -176,8 +176,7 @@ void Composite::ShiftOntoScreen(Vec3 offset)
   this->SetTranslation(offset);
 }
 
-void Composite::RenderUpdate(
-    ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
+void Composite::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   DebugValidate();
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
@@ -428,8 +427,7 @@ Widget* FindWidgetByName(StringParam name, UiTraversal::Enum traversalType, size
 }
 
 // Colored Composite
-ColoredComposite::ColoredComposite(Composite* parent, Vec4Param color, AttachType::Enum attachType) :
-    Composite(parent, attachType)
+ColoredComposite::ColoredComposite(Composite* parent, Vec4Param color, AttachType::Enum attachType) : Composite(parent, attachType)
 {
   mBackground = CreateAttached<Element>(cWhiteSquare);
   mBackground->SetColor(color);

@@ -41,8 +41,7 @@ void RaverieShaderGenerator::Initialize()
   mSamplerAttributeValues["TextureCompareFuncLess"] = SamplerSettings::CompareFunc(TextureCompareFunc::Less);
   mSamplerAttributeValues["TextureCompareFuncLessEqual"] = SamplerSettings::CompareFunc(TextureCompareFunc::LessEqual);
   mSamplerAttributeValues["TextureCompareFuncGreater"] = SamplerSettings::CompareFunc(TextureCompareFunc::Greater);
-  mSamplerAttributeValues["TextureCompareFuncGreaterEqual"] =
-      SamplerSettings::CompareFunc(TextureCompareFunc::GreaterEqual);
+  mSamplerAttributeValues["TextureCompareFuncGreaterEqual"] = SamplerSettings::CompareFunc(TextureCompareFunc::GreaterEqual);
   mSamplerAttributeValues["TextureCompareFuncEqual"] = SamplerSettings::CompareFunc(TextureCompareFunc::Equal);
   mSamplerAttributeValues["TextureCompareFuncNotEqual"] = SamplerSettings::CompareFunc(TextureCompareFunc::NotEqual);
 
@@ -152,8 +151,7 @@ void RaverieShaderGenerator::InitializeSpirV()
   transformData.AddField(real4x4Type, nameSettings.mPerspectiveToApiPerspectiveName);
   settings->AddUniformBufferDescription(transformData);
 
-  Raverie::BoundType* boneTransformsType =
-      Raverie::ShaderIntrinsicsLibrary::GetInstance().GetLibrary()->BoundTypes["FixedArray[Real4x4, 80]"];
+  Raverie::BoundType* boneTransformsType = Raverie::ShaderIntrinsicsLibrary::GetInstance().GetLibrary()->BoundTypes["FixedArray[Real4x4, 80]"];
   UniformBufferDescription miscData(3);
   miscData.mDebugName = "MiscData";
   miscData.AddField(boneTransformsType, "BoneTransforms");
@@ -173,8 +171,7 @@ void RaverieShaderGenerator::InitializeSpirV()
   // Set custom callbacks in both the compositor and entry point code generation
   // for dealing with perspective position vs. api perspective position.
   settings->mCallbackSettings.SetCompositeCallback(&RaverieShaderIRCompositor::ApiPerspectivePositionCallback, nullptr);
-  settings->mCallbackSettings.SetAppendCallback(&EntryPointGeneration::PerspectiveTransformAppendVertexCallback,
-                                                nullptr);
+  settings->mCallbackSettings.SetAppendCallback(&EntryPointGeneration::PerspectiveTransformAppendVertexCallback, nullptr);
 
   settings->Finalize();
 
@@ -182,7 +179,7 @@ void RaverieShaderGenerator::InitializeSpirV()
   mFrontEndTranslator->SetSettings(mSpirVSettings);
   mFrontEndTranslator->Setup();
   // Create the core library and parse it
-  
+
   RaverieShaderIRCore& coreLibrary = RaverieShaderIRCore::GetInstance();
   coreLibrary.Parse(mFrontEndTranslator);
   mCoreLibrary = coreLibrary.GetLibrary();
@@ -194,15 +191,10 @@ void RaverieShaderGenerator::InitializeSpirV()
   mShaderIntrinsicsLibrary = shaderIntrinsics.GetLibrary();
 
   // Connect error events
-  EventConnect(&mFragmentsProject,
-               Raverie::Events::CompilationError,
-               &RaverieShaderGenerator::OnRaverieFragmentCompilationError,
-               this);
+  EventConnect(&mFragmentsProject, Raverie::Events::CompilationError, &RaverieShaderGenerator::OnRaverieFragmentCompilationError, this);
   EventConnect(&mFragmentsProject, Raverie::Events::TypeParsed, &RaverieShaderGenerator::OnRaverieFragmentTypeParsed, this);
-  EventConnect(
-      &mFragmentsProject, Events::TranslationError, &RaverieShaderGenerator::OnRaverieFragmentTranslationError, this);
-  EventConnect(
-      &mFragmentsProject, Events::ValidationError, &RaverieShaderGenerator::OnRaverieFragmentValidationError, this);
+  EventConnect(&mFragmentsProject, Events::TranslationError, &RaverieShaderGenerator::OnRaverieFragmentTranslationError, this);
+  EventConnect(&mFragmentsProject, Events::ValidationError, &RaverieShaderGenerator::OnRaverieFragmentValidationError, this);
 }
 
 LibraryRef BuildWrapperLibrary(RaverieShaderIRLibraryRef fragmentsLibrary)
@@ -302,8 +294,7 @@ LibraryRef BuildWrapperLibrary(RaverieShaderIRLibraryRef fragmentsLibrary)
       fragmentSize += endPad;
 
       // Create fragment type.
-      BoundType* boundType =
-          builder.AddBoundType(shaderTypeMeta->mRaverieName, TypeCopyMode::ReferenceType, fragmentSize);
+      BoundType* boundType = builder.AddBoundType(shaderTypeMeta->mRaverieName, TypeCopyMode::ReferenceType, fragmentSize);
       boundType->BaseType = RaverieTypeId(MaterialBlock);
       // Associate this type to the RaverieFragment resource containing the shader
       // type.
@@ -348,8 +339,7 @@ LibraryRef BuildWrapperLibrary(RaverieShaderIRLibraryRef fragmentsLibrary)
         }
 
         // Create property.
-        GetterSetter* getterSetter = builder.AddBoundGetterSetter(
-            boundType, shaderProperty.mName, shaderProperty.mBoundType, setter, getter, MemberOptions::None);
+        GetterSetter* getterSetter = builder.AddBoundGetterSetter(boundType, shaderProperty.mName, shaderProperty.mBoundType, setter, getter, MemberOptions::None);
         // Storing member offset on the property meta for generic getter/setter
         // implementation.
         getterSetter->UserData = (void*)shaderProperty.mMemberOffset;
@@ -397,9 +387,7 @@ LibraryRef BuildWrapperLibrary(RaverieShaderIRLibraryRef fragmentsLibrary)
   return builder.CreateLibrary();
 }
 
-LibraryRef RaverieShaderGenerator::BuildFragmentsLibrary(Module& dependencies,
-                                                       Array<RaverieDocumentResource*>& fragments,
-                                                       StringParam libraryName)
+LibraryRef RaverieShaderGenerator::BuildFragmentsLibrary(Module& dependencies, Array<RaverieDocumentResource*>& fragments, StringParam libraryName)
 {
   ProfileScopeFunctionArgs(libraryName);
   mFragmentsProject.Clear();
@@ -432,8 +420,7 @@ LibraryRef RaverieShaderGenerator::BuildFragmentsLibrary(Module& dependencies,
     internalDependencies->Append(internalDependency);
   }
 
-  RaverieShaderIRLibraryRef fragmentsLibrary =
-      mFragmentsProject.CompileAndTranslate(internalDependencies, mFrontEndTranslator);
+  RaverieShaderIRLibraryRef fragmentsLibrary = mFragmentsProject.CompileAndTranslate(internalDependencies, mFrontEndTranslator);
   if (fragmentsLibrary == nullptr)
     return nullptr;
 
@@ -576,10 +563,7 @@ void RaverieShaderGenerator::MapFragmentTypes()
   }
 }
 
-bool RaverieShaderGenerator::BuildShaders(ShaderSet& shaders,
-                                        HashMap<String, UniqueComposite>& composites,
-                                        Array<ShaderEntry>& shaderEntries,
-                                        Array<ShaderDefinition>* compositeShaderDefs)
+bool RaverieShaderGenerator::BuildShaders(ShaderSet& shaders, HashMap<String, UniqueComposite>& composites, Array<ShaderEntry>& shaderEntries, Array<ShaderDefinition>* compositeShaderDefs)
 {
   ProfileScopeFunction();
   // @Nate: Build a description of the pipeline tools to run.
@@ -690,8 +674,7 @@ bool RaverieShaderGenerator::BuildShaders(ShaderSet& shaders,
     RaverieShaderIRModuleRef shaderDependencies = new RaverieShaderIRModule();
     shaderDependencies->PushBack(fragmentsLibrary);
 
-    EventConnect(
-        &shaderProject, Raverie::Events::CompilationError, &RaverieShaderGenerator::OnRaverieFragmentCompilationError, this);
+    EventConnect(&shaderProject, Raverie::Events::CompilationError, &RaverieShaderGenerator::OnRaverieFragmentCompilationError, this);
     RaverieShaderIRLibraryRef shaderLibrary = shaderProject.CompileAndTranslate(shaderDependencies, mFrontEndTranslator);
 
     if (shaderLibrary == nullptr)
@@ -733,9 +716,7 @@ bool RaverieShaderGenerator::BuildShaders(ShaderSet& shaders,
   return true;
 }
 
-bool RaverieShaderGenerator::CompilePipeline(RaverieShaderIRType* shaderType,
-                                           ShaderPipelineDescription& pipeline,
-                                           Array<TranslationPassResultRef>& pipelineResults)
+bool RaverieShaderGenerator::CompilePipeline(RaverieShaderIRType* shaderType, ShaderPipelineDescription& pipeline, Array<TranslationPassResultRef>& pipelineResults)
 {
   if (shaderType == nullptr)
     return false;
@@ -785,10 +766,7 @@ bool RaverieShaderGenerator::CompilePipeline(RaverieShaderIRType* shaderType,
   return true;
 }
 
-ShaderInput RaverieShaderGenerator::CreateShaderInput(StringParam fragmentName,
-                                                    StringParam inputName,
-                                                    ShaderInputType::Enum type,
-                                                    AnyParam value)
+ShaderInput RaverieShaderGenerator::CreateShaderInput(StringParam fragmentName, StringParam inputName, ShaderInputType::Enum type, AnyParam value)
 {
   ShaderInput shaderInput;
 
@@ -849,8 +827,7 @@ void RaverieShaderGenerator::OnRaverieFragmentCompilationError(Raverie::ErrorEve
 {
   String shortMessage = event->ExactError;
   String fullMessage = event->GetFormattedMessage(Raverie::MessageFormat::Python);
-  RaverieFragmentManager::GetInstance()->DispatchScriptError(
-      Events::SyntaxError, shortMessage, fullMessage, event->Location);
+  RaverieFragmentManager::GetInstance()->DispatchScriptError(Events::SyntaxError, shortMessage, fullMessage, event->Location);
 }
 
 void RaverieShaderGenerator::OnRaverieFragmentTypeParsed(Raverie::ParseEvent* event)
@@ -874,15 +851,13 @@ void RaverieShaderGenerator::OnRaverieFragmentTypeParsed(Raverie::ParseEvent* ev
 void RaverieShaderGenerator::OnRaverieFragmentTranslationError(TranslationErrorEvent* event)
 {
   String fullMessage = event->GetFormattedMessage(Raverie::MessageFormat::Python);
-  RaverieFragmentManager::GetInstance()->DispatchScriptError(
-      Events::SyntaxError, event->mShortMessage, fullMessage, event->mLocation);
+  RaverieFragmentManager::GetInstance()->DispatchScriptError(Events::SyntaxError, event->mShortMessage, fullMessage, event->mLocation);
 }
 
 void RaverieShaderGenerator::OnRaverieFragmentValidationError(ValidationErrorEvent* event)
 {
   String fullMessage = event->GetFormattedMessage(Raverie::MessageFormat::Python);
-  RaverieFragmentManager::GetInstance()->DispatchScriptError(
-      Events::SyntaxError, event->mShortMessage, fullMessage, event->mLocation);
+  RaverieFragmentManager::GetInstance()->DispatchScriptError(Events::SyntaxError, event->mShortMessage, fullMessage, event->mLocation);
 }
 
 RaverieShaderIRLibraryRef RaverieShaderGenerator::GetInternalLibrary(LibraryRef library)

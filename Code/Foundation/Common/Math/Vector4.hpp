@@ -153,7 +153,8 @@ struct Vector4
   /// refraction.
   Vector4 Refract(Vec4Param planeNormal, real refractionIndex) const;
 
-  union {
+  union
+  {
     struct
     {
       real x, y, z, w;

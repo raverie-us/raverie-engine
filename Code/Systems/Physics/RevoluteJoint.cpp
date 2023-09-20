@@ -47,12 +47,9 @@ RaverieDefineType(RevoluteJoint, builder, type)
   // Instead of binding the angles as usual, bind them with basis editors for
   // cleaner updating with gizmos
   // BindAngleAccessors();
-  RaverieBindGetterSetterProperty(LocalBasisA)
-      ->Add(new EditorRotationBasis("RevoluteJointBasisGizmo", "EditorRevoluteGizmoName", 0b01));
-  RaverieBindGetterSetterProperty(LocalBasisB)
-      ->Add(new EditorRotationBasis("RevoluteJointBasisGizmo", "EditorRevoluteGizmoName", 0b10));
-  RaverieBindGetterSetterProperty(WorldBasis)
-      ->Add(new EditorRotationBasis("RevoluteJointBasisGizmo", "EditorRevoluteGizmoName", 0b11));
+  RaverieBindGetterSetterProperty(LocalBasisA)->Add(new EditorRotationBasis("RevoluteJointBasisGizmo", "EditorRevoluteGizmoName", 0b01));
+  RaverieBindGetterSetterProperty(LocalBasisB)->Add(new EditorRotationBasis("RevoluteJointBasisGizmo", "EditorRevoluteGizmoName", 0b10));
+  RaverieBindGetterSetterProperty(WorldBasis)->Add(new EditorRotationBasis("RevoluteJointBasisGizmo", "EditorRevoluteGizmoName", 0b11));
   RaverieBindGetterSetterProperty(FrameOfReference);
 
   RaverieBindMethod(SetWorldFrame);
@@ -171,8 +168,7 @@ void RevoluteJoint::ComputePositionMolecules(MoleculeWalker& molecules)
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  ComputePositionMoleculesFragment(
-      this, molecules, sInfo.mAtomCount, moleculeData, DefaultAngularLimitPolicy<RevoluteJoint>());
+  ComputePositionMoleculesFragment(this, molecules, sInfo.mAtomCount, moleculeData, DefaultAngularLimitPolicy<RevoluteJoint>());
 }
 
 void RevoluteJoint::DebugDraw()

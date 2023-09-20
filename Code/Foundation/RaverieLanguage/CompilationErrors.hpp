@@ -34,30 +34,20 @@ public:
 
   // Print out an error message with extra context (one extra location, given a
   // va_list)
-  void RaiseArgs(const CodeLocation& location,
-                 StringParam extra,
-                 const CodeLocation& associatedLocation,
-                 int errorCode,
-                 va_list args);
+  void RaiseArgs(const CodeLocation& location, StringParam extra, const CodeLocation& associatedLocation, int errorCode, va_list args);
 
   // Print out an error message (given a va_list)
-  void RaiseArgs(const CodeLocation& location,
-                 StringParam extra,
-                 const LocationArray& associatedLocations,
-                 int errorCode,
-                 va_list args);
+  void RaiseArgs(const CodeLocation& location, StringParam extra, const LocationArray& associatedLocations, int errorCode, va_list args);
 
   // Print out an error message with extra context (multiple locations, given a
   // va_list)
   void RaiseArgs(const CodeLocation& location, int errorCode, va_list args);
 
   // Print out an error message with extra context (one extra location)
-  void
-  Raise(const CodeLocation& location, StringParam extra, const CodeLocation& associatedLocation, int errorCode, ...);
+  void Raise(const CodeLocation& location, StringParam extra, const CodeLocation& associatedLocation, int errorCode, ...);
 
   // Print out an error message with extra context (multiple locations)
-  void
-  Raise(const CodeLocation& location, StringParam extra, const LocationArray& associatedLocations, int errorCode, ...);
+  void Raise(const CodeLocation& location, StringParam extra, const LocationArray& associatedLocations, int errorCode, ...);
 
   // Print out an error message
   void Raise(const CodeLocation& location, int errorCode, ...);
@@ -85,4 +75,3 @@ public:
   bool TolerantMode;
 };
 } // namespace Raverie
-

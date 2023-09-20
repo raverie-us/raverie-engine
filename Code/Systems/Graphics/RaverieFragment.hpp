@@ -51,10 +51,7 @@ public:
   String GetTemplateSourceFile(ResourceAdd& resourceAdd) override;
 
   /// Helper to dispatch script errors.
-  void DispatchScriptError(StringParam eventId,
-                           StringParam shortMessage,
-                           StringParam fullMessage,
-                           const Raverie::CodeLocation& location);
+  void DispatchScriptError(StringParam eventId, StringParam shortMessage, StringParam fullMessage, const Raverie::CodeLocation& location);
 
   // We ignore duplicate exceptions until the version is incremented
   HashSet<String> mDuplicateExceptions;

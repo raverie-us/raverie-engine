@@ -5,11 +5,7 @@
 namespace Raverie
 {
 // Instantiates an array template when requested
-BoundType* InstantiateArray(LibraryBuilder& builder,
-                                       StringParam baseName,
-                                       StringParam fullyQualifiedName,
-                                       const Array<Constant>& templateTypes,
-                                       const void* userData);
+BoundType* InstantiateArray(LibraryBuilder& builder, StringParam baseName, StringParam fullyQualifiedName, const Array<Constant>& templateTypes, const void* userData);
 
 // For every instantiated array, it may want to look up information about what
 // it Contains
@@ -53,22 +49,16 @@ public:
 
 // These are all the specializations that are optimized to store exactly that
 // data type All values that are unknown will be stored as the 'Any' type
-#  define RaverieDeclareDefineArray(ElementType)                                                                         \
-    RaverieDeclareCustomType(                                                                                            \
-        ArrayClass<ElementType>,                                                                                       \
-        ::Raverie::Core::GetInstance()                                                                                        \
-            .GetBuilder()                                                                                              \
-            ->InstantiateTemplate("Array",                                                                             \
-                                  RaverieConstants(RaverieTypeId(ElementType)),                                            \
-                                  LibraryArray(RaverieInit, Core::GetInstance().GetBuilder()->BuiltLibrary))              \
-            .Type);
+#define RaverieDeclareDefineArray(ElementType)                                                                                                                                                         \
+  RaverieDeclareCustomType(ArrayClass<ElementType>,                                                                                                                                                    \
+                           ::Raverie::Core::GetInstance()                                                                                                                                              \
+                               .GetBuilder()                                                                                                                                                           \
+                               ->InstantiateTemplate("Array", RaverieConstants(RaverieTypeId(ElementType)), LibraryArray(RaverieInit, Core::GetInstance().GetBuilder()->BuiltLibrary))                 \
+                               .Type);
 
-#  define RaverieDeclareDefineValueArray(ElementType)                                                           \
-    RaverieDeclareDefineArray(ElementType) typedef ArrayClass<ElementType> Array##ElementType;
+#define RaverieDeclareDefineValueArray(ElementType) RaverieDeclareDefineArray(ElementType) typedef ArrayClass<ElementType> Array##ElementType;
 
-#  define RaverieDeclareDefineHandleArray(ElementType)                                                          \
-    RaverieDeclareDefineArray(HandleOf<ElementType>) typedef ArrayClass<HandleOf<ElementType>>                  \
-        Array##ElementType;
+#define RaverieDeclareDefineHandleArray(ElementType) RaverieDeclareDefineArray(HandleOf<ElementType>) typedef ArrayClass<HandleOf<ElementType>> Array##ElementType;
 
 // Pre-existing useful declarations
 typedef HandleOf<String> HandleOfString;

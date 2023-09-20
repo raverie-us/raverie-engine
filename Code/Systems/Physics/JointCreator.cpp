@@ -64,16 +64,12 @@ RaverieDefineType(JointCreator, builder, type)
 
   RaverieBindOverloadedMethod(Create, RaverieInstanceOverload(Cog*, Cog*, Cog*, StringParam));
   RaverieBindOverloadedMethod(CreateWorldPoints, RaverieInstanceOverload(Cog*, Cog*, Cog*, StringParam, Vec3Param));
-  RaverieBindOverloadedMethod(CreateWorldPoints,
-                            RaverieInstanceOverload(Cog*, Cog*, Cog*, StringParam, Vec3Param, Vec3Param));
-  RaverieBindOverloadedMethod(CreateLocalPoints,
-                            RaverieInstanceOverload(Cog*, Cog*, Cog*, StringParam, Vec3Param, Vec3Param));
+  RaverieBindOverloadedMethod(CreateWorldPoints, RaverieInstanceOverload(Cog*, Cog*, Cog*, StringParam, Vec3Param, Vec3Param));
+  RaverieBindOverloadedMethod(CreateLocalPoints, RaverieInstanceOverload(Cog*, Cog*, Cog*, StringParam, Vec3Param, Vec3Param));
   RaverieBindOverloadedMethod(Create, RaverieInstanceOverload(Cog*, Cog*, Cog*, Archetype*));
   RaverieBindOverloadedMethod(CreateWorldPoints, RaverieInstanceOverload(Cog*, Cog*, Cog*, Archetype*, Vec3Param));
-  RaverieBindOverloadedMethod(CreateWorldPoints,
-                            RaverieInstanceOverload(Cog*, Cog*, Cog*, Archetype*, Vec3Param, Vec3Param));
-  RaverieBindOverloadedMethod(CreateLocalPoints,
-                            RaverieInstanceOverload(Cog*, Cog*, Cog*, Archetype*, Vec3Param, Vec3Param));
+  RaverieBindOverloadedMethod(CreateWorldPoints, RaverieInstanceOverload(Cog*, Cog*, Cog*, Archetype*, Vec3Param, Vec3Param));
+  RaverieBindOverloadedMethod(CreateLocalPoints, RaverieInstanceOverload(Cog*, Cog*, Cog*, Archetype*, Vec3Param, Vec3Param));
 
   RaverieBindMethod(AddJointLimit);
   RaverieBindMethod(AddJointMotor);
@@ -108,8 +104,7 @@ Cog* JointCreator::CreateWorldPoints(Cog* objectA, Cog* objectB, StringParam joi
   return AttachInternal(info, jointName);
 }
 
-Cog* JointCreator::CreateWorldPoints(
-    Cog* objectA, Cog* objectB, StringParam jointName, Vec3Param worldPointA, Vec3Param worldPointB)
+Cog* JointCreator::CreateWorldPoints(Cog* objectA, Cog* objectB, StringParam jointName, Vec3Param worldPointA, Vec3Param worldPointB)
 {
   if (!ObjectsValid(objectA, objectB, jointName))
     return nullptr;
@@ -120,8 +115,7 @@ Cog* JointCreator::CreateWorldPoints(
   return AttachInternal(info, jointName);
 }
 
-Cog* JointCreator::CreateLocalPoints(
-    Cog* objectA, Cog* objectB, StringParam jointName, Vec3Param localPointA, Vec3Param localPointB)
+Cog* JointCreator::CreateLocalPoints(Cog* objectA, Cog* objectB, StringParam jointName, Vec3Param localPointA, Vec3Param localPointB)
 {
   if (!ObjectsValid(objectA, objectB, jointName))
     return nullptr;
@@ -156,8 +150,7 @@ Cog* JointCreator::CreateWorldPoints(Cog* objectA, Cog* objectB, Archetype* join
   return AttachInternal(info, jointName, jointArchetype);
 }
 
-Cog* JointCreator::CreateWorldPoints(
-    Cog* objectA, Cog* objectB, Archetype* jointArchetype, Vec3Param worldPointA, Vec3Param worldPointB)
+Cog* JointCreator::CreateWorldPoints(Cog* objectA, Cog* objectB, Archetype* jointArchetype, Vec3Param worldPointA, Vec3Param worldPointB)
 {
   String jointName;
   if (!ObjectsValid(objectA, objectB, jointName))
@@ -169,8 +162,7 @@ Cog* JointCreator::CreateWorldPoints(
   return AttachInternal(info, jointName, jointArchetype);
 }
 
-Cog* JointCreator::CreateLocalPoints(
-    Cog* objectA, Cog* objectB, Archetype* jointArchetype, Vec3Param localPointA, Vec3Param localPointB)
+Cog* JointCreator::CreateLocalPoints(Cog* objectA, Cog* objectB, Archetype* jointArchetype, Vec3Param localPointA, Vec3Param localPointB)
 {
   String jointName;
   if (!ObjectsValid(objectA, objectB, jointName))
@@ -441,11 +433,11 @@ void JointCreator::SetBasicProperties(Joint* joint)
   joint->SetAutoSnaps(mFlags.IsSet(JointCreatorFlags::AutoSnaps));
 }
 
-#define JointType(type)                                                                                                \
-  case JointEnums::type##Type:                                                                                         \
-  {                                                                                                                    \
-    CallJointFunctions<type>(joint, info);                                                                             \
-    break;                                                                                                             \
+#define JointType(type)                                                                                                                                                                                \
+  case JointEnums::type##Type:                                                                                                                                                                         \
+  {                                                                                                                                                                                                    \
+    CallJointFunctions<type>(joint, info);                                                                                                                                                             \
+    break;                                                                                                                                                                                             \
   }
 
 void JointCreator::CallJointFunctions(Joint* joint, ConnectionInfo& info)

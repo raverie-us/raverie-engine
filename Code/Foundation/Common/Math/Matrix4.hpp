@@ -37,22 +37,7 @@ struct Matrix4
 
 public:
   Matrix4(){};
-  Matrix4(real p00,
-          real p01,
-          real p02,
-          real p03,
-          real p10,
-          real p11,
-          real p12,
-          real p13,
-          real p20,
-          real p21,
-          real p22,
-          real p23,
-          real p30,
-          real p31,
-          real p32,
-          real p33);
+  Matrix4(real p00, real p01, real p02, real p03, real p10, real p11, real p12, real p13, real p20, real p21, real p22, real p23, real p30, real p31, real p32, real p33);
   Matrix4(Vec4Param basisX, Vec4Param basisY, Vec4Param basisZ, Vec4Param basisW);
   Matrix4(ConstRealPointer data_);
 
@@ -212,7 +197,8 @@ public:
   void SetCross(uint index, Vec3Param crossVector3, real w);
   void SetCross(uint index, real x, real y, real z, real w);
 
-  union {
+  union
+  {
     struct
     {
 #if ColumnBasis == 1

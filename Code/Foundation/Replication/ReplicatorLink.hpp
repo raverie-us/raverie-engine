@@ -197,10 +197,7 @@ public:
 
   /// [Client] Serializes reverse replica channels
   /// Returns true if successful, else false
-  bool SerializeReverseReplicaChannels(const ReplicaArray& replicas,
-                                       Message& message,
-                                       bool& containsChannels,
-                                       TimeMs timestamp);
+  bool SerializeReverseReplicaChannels(const ReplicaArray& replicas, Message& message, bool& containsChannels, TimeMs timestamp);
   /// [Server] Deserializes reverse replica channels
   /// Returns true if successful, else false
   bool DeserializeReverseReplicaChannels(const Message& message, ReplicaArray& replicas, TimeMs timestamp);

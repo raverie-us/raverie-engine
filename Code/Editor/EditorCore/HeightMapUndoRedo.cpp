@@ -156,8 +156,7 @@ void HeightPatchUndoRedo::Redo()
   }
 }
 
-ModifiedWeightMapPixel::ModifiedWeightMapPixel(
-    PatchIndexParam index, uint x, uint y, ByteColor originalWeight, ByteColor weight)
+ModifiedWeightMapPixel::ModifiedWeightMapPixel(PatchIndexParam index, uint x, uint y, ByteColor originalWeight, ByteColor weight)
 {
   PatchIndex = index;
 

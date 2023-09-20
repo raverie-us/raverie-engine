@@ -83,8 +83,7 @@ AudioFileData AudioFileEncoder::OpenFile(Status& status, StringParam fileName)
     ReadWav(status, file, fileName, data);
   }
   // If it starts with Ogg, it's an Ogg file
-  else if ((header.riff_chunk[0] == 'O' || header.riff_chunk[0] == 'o') &&
-           (header.riff_chunk[1] == 'G' || header.riff_chunk[1] == 'g'))
+  else if ((header.riff_chunk[0] == 'O' || header.riff_chunk[0] == 'o') && (header.riff_chunk[1] == 'G' || header.riff_chunk[1] == 'g'))
   {
     // Reads the audio data into the AudioFileData object
     ReadOgg(status, file, fileName, data);
@@ -98,8 +97,7 @@ AudioFileData AudioFileEncoder::OpenFile(Status& status, StringParam fileName)
   return data;
 }
 
-void AudioFileEncoder::WriteFile(
-    Status& status, StringParam outputFileName, AudioFileData& data, bool normalize, float maxVolume)
+void AudioFileEncoder::WriteFile(Status& status, StringParam outputFileName, AudioFileData& data, bool normalize, float maxVolume)
 {
   // Open the output file
   File outputFile;
@@ -190,11 +188,7 @@ void AudioFileEncoder::ReadWav(Status& status, File& file, StringParam fileName,
 
   // If the PCM to float translation returns false, it wasn't able to translate
   // the format
-  if (!PcmToFloat(rawDataBuffer,
-                  data.BuffersPerChannel,
-                  data.SamplesPerChannel * data.Channels,
-                  data.Channels,
-                  fmtChunkData.bytes_per_sample / data.Channels))
+  if (!PcmToFloat(rawDataBuffer, data.BuffersPerChannel, data.SamplesPerChannel * data.Channels, data.Channels, fmtChunkData.bytes_per_sample / data.Channels))
   {
     status.SetFailed(String::Format("File %s is in WAV format but is not 16 or 24 bit", fileName.c_str()));
   }
@@ -248,18 +242,13 @@ void AudioFileEncoder::ReadOgg(Status& status, File& file, StringParam fileName,
     data.BuffersPerChannel[i] = new float[data.SamplesPerChannel];
 
   // Translate the ogg data into the buffers of floats
-  data.SamplesPerChannel =
-      stb_vorbis_get_samples_float(oggStream, data.Channels, data.BuffersPerChannel, data.SamplesPerChannel);
+  data.SamplesPerChannel = stb_vorbis_get_samples_float(oggStream, data.Channels, data.BuffersPerChannel, data.SamplesPerChannel);
 
   // Close the vorbis stream
   stb_vorbis_close(oggStream);
 }
 
-bool AudioFileEncoder::PcmToFloat(byte* inputBuffer,
-                                  float** samplesPerChannel,
-                                  const unsigned totalSampleCount,
-                                  const unsigned channelCount,
-                                  const unsigned bytesPerSample)
+bool AudioFileEncoder::PcmToFloat(byte* inputBuffer, float** samplesPerChannel, const unsigned totalSampleCount, const unsigned channelCount, const unsigned bytesPerSample)
 {
   // 16 bit data can be read as shorts
   if (bytesPerSample == 2)
@@ -306,10 +295,7 @@ bool AudioFileEncoder::PcmToFloat(byte* inputBuffer,
     return false;
 }
 
-void AudioFileEncoder::Normalize(float** samplesPerChannel,
-                                 const unsigned frames,
-                                 const unsigned channels,
-                                 float maxVolume)
+void AudioFileEncoder::Normalize(float** samplesPerChannel, const unsigned frames, const unsigned channels, float maxVolume)
 {
   // Save variables for finding the maximum volume in the audio data
   float maxFileVolume(0.0f);
@@ -341,10 +327,7 @@ void AudioFileEncoder::Normalize(float** samplesPerChannel,
   }
 }
 
-unsigned AudioFileEncoder::Resample(unsigned fileSampleRate,
-                                    unsigned channels,
-                                    unsigned samplesPerChannel,
-                                    float**& buffersPerChannel)
+unsigned AudioFileEncoder::Resample(unsigned fileSampleRate, unsigned channels, unsigned samplesPerChannel, float**& buffersPerChannel)
 {
   // Get the factor to use while resampling
   double resampleFactor = (double)fileSampleRate / (double)AudioConstants::cSystemSampleRate;
@@ -446,8 +429,7 @@ void AudioFileEncoder::EncodeFile(Status& status, File& outputFile, AudioFileDat
         buffer = buffersPerChannel[channel] + inputIndex;
 
       // Encode a packet for this channel
-      packetHeader.Size =
-          opus_encode_float(encodersPerChannel[channel], buffer, cPacketFrames, encodedPacket, cMaxPacketSize);
+      packetHeader.Size = opus_encode_float(encodersPerChannel[channel], buffer, cPacketFrames, encodedPacket, cMaxPacketSize);
       // If there was an error, set the status
       if (packetHeader.Size <= 0)
       {
@@ -496,8 +478,7 @@ void PacketEncoder::EncodePacket(const float* dataBuffer, const unsigned samples
   ReturnIf(samples != AudioFileEncoder::cPacketFrames, , "Tried to encode packet with incorrect number of samples");
 
   encodedData.Resize(AudioFileEncoder::cMaxPacketSize);
-  unsigned encodedDataSize =
-      opus_encode_float(Encoder, dataBuffer, samples, encodedData.Data(), AudioFileEncoder::cMaxPacketSize);
+  unsigned encodedDataSize = opus_encode_float(Encoder, dataBuffer, samples, encodedData.Data(), AudioFileEncoder::cMaxPacketSize);
   encodedData.Resize(encodedDataSize);
 }
 

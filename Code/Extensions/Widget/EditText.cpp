@@ -70,8 +70,7 @@ void EditText::ChangeDefinition(BaseDefinition* def)
   // mFont = mDef->mFont;
 }
 
-void EditText::RenderUpdate(
-    ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
+void EditText::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 
@@ -361,9 +360,7 @@ void EditText::ReplaceSelection(StringRange text)
   StringIterator displayTextStartIt = mDisplayText.Begin();
   StringIterator selectionStartIt = displayTextStartIt + mSelectionLeftPos;
   StringIterator selectionEndIt = displayTextStartIt + mSelectionRightPos;
-  mDisplayText = BuildString(mDisplayText.SubString(displayTextStartIt, selectionStartIt),
-                             text,
-                             mDisplayText.SubString(selectionEndIt, mDisplayText.End()));
+  mDisplayText = BuildString(mDisplayText.SubString(displayTextStartIt, selectionStartIt), text, mDisplayText.SubString(selectionEndIt, mDisplayText.End()));
   // Move the caret to the End() of the pasted text
 
   int newCaretPos = mSelectionLeftPos + text.ComputeRuneCount();

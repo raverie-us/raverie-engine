@@ -286,8 +286,7 @@ public:
     Cog* commonArchetypeContextCog = nullptr;
 
     // Disable reverting of game and space until we resolve some issues
-    bool revertTypeDisabled =
-        (mInstance.StoredType->IsA(RaverieTypeId(GameSession)) || mInstance.StoredType->IsA(RaverieTypeId(Space)));
+    bool revertTypeDisabled = (mInstance.StoredType->IsA(RaverieTypeId(GameSession)) || mInstance.StoredType->IsA(RaverieTypeId(Space)));
 
     // Update button tooltips
     if (MetaSelection* selection = mInstance.Get<MetaSelection*>())
@@ -644,8 +643,7 @@ public:
     PlaceWithLayout(contentLayout, mName);
 
     mClearButton->SetTranslation(Vec3(contentLayout.Translation.x + contentLayout.Size.x + Pixels(2), 0, 0));
-    mPickerButton->SetTranslation(Vec3(
-        contentLayout.Translation.x + contentLayout.Size.x + Pixels(2) + mClearButton->GetSize().x + Pixels(2), 0, 0));
+    mPickerButton->SetTranslation(Vec3(contentLayout.Translation.x + contentLayout.Size.x + Pixels(2) + mClearButton->GetSize().x + Pixels(2), 0, 0));
 
     PropertyWidget::UpdateTransform();
   }
@@ -782,13 +780,7 @@ public:
   void ValidateSelection(Status& status, Cog* test)
   {
     EnsureCogPathIsRelativeTo();
-    String path = CogPath::ComputePath(status,
-                                       mValue.GetRelativeTo(),
-                                       test,
-                                       mValue.GetPathPreference0(),
-                                       mValue.GetPathPreference1(),
-                                       mValue.GetPathPreference2(),
-                                       false);
+    String path = CogPath::ComputePath(status, mValue.GetRelativeTo(), test, mValue.GetPathPreference0(), mValue.GetPathPreference1(), mValue.GetPathPreference2(), false);
     if (status.Failed())
       return;
 
@@ -1012,8 +1004,7 @@ public:
 
     Composite* cogTextParent = mCogText->mParent;
 
-    float sizeX = mSize.x - mLabel->mSize.x - mPickerButton->mSize.x - mExpandButton->mSize.x -
-                  ResourceEditorUi::CogPathCogLabelSpace;
+    float sizeX = mSize.x - mLabel->mSize.x - mPickerButton->mSize.x - mExpandButton->mSize.x - ResourceEditorUi::CogPathCogLabelSpace;
     sizeX = Math::Max(sizeX, (float)ResourceEditorUi::CogPathCogLabelMinWidth);
     sizeX = Math::Min(sizeX, mCogText->GetMinSize().x);
     Vec2 cogTextSize = Vec2(sizeX, cogTextParent->mSize.y);
@@ -1172,11 +1163,7 @@ public:
   bool mForceCompact;
 
   ResourceEditor(Composite* parent, BoundType* resourceType, bool forceCompact) :
-      Composite(parent),
-      mResourceType(resourceType),
-      mResourcePreview(nullptr),
-      mReadOnly(false),
-      mForceCompact(forceCompact)
+      Composite(parent), mResourceType(resourceType), mResourcePreview(nullptr), mReadOnly(false), mForceCompact(forceCompact)
   {
     // Background
     mBackground = CreateAttached<Element>(cWhiteSquare);
@@ -2043,8 +2030,7 @@ public:
   Element* mRemoveIcon;
   Label* mLabel;
 
-  ListItem(Composite* parent, StringParam itemName, bool bold, bool removable = false, bool expandable = false) :
-      Composite(parent)
+  ListItem(Composite* parent, StringParam itemName, bool bold, bool removable = false, bool expandable = false) : Composite(parent)
   {
     mBackground = CreateAttached<Element>(cWhiteSquare);
     mBackground->MoveToBack();
@@ -2209,16 +2195,8 @@ public:
   String mInvalidMessage;
   HandleOf<ToolTip> mToolTip;
 
-  ResourceListItem(Composite* parent,
-                   PropertyWidget* propertyWidget,
-                   ResourceList* resourceList,
-                   StringParam listName,
-                   StringParam resourceIdName) :
-      ListItem(parent, listName, false, !resourceList->GetReadOnly()),
-      mPropertyWidget(propertyWidget),
-      mResourceList(resourceList),
-      mResourceIdName(resourceIdName),
-      mInvalidIcon(nullptr)
+  ResourceListItem(Composite* parent, PropertyWidget* propertyWidget, ResourceList* resourceList, StringParam listName, StringParam resourceIdName) :
+      ListItem(parent, listName, false, !resourceList->GetReadOnly()), mPropertyWidget(propertyWidget), mResourceList(resourceList), mResourceIdName(resourceIdName), mInvalidIcon(nullptr)
   {
     ConnectThisTo(mBackground, Events::LeftClick, OnSelect);
     ConnectThisTo(mRemoveIcon, Events::LeftClick, OnRemove);
@@ -2423,8 +2401,7 @@ public:
     {
       StringRange listName = resourceIdName.FindFirstOf(':');
       listName = StringRange(listName.End(), resourceIdName.End());
-      ResourceListItem<ResourceList>* listItem =
-          new ResourceListItem<ResourceList>(mItemStack, this, mResourceList, listName, resourceIdName);
+      ResourceListItem<ResourceList>* listItem = new ResourceListItem<ResourceList>(mItemStack, this, mResourceList, listName, resourceIdName);
 
       Resource* resource = ResourceList::ManagerType::FindOrNull(resourceIdName);
       if (resource == nullptr)
@@ -2552,8 +2529,7 @@ void RegisterEngineEditors()
   RaverieTypeId(MetaEditorResource)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditorResource>));
   RaverieTypeId(CogArchetypeExtension)->Add(new MetaPropertyEditor(&CreateProperty<PropertyArchetype>));
   RaverieTypeId(RenderGroupList)->Add(new MetaPropertyEditor(&CreateProperty<ResourceListEditor<RenderGroupList>>));
-  RaverieTypeId(ChildRenderGroupList)
-      ->Add(new MetaPropertyEditor(&CreateProperty<ResourceListEditor<ChildRenderGroupList>>));
+  RaverieTypeId(ChildRenderGroupList)->Add(new MetaPropertyEditor(&CreateProperty<ResourceListEditor<ChildRenderGroupList>>));
   RaverieTypeId(MaterialList)->Add(new MetaPropertyEditor(&CreateProperty<ResourceListEditor<MaterialList>>));
   RaverieTypeId(CompositionLabelExtension)->Add(new MetaPropertyEditor(&CreateProperty<CompositionLabel>));
 }

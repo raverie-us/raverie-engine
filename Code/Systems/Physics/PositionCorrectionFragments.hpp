@@ -54,9 +54,7 @@ inline void CollectJointsToSolve(JointList& inputList, JointList& jointsToSolve)
   }
 }
 
-void CollectContactsToSolve(IConstraintSolver::ContactList& inputList,
-                            IConstraintSolver::ContactList& contactsToSolve,
-                            PhysicsSolverConfig* config);
+void CollectContactsToSolve(IConstraintSolver::ContactList& inputList, IConstraintSolver::ContactList& contactsToSolve, PhysicsSolverConfig* config);
 
 // All other joints don't need a special update so use this
 // empty function (should be optimized out in release mode).
@@ -78,12 +76,7 @@ void UpdateHierarchyTransform(RigidBody* body);
 // Helper to apply the position correction to a body
 void ApplyPositionCorrection(RigidBody* body, Vec3Param linearOffset, Vec3Param angularOffset);
 
-void ApplyPositionCorrection(RigidBody* b0,
-                             RigidBody* b1,
-                             Vec3Param linearOffset0,
-                             Vec3Param angularOffset0,
-                             Vec3Param linearOffset1,
-                             Vec3Param angularOffset1);
+void ApplyPositionCorrection(RigidBody* b0, RigidBody* b1, Vec3Param linearOffset0, Vec3Param angularOffset0, Vec3Param linearOffset1, Vec3Param angularOffset1);
 
 template <typename JointType, typename UpdateFunctor>
 void JointBlockSolvePositions(JointType& joint, PositionSolverData& data, UpdateFunctor functor)

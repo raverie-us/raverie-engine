@@ -28,21 +28,13 @@ class Overload
 public:
   // Resolve an overload between a function call and the list of functions
   // overloaded under the same name
-  static bool ResolveAndImplicitConvert(const FunctionArray* functions,
-                                        Function*& resolvedFunction,
-                                        FunctionCallNode& functionCallNode);
+  static bool ResolveAndImplicitConvert(const FunctionArray* functions, Function*& resolvedFunction, FunctionCallNode& functionCallNode);
 
   // Report an error based on the overload result
-  static void ReportError(CompilationErrors& errors,
-                          const CodeLocation& location,
-                          const FunctionArray* functions,
-                          const FunctionCallNode& functionCallNode);
+  static void ReportError(CompilationErrors& errors, const CodeLocation& location, const FunctionArray* functions, const FunctionCallNode& functionCallNode);
 
   // Report an error based on a single delegate type
-  static void ReportSingleError(CompilationErrors& errors,
-                                const CodeLocation& location,
-                                const DelegateType* type,
-                                const FunctionCallNode& functionCallNode);
+  static void ReportSingleError(CompilationErrors& errors, const CodeLocation& location, const DelegateType* type, const FunctionCallNode& functionCallNode);
 
   // Get function call signature string
   static void GetFunctionCallSignatureString(StringBuilder& builder, const FunctionCallNode& functionCallNode);
@@ -56,9 +48,7 @@ public:
   // Note: If we failed the first two passes and pass the
   // 'AnyImplicitConversion' test, then we must generate TypeCastNodes to
   // perform implicit casts on the function call's arguments
-  static bool TestDelegateTypeVsCall(DelegateType* delegateType,
-                                     FunctionCallNode& functionCallNode,
-                                     OverloadPass::Enum pass);
+  static bool TestDelegateTypeVsCall(DelegateType* delegateType, FunctionCallNode& functionCallNode, OverloadPass::Enum pass);
 
   // Generates any necessary casts for calling the function
   // This should only be called AFTER the 'AnyImplicitConversion' test has

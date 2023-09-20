@@ -1308,10 +1308,7 @@ Vector3 RotateVector(Vec3Param a, Vec3Param axis, real radians)
 
 Quat EulerDegreesToQuat(Vec3Param eulerDegrees)
 {
-  Math::EulerAngles angle(Math::DegToRad(eulerDegrees[0]),
-                          Math::DegToRad(eulerDegrees[1]),
-                          Math::DegToRad(eulerDegrees[2]),
-                          Math::EulerOrders::XYZs);
+  Math::EulerAngles angle(Math::DegToRad(eulerDegrees[0]), Math::DegToRad(eulerDegrees[1]), Math::DegToRad(eulerDegrees[2]), Math::EulerOrders::XYZs);
 
   return Math::ToQuaternion(angle);
 }

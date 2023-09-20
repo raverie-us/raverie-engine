@@ -21,8 +21,7 @@ public:
   RaverieDeclareType(BaseTextBuilder, TypeCopyMode::ReferenceType);
 
   void Generate(ContentInitializer& initializer) override;
-  BaseTextBuilder(uint order, StringParam extension, StringParam resourceName) :
-      DirectBuilderComponent(order, extension, resourceName)
+  BaseTextBuilder(uint order, StringParam extension, StringParam resourceName) : DirectBuilderComponent(order, extension, resourceName)
   {
   }
 };
@@ -56,9 +55,7 @@ public:
   {
   }
 
-  RaverieScriptBuilder() :
-      BaseTextBuilder(
-          15, FileExtensionManager::GetRaverieScriptTypeEntry()->GetDefaultExtensionWithDot(), RaverieScriptResourceName)
+  RaverieScriptBuilder() : BaseTextBuilder(15, FileExtensionManager::GetRaverieScriptTypeEntry()->GetDefaultExtensionWithDot(), RaverieScriptResourceName)
   {
   }
 };
@@ -76,8 +73,7 @@ public:
       // Increase the load order to 9 so that these load before materials
       // (since a material may need the block created from this fragment)
       :
-      BaseTextBuilder(
-          9, FileExtensionManager::GetRaverieFragmentTypeEntry()->GetDefaultExtensionWithDot(), "RaverieFragment")
+      BaseTextBuilder(9, FileExtensionManager::GetRaverieFragmentTypeEntry()->GetDefaultExtensionWithDot(), "RaverieFragment")
   {
   }
 };

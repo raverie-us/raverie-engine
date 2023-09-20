@@ -93,8 +93,7 @@ public:
   ~ArchetypeManager();
 
   /// Create a new archetype
-  Archetype*
-  MakeNewArchetypeWith(Cog* cog, StringParam newName, ResourceId id = 0, Archetype* inheritedArchetype = nullptr);
+  Archetype* MakeNewArchetypeWith(Cog* cog, StringParam newName, ResourceId id = 0, Archetype* inheritedArchetype = nullptr);
   bool SaveToContent(Cog* object, Archetype* archetype, ResourceId id = 0);
   void FlushBinaryArchetypes();
   void ArchetypeModified(Archetype* archetype);

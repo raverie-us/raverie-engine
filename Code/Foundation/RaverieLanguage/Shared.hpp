@@ -219,21 +219,13 @@ public:
 
 private:
   // Adds a binary operator
-  void AddBinary(Type* lhs,
-                 Type* rhs,
-                 Type* result,
-                 Grammar::Enum oper,
-                 Instruction::Enum instruction,
-                 IoMode::Enum io,
-                 bool flip);
+  void AddBinary(Type* lhs, Type* rhs, Type* result, Grammar::Enum oper, Instruction::Enum instruction, IoMode::Enum io, bool flip);
 
   // Adds a binary communative operator (which adds the reversed operator too)
-  void AddBinaryCommunative(
-      Type* type1, Type* type2, Type* result, Grammar::Enum oper, Instruction::Enum instruction, IoMode::Enum io);
+  void AddBinaryCommunative(Type* type1, Type* type2, Type* result, Grammar::Enum oper, Instruction::Enum instruction, IoMode::Enum io);
 
   // Adds a binary non-communative operator (the reverse will not be added)
-  void AddBinaryNonCommunative(
-      Type* lhs, Type* rhs, Type* result, Grammar::Enum oper, Instruction::Enum instruction, IoMode::Enum io);
+  void AddBinaryNonCommunative(Type* lhs, Type* rhs, Type* result, Grammar::Enum oper, Instruction::Enum instruction, IoMode::Enum io);
 
   // Adds a binary operator where the operands are the same type
   // Note: If the operator is the same type, we don't care if it's communative
@@ -248,10 +240,7 @@ private:
   void AddPrimitiveCast(Type* fromType, Type* toType, Instruction::Enum instruction, bool canBeImplicit);
 
   // Adds an operator to the precedence chart (maps it both ways)
-  void AddPrecedence(size_t precedence,
-                     OperatorAssociativity::Enum associativity,
-                     OperatorArity::Enum arity,
-                     Grammar::Enum oper);
+  void AddPrecedence(size_t precedence, OperatorAssociativity::Enum associativity, OperatorArity::Enum arity, Grammar::Enum oper);
 
 private:
   // Special binary operators
@@ -293,8 +282,8 @@ private:
 
   // Associate all the cast operators from this type to any other type
   RaverieTodo("This should actually use some kind of policy because we're not "
-           "hashing types correctly (works because we only care about "
-           "BoundType* right now, Real/Integer, etc )");
+              "hashing types correctly (works because we only care about "
+              "BoundType* right now, Real/Integer, etc )");
   HashMap<Type*, Array<CastOperator>> PrimitiveCastOperatorsFrom;
 
   // We use this as a key into a hash map
@@ -315,4 +304,3 @@ private:
   Array<Array<UntypedOperator>> PrecedenceToOperators;
 };
 } // namespace Raverie
-

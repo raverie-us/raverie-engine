@@ -8,33 +8,22 @@ namespace Raverie
 using namespace Raverie;
 
 template <OpType opType>
-Raverie::Function* AddFunction(Raverie::LibraryBuilder& builder,
-                             Raverie::BoundType* owner,
-                             Raverie::BoundType* returnType,
-                             StringParam fnName,
-                             ParameterArray& params)
+Raverie::Function* AddFunction(Raverie::LibraryBuilder& builder, Raverie::BoundType* owner, Raverie::BoundType* returnType, StringParam fnName, ParameterArray& params)
 {
-  Raverie::Function* raverieFn = builder.AddBoundFunction(
-      owner, fnName, UnTranslatedBoundFunction, params, returnType, Raverie::FunctionOptions::Static);
+  Raverie::Function* raverieFn = builder.AddBoundFunction(owner, fnName, UnTranslatedBoundFunction, params, returnType, Raverie::FunctionOptions::Static);
   raverieFn->UserData = (void*)&ResolveSimpleFunction<opType>;
   return raverieFn;
 }
 
 template <OpType opType>
-Raverie::Function*
-AddFunction(Raverie::LibraryBuilder& builder, Raverie::BoundType* owner, Raverie::BoundType* returnType, StringParam fnName)
+Raverie::Function* AddFunction(Raverie::LibraryBuilder& builder, Raverie::BoundType* owner, Raverie::BoundType* returnType, StringParam fnName)
 {
   ParameterArray params;
   return AddFunction<opType>(builder, owner, returnType, fnName, params);
 }
 
 template <OpType opType>
-Raverie::Function* AddFunction(Raverie::LibraryBuilder& builder,
-                             Raverie::BoundType* owner,
-                             Raverie::BoundType* returnType,
-                             StringParam fnName,
-                             Raverie::BoundType* param0Type,
-                             StringParam param0Name)
+Raverie::Function* AddFunction(Raverie::LibraryBuilder& builder, Raverie::BoundType* owner, Raverie::BoundType* returnType, StringParam fnName, Raverie::BoundType* param0Type, StringParam param0Name)
 {
   DelegateParameter param0(param0Type);
   param0.Name = param0Name;
@@ -44,24 +33,20 @@ Raverie::Function* AddFunction(Raverie::LibraryBuilder& builder,
 }
 
 template <OpType opType>
-Raverie::Function* AddFunction(Raverie::LibraryBuilder& builder,
-                             Raverie::BoundType* owner,
-                             Raverie::BoundType* returnType,
-                             StringParam fnName,
-                             Raverie::BoundType* param0Type)
+Raverie::Function* AddFunction(Raverie::LibraryBuilder& builder, Raverie::BoundType* owner, Raverie::BoundType* returnType, StringParam fnName, Raverie::BoundType* param0Type)
 {
   return AddFunction<opType>(builder, owner, returnType, fnName, param0Type, String());
 }
 
 template <OpType opType>
 Raverie::Function* AddFunction(Raverie::LibraryBuilder& builder,
-                             Raverie::BoundType* owner,
-                             Raverie::BoundType* returnType,
-                             StringParam fnName,
-                             Raverie::BoundType* param0Type,
-                             StringParam param0Name,
-                             Raverie::BoundType* param1Type,
-                             StringParam param1Name)
+                               Raverie::BoundType* owner,
+                               Raverie::BoundType* returnType,
+                               StringParam fnName,
+                               Raverie::BoundType* param0Type,
+                               StringParam param0Name,
+                               Raverie::BoundType* param1Type,
+                               StringParam param1Name)
 {
   DelegateParameter param0(param0Type);
   param0.Name = param0Name;
@@ -75,27 +60,23 @@ Raverie::Function* AddFunction(Raverie::LibraryBuilder& builder,
 }
 
 template <OpType opType>
-Raverie::Function* AddFunction(Raverie::LibraryBuilder& builder,
-                             Raverie::BoundType* owner,
-                             Raverie::BoundType* returnType,
-                             StringParam fnName,
-                             Raverie::BoundType* param0Type,
-                             Raverie::BoundType* param1Type)
+Raverie::Function*
+AddFunction(Raverie::LibraryBuilder& builder, Raverie::BoundType* owner, Raverie::BoundType* returnType, StringParam fnName, Raverie::BoundType* param0Type, Raverie::BoundType* param1Type)
 {
   return AddFunction<opType>(builder, owner, returnType, fnName, param0Type, String(), param1Type, String());
 }
 
 template <OpType opType>
 Raverie::Function* AddFunction(Raverie::LibraryBuilder& builder,
-                             Raverie::BoundType* owner,
-                             Raverie::BoundType* returnType,
-                             StringParam fnName,
-                             Raverie::BoundType* param0Type,
-                             StringParam param0Name,
-                             Raverie::BoundType* param1Type,
-                             StringParam param1Name,
-                             Raverie::BoundType* param2Type,
-                             StringParam param2Name)
+                               Raverie::BoundType* owner,
+                               Raverie::BoundType* returnType,
+                               StringParam fnName,
+                               Raverie::BoundType* param0Type,
+                               StringParam param0Name,
+                               Raverie::BoundType* param1Type,
+                               StringParam param1Name,
+                               Raverie::BoundType* param2Type,
+                               StringParam param2Name)
 {
   DelegateParameter param0(param0Type);
   param0.Name = param0Name;
@@ -113,30 +94,29 @@ Raverie::Function* AddFunction(Raverie::LibraryBuilder& builder,
 
 template <OpType opType>
 Raverie::Function* AddFunction(Raverie::LibraryBuilder& builder,
-                             Raverie::BoundType* owner,
-                             Raverie::BoundType* returnType,
-                             StringParam fnName,
-                             Raverie::BoundType* param0Type,
-                             Raverie::BoundType* param1Type,
-                             Raverie::BoundType* param2Type)
+                               Raverie::BoundType* owner,
+                               Raverie::BoundType* returnType,
+                               StringParam fnName,
+                               Raverie::BoundType* param0Type,
+                               Raverie::BoundType* param1Type,
+                               Raverie::BoundType* param2Type)
 {
-  return AddFunction<opType>(
-      builder, owner, returnType, fnName, param0Type, String(), param1Type, String(), param2Type, String());
+  return AddFunction<opType>(builder, owner, returnType, fnName, param0Type, String(), param1Type, String(), param2Type, String());
 }
 
 template <OpType opType>
 Raverie::Function* AddFunction(Raverie::LibraryBuilder& builder,
-                             Raverie::BoundType* owner,
-                             Raverie::BoundType* returnType,
-                             StringParam fnName,
-                             Raverie::BoundType* param0Type,
-                             StringParam param0Name,
-                             Raverie::BoundType* param1Type,
-                             StringParam param1Name,
-                             Raverie::BoundType* param2Type,
-                             StringParam param2Name,
-                             Raverie::BoundType* param3Type,
-                             StringParam param3Name)
+                               Raverie::BoundType* owner,
+                               Raverie::BoundType* returnType,
+                               StringParam fnName,
+                               Raverie::BoundType* param0Type,
+                               StringParam param0Name,
+                               Raverie::BoundType* param1Type,
+                               StringParam param1Name,
+                               Raverie::BoundType* param2Type,
+                               StringParam param2Name,
+                               Raverie::BoundType* param3Type,
+                               StringParam param3Name)
 {
   DelegateParameter param0(param0Type);
   param0.Name = param0Name;
@@ -158,26 +138,15 @@ Raverie::Function* AddFunction(Raverie::LibraryBuilder& builder,
 
 template <OpType opType>
 Raverie::Function* AddFunction(Raverie::LibraryBuilder& builder,
-                             Raverie::BoundType* owner,
-                             Raverie::BoundType* returnType,
-                             StringParam fnName,
-                             Raverie::BoundType* param0Type,
-                             Raverie::BoundType* param1Type,
-                             Raverie::BoundType* param2Type,
-                             Raverie::BoundType* param3Type)
+                               Raverie::BoundType* owner,
+                               Raverie::BoundType* returnType,
+                               StringParam fnName,
+                               Raverie::BoundType* param0Type,
+                               Raverie::BoundType* param1Type,
+                               Raverie::BoundType* param2Type,
+                               Raverie::BoundType* param3Type)
 {
-  return AddFunction<opType>(builder,
-                             owner,
-                             returnType,
-                             fnName,
-                             param0Type,
-                             String(),
-                             param1Type,
-                             String(),
-                             param2Type,
-                             String(),
-                             param3Type,
-                             String());
+  return AddFunction<opType>(builder, owner, returnType, fnName, param0Type, String(), param1Type, String(), param2Type, String(), param3Type, String());
 }
 
 void AddMathOps(Raverie::LibraryBuilder& builder, Raverie::BoundType* type, RaverieTypeGroups& types)
@@ -207,8 +176,7 @@ void AddMathOps(Raverie::LibraryBuilder& builder, Raverie::BoundType* type, Rave
     AddFunction<OpType::OpLogicalOr>(builder, type, raverieType, "LogicalOr", raverieType, raverieType);
     AddFunction<OpType::OpLogicalAnd>(builder, type, raverieType, "LogicalAnd", raverieType, raverieType);
 
-    AddFunction<OpType::OpSelect>(
-        builder, type, raverieType, "Select", vectorBoolType, "condition", raverieType, "obj1", raverieType, "obj2");
+    AddFunction<OpType::OpSelect>(builder, type, raverieType, "Select", vectorBoolType, "condition", raverieType, "obj1", raverieType, "obj2");
   }
 
   for (size_t i = 0; i < types.mIntegerVectorTypes.Size(); ++i)
@@ -222,12 +190,9 @@ void AddMathOps(Raverie::LibraryBuilder& builder, Raverie::BoundType* type, Rave
     AddFunction<OpType::OpNot>(builder, type, raverieType, "Not", raverieType);
 
     // Binary
-    AddFunction<OpType::OpShiftRightLogical>(
-        builder, type, raverieType, "ShiftRightLogical", raverieType, "base", raverieType, "shift");
-    AddFunction<OpType::OpShiftRightArithmetic>(
-        builder, type, raverieType, "ShiftRightArithmetic", raverieType, "base", raverieType, "shift");
-    AddFunction<OpType::OpShiftLeftLogical>(
-        builder, type, raverieType, "ShiftLeftLogical", raverieType, "base", raverieType, "shift");
+    AddFunction<OpType::OpShiftRightLogical>(builder, type, raverieType, "ShiftRightLogical", raverieType, "base", raverieType, "shift");
+    AddFunction<OpType::OpShiftRightArithmetic>(builder, type, raverieType, "ShiftRightArithmetic", raverieType, "base", raverieType, "shift");
+    AddFunction<OpType::OpShiftLeftLogical>(builder, type, raverieType, "ShiftLeftLogical", raverieType, "base", raverieType, "shift");
     AddFunction<OpType::OpBitwiseOr>(builder, type, raverieType, "BitwiseOr", raverieType, raverieType);
     AddFunction<OpType::OpBitwiseXor>(builder, type, raverieType, "BitwiseXor", raverieType, raverieType);
     AddFunction<OpType::OpBitwiseAnd>(builder, type, raverieType, "BitwiseAnd", raverieType, raverieType);
@@ -242,24 +207,11 @@ void AddMathOps(Raverie::LibraryBuilder& builder, Raverie::BoundType* type, Rave
     AddFunction<OpType::OpSMod>(builder, type, raverieType, "Mod", raverieType, raverieType);
 
     // Tri
-    AddFunction<OpType::OpSelect>(
-        builder, type, raverieType, "Select", vectorBoolType, "condition", raverieType, "obj1", raverieType, "obj2");
-    AddFunction<OpType::OpBitFieldSExtract>(
-        builder, type, raverieType, "BitFieldExtract", raverieType, "base", intType, "offset", intType, "count");
+    AddFunction<OpType::OpSelect>(builder, type, raverieType, "Select", vectorBoolType, "condition", raverieType, "obj1", raverieType, "obj2");
+    AddFunction<OpType::OpBitFieldSExtract>(builder, type, raverieType, "BitFieldExtract", raverieType, "base", intType, "offset", intType, "count");
 
     // Quad
-    AddFunction<OpType::OpBitFieldInsert>(builder,
-                                          type,
-                                          raverieType,
-                                          "BitFieldInsert",
-                                          raverieType,
-                                          "base",
-                                          raverieType,
-                                          "insert",
-                                          intType,
-                                          "offset",
-                                          intType,
-                                          "count");
+    AddFunction<OpType::OpBitFieldInsert>(builder, type, raverieType, "BitFieldInsert", raverieType, "base", raverieType, "insert", intType, "offset", intType, "count");
   }
 
   for (size_t i = 0; i < types.mRealVectorTypes.Size(); ++i)
@@ -268,12 +220,9 @@ void AddMathOps(Raverie::LibraryBuilder& builder, Raverie::BoundType* type, Rave
     Raverie::BoundType* vectorBoolType = types.mBooleanVectorTypes[i];
 
     // Unary
-    AddFunction<OpType::OpDPdx>(builder, type, raverieType, "Ddx", raverieType)
-        ->AddAttribute(SpirVNameSettings::mRequiresPixelAttribute);
-    AddFunction<OpType::OpDPdy>(builder, type, raverieType, "Ddy", raverieType)
-        ->AddAttribute(SpirVNameSettings::mRequiresPixelAttribute);
-    AddFunction<OpType::OpFwidth>(builder, type, raverieType, "FWidth", raverieType)
-        ->AddAttribute(SpirVNameSettings::mRequiresPixelAttribute);
+    AddFunction<OpType::OpDPdx>(builder, type, raverieType, "Ddx", raverieType)->AddAttribute(SpirVNameSettings::mRequiresPixelAttribute);
+    AddFunction<OpType::OpDPdy>(builder, type, raverieType, "Ddy", raverieType)->AddAttribute(SpirVNameSettings::mRequiresPixelAttribute);
+    AddFunction<OpType::OpFwidth>(builder, type, raverieType, "FWidth", raverieType)->AddAttribute(SpirVNameSettings::mRequiresPixelAttribute);
     AddFunction<OpType::OpIsNan>(builder, type, vectorBoolType, "IsNan", raverieType);
     AddFunction<OpType::OpIsInf>(builder, type, vectorBoolType, "IsInf", raverieType);
 
@@ -284,11 +233,9 @@ void AddMathOps(Raverie::LibraryBuilder& builder, Raverie::BoundType* type, Rave
     AddFunction<OpType::OpFOrdEqual>(builder, type, vectorBoolType, "OrderedEqual", raverieType, raverieType);
     AddFunction<OpType::OpFOrdNotEqual>(builder, type, vectorBoolType, "OrderedNotEqual", raverieType, raverieType);
     AddFunction<OpType::OpFOrdLessThan>(builder, type, vectorBoolType, "OrderedLessThan", raverieType, raverieType);
-    AddFunction<OpType::OpFOrdLessThanEqual>(
-        builder, type, vectorBoolType, "OrderedLessThanEqual", raverieType, raverieType);
+    AddFunction<OpType::OpFOrdLessThanEqual>(builder, type, vectorBoolType, "OrderedLessThanEqual", raverieType, raverieType);
     AddFunction<OpType::OpFOrdGreaterThan>(builder, type, vectorBoolType, "OrderedGreaterThan", raverieType, raverieType);
-    AddFunction<OpType::OpFOrdGreaterThanEqual>(
-        builder, type, vectorBoolType, "OrderedGreaterThanEqual", raverieType, raverieType);
+    AddFunction<OpType::OpFOrdGreaterThanEqual>(builder, type, vectorBoolType, "OrderedGreaterThanEqual", raverieType, raverieType);
 
     // Any/all only exists on vector types
     if (i != 0)
@@ -301,16 +248,12 @@ void AddMathOps(Raverie::LibraryBuilder& builder, Raverie::BoundType* type, Rave
     AddFunction<OpType::OpFUnordEqual>(builder, type, vectorBoolType, "UnorderedEqual", raverieType, raverieType);
     AddFunction<OpType::OpFUnordNotEqual>(builder, type, vectorBoolType, "UnorderedNotEqual", raverieType, raverieType);
     AddFunction<OpType::OpFUnordLessThan>(builder, type, vectorBoolType, "UnorderedLessThan", raverieType, raverieType);
-    AddFunction<OpType::OpFUnordLessThanEqual>(
-        builder, type, vectorBoolType, "UnorderedLessThanEqual", raverieType, raverieType);
-    AddFunction<OpType::OpFUnordGreaterThan>(
-        builder, type, vectorBoolType, "UnorderedGreaterThan", raverieType, raverieType);
-    AddFunction<OpType::OpFUnordGreaterThanEqual>(
-        builder, type, vectorBoolType, "UnorderedGreaterThanEqual", raverieType, raverieType);
+    AddFunction<OpType::OpFUnordLessThanEqual>(builder, type, vectorBoolType, "UnorderedLessThanEqual", raverieType, raverieType);
+    AddFunction<OpType::OpFUnordGreaterThan>(builder, type, vectorBoolType, "UnorderedGreaterThan", raverieType, raverieType);
+    AddFunction<OpType::OpFUnordGreaterThanEqual>(builder, type, vectorBoolType, "UnorderedGreaterThanEqual", raverieType, raverieType);
 
     // Trinary
-    AddFunction<OpType::OpSelect>(
-        builder, type, raverieType, "Select", vectorBoolType, "condition", raverieType, "obj1", raverieType, "obj2");
+    AddFunction<OpType::OpSelect>(builder, type, raverieType, "Select", vectorBoolType, "condition", raverieType, "obj1", raverieType, "obj2");
   }
 
   for (size_t y = 2; y <= 4; ++y)
@@ -356,21 +299,18 @@ RaverieDefineType(ShaderIntrinsics, builder, type)
   RaverieTypeGroups& types = shaderCore.mRaverieTypes;
 
   // This technically needs to be restricted to pixel fragment types.
-  AddFunction<OpType::OpKill>(builder, type, voidType, "Kill")
-      ->AddAttribute(SpirVNameSettings::mRequiresPixelAttribute);
+  AddFunction<OpType::OpKill>(builder, type, voidType, "Kill")->AddAttribute(SpirVNameSettings::mRequiresPixelAttribute);
 
   AddMathOps(builder, type, types);
   AddGlslExtensionIntrinsicOps(builder, shaderCore.mGlsl450ExtensionsLibrary, type, types);
   AddImageFunctions(builder, type, types);
 
   Raverie::ParameterArray parameters = OneParameter(intType, "language");
-  Raverie::Function* isLanguageFn = builder.AddBoundFunction(
-      type, "IsLanguage", Raverie::DummyBoundFunction, parameters, boolType, Raverie::FunctionOptions::Static);
+  Raverie::Function* isLanguageFn = builder.AddBoundFunction(type, "IsLanguage", Raverie::DummyBoundFunction, parameters, boolType, Raverie::FunctionOptions::Static);
   isLanguageFn->UserData = (void*)&ResolveIsLanguage;
 
   parameters = ThreeParameters(intType, "language", intType, "minVersion", intType, "maxVersion");
-  isLanguageFn = builder.AddBoundFunction(
-      type, "IsLanguage", Raverie::DummyBoundFunction, parameters, boolType, Raverie::FunctionOptions::Static);
+  isLanguageFn = builder.AddBoundFunction(type, "IsLanguage", Raverie::DummyBoundFunction, parameters, boolType, Raverie::FunctionOptions::Static);
   isLanguageFn->UserData = (void*)&ResolveIsLanguageMinMaxVersion;
 }
 
@@ -453,7 +393,6 @@ ComputeFragmentUserData::ComputeFragmentUserData()
   mLocalSizeZ = 1;
 }
 
-//------------------------------------------------------------------------UnsignedInt
 RaverieDefineType(UnsignedInt, builder, type)
 {
   RaverieBindDefaultCopyDestructor();

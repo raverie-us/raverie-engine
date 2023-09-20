@@ -25,29 +25,26 @@ bool PopFront(RangeType& range)
 void VoidReturn();
 
 // With auto this is much easier to define
-#define RaverieForRangeHelper(value, rangeName, rangeExpr, rangePostPop, rangePrePop)                                     \
-  if (bool __continueLoop = true)                                                                                      \
-    for (AutoDeclare(rangeName, rangeExpr); __continueLoop == true && !rangeName.Empty();                              \
-         __continueLoop ? rangePostPop : VoidReturn())                                                                 \
-      if (::AssignValue(__continueLoop, false))                                                                        \
-        for (value = rangeName.Front(); !__continueLoop; __continueLoop = true)                                        \
+#define RaverieForRangeHelper(value, rangeName, rangeExpr, rangePostPop, rangePrePop)                                                                                                                  \
+  if (bool __continueLoop = true)                                                                                                                                                                      \
+    for (AutoDeclare(rangeName, rangeExpr); __continueLoop == true && !rangeName.Empty(); __continueLoop ? rangePostPop : VoidReturn())                                                                \
+      if (::AssignValue(__continueLoop, false))                                                                                                                                                        \
+        for (value = rangeName.Front(); !__continueLoop; __continueLoop = true)                                                                                                                        \
   rangePrePop
 
 // With auto this is much easier to define
-#define RaverieForRangeReferenceHelper(value, rangeName, rangeExpr, rangePostPop, rangePrePop)                            \
-  if (bool __continueLoop = true)                                                                                      \
-    for (AutoDeclareReference(rangeName, rangeExpr); __continueLoop == true && !rangeName.Empty();                     \
-         __continueLoop ? rangePostPop : VoidReturn())                                                                 \
-      if (::AssignValue(__continueLoop, false))                                                                        \
-        for (value = rangeName.Front(); !__continueLoop; __continueLoop = true)                                        \
+#define RaverieForRangeReferenceHelper(value, rangeName, rangeExpr, rangePostPop, rangePrePop)                                                                                                         \
+  if (bool __continueLoop = true)                                                                                                                                                                      \
+    for (AutoDeclareReference(rangeName, rangeExpr); __continueLoop == true && !rangeName.Empty(); __continueLoop ? rangePostPop : VoidReturn())                                                       \
+      if (::AssignValue(__continueLoop, false))                                                                                                                                                        \
+        for (value = rangeName.Front(); !__continueLoop; __continueLoop = true)                                                                                                                        \
   rangePrePop
 
 // This is the classic version that we use which will pop after the entire
 // iteration of the loop is complete Because some ranges may return references
 // to values they actually store, we must use this order of popping
 #define forRange(value, rangeExpr) RaverieForRangeHelper(value, __rangeT, (rangeExpr).All(), __rangeT.PopFront(), )
-#define forRangeRef(value, rangeExpr)                                                                                  \
-  RaverieForRangeReferenceHelper(value, __rangeT, (rangeExpr).All(), __rangeT.PopFront(), )
+#define forRangeRef(value, rangeExpr) RaverieForRangeReferenceHelper(value, __rangeT, (rangeExpr).All(), __rangeT.PopFront(), )
 
 // A newer version of range iteration which allows us to name our range variable
 // (so we can query it) This version will call 'front' and then immediately
@@ -55,7 +52,5 @@ void VoidReturn();
 // something irregular such as storing the value and modifying the stored value
 // in PopFront, it will break This form of iteration is generally safer however
 // for iterating through intrusive lists and unlinking them as you go
-#define RaverieForRangeVar(value, rangeName, rangeExpr)                                                                   \
-  RaverieForRangeHelper(value, rangeName, (rangeExpr).All(), VoidReturn(), if (PopFront(rangeName)))
-#define RaverieForRangeRefVar(value, rangeName, rangeExpr)                                                                \
-  RaverieForRangeReferenceHelper(value, rangeName, (rangeExpr).All(), VoidReturn(), if (PopFront(rangeName)))
+#define RaverieForRangeVar(value, rangeName, rangeExpr) RaverieForRangeHelper(value, rangeName, (rangeExpr).All(), VoidReturn(), if (PopFront(rangeName)))
+#define RaverieForRangeRefVar(value, rangeName, rangeExpr) RaverieForRangeReferenceHelper(value, rangeName, (rangeExpr).All(), VoidReturn(), if (PopFront(rangeName)))

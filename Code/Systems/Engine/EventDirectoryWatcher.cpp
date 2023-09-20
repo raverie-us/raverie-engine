@@ -20,10 +20,7 @@ RaverieDefineType(FileEditEvent, builder, type)
 {
 }
 
-EventDirectoryWatcher::EventDirectoryWatcher(StringParam directory) :
-    mWatcher(directory.c_str(),
-             DirectoryWatcher::CallBackCreator<EventDirectoryWatcher, &EventDirectoryWatcher::FileCallBack>,
-             this)
+EventDirectoryWatcher::EventDirectoryWatcher(StringParam directory) : mWatcher(directory.c_str(), DirectoryWatcher::CallBackCreator<EventDirectoryWatcher, &EventDirectoryWatcher::FileCallBack>, this)
 {
 }
 

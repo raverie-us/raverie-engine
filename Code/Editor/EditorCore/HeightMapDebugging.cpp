@@ -285,8 +285,7 @@ void HeightMapAabbChecker::Draw()
       {
         Vec3 dir = HeightMap::UpVector * -heightMapCollider->GetThickness();
         Triangle sweptTri = Triangle(localTri.p0 + dir, localTri.p1 + dir, localTri.p2 + dir);
-        gDebugDraw->Add(
-            Debug::Triangle(sweptTri.Transform(worldTransform)).Color(Color::Orange).Border(true).Alpha(50));
+        gDebugDraw->Add(Debug::Triangle(sweptTri.Transform(worldTransform)).Color(Color::Orange).Border(true).Alpha(50));
       }
     }
 

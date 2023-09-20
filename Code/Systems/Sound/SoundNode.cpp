@@ -262,8 +262,7 @@ void SoundNode::RemoveAndAttachInputsToOutputs()
   RemoveAllOutputs();
   RemoveAllInputs();
 
-  ErrorIf(!mInputs[AudioThreads::MainThread].Empty() || !mOutputs[AudioThreads::MainThread].Empty(),
-          "SoundNode was not fully disconnected");
+  ErrorIf(!mInputs[AudioThreads::MainThread].Empty() || !mOutputs[AudioThreads::MainThread].Empty(), "SoundNode was not fully disconnected");
 }
 
 bool SoundNode::GetAutoCollapse()
@@ -329,8 +328,7 @@ void SoundNode::DisconnectThisAndAllInputs()
   while (!mOutputs[AudioThreads::MainThread].Empty())
     mOutputs[AudioThreads::MainThread].Back()->RemoveInputNode(this);
 
-  ErrorIf(!mInputs[AudioThreads::MainThread].Empty() || !mOutputs[AudioThreads::MainThread].Empty(),
-          "SoundNode was not fully disconnected");
+  ErrorIf(!mInputs[AudioThreads::MainThread].Empty() || !mOutputs[AudioThreads::MainThread].Empty(), "SoundNode was not fully disconnected");
 }
 
 void SoundNode::DispatchEventFromMixThread(const String eventID)
@@ -452,8 +450,7 @@ bool SoundNode::Evaluate(BufferType* outputBuffer, const unsigned numberOfChanne
     // Get output
     hasOutput = GetOutputSamples(&mMixedOutputThreaded, numberOfChannels, listener, true);
 
-    ErrorIf(hasOutput && (mMixedOutputThreaded[0] > 10.0f || mMixedOutputThreaded[0] < -10.0f),
-            "Audio data is outside of normal values");
+    ErrorIf(hasOutput && (mMixedOutputThreaded[0] > 10.0f || mMixedOutputThreaded[0] < -10.0f), "Audio data is outside of normal values");
 
     if (hasOutput)
       mValidOutputLastMix.Set(cTrue);
@@ -463,8 +460,7 @@ bool SoundNode::Evaluate(BufferType* outputBuffer, const unsigned numberOfChanne
     // Copy mixed samples to output buffer if there is real data
     if (hasOutput)
     {
-      ErrorIf(outputBuffer->Size() != mMixedOutputThreaded.Size(),
-              "Buffer sizes do not match when evaluating sound node");
+      ErrorIf(outputBuffer->Size() != mMixedOutputThreaded.Size(), "Buffer sizes do not match when evaluating sound node");
       memcpy(outputBuffer->Data(), mMixedOutputThreaded.Data(), sizeof(float) * mMixedOutputThreaded.Size());
     }
 
@@ -475,9 +471,7 @@ bool SoundNode::Evaluate(BufferType* outputBuffer, const unsigned numberOfChanne
   return hasOutput;
 }
 
-bool SoundNode::AccumulateInputSamples(const unsigned howManySamples,
-                                       const unsigned numberOfChannels,
-                                       ListenerNode* listener)
+bool SoundNode::AccumulateInputSamples(const unsigned howManySamples, const unsigned numberOfChannels, ListenerNode* listener)
 {
   // No sources, do nothing
   if (mInputs[AudioThreads::MixThread].Empty())
@@ -506,8 +500,7 @@ bool SoundNode::AccumulateInputSamples(const unsigned howManySamples,
       // Otherwise add the new samples to the existing ones
       else
       {
-        for (BufferRange myData = mInputSamplesThreaded.All(), newData = tempBuffer.All(); !myData.Empty();
-             myData.PopFront(), newData.PopFront())
+        for (BufferRange myData = mInputSamplesThreaded.All(), newData = tempBuffer.All(); !myData.Empty(); myData.PopFront(), newData.PopFront())
         {
           myData.Front() += newData.Front();
         }
@@ -525,8 +518,7 @@ void SoundNode::AddBypassThreaded(BufferType* outputBuffer)
   float bypassValue = mBypassValue.Get(AudioThreads::MixThread);
   if (bypassValue > 0.0f)
   {
-    for (BufferRange outputRange = outputBuffer->All(), inputRange = mInputSamplesThreaded.All(); !outputRange.Empty();
-         outputRange.PopFront(), inputRange.PopFront())
+    for (BufferRange outputRange = outputBuffer->All(), inputRange = mInputSamplesThreaded.All(); !outputRange.Empty(); outputRange.PopFront(), inputRange.PopFront())
     {
       outputRange.Front() = (inputRange.Front() * bypassValue) + (outputRange.Front() * (1.0f - bypassValue));
     }
@@ -585,10 +577,7 @@ float OutputNode::GetVolumeChangeFromOutputsThreaded()
   return 1.0f;
 }
 
-bool OutputNode::GetOutputSamples(BufferType* outputBuffer,
-                                  const unsigned numberOfChannels,
-                                  ListenerNode* listener,
-                                  const bool firstRequest)
+bool OutputNode::GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest)
 {
   // Get input
   bool isThereOutput = AccumulateInputSamples(outputBuffer->Size(), numberOfChannels, nullptr);
@@ -610,10 +599,7 @@ CombineNode::CombineNode(Raverie::StringParam name, unsigned ID) : SimpleCollaps
 {
 }
 
-bool CombineNode::GetOutputSamples(BufferType* outputBuffer,
-                                   const unsigned numberOfChannels,
-                                   ListenerNode* listener,
-                                   const bool firstRequest)
+bool CombineNode::GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest)
 {
   // Get input
   bool isThereOutput = AccumulateInputSamples(outputBuffer->Size(), numberOfChannels, listener);
@@ -632,12 +618,7 @@ RaverieDefineType(CombineAndPauseNode, builder, Type)
 }
 
 CombineAndPauseNode::CombineAndPauseNode(Raverie::StringParam name, unsigned ID) :
-    SimpleCollapseNode(name, ID, false, false),
-    mPaused(cFalse),
-    mPausingThreaded(false),
-    mMuted(cFalse),
-    mMutingThreaded(false),
-    mInterpolatingThreaded(false)
+    SimpleCollapseNode(name, ID, false, false), mPaused(cFalse), mPausingThreaded(false), mMuted(cFalse), mMutingThreaded(false), mInterpolatingThreaded(false)
 {
 }
 
@@ -661,10 +642,7 @@ void CombineAndPauseNode::SetMuted(bool muted)
   Z::gSound->Mixer.AddTask(CreateFunctor(&CombineAndPauseNode::SetMutedThreaded, this, muted), this);
 }
 
-bool CombineAndPauseNode::GetOutputSamples(BufferType* outputBuffer,
-                                           const unsigned numberOfChannels,
-                                           ListenerNode* listener,
-                                           const bool firstRequest)
+bool CombineAndPauseNode::GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest)
 {
   // Check if we are paused (don't need to process or return audio)
   if (mPaused.Get() == cTrue)

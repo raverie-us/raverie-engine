@@ -20,14 +20,14 @@ struct binary_function
   typedef result result_type;
 };
 
-#define StandardFunctor(name, operation)                                                                               \
-  template <typename type>                                                                                             \
-  struct name : public binary_function<type, type, bool>                                                               \
-  {                                                                                                                    \
-    bool operator()(const type& left, const type& right) const                                                         \
-    {                                                                                                                  \
-      return (left operation right);                                                                                   \
-    }                                                                                                                  \
+#define StandardFunctor(name, operation)                                                                                                                                                               \
+  template <typename type>                                                                                                                                                                             \
+  struct name : public binary_function<type, type, bool>                                                                                                                                               \
+  {                                                                                                                                                                                                    \
+    bool operator()(const type& left, const type& right) const                                                                                                                                         \
+    {                                                                                                                                                                                                  \
+      return (left operation right);                                                                                                                                                                   \
+    }                                                                                                                                                                                                  \
   };
 
 StandardFunctor(equal_to, ==);

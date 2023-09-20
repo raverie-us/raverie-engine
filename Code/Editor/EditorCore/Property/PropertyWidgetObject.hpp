@@ -22,9 +22,7 @@ class PropertyWidgetObject : public PropertyWidget
 public:
   RaverieDeclareType(PropertyWidgetObject, TypeCopyMode::ReferenceType);
 
-  PropertyWidgetObject(PropertyWidgetInitializer& initializer,
-                       PropertyWidgetObject* parentNode,
-                       StringParam removedTypeName = "");
+  PropertyWidgetObject(PropertyWidgetInitializer& initializer, PropertyWidgetObject* parentNode, StringParam removedTypeName = "");
 
   ~PropertyWidgetObject();
 

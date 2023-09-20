@@ -116,12 +116,7 @@ RaverieDefineType(ContextMenuEntry, builder, type)
   RaverieBindEvent(Events::ContextMenuCreated, ContextMenuEvent);
 }
 
-ContextMenuEntry::ContextMenuEntry(StringParam name, StringParam icon, bool readOnly) :
-    mName(name),
-    mIcon(icon),
-    mEnabled(true),
-    mParent(nullptr),
-    mReadOnly(readOnly)
+ContextMenuEntry::ContextMenuEntry(StringParam name, StringParam icon, bool readOnly) : mName(name), mIcon(icon), mEnabled(true), mParent(nullptr), mReadOnly(readOnly)
 {
   ConnectThisTo(this, Events::MenuItemSelected, OnItemSelected);
   ConnectThisTo(this, Events::MenuItemHover, OnItemHover);
@@ -552,8 +547,7 @@ void ContextMenuItem::OnLeftClick(MouseEvent* event)
 {
   if (Z::gEngine->IsReadOnly() && !mReadOnly)
   {
-    DoNotifyWarning("Context Menu",
-                    BuildString("Cannot execute menu item ", mName, " because we are in read-only mode"));
+    DoNotifyWarning("Context Menu", BuildString("Cannot execute menu item ", mName, " because we are in read-only mode"));
     return;
   }
 
@@ -587,11 +581,7 @@ void ContextMenuItem::OnLeftClick(MouseEvent* event)
     this->GetParent()->Destroy();
 }
 
-ContextMenu::ContextMenu(Widget* target, ContextMenuEntry* rootEntry) :
-    PopUp(target, PopUpCloseMode::MouseDistance, cPopUpNormal),
-    mParentMenu(nullptr),
-    mSubMenu(nullptr),
-    mSubMenuOffset(Vec3::cZero)
+ContextMenu::ContextMenu(Widget* target, ContextMenuEntry* rootEntry) : PopUp(target, PopUpCloseMode::MouseDistance, cPopUpNormal), mParentMenu(nullptr), mSubMenu(nullptr), mSubMenuOffset(Vec3::cZero)
 {
   mBackground = CreateAttached<Element>(cWhiteSquare);
   mBorder = CreateAttached<Element>(cWhiteSquareBorder);

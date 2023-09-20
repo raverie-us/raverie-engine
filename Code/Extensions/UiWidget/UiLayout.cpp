@@ -100,12 +100,7 @@ void UiLayout::UpdateNotInLayout(UiTransformUpdateEvent* e)
   }
 }
 
-void UiLayout::CalculateAlignment(Axis::Type axis,
-                                  uint alignment,
-                                  Vec2Param areaSize,
-                                  Vec2Param areaPos,
-                                  Vec2Param childSize,
-                                  Vec2Ref childTranslation)
+void UiLayout::CalculateAlignment(Axis::Type axis, uint alignment, Vec2Param areaSize, Vec2Param areaPos, Vec2Param childSize, Vec2Ref childTranslation)
 {
   switch (alignment)
   {

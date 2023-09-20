@@ -5,8 +5,7 @@ namespace Raverie
 {
 
 // Location
-DeclareEnum9(
-    Location, TopLeft, TopCenter, TopRight, CenterLeft, Center, CenterRight, BottomLeft, BottomCenter, BottomRight);
+DeclareEnum9(Location, TopLeft, TopCenter, TopRight, CenterLeft, Center, CenterRight, BottomLeft, BottomCenter, BottomRight);
 
 // Extensions
 namespace Location

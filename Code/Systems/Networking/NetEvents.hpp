@@ -190,9 +190,7 @@ class NetRequest
 {
 public:
   /// Constructors.
-  NetRequest(NetRequestType::Enum netRequestType = NetRequestType::Unspecified,
-             const IpAddress& ipAddress = IpAddress(),
-             const EventBundle& requestBundle = EventBundle());
+  NetRequest(NetRequestType::Enum netRequestType = NetRequestType::Unspecified, const IpAddress& ipAddress = IpAddress(), const EventBundle& requestBundle = EventBundle());
 
   // Data
   NetRequestType::Enum mNetRequestType; ///< Network request type.

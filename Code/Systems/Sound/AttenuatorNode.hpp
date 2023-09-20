@@ -55,10 +55,7 @@ public:
   void SetLowPassCutoffFreq(float frequency);
 
 private:
-  bool GetOutputSamples(BufferType* outputBuffer,
-                        const unsigned numberOfChannels,
-                        ListenerNode* listener,
-                        const bool firstRequest) override;
+  bool GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest) override;
   float GetVolumeChangeFromOutputsThreaded() override;
   void RemoveListenerThreaded(SoundEvent* event) override;
   void UpdateDistanceInterpolator();

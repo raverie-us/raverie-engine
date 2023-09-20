@@ -76,32 +76,13 @@ public:
   void FillRectangle(PRectangle rc, ColourDesired back) override;
   void FillRectangle(PRectangle rc, Surface& surfacePattern) override;
   void RoundedRectangle(PRectangle rc, ColourDesired fore, ColourDesired back) override;
-  void AlphaRectangle(PRectangle rc,
-                      int cornerSize,
-                      ColourDesired fill,
-                      int alphaFill,
-                      ColourDesired outline,
-                      int alphaOutline,
-                      int flags) override;
+  void AlphaRectangle(PRectangle rc, int cornerSize, ColourDesired fill, int alphaFill, ColourDesired outline, int alphaOutline, int flags) override;
   void DrawRGBAImage(PRectangle rc, int width, int height, const unsigned char* pixelsImage) override;
   void Ellipse(PRectangle rc, ColourDesired fore, ColourDesired back) override;
   void Copy(PRectangle rc, Point from, Surface& surfaceSource) override;
-  void DrawTextNoClip(PRectangle rc,
-                      Font& font_,
-                      XYPOSITION ybase,
-                      const char* s,
-                      int len,
-                      ColourDesired fore,
-                      ColourDesired back) override;
-  void DrawTextClipped(PRectangle rc,
-                       Font& font_,
-                       XYPOSITION ybase,
-                       const char* s,
-                       int len,
-                       ColourDesired fore,
-                       ColourDesired back) override;
-  void DrawTextTransparent(
-      PRectangle rc, Font& font_, XYPOSITION ybase, const char* s, int len, ColourDesired fore) override;
+  void DrawTextNoClip(PRectangle rc, Font& font_, XYPOSITION ybase, const char* s, int len, ColourDesired fore, ColourDesired back) override;
+  void DrawTextClipped(PRectangle rc, Font& font_, XYPOSITION ybase, const char* s, int len, ColourDesired fore, ColourDesired back) override;
+  void DrawTextTransparent(PRectangle rc, Font& font_, XYPOSITION ybase, const char* s, int len, ColourDesired fore) override;
   void MeasureWidths(Font& font_, const char* s, int len, XYPOSITION* positions) override;
   XYPOSITION WidthText(Font& font_, const char* s, int len) override;
   XYPOSITION WidthChar(Font& font_, char ch) override;
@@ -116,13 +97,7 @@ public:
   void SetUnicodeMode(bool unicodeMode_) override;
   void SetDBCSMode(int codePage) override;
 
-  void RoundedLineRectHelper(PRectangle rc,
-                             int cornerEmulation,
-                             ColourDesired fill,
-                             int alphaFill,
-                             ColourDesired outline,
-                             int alphaOutline,
-                             int flags);
+  void RoundedLineRectHelper(PRectangle rc, int cornerEmulation, ColourDesired fill, int alphaFill, ColourDesired outline, int alphaOutline, int flags);
 
   enum DrawType
   {

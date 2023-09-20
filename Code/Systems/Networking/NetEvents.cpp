@@ -229,12 +229,8 @@ void BindNetEvents(LibraryBuilder& builder, BoundType* type)
 
 //                                  NetRequest //
 
-NetRequest::NetRequest(NetRequestType::Enum netRequestType,
-                       const IpAddress& ipAddress,
-                       const EventBundle& requestBundle) :
-    mNetRequestType(netRequestType),
-    mTheirIpAddress(ipAddress),
-    mOurRequestBundle(requestBundle)
+NetRequest::NetRequest(NetRequestType::Enum netRequestType, const IpAddress& ipAddress, const EventBundle& requestBundle) :
+    mNetRequestType(netRequestType), mTheirIpAddress(ipAddress), mOurRequestBundle(requestBundle)
 {
 }
 
@@ -277,11 +273,7 @@ RaverieDefineType(NetHostUpdate, builder, type)
   RaverieBindFieldGetterProperty(mHost);
 }
 
-NetHostUpdate::NetHostUpdate() :
-    mRefreshResult(NetRefreshResult::NoResponse),
-    mResponseTime(0),
-    mNetwork(Network::LAN),
-    mHost(nullptr)
+NetHostUpdate::NetHostUpdate() : mRefreshResult(NetRefreshResult::NoResponse), mResponseTime(0), mNetwork(Network::LAN), mHost(nullptr)
 {
 }
 
@@ -360,10 +352,7 @@ RaverieDefineType(NetPeerSentConnectRequest, builder, type)
   RaverieBindFieldGetterProperty(mOurPendingUserAddRequestCount);
 }
 
-NetPeerSentConnectRequest::NetPeerSentConnectRequest(GameSession* gameSession) :
-    mTheirIpAddress(),
-    mOurRequestBundle(gameSession),
-    mOurPendingUserAddRequestCount(0)
+NetPeerSentConnectRequest::NetPeerSentConnectRequest(GameSession* gameSession) : mTheirIpAddress(), mOurRequestBundle(gameSession), mOurPendingUserAddRequestCount(0)
 {
 }
 
@@ -384,12 +373,7 @@ RaverieDefineType(NetPeerReceivedConnectRequest, builder, type)
 }
 
 NetPeerReceivedConnectRequest::NetPeerReceivedConnectRequest(GameSession* gameSession) :
-    mTheirIpAddress(),
-    mTheirRequestBundle(gameSession),
-    mTheirPendingUserAddRequestCount(0),
-    mOurIpAddress(),
-    mReturnOurConnectResponse(false),
-    mReturnOurResponseBundle(gameSession)
+    mTheirIpAddress(), mTheirRequestBundle(gameSession), mTheirPendingUserAddRequestCount(0), mOurIpAddress(), mReturnOurConnectResponse(false), mReturnOurResponseBundle(gameSession)
 {
 }
 
@@ -466,10 +450,7 @@ RaverieDefineType(NetLinkConnected, builder, type)
   RaverieBindFieldGetterProperty(mDirection);
 }
 
-NetLinkConnected::NetLinkConnected() :
-    mTheirNetPeerId(0),
-    mTheirIpAddress(),
-    mDirection(TransmissionDirection::Unspecified)
+NetLinkConnected::NetLinkConnected() : mTheirNetPeerId(0), mTheirIpAddress(), mDirection(TransmissionDirection::Unspecified)
 {
 }
 
@@ -489,11 +470,7 @@ RaverieDefineType(NetLinkDisconnected, builder, type)
 }
 
 NetLinkDisconnected::NetLinkDisconnected(GameSession* gameSession) :
-    mTheirNetPeerId(0),
-    mTheirIpAddress(),
-    mDisconnectReason(DisconnectReason::Request),
-    mRequestBundle(gameSession),
-    mDirection(TransmissionDirection::Unspecified)
+    mTheirNetPeerId(0), mTheirIpAddress(), mDisconnectReason(DisconnectReason::Request), mRequestBundle(gameSession), mDirection(TransmissionDirection::Unspecified)
 {
 }
 
@@ -539,10 +516,7 @@ RaverieDefineType(NetPeerSentUserAddRequest, builder, type)
   RaverieBindFieldGetterProperty(mOurRequestBundle);
 }
 
-NetPeerSentUserAddRequest::NetPeerSentUserAddRequest(GameSession* gameSession) :
-    mTheirNetPeerId(0),
-    mTheirIpAddress(),
-    mOurRequestBundle(gameSession)
+NetPeerSentUserAddRequest::NetPeerSentUserAddRequest(GameSession* gameSession) : mTheirNetPeerId(0), mTheirIpAddress(), mOurRequestBundle(gameSession)
 {
 }
 
@@ -564,13 +538,7 @@ RaverieDefineType(NetPeerReceivedUserAddRequest, builder, type)
 }
 
 NetPeerReceivedUserAddRequest::NetPeerReceivedUserAddRequest(GameSession* gameSession) :
-    mTheirNetPeerId(0),
-    mTheirIpAddress(),
-    mTheirRequestBundle(gameSession),
-    mReturnOurAddResponse(false),
-    mReturnOurResponseBundle(gameSession),
-    mReturnTheirNetUser(nullptr),
-    mTheirNetUserId(0)
+    mTheirNetPeerId(0), mTheirIpAddress(), mTheirRequestBundle(gameSession), mReturnOurAddResponse(false), mReturnOurResponseBundle(gameSession), mReturnTheirNetUser(nullptr), mTheirNetUserId(0)
 {
 }
 
@@ -593,13 +561,7 @@ RaverieDefineType(NetPeerSentUserAddResponse, builder, type)
 
 /// Constructor.
 NetPeerSentUserAddResponse::NetPeerSentUserAddResponse(GameSession* gameSession) :
-    mTheirNetPeerId(0),
-    mTheirIpAddress(),
-    mTheirRequestBundle(gameSession),
-    mOurAddResponse(NetUserAddResponse::Deny),
-    mOurResponseBundle(gameSession),
-    mTheirNetUserId(0),
-    mTheirNetUser(nullptr)
+    mTheirNetPeerId(0), mTheirIpAddress(), mTheirRequestBundle(gameSession), mOurAddResponse(NetUserAddResponse::Deny), mOurResponseBundle(gameSession), mTheirNetUserId(0), mTheirNetUser(nullptr)
 {
 }
 
@@ -620,12 +582,7 @@ RaverieDefineType(NetPeerReceivedUserAddResponse, builder, type)
 }
 
 NetPeerReceivedUserAddResponse::NetPeerReceivedUserAddResponse(GameSession* gameSession) :
-    mTheirNetPeerId(0),
-    mTheirIpAddress(),
-    mOurRequestBundle(gameSession),
-    mTheirAddResponse(NetUserAddResponse::Deny),
-    mTheirResponseBundle(gameSession),
-    mOurNetUserId(0)
+    mTheirNetPeerId(0), mTheirIpAddress(), mOurRequestBundle(gameSession), mTheirAddResponse(NetUserAddResponse::Deny), mTheirResponseBundle(gameSession), mOurNetUserId(0)
 {
 }
 

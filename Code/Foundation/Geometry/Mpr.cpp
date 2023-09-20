@@ -17,9 +17,7 @@ const uint cRefinementIterations = 25;
 
 const real cTimeOfIntersectionEpsilon = real(-0.01);
 
-const Vec3 cSafetyDirection = Vec3(real(0.57735026918962576450914878050196),
-                                   real(0.57735026918962576450914878050196),
-                                   real(0.57735026918962576450914878050196));
+const Vec3 cSafetyDirection = Vec3(real(0.57735026918962576450914878050196), real(0.57735026918962576450914878050196), real(0.57735026918962576450914878050196));
 
 const uint cLeftShape = 0;
 const uint cRightShape = 1;
@@ -458,8 +456,7 @@ bool Mpr::Refine(bool toSurface)
     planeNormals[1] = Cross(planeNormals[1], n);
     planeNormals[2] = Cross(planeNormals[2], n);
 
-    real planeDistances[3] = {
-        Dot(planeNormals[0], toOrigin), Dot(planeNormals[1], toOrigin), Dot(planeNormals[2], toOrigin)};
+    real planeDistances[3] = {Dot(planeNormals[0], toOrigin), Dot(planeNormals[1], toOrigin), Dot(planeNormals[2], toOrigin)};
 
     // Choose new portal!
 

@@ -140,10 +140,7 @@ void GraphicsEngine::Initialize(SystemInitializer& initializer)
 }
 
 #if defined(RaverieLazyShaderCompositing)
-void CollectShadersRenderTaskRenderPass(RenderTaskRenderPass* task,
-                                        ViewBlock* viewBlock,
-                                        FrameBlock* frameBlock,
-                                        Array<String>& shadersOut)
+void CollectShadersRenderTaskRenderPass(RenderTaskRenderPass* task, ViewBlock* viewBlock, FrameBlock* frameBlock, Array<String>& shadersOut)
 {
   // Create a map of RenderGroup id to task memory index for every sub group
   // entry.
@@ -180,8 +177,7 @@ void CollectShadersRenderTaskRenderPass(RenderTaskRenderPass* task,
       continue;
 
     // Shader permutation lookup for vertex type and render pass
-    String name = BuildString(
-        GetCoreVertexFragmentName(frameNode.mCoreVertexType), materialData->mCompositeName, subTask->mRenderPassName);
+    String name = BuildString(GetCoreVertexFragmentName(frameNode.mCoreVertexType), materialData->mCompositeName, subTask->mRenderPassName);
     shadersOut.PushBack(name);
   }
 }
@@ -256,13 +252,13 @@ void GraphicsEngine::Update(bool debugger)
     return;
 
   // Do any deferred tasks
-  if (!ThreadingEnabled) {
+  if (!ThreadingEnabled)
+  {
     RendererThreadMain(mRendererJobQueue);
   }
 
-  RaverieManager::GetInstance()->mDebugger.DoNotAllowBreakReason =
-      "Cannot currently break within the graphics engine because it must "
-      "continue running in editor";
+  RaverieManager::GetInstance()->mDebugger.DoNotAllowBreakReason = "Cannot currently break within the graphics engine because it must "
+                                                                   "continue running in editor";
 
   ProfileScopeTree("GraphicsSystem", "Engine", Color::Blue);
 
@@ -507,8 +503,7 @@ void GraphicsEngine::CheckTextureYInvert(Texture* texture)
       {
         MipHeader* mipHeader = texture->mMipHeaders + i;
         byte* mipData = texture->mImageData + mipHeader->mDataOffset;
-        YInvertBlockCompressed(
-            mipData, mipHeader->mWidth, mipHeader->mHeight, mipHeader->mDataSize, texture->mCompression);
+        YInvertBlockCompressed(mipData, mipHeader->mWidth, mipHeader->mHeight, mipHeader->mDataSize, texture->mCompression);
       }
     }
   }
@@ -516,9 +511,12 @@ void GraphicsEngine::CheckTextureYInvert(Texture* texture)
 
 void GraphicsEngine::AddRendererJob(RendererJob* rendererJob)
 {
-  if (ThreadingEnabled) {
+  if (ThreadingEnabled)
+  {
     mRendererJobQueue->AddJob(rendererJob);
-  } else {
+  }
+  else
+  {
     // In single threaded mode, instantly execute the job
     ExecuteRendererJob(rendererJob);
   }
@@ -915,10 +913,7 @@ void GraphicsEngine::RemoveComposite(StringParam compositeName)
   }
 }
 
-Shader* GraphicsEngine::GetOrCreateShader(StringParam coreVertex,
-                                          StringParam composite,
-                                          StringParam renderPass,
-                                          ShaderMap& shaderMap)
+Shader* GraphicsEngine::GetOrCreateShader(StringParam coreVertex, StringParam composite, StringParam renderPass, ShaderMap& shaderMap)
 {
   String name = BuildString(coreVertex, composite, renderPass);
   Shader*& shader = shaderMap[name];
@@ -933,12 +928,7 @@ Shader* GraphicsEngine::GetOrCreateShader(StringParam coreVertex,
   return shader;
 }
 
-void GraphicsEngine::FindShadersToCompile(Array<String>& coreVertexRange,
-                                          Array<String>& compositeRange,
-                                          Array<String>& renderPassRange,
-                                          ShaderSetMap& testMap,
-                                          uint index,
-                                          ShaderSet& shaders)
+void GraphicsEngine::FindShadersToCompile(Array<String>& coreVertexRange, Array<String>& compositeRange, Array<String>& renderPassRange, ShaderSetMap& testMap, uint index, ShaderSet& shaders)
 {
   Array<String>* ranges[] = {&coreVertexRange, &compositeRange, &renderPassRange};
 
@@ -969,8 +959,7 @@ void GraphicsEngine::FindShadersToCompile(Array<String>& coreVertexRange,
         {
           String fragmentNames[] = {frag0, frag1, frag2};
 
-          Shader* shader =
-              GetOrCreateShader(fragmentNames[f0], fragmentNames[f1], fragmentNames[f2], mCompositeShaders);
+          Shader* shader = GetOrCreateShader(fragmentNames[f0], fragmentNames[f1], fragmentNames[f2], mCompositeShaders);
           shaders.Insert(shader);
         }
       }
@@ -1075,12 +1064,10 @@ void GraphicsEngine::ProcessModifiedScripts(LibraryRef library)
 
 RaverieFragmentType::Enum GraphicsEngine::GetFragmentType(MaterialBlock* materialBlock)
 {
-  return mShaderGenerator->mFragmentTypes.FindValue(RaverieVirtualTypeId(materialBlock)->Name,
-                                                    RaverieFragmentType::Fragment);
+  return mShaderGenerator->mFragmentTypes.FindValue(RaverieVirtualTypeId(materialBlock)->Name, RaverieFragmentType::Fragment);
 }
 
-HandleOf<RenderTarget>
-GraphicsEngine::GetRenderTarget(uint width, uint height, TextureFormat::Enum format, SamplerSettings samplerSettings)
+HandleOf<RenderTarget> GraphicsEngine::GetRenderTarget(uint width, uint height, TextureFormat::Enum format, SamplerSettings samplerSettings)
 {
   return mRenderTargetManager.GetRenderTarget(width, height, format, samplerSettings);
 }
@@ -1156,8 +1143,7 @@ void GraphicsEngine::RemovedFragment(RaverieFragmentType::Enum type, StringParam
 void GraphicsEngine::OnCompileRaverieFragments(RaverieCompileFragmentEvent* event)
 {
   String libraryName = BuildString(event->mOwningLibrary->Name, "Fragments");
-  event->mReturnedLibrary =
-      mShaderGenerator->BuildFragmentsLibrary(event->mDependencies, event->mFragments, libraryName);
+  event->mReturnedLibrary = mShaderGenerator->BuildFragmentsLibrary(event->mDependencies, event->mFragments, libraryName);
 }
 
 void GraphicsEngine::OnScriptsCompiledPrePatch(RaverieCompileEvent* event)
@@ -1167,14 +1153,11 @@ void GraphicsEngine::OnScriptsCompiledPrePatch(RaverieCompileEvent* event)
     if (!modifiedLibrary->mSwapFragment.HasPendingLibrary())
       continue;
 
-    RaverieShaderIRLibraryRef currentLibrary =
-        mShaderGenerator->GetCurrentInternalLibrary(modifiedLibrary->mSwapFragment.mCurrentLibrary);
+    RaverieShaderIRLibraryRef currentLibrary = mShaderGenerator->GetCurrentInternalLibrary(modifiedLibrary->mSwapFragment.mCurrentLibrary);
     RaverieFragmentTypeMap& currentFragmentTypes = mShaderGenerator->mFragmentTypes;
 
-    RaverieShaderIRLibraryRef pendingLibrary =
-        mShaderGenerator->GetPendingInternalLibrary(modifiedLibrary->mSwapFragment.mPendingLibrary);
-    RaverieFragmentTypeMap& pendingFragmentTypes =
-        mShaderGenerator->mPendingFragmentTypes[modifiedLibrary->mSwapFragment.mPendingLibrary];
+    RaverieShaderIRLibraryRef pendingLibrary = mShaderGenerator->GetPendingInternalLibrary(modifiedLibrary->mSwapFragment.mPendingLibrary);
+    RaverieFragmentTypeMap& pendingFragmentTypes = mShaderGenerator->mPendingFragmentTypes[modifiedLibrary->mSwapFragment.mPendingLibrary];
 
     // Find removed types
     if (currentLibrary != nullptr)
@@ -1193,8 +1176,7 @@ void GraphicsEngine::OnScriptsCompiledPrePatch(RaverieCompileEvent* event)
         if (pendingLibrary->mTypes.ContainsKey(shaderTypeMeta->mRaverieName))
           continue;
 
-        RaverieFragmentType::Enum fragmentType =
-            currentFragmentTypes.FindValue(shaderTypeMeta->mRaverieName, RaverieFragmentType::Fragment);
+        RaverieFragmentType::Enum fragmentType = currentFragmentTypes.FindValue(shaderTypeMeta->mRaverieName, RaverieFragmentType::Fragment);
         RemovedFragment(fragmentType, shaderTypeMeta->mRaverieName);
       }
     }
@@ -1224,10 +1206,8 @@ void GraphicsEngine::OnScriptsCompiledPrePatch(RaverieCompileEvent* event)
         {
           // Check for fragments that used to have a special attribute and add
           // them to the appropriate removed list
-          RaverieFragmentType::Enum currentFragmentType =
-              currentFragmentTypes.FindValue(shaderTypeMeta->mRaverieName, RaverieFragmentType::Fragment);
-          RaverieFragmentType::Enum pendingFragmentType =
-              pendingFragmentTypes.FindValue(shaderTypeMeta->mRaverieName, RaverieFragmentType::Fragment);
+          RaverieFragmentType::Enum currentFragmentType = currentFragmentTypes.FindValue(shaderTypeMeta->mRaverieName, RaverieFragmentType::Fragment);
+          RaverieFragmentType::Enum pendingFragmentType = pendingFragmentTypes.FindValue(shaderTypeMeta->mRaverieName, RaverieFragmentType::Fragment);
 
           if (pendingFragmentType != currentFragmentType)
             RemovedFragment(currentFragmentType, shaderTypeMeta->mRaverieName);
@@ -1255,8 +1235,7 @@ void GraphicsEngine::OnScriptsCompiledPrePatch(RaverieCompileEvent* event)
             if (dependentTypeMeta == nullptr)
               continue;
 
-            RaverieFragmentType::Enum dependentType =
-                pendingFragmentTypes.FindValue(dependentTypeMeta->mRaverieName, RaverieFragmentType::Fragment);
+            RaverieFragmentType::Enum dependentType = pendingFragmentTypes.FindValue(dependentTypeMeta->mRaverieName, RaverieFragmentType::Fragment);
 
             // Do not need to check composites unless it's a regular fragment
             // type Composites will otherwise be handled by the other fragment
@@ -1313,8 +1292,7 @@ void GraphicsEngine::OnScriptsCompiledPostPatch(RaverieCompileEvent* event)
 
   mNewLibrariesCommitted = false;
 
-  MaterialFactory::GetInstance()->UpdateRestrictedComponents(mShaderGenerator->mCurrentToInternal,
-                                                             mShaderGenerator->mFragmentTypes);
+  MaterialFactory::GetInstance()->UpdateRestrictedComponents(mShaderGenerator->mCurrentToInternal, mShaderGenerator->mFragmentTypes);
 
   // Re-Initialize composites after new types have been committed
   forRange (Resource* resource, MaterialManager::GetInstance()->AllResources())
@@ -1434,12 +1412,9 @@ void GraphicsEngine::CompileShaders()
   Array<String>& renderPassFragments = mShaderGenerator->mRenderPassFragments;
 
   // Process based on modified lists
-  FindShadersToCompile(
-      mModifiedCoreVertex, compositeNames, renderPassFragments, mShaderCoreVertexMap, 0, shadersToCompile);
-  FindShadersToCompile(
-      coreVertexFragments, modifiedComposites, renderPassFragments, mShaderCompositeMap, 1, shadersToCompile);
-  FindShadersToCompile(
-      coreVertexFragments, compositeNames, mModifiedRenderPass, mShaderRenderPassMap, 2, shadersToCompile);
+  FindShadersToCompile(mModifiedCoreVertex, compositeNames, renderPassFragments, mShaderCoreVertexMap, 0, shadersToCompile);
+  FindShadersToCompile(coreVertexFragments, modifiedComposites, renderPassFragments, mShaderCompositeMap, 1, shadersToCompile);
+  FindShadersToCompile(coreVertexFragments, compositeNames, mModifiedRenderPass, mShaderRenderPassMap, 2, shadersToCompile);
 
   AddToShaderMaps(shadersToCompile);
 

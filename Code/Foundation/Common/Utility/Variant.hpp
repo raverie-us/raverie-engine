@@ -343,7 +343,8 @@ public:
   /// Fixed-size local buffer
   /// Contains the small stored value or a pointer to the large stored value
   /// (Should be zeroed if the variant is empty)
-  union {
+  union
+  {
     byte mData[16];
     int mDataAsInts[4];
     float mDataAsFloats[4];

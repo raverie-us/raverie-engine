@@ -459,10 +459,7 @@ void BroadPhaseTracker::Cleanup()
   }
 }
 
-void BroadPhaseTracker::CastIntoBroadphase(uint broadPhaseType,
-                                           CastDataParam data,
-                                           ProxyCastResults& results,
-                                           CastFunction func)
+void BroadPhaseTracker::CastIntoBroadphase(uint broadPhaseType, CastDataParam data, ProxyCastResults& results, CastFunction func)
 {
   BroadPhaseVec& broadPhases = mBroadPhases[broadPhaseType];
 
@@ -525,10 +522,7 @@ uint BroadPhaseTracker::GetNewProxyIndex(uint type)
   return index;
 }
 
-void BroadPhaseTracker::RegisterCollisions(uint type,
-                                           uint broadPhaseId,
-                                           ClientPairArray& currentResults,
-                                           ClientPairArray& finalResults)
+void BroadPhaseTracker::RegisterCollisions(uint type, uint broadPhaseId, ClientPairArray& currentResults, ClientPairArray& finalResults)
 {
   // Record the amount of collisions being registered
   mBroadPhases[type][broadPhaseId]->mStats.mPossibleCollisionsReturned += currentResults.Size();

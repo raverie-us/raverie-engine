@@ -116,8 +116,7 @@ void TypeDependencyCollector::Collect(RaverieShaderIROp* op)
   // Handle constants (have to add them to a separate map). These should be
   // added after collecting all arguments so that composite instructions are
   // guaranteed to have already visited their constituents.
-  if (op->mOpType == OpType::OpConstant || op->mOpType == OpType::OpConstantComposite ||
-      op->mOpType == OpType::OpSpecConstant || op->mOpType == OpType::OpSpecConstantComposite)
+  if (op->mOpType == OpType::OpConstant || op->mOpType == OpType::OpConstantComposite || op->mOpType == OpType::OpSpecConstant || op->mOpType == OpType::OpSpecConstantComposite)
   {
     AddConstantReference(op);
   }
@@ -193,8 +192,7 @@ void TypeDependencyCollector::AddGlobalReference(RaverieShaderIROp* op)
 
 bool TypeDependencyCollector::IsGlobalStorageClass(spv::StorageClass storageClass)
 {
-  return storageClass == spv::StorageClassUniform || storageClass == spv::StorageClassUniformConstant ||
-         storageClass == spv::StorageClassStorageBuffer || storageClass == spv::StorageClassInput ||
+  return storageClass == spv::StorageClassUniform || storageClass == spv::StorageClassUniformConstant || storageClass == spv::StorageClassStorageBuffer || storageClass == spv::StorageClassInput ||
          storageClass == spv::StorageClassOutput || storageClass == spv::StorageClassPrivate;
 }
 

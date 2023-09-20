@@ -165,6 +165,7 @@ public:
   void UpdateGamepadsActiveState();
 
   void OnUpdate(UpdateEvent* event);
+
 private:
   Gamepad* mGamePads[4];
 };

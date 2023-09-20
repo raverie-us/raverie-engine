@@ -37,8 +37,7 @@ public:
     {
       logFile = new File();
       String logFilePath = GetLogFilePath();
-      bool opened =
-          logFile->Open(logFilePath.c_str(), FileMode::Append, FileAccessPattern::Sequential, FileShare::Read);
+      bool opened = logFile->Open(logFilePath.c_str(), FileMode::Append, FileAccessPattern::Sequential, FileShare::Read);
 
       if (!opened)
       {

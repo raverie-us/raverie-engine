@@ -42,27 +42,12 @@ protected:
   void FixUniformBufferNameoverlaps(GlslBackendInternalData& internalData);
   void FindUsedSampledImageBindings(GlslBackendInternalData& internalData);
   void HandleCompiledSampledImages(GlslBackendInternalData& internalData);
-  void PopulateTypeName(GlslBackendInternalData& internalData,
-                        spirv_cross::SPIRType& spirVType,
-                        ShaderResourceReflectionData& reflectionData);
-  void PopulateMemberTypeInfo(GlslBackendInternalData& internalData,
-                              spirv_cross::SPIRType& parentType,
-                              int memberIndex,
-                              ShaderResourceReflectionData& reflectionData,
-                              bool isInterfaceType);
-  void PopulateTypeInfo(GlslBackendInternalData& internalData,
-                        spirv_cross::SPIRType& spirvType,
-                        ShaderResourceReflectionData& reflectionData,
-                        bool isInterfaceType);
-  void ExtractResourceReflection(GlslBackendInternalData& internalData,
-                                 spirv_cross::Resource& resource,
-                                 Array<ShaderStageResource>& results,
-                                 bool isInterfaceType);
+  void PopulateTypeName(GlslBackendInternalData& internalData, spirv_cross::SPIRType& spirVType, ShaderResourceReflectionData& reflectionData);
+  void PopulateMemberTypeInfo(GlslBackendInternalData& internalData, spirv_cross::SPIRType& parentType, int memberIndex, ShaderResourceReflectionData& reflectionData, bool isInterfaceType);
+  void PopulateTypeInfo(GlslBackendInternalData& internalData, spirv_cross::SPIRType& spirvType, ShaderResourceReflectionData& reflectionData, bool isInterfaceType);
+  void ExtractResourceReflection(GlslBackendInternalData& internalData, spirv_cross::Resource& resource, Array<ShaderStageResource>& results, bool isInterfaceType);
   template <typename VectorType>
-  void ExtractResourcesReflection(GlslBackendInternalData& internalData,
-                                  VectorType& resources,
-                                  Array<ShaderStageResource>& results,
-                                  bool isInterfaceType);
+  void ExtractResourcesReflection(GlslBackendInternalData& internalData, VectorType& resources, Array<ShaderStageResource>& results, bool isInterfaceType);
   void ExtractResourceReflectionData(GlslBackendInternalData& internalData);
 
 public:

@@ -19,10 +19,7 @@ NativeVirtualInfo::NativeVirtualInfo() : Index(NonVirtual), Thunk(nullptr), Guid
 bool NativeVirtualInfo::Validate()
 {
   // Error checking for the native virtual calls
-  ReturnIf((this->Index == NonVirtual && this->Thunk != nullptr) ||
-               (this->Index != NonVirtual && this->Thunk == nullptr),
-           false,
-           "You must provide both the virtual index and thunk, or neither");
+  ReturnIf((this->Index == NonVirtual && this->Thunk != nullptr) || (this->Index != NonVirtual && this->Thunk == nullptr), false, "You must provide both the virtual index and thunk, or neither");
 
   // Error check the guid
   ReturnIf(this->Index != NonVirtual && this->Guid == InvalidGuid, false, "The guid provided was not valid");
@@ -32,15 +29,7 @@ bool NativeVirtualInfo::Validate()
 }
 
 Function::Function() :
-    Hash(0),
-    BoundFunction(nullptr),
-    NativeConstructor(nullptr),
-    FunctionType(nullptr),
-    RequiredStackSpace(0),
-    This(nullptr),
-    SourceLibrary(nullptr),
-    OwningProperty(nullptr),
-    IsVirtual(false)
+    Hash(0), BoundFunction(nullptr), NativeConstructor(nullptr), FunctionType(nullptr), RequiredStackSpace(0), This(nullptr), SourceLibrary(nullptr), OwningProperty(nullptr), IsVirtual(false)
 {
 }
 
@@ -125,9 +114,7 @@ CodeLocation* Function::GetCodeLocationFromProgramCounter(size_t programCounter)
   return codeLocation;
 }
 
-Opcode& Function::AllocateArgumentFreeOpcode(Instruction::Enum instruction,
-                                             DebugOrigin::Enum debugOrigin,
-                                             const CodeLocation& debugLocation)
+Opcode& Function::AllocateArgumentFreeOpcode(Instruction::Enum instruction, DebugOrigin::Enum debugOrigin, const CodeLocation& debugLocation)
 {
   return AllocateOpcode<Opcode>(instruction, debugOrigin, debugLocation);
 }

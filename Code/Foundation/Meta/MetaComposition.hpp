@@ -127,16 +127,8 @@ public:
 
   /// Allocates and adds the component to the object at the given index. Default
   /// index puts the component at the back of all components.
-  virtual void AddComponent(HandleParam owner,
-                            HandleParam component,
-                            int index = -1,
-                            bool ignoreDependencies = false,
-                            MetaCreationContext* creationContext = nullptr);
-  virtual void AddComponent(HandleParam owner,
-                            BoundType* typeToAdd,
-                            int index = -1,
-                            bool ignoreDependencies = false,
-                            MetaCreationContext* creationContext = nullptr);
+  virtual void AddComponent(HandleParam owner, HandleParam component, int index = -1, bool ignoreDependencies = false, MetaCreationContext* creationContext = nullptr);
+  virtual void AddComponent(HandleParam owner, BoundType* typeToAdd, int index = -1, bool ignoreDependencies = false, MetaCreationContext* creationContext = nullptr);
 
   /// See the comment above 'MetaCreationContext'. Once all components are
   /// created, this function will be called and any post-creation logic can be
@@ -157,8 +149,7 @@ public:
   /// Checks whether or not the given component can be moved to the given
   /// destination. If it cannot be moved because of a dependency, the infringing
   /// component will be returned.
-  bool CanMoveComponent(
-      HandleParam owner, HandleParam component, uint destination, Handle& blockingComponent, String& reason);
+  bool CanMoveComponent(HandleParam owner, HandleParam component, uint destination, Handle& blockingComponent, String& reason);
 
   /// Attempts to move the given component to the given index. If it cannot be
   /// moved there due to moving before a dependency or after a dependent, it

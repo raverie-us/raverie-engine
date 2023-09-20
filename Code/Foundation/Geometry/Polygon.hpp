@@ -147,11 +147,7 @@ public:
   Array<Vec2> mData;
 };
 
-ShapeSegResult::Enum ShapeSegmentSegment(Vec2Param segmentStartA,
-                                         Vec2Param segmentEndA,
-                                         Vec2Param segmentStartB,
-                                         Vec2Param segmentEndB,
-                                         Vec2 intersectionPoints[2]);
+ShapeSegResult::Enum ShapeSegmentSegment(Vec2Param segmentStartA, Vec2Param segmentEndA, Vec2Param segmentStartB, Vec2Param segmentEndB, Vec2 intersectionPoints[2]);
 
 float PolygonQuantizeFloat(float value);
 

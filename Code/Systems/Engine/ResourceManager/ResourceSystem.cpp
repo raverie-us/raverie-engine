@@ -70,16 +70,12 @@ void ResourceSystem::SetupDefaults()
         resource->mContentItem->ShowInEditor = true;
 
         // Moved default font to the Loading library for progress display
-        ErrorIf(resource->mContentItem->mLibrary->Name != "EngineCore" &&
-                    resource->mContentItem->mLibrary->Name != "Loading",
-                "Only resources that are in core can be defaults");
+        ErrorIf(resource->mContentItem->mLibrary->Name != "EngineCore" && resource->mContentItem->mLibrary->Name != "Loading", "Only resources that are in core can be defaults");
       }
     }
     else
     {
-      ErrorIf(!manager->mNoFallbackNeeded,
-              "Failed to find default resource for resource type %s",
-              manager->mResourceTypeName.c_str());
+      ErrorIf(!manager->mNoFallbackNeeded, "Failed to find default resource for resource type %s", manager->mResourceTypeName.c_str());
     }
   }
 }
@@ -258,10 +254,7 @@ Resource* ResourceSystem::GetResource(ResourceId resourceId)
   return ResourceIdMap.FindValue(resourceId, nullptr);
 }
 
-void ResourceSystem::LoadIntoLibrary(Status& status,
-                                     ResourceLibrary* resourceLibrary,
-                                     ResourcePackage* resourcePackage,
-                                     bool isNew)
+void ResourceSystem::LoadIntoLibrary(Status& status, ResourceLibrary* resourceLibrary, ResourcePackage* resourcePackage, bool isNew)
 {
   Z::gEngine->LoadingStart();
 

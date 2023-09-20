@@ -120,8 +120,8 @@ bool ValidPropertyTrack(Property* property)
   // First check to see if it's a value type
   Type* propertyType = property->PropertyType;
 
-#define DoVariantType(type)                                                                                            \
-  if (propertyType == RaverieTypeId(type))                                                                               \
+#define DoVariantType(type)                                                                                                                                                                            \
+  if (propertyType == RaverieTypeId(type))                                                                                                                                                             \
     return true;
 #include "Foundation/Meta/VariantTypes.inl"
 #undef DoVariantType
@@ -149,8 +149,8 @@ PropertyTrack* MakePropertyTrack(StringParam componentName, StringParam property
 PropertyTrack* MakePropertyTrack(StringParam componentName, StringParam propertyName, BoundType* propertyTypeId)
 {
   // First check to see if it's a value type
-#define DoVariantType(type)                                                                                            \
-  if (propertyTypeId == RaverieTypeId(type))                                                                             \
+#define DoVariantType(type)                                                                                                                                                                            \
+  if (propertyTypeId == RaverieTypeId(type))                                                                                                                                                           \
     return new AnimatePropertyValueType<type>(componentName, propertyName);
 #include "Foundation/Meta/VariantTypes.inl"
 #undef DoVariantType

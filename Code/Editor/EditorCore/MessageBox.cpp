@@ -109,8 +109,7 @@ MessageBox::MessageBox(Composite* parent, StringParam caption, StringParam text,
   this->TakeFocus();
 }
 
-MessageBox::MessageBox(Composite* parent, StringParam caption, StringParam text, Array<String>& buttons) :
-    Window(parent)
+MessageBox::MessageBox(Composite* parent, StringParam caption, StringParam text, Array<String>& buttons) : Window(parent)
 {
   // Create a large transparent block to darken and block input on the screen.
   mBlock = CreateBlackOut(parent);

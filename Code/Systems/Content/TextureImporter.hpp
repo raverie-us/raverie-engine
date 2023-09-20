@@ -5,13 +5,7 @@
 namespace Raverie
 {
 
-void ResizeImage(TextureFormat::Enum format,
-                 const byte* srcImage,
-                 uint srcWidth,
-                 uint srcHeight,
-                 byte* dstImage,
-                 uint dstWidth,
-                 uint dstHeight);
+void ResizeImage(TextureFormat::Enum format, const byte* srcImage, uint srcWidth, uint srcHeight, byte* dstImage, uint dstWidth, uint dstHeight);
 
 void ToNvttSurface(nvtt::Surface& surface, uint width, uint height, TextureFormat::Enum format, const byte* image);
 void FromNvttSurface(const nvtt::Surface& surface, uint& width, uint& height, TextureFormat::Enum format, byte*& image);

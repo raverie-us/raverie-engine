@@ -150,11 +150,9 @@ class StringRangeExtended
   static void FindRangeInclusive(Call& call, ExceptionReport& report);
   String Replace(StringRangeExtended oldValue, StringRangeExtended newValue);
   static void RuneIteratorFromByteIndex(Call& call, ExceptionReport& report);
-  static void RuneIteratorFromByteIndexInternal(
-      Call& call, ExceptionReport& report, StringParam strRef, StringRange range, int byteIndex);
+  static void RuneIteratorFromByteIndexInternal(Call& call, ExceptionReport& report, StringParam strRef, StringRange range, int byteIndex);
   static void RuneIteratorFromRuneIndex(Call& call, ExceptionReport& report);
-  static void RuneIteratorFromRuneIndexInternal(
-      Call& call, ExceptionReport& report, StringParam strRef, StringRange range, int runeIndex);
+  static void RuneIteratorFromRuneIndexInternal(Call& call, ExceptionReport& report, StringParam strRef, StringRange range, int runeIndex);
   static void Split(Call& call, ExceptionReport& report);
   bool StartsWith(StringRangeExtended subString);
   static void SubString(Call& call, ExceptionReport& report);
@@ -166,10 +164,7 @@ class StringRangeExtended
   String ToLower();
   String ToUpper();
   static void SetResultStringRange(Call& call, ExceptionReport& report, const String& strRef, StringRange result);
-  static void SetResultStringSplitRange(Call& call,
-                                        ExceptionReport& report,
-                                        StringParam strRef,
-                                        const Raverie::StringSplitRange& result);
+  static void SetResultStringSplitRange(Call& call, ExceptionReport& report, StringParam strRef, const Raverie::StringSplitRange& result);
   static void SetResultIterator(Call& call, ExceptionReport& report, StringRange result);
   static void GetOriginalString(Call& call, ExceptionReport& report);
 

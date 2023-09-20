@@ -253,9 +253,7 @@ void DataTreeLoader::SetRoot(DataNode* node)
 
 DataNode* DataTreeLoader::TakeOwnershipOfFirstRoot()
 {
-  ReturnIf(mFileRoot == nullptr || mFileRoot->GetNumberOfChildren() != 1,
-           nullptr,
-           "Can only take ownership if there's one root");
+  ReturnIf(mFileRoot == nullptr || mFileRoot->GetNumberOfChildren() != 1, nullptr, "Can only take ownership if there's one root");
   DataNode* root = mFileRoot->GetFirstChild();
   if (root)
     root->Detach();
@@ -270,8 +268,7 @@ String DataTreeLoader::DebugLocation()
   if (node == NULL)
     return "No location";
 
-  return String::Format(
-      "Node '%s %s' in file '%s'", node->mTypeName.c_str(), node->mPropertyName.c_str(), mFileName.c_str());
+  return String::Format("Node '%s %s' in file '%s'", node->mTypeName.c_str(), node->mPropertyName.c_str(), mFileName.c_str());
 }
 
 PatchResolveMethod::Enum DataTreeLoader::ResolveInheritedData(StringRange inheritId, DataNode*& result)
@@ -281,8 +278,7 @@ PatchResolveMethod::Enum DataTreeLoader::ResolveInheritedData(StringRange inheri
   return PatchResolveMethod::Error;
 }
 
-DependencyAction::Enum
-DataTreeLoader::ResolveDependencies(DataNode* parent, DataNode* newChild, DataNode** toReplace, Status& status)
+DependencyAction::Enum DataTreeLoader::ResolveDependencies(DataNode* parent, DataNode* newChild, DataNode** toReplace, Status& status)
 {
   return DependencyAction::Add;
 }
@@ -343,8 +339,7 @@ void ReadArray(DataNode* arrayNode, type* data, uint numberOfElements)
   }
 }
 
-bool DataTreeLoader::ArrayField(
-    cstr typeName, cstr fieldName, byte* data, ArrayType arrayType, uint numberOfElements, uint sizeOftype)
+bool DataTreeLoader::ArrayField(cstr typeName, cstr fieldName, byte* data, ArrayType arrayType, uint numberOfElements, uint sizeOftype)
 {
   if (InnerStart(typeName, fieldName, StructureType::BasicArray))
   {

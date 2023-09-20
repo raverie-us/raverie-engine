@@ -18,8 +18,7 @@ public:
   void FindSpline();
 
   /// ParticleEmitter Interface.
-  int EmitParticles(
-      ParticleList* particleList, float dt, Mat4Ref transform, Vec3Param velocity, float timeAlive) override;
+  int EmitParticles(ParticleList* particleList, float dt, Mat4Ref transform, Vec3Param velocity, float timeAlive) override;
 
   /// The current spline being emitted along
   Spline* GetSpline() const;

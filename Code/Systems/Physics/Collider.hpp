@@ -4,15 +4,7 @@
 namespace Raverie
 {
 
-DeclareBitField8(ColliderFlags,
-                 Ghost,
-                 SendsEvents,
-                 OnIsland,
-                 HasPairFilter,
-                 Uninitialized,
-                 Seamless,
-                 MasslessBody,
-                 MasslessCollider);
+DeclareBitField8(ColliderFlags, Ghost, SendsEvents, OnIsland, HasPairFilter, Uninitialized, Seamless, MasslessBody, MasslessCollider);
 
 /// A collider controls how collision detection is performed for an object.
 /// A collider also gives mass properties to a RigidBody (via the material and

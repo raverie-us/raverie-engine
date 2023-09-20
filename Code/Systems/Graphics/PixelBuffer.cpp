@@ -3,23 +3,11 @@
 
 namespace Raverie
 {
-PixelBuffer::PixelBuffer() :
-    Width(0),
-    Height(0),
-    Total(0),
-    Data(nullptr),
-    MaxMipLevel(-1),
-    Image(Texture::CreateRuntime())
+PixelBuffer::PixelBuffer() : Width(0), Height(0), Total(0), Data(nullptr), MaxMipLevel(-1), Image(Texture::CreateRuntime())
 {
 }
 
-PixelBuffer::PixelBuffer(MoveReference<PixelBuffer> rhs) :
-    Width(rhs->Width),
-    Height(rhs->Height),
-    Total(rhs->Total),
-    Data(rhs->Data),
-    MaxMipLevel(rhs->MaxMipLevel),
-    Image(rhs->Image)
+PixelBuffer::PixelBuffer(MoveReference<PixelBuffer> rhs) : Width(rhs->Width), Height(rhs->Height), Total(rhs->Total), Data(rhs->Data), MaxMipLevel(rhs->MaxMipLevel), Image(rhs->Image)
 {
   rhs->Width = 0;
   rhs->Height = 0;
@@ -30,12 +18,7 @@ PixelBuffer::PixelBuffer(MoveReference<PixelBuffer> rhs) :
 }
 
 PixelBuffer::PixelBuffer(ByteColor clearColor, uint width, uint height) :
-    Width(width),
-    Height(height),
-    Total(width * height),
-    Data(new ByteColor[Total]),
-    MaxMipLevel(-1),
-    Image(Texture::CreateRuntime())
+    Width(width), Height(height), Total(width * height), Data(new ByteColor[Total]), MaxMipLevel(-1), Image(Texture::CreateRuntime())
 {
   Clear(clearColor);
 
@@ -48,8 +31,7 @@ PixelBuffer::~PixelBuffer()
   Data = nullptr;
 }
 
-void PixelBuffer::Resize(
-    uint width, uint height, bool copyOldContents, bool clearNewContents, ByteColor clearColor, bool Upload)
+void PixelBuffer::Resize(uint width, uint height, bool copyOldContents, bool clearNewContents, ByteColor clearColor, bool Upload)
 {
   Total = width * height;
   ByteColor* oldData = Data;

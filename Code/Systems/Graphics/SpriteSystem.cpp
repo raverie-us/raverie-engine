@@ -17,10 +17,8 @@ RaverieDefineType(SpriteParticleSystem, builder, type)
   RaverieBindFieldProperty(mSpriteSource);
   RaverieBindFieldProperty(mParticleAnimation);
   RaverieBindFieldProperty(mParticleSort);
-  RaverieBindFieldProperty(mBeamBaseScale)
-      ->RaverieFilterEquality(mGeometryMode, SpriteParticleGeometryMode::Enum, SpriteParticleGeometryMode::Beam);
-  RaverieBindFieldProperty(mBeamVelocityScale)
-      ->RaverieFilterEquality(mGeometryMode, SpriteParticleGeometryMode::Enum, SpriteParticleGeometryMode::Beam);
+  RaverieBindFieldProperty(mBeamBaseScale)->RaverieFilterEquality(mGeometryMode, SpriteParticleGeometryMode::Enum, SpriteParticleGeometryMode::Beam);
+  RaverieBindFieldProperty(mBeamVelocityScale)->RaverieFilterEquality(mGeometryMode, SpriteParticleGeometryMode::Enum, SpriteParticleGeometryMode::Beam);
 }
 
 void SpriteParticleSystem::Serialize(Serializer& stream)

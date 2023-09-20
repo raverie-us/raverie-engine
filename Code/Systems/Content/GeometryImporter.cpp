@@ -4,12 +4,7 @@
 namespace Raverie
 {
 GeometryImporter::GeometryImporter(StringParam inputFile, StringParam outputPath, StringParam metaFile) :
-    mScene(nullptr),
-    mInputFile(inputFile),
-    mOutputPath(outputPath),
-    mMetaFile(metaFile),
-    mBaseMeshName(FilePath::GetFileNameWithoutExtension(inputFile)),
-    mUniquifyingIndex(0)
+    mScene(nullptr), mInputFile(inputFile), mOutputPath(outputPath), mMetaFile(metaFile), mBaseMeshName(FilePath::GetFileNameWithoutExtension(inputFile)), mUniquifyingIndex(0)
 {
   if (metaFile.Empty())
     mMetaFile = BuildString(inputFile, ".meta");
@@ -93,7 +88,8 @@ GeometryProcessorCodes::Enum GeometryImporter::ProcessModelFiles()
   // read the file.
   DataBlock block = ReadFileIntoDataBlock(mInputFile.c_str());
   mScene = mAssetImporter.ReadFileFromMemory(block.Data, block.Size, flags);
-  if (!mScene) {
+  if (!mScene)
+  {
     String extension = FilePath::GetExtension(mInputFile);
     mScene = mAssetImporter.ReadFileFromMemory(block.Data, block.Size, flags, extension.c_str());
   }
@@ -304,8 +300,7 @@ void GeometryImporter::MultipleMeshsHierarchicalEntry(HierarchyData& hierarchyDa
     HierarchyData childHierarchyData;
     childHierarchyData.mParentNodeName = parentNodeName;
     childHierarchyData.mNodeName = BuildString(parentNodeName, "GeneratedMeshNode", ToString(mUniquifyingIndex++));
-    childHierarchyData.mNodePath =
-        BuildString(hierarchyData.mNodePath, cAnimationPathDelimiterStr, childHierarchyData.mNodeName);
+    childHierarchyData.mNodePath = BuildString(hierarchyData.mNodePath, cAnimationPathDelimiterStr, childHierarchyData.mNodeName);
     childHierarchyData.mLocalTransform = Mat4::cIdentity;
 
     SingleMeshHierarchyEntry(childHierarchyData, node->mMeshes[i]);
@@ -339,14 +334,12 @@ void GeometryImporter::FindAnimationNodes()
         // scale it does not count as an animation and will be collapsed as
         // these values are only used to take the model out of bind pose and are
         // effectively the nodes local transform
-        if (sceneChannelNode->mNumPositionKeys > 1 || sceneChannelNode->mNumRotationKeys > 1 ||
-            sceneChannelNode->mNumScalingKeys > 1)
+        if (sceneChannelNode->mNumPositionKeys > 1 || sceneChannelNode->mNumRotationKeys > 1 || sceneChannelNode->mNumScalingKeys > 1)
         {
           node.mIsPivot = false;
           node.mIsAnimatedPivot = true;
         }
-        else if (sceneChannelNode->mNumPositionKeys == 1 || sceneChannelNode->mNumRotationKeys == 1 ||
-                 sceneChannelNode->mNumScalingKeys == 1)
+        else if (sceneChannelNode->mNumPositionKeys == 1 || sceneChannelNode->mNumRotationKeys == 1 || sceneChannelNode->mNumScalingKeys == 1)
         {
           node.mAnimationNode = sceneChannelNode;
         }

@@ -79,11 +79,7 @@ public:
   CameraViewportDrawer(Composite* parent, Cog* cameraObject);
 
   void SetSize(Vec2 newSize);
-  void RenderUpdate(ViewBlock& viewBlock,
-                    FrameBlock& frameBlock,
-                    Mat4Param parentTx,
-                    ColorTransform colorTx,
-                    WidgetRect clipRect) override;
+  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect) override;
 
   HandleOf<Cog> mCameraObject;
 };
@@ -104,9 +100,7 @@ class SpacePreview : public PreviewWidget
 public:
   typedef SpacePreview RaverieSelf;
 
-  SpacePreview(PreviewWidgetInitializer& initializer,
-               StringParam objectArchetype = CoreArchetypes::Default,
-               Cog* objectToView = nullptr);
+  SpacePreview(PreviewWidgetInitializer& initializer, StringParam objectArchetype = CoreArchetypes::Default, Cog* objectToView = nullptr);
   ~SpacePreview();
 
   void SetInteractive(bool interactive) override;
@@ -251,8 +245,7 @@ public:
   SampleCurveDrawer(Composite* parent, HandleParam object);
 
   void AddCurve(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, SampleCurve* curveObject);
-  void RenderUpdate(
-      ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect);
+  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect);
 
   Handle mObject;
 };

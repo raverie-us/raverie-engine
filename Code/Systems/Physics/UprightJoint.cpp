@@ -14,10 +14,7 @@ struct UprightPolicy : public DefaultFragmentPolicy<UprightJoint>
 {
   void AxisValue(MoleculeData& data, int atomIndex, UprightJoint* joint)
   {
-    ErrorIf(atomIndex >= (int)joint->sInfo.mAtomCount,
-            "UprightJoint has only %d atom. Cannot compute atom number %d.",
-            joint->sInfo.mAtomCount,
-            atomIndex);
+    ErrorIf(atomIndex >= (int)joint->sInfo.mAtomCount, "UprightJoint has only %d atom. Cannot compute atom number %d.", joint->sInfo.mAtomCount, atomIndex);
 
     uint axisIndex = atomIndex % 3;
     ConstraintAtom& atom = joint->mAtoms[atomIndex];
@@ -43,10 +40,7 @@ struct UprightPolicy : public DefaultFragmentPolicy<UprightJoint>
   // Returns baumgarte
   real AxisFragment(MoleculeData& data, int atomIndex, UprightJoint* joint, ConstraintMolecule& mol)
   {
-    ErrorIf(atomIndex >= (int)joint->sInfo.mAtomCount,
-            "UprightJoint has only %d atom. Cannot compute atom number %d.",
-            joint->sInfo.mAtomCount,
-            atomIndex);
+    ErrorIf(atomIndex >= (int)joint->sInfo.mAtomCount, "UprightJoint has only %d atom. Cannot compute atom number %d.", joint->sInfo.mAtomCount, atomIndex);
 
     uint axisIndex = atomIndex % 3;
     AngularAxisFragment(data.mRefAngle, data.AngularAxes[axisIndex], mol);

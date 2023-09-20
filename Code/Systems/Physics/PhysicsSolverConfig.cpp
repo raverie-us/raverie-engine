@@ -58,8 +58,7 @@ void ConstraintConfigBlock::SetLinearBaumgarte(real linearBaumgarte)
   real maxValue = 100;
   if (linearBaumgarte < minValue)
   {
-    String msg =
-        String::Format("LinearBaumgarte must be positive. Clamping to the range of [%g, %g]", minValue, maxValue);
+    String msg = String::Format("LinearBaumgarte must be positive. Clamping to the range of [%g, %g]", minValue, maxValue);
     DoNotifyWarning("Invalid value", msg);
     linearBaumgarte = minValue;
   }
@@ -87,8 +86,7 @@ void ConstraintConfigBlock::SetAngularBaumgarte(real angularBaumgarte)
   real maxValue = 100;
   if (angularBaumgarte < minValue)
   {
-    String msg =
-        String::Format("AngularBaumgarte must be positive. Clamping to the range of [%g, %g]", minValue, maxValue);
+    String msg = String::Format("AngularBaumgarte must be positive. Clamping to the range of [%g, %g]", minValue, maxValue);
     DoNotifyWarning("Invalid value", msg);
     angularBaumgarte = minValue;
   }
@@ -265,13 +263,13 @@ RaverieDefineType(ContactBlock, builder, type)
 }
 
 // joint block type
-#define JointType(jointType)                                                                                           \
-  RaverieDefineType(jointType##Block, builder, type)                                                                     \
-  {                                                                                                                    \
-    RaverieBindComponent();                                                                                               \
-    type->HasOrAdd<::Raverie::CogComponentMeta>(type);                                                                    \
-    type->Add(new MetaSerialization());                                                                                \
-    RaverieBindSetup(SetupMode::DefaultSerialization);                                                                    \
+#define JointType(jointType)                                                                                                                                                                           \
+  RaverieDefineType(jointType##Block, builder, type)                                                                                                                                                   \
+  {                                                                                                                                                                                                    \
+    RaverieBindComponent();                                                                                                                                                                            \
+    type->HasOrAdd<::Raverie::CogComponentMeta>(type);                                                                                                                                                 \
+    type->Add(new MetaSerialization());                                                                                                                                                                \
+    RaverieBindSetup(SetupMode::DefaultSerialization);                                                                                                                                                 \
   }
 #include "JointList.hpp"
 #undef JointType
@@ -324,8 +322,7 @@ void PhysicsSolverConfig::Serialize(Serializer& stream)
   SerializeNameDefault(mCacheContacts, true);
 
   SerializeEnumNameDefault(PhysicsContactTangentTypes, mTangentType, PhysicsContactTangentTypes::OrthonormalTangents);
-  SerializeEnumNameDefault(
-      PhysicsSolverPositionCorrection, mPositionCorrectionType, PhysicsSolverPositionCorrection::PostStabilization);
+  SerializeEnumNameDefault(PhysicsSolverPositionCorrection, mPositionCorrectionType, PhysicsSolverPositionCorrection::PostStabilization);
   SerializeEnumNameDefault(PhysicsSolverType, mSolverType, PhysicsSolverType::Basic);
   SerializeEnumNameDefault(PhysicsSolverSubType, mSubType, PhysicsSolverSubType::BlockSolving);
 

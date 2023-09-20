@@ -247,4 +247,3 @@ private:
 // Every platform should define an error handler
 bool DebugErrorHandler(ErrorSignaler::ErrorData& errorData);
 } // namespace Raverie
-

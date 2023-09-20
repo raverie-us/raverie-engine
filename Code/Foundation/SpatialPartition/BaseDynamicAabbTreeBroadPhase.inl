@@ -118,8 +118,7 @@ void BaseDynamicAabbTreeBroadPhase<TreeType>::SelfQuery(ClientPairArray& results
 template <typename TreeType>
 void BaseDynamicAabbTreeBroadPhase<TreeType>::Query(BroadPhaseData& data, ClientPairArray& results)
 {
-  forRangeBroadphaseTree(typename TreeType, mTree, Aabb, data.mAabb)
-      results.PushBack(ClientPair(data.mClientData, range.Front()));
+  forRangeBroadphaseTree(typename TreeType, mTree, Aabb, data.mAabb) results.PushBack(ClientPair(data.mClientData, range.Front()));
 }
 
 template <typename TreeType>

@@ -615,8 +615,7 @@ bool ResourceTable::ValidateEntryType(ResourceTableEntry* entry, bool throwExcep
   {
     if (throwException)
     {
-      String msg = String::Format(
-          "Entry type '%s' is invalid with table of type '%s'", entry->mResourceType.c_str(), mResourceType.c_str());
+      String msg = String::Format("Entry type '%s' is invalid with table of type '%s'", entry->mResourceType.c_str(), mResourceType.c_str());
       DoNotifyException("Invalid Entry Type", msg);
     }
     return false;

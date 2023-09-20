@@ -130,8 +130,7 @@ public:
 
   /// Sets the two colliders with the given pair. Takes care of making sure the
   /// collider ordering matches the filter order.
-  void
-  Set(Physics::Manifold* manifold, const CollisionFilter& pair, CollisionFilterBlock* block, StringParam eventType);
+  void Set(Physics::Manifold* manifold, const CollisionFilter& pair, CollisionFilterBlock* block, StringParam eventType);
 
   /// Returns the CollisionGroup name of object A
   String GetTypeAName();

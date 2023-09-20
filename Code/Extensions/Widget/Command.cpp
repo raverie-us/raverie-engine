@@ -88,11 +88,8 @@ CommandExecuter* BuildMetaCommandExecuter(StringParam executionFunction)
   BoundType* metaType = RaverieVirtualTypeId(systemObject);
   Function* function = metaType->GetFunction(functionName);
 
-  ReturnIf(function == nullptr || !function->FunctionType->Parameters.Empty(),
-           nullptr,
-           "Failed to find method or invalid number of parameters '%s' on '%s'",
-           functionName.c_str(),
-           metaType->Name.c_str());
+  ReturnIf(
+      function == nullptr || !function->FunctionType->Parameters.Empty(), nullptr, "Failed to find method or invalid number of parameters '%s' on '%s'", functionName.c_str(), metaType->Name.c_str());
 
   MetaCommandExecuter* executer = new MetaCommandExecuter();
   executer->mDelegate.ThisHandle = systemObject;
@@ -443,8 +440,7 @@ bool CommandManager::TestCommandKeyboardShortcuts(KeyboardEvent* event)
   if (event->Handled || event->Key == Keys::Unknown)
     return false;
 
-  String shortcut = BuildShortcutString(
-      event->CtrlPressed, event->AltPressed, event->ShiftPressed, event->mKeyboard->ToSymbol(event->Key));
+  String shortcut = BuildShortcutString(event->CtrlPressed, event->AltPressed, event->ShiftPressed, event->mKeyboard->ToSymbol(event->Key));
 
   // ZPrint("Shortcut %s\n", shortcutString.c_str());
   Command* command = mShortcuts.FindValue(shortcut, nullptr);
@@ -506,8 +502,7 @@ bool CommandManager::ClearCommandShortcut(Command* command, bool sendEvents)
   return true;
 }
 
-bool CommandManager::UpdateCommandShortcut(
-    StringParam commandName, bool ctrl, bool alt, bool shift, StringParam key, bool sendEvents)
+bool CommandManager::UpdateCommandShortcut(StringParam commandName, bool ctrl, bool alt, bool shift, StringParam key, bool sendEvents)
 {
   if (Command* command = mNamedCommands.FindValue(commandName, nullptr))
     return UpdateCommandShortcut(command, ctrl, alt, shift, key, sendEvents);
@@ -515,8 +510,7 @@ bool CommandManager::UpdateCommandShortcut(
   return false;
 }
 
-bool CommandManager::UpdateCommandShortcut(
-    Command* command, bool ctrl, bool alt, bool shift, StringParam key, bool sendEvents)
+bool CommandManager::UpdateCommandShortcut(Command* command, bool ctrl, bool alt, bool shift, StringParam key, bool sendEvents)
 {
   String shortcut = BuildShortcutString(ctrl, alt, shift, key);
 

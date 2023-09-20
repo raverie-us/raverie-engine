@@ -108,8 +108,7 @@ void UiDockLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
     if (lastWidget)
     {
       areaPos = Vec2(area[SlicesIndex::Left], area[SlicesIndex::Top]);
-      areaSize =
-          Vec2(area[SlicesIndex::Right] - area[SlicesIndex::Left], area[SlicesIndex::Bottom] - area[SlicesIndex::Top]);
+      areaSize = Vec2(area[SlicesIndex::Right] - area[SlicesIndex::Left], area[SlicesIndex::Bottom] - area[SlicesIndex::Top]);
     }
     else
     {

@@ -11,14 +11,14 @@ RaverieDefineType(EventObject, builder, type)
 // different threads.
 Memory::Heap* sEventHeap = new Memory::Heap("Events", Memory::GetRoot());
 
-#define UseEventMemoryPool(type)                                                                                       \
-  void* type::operator new(size_t size)                                                                                \
-  {                                                                                                                    \
-    return sEventHeap->Allocate(size);                                                                                 \
-  };                                                                                                                   \
-  void type::operator delete(void* pMem, size_t size)                                                                  \
-  {                                                                                                                    \
-    sEventHeap->Deallocate(pMem, size);                                                                                \
+#define UseEventMemoryPool(type)                                                                                                                                                                       \
+  void* type::operator new(size_t size)                                                                                                                                                                \
+  {                                                                                                                                                                                                    \
+    return sEventHeap->Allocate(size);                                                                                                                                                                 \
+  };                                                                                                                                                                                                   \
+  void type::operator delete(void* pMem, size_t size)                                                                                                                                                  \
+  {                                                                                                                                                                                                    \
+    sEventHeap->Deallocate(pMem, size);                                                                                                                                                                \
   }
 
 UseEventMemoryPool(Event);
@@ -92,11 +92,7 @@ Object* ObjectEvent::GetSource()
 
 Array<Delegate> EventConnection::sDelayDestructDelegates;
 
-EventConnection::EventConnection(EventDispatcher* dispatcher, StringParam eventId) :
-    ThisObject(nullptr),
-    EventType(nullptr),
-    mDispatcher(dispatcher),
-    mEventId(eventId)
+EventConnection::EventConnection(EventDispatcher* dispatcher, StringParam eventId) : ThisObject(nullptr), EventType(nullptr), mDispatcher(dispatcher), mEventId(eventId)
 {
 }
 
@@ -183,9 +179,7 @@ size_t EventConnection::Hash()
   return thisObjectPointer.Hash() ^ dispatcherPointer.Hash() ^ functionPointer.Hash() ^ mEventId.Hash();
 }
 
-void EventConnection::ConnectToReceiverAndDispatcher(StringParam eventId,
-                                                     EventReceiver* receiver,
-                                                     EventDispatcher* dispatcher)
+void EventConnection::ConnectToReceiverAndDispatcher(StringParam eventId, EventReceiver* receiver, EventDispatcher* dispatcher)
 {
   ErrorIf(EventType == nullptr, "The event connection should always register it's event parameter type");
 
@@ -273,10 +267,7 @@ void EventDispatchList::Dispatch(Event* event)
       // the exact same as the received event type
       if (!sentEventType->IsA(current->EventType))
       {
-        String message = String::Format("Expected a %s, but the event type sent for event %s was %s",
-                                        current->EventType->Name.c_str(),
-                                        event->EventId.c_str(),
-                                        sentEventType->Name.c_str());
+        String message = String::Format("Expected a %s, but the event type sent for event %s was %s", current->EventType->Name.c_str(), event->EventId.c_str(), sentEventType->Name.c_str());
 
         current->RaiseError(message);
 
@@ -455,9 +446,7 @@ void EventDispatcher::Dispatch(StringParam eventId, Event* event)
       // same type
       if (!sentEventType->IsA(boundEventType))
       {
-        String message = String::Format("The event was bound as a %s but you attempted to send a %s",
-                                        boundEventType->Name.c_str(),
-                                        sentEventType->Name.c_str());
+        String message = String::Format("The event was bound as a %s but you attempted to send a %s", boundEventType->Name.c_str(), sentEventType->Name.c_str());
         DoNotifyException("Events", message);
         return;
       }

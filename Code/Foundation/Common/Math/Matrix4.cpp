@@ -4,39 +4,10 @@
 namespace Math
 {
 
-const Matrix4 Matrix4::cIdentity(real(1.0),
-                                 real(0.0),
-                                 real(0.0),
-                                 real(0.0),
-                                 real(0.0),
-                                 real(1.0),
-                                 real(0.0),
-                                 real(0.0),
-                                 real(0.0),
-                                 real(0.0),
-                                 real(1.0),
-                                 real(0.0),
-                                 real(0.0),
-                                 real(0.0),
-                                 real(0.0),
-                                 real(1.0));
+const Matrix4
+    Matrix4::cIdentity(real(1.0), real(0.0), real(0.0), real(0.0), real(0.0), real(1.0), real(0.0), real(0.0), real(0.0), real(0.0), real(1.0), real(0.0), real(0.0), real(0.0), real(0.0), real(1.0));
 
-Matrix4::Matrix4(real p00,
-                 real p01,
-                 real p02,
-                 real p03,
-                 real p10,
-                 real p11,
-                 real p12,
-                 real p13,
-                 real p20,
-                 real p21,
-                 real p22,
-                 real p23,
-                 real p30,
-                 real p31,
-                 real p32,
-                 real p33)
+Matrix4::Matrix4(real p00, real p01, real p02, real p03, real p10, real p11, real p12, real p13, real p20, real p21, real p22, real p23, real p30, real p31, real p32, real p33)
 {
   m00 = p00;
   m01 = p01;
@@ -742,9 +713,7 @@ void Matrix4::Decompose(Mat4Param transform, Vec3Ref translation, Mat3Ref rotati
   shear.x /= scale.z;
 
   // If the determinant is negative, then the rotation and scale contain a flip
-  Vector3 v = Vector3(rotation.m11 * rotation.m22 - rotation.m21 * rotation.m12,
-                      rotation.m21 * rotation.m02 - rotation.m01 * rotation.m22,
-                      rotation.m01 * rotation.m12 - rotation.m11 * rotation.m02);
+  Vector3 v = Vector3(rotation.m11 * rotation.m22 - rotation.m21 * rotation.m12, rotation.m21 * rotation.m02 - rotation.m01 * rotation.m22, rotation.m01 * rotation.m12 - rotation.m11 * rotation.m02);
   real dot = v.x * rotation.m00 + v.y * rotation.m10 + v.z * rotation.m20;
   if (dot < real(0.0))
   {

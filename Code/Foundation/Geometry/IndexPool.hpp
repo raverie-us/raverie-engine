@@ -22,7 +22,8 @@ public:
   index_t GetSize() const;
 
 private:
-  union Node {
+  union Node
+  {
     T Element;
     index_t Next;
   };

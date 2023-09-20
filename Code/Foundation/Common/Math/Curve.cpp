@@ -4,15 +4,9 @@
 namespace Math
 {
 
-static const Mat4 CatmullBasis = Mat4(Vec4(0, -1, 2, -1) / real(2.0),
-                                      Vec4(2, 0, -5, 3) / real(2.0),
-                                      Vec4(0, 1, 4, -3) / real(2.0),
-                                      Vec4(0, 0, -1, 1) / real(2.0));
+static const Mat4 CatmullBasis = Mat4(Vec4(0, -1, 2, -1) / real(2.0), Vec4(2, 0, -5, 3) / real(2.0), Vec4(0, 1, 4, -3) / real(2.0), Vec4(0, 0, -1, 1) / real(2.0));
 
-static const Mat4 BSplineBasis = Mat4(Vec4(-1, 3, -3, 1) / real(6.0),
-                                      Vec4(3, -6, 0, 4) / real(6.0),
-                                      Vec4(-3, 3, 3, 1) / real(6.0),
-                                      Vec4(1, 0, 0, 0) / real(6.0));
+static const Mat4 BSplineBasis = Mat4(Vec4(-1, 3, -3, 1) / real(6.0), Vec4(3, -6, 0, 4) / real(6.0), Vec4(-3, 3, 3, 1) / real(6.0), Vec4(1, 0, 0, 0) / real(6.0));
 
 SplineCurve::SplineCurve()
 {

@@ -50,10 +50,7 @@ String InstantiateTemplateInfo::GetFullName(const Array<Constant>& templateArgum
   return builder.ToString();
 }
 
-void VisitBoundTypeLibraryArray(const HashSet<LibraryRef>& librarySet,
-                                HashSet<BoundType*>& visitedTypes,
-                                BoundType* type,
-                                Array<BoundType*>& typesInOrder)
+void VisitBoundTypeLibraryArray(const HashSet<LibraryRef>& librarySet, HashSet<BoundType*>& visitedTypes, BoundType* type, Array<BoundType*>& typesInOrder)
 {
   // If we already visited this type, then skip it
   if (visitedTypes.Contains(type))
@@ -71,9 +68,7 @@ void VisitBoundTypeLibraryArray(const HashSet<LibraryRef>& librarySet,
   typesInOrder.PushBack(type);
 }
 
-void ComputeTypesInDependencyOrder(const Array<LibraryRef>& libraries,
-                                   HashSet<LibraryRef>& outLibrarySet,
-                                   Array<BoundType*>& outOrderedTypes)
+void ComputeTypesInDependencyOrder(const Array<LibraryRef>& libraries, HashSet<LibraryRef>& outLibrarySet, Array<BoundType*>& outOrderedTypes)
 {
   HashSet<BoundType*> visitedTypes;
 
@@ -106,10 +101,7 @@ bool DelegateTypePolicy::Equal(DelegateType* a, DelegateType* b) const
   return Type::IsRawSame(a, b);
 }
 
-LibraryBuilder::LibraryBuilder(StringParam name) :
-    UserData(nullptr),
-    CreatableInScriptDefault(true),
-    ComputedDelegateAndFunctionSizes(false)
+LibraryBuilder::LibraryBuilder(StringParam name) : UserData(nullptr), CreatableInScriptDefault(true), ComputedDelegateAndFunctionSizes(false)
 {
   // Start out by creating a new library that we'll populate
   this->BuiltLibrary = LibraryRef(new Library());
@@ -121,13 +113,8 @@ String LibraryBuilder::GetName()
   return this->BuiltLibrary->Name;
 }
 
-Function* LibraryBuilder::AddBoundFunction(BoundType* owner,
-                                           StringParam name,
-                                           BoundFn function,
-                                           const ParameterArray& parameters,
-                                           Type* returnType,
-                                           FunctionOptions::Flags options,
-                                           NativeVirtualInfo nativeVirtual)
+Function* LibraryBuilder::AddBoundFunction(
+    BoundType* owner, StringParam name, BoundFn function, const ParameterArray& parameters, Type* returnType, FunctionOptions::Flags options, NativeVirtualInfo nativeVirtual)
 {
   // First add a raw function to the library
   Function* func = this->CreateRawFunction(owner, name, function, parameters, returnType, options, nativeVirtual);
@@ -144,12 +131,7 @@ Function* LibraryBuilder::AddBoundFunction(BoundType* owner,
   return func;
 }
 
-Function* LibraryBuilder::AddExtensionFunction(BoundType* forType,
-                                               StringParam name,
-                                               BoundFn function,
-                                               const ParameterArray& parameters,
-                                               Type* returnType,
-                                               FunctionOptions::Flags options)
+Function* LibraryBuilder::AddExtensionFunction(BoundType* forType, StringParam name, BoundFn function, const ParameterArray& parameters, Type* returnType, FunctionOptions::Flags options)
 {
   // First add a raw function to the library
   Function* createdFunction = this->CreateRawFunction(forType, name, function, parameters, returnType, options);
@@ -214,8 +196,7 @@ Function* LibraryBuilder::AddBoundConstructor(BoundType* owner, BoundFn function
   if (func != nullptr)
   {
     AddMemberResult::Enum result = owner->AddRawConstructor(func);
-    ErrorIf(result == AddMemberResult::AlreadyExists,
-            "The constructor already existed (most likely it was bound twice)");
+    ErrorIf(result == AddMemberResult::AlreadyExists, "The constructor already existed (most likely it was bound twice)");
   }
 
   // Return the function that was created
@@ -262,8 +243,7 @@ Function* LibraryBuilder::AddBoundDestructor(BoundType* owner, BoundFn function)
   return func;
 }
 
-GetterSetter* LibraryBuilder::AddBoundGetterSetter(
-    BoundType* owner, StringParam name, Type* type, BoundFn set, BoundFn get, MemberOptions::Flags options)
+GetterSetter* LibraryBuilder::AddBoundGetterSetter(BoundType* owner, StringParam name, Type* type, BoundFn set, BoundFn get, MemberOptions::Flags options)
 {
   // First add a raw property to the library
   GetterSetter* property = this->CreateRawGetterSetter(owner, name, type, set, get, options);
@@ -291,8 +271,7 @@ GetterSetter* LibraryBuilder::AddEnumValue(BoundType* owner, StringParam name, I
 {
   ErrorIf(Type::IsEnumOrFlagsType(owner) == false, "Use RaverieFullBindEnum before calling RaverieFullBindEnumValue");
   ErrorIf(owner->Size != sizeof(Integer), "Must be the same size as an Integer");
-  GetterSetter* getset = this->AddBoundGetterSetter(
-      owner, name, owner, nullptr, &::Raverie::VirtualMachine::EnumerationProperty, ::Raverie::MemberOptions::Static);
+  GetterSetter* getset = this->AddBoundGetterSetter(owner, name, owner, nullptr, &::Raverie::VirtualMachine::EnumerationProperty, ::Raverie::MemberOptions::Static);
   getset->Get->UserData = (void*)(size_t)(value);
 
   owner->PropertyToEnumValue[getset] = value;
@@ -309,9 +288,7 @@ GetterSetter* LibraryBuilder::AddEnumValue(BoundType* owner, StringParam name, I
   return getset;
 }
 
-InstantiatedTemplate LibraryBuilder::InstantiateTemplate(StringParam baseName,
-                                                         const Array<Constant>& arguments,
-                                                         const LibraryArray& fromLibraries)
+InstantiatedTemplate LibraryBuilder::InstantiateTemplate(StringParam baseName, const Array<Constant>& arguments, const LibraryArray& fromLibraries)
 {
   // What we'll return to the user
   InstantiatedTemplate result;
@@ -416,8 +393,7 @@ InstantiatedTemplate LibraryBuilder::InstantiateTemplate(StringParam baseName,
   return result;
 }
 
-GetterSetter* LibraryBuilder::AddExtensionGetterSetter(
-    BoundType* forType, StringParam name, Type* type, BoundFn set, BoundFn get, MemberOptions::Flags options)
+GetterSetter* LibraryBuilder::AddExtensionGetterSetter(BoundType* forType, StringParam name, Type* type, BoundFn set, BoundFn get, MemberOptions::Flags options)
 {
   // First add a raw property to the library
   GetterSetter* property = this->CreateRawGetterSetter(forType, name, type, set, get, options);
@@ -470,8 +446,7 @@ GetterSetter* LibraryBuilder::AddExtensionGetterSetter(
   return property;
 }
 
-SendsEvent*
-LibraryBuilder::AddSendsEvent(BoundType* forType, StringParam name, BoundType* sentType, StringParam description)
+SendsEvent* LibraryBuilder::AddSendsEvent(BoundType* forType, StringParam name, BoundType* sentType, StringParam description)
 {
   ErrorIf(sentType == nullptr, "Event type must be provided");
 
@@ -489,12 +464,7 @@ LibraryBuilder::AddSendsEvent(BoundType* forType, StringParam name, BoundType* s
   {
     // Create an extension property on the events object so that the event can
     // be accessed by name
-    Property* property = this->AddExtensionGetterSetter(RaverieTypeId(EventsClass),
-                                                        name,
-                                                        RaverieTypeId(String),
-                                                        nullptr,
-                                                        VirtualMachine::EventsProperty,
-                                                        MemberOptions::Static);
+    Property* property = this->AddExtensionGetterSetter(RaverieTypeId(EventsClass), name, RaverieTypeId(String), nullptr, VirtualMachine::EventsProperty, MemberOptions::Static);
     sendsEvent->EventProperty = property;
 
     // Store the event name in the complex user data (the 'EventsProperty' will
@@ -509,15 +479,14 @@ LibraryBuilder::AddSendsEvent(BoundType* forType, StringParam name, BoundType* s
     // This isn't quite correct, but since we don't actually care about the
     // event type...
     RaverieTodo("Don't allow two sends events with the same name, unless maybe "
-             "they are the same type?");
+                "they are the same type?");
     sendsEvent->EventProperty = existingProperty;
   }
 
   return sendsEvent;
 }
 
-Field* LibraryBuilder::AddBoundField(
-    BoundType* owner, StringParam name, Type* type, size_t offset, MemberOptions::Flags options)
+Field* LibraryBuilder::AddBoundField(BoundType* owner, StringParam name, Type* type, size_t offset, MemberOptions::Flags options)
 {
   // First add a raw field to the library
   Field* field = this->CreateRawField(owner, name, type, offset, options);
@@ -533,13 +502,8 @@ Field* LibraryBuilder::AddBoundField(
   return field;
 }
 
-Function* LibraryBuilder::CreateRawFunction(BoundType* owner,
-                                            String name,
-                                            BoundFn boundFunction,
-                                            const ParameterArray& parameters,
-                                            Type* returnType,
-                                            FunctionOptions::Flags options,
-                                            NativeVirtualInfo nativeVirtual)
+Function* LibraryBuilder::CreateRawFunction(
+    BoundType* owner, String name, BoundFn boundFunction, const ParameterArray& parameters, Type* returnType, FunctionOptions::Flags options, NativeVirtualInfo nativeVirtual)
 {
   // Verify that the name is correct
   name = FixIdentifier(name, TokenCheck::IsUpper);
@@ -614,8 +578,7 @@ Function* LibraryBuilder::CreateRawPreConstructor(BoundType* owner, BoundFn func
   Core& core = Core::GetInstance();
 
   // Create the function
-  return this->CreateRawFunction(
-      owner, PreConstructorName, function, ParameterArray(), core.VoidType, FunctionOptions::None);
+  return this->CreateRawFunction(owner, PreConstructorName, function, ParameterArray(), core.VoidType, FunctionOptions::None);
 }
 
 Function* LibraryBuilder::CreateRawConstructor(BoundType* owner, BoundFn function, const ParameterArray& parameters)
@@ -631,8 +594,7 @@ Function* LibraryBuilder::CreateRawConstructor(BoundType* owner, BoundFn functio
 
   // Create the constructor and set the 'original' bound-function on it (may not
   // be used)
-  Function* constructor = this->CreateRawFunction(
-      owner, ConstructorName, invokedFunction, parameters, core.VoidType, FunctionOptions::None);
+  Function* constructor = this->CreateRawFunction(owner, ConstructorName, invokedFunction, parameters, core.VoidType, FunctionOptions::None);
   constructor->NativeConstructor = function;
   return constructor;
 }
@@ -648,12 +610,10 @@ Function* LibraryBuilder::CreateRawDestructor(BoundType* owner, BoundFn function
   Core& core = Core::GetInstance();
 
   // Create the function
-  return this->CreateRawFunction(
-      owner, DestructorName, function, ParameterArray(), core.VoidType, FunctionOptions::None);
+  return this->CreateRawFunction(owner, DestructorName, function, ParameterArray(), core.VoidType, FunctionOptions::None);
 }
 
-GetterSetter* LibraryBuilder::CreateRawGetterSetter(
-    BoundType* owner, String name, Type* type, BoundFn set, BoundFn get, MemberOptions::Flags options)
+GetterSetter* LibraryBuilder::CreateRawGetterSetter(BoundType* owner, String name, Type* type, BoundFn set, BoundFn get, MemberOptions::Flags options)
 {
   // Verify that the name is correct
   name = FixIdentifier(name, TokenCheck::IsUpper);
@@ -689,8 +649,7 @@ GetterSetter* LibraryBuilder::CreateRawGetterSetter(
     if (get != nullptr && get != DoNotGenerate)
     {
       // Generate the get function
-      property->Get =
-          this->CreateRawFunction(owner, BuildGetterName(name), get, ParameterArray(), type, functionOptions);
+      property->Get = this->CreateRawFunction(owner, BuildGetterName(name), get, ParameterArray(), type, functionOptions);
       property->Get->IsHidden = true;
       property->Get->OwningProperty = property;
     }
@@ -709,8 +668,7 @@ GetterSetter* LibraryBuilder::CreateRawGetterSetter(
       Core& core = Core::GetInstance();
 
       // Generate the set function
-      property->Set =
-          this->CreateRawFunction(owner, BuildSetterName(name), set, parameters, core.VoidType, functionOptions);
+      property->Set = this->CreateRawFunction(owner, BuildSetterName(name), set, parameters, core.VoidType, functionOptions);
       property->Set->IsHidden = true;
       property->Set->OwningProperty = property;
     }
@@ -830,8 +788,7 @@ void StaticFieldGetter(Call& call, ExceptionReport& report)
   field->PropertyType->GenericCopyConstruct(returnMemory, fieldMemory);
 }
 
-Field*
-LibraryBuilder::CreateRawField(BoundType* owner, String name, Type* type, size_t offset, MemberOptions::Flags options)
+Field* LibraryBuilder::CreateRawField(BoundType* owner, String name, Type* type, size_t offset, MemberOptions::Flags options)
 {
   // Verify that the name is correct
   name = FixIdentifier(name, TokenCheck::IsUpper);
@@ -885,10 +842,7 @@ Variable* LibraryBuilder::CreateRawVariable(Function* function, String name)
   return variable;
 }
 
-void LibraryBuilder::AddTemplateInstantiator(StringParam baseName,
-                                             InstantiateTemplateCallback callback,
-                                             const StringArray& templateTypeParameters,
-                                             void* userData)
+void LibraryBuilder::AddTemplateInstantiator(StringParam baseName, InstantiateTemplateCallback callback, const StringArray& templateTypeParameters, void* userData)
 {
   Array<TemplateParameter> parameters;
   parameters.Reserve(templateTypeParameters.Size());
@@ -904,10 +858,7 @@ void LibraryBuilder::AddTemplateInstantiator(StringParam baseName,
   this->AddTemplateInstantiator(baseName, callback, parameters, userData);
 }
 
-void LibraryBuilder::AddTemplateInstantiator(StringParam baseName,
-                                             InstantiateTemplateCallback callback,
-                                             const Array<TemplateParameter>& templateParameters,
-                                             void* userData)
+void LibraryBuilder::AddTemplateInstantiator(StringParam baseName, InstantiateTemplateCallback callback, const Array<TemplateParameter>& templateParameters, void* userData)
 {
   // Create the delegate that we will call
   InstantiateTemplateInfo info;
@@ -924,17 +875,12 @@ void LibraryBuilder::AddTemplateInstantiator(StringParam baseName,
           baseName.c_str());
 }
 
-BoundType*
-LibraryBuilder::AddBoundType(StringParam name, TypeCopyMode::Enum copyMode, size_t size, size_t nativeVirtualCount)
+BoundType* LibraryBuilder::AddBoundType(StringParam name, TypeCopyMode::Enum copyMode, size_t size, size_t nativeVirtualCount)
 {
   return AddBoundType(name, name, copyMode, size, nativeVirtualCount);
 }
 
-BoundType* LibraryBuilder::AddBoundType(StringParam baseName,
-                                        StringParam fullyQualifiedName,
-                                        TypeCopyMode::Enum copyMode,
-                                        size_t size,
-                                        size_t nativeVirtualCount)
+BoundType* LibraryBuilder::AddBoundType(StringParam baseName, StringParam fullyQualifiedName, TypeCopyMode::Enum copyMode, size_t size, size_t nativeVirtualCount)
 {
   // Create a new bound type with the given name / size
   BoundType* type = new BoundType(nullptr);
@@ -976,8 +922,7 @@ void LibraryBuilder::AddNativeBoundType(BoundType* type)
 
   // Map the bound type's name to its type object
   bool inserted = this->BoundTypes.InsertNoOverwrite(type->Name, type);
-  ErrorIf(
-      inserted == false, "Another type with the same name (%s) was added to the LibraryBuilder.", type->Name.c_str());
+  ErrorIf(inserted == false, "Another type with the same name (%s) was added to the LibraryBuilder.", type->Name.c_str());
 }
 
 void LibraryBuilder::AddNativeBoundType(BoundType* type, BoundType* base, TypeCopyMode::Enum mode)
@@ -1030,12 +975,8 @@ void LibraryBuilder::GenerateGetSetFields()
     if (field->Get == nullptr)
     {
       // Generate the get function
-      field->Get = this->CreateRawFunction(field->Owner,
-                                           BuildGetterName(field->Name),
-                                           field->IsStatic ? StaticFieldGetter : InstanceFieldGetter,
-                                           ParameterArray(),
-                                           field->PropertyType,
-                                           functionOptions);
+      field->Get =
+          this->CreateRawFunction(field->Owner, BuildGetterName(field->Name), field->IsStatic ? StaticFieldGetter : InstanceFieldGetter, ParameterArray(), field->PropertyType, functionOptions);
       field->Get->IsHidden = true;
       field->Get->OwningProperty = field;
 
@@ -1051,12 +992,8 @@ void LibraryBuilder::GenerateGetSetFields()
     if (field->Set == nullptr)
     {
       // Generate the set function
-      field->Set = this->CreateRawFunction(field->Owner,
-                                           BuildSetterName(field->Name),
-                                           field->IsStatic ? StaticFieldSetter : InstanceFieldSetter,
-                                           OneParameter(field->PropertyType, ValueKeyword),
-                                           RaverieTypeId(void),
-                                           functionOptions);
+      field->Set = this->CreateRawFunction(
+          field->Owner, BuildSetterName(field->Name), field->IsStatic ? StaticFieldSetter : InstanceFieldSetter, OneParameter(field->PropertyType, ValueKeyword), RaverieTypeId(void), functionOptions);
       field->Set->IsHidden = true;
       field->Set->OwningProperty = field;
 
@@ -1183,8 +1120,7 @@ String LibraryBuilder::FixIdentifier(StringParam ident, TokenCheck::Flags flags,
           // the next character (and make sure that's even valid)
           StringRange peekRange = identifierRange;
           peekRange.PopFront();
-          bool isNextUpperOrUnderscore =
-              !peekRange.Empty() && (CharacterUtilities::IsUpper(peekRange.Front()) || r.value == '_');
+          bool isNextUpperOrUnderscore = !peekRange.Empty() && (CharacterUtilities::IsUpper(peekRange.Front()) || r.value == '_');
 
           // Automatically make the next character uppercase, unless we detected
           // Hungarian notation
@@ -1218,9 +1154,7 @@ String LibraryBuilder::FixIdentifier(StringParam ident, TokenCheck::Flags flags,
               r.value);
       // We should only Append invalid characters if the user specified one (not
       // null) and if the user doesn't want multiple of the same character
-      bool shouldAppendInvalidCharacter =
-          invalidCharacter != '\0' && (noMultipleInvalidCharacters == false || builder.GetSize() == 0 ||
-                                       builder[builder.GetSize() - 1] != invalidCharacter);
+      bool shouldAppendInvalidCharacter = invalidCharacter != '\0' && (noMultipleInvalidCharacters == false || builder.GetSize() == 0 || builder[builder.GetSize() - 1] != invalidCharacter);
 
       // Append the invalid character
       if (shouldAppendInvalidCharacter)
@@ -1318,8 +1252,7 @@ void LibraryBuilder::ComputeDelegateAndFunctionSizesOnce()
       Core& core = Core::GetInstance();
 
       // Make sure all delegates have returns
-      ErrorIf(parameter.ParameterType == nullptr || parameter.ParameterType == core.VoidType,
-              "Delegate/function parameters cannot be null or void");
+      ErrorIf(parameter.ParameterType == nullptr || parameter.ParameterType == core.VoidType, "Delegate/function parameters cannot be null or void");
     }
 
     // Finally, the 'this' handle comes right after all the parameters
@@ -1972,9 +1905,7 @@ DocumentationModule* Module::BuildDocumentation()
   return docs;
 }
 
-void Module::BuildJsonConstructors(JsonBuilder& json,
-                                   const Array<DocumentationFunction*>& constructors,
-                                   StringParam name)
+void Module::BuildJsonConstructors(JsonBuilder& json, const Array<DocumentationFunction*>& constructors, StringParam name)
 {
   // Early out if we have no functions
   if (constructors.Empty())
@@ -2350,10 +2281,7 @@ String Module::BuildDocumentationHtml()
   return json.ToString();
 }
 
-InstantiatedTemplate::InstantiatedTemplate() :
-    Type(nullptr),
-    ExpectedArguments(0),
-    Result(TemplateResult::FailedInstantiatorDidNotReturnType)
+InstantiatedTemplate::InstantiatedTemplate() : Type(nullptr), ExpectedArguments(0), Result(TemplateResult::FailedInstantiatorDidNotReturnType)
 {
 }
 
@@ -2430,8 +2358,7 @@ ParameterArray ThreeParameters(Type* type)
   return parameters;
 }
 
-ParameterArray
-ThreeParameters(Type* type1, StringParam name1, Type* type2, StringParam name2, Type* type3, StringParam name3)
+ParameterArray ThreeParameters(Type* type1, StringParam name1, Type* type2, StringParam name2, Type* type3, StringParam name3)
 {
   ParameterArray parameters;
 
@@ -2522,8 +2449,7 @@ ParameterArray FiveParameters(Type* type)
   return parameters;
 }
 
-ParameterArray FiveParameters(
-    Type* type, StringParam name1, StringParam name2, StringParam name3, StringParam name4, StringParam name5)
+ParameterArray FiveParameters(Type* type, StringParam name1, StringParam name2, StringParam name3, StringParam name4, StringParam name5)
 {
   ParameterArray parameters;
 

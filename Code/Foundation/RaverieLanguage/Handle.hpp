@@ -160,7 +160,7 @@ private:
   void ReleaseReference();
 
 public:
-#  ifdef RaverieHandleDebug
+#ifdef RaverieHandleDebug
   // In order to verify that handles are valid, we keep a global list of all
   // handles and we check to see if any of them are ever improperly destructed
   // or get written over
@@ -172,7 +172,7 @@ public:
   void Validate() const;
   void DebugLink();
   void DebugUnlink();
-#  endif
+#endif
 
   // The type of this handle (if the type is a value type, then it means we were
   // assigned via ref/indirection type) Unlike most OOP designs, our handle
@@ -189,7 +189,8 @@ public:
   // An offset from the base of the handle (used in dereferencing)
   size_t Offset;
 
-  union {
+  union
+  {
     // The user data stored on the handle (of a fixed size)
     byte Data[HandleUserDataSize];
 
@@ -211,4 +212,3 @@ public:
 
 typedef const Handle& HandleParam;
 } // namespace Raverie
-

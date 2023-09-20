@@ -25,22 +25,10 @@ public:
 
 private:
   void MakeMathTypes(RaverieSpirVFrontEnd* translator, RaverieShaderIRLibrary* shaderLibrary, ShaderTypeGroups& types);
-  void RegisterPrimitiveFunctions(RaverieSpirVFrontEnd* translator,
-                                  RaverieShaderIRLibrary* shaderLibrary,
-                                  ShaderTypeGroups& types,
-                                  RaverieShaderIRType* shaderType);
-  void RegisterVectorFunctions(RaverieSpirVFrontEnd* translator,
-                               RaverieShaderIRLibrary* shaderLibrary,
-                               ShaderTypeGroups& types,
-                               Array<RaverieShaderIRType*>& vectorTypes);
-  void RegisterMatrixFunctions(RaverieSpirVFrontEnd* translator,
-                               RaverieShaderIRLibrary* shaderLibrary,
-                               ShaderTypeGroups& types,
-                               Array<RaverieShaderIRType*>& matrixTypes);
-  void RegisterQuaternionFunctions(RaverieSpirVFrontEnd* translator,
-                                   RaverieShaderIRLibrary* shaderLibrary,
-                                   ShaderTypeGroups& types,
-                                   RaverieShaderIRType* quaternionType);
+  void RegisterPrimitiveFunctions(RaverieSpirVFrontEnd* translator, RaverieShaderIRLibrary* shaderLibrary, ShaderTypeGroups& types, RaverieShaderIRType* shaderType);
+  void RegisterVectorFunctions(RaverieSpirVFrontEnd* translator, RaverieShaderIRLibrary* shaderLibrary, ShaderTypeGroups& types, Array<RaverieShaderIRType*>& vectorTypes);
+  void RegisterMatrixFunctions(RaverieSpirVFrontEnd* translator, RaverieShaderIRLibrary* shaderLibrary, ShaderTypeGroups& types, Array<RaverieShaderIRType*>& matrixTypes);
+  void RegisterQuaternionFunctions(RaverieSpirVFrontEnd* translator, RaverieShaderIRLibrary* shaderLibrary, ShaderTypeGroups& types, RaverieShaderIRType* quaternionType);
 
   RaverieShaderIRLibraryRef mLibraryRef;
   static RaverieShaderIRCore* mInstance;

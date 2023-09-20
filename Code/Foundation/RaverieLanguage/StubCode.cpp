@@ -56,7 +56,7 @@ void StubCode::Generate(BoundType* type)
   this->GenerateHeader(type);
 
   RaverieTodo("We may want to handle attributes for GetEventHandlerFunction being "
-           "non-null (may be an interface) / CreatableInScript / Native");
+              "non-null (may be an interface) / CreatableInScript / Native");
 
   if (type->CopyMode == TypeCopyMode::ReferenceType)
   {
@@ -89,14 +89,12 @@ void StubCode::Generate(BoundType* type)
 
   if (type->BaseType != nullptr && !type->IsEnumOrFlags())
   {
-    codeBuilder.WriteKeywordOrSymbolSpaceStyle(
-        Grammar::Inheritance, format.SpaceStyleInheritanceColon, format.SpaceStyleGlobalDefaultColon);
+    codeBuilder.WriteKeywordOrSymbolSpaceStyle(Grammar::Inheritance, format.SpaceStyleInheritanceColon, format.SpaceStyleGlobalDefaultColon);
     codeBuilder.Write(type->BaseType->Name);
 
     RaverieForEach (BoundType* interfaceType, type->InterfaceTypes)
     {
-      codeBuilder.WriteKeywordOrSymbolSpaceStyle(
-          Grammar::ArgumentSeparator, format.SpaceStyleInheritanceComma, format.SpaceStyleGlobalDefaultComma);
+      codeBuilder.WriteKeywordOrSymbolSpaceStyle(Grammar::ArgumentSeparator, format.SpaceStyleInheritanceComma, format.SpaceStyleGlobalDefaultComma);
       codeBuilder.Write(interfaceType->Name);
     }
   }
@@ -173,9 +171,7 @@ void StubCode::Generate(Function* function)
     this->EndNativeLocation(function->NameLocation);
   }
 
-  codeBuilder.WriteKeywordOrSymbolSpaceStyle(Grammar::BeginFunctionParameters,
-                                             format.SpaceStyleFunctionDefinitionBeginParenthesis,
-                                             format.SpaceStyleGlobalDefaultParenthesis);
+  codeBuilder.WriteKeywordOrSymbolSpaceStyle(Grammar::BeginFunctionParameters, format.SpaceStyleFunctionDefinitionBeginParenthesis, format.SpaceStyleGlobalDefaultParenthesis);
 
   int parameterIndex = 0;
   RaverieForRange (DelegateParameter& parameter, parameterRange, function->FunctionType->Parameters)
@@ -190,25 +186,20 @@ void StubCode::Generate(Function* function)
     }
 
     codeBuilder.Write(paramName);
-    codeBuilder.WriteKeywordOrSymbolSpaceStyle(
-        Grammar::TypeSpecifier, format.SpaceStyleTypeColon, format.SpaceStyleGlobalDefaultColon);
+    codeBuilder.WriteKeywordOrSymbolSpaceStyle(Grammar::TypeSpecifier, format.SpaceStyleTypeColon, format.SpaceStyleGlobalDefaultColon);
     codeBuilder.Write(parameter.ParameterType->ToString());
 
     if (parameterRange.Empty() == false)
-      codeBuilder.WriteKeywordOrSymbolSpaceStyle(
-          Grammar::ArgumentSeparator, format.SpaceStyleFunctionCallParameterComma, format.SpaceStyleGlobalDefaultComma);
+      codeBuilder.WriteKeywordOrSymbolSpaceStyle(Grammar::ArgumentSeparator, format.SpaceStyleFunctionCallParameterComma, format.SpaceStyleGlobalDefaultComma);
     ++parameterIndex;
   }
 
-  codeBuilder.WriteKeywordOrSymbolSpaceStyle(Grammar::EndFunctionParameters,
-                                             format.SpaceStyleFunctionDefinitionEndParenthesis,
-                                             format.SpaceStyleGlobalDefaultParenthesis);
+  codeBuilder.WriteKeywordOrSymbolSpaceStyle(Grammar::EndFunctionParameters, format.SpaceStyleFunctionDefinitionEndParenthesis, format.SpaceStyleGlobalDefaultParenthesis);
 
   // Write out the return type if it's not void
   if (function->FunctionType->Return != RaverieTypeId(void))
   {
-    codeBuilder.WriteKeywordOrSymbolSpaceStyle(
-        Grammar::TypeSpecifier, format.SpaceStyleTypeColon, format.SpaceStyleGlobalDefaultColon);
+    codeBuilder.WriteKeywordOrSymbolSpaceStyle(Grammar::TypeSpecifier, format.SpaceStyleTypeColon, format.SpaceStyleGlobalDefaultColon);
     codeBuilder.Write(function->FunctionType->Return->ToString());
   }
 
@@ -234,8 +225,7 @@ void StubCode::Generate(SendsEvent* sends)
   codeBuilder.Write(sends->Name);
   this->EndNativeLocation(sends->NameLocation);
 
-  codeBuilder.WriteKeywordOrSymbolSpaceStyle(
-      Grammar::TypeSpecifier, format.SpaceStyleTypeColon, format.SpaceStyleGlobalDefaultColon);
+  codeBuilder.WriteKeywordOrSymbolSpaceStyle(Grammar::TypeSpecifier, format.SpaceStyleTypeColon, format.SpaceStyleGlobalDefaultColon);
   codeBuilder.Write(sends->SentType->ToString());
   codeBuilder.WriteKeywordOrSymbol(Grammar::StatementSeparator);
   this->EndNativeLocation(sends->Location);
@@ -259,8 +249,7 @@ void StubCode::Generate(Property* property)
   codeBuilder.Write(property->Name);
   this->EndNativeLocation(property->NameLocation);
 
-  codeBuilder.WriteKeywordOrSymbolSpaceStyle(
-      Grammar::TypeSpecifier, format.SpaceStyleTypeColon, format.SpaceStyleGlobalDefaultColon);
+  codeBuilder.WriteKeywordOrSymbolSpaceStyle(Grammar::TypeSpecifier, format.SpaceStyleTypeColon, format.SpaceStyleGlobalDefaultColon);
   codeBuilder.Write(property->PropertyType->ToString());
 
   // If type is a field (no get/set, just a raw data member)
@@ -384,7 +373,7 @@ void StubCode::GenerateHeader(ReflectionObject* object, Array<Attribute>& attrib
   }
 
   RaverieTodo("We may want to handle the 'IsHidden' attribute specially here "
-           "because it may not exist inside 'Attributes'");
+              "because it may not exist inside 'Attributes'");
 
   // Write out all attributes
   RaverieForEach (Attribute& attribute, attributes)
@@ -403,16 +392,13 @@ void StubCode::GenerateHeader(ReflectionObject* object, Array<Attribute>& attrib
         if (parameter.Name.Empty() == false)
         {
           codeBuilder.Write(parameter.Name);
-          codeBuilder.WriteKeywordOrSymbolSpaceStyle(
-              Grammar::NameSpecifier, format.SpaceStyleNamedArgumentColon, format.SpaceStyleGlobalDefaultColon);
+          codeBuilder.WriteKeywordOrSymbolSpaceStyle(Grammar::NameSpecifier, format.SpaceStyleNamedArgumentColon, format.SpaceStyleGlobalDefaultColon);
         }
 
         codeBuilder.Write(parameter.ToString());
 
         if (i != lastParameter)
-          codeBuilder.WriteKeywordOrSymbolSpaceStyle(Grammar::ArgumentSeparator,
-                                                     format.SpaceStyleFunctionCallParameterComma,
-                                                     format.SpaceStyleGlobalDefaultComma);
+          codeBuilder.WriteKeywordOrSymbolSpaceStyle(Grammar::ArgumentSeparator, format.SpaceStyleFunctionCallParameterComma, format.SpaceStyleGlobalDefaultComma);
       }
 
       codeBuilder.WriteKeywordOrSymbol(Grammar::EndFunctionCall);

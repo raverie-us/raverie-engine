@@ -49,18 +49,9 @@ public:
 private:
   Vec2 GetPositionOfZero(real val0, real val1, Vec2Param pos0, Vec2Param pos1);
 
-  void SolveSingleEdge(
-      real valC, real valX, real valY, Vec2Param posC, Vec2Param posX, Vec2Param posY, Array<Segment2d>& segments);
+  void SolveSingleEdge(real valC, real valX, real valY, Vec2Param posC, Vec2Param posX, Vec2Param posY, Array<Segment2d>& segments);
 
-  void SolveDoubleEdge(real val0Edge0,
-                       real val1Edge0,
-                       real val0Edge1,
-                       real val1Edge1,
-                       Vec2Param pos0Edge0,
-                       Vec2Param pos1Edge0,
-                       Vec2Param pos0Edge1,
-                       Vec2Param pos1Edge1,
-                       Array<Segment2d>& segments);
+  void SolveDoubleEdge(real val0Edge0, real val1Edge0, real val0Edge1, real val1Edge1, Vec2Param pos0Edge0, Vec2Param pos1Edge0, Vec2Param pos0Edge1, Vec2Param pos1Edge1, Array<Segment2d>& segments);
 
 public:
   DensitySamplerFunction mDensitySampler;

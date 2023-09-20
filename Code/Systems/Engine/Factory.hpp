@@ -31,8 +31,7 @@ public:
   /// Creates an object of an expected type. Used to create a GameSession or
   /// something else but still properly check to make sure the filename we're
   /// opening has the correct type in it.
-  Cog*
-  CreateCheckedType(BoundType* expectedType, Space* space, StringParam filename, uint flags, GameSession* gameSession);
+  Cog* CreateCheckedType(BoundType* expectedType, Space* space, StringParam filename, uint flags, GameSession* gameSession);
 
   // Create an object engine error if it could not be found.
   Cog* CreateRequired(Space* space, StringParam filename, uint flags, GameSession* gameSession);

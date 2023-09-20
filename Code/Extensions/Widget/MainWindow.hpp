@@ -14,8 +14,7 @@ class MainWindowTransformEvent : public Event
 public:
   RaverieDeclareType(MainWindowTransformEvent, TypeCopyMode::ReferenceType);
 
-  MainWindowTransformEvent(Vec2Param oldScreenSize = Vec2::cZero,
-                           Vec2Param newScreenSize = Vec2::cZero);
+  MainWindowTransformEvent(Vec2Param oldScreenSize = Vec2::cZero, Vec2Param newScreenSize = Vec2::cZero);
 
   OsWindow* GetTargetWindow();
 

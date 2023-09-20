@@ -52,9 +52,7 @@ void RaverieCodeBuilder::WriteKeywordOrSymbol(Grammar::Enum token)
   this->Write(Grammar::GetKeywordOrSymbol(token));
 }
 
-void RaverieCodeBuilder::WriteKeywordOrSymbolSpaceStyle(Grammar::Enum token,
-                                                      SpaceStyle::Enum specific,
-                                                      SpaceStyle::Enum globalDefault)
+void RaverieCodeBuilder::WriteKeywordOrSymbolSpaceStyle(Grammar::Enum token, SpaceStyle::Enum specific, SpaceStyle::Enum globalDefault)
 {
   // This tells us if we want to place spaces before or after (or around) the
   // token
@@ -346,8 +344,7 @@ CodeFormatterContext::CodeFormatterContext()
 
 LineStyle::Enum RaverieCodeBuilder::GetLineStyle(LineStyle::Enum specific, LineStyle::Enum globalDefault)
 {
-  ErrorIf(globalDefault == LineStyle::UseGlobalDefault,
-          "The global default cannot be set to 'LineStyle::UseGlobalDefault'");
+  ErrorIf(globalDefault == LineStyle::UseGlobalDefault, "The global default cannot be set to 'LineStyle::UseGlobalDefault'");
 
   // Return the specific line style as long as it's not falling back on the
   // default
@@ -362,8 +359,7 @@ LineStyle::Enum RaverieCodeBuilder::GetLineStyle(LineStyle::Enum specific, LineS
 
 IndentStyle::Enum RaverieCodeBuilder::GetIndentStyle(IndentStyle::Enum specific, IndentStyle::Enum globalDefault)
 {
-  ErrorIf(globalDefault == IndentStyle::UseGlobalDefault,
-          "The global default cannot be set to 'IndentStyle::UseGlobalDefault'");
+  ErrorIf(globalDefault == IndentStyle::UseGlobalDefault, "The global default cannot be set to 'IndentStyle::UseGlobalDefault'");
 
   // Return the specific indent style as long as it's not falling back on the
   // default
@@ -378,8 +374,7 @@ IndentStyle::Enum RaverieCodeBuilder::GetIndentStyle(IndentStyle::Enum specific,
 
 SpaceStyle::Enum RaverieCodeBuilder::GetSpaceStyle(SpaceStyle::Enum specific, SpaceStyle::Enum globalDefault)
 {
-  ErrorIf(globalDefault == SpaceStyle::UseGlobalDefault,
-          "The global default cannot be set to 'SpaceStyle::UseGlobalDefault'");
+  ErrorIf(globalDefault == SpaceStyle::UseGlobalDefault, "The global default cannot be set to 'SpaceStyle::UseGlobalDefault'");
 
   // Return the specific space style as long as it's not falling back on the
   // default
@@ -922,8 +917,7 @@ void CodeFormatter::FormatIndexerCall(IndexerCallNode*& node, CodeFormatterConte
     if (isNotLast)
     {
       // HACK, this needs a space style!
-      builder.WriteKeywordOrSymbolSpaceStyle(
-          Grammar::ArgumentSeparator, SpaceStyle::UseGlobalDefault, builder.Format.SpaceStyleGlobalDefaultComma);
+      builder.WriteKeywordOrSymbolSpaceStyle(Grammar::ArgumentSeparator, SpaceStyle::UseGlobalDefault, builder.Format.SpaceStyleGlobalDefaultComma);
     }
   }
 
@@ -945,8 +939,7 @@ void CodeFormatter::FormatBinaryOperator(BinaryOperatorNode*& node, CodeFormatte
     Shared& shared = Shared::GetInstance();
 
     UntypedOperator ourPrecedence = shared.GetOperatorPrecedence(node->Operator->TokenId, OperatorArity::Binary);
-    UntypedOperator parentPrecedence =
-        shared.GetOperatorPrecedence(parentBinOp->Operator->TokenId, OperatorArity::Binary);
+    UntypedOperator parentPrecedence = shared.GetOperatorPrecedence(parentBinOp->Operator->TokenId, OperatorArity::Binary);
 
     // If the parent has a higher precedence, then we need to wrap ourselves in
     // a group Note: Higher precedence is denoted by a lower number, which is
@@ -994,15 +987,13 @@ void CodeFormatter::FormatBinaryOperator(BinaryOperatorNode*& node, CodeFormatte
 
   // HACK, maybe every operator needs it's own spacing, or access operators have
   // a special mode
-  if (node->Operator->TokenId == Grammar::Access || node->Operator->TokenId == Grammar::DynamicAccess ||
-      node->Operator->TokenId == Grammar::NonVirtualAccess)
+  if (node->Operator->TokenId == Grammar::Access || node->Operator->TokenId == Grammar::DynamicAccess || node->Operator->TokenId == Grammar::NonVirtualAccess)
   {
     globalOperatorSpaceStyle = SpaceStyle::None;
   }
 
   // HACK, this needs a space style!
-  builder.WriteKeywordOrSymbolSpaceStyle(
-      node->Operator->TokenId, SpaceStyle::UseGlobalDefault, globalOperatorSpaceStyle);
+  builder.WriteKeywordOrSymbolSpaceStyle(node->Operator->TokenId, SpaceStyle::UseGlobalDefault, globalOperatorSpaceStyle);
 
   context->Walker->Walk(this, node->RightOperand, context);
 
@@ -1055,8 +1046,7 @@ void CodeFormatter::FormatClass(ClassNode*& node, CodeFormatterContext* context)
 
   if (node->Inheritance.Empty() == false)
   {
-    builder.WriteKeywordOrSymbolSpaceStyle(
-        Grammar::Inheritance, builder.Format.SpaceStyleInheritanceColon, builder.Format.SpaceStyleGlobalDefaultColon);
+    builder.WriteKeywordOrSymbolSpaceStyle(Grammar::Inheritance, builder.Format.SpaceStyleInheritanceColon, builder.Format.SpaceStyleGlobalDefaultColon);
 
     for (size_t i = 0; i < node->Inheritance.Size(); ++i)
     {
@@ -1067,9 +1057,7 @@ void CodeFormatter::FormatClass(ClassNode*& node, CodeFormatterContext* context)
       bool isNotLast = (i != (node->Inheritance.Size() - 1));
       if (isNotLast)
       {
-        builder.WriteKeywordOrSymbolSpaceStyle(Grammar::ArgumentSeparator,
-                                               builder.Format.SpaceStyleInheritanceComma,
-                                               builder.Format.SpaceStyleGlobalDefaultComma);
+        builder.WriteKeywordOrSymbolSpaceStyle(Grammar::ArgumentSeparator, builder.Format.SpaceStyleInheritanceComma, builder.Format.SpaceStyleGlobalDefaultComma);
       }
     }
   }
@@ -1128,8 +1116,7 @@ void CodeFormatter::FormatEnum(EnumNode*& node, CodeFormatterContext* context)
 
   if (node->Inheritance != nullptr)
   {
-    builder.WriteKeywordOrSymbolSpaceStyle(
-        Grammar::Inheritance, builder.Format.SpaceStyleInheritanceColon, builder.Format.SpaceStyleGlobalDefaultColon);
+    builder.WriteKeywordOrSymbolSpaceStyle(Grammar::Inheritance, builder.Format.SpaceStyleInheritanceColon, builder.Format.SpaceStyleGlobalDefaultColon);
 
     builder.Write(node->Inheritance->ToString());
   }
@@ -1157,17 +1144,14 @@ void CodeFormatter::FormatEnumValue(EnumValueNode*& node, CodeFormatterContext* 
   if (node->Value != nullptr)
   {
     // HACK, needs space style
-    builder.WriteKeywordOrSymbolSpaceStyle(
-        Grammar::Assignment, SpaceStyle::UseGlobalDefault, SpaceStyle::BeforeAndAfter);
+    builder.WriteKeywordOrSymbolSpaceStyle(Grammar::Assignment, SpaceStyle::UseGlobalDefault, SpaceStyle::BeforeAndAfter);
     builder.Write(node->Value->Token);
   }
 }
 
 // NodeType is a GenericFunctionNode
 template <typename NodeType, typename FunctionType>
-void CodeFormatter::FormatGenericFunctionHelper(NodeType* node,
-                                                CodeFormatterContext* context,
-                                                FunctionType emitPostArgs)
+void CodeFormatter::FormatGenericFunctionHelper(NodeType* node, CodeFormatterContext* context, FunctionType emitPostArgs)
 {
   RaverieCodeBuilder& builder = context->Builder;
 
@@ -1180,17 +1164,14 @@ void CodeFormatter::FormatGenericFunctionHelper(NodeType* node,
 
     builder.Write(parameter->Name);
 
-    builder.WriteKeywordOrSymbolSpaceStyle(
-        Grammar::TypeSpecifier, builder.Format.SpaceStyleTypeColon, builder.Format.SpaceStyleGlobalDefaultColon);
+    builder.WriteKeywordOrSymbolSpaceStyle(Grammar::TypeSpecifier, builder.Format.SpaceStyleTypeColon, builder.Format.SpaceStyleGlobalDefaultColon);
 
     builder.Write(parameter->ResultSyntaxType->ToString());
 
     bool isNotLast = (i != (node->Parameters.Size() - 1));
     if (isNotLast)
     {
-      builder.WriteKeywordOrSymbolSpaceStyle(Grammar::ArgumentSeparator,
-                                             builder.Format.SpaceStyleFunctionDefinitionParameterComma,
-                                             builder.Format.SpaceStyleGlobalDefaultComma);
+      builder.WriteKeywordOrSymbolSpaceStyle(Grammar::ArgumentSeparator, builder.Format.SpaceStyleFunctionDefinitionParameterComma, builder.Format.SpaceStyleGlobalDefaultComma);
     }
   }
 
@@ -1214,8 +1195,7 @@ void FormatFunctionPostArgs(FunctionNode* node, RaverieCodeBuilder& builder)
 {
   if (node->ReturnType != nullptr)
   {
-    builder.WriteKeywordOrSymbolSpaceStyle(
-        Grammar::TypeSpecifier, builder.Format.SpaceStyleTypeColon, builder.Format.SpaceStyleGlobalDefaultColon);
+    builder.WriteKeywordOrSymbolSpaceStyle(Grammar::TypeSpecifier, builder.Format.SpaceStyleTypeColon, builder.Format.SpaceStyleGlobalDefaultColon);
 
     builder.Write(node->ReturnType->ToString());
   }
@@ -1262,8 +1242,7 @@ void CodeFormatter::FormatSendsEvent(SendsEventNode*& node, CodeFormatterContext
   builder.WriteKeywordOrSymbol(Grammar::Sends);
   builder.WriteSpace();
   builder.Write(node->Name->Token);
-  builder.WriteKeywordOrSymbolSpaceStyle(
-      Grammar::TypeSpecifier, builder.Format.SpaceStyleNamedArgumentColon, builder.Format.SpaceStyleGlobalDefaultColon);
+  builder.WriteKeywordOrSymbolSpaceStyle(Grammar::TypeSpecifier, builder.Format.SpaceStyleNamedArgumentColon, builder.Format.SpaceStyleGlobalDefaultColon);
   builder.Write(node->EventType->ToString());
   builder.WriteKeywordOrSymbol(Grammar::StatementSeparator);
 }
@@ -1302,9 +1281,7 @@ void CodeFormatter::FormatFunctionCall(FunctionCallNode*& node, CodeFormatterCon
       String& name = node->ArgumentNames[i];
       builder.Write(name);
 
-      builder.WriteKeywordOrSymbolSpaceStyle(Grammar::TypeSpecifier,
-                                             builder.Format.SpaceStyleNamedArgumentColon,
-                                             builder.Format.SpaceStyleGlobalDefaultColon);
+      builder.WriteKeywordOrSymbolSpaceStyle(Grammar::TypeSpecifier, builder.Format.SpaceStyleNamedArgumentColon, builder.Format.SpaceStyleGlobalDefaultColon);
     }
 
     context->Walker->Walk(this, expression, context);
@@ -1312,9 +1289,7 @@ void CodeFormatter::FormatFunctionCall(FunctionCallNode*& node, CodeFormatterCon
     bool isNotLast = (i != (node->Arguments.Size() - 1));
     if (isNotLast)
     {
-      builder.WriteKeywordOrSymbolSpaceStyle(Grammar::ArgumentSeparator,
-                                             builder.Format.SpaceStyleFunctionCallParameterComma,
-                                             builder.Format.SpaceStyleGlobalDefaultComma);
+      builder.WriteKeywordOrSymbolSpaceStyle(Grammar::ArgumentSeparator, builder.Format.SpaceStyleFunctionCallParameterComma, builder.Format.SpaceStyleGlobalDefaultComma);
     }
   }
 
@@ -1343,8 +1318,7 @@ void CodeFormatter::FormatMemberVariable(MemberVariableNode*& node, CodeFormatte
 
   if (node->IsInferred() == false)
   {
-    builder.WriteKeywordOrSymbolSpaceStyle(
-        Grammar::TypeSpecifier, builder.Format.SpaceStyleTypeColon, builder.Format.SpaceStyleGlobalDefaultColon);
+    builder.WriteKeywordOrSymbolSpaceStyle(Grammar::TypeSpecifier, builder.Format.SpaceStyleTypeColon, builder.Format.SpaceStyleGlobalDefaultColon);
     builder.Write(node->ResultSyntaxType->ToString());
   }
 
@@ -1381,8 +1355,7 @@ void CodeFormatter::FormatMemberVariable(MemberVariableNode*& node, CodeFormatte
   {
     // HACK, this needs a space style!
     // PROBABLY BINARY OPERATOR SPACE STYLE
-    builder.WriteKeywordOrSymbolSpaceStyle(
-        Grammar::Assignment, SpaceStyle::UseGlobalDefault, SpaceStyle::BeforeAndAfter);
+    builder.WriteKeywordOrSymbolSpaceStyle(Grammar::Assignment, SpaceStyle::UseGlobalDefault, SpaceStyle::BeforeAndAfter);
     context->Walker->Walk(this, node->InitialValue, context);
     builder.WriteKeywordOrSymbol(Grammar::StatementSeparator);
   }
@@ -1392,8 +1365,7 @@ void CodeFormatter::FormatParameter(ParameterNode*& node, CodeFormatterContext* 
 {
   RaverieCodeBuilder& builder = context->Builder;
   builder.Write(node->Name);
-  builder.WriteKeywordOrSymbolSpaceStyle(
-      Grammar::TypeSpecifier, builder.Format.SpaceStyleTypeColon, builder.Format.SpaceStyleGlobalDefaultColon);
+  builder.WriteKeywordOrSymbolSpaceStyle(Grammar::TypeSpecifier, builder.Format.SpaceStyleTypeColon, builder.Format.SpaceStyleGlobalDefaultColon);
   builder.Write(node->ResultSyntaxType->ToString());
 }
 
@@ -1408,8 +1380,7 @@ void CodeFormatter::FormatLocalVariable(LocalVariableNode*& node, CodeFormatterC
 
   if (node->IsInferred() == false)
   {
-    builder.WriteKeywordOrSymbolSpaceStyle(
-        Grammar::TypeSpecifier, builder.Format.SpaceStyleTypeColon, builder.Format.SpaceStyleGlobalDefaultColon);
+    builder.WriteKeywordOrSymbolSpaceStyle(Grammar::TypeSpecifier, builder.Format.SpaceStyleTypeColon, builder.Format.SpaceStyleGlobalDefaultColon);
     builder.Write(node->ResultSyntaxType->ToString());
   }
 
@@ -1418,8 +1389,7 @@ void CodeFormatter::FormatLocalVariable(LocalVariableNode*& node, CodeFormatterC
   {
     // HACK, this needs a space style!
     // PROBABLY BINARY OPERATOR SPACE STYLE
-    builder.WriteKeywordOrSymbolSpaceStyle(
-        Grammar::Assignment, SpaceStyle::UseGlobalDefault, SpaceStyle::BeforeAndAfter);
+    builder.WriteKeywordOrSymbolSpaceStyle(Grammar::Assignment, SpaceStyle::UseGlobalDefault, SpaceStyle::BeforeAndAfter);
     context->Walker->Walk(this, node->InitialValue, context);
   }
 }

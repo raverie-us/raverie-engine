@@ -112,8 +112,7 @@ void ScrollingGraph::PanToTranslation(Vec2Param graphPos, float animTime)
   }
 }
 
-void ScrollingGraph::Frame(
-    Vec2Param min, Vec2Param max, Vec2Param clientSize, IntVec2 axes, Vec2 pixelPadding, float animTime)
+void ScrollingGraph::Frame(Vec2Param min, Vec2Param max, Vec2Param clientSize, IntVec2 axes, Vec2 pixelPadding, float animTime)
 {
   // Calculate the zoom without the padding
   Vec2 targetZoom = Zoom;

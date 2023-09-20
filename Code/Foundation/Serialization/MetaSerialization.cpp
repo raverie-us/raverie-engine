@@ -85,10 +85,7 @@ bool MetaSerialization::SerializePrimitiveProperty(BoundType* meta, cstr fieldNa
   return false;
 }
 
-bool MetaSerialization::SerializeReferenceProperty(BoundType* propertyType,
-                                                   cstr fieldName,
-                                                   Any& value,
-                                                   Serializer& serializer)
+bool MetaSerialization::SerializeReferenceProperty(BoundType* propertyType, cstr fieldName, Any& value, Serializer& serializer)
 {
   Handle object = value.ToHandle();
 
@@ -156,10 +153,7 @@ EnumMetaSerialization::EnumMetaSerialization(BoundType* enumType) : mEnumType(en
 {
 }
 
-bool EnumMetaSerialization::SerializePrimitiveProperty(BoundType* type,
-                                                       cstr fieldName,
-                                                       Any& value,
-                                                       Serializer& serializer)
+bool EnumMetaSerialization::SerializePrimitiveProperty(BoundType* type, cstr fieldName, Any& value, Serializer& serializer)
 {
   Integer& enumValue = value.Get<Integer&>();
   return serializer.EnumField(type->Name.c_str(), fieldName, (uint&)enumValue, type);
@@ -253,10 +247,7 @@ RaverieDefineType(MetaStringSerialization, builder, type)
 {
 }
 
-bool MetaStringSerialization::SerializeReferenceProperty(BoundType* propertyType,
-                                                         cstr fieldName,
-                                                         Any& value,
-                                                         Serializer& serializer)
+bool MetaStringSerialization::SerializeReferenceProperty(BoundType* propertyType, cstr fieldName, Any& value, Serializer& serializer)
 {
   if (serializer.GetMode() == SerializerMode::Saving)
   {
@@ -483,8 +474,7 @@ void MetaSerializeProperties(HandleParam instance, Serializer& serializer)
     if (property->Get == nullptr || property->Set == nullptr)
       continue;
 
-    if (property->HasAttribute(PropertyAttributes::cProperty) == nullptr &&
-        property->HasAttribute(PropertyAttributes::cSerialize) == nullptr &&
+    if (property->HasAttribute(PropertyAttributes::cProperty) == nullptr && property->HasAttribute(PropertyAttributes::cSerialize) == nullptr &&
         property->HasAttribute(PropertyAttributes::cDeprecatedSerialized) == nullptr)
       continue;
 

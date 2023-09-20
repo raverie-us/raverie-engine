@@ -23,10 +23,7 @@ DefineEvent(MouseExitGizmoHierarchy);
 RaverieDefineType(GizmoRayTestEvent, builder, type)
 {
 }
-GizmoRayTestEvent::GizmoRayTestEvent() :
-    mGizmoHit(nullptr),
-    mHitDistance(Math::PositiveMax()),
-    mPickingPriority(-Math::IntegerNegativeMin())
+GizmoRayTestEvent::GizmoRayTestEvent() : mGizmoHit(nullptr), mHitDistance(Math::PositiveMax()), mPickingPriority(-Math::IntegerNegativeMin())
 {
 }
 
@@ -55,11 +52,7 @@ RaverieDefineType(GizmoEvent, builder, type)
   RaverieBindGetter(Finished);
 }
 
-GizmoEvent::GizmoEvent(Cog* gizmoCog, ViewportMouseEvent* e) :
-    mGizmo(gizmoCog),
-    mSource(nullptr),
-    mMouseEvent(e),
-    mOperationQueue(nullptr)
+GizmoEvent::GizmoEvent(Cog* gizmoCog, ViewportMouseEvent* e) : mGizmo(gizmoCog), mSource(nullptr), mMouseEvent(e), mOperationQueue(nullptr)
 {
 }
 

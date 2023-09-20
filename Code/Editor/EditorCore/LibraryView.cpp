@@ -187,8 +187,7 @@ public:
 class TagTileWidget : public TileViewWidget
 {
 public:
-  TagTileWidget(Composite* parent, TileView* tileView, PreviewWidget* tileWidget, DataIndex dataIndex) :
-      TileViewWidget(parent, tileView, tileWidget, dataIndex)
+  TagTileWidget(Composite* parent, TileView* tileView, PreviewWidget* tileWidget, DataIndex dataIndex) : TileViewWidget(parent, tileView, tileWidget, dataIndex)
   {
     // Create the tag icon
     mTagIcon = CreateAttached<Element>(cTagIcon);
@@ -231,8 +230,7 @@ LibraryTileView::LibraryTileView(LibraryView* parent) : TileView(parent), mLibra
 {
 }
 
-TileViewWidget* LibraryTileView::CreateTileViewWidget(
-    Composite* parent, StringParam name, HandleParam instance, DataIndex index, PreviewImportance::Enum minImportance)
+TileViewWidget* LibraryTileView::CreateTileViewWidget(Composite* parent, StringParam name, HandleParam instance, DataIndex index, PreviewImportance::Enum minImportance)
 {
   PreviewWidget* previewWidget = nullptr;
 
@@ -1442,8 +1440,7 @@ void LibraryView::OpenTagEditor()
   mTagEditorFinalHeight = mTagEditor->GetDesiredHeight(mTagEditor->GetTagChain()->GetSize());
 
   ActionSequence* seq = new ActionSequence(this);
-  seq->Add(
-      AnimatePropertyGetSet(RaverieSelf, TagEditorCurrentHeight, Ease::Quad::Out, this, 0.3f, mTagEditorFinalHeight));
+  seq->Add(AnimatePropertyGetSet(RaverieSelf, TagEditorCurrentHeight, Ease::Quad::Out, this, 0.3f, mTagEditorFinalHeight));
 
   mTagEditor->SetIsAnimating(true);
 }
@@ -1456,8 +1453,7 @@ void LibraryView::CloseTagEditor()
   float mTagEditorFinalHeight = 0;
 
   ActionSequence* seq = new ActionSequence(this);
-  seq->Add(
-      AnimatePropertyGetSet(RaverieSelf, TagEditorCurrentHeight, Ease::Quad::Out, this, 0.3f, mTagEditorFinalHeight));
+  seq->Add(AnimatePropertyGetSet(RaverieSelf, TagEditorCurrentHeight, Ease::Quad::Out, this, 0.3f, mTagEditorFinalHeight));
 
   mTagEditor->SetIsAnimating(true);
 }

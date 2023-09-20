@@ -40,8 +40,7 @@ RaverieDefineType(SoundAttenuator, builder, type)
   RaverieBindGetterSetterProperty(LowPassStartDistance)->RaverieFilterBool(mUseLowPassFilter);
   RaverieBindGetterSetterProperty(LowPassCutoffFreq)->RaverieFilterBool(mUseLowPassFilter);
   RaverieBindGetterSetterProperty(FalloffCurveType)->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  RaverieBindGetterSetterProperty(FalloffCurve)
-      ->RaverieFilterEquality(mFalloffCurveType, FalloffCurveType::Enum, FalloffCurveType::Custom);
+  RaverieBindGetterSetterProperty(FalloffCurve)->RaverieFilterEquality(mFalloffCurveType, FalloffCurveType::Enum, FalloffCurveType::Custom);
 }
 
 SoundAttenuator::SoundAttenuator() :
@@ -255,19 +254,11 @@ SoundAttenuatorNode* SoundAttenuator::GetAttenuationNode(StringParam name, unsig
     Array<Vec3> curve;
     mCustomFalloffCurve->GetCurve(curve);
 
-    node = new SoundAttenuatorNode(new AttenuatorNode(
-        name, ID, Math::Vec3(0, 0, 0), mStartDistance, mStopDistance, mMinAttenuatedVolume, mFalloffCurveType, &curve));
+    node = new SoundAttenuatorNode(new AttenuatorNode(name, ID, Math::Vec3(0, 0, 0), mStartDistance, mStopDistance, mMinAttenuatedVolume, mFalloffCurveType, &curve));
   }
   // Otherwise create it for the specified curve type
   else
-    node = new SoundAttenuatorNode(new AttenuatorNode(name,
-                                                      ID,
-                                                      Math::Vec3(0, 0, 0),
-                                                      mStartDistance,
-                                                      mStopDistance,
-                                                      mMinAttenuatedVolume,
-                                                      mFalloffCurveType,
-                                                      nullptr));
+    node = new SoundAttenuatorNode(new AttenuatorNode(name, ID, Math::Vec3(0, 0, 0), mStartDistance, mStopDistance, mMinAttenuatedVolume, mFalloffCurveType, nullptr));
 
   node->mNode->SetUsingLowPass(mUseLowPassFilter);
   if (mUseLowPassFilter)

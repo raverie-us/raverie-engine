@@ -18,8 +18,7 @@ RaverieDefineType(NotifyEvent, builder, type)
 {
 }
 
-void DoNotify(
-    StringParam title, StringParam message, StringParam icon, NotifyType::Enum type, NotifyException::Enum expections)
+void DoNotify(StringParam title, StringParam message, StringParam icon, NotifyType::Enum type, NotifyException::Enum expections)
 {
   Z::gNotifyCallbackStack.Back()(title, message, icon, type, expections);
 }
@@ -51,15 +50,13 @@ void DoNotifyExceptionAssert(StringParam title, StringParam message)
   DoNotify(title, message, "Warning", NotifyType::Error, NotifyException::Script);
 }
 
-void DefaultDoNotify(
-    StringParam title, StringParam message, StringParam icon, NotifyType::Enum type, NotifyException::Enum exceptions)
+void DefaultDoNotify(StringParam title, StringParam message, StringParam icon, NotifyType::Enum type, NotifyException::Enum exceptions)
 {
   String finalMessage = String::Format("%s: %s", title.c_str(), message.c_str());
   Error(finalMessage.c_str());
 }
 
-void IgnoreDoNotify(
-    StringParam title, StringParam message, StringParam icon, NotifyType::Enum type, NotifyException::Enum exceptions)
+void IgnoreDoNotify(StringParam title, StringParam message, StringParam icon, NotifyType::Enum type, NotifyException::Enum exceptions)
 {
   // We do nothing here, this is used to suppress notifications (such as when we
   // use previews)

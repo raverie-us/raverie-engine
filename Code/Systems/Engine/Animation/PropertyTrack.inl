@@ -19,10 +19,7 @@ void AnimatePropertyType<propertyType>::Serialize(Serializer& stream)
 }
 
 template <typename propertyType>
-void AnimatePropertyType<propertyType>::LinkInstance(PropertyTrackPlayData& data,
-                                                     BlendTracks& tracks,
-                                                     StringParam objectPath,
-                                                     Cog* object)
+void AnimatePropertyType<propertyType>::LinkInstance(PropertyTrackPlayData& data, BlendTracks& tracks, StringParam objectPath, Cog* object)
 {
   BoundType* componentMeta = MetaDatabase::GetInstance()->FindType(mComponentName);
 
@@ -49,9 +46,7 @@ void AnimatePropertyType<propertyType>::LinkInstance(PropertyTrackPlayData& data
 }
 
 template <typename propertyType>
-void AnimatePropertyType<propertyType>::UpdateFrame(PropertyTrackPlayData& data,
-                                                    TrackParams& params,
-                                                    AnimationFrame& animationFrame)
+void AnimatePropertyType<propertyType>::UpdateFrame(PropertyTrackPlayData& data, TrackParams& params, AnimationFrame& animationFrame)
 {
   if (data.mBlend == NULL)
     return;
@@ -134,8 +129,7 @@ void AnimatePropertyType<propertyType>::KeyFrameT::Serialize(Serializer& stream)
 }
 
 template <typename propertyType>
-AnimatePropertyValueType<propertyType>::AnimatePropertyValueType(StringParam componentName, StringParam propertyName) :
-    BaseType(componentName, propertyName)
+AnimatePropertyValueType<propertyType>::AnimatePropertyValueType(StringParam componentName, StringParam propertyName) : BaseType(componentName, propertyName)
 {
 }
 
@@ -146,8 +140,7 @@ propertyType AnimatePropertyValueType<propertyType>::VariantToType(AnyParam vari
 }
 
 template <typename propertyType>
-AnimatePropertyRefType<propertyType>::AnimatePropertyRefType(StringParam componentName, StringParam propertyName) :
-    BaseType(componentName, propertyName)
+AnimatePropertyRefType<propertyType>::AnimatePropertyRefType(StringParam componentName, StringParam propertyName) : BaseType(componentName, propertyName)
 {
 }
 

@@ -98,11 +98,7 @@ MetaCreationContext* CogMetaComposition::GetCreationContext()
   return new CogMetaCreationContext();
 }
 
-void CogMetaComposition::AddComponent(HandleParam owner,
-                                      HandleParam componentToAdd,
-                                      int index,
-                                      bool ignoreDependencies,
-                                      MetaCreationContext* creationContext)
+void CogMetaComposition::AddComponent(HandleParam owner, HandleParam componentToAdd, int index, bool ignoreDependencies, MetaCreationContext* creationContext)
 {
   Cog* cog = owner.Get<Cog*>(GetOptions::AssertOnNull);
 

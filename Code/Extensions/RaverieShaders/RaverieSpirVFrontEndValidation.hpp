@@ -8,14 +8,8 @@ class RaverieSpirVFrontEnd;
 class RaverieSpirVFrontEndContext;
 class EntryPointInfo;
 
-void ValidateEntryPoint(RaverieSpirVFrontEnd* translator,
-                        Raverie::GenericFunctionNode* node,
-                        RaverieSpirVFrontEndContext* context);
-void ValidateBasicEntryPoint(RaverieSpirVFrontEnd* translator,
-                             Raverie::GenericFunctionNode* node,
-                             RaverieSpirVFrontEndContext* context);
-void ValidateGeometryEntryPoint(RaverieSpirVFrontEnd* translator,
-                                Raverie::GenericFunctionNode* node,
-                                RaverieSpirVFrontEndContext* context);
+void ValidateEntryPoint(RaverieSpirVFrontEnd* translator, Raverie::GenericFunctionNode* node, RaverieSpirVFrontEndContext* context);
+void ValidateBasicEntryPoint(RaverieSpirVFrontEnd* translator, Raverie::GenericFunctionNode* node, RaverieSpirVFrontEndContext* context);
+void ValidateGeometryEntryPoint(RaverieSpirVFrontEnd* translator, Raverie::GenericFunctionNode* node, RaverieSpirVFrontEndContext* context);
 
 } // namespace Raverie

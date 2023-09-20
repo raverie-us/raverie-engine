@@ -34,10 +34,7 @@ public:
   void SetStreamToDisk(bool stream);
 
 private:
-  bool GetOutputSamples(BufferType* outputBuffer,
-                        const unsigned numberOfChannels,
-                        ListenerNode* listener,
-                        const bool firstRequest) override;
+  bool GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest) override;
   void WriteBuffer(Raverie::Array<float>* buffer, unsigned numberOfChannels);
 
   Raverie::String mFileName;
@@ -91,10 +88,7 @@ public:
   void ClearSavedAudio();
 
 private:
-  bool GetOutputSamples(BufferType* outputBuffer,
-                        const unsigned numberOfChannels,
-                        ListenerNode* listener,
-                        const bool firstRequest) override;
+  bool GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest) override;
   void ClearSavedAudioThreaded();
 
   Threaded<bool> mSaveData;

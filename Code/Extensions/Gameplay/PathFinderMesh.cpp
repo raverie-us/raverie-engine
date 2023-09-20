@@ -10,12 +10,7 @@ DefineEvent(PathFinderMeshFinished);
 }
 
 // Nav Mesh Edge
-NavMeshEdge::NavMeshEdge(NavMeshPolygon* owner) :
-    mCost(0.0f),
-    mTailVertex(u32(-1)),
-    mPolygon(owner),
-    mNextConnected(this),
-    mPreviousConnected(this)
+NavMeshEdge::NavMeshEdge(NavMeshPolygon* owner) : mCost(0.0f), mTailVertex(u32(-1)), mPolygon(owner), mNextConnected(this), mPreviousConnected(this)
 {
   owner->mEdges.PushBack(this);
 }
@@ -25,10 +20,7 @@ NavMeshEdge::PolygonRange::PolygonRange() : mIgnore(nullptr)
 {
 }
 
-NavMeshEdge::PolygonRange::PolygonRange(NavMeshEdge* edge, NavMeshPolygon* ignore) :
-    mBegin(edge->mNextConnected),
-    mEnd(edge),
-    mIgnore(ignore)
+NavMeshEdge::PolygonRange::PolygonRange(NavMeshEdge* edge, NavMeshPolygon* ignore) : mBegin(edge->mNextConnected), mEnd(edge), mIgnore(ignore)
 {
   FindNextValid();
 }
@@ -609,8 +601,7 @@ HandleOf<ArrayClass<Vec3>> PathFinderMesh::FindPath(NavMeshPolygonId start, NavM
   // NavMeshPolygon* startPoly = mesh->GetPolygon(start);
   // NavMeshPolygon* goalPoly = mesh->GetPolygon(goal);
 
-  HandleOf<ArrayClass<NavMeshPolygonId>> polygons =
-      FindPathHelper<NavMeshPolygonId, PathFinderAlgorithmMesh>(mMesh, start, goal, mMaxIterations);
+  HandleOf<ArrayClass<NavMeshPolygonId>> polygons = FindPathHelper<NavMeshPolygonId, PathFinderAlgorithmMesh>(mMesh, start, goal, mMaxIterations);
 
   HandleOf<ArrayClass<Vec3>> output = RaverieAllocate(ArrayClass<Vec3>);
   forRange (NavMeshPolygonId polygonId, polygons->NativeArray.All())

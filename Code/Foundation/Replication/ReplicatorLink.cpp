@@ -923,9 +923,7 @@ bool ReplicatorLink::DeserializeDestroy(const Message& message, ReplicaArray& re
   // Success
   return true;
 }
-bool ReplicatorLink::HandleDestroy(const ReplicaArray& replicas,
-                                   TransmissionDirection::Enum direction,
-                                   TimeMs timestamp)
+bool ReplicatorLink::HandleDestroy(const ReplicaArray& replicas, TransmissionDirection::Enum direction, TimeMs timestamp)
 {
   // (All replicas should have a replica ID)
   AssertReplicas(replicas, replica->GetReplicaId() != 0, "");
@@ -1031,10 +1029,7 @@ bool ReplicatorLink::ReceiveDestroy(const Message& message)
   return true;
 }
 
-bool ReplicatorLink::SerializeReverseReplicaChannels(const ReplicaArray& replicas,
-                                                     Message& message,
-                                                     bool& containsChannels,
-                                                     TimeMs timestamp)
+bool ReplicatorLink::SerializeReverseReplicaChannels(const ReplicaArray& replicas, Message& message, bool& containsChannels, TimeMs timestamp)
 {
   Assert(GetReplicator()->GetRole() == Role::Client);
 
@@ -1045,8 +1040,7 @@ bool ReplicatorLink::SerializeReverseReplicaChannels(const ReplicaArray& replica
   Bits bitsWrittenStart = message.GetData().GetBitsWritten();
 
   // Serialize reverse replica channel mappings
-  ReplicaStream replicaStream(
-      GetReplicator(), this, message.GetData(), ReplicaStreamMode::ReverseReplicaChannels, timestamp);
+  ReplicaStream replicaStream(GetReplicator(), this, message.GetData(), ReplicaStreamMode::ReverseReplicaChannels, timestamp);
   if (!GetReplicator()->SerializeReplicas(replicas, replicaStream)) // Unable?
   {
     Assert(false);
@@ -1067,8 +1061,7 @@ bool ReplicatorLink::DeserializeReverseReplicaChannels(const Message& message, R
   Assert(GetReplicator()->GetRole() == Role::Server);
 
   // Deserialize reverse replica channel mappings
-  ReplicaStream replicaStream(
-      GetReplicator(), this, message.GetData(), ReplicaStreamMode::ReverseReplicaChannels, timestamp);
+  ReplicaStream replicaStream(GetReplicator(), this, message.GetData(), ReplicaStreamMode::ReverseReplicaChannels, timestamp);
   if (!GetReplicator()->DeserializeReplicas(replicaStream, replicas)) // Unable?
   {
     // Assert(false);
@@ -1211,8 +1204,7 @@ bool ReplicatorLink::DeserializeChange(const Message& message, TimeMs timestamp)
   // (Don't set properties last values to their current values when reacting to
   // property changes if changes need to be relayed) (The last values will be
   // set when relaying outgoing property changes after this call)
-  replicaChannel->ReactToPropertyChanges(
-      timestamp, ReplicationPhase::Change, TransmissionDirection::Incoming, true, !shouldRelay);
+  replicaChannel->ReactToPropertyChanges(timestamp, ReplicationPhase::Change, TransmissionDirection::Incoming, true, !shouldRelay);
 
   // Changes need to be relayed?
   if (shouldRelay)
@@ -1253,8 +1245,7 @@ bool ReplicatorLink::SendChange(ReplicaChannel* replicaChannel, Message& message
 
   // Send change message
   Status status;
-  LinkPlugin::Send(
-      status, message, (replicaChannelType->GetReliabilityMode() == ReliabilityMode::Reliable), channelId, false);
+  LinkPlugin::Send(status, message, (replicaChannelType->GetReliabilityMode() == ReliabilityMode::Reliable), channelId, false);
   if (status.Failed()) // Unable?
     return false;
 
@@ -1354,8 +1345,7 @@ bool ReplicatorLink::OpenAndSerializeReverseReplicaChannels(const Replica* repli
 
     //    Replica channel has client change authority?
     // OR Replica channel type has dynamic change authority mode?
-    if (replicaChannel->GetAuthority() == Authority::Client ||
-        replicaChannelType->GetAuthorityMode() == AuthorityMode::Dynamic)
+    if (replicaChannel->GetAuthority() == Authority::Client || replicaChannelType->GetAuthorityMode() == AuthorityMode::Dynamic)
     {
       // Open outgoing message channel
       MessageChannelId channelId = OpenOutgoingReplicaChannel(replicaChannel);
@@ -1385,8 +1375,7 @@ bool ReplicatorLink::DeserializeAndSetReverseReplicaChannels(Replica* replica, c
 
     //    Replica channel has client change authority?
     // OR Replica channel has dynamic change authority mode?
-    if (replicaChannel->GetAuthority() == Authority::Client ||
-        replicaChannelType->GetAuthorityMode() == AuthorityMode::Dynamic)
+    if (replicaChannel->GetAuthority() == Authority::Client || replicaChannelType->GetAuthorityMode() == AuthorityMode::Dynamic)
     {
       // Read incoming message channel ID
       MessageChannelId channelId;

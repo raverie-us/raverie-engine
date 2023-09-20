@@ -9,8 +9,7 @@ SpirVExtensionInstruction::SpirVExtensionInstruction()
   mResolverFn = nullptr;
 }
 
-SpirVExtensionInstruction* SpirVExtensionLibrary::CreateExtInst(Raverie::Function* raverieFn,
-                                                                SpirVExtensionInstructionResolverFn resolverFn)
+SpirVExtensionInstruction* SpirVExtensionLibrary::CreateExtInst(Raverie::Function* raverieFn, SpirVExtensionInstructionResolverFn resolverFn)
 {
   ErrorIf(raverieFn == nullptr, "Invalid raverie function");
   ErrorIf(mExtensions.ContainsKey(raverieFn), "Extension already exists");

@@ -71,8 +71,7 @@ public:
   // Adding Files in Compressing mode
 
   // Directory Logic
-  void
-  ArchiveDirectory(Status& status, StringParam path, StringParam parentPath = String(), FileFilter* test = nullptr);
+  void ArchiveDirectory(Status& status, StringParam path, StringParam parentPath = String(), FileFilter* test = nullptr);
 
   // Export
   void ExportToDirectory(ArchiveExportMode::Enum exportMode, StringParam path);

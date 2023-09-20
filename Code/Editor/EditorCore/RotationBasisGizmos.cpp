@@ -400,9 +400,7 @@ void OrientationBasisGizmo::RevertRotation(OrientationBasisProperty& prop)
   orientation->SetDefaultOrientationBases(prop.mBasisType);
 }
 
-void OrientationBasisGizmo::QueueRotationsWithUndo(OperationQueue* queue,
-                                                   OrientationBasisProperty& prop,
-                                                   QuatParam rotation)
+void OrientationBasisGizmo::QueueRotationsWithUndo(OperationQueue* queue, OrientationBasisProperty& prop, QuatParam rotation)
 {
   Orientation* orientation = prop.mCogId.has(Orientation);
   if (orientation != nullptr)
@@ -620,9 +618,7 @@ void PhysicsCarWheelBasisGizmo::RevertRotation(SimpleBasisProperty& prop)
   SetWorldRotation(prop, prop.mOriginalBasis);
 }
 
-void PhysicsCarWheelBasisGizmo::QueueRotationsWithUndo(OperationQueue* queue,
-                                                       SimpleBasisProperty& prop,
-                                                       QuatParam rotation)
+void PhysicsCarWheelBasisGizmo::QueueRotationsWithUndo(OperationQueue* queue, SimpleBasisProperty& prop, QuatParam rotation)
 {
   PhysicsCarWheel* wheel = prop.mCogId.has(PhysicsCarWheel);
   if (wheel == nullptr)
@@ -827,9 +823,7 @@ void RevoluteBasisGizmo::RevertRotation(RevoluteJointBasisProperty& prop)
     SetWorldBasis(joint, 1, prop.mOriginalBasisB);
 }
 
-void RevoluteBasisGizmo::QueueRotationsWithUndo(OperationQueue* queue,
-                                                RevoluteJointBasisProperty& prop,
-                                                QuatParam rotation)
+void RevoluteBasisGizmo::QueueRotationsWithUndo(OperationQueue* queue, RevoluteJointBasisProperty& prop, QuatParam rotation)
 {
   RevoluteJoint* joint = prop.mCogId.has(RevoluteJoint);
   if (joint == nullptr)

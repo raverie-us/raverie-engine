@@ -29,8 +29,7 @@ bool IsValidNetPropertyType(Type* propertyType)
   // OR This is a cog path type?
   // (We allow NetObject net properties to serialize these types, but not
   // NetEvents, for now)
-  return BitStreamCanSerializeType(propertyType) || propertyType == RaverieTypeId(Cog) ||
-         propertyType == RaverieTypeId(CogPath);
+  return BitStreamCanSerializeType(propertyType) || propertyType == RaverieTypeId(Cog) || propertyType == RaverieTypeId(CogPath);
 }
 bool IsValidNetPeerIdPropertyType(Type* propertyType)
 {
@@ -39,9 +38,7 @@ bool IsValidNetPeerIdPropertyType(Type* propertyType)
 
 //                                 Network Types //
 
-ComponentPropertyInstanceData::ComponentPropertyInstanceData(String propertyName, Component* component) :
-    mPropertyName(propertyName),
-    mComponent(component)
+ComponentPropertyInstanceData::ComponentPropertyInstanceData(String propertyName, Component* component) : mPropertyName(propertyName), mComponent(component)
 {
 }
 
@@ -490,8 +487,7 @@ bool HasNetPeerIdProperty(Event* event)
   forRange (Property* property, properties)
   {
     // Is a net peer ID property?
-    if (property->HasAttribute(PropertyAttributes::cNetPeerId) &&
-        IsValidNetPeerIdPropertyType(property->GetValue(event).StoredType))
+    if (property->HasAttribute(PropertyAttributes::cNetPeerId) && IsValidNetPeerIdPropertyType(property->GetValue(event).StoredType))
       return true;
   }
 
@@ -512,8 +508,7 @@ void SetNetPeerIdProperties(Event* event, NetPeerId netPeerId)
   forRange (Property* property, properties)
   {
     // Is a net peer ID property?
-    if (property->HasAttribute(PropertyAttributes::cNetPeerId) &&
-        IsValidNetPeerIdPropertyType(property->GetValue(event).StoredType))
+    if (property->HasAttribute(PropertyAttributes::cNetPeerId) && IsValidNetPeerIdPropertyType(property->GetValue(event).StoredType))
     {
       // Set net peer ID
       property->SetValue(event, netPeerId);
@@ -564,12 +559,7 @@ NetObjectId GetNetPropertyCogAsNetObjectId(Property* property, const Any& instan
 
 //                                 FamilyTree //
 
-FamilyTree::FamilyTree() :
-    mFamilyTreeId(0),
-    mAncestorDisplayName(),
-    mAncestorCreateContext(),
-    mAncestorReplicaType(),
-    mReplicas()
+FamilyTree::FamilyTree() : mFamilyTreeId(0), mAncestorDisplayName(), mAncestorCreateContext(), mAncestorReplicaType(), mReplicas()
 {
   // (Should not actually get called)
   Assert(false);

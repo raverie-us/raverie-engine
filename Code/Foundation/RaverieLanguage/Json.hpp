@@ -77,40 +77,20 @@ public:
 
   // Helper functions for pulling out members of a json object
   // Only valid when the 'Type' is set to 'Object'
-  bool MemberAsBool(StringParam name,
-                    bool defaultValue = false,
-                    JsonErrorMode::Enum errorMode = JsonErrorMode::ReportError);
-  String MemberAsString(StringParam name,
-                        StringParam defaultValue = String(),
-                        JsonErrorMode::Enum errorMode = JsonErrorMode::ReportError);
-  double MemberAsDouble(StringParam name,
-                        double defaultValue = 0.0,
-                        JsonErrorMode::Enum errorMode = JsonErrorMode::ReportError);
-  float MemberAsFloat(StringParam name,
-                      float defaultValue = 0.0f,
-                      JsonErrorMode::Enum errorMode = JsonErrorMode::ReportError);
-  long long MemberAsLongLong(StringParam name,
-                             long long defaultValue = 0LL,
-                             JsonErrorMode::Enum errorMode = JsonErrorMode::ReportError);
-  int MemberAsInteger(StringParam name,
-                      int defaultValue = 0,
-                      JsonErrorMode::Enum errorMode = JsonErrorMode::ReportError);
+  bool MemberAsBool(StringParam name, bool defaultValue = false, JsonErrorMode::Enum errorMode = JsonErrorMode::ReportError);
+  String MemberAsString(StringParam name, StringParam defaultValue = String(), JsonErrorMode::Enum errorMode = JsonErrorMode::ReportError);
+  double MemberAsDouble(StringParam name, double defaultValue = 0.0, JsonErrorMode::Enum errorMode = JsonErrorMode::ReportError);
+  float MemberAsFloat(StringParam name, float defaultValue = 0.0f, JsonErrorMode::Enum errorMode = JsonErrorMode::ReportError);
+  long long MemberAsLongLong(StringParam name, long long defaultValue = 0LL, JsonErrorMode::Enum errorMode = JsonErrorMode::ReportError);
+  int MemberAsInteger(StringParam name, int defaultValue = 0, JsonErrorMode::Enum errorMode = JsonErrorMode::ReportError);
 
   // Helper functions for indexing values of a json array
   // Only valid when the 'Type' is set to 'Array'
   bool IndexAsBool(size_t index, bool defaultValue = false, JsonErrorMode::Enum errorMode = JsonErrorMode::ReportError);
-  String IndexAsString(size_t index,
-                       StringParam defaultValue = String(),
-                       JsonErrorMode::Enum errorMode = JsonErrorMode::ReportError);
-  double IndexAsDouble(size_t index,
-                       double defaultValue = 0.0,
-                       JsonErrorMode::Enum errorMode = JsonErrorMode::ReportError);
-  float IndexAsFloat(size_t index,
-                     float defaultValue = 0.0f,
-                     JsonErrorMode::Enum errorMode = JsonErrorMode::ReportError);
-  long long IndexAsLongLong(size_t index,
-                            long long defaultValue = 0LL,
-                            JsonErrorMode::Enum errorMode = JsonErrorMode::ReportError);
+  String IndexAsString(size_t index, StringParam defaultValue = String(), JsonErrorMode::Enum errorMode = JsonErrorMode::ReportError);
+  double IndexAsDouble(size_t index, double defaultValue = 0.0, JsonErrorMode::Enum errorMode = JsonErrorMode::ReportError);
+  float IndexAsFloat(size_t index, float defaultValue = 0.0f, JsonErrorMode::Enum errorMode = JsonErrorMode::ReportError);
+  long long IndexAsLongLong(size_t index, long long defaultValue = 0LL, JsonErrorMode::Enum errorMode = JsonErrorMode::ReportError);
   int IndexAsInteger(size_t index, int defaultValue = 0, JsonErrorMode::Enum errorMode = JsonErrorMode::ReportError);
 
   // Specifies what type of value this is
@@ -140,8 +120,7 @@ class JsonReader
 {
 public:
   // Reads a json text file into a tree format
-  static JsonValue*
-  ReadIntoTreeFromString(CompilationErrors& errors, StringParam json, StringParam origin, void* userData);
+  static JsonValue* ReadIntoTreeFromString(CompilationErrors& errors, StringParam json, StringParam origin, void* userData);
 
   // Reads json text into a tree format
   static JsonValue* ReadIntoTreeFromFile(CompilationErrors& errors, StringParam fileName, void* userData);

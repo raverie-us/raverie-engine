@@ -8,14 +8,12 @@ static void BoundStatic(Call& call, ExceptionReport& report)
 }
 // EndBound
 template <typename FunctionType, FunctionType function>
-static Function* FromMethod(
-    LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, void (*)())
+static Function* FromMethod(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, void (*)())
 {
   BoundFn boundFunction = BoundStatic<FunctionType, function>;
   ParameterArray parameters;
   ParseParameterArrays(parameters, spaceDelimitedNames);
-  return builder.AddBoundFunction(
-      classBoundType, name, boundFunction, parameters, RaverieTypeId(void), FunctionOptions::Static);
+  return builder.AddBoundFunction(classBoundType, name, boundFunction, parameters, RaverieTypeId(void), FunctionOptions::Static);
 }
 // BeginBound
 template <typename FunctionType, FunctionType function, typename Arg0>
@@ -29,19 +27,14 @@ static void BoundStatic(Call& call, ExceptionReport& report)
 }
 // EndBound
 template <typename FunctionType, FunctionType function, typename Arg0>
-static Function* FromMethod(LibraryBuilder& builder,
-                            BoundType* classBoundType,
-                            StringRange name,
-                            StringRange spaceDelimitedNames,
-                            void (*)(Arg0))
+static Function* FromMethod(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, void (*)(Arg0))
 {
   BoundFn boundFunction = BoundStatic<FunctionType, function, Arg0>;
   ParameterArray parameters;
   DelegateParameter& p0 = parameters.PushBack();
   p0.ParameterType = RaverieTypeId(Arg0);
   ParseParameterArrays(parameters, spaceDelimitedNames);
-  return builder.AddBoundFunction(
-      classBoundType, name, boundFunction, parameters, RaverieTypeId(void), FunctionOptions::Static);
+  return builder.AddBoundFunction(classBoundType, name, boundFunction, parameters, RaverieTypeId(void), FunctionOptions::Static);
 }
 // BeginBound
 template <typename FunctionType, FunctionType function, typename Arg0, typename Arg1>
@@ -57,11 +50,7 @@ static void BoundStatic(Call& call, ExceptionReport& report)
 }
 // EndBound
 template <typename FunctionType, FunctionType function, typename Arg0, typename Arg1>
-static Function* FromMethod(LibraryBuilder& builder,
-                            BoundType* classBoundType,
-                            StringRange name,
-                            StringRange spaceDelimitedNames,
-                            void (*)(Arg0, Arg1))
+static Function* FromMethod(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, void (*)(Arg0, Arg1))
 {
   BoundFn boundFunction = BoundStatic<FunctionType, function, Arg0, Arg1>;
   ParameterArray parameters;
@@ -70,8 +59,7 @@ static Function* FromMethod(LibraryBuilder& builder,
   DelegateParameter& p1 = parameters.PushBack();
   p1.ParameterType = RaverieTypeId(Arg1);
   ParseParameterArrays(parameters, spaceDelimitedNames);
-  return builder.AddBoundFunction(
-      classBoundType, name, boundFunction, parameters, RaverieTypeId(void), FunctionOptions::Static);
+  return builder.AddBoundFunction(classBoundType, name, boundFunction, parameters, RaverieTypeId(void), FunctionOptions::Static);
 }
 // BeginBound
 template <typename FunctionType, FunctionType function, typename Arg0, typename Arg1, typename Arg2>
@@ -89,11 +77,7 @@ static void BoundStatic(Call& call, ExceptionReport& report)
 }
 // EndBound
 template <typename FunctionType, FunctionType function, typename Arg0, typename Arg1, typename Arg2>
-static Function* FromMethod(LibraryBuilder& builder,
-                            BoundType* classBoundType,
-                            StringRange name,
-                            StringRange spaceDelimitedNames,
-                            void (*)(Arg0, Arg1, Arg2))
+static Function* FromMethod(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, void (*)(Arg0, Arg1, Arg2))
 {
   BoundFn boundFunction = BoundStatic<FunctionType, function, Arg0, Arg1, Arg2>;
   ParameterArray parameters;
@@ -104,8 +88,7 @@ static Function* FromMethod(LibraryBuilder& builder,
   DelegateParameter& p2 = parameters.PushBack();
   p2.ParameterType = RaverieTypeId(Arg2);
   ParseParameterArrays(parameters, spaceDelimitedNames);
-  return builder.AddBoundFunction(
-      classBoundType, name, boundFunction, parameters, RaverieTypeId(void), FunctionOptions::Static);
+  return builder.AddBoundFunction(classBoundType, name, boundFunction, parameters, RaverieTypeId(void), FunctionOptions::Static);
 }
 // BeginBound
 template <typename FunctionType, FunctionType function, typename Arg0, typename Arg1, typename Arg2, typename Arg3>
@@ -125,11 +108,7 @@ static void BoundStatic(Call& call, ExceptionReport& report)
 }
 // EndBound
 template <typename FunctionType, FunctionType function, typename Arg0, typename Arg1, typename Arg2, typename Arg3>
-static Function* FromMethod(LibraryBuilder& builder,
-                            BoundType* classBoundType,
-                            StringRange name,
-                            StringRange spaceDelimitedNames,
-                            void (*)(Arg0, Arg1, Arg2, Arg3))
+static Function* FromMethod(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, void (*)(Arg0, Arg1, Arg2, Arg3))
 {
   BoundFn boundFunction = BoundStatic<FunctionType, function, Arg0, Arg1, Arg2, Arg3>;
   ParameterArray parameters;
@@ -142,17 +121,10 @@ static Function* FromMethod(LibraryBuilder& builder,
   DelegateParameter& p3 = parameters.PushBack();
   p3.ParameterType = RaverieTypeId(Arg3);
   ParseParameterArrays(parameters, spaceDelimitedNames);
-  return builder.AddBoundFunction(
-      classBoundType, name, boundFunction, parameters, RaverieTypeId(void), FunctionOptions::Static);
+  return builder.AddBoundFunction(classBoundType, name, boundFunction, parameters, RaverieTypeId(void), FunctionOptions::Static);
 }
 // BeginBound
-template <typename FunctionType,
-          FunctionType function,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3,
-          typename Arg4>
+template <typename FunctionType, FunctionType function, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
 static void BoundStatic(Call& call, ExceptionReport& report)
 {
   byte* arg0Ptr = call.GetArgumentPointer<RaverieBindingType(Arg0)>(0);
@@ -170,18 +142,8 @@ static void BoundStatic(Call& call, ExceptionReport& report)
   function(arg0, arg1, arg2, arg3, arg4);
 }
 // EndBound
-template <typename FunctionType,
-          FunctionType function,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3,
-          typename Arg4>
-static Function* FromMethod(LibraryBuilder& builder,
-                            BoundType* classBoundType,
-                            StringRange name,
-                            StringRange spaceDelimitedNames,
-                            void (*)(Arg0, Arg1, Arg2, Arg3, Arg4))
+template <typename FunctionType, FunctionType function, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
+static Function* FromMethod(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, void (*)(Arg0, Arg1, Arg2, Arg3, Arg4))
 {
   BoundFn boundFunction = BoundStatic<FunctionType, function, Arg0, Arg1, Arg2, Arg3, Arg4>;
   ParameterArray parameters;
@@ -196,18 +158,10 @@ static Function* FromMethod(LibraryBuilder& builder,
   DelegateParameter& p4 = parameters.PushBack();
   p4.ParameterType = RaverieTypeId(Arg4);
   ParseParameterArrays(parameters, spaceDelimitedNames);
-  return builder.AddBoundFunction(
-      classBoundType, name, boundFunction, parameters, RaverieTypeId(void), FunctionOptions::Static);
+  return builder.AddBoundFunction(classBoundType, name, boundFunction, parameters, RaverieTypeId(void), FunctionOptions::Static);
 }
 // BeginBound
-template <typename FunctionType,
-          FunctionType function,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3,
-          typename Arg4,
-          typename Arg5>
+template <typename FunctionType, FunctionType function, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5>
 static void BoundStatic(Call& call, ExceptionReport& report)
 {
   byte* arg0Ptr = call.GetArgumentPointer<RaverieBindingType(Arg0)>(0);
@@ -227,19 +181,8 @@ static void BoundStatic(Call& call, ExceptionReport& report)
   function(arg0, arg1, arg2, arg3, arg4, arg5);
 }
 // EndBound
-template <typename FunctionType,
-          FunctionType function,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3,
-          typename Arg4,
-          typename Arg5>
-static Function* FromMethod(LibraryBuilder& builder,
-                            BoundType* classBoundType,
-                            StringRange name,
-                            StringRange spaceDelimitedNames,
-                            void (*)(Arg0, Arg1, Arg2, Arg3, Arg4, Arg5))
+template <typename FunctionType, FunctionType function, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5>
+static Function* FromMethod(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, void (*)(Arg0, Arg1, Arg2, Arg3, Arg4, Arg5))
 {
   BoundFn boundFunction = BoundStatic<FunctionType, function, Arg0, Arg1, Arg2, Arg3, Arg4, Arg5>;
   ParameterArray parameters;
@@ -256,19 +199,10 @@ static Function* FromMethod(LibraryBuilder& builder,
   DelegateParameter& p5 = parameters.PushBack();
   p5.ParameterType = RaverieTypeId(Arg5);
   ParseParameterArrays(parameters, spaceDelimitedNames);
-  return builder.AddBoundFunction(
-      classBoundType, name, boundFunction, parameters, RaverieTypeId(void), FunctionOptions::Static);
+  return builder.AddBoundFunction(classBoundType, name, boundFunction, parameters, RaverieTypeId(void), FunctionOptions::Static);
 }
 // BeginBound
-template <typename FunctionType,
-          FunctionType function,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3,
-          typename Arg4,
-          typename Arg5,
-          typename Arg6>
+template <typename FunctionType, FunctionType function, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5, typename Arg6>
 static void BoundStatic(Call& call, ExceptionReport& report)
 {
   byte* arg0Ptr = call.GetArgumentPointer<RaverieBindingType(Arg0)>(0);
@@ -290,20 +224,8 @@ static void BoundStatic(Call& call, ExceptionReport& report)
   function(arg0, arg1, arg2, arg3, arg4, arg5, arg6);
 }
 // EndBound
-template <typename FunctionType,
-          FunctionType function,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3,
-          typename Arg4,
-          typename Arg5,
-          typename Arg6>
-static Function* FromMethod(LibraryBuilder& builder,
-                            BoundType* classBoundType,
-                            StringRange name,
-                            StringRange spaceDelimitedNames,
-                            void (*)(Arg0, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6))
+template <typename FunctionType, FunctionType function, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5, typename Arg6>
+static Function* FromMethod(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, void (*)(Arg0, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6))
 {
   BoundFn boundFunction = BoundStatic<FunctionType, function, Arg0, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6>;
   ParameterArray parameters;
@@ -322,8 +244,7 @@ static Function* FromMethod(LibraryBuilder& builder,
   DelegateParameter& p6 = parameters.PushBack();
   p6.ParameterType = RaverieTypeId(Arg6);
   ParseParameterArrays(parameters, spaceDelimitedNames);
-  return builder.AddBoundFunction(
-      classBoundType, name, boundFunction, parameters, RaverieTypeId(void), FunctionOptions::Static);
+  return builder.AddBoundFunction(classBoundType, name, boundFunction, parameters, RaverieTypeId(void), FunctionOptions::Static);
 }
 // BeginBound
 template <typename FunctionType, FunctionType function, typename Return>
@@ -336,14 +257,12 @@ static void BoundStaticReturn(Call& call, ExceptionReport& report)
 }
 // EndBound
 template <typename FunctionType, FunctionType function, typename Return>
-static Function* FromMethod(
-    LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, Return (*)())
+static Function* FromMethod(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, Return (*)())
 {
   BoundFn boundFunction = BoundStaticReturn<FunctionType, function, Return>;
   ParameterArray parameters;
   ParseParameterArrays(parameters, spaceDelimitedNames);
-  return builder.AddBoundFunction(
-      classBoundType, name, boundFunction, parameters, RaverieTypeId(Return), FunctionOptions::Static);
+  return builder.AddBoundFunction(classBoundType, name, boundFunction, parameters, RaverieTypeId(Return), FunctionOptions::Static);
 }
 // BeginBound
 template <typename FunctionType, FunctionType function, typename Return, typename Arg0>
@@ -360,19 +279,14 @@ static void BoundStaticReturn(Call& call, ExceptionReport& report)
 }
 // EndBound
 template <typename FunctionType, FunctionType function, typename Return, typename Arg0>
-static Function* FromMethod(LibraryBuilder& builder,
-                            BoundType* classBoundType,
-                            StringRange name,
-                            StringRange spaceDelimitedNames,
-                            Return (*)(Arg0))
+static Function* FromMethod(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, Return (*)(Arg0))
 {
   BoundFn boundFunction = BoundStaticReturn<FunctionType, function, Return, Arg0>;
   ParameterArray parameters;
   DelegateParameter& p0 = parameters.PushBack();
   p0.ParameterType = RaverieTypeId(Arg0);
   ParseParameterArrays(parameters, spaceDelimitedNames);
-  return builder.AddBoundFunction(
-      classBoundType, name, boundFunction, parameters, RaverieTypeId(Return), FunctionOptions::Static);
+  return builder.AddBoundFunction(classBoundType, name, boundFunction, parameters, RaverieTypeId(Return), FunctionOptions::Static);
 }
 // BeginBound
 template <typename FunctionType, FunctionType function, typename Return, typename Arg0, typename Arg1>
@@ -391,11 +305,7 @@ static void BoundStaticReturn(Call& call, ExceptionReport& report)
 }
 // EndBound
 template <typename FunctionType, FunctionType function, typename Return, typename Arg0, typename Arg1>
-static Function* FromMethod(LibraryBuilder& builder,
-                            BoundType* classBoundType,
-                            StringRange name,
-                            StringRange spaceDelimitedNames,
-                            Return (*)(Arg0, Arg1))
+static Function* FromMethod(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, Return (*)(Arg0, Arg1))
 {
   BoundFn boundFunction = BoundStaticReturn<FunctionType, function, Return, Arg0, Arg1>;
   ParameterArray parameters;
@@ -404,8 +314,7 @@ static Function* FromMethod(LibraryBuilder& builder,
   DelegateParameter& p1 = parameters.PushBack();
   p1.ParameterType = RaverieTypeId(Arg1);
   ParseParameterArrays(parameters, spaceDelimitedNames);
-  return builder.AddBoundFunction(
-      classBoundType, name, boundFunction, parameters, RaverieTypeId(Return), FunctionOptions::Static);
+  return builder.AddBoundFunction(classBoundType, name, boundFunction, parameters, RaverieTypeId(Return), FunctionOptions::Static);
 }
 // BeginBound
 template <typename FunctionType, FunctionType function, typename Return, typename Arg0, typename Arg1, typename Arg2>
@@ -426,11 +335,7 @@ static void BoundStaticReturn(Call& call, ExceptionReport& report)
 }
 // EndBound
 template <typename FunctionType, FunctionType function, typename Return, typename Arg0, typename Arg1, typename Arg2>
-static Function* FromMethod(LibraryBuilder& builder,
-                            BoundType* classBoundType,
-                            StringRange name,
-                            StringRange spaceDelimitedNames,
-                            Return (*)(Arg0, Arg1, Arg2))
+static Function* FromMethod(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, Return (*)(Arg0, Arg1, Arg2))
 {
   BoundFn boundFunction = BoundStaticReturn<FunctionType, function, Return, Arg0, Arg1, Arg2>;
   ParameterArray parameters;
@@ -441,17 +346,10 @@ static Function* FromMethod(LibraryBuilder& builder,
   DelegateParameter& p2 = parameters.PushBack();
   p2.ParameterType = RaverieTypeId(Arg2);
   ParseParameterArrays(parameters, spaceDelimitedNames);
-  return builder.AddBoundFunction(
-      classBoundType, name, boundFunction, parameters, RaverieTypeId(Return), FunctionOptions::Static);
+  return builder.AddBoundFunction(classBoundType, name, boundFunction, parameters, RaverieTypeId(Return), FunctionOptions::Static);
 }
 // BeginBound
-template <typename FunctionType,
-          FunctionType function,
-          typename Return,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3>
+template <typename FunctionType, FunctionType function, typename Return, typename Arg0, typename Arg1, typename Arg2, typename Arg3>
 static void BoundStaticReturn(Call& call, ExceptionReport& report)
 {
   byte* arg0Ptr = call.GetArgumentPointer<RaverieBindingType(Arg0)>(0);
@@ -470,18 +368,8 @@ static void BoundStaticReturn(Call& call, ExceptionReport& report)
   call.Set<Return>(Call::Return, result);
 }
 // EndBound
-template <typename FunctionType,
-          FunctionType function,
-          typename Return,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3>
-static Function* FromMethod(LibraryBuilder& builder,
-                            BoundType* classBoundType,
-                            StringRange name,
-                            StringRange spaceDelimitedNames,
-                            Return (*)(Arg0, Arg1, Arg2, Arg3))
+template <typename FunctionType, FunctionType function, typename Return, typename Arg0, typename Arg1, typename Arg2, typename Arg3>
+static Function* FromMethod(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, Return (*)(Arg0, Arg1, Arg2, Arg3))
 {
   BoundFn boundFunction = BoundStaticReturn<FunctionType, function, Return, Arg0, Arg1, Arg2, Arg3>;
   ParameterArray parameters;
@@ -494,18 +382,10 @@ static Function* FromMethod(LibraryBuilder& builder,
   DelegateParameter& p3 = parameters.PushBack();
   p3.ParameterType = RaverieTypeId(Arg3);
   ParseParameterArrays(parameters, spaceDelimitedNames);
-  return builder.AddBoundFunction(
-      classBoundType, name, boundFunction, parameters, RaverieTypeId(Return), FunctionOptions::Static);
+  return builder.AddBoundFunction(classBoundType, name, boundFunction, parameters, RaverieTypeId(Return), FunctionOptions::Static);
 }
 // BeginBound
-template <typename FunctionType,
-          FunctionType function,
-          typename Return,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3,
-          typename Arg4>
+template <typename FunctionType, FunctionType function, typename Return, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
 static void BoundStaticReturn(Call& call, ExceptionReport& report)
 {
   byte* arg0Ptr = call.GetArgumentPointer<RaverieBindingType(Arg0)>(0);
@@ -526,19 +406,8 @@ static void BoundStaticReturn(Call& call, ExceptionReport& report)
   call.Set<Return>(Call::Return, result);
 }
 // EndBound
-template <typename FunctionType,
-          FunctionType function,
-          typename Return,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3,
-          typename Arg4>
-static Function* FromMethod(LibraryBuilder& builder,
-                            BoundType* classBoundType,
-                            StringRange name,
-                            StringRange spaceDelimitedNames,
-                            Return (*)(Arg0, Arg1, Arg2, Arg3, Arg4))
+template <typename FunctionType, FunctionType function, typename Return, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
+static Function* FromMethod(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, Return (*)(Arg0, Arg1, Arg2, Arg3, Arg4))
 {
   BoundFn boundFunction = BoundStaticReturn<FunctionType, function, Return, Arg0, Arg1, Arg2, Arg3, Arg4>;
   ParameterArray parameters;
@@ -553,19 +422,10 @@ static Function* FromMethod(LibraryBuilder& builder,
   DelegateParameter& p4 = parameters.PushBack();
   p4.ParameterType = RaverieTypeId(Arg4);
   ParseParameterArrays(parameters, spaceDelimitedNames);
-  return builder.AddBoundFunction(
-      classBoundType, name, boundFunction, parameters, RaverieTypeId(Return), FunctionOptions::Static);
+  return builder.AddBoundFunction(classBoundType, name, boundFunction, parameters, RaverieTypeId(Return), FunctionOptions::Static);
 }
 // BeginBound
-template <typename FunctionType,
-          FunctionType function,
-          typename Return,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3,
-          typename Arg4,
-          typename Arg5>
+template <typename FunctionType, FunctionType function, typename Return, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5>
 static void BoundStaticReturn(Call& call, ExceptionReport& report)
 {
   byte* arg0Ptr = call.GetArgumentPointer<RaverieBindingType(Arg0)>(0);
@@ -588,20 +448,8 @@ static void BoundStaticReturn(Call& call, ExceptionReport& report)
   call.Set<Return>(Call::Return, result);
 }
 // EndBound
-template <typename FunctionType,
-          FunctionType function,
-          typename Return,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3,
-          typename Arg4,
-          typename Arg5>
-static Function* FromMethod(LibraryBuilder& builder,
-                            BoundType* classBoundType,
-                            StringRange name,
-                            StringRange spaceDelimitedNames,
-                            Return (*)(Arg0, Arg1, Arg2, Arg3, Arg4, Arg5))
+template <typename FunctionType, FunctionType function, typename Return, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5>
+static Function* FromMethod(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, Return (*)(Arg0, Arg1, Arg2, Arg3, Arg4, Arg5))
 {
   BoundFn boundFunction = BoundStaticReturn<FunctionType, function, Return, Arg0, Arg1, Arg2, Arg3, Arg4, Arg5>;
   ParameterArray parameters;
@@ -618,20 +466,10 @@ static Function* FromMethod(LibraryBuilder& builder,
   DelegateParameter& p5 = parameters.PushBack();
   p5.ParameterType = RaverieTypeId(Arg5);
   ParseParameterArrays(parameters, spaceDelimitedNames);
-  return builder.AddBoundFunction(
-      classBoundType, name, boundFunction, parameters, RaverieTypeId(Return), FunctionOptions::Static);
+  return builder.AddBoundFunction(classBoundType, name, boundFunction, parameters, RaverieTypeId(Return), FunctionOptions::Static);
 }
 // BeginBound
-template <typename FunctionType,
-          FunctionType function,
-          typename Return,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3,
-          typename Arg4,
-          typename Arg5,
-          typename Arg6>
+template <typename FunctionType, FunctionType function, typename Return, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5, typename Arg6>
 static void BoundStaticReturn(Call& call, ExceptionReport& report)
 {
   byte* arg0Ptr = call.GetArgumentPointer<RaverieBindingType(Arg0)>(0);
@@ -656,21 +494,8 @@ static void BoundStaticReturn(Call& call, ExceptionReport& report)
   call.Set<Return>(Call::Return, result);
 }
 // EndBound
-template <typename FunctionType,
-          FunctionType function,
-          typename Return,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3,
-          typename Arg4,
-          typename Arg5,
-          typename Arg6>
-static Function* FromMethod(LibraryBuilder& builder,
-                            BoundType* classBoundType,
-                            StringRange name,
-                            StringRange spaceDelimitedNames,
-                            Return (*)(Arg0, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6))
+template <typename FunctionType, FunctionType function, typename Return, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5, typename Arg6>
+static Function* FromMethod(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, Return (*)(Arg0, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6))
 {
   BoundFn boundFunction = BoundStaticReturn<FunctionType, function, Return, Arg0, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6>;
   ParameterArray parameters;
@@ -689,8 +514,7 @@ static Function* FromMethod(LibraryBuilder& builder,
   DelegateParameter& p6 = parameters.PushBack();
   p6.ParameterType = RaverieTypeId(Arg6);
   ParseParameterArrays(parameters, spaceDelimitedNames);
-  return builder.AddBoundFunction(
-      classBoundType, name, boundFunction, parameters, RaverieTypeId(Return), FunctionOptions::Static);
+  return builder.AddBoundFunction(classBoundType, name, boundFunction, parameters, RaverieTypeId(Return), FunctionOptions::Static);
 }
 // BeginBound
 template <typename FunctionType, FunctionType function, typename Class>
@@ -701,17 +525,12 @@ static void BoundInstance(Call& call, ExceptionReport& report)
 }
 // EndBound
 template <typename FunctionType, FunctionType function, typename Class>
-static Function* FromMethod(LibraryBuilder& builder,
-                            BoundType* classBoundType,
-                            StringRange name,
-                            StringRange spaceDelimitedNames,
-                            void (Class::*)())
+static Function* FromMethod(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, void (Class::*)())
 {
   BoundFn boundFunction = BoundInstance<FunctionType, function, Class>;
   ParameterArray parameters;
   ParseParameterArrays(parameters, spaceDelimitedNames);
-  return builder.AddBoundFunction(
-      classBoundType, name, boundFunction, parameters, RaverieTypeId(void), FunctionOptions::None);
+  return builder.AddBoundFunction(classBoundType, name, boundFunction, parameters, RaverieTypeId(void), FunctionOptions::None);
 }
 // BeginBound
 template <typename FunctionType, FunctionType function, typename Class, typename Arg0>
@@ -726,19 +545,14 @@ static void BoundInstance(Call& call, ExceptionReport& report)
 }
 // EndBound
 template <typename FunctionType, FunctionType function, typename Class, typename Arg0>
-static Function* FromMethod(LibraryBuilder& builder,
-                            BoundType* classBoundType,
-                            StringRange name,
-                            StringRange spaceDelimitedNames,
-                            void (Class::*)(Arg0))
+static Function* FromMethod(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, void (Class::*)(Arg0))
 {
   BoundFn boundFunction = BoundInstance<FunctionType, function, Class, Arg0>;
   ParameterArray parameters;
   DelegateParameter& p0 = parameters.PushBack();
   p0.ParameterType = RaverieTypeId(Arg0);
   ParseParameterArrays(parameters, spaceDelimitedNames);
-  return builder.AddBoundFunction(
-      classBoundType, name, boundFunction, parameters, RaverieTypeId(void), FunctionOptions::None);
+  return builder.AddBoundFunction(classBoundType, name, boundFunction, parameters, RaverieTypeId(void), FunctionOptions::None);
 }
 // BeginBound
 template <typename FunctionType, FunctionType function, typename Class, typename Arg0, typename Arg1>
@@ -755,11 +569,7 @@ static void BoundInstance(Call& call, ExceptionReport& report)
 }
 // EndBound
 template <typename FunctionType, FunctionType function, typename Class, typename Arg0, typename Arg1>
-static Function* FromMethod(LibraryBuilder& builder,
-                            BoundType* classBoundType,
-                            StringRange name,
-                            StringRange spaceDelimitedNames,
-                            void (Class::*)(Arg0, Arg1))
+static Function* FromMethod(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, void (Class::*)(Arg0, Arg1))
 {
   BoundFn boundFunction = BoundInstance<FunctionType, function, Class, Arg0, Arg1>;
   ParameterArray parameters;
@@ -768,8 +578,7 @@ static Function* FromMethod(LibraryBuilder& builder,
   DelegateParameter& p1 = parameters.PushBack();
   p1.ParameterType = RaverieTypeId(Arg1);
   ParseParameterArrays(parameters, spaceDelimitedNames);
-  return builder.AddBoundFunction(
-      classBoundType, name, boundFunction, parameters, RaverieTypeId(void), FunctionOptions::None);
+  return builder.AddBoundFunction(classBoundType, name, boundFunction, parameters, RaverieTypeId(void), FunctionOptions::None);
 }
 // BeginBound
 template <typename FunctionType, FunctionType function, typename Class, typename Arg0, typename Arg1, typename Arg2>
@@ -788,11 +597,7 @@ static void BoundInstance(Call& call, ExceptionReport& report)
 }
 // EndBound
 template <typename FunctionType, FunctionType function, typename Class, typename Arg0, typename Arg1, typename Arg2>
-static Function* FromMethod(LibraryBuilder& builder,
-                            BoundType* classBoundType,
-                            StringRange name,
-                            StringRange spaceDelimitedNames,
-                            void (Class::*)(Arg0, Arg1, Arg2))
+static Function* FromMethod(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, void (Class::*)(Arg0, Arg1, Arg2))
 {
   BoundFn boundFunction = BoundInstance<FunctionType, function, Class, Arg0, Arg1, Arg2>;
   ParameterArray parameters;
@@ -803,17 +608,10 @@ static Function* FromMethod(LibraryBuilder& builder,
   DelegateParameter& p2 = parameters.PushBack();
   p2.ParameterType = RaverieTypeId(Arg2);
   ParseParameterArrays(parameters, spaceDelimitedNames);
-  return builder.AddBoundFunction(
-      classBoundType, name, boundFunction, parameters, RaverieTypeId(void), FunctionOptions::None);
+  return builder.AddBoundFunction(classBoundType, name, boundFunction, parameters, RaverieTypeId(void), FunctionOptions::None);
 }
 // BeginBound
-template <typename FunctionType,
-          FunctionType function,
-          typename Class,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3>
+template <typename FunctionType, FunctionType function, typename Class, typename Arg0, typename Arg1, typename Arg2, typename Arg3>
 static void BoundInstance(Call& call, ExceptionReport& report)
 {
   byte* arg0Ptr = call.GetArgumentPointer<RaverieBindingType(Arg0)>(0);
@@ -830,18 +628,8 @@ static void BoundInstance(Call& call, ExceptionReport& report)
   (self->*function)(arg0, arg1, arg2, arg3);
 }
 // EndBound
-template <typename FunctionType,
-          FunctionType function,
-          typename Class,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3>
-static Function* FromMethod(LibraryBuilder& builder,
-                            BoundType* classBoundType,
-                            StringRange name,
-                            StringRange spaceDelimitedNames,
-                            void (Class::*)(Arg0, Arg1, Arg2, Arg3))
+template <typename FunctionType, FunctionType function, typename Class, typename Arg0, typename Arg1, typename Arg2, typename Arg3>
+static Function* FromMethod(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, void (Class::*)(Arg0, Arg1, Arg2, Arg3))
 {
   BoundFn boundFunction = BoundInstance<FunctionType, function, Class, Arg0, Arg1, Arg2, Arg3>;
   ParameterArray parameters;
@@ -854,18 +642,10 @@ static Function* FromMethod(LibraryBuilder& builder,
   DelegateParameter& p3 = parameters.PushBack();
   p3.ParameterType = RaverieTypeId(Arg3);
   ParseParameterArrays(parameters, spaceDelimitedNames);
-  return builder.AddBoundFunction(
-      classBoundType, name, boundFunction, parameters, RaverieTypeId(void), FunctionOptions::None);
+  return builder.AddBoundFunction(classBoundType, name, boundFunction, parameters, RaverieTypeId(void), FunctionOptions::None);
 }
 // BeginBound
-template <typename FunctionType,
-          FunctionType function,
-          typename Class,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3,
-          typename Arg4>
+template <typename FunctionType, FunctionType function, typename Class, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
 static void BoundInstance(Call& call, ExceptionReport& report)
 {
   byte* arg0Ptr = call.GetArgumentPointer<RaverieBindingType(Arg0)>(0);
@@ -884,19 +664,8 @@ static void BoundInstance(Call& call, ExceptionReport& report)
   (self->*function)(arg0, arg1, arg2, arg3, arg4);
 }
 // EndBound
-template <typename FunctionType,
-          FunctionType function,
-          typename Class,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3,
-          typename Arg4>
-static Function* FromMethod(LibraryBuilder& builder,
-                            BoundType* classBoundType,
-                            StringRange name,
-                            StringRange spaceDelimitedNames,
-                            void (Class::*)(Arg0, Arg1, Arg2, Arg3, Arg4))
+template <typename FunctionType, FunctionType function, typename Class, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
+static Function* FromMethod(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, void (Class::*)(Arg0, Arg1, Arg2, Arg3, Arg4))
 {
   BoundFn boundFunction = BoundInstance<FunctionType, function, Class, Arg0, Arg1, Arg2, Arg3, Arg4>;
   ParameterArray parameters;
@@ -911,19 +680,10 @@ static Function* FromMethod(LibraryBuilder& builder,
   DelegateParameter& p4 = parameters.PushBack();
   p4.ParameterType = RaverieTypeId(Arg4);
   ParseParameterArrays(parameters, spaceDelimitedNames);
-  return builder.AddBoundFunction(
-      classBoundType, name, boundFunction, parameters, RaverieTypeId(void), FunctionOptions::None);
+  return builder.AddBoundFunction(classBoundType, name, boundFunction, parameters, RaverieTypeId(void), FunctionOptions::None);
 }
 // BeginBound
-template <typename FunctionType,
-          FunctionType function,
-          typename Class,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3,
-          typename Arg4,
-          typename Arg5>
+template <typename FunctionType, FunctionType function, typename Class, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5>
 static void BoundInstance(Call& call, ExceptionReport& report)
 {
   byte* arg0Ptr = call.GetArgumentPointer<RaverieBindingType(Arg0)>(0);
@@ -944,20 +704,8 @@ static void BoundInstance(Call& call, ExceptionReport& report)
   (self->*function)(arg0, arg1, arg2, arg3, arg4, arg5);
 }
 // EndBound
-template <typename FunctionType,
-          FunctionType function,
-          typename Class,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3,
-          typename Arg4,
-          typename Arg5>
-static Function* FromMethod(LibraryBuilder& builder,
-                            BoundType* classBoundType,
-                            StringRange name,
-                            StringRange spaceDelimitedNames,
-                            void (Class::*)(Arg0, Arg1, Arg2, Arg3, Arg4, Arg5))
+template <typename FunctionType, FunctionType function, typename Class, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5>
+static Function* FromMethod(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, void (Class::*)(Arg0, Arg1, Arg2, Arg3, Arg4, Arg5))
 {
   BoundFn boundFunction = BoundInstance<FunctionType, function, Class, Arg0, Arg1, Arg2, Arg3, Arg4, Arg5>;
   ParameterArray parameters;
@@ -974,20 +722,10 @@ static Function* FromMethod(LibraryBuilder& builder,
   DelegateParameter& p5 = parameters.PushBack();
   p5.ParameterType = RaverieTypeId(Arg5);
   ParseParameterArrays(parameters, spaceDelimitedNames);
-  return builder.AddBoundFunction(
-      classBoundType, name, boundFunction, parameters, RaverieTypeId(void), FunctionOptions::None);
+  return builder.AddBoundFunction(classBoundType, name, boundFunction, parameters, RaverieTypeId(void), FunctionOptions::None);
 }
 // BeginBound
-template <typename FunctionType,
-          FunctionType function,
-          typename Class,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3,
-          typename Arg4,
-          typename Arg5,
-          typename Arg6>
+template <typename FunctionType, FunctionType function, typename Class, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5, typename Arg6>
 static void BoundInstance(Call& call, ExceptionReport& report)
 {
   byte* arg0Ptr = call.GetArgumentPointer<RaverieBindingType(Arg0)>(0);
@@ -1010,21 +748,8 @@ static void BoundInstance(Call& call, ExceptionReport& report)
   (self->*function)(arg0, arg1, arg2, arg3, arg4, arg5, arg6);
 }
 // EndBound
-template <typename FunctionType,
-          FunctionType function,
-          typename Class,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3,
-          typename Arg4,
-          typename Arg5,
-          typename Arg6>
-static Function* FromMethod(LibraryBuilder& builder,
-                            BoundType* classBoundType,
-                            StringRange name,
-                            StringRange spaceDelimitedNames,
-                            void (Class::*)(Arg0, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6))
+template <typename FunctionType, FunctionType function, typename Class, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5, typename Arg6>
+static Function* FromMethod(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, void (Class::*)(Arg0, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6))
 {
   BoundFn boundFunction = BoundInstance<FunctionType, function, Class, Arg0, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6>;
   ParameterArray parameters;
@@ -1043,8 +768,7 @@ static Function* FromMethod(LibraryBuilder& builder,
   DelegateParameter& p6 = parameters.PushBack();
   p6.ParameterType = RaverieTypeId(Arg6);
   ParseParameterArrays(parameters, spaceDelimitedNames);
-  return builder.AddBoundFunction(
-      classBoundType, name, boundFunction, parameters, RaverieTypeId(void), FunctionOptions::None);
+  return builder.AddBoundFunction(classBoundType, name, boundFunction, parameters, RaverieTypeId(void), FunctionOptions::None);
 }
 // BeginBound
 template <typename FunctionType, FunctionType function, typename Class, typename Return>
@@ -1058,17 +782,12 @@ static void BoundInstanceReturn(Call& call, ExceptionReport& report)
 }
 // EndBound
 template <typename FunctionType, FunctionType function, typename Class, typename Return>
-static Function* FromMethod(LibraryBuilder& builder,
-                            BoundType* classBoundType,
-                            StringRange name,
-                            StringRange spaceDelimitedNames,
-                            Return (Class::*)())
+static Function* FromMethod(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, Return (Class::*)())
 {
   BoundFn boundFunction = BoundInstanceReturn<FunctionType, function, Class, Return>;
   ParameterArray parameters;
   ParseParameterArrays(parameters, spaceDelimitedNames);
-  return builder.AddBoundFunction(
-      classBoundType, name, boundFunction, parameters, RaverieTypeId(Return), FunctionOptions::None);
+  return builder.AddBoundFunction(classBoundType, name, boundFunction, parameters, RaverieTypeId(Return), FunctionOptions::None);
 }
 // BeginBound
 template <typename FunctionType, FunctionType function, typename Class, typename Return, typename Arg0>
@@ -1086,19 +805,14 @@ static void BoundInstanceReturn(Call& call, ExceptionReport& report)
 }
 // EndBound
 template <typename FunctionType, FunctionType function, typename Class, typename Return, typename Arg0>
-static Function* FromMethod(LibraryBuilder& builder,
-                            BoundType* classBoundType,
-                            StringRange name,
-                            StringRange spaceDelimitedNames,
-                            Return (Class::*)(Arg0))
+static Function* FromMethod(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, Return (Class::*)(Arg0))
 {
   BoundFn boundFunction = BoundInstanceReturn<FunctionType, function, Class, Return, Arg0>;
   ParameterArray parameters;
   DelegateParameter& p0 = parameters.PushBack();
   p0.ParameterType = RaverieTypeId(Arg0);
   ParseParameterArrays(parameters, spaceDelimitedNames);
-  return builder.AddBoundFunction(
-      classBoundType, name, boundFunction, parameters, RaverieTypeId(Return), FunctionOptions::None);
+  return builder.AddBoundFunction(classBoundType, name, boundFunction, parameters, RaverieTypeId(Return), FunctionOptions::None);
 }
 // BeginBound
 template <typename FunctionType, FunctionType function, typename Class, typename Return, typename Arg0, typename Arg1>
@@ -1118,11 +832,7 @@ static void BoundInstanceReturn(Call& call, ExceptionReport& report)
 }
 // EndBound
 template <typename FunctionType, FunctionType function, typename Class, typename Return, typename Arg0, typename Arg1>
-static Function* FromMethod(LibraryBuilder& builder,
-                            BoundType* classBoundType,
-                            StringRange name,
-                            StringRange spaceDelimitedNames,
-                            Return (Class::*)(Arg0, Arg1))
+static Function* FromMethod(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, Return (Class::*)(Arg0, Arg1))
 {
   BoundFn boundFunction = BoundInstanceReturn<FunctionType, function, Class, Return, Arg0, Arg1>;
   ParameterArray parameters;
@@ -1131,17 +841,10 @@ static Function* FromMethod(LibraryBuilder& builder,
   DelegateParameter& p1 = parameters.PushBack();
   p1.ParameterType = RaverieTypeId(Arg1);
   ParseParameterArrays(parameters, spaceDelimitedNames);
-  return builder.AddBoundFunction(
-      classBoundType, name, boundFunction, parameters, RaverieTypeId(Return), FunctionOptions::None);
+  return builder.AddBoundFunction(classBoundType, name, boundFunction, parameters, RaverieTypeId(Return), FunctionOptions::None);
 }
 // BeginBound
-template <typename FunctionType,
-          FunctionType function,
-          typename Class,
-          typename Return,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2>
+template <typename FunctionType, FunctionType function, typename Class, typename Return, typename Arg0, typename Arg1, typename Arg2>
 static void BoundInstanceReturn(Call& call, ExceptionReport& report)
 {
   byte* arg0Ptr = call.GetArgumentPointer<RaverieBindingType(Arg0)>(0);
@@ -1159,18 +862,8 @@ static void BoundInstanceReturn(Call& call, ExceptionReport& report)
   call.Set<Return>(Call::Return, result);
 }
 // EndBound
-template <typename FunctionType,
-          FunctionType function,
-          typename Class,
-          typename Return,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2>
-static Function* FromMethod(LibraryBuilder& builder,
-                            BoundType* classBoundType,
-                            StringRange name,
-                            StringRange spaceDelimitedNames,
-                            Return (Class::*)(Arg0, Arg1, Arg2))
+template <typename FunctionType, FunctionType function, typename Class, typename Return, typename Arg0, typename Arg1, typename Arg2>
+static Function* FromMethod(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, Return (Class::*)(Arg0, Arg1, Arg2))
 {
   BoundFn boundFunction = BoundInstanceReturn<FunctionType, function, Class, Return, Arg0, Arg1, Arg2>;
   ParameterArray parameters;
@@ -1181,18 +874,10 @@ static Function* FromMethod(LibraryBuilder& builder,
   DelegateParameter& p2 = parameters.PushBack();
   p2.ParameterType = RaverieTypeId(Arg2);
   ParseParameterArrays(parameters, spaceDelimitedNames);
-  return builder.AddBoundFunction(
-      classBoundType, name, boundFunction, parameters, RaverieTypeId(Return), FunctionOptions::None);
+  return builder.AddBoundFunction(classBoundType, name, boundFunction, parameters, RaverieTypeId(Return), FunctionOptions::None);
 }
 // BeginBound
-template <typename FunctionType,
-          FunctionType function,
-          typename Class,
-          typename Return,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3>
+template <typename FunctionType, FunctionType function, typename Class, typename Return, typename Arg0, typename Arg1, typename Arg2, typename Arg3>
 static void BoundInstanceReturn(Call& call, ExceptionReport& report)
 {
   byte* arg0Ptr = call.GetArgumentPointer<RaverieBindingType(Arg0)>(0);
@@ -1212,19 +897,8 @@ static void BoundInstanceReturn(Call& call, ExceptionReport& report)
   call.Set<Return>(Call::Return, result);
 }
 // EndBound
-template <typename FunctionType,
-          FunctionType function,
-          typename Class,
-          typename Return,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3>
-static Function* FromMethod(LibraryBuilder& builder,
-                            BoundType* classBoundType,
-                            StringRange name,
-                            StringRange spaceDelimitedNames,
-                            Return (Class::*)(Arg0, Arg1, Arg2, Arg3))
+template <typename FunctionType, FunctionType function, typename Class, typename Return, typename Arg0, typename Arg1, typename Arg2, typename Arg3>
+static Function* FromMethod(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, Return (Class::*)(Arg0, Arg1, Arg2, Arg3))
 {
   BoundFn boundFunction = BoundInstanceReturn<FunctionType, function, Class, Return, Arg0, Arg1, Arg2, Arg3>;
   ParameterArray parameters;
@@ -1237,19 +911,10 @@ static Function* FromMethod(LibraryBuilder& builder,
   DelegateParameter& p3 = parameters.PushBack();
   p3.ParameterType = RaverieTypeId(Arg3);
   ParseParameterArrays(parameters, spaceDelimitedNames);
-  return builder.AddBoundFunction(
-      classBoundType, name, boundFunction, parameters, RaverieTypeId(Return), FunctionOptions::None);
+  return builder.AddBoundFunction(classBoundType, name, boundFunction, parameters, RaverieTypeId(Return), FunctionOptions::None);
 }
 // BeginBound
-template <typename FunctionType,
-          FunctionType function,
-          typename Class,
-          typename Return,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3,
-          typename Arg4>
+template <typename FunctionType, FunctionType function, typename Class, typename Return, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
 static void BoundInstanceReturn(Call& call, ExceptionReport& report)
 {
   byte* arg0Ptr = call.GetArgumentPointer<RaverieBindingType(Arg0)>(0);
@@ -1271,20 +936,8 @@ static void BoundInstanceReturn(Call& call, ExceptionReport& report)
   call.Set<Return>(Call::Return, result);
 }
 // EndBound
-template <typename FunctionType,
-          FunctionType function,
-          typename Class,
-          typename Return,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3,
-          typename Arg4>
-static Function* FromMethod(LibraryBuilder& builder,
-                            BoundType* classBoundType,
-                            StringRange name,
-                            StringRange spaceDelimitedNames,
-                            Return (Class::*)(Arg0, Arg1, Arg2, Arg3, Arg4))
+template <typename FunctionType, FunctionType function, typename Class, typename Return, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
+static Function* FromMethod(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, Return (Class::*)(Arg0, Arg1, Arg2, Arg3, Arg4))
 {
   BoundFn boundFunction = BoundInstanceReturn<FunctionType, function, Class, Return, Arg0, Arg1, Arg2, Arg3, Arg4>;
   ParameterArray parameters;
@@ -1299,20 +952,10 @@ static Function* FromMethod(LibraryBuilder& builder,
   DelegateParameter& p4 = parameters.PushBack();
   p4.ParameterType = RaverieTypeId(Arg4);
   ParseParameterArrays(parameters, spaceDelimitedNames);
-  return builder.AddBoundFunction(
-      classBoundType, name, boundFunction, parameters, RaverieTypeId(Return), FunctionOptions::None);
+  return builder.AddBoundFunction(classBoundType, name, boundFunction, parameters, RaverieTypeId(Return), FunctionOptions::None);
 }
 // BeginBound
-template <typename FunctionType,
-          FunctionType function,
-          typename Class,
-          typename Return,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3,
-          typename Arg4,
-          typename Arg5>
+template <typename FunctionType, FunctionType function, typename Class, typename Return, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5>
 static void BoundInstanceReturn(Call& call, ExceptionReport& report)
 {
   byte* arg0Ptr = call.GetArgumentPointer<RaverieBindingType(Arg0)>(0);
@@ -1336,24 +979,10 @@ static void BoundInstanceReturn(Call& call, ExceptionReport& report)
   call.Set<Return>(Call::Return, result);
 }
 // EndBound
-template <typename FunctionType,
-          FunctionType function,
-          typename Class,
-          typename Return,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3,
-          typename Arg4,
-          typename Arg5>
-static Function* FromMethod(LibraryBuilder& builder,
-                            BoundType* classBoundType,
-                            StringRange name,
-                            StringRange spaceDelimitedNames,
-                            Return (Class::*)(Arg0, Arg1, Arg2, Arg3, Arg4, Arg5))
+template <typename FunctionType, FunctionType function, typename Class, typename Return, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5>
+static Function* FromMethod(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, Return (Class::*)(Arg0, Arg1, Arg2, Arg3, Arg4, Arg5))
 {
-  BoundFn boundFunction =
-      BoundInstanceReturn<FunctionType, function, Class, Return, Arg0, Arg1, Arg2, Arg3, Arg4, Arg5>;
+  BoundFn boundFunction = BoundInstanceReturn<FunctionType, function, Class, Return, Arg0, Arg1, Arg2, Arg3, Arg4, Arg5>;
   ParameterArray parameters;
   DelegateParameter& p0 = parameters.PushBack();
   p0.ParameterType = RaverieTypeId(Arg0);
@@ -1368,21 +997,10 @@ static Function* FromMethod(LibraryBuilder& builder,
   DelegateParameter& p5 = parameters.PushBack();
   p5.ParameterType = RaverieTypeId(Arg5);
   ParseParameterArrays(parameters, spaceDelimitedNames);
-  return builder.AddBoundFunction(
-      classBoundType, name, boundFunction, parameters, RaverieTypeId(Return), FunctionOptions::None);
+  return builder.AddBoundFunction(classBoundType, name, boundFunction, parameters, RaverieTypeId(Return), FunctionOptions::None);
 }
 // BeginBound
-template <typename FunctionType,
-          FunctionType function,
-          typename Class,
-          typename Return,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3,
-          typename Arg4,
-          typename Arg5,
-          typename Arg6>
+template <typename FunctionType, FunctionType function, typename Class, typename Return, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5, typename Arg6>
 static void BoundInstanceReturn(Call& call, ExceptionReport& report)
 {
   byte* arg0Ptr = call.GetArgumentPointer<RaverieBindingType(Arg0)>(0);
@@ -1408,25 +1026,10 @@ static void BoundInstanceReturn(Call& call, ExceptionReport& report)
   call.Set<Return>(Call::Return, result);
 }
 // EndBound
-template <typename FunctionType,
-          FunctionType function,
-          typename Class,
-          typename Return,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3,
-          typename Arg4,
-          typename Arg5,
-          typename Arg6>
-static Function* FromMethod(LibraryBuilder& builder,
-                            BoundType* classBoundType,
-                            StringRange name,
-                            StringRange spaceDelimitedNames,
-                            Return (Class::*)(Arg0, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6))
+template <typename FunctionType, FunctionType function, typename Class, typename Return, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5, typename Arg6>
+static Function* FromMethod(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, Return (Class::*)(Arg0, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6))
 {
-  BoundFn boundFunction =
-      BoundInstanceReturn<FunctionType, function, Class, Return, Arg0, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6>;
+  BoundFn boundFunction = BoundInstanceReturn<FunctionType, function, Class, Return, Arg0, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6>;
   ParameterArray parameters;
   DelegateParameter& p0 = parameters.PushBack();
   p0.ParameterType = RaverieTypeId(Arg0);
@@ -1443,46 +1046,31 @@ static Function* FromMethod(LibraryBuilder& builder,
   DelegateParameter& p6 = parameters.PushBack();
   p6.ParameterType = RaverieTypeId(Arg6);
   ParseParameterArrays(parameters, spaceDelimitedNames);
-  return builder.AddBoundFunction(
-      classBoundType, name, boundFunction, parameters, RaverieTypeId(Return), FunctionOptions::None);
+  return builder.AddBoundFunction(classBoundType, name, boundFunction, parameters, RaverieTypeId(Return), FunctionOptions::None);
 }
 
 template <typename FunctionType, FunctionType function, typename Class>
-static Function* FromMethod(LibraryBuilder& builder,
-                            BoundType* classBoundType,
-                            StringRange name,
-                            StringRange spaceDelimitedNames,
-                            void (Class::*)() const)
+static Function* FromMethod(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, void (Class::*)() const)
 {
   BoundFn boundFunction = BoundInstance<FunctionType, function, Class>;
   ParameterArray parameters;
   ParseParameterArrays(parameters, spaceDelimitedNames);
-  return builder.AddBoundFunction(
-      classBoundType, name, boundFunction, parameters, RaverieTypeId(void), FunctionOptions::None);
+  return builder.AddBoundFunction(classBoundType, name, boundFunction, parameters, RaverieTypeId(void), FunctionOptions::None);
 }
 
 template <typename FunctionType, FunctionType function, typename Class, typename Arg0>
-static Function* FromMethod(LibraryBuilder& builder,
-                            BoundType* classBoundType,
-                            StringRange name,
-                            StringRange spaceDelimitedNames,
-                            void (Class::*)(Arg0) const)
+static Function* FromMethod(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, void (Class::*)(Arg0) const)
 {
   BoundFn boundFunction = BoundInstance<FunctionType, function, Class, Arg0>;
   ParameterArray parameters;
   DelegateParameter& p0 = parameters.PushBack();
   p0.ParameterType = RaverieTypeId(Arg0);
   ParseParameterArrays(parameters, spaceDelimitedNames);
-  return builder.AddBoundFunction(
-      classBoundType, name, boundFunction, parameters, RaverieTypeId(void), FunctionOptions::None);
+  return builder.AddBoundFunction(classBoundType, name, boundFunction, parameters, RaverieTypeId(void), FunctionOptions::None);
 }
 
 template <typename FunctionType, FunctionType function, typename Class, typename Arg0, typename Arg1>
-static Function* FromMethod(LibraryBuilder& builder,
-                            BoundType* classBoundType,
-                            StringRange name,
-                            StringRange spaceDelimitedNames,
-                            void (Class::*)(Arg0, Arg1) const)
+static Function* FromMethod(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, void (Class::*)(Arg0, Arg1) const)
 {
   BoundFn boundFunction = BoundInstance<FunctionType, function, Class, Arg0, Arg1>;
   ParameterArray parameters;
@@ -1491,16 +1079,11 @@ static Function* FromMethod(LibraryBuilder& builder,
   DelegateParameter& p1 = parameters.PushBack();
   p1.ParameterType = RaverieTypeId(Arg1);
   ParseParameterArrays(parameters, spaceDelimitedNames);
-  return builder.AddBoundFunction(
-      classBoundType, name, boundFunction, parameters, RaverieTypeId(void), FunctionOptions::None);
+  return builder.AddBoundFunction(classBoundType, name, boundFunction, parameters, RaverieTypeId(void), FunctionOptions::None);
 }
 
 template <typename FunctionType, FunctionType function, typename Class, typename Arg0, typename Arg1, typename Arg2>
-static Function* FromMethod(LibraryBuilder& builder,
-                            BoundType* classBoundType,
-                            StringRange name,
-                            StringRange spaceDelimitedNames,
-                            void (Class::*)(Arg0, Arg1, Arg2) const)
+static Function* FromMethod(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, void (Class::*)(Arg0, Arg1, Arg2) const)
 {
   BoundFn boundFunction = BoundInstance<FunctionType, function, Class, Arg0, Arg1, Arg2>;
   ParameterArray parameters;
@@ -1511,22 +1094,11 @@ static Function* FromMethod(LibraryBuilder& builder,
   DelegateParameter& p2 = parameters.PushBack();
   p2.ParameterType = RaverieTypeId(Arg2);
   ParseParameterArrays(parameters, spaceDelimitedNames);
-  return builder.AddBoundFunction(
-      classBoundType, name, boundFunction, parameters, RaverieTypeId(void), FunctionOptions::None);
+  return builder.AddBoundFunction(classBoundType, name, boundFunction, parameters, RaverieTypeId(void), FunctionOptions::None);
 }
 
-template <typename FunctionType,
-          FunctionType function,
-          typename Class,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3>
-static Function* FromMethod(LibraryBuilder& builder,
-                            BoundType* classBoundType,
-                            StringRange name,
-                            StringRange spaceDelimitedNames,
-                            void (Class::*)(Arg0, Arg1, Arg2, Arg3) const)
+template <typename FunctionType, FunctionType function, typename Class, typename Arg0, typename Arg1, typename Arg2, typename Arg3>
+static Function* FromMethod(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, void (Class::*)(Arg0, Arg1, Arg2, Arg3) const)
 {
   BoundFn boundFunction = BoundInstance<FunctionType, function, Class, Arg0, Arg1, Arg2, Arg3>;
   ParameterArray parameters;
@@ -1539,23 +1111,11 @@ static Function* FromMethod(LibraryBuilder& builder,
   DelegateParameter& p3 = parameters.PushBack();
   p3.ParameterType = RaverieTypeId(Arg3);
   ParseParameterArrays(parameters, spaceDelimitedNames);
-  return builder.AddBoundFunction(
-      classBoundType, name, boundFunction, parameters, RaverieTypeId(void), FunctionOptions::None);
+  return builder.AddBoundFunction(classBoundType, name, boundFunction, parameters, RaverieTypeId(void), FunctionOptions::None);
 }
 
-template <typename FunctionType,
-          FunctionType function,
-          typename Class,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3,
-          typename Arg4>
-static Function* FromMethod(LibraryBuilder& builder,
-                            BoundType* classBoundType,
-                            StringRange name,
-                            StringRange spaceDelimitedNames,
-                            void (Class::*)(Arg0, Arg1, Arg2, Arg3, Arg4) const)
+template <typename FunctionType, FunctionType function, typename Class, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
+static Function* FromMethod(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, void (Class::*)(Arg0, Arg1, Arg2, Arg3, Arg4) const)
 {
   BoundFn boundFunction = BoundInstance<FunctionType, function, Class, Arg0, Arg1, Arg2, Arg3, Arg4>;
   ParameterArray parameters;
@@ -1570,24 +1130,11 @@ static Function* FromMethod(LibraryBuilder& builder,
   DelegateParameter& p4 = parameters.PushBack();
   p4.ParameterType = RaverieTypeId(Arg4);
   ParseParameterArrays(parameters, spaceDelimitedNames);
-  return builder.AddBoundFunction(
-      classBoundType, name, boundFunction, parameters, RaverieTypeId(void), FunctionOptions::None);
+  return builder.AddBoundFunction(classBoundType, name, boundFunction, parameters, RaverieTypeId(void), FunctionOptions::None);
 }
 
-template <typename FunctionType,
-          FunctionType function,
-          typename Class,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3,
-          typename Arg4,
-          typename Arg5>
-static Function* FromMethod(LibraryBuilder& builder,
-                            BoundType* classBoundType,
-                            StringRange name,
-                            StringRange spaceDelimitedNames,
-                            void (Class::*)(Arg0, Arg1, Arg2, Arg3, Arg4, Arg5) const)
+template <typename FunctionType, FunctionType function, typename Class, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5>
+static Function* FromMethod(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, void (Class::*)(Arg0, Arg1, Arg2, Arg3, Arg4, Arg5) const)
 {
   BoundFn boundFunction = BoundInstance<FunctionType, function, Class, Arg0, Arg1, Arg2, Arg3, Arg4, Arg5>;
   ParameterArray parameters;
@@ -1604,25 +1151,11 @@ static Function* FromMethod(LibraryBuilder& builder,
   DelegateParameter& p5 = parameters.PushBack();
   p5.ParameterType = RaverieTypeId(Arg5);
   ParseParameterArrays(parameters, spaceDelimitedNames);
-  return builder.AddBoundFunction(
-      classBoundType, name, boundFunction, parameters, RaverieTypeId(void), FunctionOptions::None);
+  return builder.AddBoundFunction(classBoundType, name, boundFunction, parameters, RaverieTypeId(void), FunctionOptions::None);
 }
 
-template <typename FunctionType,
-          FunctionType function,
-          typename Class,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3,
-          typename Arg4,
-          typename Arg5,
-          typename Arg6>
-static Function* FromMethod(LibraryBuilder& builder,
-                            BoundType* classBoundType,
-                            StringRange name,
-                            StringRange spaceDelimitedNames,
-                            void (Class::*)(Arg0, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6) const)
+template <typename FunctionType, FunctionType function, typename Class, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5, typename Arg6>
+static Function* FromMethod(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, void (Class::*)(Arg0, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6) const)
 {
   BoundFn boundFunction = BoundInstance<FunctionType, function, Class, Arg0, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6>;
   ParameterArray parameters;
@@ -1641,46 +1174,31 @@ static Function* FromMethod(LibraryBuilder& builder,
   DelegateParameter& p6 = parameters.PushBack();
   p6.ParameterType = RaverieTypeId(Arg6);
   ParseParameterArrays(parameters, spaceDelimitedNames);
-  return builder.AddBoundFunction(
-      classBoundType, name, boundFunction, parameters, RaverieTypeId(void), FunctionOptions::None);
+  return builder.AddBoundFunction(classBoundType, name, boundFunction, parameters, RaverieTypeId(void), FunctionOptions::None);
 }
 
 template <typename FunctionType, FunctionType function, typename Class, typename Return>
-static Function* FromMethod(LibraryBuilder& builder,
-                            BoundType* classBoundType,
-                            StringRange name,
-                            StringRange spaceDelimitedNames,
-                            Return (Class::*)() const)
+static Function* FromMethod(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, Return (Class::*)() const)
 {
   BoundFn boundFunction = BoundInstanceReturn<FunctionType, function, Class, Return>;
   ParameterArray parameters;
   ParseParameterArrays(parameters, spaceDelimitedNames);
-  return builder.AddBoundFunction(
-      classBoundType, name, boundFunction, parameters, RaverieTypeId(Return), FunctionOptions::None);
+  return builder.AddBoundFunction(classBoundType, name, boundFunction, parameters, RaverieTypeId(Return), FunctionOptions::None);
 }
 
 template <typename FunctionType, FunctionType function, typename Class, typename Return, typename Arg0>
-static Function* FromMethod(LibraryBuilder& builder,
-                            BoundType* classBoundType,
-                            StringRange name,
-                            StringRange spaceDelimitedNames,
-                            Return (Class::*)(Arg0) const)
+static Function* FromMethod(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, Return (Class::*)(Arg0) const)
 {
   BoundFn boundFunction = BoundInstanceReturn<FunctionType, function, Class, Return, Arg0>;
   ParameterArray parameters;
   DelegateParameter& p0 = parameters.PushBack();
   p0.ParameterType = RaverieTypeId(Arg0);
   ParseParameterArrays(parameters, spaceDelimitedNames);
-  return builder.AddBoundFunction(
-      classBoundType, name, boundFunction, parameters, RaverieTypeId(Return), FunctionOptions::None);
+  return builder.AddBoundFunction(classBoundType, name, boundFunction, parameters, RaverieTypeId(Return), FunctionOptions::None);
 }
 
 template <typename FunctionType, FunctionType function, typename Class, typename Return, typename Arg0, typename Arg1>
-static Function* FromMethod(LibraryBuilder& builder,
-                            BoundType* classBoundType,
-                            StringRange name,
-                            StringRange spaceDelimitedNames,
-                            Return (Class::*)(Arg0, Arg1) const)
+static Function* FromMethod(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, Return (Class::*)(Arg0, Arg1) const)
 {
   BoundFn boundFunction = BoundInstanceReturn<FunctionType, function, Class, Return, Arg0, Arg1>;
   ParameterArray parameters;
@@ -1689,22 +1207,11 @@ static Function* FromMethod(LibraryBuilder& builder,
   DelegateParameter& p1 = parameters.PushBack();
   p1.ParameterType = RaverieTypeId(Arg1);
   ParseParameterArrays(parameters, spaceDelimitedNames);
-  return builder.AddBoundFunction(
-      classBoundType, name, boundFunction, parameters, RaverieTypeId(Return), FunctionOptions::None);
+  return builder.AddBoundFunction(classBoundType, name, boundFunction, parameters, RaverieTypeId(Return), FunctionOptions::None);
 }
 
-template <typename FunctionType,
-          FunctionType function,
-          typename Class,
-          typename Return,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2>
-static Function* FromMethod(LibraryBuilder& builder,
-                            BoundType* classBoundType,
-                            StringRange name,
-                            StringRange spaceDelimitedNames,
-                            Return (Class::*)(Arg0, Arg1, Arg2) const)
+template <typename FunctionType, FunctionType function, typename Class, typename Return, typename Arg0, typename Arg1, typename Arg2>
+static Function* FromMethod(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, Return (Class::*)(Arg0, Arg1, Arg2) const)
 {
   BoundFn boundFunction = BoundInstanceReturn<FunctionType, function, Class, Return, Arg0, Arg1, Arg2>;
   ParameterArray parameters;
@@ -1715,23 +1222,11 @@ static Function* FromMethod(LibraryBuilder& builder,
   DelegateParameter& p2 = parameters.PushBack();
   p2.ParameterType = RaverieTypeId(Arg2);
   ParseParameterArrays(parameters, spaceDelimitedNames);
-  return builder.AddBoundFunction(
-      classBoundType, name, boundFunction, parameters, RaverieTypeId(Return), FunctionOptions::None);
+  return builder.AddBoundFunction(classBoundType, name, boundFunction, parameters, RaverieTypeId(Return), FunctionOptions::None);
 }
 
-template <typename FunctionType,
-          FunctionType function,
-          typename Class,
-          typename Return,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3>
-static Function* FromMethod(LibraryBuilder& builder,
-                            BoundType* classBoundType,
-                            StringRange name,
-                            StringRange spaceDelimitedNames,
-                            Return (Class::*)(Arg0, Arg1, Arg2, Arg3) const)
+template <typename FunctionType, FunctionType function, typename Class, typename Return, typename Arg0, typename Arg1, typename Arg2, typename Arg3>
+static Function* FromMethod(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, Return (Class::*)(Arg0, Arg1, Arg2, Arg3) const)
 {
   BoundFn boundFunction = BoundInstanceReturn<FunctionType, function, Class, Return, Arg0, Arg1, Arg2, Arg3>;
   ParameterArray parameters;
@@ -1744,24 +1239,11 @@ static Function* FromMethod(LibraryBuilder& builder,
   DelegateParameter& p3 = parameters.PushBack();
   p3.ParameterType = RaverieTypeId(Arg3);
   ParseParameterArrays(parameters, spaceDelimitedNames);
-  return builder.AddBoundFunction(
-      classBoundType, name, boundFunction, parameters, RaverieTypeId(Return), FunctionOptions::None);
+  return builder.AddBoundFunction(classBoundType, name, boundFunction, parameters, RaverieTypeId(Return), FunctionOptions::None);
 }
 
-template <typename FunctionType,
-          FunctionType function,
-          typename Class,
-          typename Return,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3,
-          typename Arg4>
-static Function* FromMethod(LibraryBuilder& builder,
-                            BoundType* classBoundType,
-                            StringRange name,
-                            StringRange spaceDelimitedNames,
-                            Return (Class::*)(Arg0, Arg1, Arg2, Arg3, Arg4) const)
+template <typename FunctionType, FunctionType function, typename Class, typename Return, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
+static Function* FromMethod(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, Return (Class::*)(Arg0, Arg1, Arg2, Arg3, Arg4) const)
 {
   BoundFn boundFunction = BoundInstanceReturn<FunctionType, function, Class, Return, Arg0, Arg1, Arg2, Arg3, Arg4>;
   ParameterArray parameters;
@@ -1776,28 +1258,13 @@ static Function* FromMethod(LibraryBuilder& builder,
   DelegateParameter& p4 = parameters.PushBack();
   p4.ParameterType = RaverieTypeId(Arg4);
   ParseParameterArrays(parameters, spaceDelimitedNames);
-  return builder.AddBoundFunction(
-      classBoundType, name, boundFunction, parameters, RaverieTypeId(Return), FunctionOptions::None);
+  return builder.AddBoundFunction(classBoundType, name, boundFunction, parameters, RaverieTypeId(Return), FunctionOptions::None);
 }
 
-template <typename FunctionType,
-          FunctionType function,
-          typename Class,
-          typename Return,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3,
-          typename Arg4,
-          typename Arg5>
-static Function* FromMethod(LibraryBuilder& builder,
-                            BoundType* classBoundType,
-                            StringRange name,
-                            StringRange spaceDelimitedNames,
-                            Return (Class::*)(Arg0, Arg1, Arg2, Arg3, Arg4, Arg5) const)
+template <typename FunctionType, FunctionType function, typename Class, typename Return, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5>
+static Function* FromMethod(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, Return (Class::*)(Arg0, Arg1, Arg2, Arg3, Arg4, Arg5) const)
 {
-  BoundFn boundFunction =
-      BoundInstanceReturn<FunctionType, function, Class, Return, Arg0, Arg1, Arg2, Arg3, Arg4, Arg5>;
+  BoundFn boundFunction = BoundInstanceReturn<FunctionType, function, Class, Return, Arg0, Arg1, Arg2, Arg3, Arg4, Arg5>;
   ParameterArray parameters;
   DelegateParameter& p0 = parameters.PushBack();
   p0.ParameterType = RaverieTypeId(Arg0);
@@ -1812,29 +1279,13 @@ static Function* FromMethod(LibraryBuilder& builder,
   DelegateParameter& p5 = parameters.PushBack();
   p5.ParameterType = RaverieTypeId(Arg5);
   ParseParameterArrays(parameters, spaceDelimitedNames);
-  return builder.AddBoundFunction(
-      classBoundType, name, boundFunction, parameters, RaverieTypeId(Return), FunctionOptions::None);
+  return builder.AddBoundFunction(classBoundType, name, boundFunction, parameters, RaverieTypeId(Return), FunctionOptions::None);
 }
 
-template <typename FunctionType,
-          FunctionType function,
-          typename Class,
-          typename Return,
-          typename Arg0,
-          typename Arg1,
-          typename Arg2,
-          typename Arg3,
-          typename Arg4,
-          typename Arg5,
-          typename Arg6>
-static Function* FromMethod(LibraryBuilder& builder,
-                            BoundType* classBoundType,
-                            StringRange name,
-                            StringRange spaceDelimitedNames,
-                            Return (Class::*)(Arg0, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6) const)
+template <typename FunctionType, FunctionType function, typename Class, typename Return, typename Arg0, typename Arg1, typename Arg2, typename Arg3, typename Arg4, typename Arg5, typename Arg6>
+static Function* FromMethod(LibraryBuilder& builder, BoundType* classBoundType, StringRange name, StringRange spaceDelimitedNames, Return (Class::*)(Arg0, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6) const)
 {
-  BoundFn boundFunction =
-      BoundInstanceReturn<FunctionType, function, Class, Return, Arg0, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6>;
+  BoundFn boundFunction = BoundInstanceReturn<FunctionType, function, Class, Return, Arg0, Arg1, Arg2, Arg3, Arg4, Arg5, Arg6>;
   ParameterArray parameters;
   DelegateParameter& p0 = parameters.PushBack();
   p0.ParameterType = RaverieTypeId(Arg0);
@@ -1851,6 +1302,5 @@ static Function* FromMethod(LibraryBuilder& builder,
   DelegateParameter& p6 = parameters.PushBack();
   p6.ParameterType = RaverieTypeId(Arg6);
   ParseParameterArrays(parameters, spaceDelimitedNames);
-  return builder.AddBoundFunction(
-      classBoundType, name, boundFunction, parameters, RaverieTypeId(Return), FunctionOptions::None);
+  return builder.AddBoundFunction(classBoundType, name, boundFunction, parameters, RaverieTypeId(Return), FunctionOptions::None);
 }

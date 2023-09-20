@@ -14,10 +14,7 @@ RaverieDefineType(Viewport, builder, type)
 {
 }
 
-Viewport::Viewport(Composite* parent, Space* space, Camera* camera) :
-    Composite(parent),
-    mTargetSpace(space),
-    mCamera(camera)
+Viewport::Viewport(Composite* parent, Space* space, Camera* camera) : Composite(parent), mTargetSpace(space), mCamera(camera)
 {
   for (uint i = 0; i < 4; ++i)
   {
@@ -190,8 +187,7 @@ Vec3 Viewport::ScreenToWorldViewPlane(Vec2Param screenPoint, float viewDepth)
   plane.Set(viewDirection, planePoint);
 
   Intersection::IntersectionPoint iPoint;
-  Intersection::Type result =
-      Intersection::RayPlane(ray.Start, ray.Direction, plane.GetNormal(), plane.GetDistance(), &iPoint);
+  Intersection::Type result = Intersection::RayPlane(ray.Start, ray.Direction, plane.GetNormal(), plane.GetDistance(), &iPoint);
   if (result == Intersection::None)
     return ray.GetPoint(0.0f);
   return iPoint.Points[0];
@@ -205,8 +201,7 @@ Vec3 Viewport::ScreenToWorldPlane(Vec2Param screenPoint, Vec3Param worldPlaneNor
   plane.Set(worldPlaneNormal, worldPlanePosition);
 
   Intersection::IntersectionPoint iPoint;
-  Intersection::Type result =
-      Intersection::RayPlane(ray.Start, ray.Direction, plane.GetNormal(), plane.GetDistance(), &iPoint);
+  Intersection::Type result = Intersection::RayPlane(ray.Start, ray.Direction, plane.GetNormal(), plane.GetDistance(), &iPoint);
   if (result == Intersection::None)
     return ray.GetPoint(0.0f);
   return iPoint.Points[0];
@@ -297,8 +292,7 @@ ViewportDisplay::ViewportDisplay(Composite* parent) : Widget(parent)
   mViewport = (Viewport*)parent;
 }
 
-void ViewportDisplay::RenderUpdate(
-    ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
+void ViewportDisplay::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 

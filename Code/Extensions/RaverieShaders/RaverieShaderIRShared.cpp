@@ -11,8 +11,7 @@ RaverieShaderIROp::RaverieShaderIROp(OpType opType) : IRaverieShaderIR(mStaticBa
 
 bool RaverieShaderIROp::IsTerminator()
 {
-  bool isTerminator = (mOpType == OpType::OpReturn) || (mOpType == OpType::OpReturnValue) ||
-                      (mOpType == OpType::OpBranch) || (mOpType == OpType::OpBranchConditional);
+  bool isTerminator = (mOpType == OpType::OpReturn) || (mOpType == OpType::OpReturnValue) || (mOpType == OpType::OpBranch) || (mOpType == OpType::OpBranchConditional);
   return isTerminator;
 }
 
@@ -166,8 +165,7 @@ size_t RaverieShaderIRType::GetSubTypeCount()
 size_t RaverieShaderIRType::GetByteSize() const
 {
   // Force everything to 4 bytes
-  if (mBaseType == ShaderIRTypeBaseType::Bool || mBaseType == ShaderIRTypeBaseType::Int ||
-      mBaseType == ShaderIRTypeBaseType::Float)
+  if (mBaseType == ShaderIRTypeBaseType::Bool || mBaseType == ShaderIRTypeBaseType::Int || mBaseType == ShaderIRTypeBaseType::Float)
     return 4;
   // Don't pad matrices to weird byte alignments
   else if (mBaseType == ShaderIRTypeBaseType::Vector)
@@ -217,8 +215,7 @@ size_t RaverieShaderIRType::GetByteSize() const
 
 size_t RaverieShaderIRType::GetByteAlignment() const
 {
-  if (mBaseType == ShaderIRTypeBaseType::Bool || mBaseType == ShaderIRTypeBaseType::Int ||
-      mBaseType == ShaderIRTypeBaseType::Float)
+  if (mBaseType == ShaderIRTypeBaseType::Bool || mBaseType == ShaderIRTypeBaseType::Int || mBaseType == ShaderIRTypeBaseType::Float)
     return 4;
   else if (mBaseType == ShaderIRTypeBaseType::Vector)
   {
@@ -242,8 +239,8 @@ size_t RaverieShaderIRType::GetByteAlignment() const
     // types are padded up to vec4s. This happens for efficiency reason (at
     // least with uniform buffers).
     RaverieShaderIRType* elementType = mParameters[0]->As<RaverieShaderIRType>();
-    if (elementType->mBaseType == ShaderIRTypeBaseType::Int || elementType->mBaseType == ShaderIRTypeBaseType::Float ||
-        elementType->mBaseType == ShaderIRTypeBaseType::Bool || elementType->mBaseType == ShaderIRTypeBaseType::Vector)
+    if (elementType->mBaseType == ShaderIRTypeBaseType::Int || elementType->mBaseType == ShaderIRTypeBaseType::Float || elementType->mBaseType == ShaderIRTypeBaseType::Bool ||
+        elementType->mBaseType == ShaderIRTypeBaseType::Vector)
       return 16;
     return elementType->GetByteAlignment();
   }
@@ -265,8 +262,7 @@ size_t RaverieShaderIRType::GetByteAlignment() const
 
 ShaderIRTypeBaseType::Enum RaverieShaderIRType::GetBasePrimitiveType() const
 {
-  if (mBaseType == ShaderIRTypeBaseType::Bool || mBaseType == ShaderIRTypeBaseType::Int ||
-      mBaseType == ShaderIRTypeBaseType::Float)
+  if (mBaseType == ShaderIRTypeBaseType::Bool || mBaseType == ShaderIRTypeBaseType::Int || mBaseType == ShaderIRTypeBaseType::Float)
     return mBaseType;
   else if (mBaseType == ShaderIRTypeBaseType::Vector || mBaseType == ShaderIRTypeBaseType::Matrix)
     return mComponentType->GetBasePrimitiveType();
@@ -294,8 +290,7 @@ bool RaverieShaderIRType::IsGlobalType() const
 
   // Check the value of the storage class
   spv::StorageClass storageClass = (spv::StorageClass)storageClassAttribute->mParameters[0].GetIntValue();
-  if (storageClass == spv::StorageClass::StorageClassUniformConstant || storageClass == spv::StorageClassUniform ||
-      storageClass == spv::StorageClassStorageBuffer)
+  if (storageClass == spv::StorageClass::StorageClassUniformConstant || storageClass == spv::StorageClassUniform || storageClass == spv::StorageClassStorageBuffer)
     return true;
   return false;
 }
@@ -316,9 +311,7 @@ RaverieShaderIRType* RaverieShaderIRType::GetPointerType()
 
 RaverieShaderIRType* GetComponentType(RaverieShaderIRType* compositeType)
 {
-  bool isMathType = compositeType->mBaseType == ShaderIRTypeBaseType::Int ||
-                    compositeType->mBaseType == ShaderIRTypeBaseType::Float ||
-                    compositeType->mBaseType == ShaderIRTypeBaseType::Vector ||
+  bool isMathType = compositeType->mBaseType == ShaderIRTypeBaseType::Int || compositeType->mBaseType == ShaderIRTypeBaseType::Float || compositeType->mBaseType == ShaderIRTypeBaseType::Vector ||
                     compositeType->mBaseType == ShaderIRTypeBaseType::Matrix;
   ErrorIf(!isMathType,
           "Invalid type to find component type on. Only math types "
@@ -328,9 +321,7 @@ RaverieShaderIRType* GetComponentType(RaverieShaderIRType* compositeType)
 
 bool IsScalarType(RaverieShaderIRType* compositeType)
 {
-  bool isScalarType = compositeType->mBaseType == ShaderIRTypeBaseType::Int ||
-                      compositeType->mBaseType == ShaderIRTypeBaseType::Float ||
-                      compositeType->mBaseType == ShaderIRTypeBaseType::Bool;
+  bool isScalarType = compositeType->mBaseType == ShaderIRTypeBaseType::Int || compositeType->mBaseType == ShaderIRTypeBaseType::Float || compositeType->mBaseType == ShaderIRTypeBaseType::Bool;
   return isScalarType;
 }
 

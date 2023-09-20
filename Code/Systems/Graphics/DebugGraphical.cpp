@@ -145,8 +145,7 @@ void DebugGraphicalText::ExtractViewData(ViewNode& viewNode, ViewBlock& viewBloc
     uint debugTextStart = streamedVertices.Size();
 
     FontProcessor fontProcessor(frameBlock.mRenderQueues, &viewNode, debugText->mColor);
-    ProcessTextRange(
-        fontProcessor, font, debugText->mText, startLocation, align, Vec2(1, -1) * pixelScale, widths * 2.0f);
+    ProcessTextRange(fontProcessor, font, debugText->mText, startLocation, align, Vec2(1, -1) * pixelScale, widths * 2.0f);
 
     uint debugTextEnd = streamedVertices.Size();
 
@@ -159,11 +158,9 @@ void DebugGraphicalText::ExtractViewData(ViewNode& viewNode, ViewBlock& viewBloc
       viewScale = (debugText->mPosition - viewBlock.mEyePosition).Length() * Debug::cViewScale;
 
     // Local to View transform is different for each debug text object
-    Mat4 localToView =
-        viewBlock.mWorldToView * Math::BuildTransform(debugText->mPosition, rotation, Vec3(1, 1, 1) * viewScale);
+    Mat4 localToView = viewBlock.mWorldToView * Math::BuildTransform(debugText->mPosition, rotation, Vec3(1, 1, 1) * viewScale);
     for (uint i = debugTextStart; i < debugTextEnd; ++i)
-      streamedVertices[i].mPosition =
-          Math::TransformPoint(localToView, streamedVertices[i].mPosition + debugText->mViewScaleOffset);
+      streamedVertices[i].mPosition = Math::TransformPoint(localToView, streamedVertices[i].mPosition + debugText->mViewScaleOffset);
   }
 }
 

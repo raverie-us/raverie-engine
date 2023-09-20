@@ -11,8 +11,7 @@ public:
   {
   }
 
-  void RenderUpdate(
-      ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
+  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
   {
     Texture* texture = TextureManager::FindOrNull("White");
     if (texture == nullptr)

@@ -24,8 +24,7 @@ void MakeBasisFromY(Vec3Param yAxis, Mat3Ptr basis)
 } // namespace
 
 // Intersect a segment with an axis aligned bounding box.
-Type SegmentAabb(
-    Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param aabbMinPoint, Vec3Param aabbMaxPoint, Interval* interval)
+Type SegmentAabb(Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param aabbMinPoint, Vec3Param aabbMaxPoint, Interval* interval)
 {
   Error("Intersection - This function hasn't been implemented yet, you "
         "probably shouldn't be calling this function.");
@@ -37,13 +36,7 @@ Type SegmentAabb(
 
 // Intersect a segment with a capsule defined by its center, local axes, radius,
 // and half of the distance between the centers of the spherical endcaps.
-Type SegmentCapsule(Vec3Param segmentStart,
-                    Vec3Param segmentEnd,
-                    Vec3Param capsuleCenter,
-                    Mat3Param capsuleBasis,
-                    real capsuleRadius,
-                    real capsuleSegmentHalfLength,
-                    Interval* interval)
+Type SegmentCapsule(Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param capsuleCenter, Mat3Param capsuleBasis, real capsuleRadius, real capsuleSegmentHalfLength, Interval* interval)
 {
   Error("Intersection - This function hasn't been implemented yet, you "
         "probably shouldn't be calling this function.");
@@ -55,12 +48,7 @@ Type SegmentCapsule(Vec3Param segmentStart,
 
 // Intersect a segment with a capsule defined by the centers of the spherical
 // endcaps and the radius.
-Type SegmentCapsule(Vec3Param segmentStart,
-                    Vec3Param segmentEnd,
-                    Vec3Param capsulePointA,
-                    Vec3Param capsulePointB,
-                    real capsuleRadius,
-                    Interval* interval)
+Type SegmentCapsule(Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param capsulePointA, Vec3Param capsulePointB, real capsuleRadius, Interval* interval)
 {
   Error("Intersection - This function hasn't been implemented yet, you "
         "probably shouldn't be calling this function.");
@@ -76,13 +64,7 @@ Type SegmentCapsule(Vec3Param segmentStart,
 
 // Intersect a segment with a cylinder defined by its center, local axes,
 // radius, and half height.
-Type SegmentCylinder(Vec3Param segmentStart,
-                     Vec3Param segmentEnd,
-                     Vec3Param cylinderCenter,
-                     Mat3Param cylinderBasis,
-                     real cylinderRadius,
-                     real cylinderHalfHeight,
-                     Interval* interval)
+Type SegmentCylinder(Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param cylinderCenter, Mat3Param cylinderBasis, real cylinderRadius, real cylinderHalfHeight, Interval* interval)
 {
   Error("Intersection - This function hasn't been implemented yet, you "
         "probably shouldn't be calling this function.");
@@ -94,12 +76,7 @@ Type SegmentCylinder(Vec3Param segmentStart,
 
 // Intersect a segment with a cylinder defined by the points at the planar
 // endcap and the radius.
-Type SegmentCylinder(Vec3Param segmentStart,
-                     Vec3Param segmentEnd,
-                     Vec3Param cylinderPointA,
-                     Vec3Param cylinderPointB,
-                     real cylinderRadius,
-                     Interval* interval)
+Type SegmentCylinder(Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param cylinderPointA, Vec3Param cylinderPointB, real cylinderRadius, Interval* interval)
 {
   Error("Intersection - This function hasn't been implemented yet, you "
         "probably shouldn't be calling this function.");
@@ -115,14 +92,8 @@ Type SegmentCylinder(Vec3Param segmentStart,
 
 // Intersect a segment with an elliptical cylinder defined by its center, local
 // axes, major radius (x-axis), minor radius (z-axis), and half height (y-axis).
-Type SegmentCylinder(Vec3Param segmentStart,
-                     Vec3Param segmentEnd,
-                     Vec3Param cylinderCenter,
-                     Mat3Param cylinderBasis,
-                     real cylinderMajorRadius,
-                     real cylinderMinorRadius,
-                     real cylinderHalfHeight,
-                     Interval* interval)
+Type SegmentCylinder(
+    Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param cylinderCenter, Mat3Param cylinderBasis, real cylinderMajorRadius, real cylinderMinorRadius, real cylinderHalfHeight, Interval* interval)
 {
   Error("Intersection - This function hasn't been implemented yet, you "
         "probably shouldn't be calling this function.");
@@ -133,12 +104,7 @@ Type SegmentCylinder(Vec3Param segmentStart,
 }
 
 // Intersect a segment with an ellipsoid.
-Type SegmentEllipsoid(Vec3Param segmentStart,
-                      Vec3Param segmentEnd,
-                      Vec3Param ellipsoidCenter,
-                      Vec3Param ellipsoidRadii,
-                      Mat3Param ellipsoidBasis,
-                      Interval* interval)
+Type SegmentEllipsoid(Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param ellipsoidCenter, Vec3Param ellipsoidRadii, Mat3Param ellipsoidBasis, Interval* interval)
 {
   Error("Intersection - This function hasn't been implemented yet, you "
         "probably shouldn't be calling this function.");
@@ -149,8 +115,7 @@ Type SegmentEllipsoid(Vec3Param segmentStart,
 }
 
 // Intersect a segment with a plane.
-Type SegmentPlane(
-    Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param planeNormal, real planeDistance, Interval* interval)
+Type SegmentPlane(Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param planeNormal, real planeDistance, Interval* interval)
 {
   Error("Intersection - This function hasn't been implemented yet, you "
         "probably shouldn't be calling this function.");
@@ -161,12 +126,7 @@ Type SegmentPlane(
 }
 
 // Intersect a segment with an oriented bounding box.
-Type SegmentObb(Vec3Param segmentStart,
-                Vec3Param segmentEnd,
-                Vec3Param obbCenter,
-                Vec3Param obbHalfExtents,
-                Mat3Param obbBasis,
-                Interval* interval)
+Type SegmentObb(Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param obbCenter, Vec3Param obbHalfExtents, Mat3Param obbBasis, Interval* interval)
 {
   Error("Intersection - This function hasn't been implemented yet, you "
         "probably shouldn't be calling this function.");
@@ -177,8 +137,7 @@ Type SegmentObb(Vec3Param segmentStart,
 }
 
 // Intersect a segment with a sphere.
-Type SegmentSphere(
-    Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param sphereCenter, real sphereRadius, Interval* interval)
+Type SegmentSphere(Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param sphereCenter, real sphereRadius, Interval* interval)
 {
   Error("Intersection - This function hasn't been implemented yet, you "
         "probably shouldn't be calling this function.");
@@ -189,13 +148,7 @@ Type SegmentSphere(
 }
 
 // Intersect a segment with a torus.
-Type SegmentTorus(Vec3Param segmentStart,
-                  Vec3Param segmentEnd,
-                  Vec3Param torusCenter,
-                  Mat3Param torusBasis,
-                  real torusRingRadius,
-                  real torusTubeRadius,
-                  Interval* interval)
+Type SegmentTorus(Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param torusCenter, Mat3Param torusBasis, real torusRingRadius, real torusTubeRadius, Interval* interval)
 {
   Error("Intersection - This function hasn't been implemented yet, you "
         "probably shouldn't be calling this function.");
@@ -206,12 +159,7 @@ Type SegmentTorus(Vec3Param segmentStart,
 }
 
 // Intersect a segment with a triangle.
-Type SegmentTriangle(Vec3Param segmentStart,
-                     Vec3Param segmentEnd,
-                     Vec3Param trianglePointA,
-                     Vec3Param trianglePointB,
-                     Vec3Param trianglePointC,
-                     Interval* interval)
+Type SegmentTriangle(Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param trianglePointA, Vec3Param trianglePointB, Vec3Param trianglePointC, Interval* interval)
 {
   Error("Intersection - This function hasn't been implemented yet, you "
         "probably shouldn't be calling this function.");
@@ -222,11 +170,7 @@ Type SegmentTriangle(Vec3Param segmentStart,
 }
 
 // Intersect a segment with an axis aligned bounding box.
-Type SegmentAabb(Vec3Param segmentStart,
-                 Vec3Param segmentEnd,
-                 Vec3Param aabbMinPoint,
-                 Vec3Param aabbMaxPoint,
-                 IntersectionPoint* intersectionPoint)
+Type SegmentAabb(Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param aabbMinPoint, Vec3Param aabbMaxPoint, IntersectionPoint* intersectionPoint)
 {
   ErrorIf((aabbMinPoint.x > aabbMaxPoint.x) || (aabbMinPoint.y > aabbMaxPoint.y) || (aabbMinPoint.z > aabbMaxPoint.z),
           "Intersection - Axis-aligned bounding box's minimum point is greater"
@@ -380,12 +324,7 @@ Type SegmentAabb(Vec3Param segmentStart,
 }
 
 // Intersect a segment with a capsule.
-Type SegmentCapsule(Vec3Param segmentStart,
-                    Vec3Param segmentEnd,
-                    Vec3Param capsulePointA,
-                    Vec3Param capsulePointB,
-                    real capsuleRadius,
-                    IntersectionPoint* intersectionPoint)
+Type SegmentCapsule(Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param capsulePointA, Vec3Param capsulePointB, real capsuleRadius, IntersectionPoint* intersectionPoint)
 {
   // This isn't the "fastest" code that can detect intersection with a segment
   // and a capsule, but it works and makes the most sense (to me)
@@ -543,12 +482,7 @@ Type SegmentCapsule(Vec3Param segmentStart,
 }
 
 // Intersect a segment with a cylinder.
-Type SegmentCylinder(Vec3Param segmentStart,
-                     Vec3Param segmentEnd,
-                     Vec3Param cylinderPointA,
-                     Vec3Param cylinderPointB,
-                     real cylinderRadius,
-                     IntersectionPoint* intersectionPoint)
+Type SegmentCylinder(Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param cylinderPointA, Vec3Param cylinderPointB, real cylinderRadius, IntersectionPoint* intersectionPoint)
 {
   // This isn't the "fastest" code that can detect intersection with a segment
   // and a cylinder, but it works and makes the most sense (to me)
@@ -659,12 +593,7 @@ Type SegmentCylinder(Vec3Param segmentStart,
 }
 
 /// Intersect a segment with an ellipsoid.
-Type SegmentEllipsoid(Vec3Param segmentStart,
-                      Vec3Param segmentEnd,
-                      Vec3Param ellipsoidCenter,
-                      Vec3Param ellipsoidRadii,
-                      Mat3Param ellipsoidBasis,
-                      IntersectionPoint* intersectionPoint)
+Type SegmentEllipsoid(Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param ellipsoidCenter, Vec3Param ellipsoidRadii, Mat3Param ellipsoidBasis, IntersectionPoint* intersectionPoint)
 {
   Error("Intersection - This function hasn't been implemented yet, you "
         "probably shouldn't be calling this function.");
@@ -677,11 +606,7 @@ Type SegmentEllipsoid(Vec3Param segmentStart,
 }
 
 // Intersect a segment with a plane.
-Type SegmentPlane(Vec3Param segmentStart,
-                  Vec3Param segmentEnd,
-                  Vec3Param planeNormal,
-                  real planeDistance,
-                  IntersectionPoint* intersectionPoint)
+Type SegmentPlane(Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param planeNormal, real planeDistance, IntersectionPoint* intersectionPoint)
 {
   // Compute the t value for the directed line ab intersecting the plane
   Vec3 segment = segmentEnd - segmentStart;
@@ -709,12 +634,7 @@ Type SegmentPlane(Vec3Param segmentStart,
 }
 
 // Intersect a segment with an oriented bounding box.
-Type SegmentObb(Vec3Param segmentStart,
-                Vec3Param segmentEnd,
-                Vec3Param obbCenter,
-                Vec3Param obbHalfExtents,
-                Mat3Param obbBasis,
-                IntersectionPoint* intersectionPoint)
+Type SegmentObb(Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param obbCenter, Vec3Param obbHalfExtents, Mat3Param obbBasis, IntersectionPoint* intersectionPoint)
 {
   // Take everything into the box's body space and use the ray-aabb function
   Vec3 segStart = segmentStart - obbCenter;
@@ -743,11 +663,7 @@ Type SegmentObb(Vec3Param segmentStart,
 }
 
 // Intersect a segment with a sphere.
-Type SegmentSphere(Vec3Param segmentStart,
-                   Vec3Param segmentEnd,
-                   Vec3Param sphereCenter,
-                   real sphereRadius,
-                   IntersectionPoint* intersectionPoint)
+Type SegmentSphere(Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param sphereCenter, real sphereRadius, IntersectionPoint* intersectionPoint)
 {
   Vec3 m = segmentStart - sphereCenter;
   Vec3 d = segmentEnd - segmentStart;
@@ -850,12 +766,7 @@ Type SegmentSphere(Vec3Param segmentStart,
 }
 
 // Intersect a segment with a triangle.
-Type SegmentTriangle(Vec3Param segmentStart,
-                     Vec3Param segmentEnd,
-                     Vec3Param trianglePointA,
-                     Vec3Param trianglePointB,
-                     Vec3Param trianglePointC,
-                     IntersectionPoint* intersectionPoint)
+Type SegmentTriangle(Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param trianglePointA, Vec3Param trianglePointB, Vec3Param trianglePointC, IntersectionPoint* intersectionPoint)
 {
   Vec3 aToB = trianglePointB - trianglePointA;
   Vec3 aToC = trianglePointC - trianglePointA;

@@ -130,16 +130,14 @@ void ResourceListResourceAdded(SelfResource* selfResource, OtherResource* otherR
     *listName = otherResource->ResourceIdName;
 
   // Function potentially called more than once if entry already exists
-  ErrorIf(otherResource->mReferencedByList.mResourceIdNames.Contains(selfResource->ResourceIdName),
-          "Resource already in list.");
+  ErrorIf(otherResource->mReferencedByList.mResourceIdNames.Contains(selfResource->ResourceIdName), "Resource already in list.");
   // Add to the runtime list of the other resource
   otherResource->mReferencedByList.mResourceIdNames.PushBack(selfResource->ResourceIdName);
 
   bool activeHandle = selfResource->mActiveResources.Contains(otherResource);
   // There is an error in our management of cross references if these ever don't
   // match
-  ErrorIf(activeHandle != otherResource->mActiveResources.Contains(selfResource),
-          "Material/RenderGroup cross reference mismatch.");
+  ErrorIf(activeHandle != otherResource->mActiveResources.Contains(selfResource), "Material/RenderGroup cross reference mismatch.");
 
   // Do not add another entry if resources are already referencing each other
   if (!activeHandle)
@@ -157,8 +155,7 @@ void ResourceListResourceRemoved(SelfResource* selfResource, OtherResource* othe
   // needs to be removed
   if (selfResource->mSerializedList.mResourceIdNames.Contains(otherResource->ResourceIdName))
   {
-    ErrorIf(!otherResource->mReferencedByList.mResourceIdNames.Contains(selfResource->ResourceIdName),
-            "Resource not in list.");
+    ErrorIf(!otherResource->mReferencedByList.mResourceIdNames.Contains(selfResource->ResourceIdName), "Resource not in list.");
     otherResource->mReferencedByList.mResourceIdNames.EraseValue(selfResource->ResourceIdName);
   }
 
@@ -173,16 +170,14 @@ void ResourceListResourceRemoved(SelfResource* selfResource, OtherResource* othe
 template <typename SelfResource, typename OtherResource>
 void ResourceListEntryAdded(SelfResource* selfResource, OtherResource* otherResource)
 {
-  ErrorIf(otherResource->mReferencedByList.mResourceIdNames.Contains(selfResource->ResourceIdName),
-          "Resource already in list.");
+  ErrorIf(otherResource->mReferencedByList.mResourceIdNames.Contains(selfResource->ResourceIdName), "Resource already in list.");
   // Add to the runtime list of the other resource
   otherResource->mReferencedByList.mResourceIdNames.PushBack(selfResource->ResourceIdName);
 
   bool activeHandle = selfResource->mActiveResources.Contains(otherResource);
   // There is an error in our management of cross references if these ever don't
   // match
-  ErrorIf(activeHandle != otherResource->mActiveResources.Contains(selfResource),
-          "Material/RenderGroup cross reference mismatch.");
+  ErrorIf(activeHandle != otherResource->mActiveResources.Contains(selfResource), "Material/RenderGroup cross reference mismatch.");
 
   // Do not add another entry if resources are already referencing each other
   if (!activeHandle)
@@ -196,16 +191,13 @@ void ResourceListEntryAdded(SelfResource* selfResource, OtherResource* otherReso
 template <typename SelfResource, typename OtherResource>
 void ResourceListEntryRemoved(SelfResource* selfResource, OtherResource* otherResource)
 {
-  ErrorIf(!otherResource->mReferencedByList.mResourceIdNames.Contains(selfResource->ResourceIdName),
-          "Resource not in list.");
+  ErrorIf(!otherResource->mReferencedByList.mResourceIdNames.Contains(selfResource->ResourceIdName), "Resource not in list.");
   // Remove from the runtime list of the other resource
   otherResource->mReferencedByList.mResourceIdNames.EraseValue(selfResource->ResourceIdName);
 
   // There is an error in our management of cross references if these ever don't
   // match
-  ErrorIf(selfResource->mActiveResources.Contains(otherResource) !=
-              otherResource->mActiveResources.Contains(selfResource),
-          "Material/RenderGroup cross reference mismatch.");
+  ErrorIf(selfResource->mActiveResources.Contains(otherResource) != otherResource->mActiveResources.Contains(selfResource), "Material/RenderGroup cross reference mismatch.");
 
   // Do not remove entries if still in other resource's list
   if (!otherResource->mSerializedList.mResourceIdNames.Contains(selfResource->ResourceIdName))

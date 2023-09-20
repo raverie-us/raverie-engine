@@ -5,27 +5,24 @@ using namespace Raverie;
 
 static GameOrEditorStartup* startup = nullptr;
 
-extern "C" {
-void __wasm_call_ctors();
+extern "C"
+{
+  void __wasm_call_ctors();
 }
 
-void* RaverieExportNamed(ExportAllocate)(size_t size) {
+void* RaverieExportNamed(ExportAllocate)(size_t size)
+{
   return malloc(size);
 }
 
-void RaverieExportNamed(ExportFree)(void* pointer) {
+void RaverieExportNamed(ExportFree)(void* pointer)
+{
   free(pointer);
 }
 
 void RaverieExportNamed(ExportInitialize)(
-  const char* arguments,
-  int32_t clientWidth,
-  int32_t clientHeight,
-  bool focused,
-  byte* projectDataSteal,
-  size_t projectLength,
-  byte* builtContentDataSteal,
-  size_t builtContentLength) {
+    const char* arguments, int32_t clientWidth, int32_t clientHeight, bool focused, byte* projectDataSteal, size_t projectLength, byte* builtContentDataSteal, size_t builtContentLength)
+{
   __wasm_call_ctors();
   Shell::sInitialClientSize = IntVec2(clientWidth, clientHeight);
   Shell::sInitialFocused = focused;
@@ -35,7 +32,8 @@ void RaverieExportNamed(ExportInitialize)(
   gCommandLine = arguments;
 }
 
-void RaverieExportNamed(ExportRunIteration)() {
+void RaverieExportNamed(ExportRunIteration)()
+{
   startup->RunIteration();
 }
 

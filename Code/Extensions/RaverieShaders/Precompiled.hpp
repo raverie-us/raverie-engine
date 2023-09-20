@@ -2,7 +2,7 @@
 #pragma once
 
 #ifndef RaverieExceptions
-#define SPIRV_CROSS_EXCEPTIONS_TO_ASSERTIONS
+#  define SPIRV_CROSS_EXCEPTIONS_TO_ASSERTIONS
 #endif
 #include "RaverieShadersStandard.hpp"
 

@@ -15,8 +15,7 @@ void GetResourcesFromProperties(HandleParam object, HashSet<Resource*>& resource
   {
     // We're only looking for dependencies that are serialized. Any runtime
     // references don't matter.
-    if (metaProperty->HasAttribute(PropertyAttributes::cProperty) == nullptr &&
-        metaProperty->HasAttribute(PropertyAttributes::cSerialize) == nullptr &&
+    if (metaProperty->HasAttribute(PropertyAttributes::cProperty) == nullptr && metaProperty->HasAttribute(PropertyAttributes::cSerialize) == nullptr &&
         metaProperty->HasAttribute(PropertyAttributes::cDeprecatedSerialized) == nullptr)
       continue;
 

@@ -136,11 +136,7 @@ public:
 
   /// Reacts if the replica property has been legitimately changed, determined
   /// using comparisons, since this function was last called
-  void ReactToChanges(TimeMs timestamp,
-                      ReplicationPhase::Enum replicationPhase,
-                      TransmissionDirection::Enum direction,
-                      bool generateNotification = true,
-                      bool setLastValue = true);
+  void ReactToChanges(TimeMs timestamp, ReplicationPhase::Enum replicationPhase, TransmissionDirection::Enum direction, bool generateNotification = true, bool setLastValue = true);
 
   //
   // Internal
@@ -235,11 +231,7 @@ class ReplicaPropertyType
 {
 public:
   /// Constructor
-  ReplicaPropertyType(const String& name,
-                      NativeType* nativeType,
-                      SerializeValueFn serializeValueFn,
-                      GetValueFn getValueFn,
-                      SetValueFn setValueFn);
+  ReplicaPropertyType(const String& name, NativeType* nativeType, SerializeValueFn serializeValueFn, GetValueFn getValueFn, SetValueFn setValueFn);
 
   /// Destructor
   REPLICA_PROPERTY_TYPE_VIRTUAL ~ReplicaPropertyType();

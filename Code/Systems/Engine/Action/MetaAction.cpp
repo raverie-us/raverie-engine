@@ -22,8 +22,8 @@ Any NoInterpolation(AnyParam starting, AnyParam ending, float t)
   return ending;
 }
 
-#define InterpolatorFor(type)                                                                                          \
-  if (typeId == RaverieTypeId(type))                                                                                     \
+#define InterpolatorFor(type)                                                                                                                                                                          \
+  if (typeId == RaverieTypeId(type))                                                                                                                                                                   \
     return InterpolateType<type>;
 
 Interpolator GetInterpolator(Type* typeId)
@@ -141,8 +141,7 @@ public:
   }
 };
 
-Action* CreateMetaAnimatePropertyAction(
-    HandleParam handle, Property* property, float duration, AnyParam ending, EaseType::Enum ease)
+Action* CreateMetaAnimatePropertyAction(HandleParam handle, Property* property, float duration, AnyParam ending, EaseType::Enum ease)
 {
   MetaAnimateProperty* action = new MetaAnimateProperty();
   action->mDuration = duration;

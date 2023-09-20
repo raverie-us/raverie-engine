@@ -140,8 +140,7 @@ void DragSelectSubTool::OnMouseDragMove(ViewportMouseEvent* e)
   Vec2 minSelectSize = viewport->ViewportToScreen(Vec2(0, 0));
   Vec2 maxSelectSize = viewport->ViewportToScreen(viewport->GetSize());
   upperLeftScreen = Vec2(Math::Max(upperLeftScreen.x, minSelectSize.x), Math::Max(upperLeftScreen.y, minSelectSize.y));
-  lowerRightScreen =
-      Vec2(Math::Min(lowerRightScreen.x, maxSelectSize.x), Math::Min(lowerRightScreen.y, maxSelectSize.y));
+  lowerRightScreen = Vec2(Math::Min(lowerRightScreen.x, maxSelectSize.x), Math::Min(lowerRightScreen.y, maxSelectSize.y));
 
   // can't cast a frustum of zero size
   if (upperLeftScreen.x != lowerRightScreen.x && upperLeftScreen.y != lowerRightScreen.y)
@@ -223,8 +222,7 @@ void SelectorSpringSubTool::OnMouseDragMove(ViewportMouseEvent* e)
   Vec2 minSelectSize = viewport->ViewportToScreen(Vec2(0, 0));
   Vec2 maxSelectSize = viewport->ViewportToScreen(viewport->GetSize());
   upperLeftScreen = Vec2(Math::Max(upperLeftScreen.x, minSelectSize.x), Math::Max(upperLeftScreen.y, minSelectSize.y));
-  lowerRightScreen =
-      Vec2(Math::Min(lowerRightScreen.x, maxSelectSize.x), Math::Min(lowerRightScreen.y, maxSelectSize.y));
+  lowerRightScreen = Vec2(Math::Min(lowerRightScreen.x, maxSelectSize.x), Math::Min(lowerRightScreen.y, maxSelectSize.y));
 
   // can't cast a frustum of zero size
   if (upperLeftScreen.x != lowerRightScreen.x && upperLeftScreen.y != lowerRightScreen.y)

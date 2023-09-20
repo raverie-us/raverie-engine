@@ -339,9 +339,7 @@ struct NetHostRefreshData
 /// Serializes network host record list data.
 /// Returns the number of bits serialized if successful, else 0.
 template <>
-Bits Serialize<NetHostRefreshData>(SerializeDirection::Enum direction,
-                                   BitStream& bitStream,
-                                   NetHostRefreshData& netRequestHostRefreshData);
+Bits Serialize<NetHostRefreshData>(SerializeDirection::Enum direction, BitStream& bitStream, NetHostRefreshData& netRequestHostRefreshData);
 
 //                                 FamilyTree //
 
@@ -424,9 +422,7 @@ typedef ArraySet<FamilyTreeId> FamilyTreeIdSet;
 
 //                             NetUserAddRequestData //
 template <>
-inline Bits Serialize<NetUserAddRequestData>(SerializeDirection::Enum direction,
-                                             BitStream& bitStream,
-                                             NetUserAddRequestData& netUserAddRequestData)
+inline Bits Serialize<NetUserAddRequestData>(SerializeDirection::Enum direction, BitStream& bitStream, NetUserAddRequestData& netUserAddRequestData)
 {
   // Write operation?
   if (direction == SerializeDirection::Write)
@@ -465,9 +461,7 @@ inline Bits Serialize<NetUserAddRequestData>(SerializeDirection::Enum direction,
 
 //                             NetUserAddResponseData //
 template <>
-inline Bits Serialize<NetUserAddResponseData>(SerializeDirection::Enum direction,
-                                              BitStream& bitStream,
-                                              NetUserAddResponseData& netUserAddResponseData)
+inline Bits Serialize<NetUserAddResponseData>(SerializeDirection::Enum direction, BitStream& bitStream, NetUserAddResponseData& netUserAddResponseData)
 {
   // Write operation?
   if (direction == SerializeDirection::Write)
@@ -496,10 +490,7 @@ inline Bits Serialize<NetUserAddResponseData>(SerializeDirection::Enum direction
     const Bits bitsReadStart = bitStream.GetBitsRead();
 
     // Read network user add response
-    ReturnIf(
-        !bitStream.ReadQuantized(netUserAddResponseData.mAddResponse, NetUserAddResponseMin, NetUserAddResponseMax),
-        0,
-        "");
+    ReturnIf(!bitStream.ReadQuantized(netUserAddResponseData.mAddResponse, NetUserAddResponseMin, NetUserAddResponseMax), 0, "");
 
     // Accepted?
     if (netUserAddResponseData.mAddResponse == NetUserAddResponse::Accept)
@@ -518,9 +509,7 @@ inline Bits Serialize<NetUserAddResponseData>(SerializeDirection::Enum direction
 
 //                            NetUserRemoveRequestData //
 template <>
-inline Bits Serialize<NetUserRemoveRequestData>(SerializeDirection::Enum direction,
-                                                BitStream& bitStream,
-                                                NetUserRemoveRequestData& netUserRemoveRequestData)
+inline Bits Serialize<NetUserRemoveRequestData>(SerializeDirection::Enum direction, BitStream& bitStream, NetUserRemoveRequestData& netUserRemoveRequestData)
 {
   // Write operation?
   if (direction == SerializeDirection::Write)
@@ -554,9 +543,7 @@ inline Bits Serialize<NetUserRemoveRequestData>(SerializeDirection::Enum directi
 
 //                            NetLevelLoadStartedData //
 template <>
-inline Bits Serialize<NetLevelLoadStartedData>(SerializeDirection::Enum direction,
-                                               BitStream& bitStream,
-                                               NetLevelLoadStartedData& netLevelLoadStartedData)
+inline Bits Serialize<NetLevelLoadStartedData>(SerializeDirection::Enum direction, BitStream& bitStream, NetLevelLoadStartedData& netLevelLoadStartedData)
 {
   // Write operation?
   if (direction == SerializeDirection::Write)
@@ -600,9 +587,7 @@ inline Bits Serialize<NetLevelLoadStartedData>(SerializeDirection::Enum directio
 
 //                            NetLevelLoadFinishedData //
 template <>
-inline Bits Serialize<NetLevelLoadFinishedData>(SerializeDirection::Enum direction,
-                                                BitStream& bitStream,
-                                                NetLevelLoadFinishedData& netLevelLoadFinishedData)
+inline Bits Serialize<NetLevelLoadFinishedData>(SerializeDirection::Enum direction, BitStream& bitStream, NetLevelLoadFinishedData& netLevelLoadFinishedData)
 {
   // Write operation?
   if (direction == SerializeDirection::Write)
@@ -640,9 +625,7 @@ inline Bits Serialize<NetLevelLoadFinishedData>(SerializeDirection::Enum directi
 
 //                              NetConnectRequestData //
 template <>
-inline Bits Serialize<NetConnectRequestData>(SerializeDirection::Enum direction,
-                                             BitStream& bitStream,
-                                             NetConnectRequestData& netConnectRequestData)
+inline Bits Serialize<NetConnectRequestData>(SerializeDirection::Enum direction, BitStream& bitStream, NetConnectRequestData& netConnectRequestData)
 {
   // Write operation?
   if (direction == SerializeDirection::Write)
@@ -676,9 +659,7 @@ inline Bits Serialize<NetConnectRequestData>(SerializeDirection::Enum direction,
 
 //                                 NetHostPingData //
 template <>
-inline Bits Serialize<NetHostPingData>(SerializeDirection::Enum direction,
-                                       BitStream& bitStream,
-                                       NetHostPingData& netHostPingData)
+inline Bits Serialize<NetHostPingData>(SerializeDirection::Enum direction, BitStream& bitStream, NetHostPingData& netHostPingData)
 {
   // Write operation?
   if (direction == SerializeDirection::Write)
@@ -730,9 +711,7 @@ inline Bits Serialize<NetHostPingData>(SerializeDirection::Enum direction,
 
 //                                 NetHostPongData //
 template <>
-inline Bits Serialize<NetHostPongData>(SerializeDirection::Enum direction,
-                                       BitStream& bitStream,
-                                       NetHostPongData& netHostPongData)
+inline Bits Serialize<NetHostPongData>(SerializeDirection::Enum direction, BitStream& bitStream, NetHostPongData& netHostPongData)
 {
   // Write operation?
   if (direction == SerializeDirection::Write)
@@ -784,9 +763,7 @@ inline Bits Serialize<NetHostPongData>(SerializeDirection::Enum direction,
 
 //                                NetHostRecordList //
 template <>
-inline Bits Serialize<NetHostRecordListData>(SerializeDirection::Enum direction,
-                                             BitStream& bitStream,
-                                             NetHostRecordListData& netHostRecordList)
+inline Bits Serialize<NetHostRecordListData>(SerializeDirection::Enum direction, BitStream& bitStream, NetHostRecordListData& netHostRecordList)
 {
   // Write operation?
   if (direction == SerializeDirection::Write)
@@ -871,9 +848,7 @@ inline Bits Serialize<NetHostRecordListData>(SerializeDirection::Enum direction,
 
 //                              NetHostPublishData //
 template <>
-inline Bits Serialize<NetHostPublishData>(SerializeDirection::Enum direction,
-                                          BitStream& bitStream,
-                                          NetHostPublishData& netHostPingData)
+inline Bits Serialize<NetHostPublishData>(SerializeDirection::Enum direction, BitStream& bitStream, NetHostPublishData& netHostPingData)
 {
   // Write operation?
   if (direction == SerializeDirection::Write)
@@ -907,9 +882,7 @@ inline Bits Serialize<NetHostPublishData>(SerializeDirection::Enum direction,
 
 //                              NetRequestHostRefreshData //
 template <>
-inline Bits Serialize<NetRequestHostRefreshData>(SerializeDirection::Enum direction,
-                                                 BitStream& bitStream,
-                                                 NetRequestHostRefreshData& netRequestHostRefreshData)
+inline Bits Serialize<NetRequestHostRefreshData>(SerializeDirection::Enum direction, BitStream& bitStream, NetRequestHostRefreshData& netRequestHostRefreshData)
 {
   // Write operation?
   if (direction == SerializeDirection::Write)
@@ -943,9 +916,7 @@ inline Bits Serialize<NetRequestHostRefreshData>(SerializeDirection::Enum direct
 
 //                              NetHostRefreshData //
 template <>
-inline Bits Serialize<NetHostRefreshData>(SerializeDirection::Enum direction,
-                                          BitStream& bitStream,
-                                          NetHostRefreshData& netHostRefreshData)
+inline Bits Serialize<NetHostRefreshData>(SerializeDirection::Enum direction, BitStream& bitStream, NetHostRefreshData& netHostRefreshData)
 {
   // Write operation?
   if (direction == SerializeDirection::Write)

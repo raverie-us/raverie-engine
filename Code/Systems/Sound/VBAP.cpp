@@ -25,11 +25,7 @@ float GetNormalizeValue(const Math::Vec2& vector)
 
 // Speaker Info
 
-SpeakerInfo::SpeakerInfo(float radians, const Math::Vec2& vector, SpeakerInfo* neighbor, unsigned index) :
-    mAngleRadians(radians),
-    mVector(vector),
-    mLeftNeighbor(neighbor),
-    mChannelIndex(index)
+SpeakerInfo::SpeakerInfo(float radians, const Math::Vec2& vector, SpeakerInfo* neighbor, unsigned index) : mAngleRadians(radians), mVector(vector), mLeftNeighbor(neighbor), mChannelIndex(index)
 {
   if (Math::Abs(mVector.x) < 0.0001f)
     mVector.x = 0.0f;
@@ -236,24 +232,13 @@ void VBAP::ComputeGains(Math::Vec2 sourceVec, const float sourceExtent, float* g
 
     // In this case the angles are within the normal range
     if (speaker->mAngleRadians >= 0.0f || speaker->mLeftNeighbor->mAngleRadians <= 0.0f)
-      UpdateSpeaker(
-          speaker, gainsOutput, minRadians, maxRadians, speaker->mLeftNeighbor->mAngleRadians, speaker->mAngleRadians);
+      UpdateSpeaker(speaker, gainsOutput, minRadians, maxRadians, speaker->mLeftNeighbor->mAngleRadians, speaker->mAngleRadians);
     // Otherwise, try adjusting both angles. The function performs the check for
     // the correct angle value.
     else
     {
-      UpdateSpeaker(speaker,
-                    gainsOutput,
-                    minRadians,
-                    maxRadians,
-                    speaker->mLeftNeighbor->mAngleRadians,
-                    speaker->mAngleRadians + Math::cTwoPi);
-      UpdateSpeaker(speaker,
-                    gainsOutput,
-                    minRadians,
-                    maxRadians,
-                    speaker->mLeftNeighbor->mAngleRadians - Math::cTwoPi,
-                    speaker->mAngleRadians);
+      UpdateSpeaker(speaker, gainsOutput, minRadians, maxRadians, speaker->mLeftNeighbor->mAngleRadians, speaker->mAngleRadians + Math::cTwoPi);
+      UpdateSpeaker(speaker, gainsOutput, minRadians, maxRadians, speaker->mLeftNeighbor->mAngleRadians - Math::cTwoPi, speaker->mAngleRadians);
     }
   }
 }
@@ -263,8 +248,7 @@ unsigned VBAP::GetNumberOfChannels()
   return mNumberOfChannels;
 }
 
-void VBAP::UpdateSpeaker(
-    SpeakerInfo* speaker, float* outputGains, float minRadians, float maxRadians, float leftAngle, float thisAngle)
+void VBAP::UpdateSpeaker(SpeakerInfo* speaker, float* outputGains, float minRadians, float maxRadians, float leftAngle, float thisAngle)
 {
   // Make sure the sound is audible between these speakers
   if (thisAngle < minRadians || leftAngle > maxRadians)

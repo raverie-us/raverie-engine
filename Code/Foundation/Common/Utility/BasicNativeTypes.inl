@@ -24,14 +24,12 @@ DeclareBasicNativeTypePrimitive(bool, Bool) // aka Boolean
     DeclareBasicNativeTypePrimitive(char, Char)
 
     // Fixed-Width Signed Integral Types
-    DeclareBasicNativeTypePrimitive(int8, Int8) DeclareBasicNativeTypePrimitive(int16, Int16)
-        DeclareBasicNativeTypePrimitive(int32, Int32) // aka Integer
-    DeclareBasicNativeTypePrimitive(int64, Int64)     // aka DoubleInteger
+    DeclareBasicNativeTypePrimitive(int8, Int8) DeclareBasicNativeTypePrimitive(int16, Int16) DeclareBasicNativeTypePrimitive(int32, Int32) // aka Integer
+    DeclareBasicNativeTypePrimitive(int64, Int64)                                                                                           // aka DoubleInteger
 
     // Fixed-Width Unsigned Integral Types
     DeclareBasicNativeTypePrimitive(uint8, Uint8) // aka Byte
-    DeclareBasicNativeTypePrimitive(uint16, Uint16) DeclareBasicNativeTypePrimitive(uint32, Uint32)
-        DeclareBasicNativeTypePrimitive(uint64, Uint64)
+    DeclareBasicNativeTypePrimitive(uint16, Uint16) DeclareBasicNativeTypePrimitive(uint32, Uint32) DeclareBasicNativeTypePrimitive(uint64, Uint64)
 
     // Floating Point Types
     DeclareBasicNativeTypePrimitive(float, Float)   // aka Real

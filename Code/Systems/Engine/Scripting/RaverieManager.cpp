@@ -19,8 +19,7 @@ RaverieDefineType(RaverieCompileEvent, builder, type)
 {
 }
 
-RaverieCompileEvent::RaverieCompileEvent(HashSet<ResourceLibrary*>& modifiedLibraries) :
-    mModifiedLibraries(modifiedLibraries)
+RaverieCompileEvent::RaverieCompileEvent(HashSet<ResourceLibrary*>& modifiedLibraries) : mModifiedLibraries(modifiedLibraries)
 {
 }
 
@@ -50,18 +49,14 @@ BoundType* RaverieCompileEvent::GetReplacingType(BoundType* oldType)
 }
 
 // Raverie Manager
-RaverieManager::RaverieManager() :
-    mVersion(0),
-    mShouldAttemptCompile(true),
-    mLastCompileResult(CompileResult::CompilationSucceeded)
+RaverieManager::RaverieManager() : mVersion(0), mShouldAttemptCompile(true), mLastCompileResult(CompileResult::CompilationSucceeded)
 {
   ConnectThisTo(Z::gEngine, Events::EngineUpdate, OnEngineUpdate);
 
   EventConnect(&mDebugger, Raverie::Events::DebuggingPause, &RaverieManager::OnDebuggerPause, this, &mDebugger);
   EventConnect(&mDebugger, Raverie::Events::DebuggingResume, &RaverieManager::OnDebuggerResume, this, &mDebugger);
   EventConnect(&mDebugger, Raverie::Events::DebuggingPauseUpdate, &RaverieManager::OnDebuggerPauseUpdate, this, &mDebugger);
-  EventConnect(
-      &mDebugger, Raverie::Events::DebuggingBreakNotAllowed, &RaverieManager::OnDebuggerBreakNotAllowed, this, &mDebugger);
+  EventConnect(&mDebugger, Raverie::Events::DebuggingBreakNotAllowed, &RaverieManager::OnDebuggerBreakNotAllowed, this, &mDebugger);
 }
 
 void RaverieManager::TriggerCompileExternally()

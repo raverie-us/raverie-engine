@@ -1,9 +1,9 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-#define AddDeclarations(DebugObjectType)                                                                               \
-  static void Add(Debug::DebugObjectType& debugObject);                                                                \
-  static void Add(uint spaceId, Debug::DebugObjectType& debugObject);                                                  \
+#define AddDeclarations(DebugObjectType)                                                                                                                                                               \
+  static void Add(Debug::DebugObjectType& debugObject);                                                                                                                                                \
+  static void Add(uint spaceId, Debug::DebugObjectType& debugObject);                                                                                                                                  \
   static void Add(Space* space, Debug::DebugObjectType& debugObject);
 
 namespace Raverie

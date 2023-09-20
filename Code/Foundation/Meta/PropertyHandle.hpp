@@ -100,10 +100,7 @@ public:
     Entry()
     {
     }
-    Entry(StringParam typeName, PropertyPathType::Enum type, uint index = uint(-1)) :
-        mName(typeName),
-        mType(type),
-        mIndex(index)
+    Entry(StringParam typeName, PropertyPathType::Enum type, uint index = uint(-1)) : mName(typeName), mType(type), mIndex(index)
     {
     }
 

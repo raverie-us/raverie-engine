@@ -159,28 +159,28 @@ void PrintProfileGraph();
 
 #if ZPROFILE_ENABLED
 
-#  define ProfileScopeFunction()                                                                                       \
-    static Raverie::Profile::Record __LocalRecord(__FUNCTION__);                                                          \
+#  define ProfileScopeFunction()                                                                                                                                                                       \
+    static Raverie::Profile::Record __LocalRecord(__FUNCTION__);                                                                                                                                       \
     Raverie::Profile::ScopeTimer __ScopedBlock(&__LocalRecord);
 
-#  define ProfileScopeFunctionArgs(args)                                                                               \
-    static Raverie::Profile::Record __LocalRecord(__FUNCTION__);                                                          \
+#  define ProfileScopeFunctionArgs(args)                                                                                                                                                               \
+    static Raverie::Profile::Record __LocalRecord(__FUNCTION__);                                                                                                                                       \
     Raverie::Profile::ScopeTimer __ScopedBlock(&__LocalRecord, args);
 
-#  define ProfileScope(name)                                                                                           \
-    static Raverie::Profile::Record __LocalRecord(name);                                                                  \
+#  define ProfileScope(name)                                                                                                                                                                           \
+    static Raverie::Profile::Record __LocalRecord(name);                                                                                                                                               \
     Raverie::Profile::ScopeTimer __ScopedBlock(&__LocalRecord);
 
-#  define ProfileScopeArgs(name, args)                                                                                 \
-    static Raverie::Profile::Record __LocalRecord(name);                                                                  \
+#  define ProfileScopeArgs(name, args)                                                                                                                                                                 \
+    static Raverie::Profile::Record __LocalRecord(name);                                                                                                                                               \
     Raverie::Profile::ScopeTimer __ScopedBlock(&__LocalRecord, args);
 
-#  define ProfileScopeTree(name, parentName, color)                                                                    \
-    static Raverie::Profile::Record __LocalRecord(name, parentName, color);                                               \
+#  define ProfileScopeTree(name, parentName, color)                                                                                                                                                    \
+    static Raverie::Profile::Record __LocalRecord(name, parentName, color);                                                                                                                            \
     Raverie::Profile::ScopeTimer __ScopedBlock(&__LocalRecord);
 
-#  define ProfileScopeTreeArgs(name, args, parentName, color)                                                          \
-    static Raverie::Profile::Record __LocalRecord(name, parentName, color);                                               \
+#  define ProfileScopeTreeArgs(name, args, parentName, color)                                                                                                                                          \
+    static Raverie::Profile::Record __LocalRecord(name, parentName, color);                                                                                                                            \
     Raverie::Profile::ScopeTimer __ScopedBlock(&__LocalRecord, args);
 
 #  define ProfileScopeRecord(recordName) Raverie::Profile::ScopeTimer __ScopedBlock(&recordName);

@@ -85,29 +85,13 @@ struct SampledImageSet
   Raverie::BoundType* mSampledImageType;
 };
 
-void AddSampleImplicitLod(Raverie::LibraryBuilder& builder,
-                          Raverie::BoundType* type,
-                          SampledImageSet& set,
-                          Raverie::BoundType* coordinateType,
-                          Raverie::BoundType* returnType);
-void AddSampleExplicitLod(Raverie::LibraryBuilder& builder,
-                          Raverie::BoundType* type,
-                          SampledImageSet& set,
-                          Raverie::BoundType* coordinateType,
-                          Raverie::BoundType* lodType,
-                          Raverie::BoundType* returnType);
-void AddSampleGradExplicitLod(Raverie::LibraryBuilder& builder,
-                              Raverie::BoundType* type,
-                              SampledImageSet& set,
-                              Raverie::BoundType* coordinateType,
-                              Raverie::BoundType* derivativeType,
-                              Raverie::BoundType* returnType);
-void AddSampleDrefImplicitLod(Raverie::LibraryBuilder& builder,
-                              Raverie::BoundType* type,
-                              SampledImageSet& set,
-                              Raverie::BoundType* coordinateType,
-                              Raverie::BoundType* depthType,
-                              Raverie::BoundType* returnType);
+void AddSampleImplicitLod(Raverie::LibraryBuilder& builder, Raverie::BoundType* type, SampledImageSet& set, Raverie::BoundType* coordinateType, Raverie::BoundType* returnType);
+void AddSampleExplicitLod(
+    Raverie::LibraryBuilder& builder, Raverie::BoundType* type, SampledImageSet& set, Raverie::BoundType* coordinateType, Raverie::BoundType* lodType, Raverie::BoundType* returnType);
+void AddSampleGradExplicitLod(
+    Raverie::LibraryBuilder& builder, Raverie::BoundType* type, SampledImageSet& set, Raverie::BoundType* coordinateType, Raverie::BoundType* derivativeType, Raverie::BoundType* returnType);
+void AddSampleDrefImplicitLod(
+    Raverie::LibraryBuilder& builder, Raverie::BoundType* type, SampledImageSet& set, Raverie::BoundType* coordinateType, Raverie::BoundType* depthType, Raverie::BoundType* returnType);
 void AddSampleDrefExplicitLod(Raverie::LibraryBuilder& builder,
                               Raverie::BoundType* type,
                               SampledImageSet& set,
@@ -115,23 +99,11 @@ void AddSampleDrefExplicitLod(Raverie::LibraryBuilder& builder,
                               Raverie::BoundType* depthType,
                               Raverie::BoundType* lodType,
                               Raverie::BoundType* returnType);
-void AddSampleProjImplicitLod(Raverie::LibraryBuilder& builder,
-                              Raverie::BoundType* type,
-                              SampledImageSet& set,
-                              Raverie::BoundType* coordinateType,
-                              Raverie::BoundType* returnType);
-void AddSampleProjExplicitLod(Raverie::LibraryBuilder& builder,
-                              Raverie::BoundType* type,
-                              SampledImageSet& set,
-                              Raverie::BoundType* coordinateType,
-                              Raverie::BoundType* lodType,
-                              Raverie::BoundType* returnType);
-void AddSampleProjDrefImplicitLod(Raverie::LibraryBuilder& builder,
-                                  Raverie::BoundType* type,
-                                  SampledImageSet& set,
-                                  Raverie::BoundType* coordinateType,
-                                  Raverie::BoundType* depthType,
-                                  Raverie::BoundType* returnType);
+void AddSampleProjImplicitLod(Raverie::LibraryBuilder& builder, Raverie::BoundType* type, SampledImageSet& set, Raverie::BoundType* coordinateType, Raverie::BoundType* returnType);
+void AddSampleProjExplicitLod(
+    Raverie::LibraryBuilder& builder, Raverie::BoundType* type, SampledImageSet& set, Raverie::BoundType* coordinateType, Raverie::BoundType* lodType, Raverie::BoundType* returnType);
+void AddSampleProjDrefImplicitLod(
+    Raverie::LibraryBuilder& builder, Raverie::BoundType* type, SampledImageSet& set, Raverie::BoundType* coordinateType, Raverie::BoundType* depthType, Raverie::BoundType* returnType);
 void AddSampleProjDrefExplicitLod(Raverie::LibraryBuilder& builder,
                                   Raverie::BoundType* type,
                                   SampledImageSet& set,
@@ -139,30 +111,11 @@ void AddSampleProjDrefExplicitLod(Raverie::LibraryBuilder& builder,
                                   Raverie::BoundType* depthType,
                                   Raverie::BoundType* lodType,
                                   Raverie::BoundType* returnType);
-void AddImageFetch(Raverie::LibraryBuilder& builder,
-                   Raverie::BoundType* type,
-                   SampledImageSet& set,
-                   Raverie::BoundType* coordianteType,
-                   Raverie::BoundType* lodType,
-                   Raverie::BoundType* returnType);
-void AddImageQuerySizeLod(Raverie::LibraryBuilder& builder,
-                          Raverie::BoundType* type,
-                          SampledImageSet& set,
-                          Raverie::BoundType* lodType,
-                          Raverie::BoundType* returnType);
-void AddImageQuerySize(Raverie::LibraryBuilder& builder,
-                       Raverie::BoundType* type,
-                       SampledImageSet& set,
-                       Raverie::BoundType* returnType);
-void AddImageQueryLod(Raverie::LibraryBuilder& builder,
-                      Raverie::BoundType* type,
-                      SampledImageSet& set,
-                      Raverie::BoundType* coordinateType,
-                      Raverie::BoundType* returnType);
-void AddImageQueryLevels(Raverie::LibraryBuilder& builder,
-                         Raverie::BoundType* type,
-                         SampledImageSet& set,
-                         Raverie::BoundType* returnType);
+void AddImageFetch(Raverie::LibraryBuilder& builder, Raverie::BoundType* type, SampledImageSet& set, Raverie::BoundType* coordianteType, Raverie::BoundType* lodType, Raverie::BoundType* returnType);
+void AddImageQuerySizeLod(Raverie::LibraryBuilder& builder, Raverie::BoundType* type, SampledImageSet& set, Raverie::BoundType* lodType, Raverie::BoundType* returnType);
+void AddImageQuerySize(Raverie::LibraryBuilder& builder, Raverie::BoundType* type, SampledImageSet& set, Raverie::BoundType* returnType);
+void AddImageQueryLod(Raverie::LibraryBuilder& builder, Raverie::BoundType* type, SampledImageSet& set, Raverie::BoundType* coordinateType, Raverie::BoundType* returnType);
+void AddImageQueryLevels(Raverie::LibraryBuilder& builder, Raverie::BoundType* type, SampledImageSet& set, Raverie::BoundType* returnType);
 
 // Add all of the relevant image intrinsics to the shader given bound type.
 void AddImageFunctions(Raverie::LibraryBuilder& builder, Raverie::BoundType* type, RaverieTypeGroups& types);

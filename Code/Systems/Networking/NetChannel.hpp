@@ -97,22 +97,11 @@ public:
   /// (Must not differ between client/server peers!)
   /// Returns the net property if successful, else nullptr (a net property of
   /// that name already exists).
-  NetProperty* AddNetProperty(Component* component,
-                              Property* property,
-                              const String& netPropertyTypeName,
-                              NetPropertyConfig* netPropertyConfig = nullptr);
+  NetProperty* AddNetProperty(Component* component, Property* property, const String& netPropertyTypeName, NetPropertyConfig* netPropertyConfig = nullptr);
   template <typename T>
-  NetProperty* AddBasicNetProperty(const String& netPropertyName,
-                                   T& propertyData,
-                                   NetPropertyConfig* netPropertyConfig = nullptr)
+  NetProperty* AddBasicNetProperty(const String& netPropertyName, T& propertyData, NetPropertyConfig* netPropertyConfig = nullptr)
   {
-    return AddBasicNetProperty(netPropertyName,
-                               Variant(&propertyData),
-                               NativeTypeOf(T),
-                               SerializeKnownExtendedVariant,
-                               GetDataValue<T>,
-                               SetDataValue<T>,
-                               netPropertyConfig);
+    return AddBasicNetProperty(netPropertyName, Variant(&propertyData), NativeTypeOf(T), SerializeKnownExtendedVariant, GetDataValue<T>, SetDataValue<T>, netPropertyConfig);
   }
   NetProperty* AddBasicNetProperty(const String& netPropertyName,
                                    const Variant& propertyData,

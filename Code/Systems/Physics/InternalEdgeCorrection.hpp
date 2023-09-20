@@ -26,9 +26,6 @@ void CorrectInternalEdgeNormal(Physics::ManifoldPoint& point, uint objectIndex, 
 void CorrectInternalEdgeNormal(GenericPhysicsMesh* mesh, Physics::Manifold* manifold, uint objectIndex, uint contactId);
 /// Given a manifold, correct any normals that are
 /// pointing the wrong way due to internal edges.
-void CorrectInternalEdgeNormal(HeightMapCollider* heightMap,
-                               Physics::Manifold* manifold,
-                               uint objectIndex,
-                               uint contactId);
+void CorrectInternalEdgeNormal(HeightMapCollider* heightMap, Physics::Manifold* manifold, uint objectIndex, uint contactId);
 
 } // namespace Raverie

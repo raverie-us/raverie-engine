@@ -42,8 +42,7 @@ public:
 private:
   /// DataTreeLoader Interface.
   PatchResolveMethod::Enum ResolveInheritedData(StringRange inheritId, DataNode*& result) override;
-  DependencyAction::Enum
-  ResolveDependencies(DataNode* parent, DataNode* newChild, DataNode** toReplace, Status& status) override;
+  DependencyAction::Enum ResolveDependencies(DataNode* parent, DataNode* newChild, DataNode** toReplace, Status& status) override;
 };
 
 // Cached Modifications

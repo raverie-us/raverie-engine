@@ -88,10 +88,7 @@ void DestructibleBuffer::Clear()
   this->Data.Clear();
 }
 
-byte* DestructibleBuffer::Allocate(size_t size,
-                                   DestructFn destructor,
-                                   CopyConstructFn copyConstructor,
-                                   size_t* positionOut)
+byte* DestructibleBuffer::Allocate(size_t size, DestructFn destructor, CopyConstructFn copyConstructor, size_t* positionOut)
 {
   // Make sure the size aligns with the bus for efficiency
   size = AlignToBusWidth(size);

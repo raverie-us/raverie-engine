@@ -44,8 +44,7 @@ ContentItem* MakeImageContentItem(ContentInitializer& initializer)
 
   String extension = FilePath::GetExtension(initializer.Filename);
 
-  bool isSprite = initializer.BuilderType == "SpriteSource" ||
-                  initializer.Options && initializer.Options->mImageOptions->mImportImages == ImageImport::Sprites;
+  bool isSprite = initializer.BuilderType == "SpriteSource" || initializer.Options && initializer.Options->mImageOptions->mImportImages == ImageImport::Sprites;
 
   if (isSprite)
   {

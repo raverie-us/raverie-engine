@@ -6,11 +6,7 @@
 namespace Raverie
 {
 
-BoundType* InstantiateFixedArray(LibraryBuilder& builder,
-                                 StringParam baseName,
-                                 StringParam fullyQualifiedName,
-                                 const Array<Constant>& templateTypes,
-                                 const void* userData)
+BoundType* InstantiateFixedArray(LibraryBuilder& builder, StringParam baseName, StringParam fullyQualifiedName, const Array<Constant>& templateTypes, const void* userData)
 {
   Core& core = Core::GetInstance();
   Type* templateType = templateTypes[0].TypeValue;
@@ -20,35 +16,15 @@ BoundType* InstantiateFixedArray(LibraryBuilder& builder,
   // Bind all of the array's functions and properties (stubbed out since we're
   // only using this for translation)
   builder.AddBoundConstructor(arrayType, Raverie::DummyBoundFunction, ParameterArray());
-  builder.AddBoundFunction(arrayType,
-                           "Add",
-                           Raverie::DummyBoundFunction,
-                           OneParameter(templateType),
-                           core.VoidType,
-                           Raverie::FunctionOptions::None);
-  builder.AddBoundFunction(arrayType,
-                           "Get",
-                           Raverie::DummyBoundFunction,
-                           OneParameter(core.IntegerType, "index"),
-                           templateType,
-                           Raverie::FunctionOptions::None);
-  builder.AddBoundFunction(arrayType,
-                           "Set",
-                           Raverie::DummyBoundFunction,
-                           TwoParameters(core.IntegerType, "index", templateType, "value"),
-                           core.VoidType,
-                           Raverie::FunctionOptions::None);
-  builder.AddBoundGetterSetter(
-      arrayType, "Count", core.IntegerType, nullptr, Raverie::DummyBoundFunction, Raverie::MemberOptions::None);
+  builder.AddBoundFunction(arrayType, "Add", Raverie::DummyBoundFunction, OneParameter(templateType), core.VoidType, Raverie::FunctionOptions::None);
+  builder.AddBoundFunction(arrayType, "Get", Raverie::DummyBoundFunction, OneParameter(core.IntegerType, "index"), templateType, Raverie::FunctionOptions::None);
+  builder.AddBoundFunction(arrayType, "Set", Raverie::DummyBoundFunction, TwoParameters(core.IntegerType, "index", templateType, "value"), core.VoidType, Raverie::FunctionOptions::None);
+  builder.AddBoundGetterSetter(arrayType, "Count", core.IntegerType, nullptr, Raverie::DummyBoundFunction, Raverie::MemberOptions::None);
 
   return arrayType;
 }
 
-BoundType* InstantiateRuntimeArray(LibraryBuilder& builder,
-                                   StringParam baseName,
-                                   StringParam fullyQualifiedName,
-                                   const Array<Constant>& templateTypes,
-                                   const void* userData)
+BoundType* InstantiateRuntimeArray(LibraryBuilder& builder, StringParam baseName, StringParam fullyQualifiedName, const Array<Constant>& templateTypes, const void* userData)
 {
   Core& core = Core::GetInstance();
   Type* templateType = templateTypes[0].TypeValue;
@@ -60,29 +36,14 @@ BoundType* InstantiateRuntimeArray(LibraryBuilder& builder,
 
   // Bind all of the array's functions and properties (stubbed out since we're
   // only using this for translation)
-  builder.AddBoundFunction(arrayType,
-                           "Get",
-                           Raverie::DummyBoundFunction,
-                           OneParameter(core.IntegerType, "index"),
-                           templateType,
-                           Raverie::FunctionOptions::None);
-  builder.AddBoundFunction(arrayType,
-                           "Set",
-                           Raverie::DummyBoundFunction,
-                           TwoParameters(core.IntegerType, "index", templateType, "value"),
-                           core.VoidType,
-                           Raverie::FunctionOptions::None);
-  builder.AddBoundGetterSetter(
-      arrayType, "Count", core.IntegerType, nullptr, Raverie::DummyBoundFunction, Raverie::MemberOptions::None);
+  builder.AddBoundFunction(arrayType, "Get", Raverie::DummyBoundFunction, OneParameter(core.IntegerType, "index"), templateType, Raverie::FunctionOptions::None);
+  builder.AddBoundFunction(arrayType, "Set", Raverie::DummyBoundFunction, TwoParameters(core.IntegerType, "index", templateType, "value"), core.VoidType, Raverie::FunctionOptions::None);
+  builder.AddBoundGetterSetter(arrayType, "Count", core.IntegerType, nullptr, Raverie::DummyBoundFunction, Raverie::MemberOptions::None);
 
   return arrayType;
 }
 
-BoundType* InstantiateGeometryInput(LibraryBuilder& builder,
-                                    StringParam baseName,
-                                    StringParam fullyQualifiedName,
-                                    const Array<Constant>& templateTypes,
-                                    const void* userData)
+BoundType* InstantiateGeometryInput(LibraryBuilder& builder, StringParam baseName, StringParam fullyQualifiedName, const Array<Constant>& templateTypes, const void* userData)
 {
   Core& core = Core::GetInstance();
   Type* templateType = templateTypes[0].TypeValue;
@@ -91,20 +52,9 @@ BoundType* InstantiateGeometryInput(LibraryBuilder& builder,
   // Bind all of the functions and properties (stubbed out since we're only
   // using this for translation)
   builder.AddBoundConstructor(selfType, Raverie::UnTranslatedBoundFunction, ParameterArray());
-  builder.AddBoundFunction(selfType,
-                           "Get",
-                           Raverie::UnTranslatedBoundFunction,
-                           OneParameter(core.IntegerType),
-                           templateType,
-                           Raverie::FunctionOptions::None);
-  builder.AddBoundFunction(selfType,
-                           "Set",
-                           Raverie::UnTranslatedBoundFunction,
-                           TwoParameters(core.IntegerType, templateType),
-                           core.VoidType,
-                           Raverie::FunctionOptions::None);
-  builder.AddBoundGetterSetter(
-      selfType, "Count", core.IntegerType, nullptr, Raverie::UnTranslatedBoundFunction, Raverie::MemberOptions::None);
+  builder.AddBoundFunction(selfType, "Get", Raverie::UnTranslatedBoundFunction, OneParameter(core.IntegerType), templateType, Raverie::FunctionOptions::None);
+  builder.AddBoundFunction(selfType, "Set", Raverie::UnTranslatedBoundFunction, TwoParameters(core.IntegerType, templateType), core.VoidType, Raverie::FunctionOptions::None);
+  builder.AddBoundGetterSetter(selfType, "Count", core.IntegerType, nullptr, Raverie::UnTranslatedBoundFunction, Raverie::MemberOptions::None);
 
   Raverie::HandleOf<GeometryStreamUserData> handle = RaverieAllocate(GeometryStreamUserData);
   handle->Set((spv::ExecutionMode)(uintptr_t)userData);
@@ -113,11 +63,7 @@ BoundType* InstantiateGeometryInput(LibraryBuilder& builder,
   return selfType;
 }
 
-BoundType* InstantiateGeometryOutput(LibraryBuilder& builder,
-                                     StringParam baseName,
-                                     StringParam fullyQualifiedName,
-                                     const Array<Constant>& templateTypes,
-                                     const void* userData)
+BoundType* InstantiateGeometryOutput(LibraryBuilder& builder, StringParam baseName, StringParam fullyQualifiedName, const Array<Constant>& templateTypes, const void* userData)
 {
   Core& core = Core::GetInstance();
   Type* templateType = templateTypes[0].TypeValue;
@@ -126,18 +72,8 @@ BoundType* InstantiateGeometryOutput(LibraryBuilder& builder,
   selfType->CreatableInScript = true;
   // Bind all of the functions and properties (stubbed out since we're only
   // using this for translation)
-  builder.AddBoundFunction(selfType,
-                           "Append",
-                           Raverie::UnTranslatedBoundFunction,
-                           TwoParameters(templateType, core.IntegerType),
-                           core.VoidType,
-                           Raverie::FunctionOptions::None);
-  builder.AddBoundFunction(selfType,
-                           "Restart",
-                           Raverie::UnTranslatedBoundFunction,
-                           ParameterArray(),
-                           core.VoidType,
-                           Raverie::FunctionOptions::None);
+  builder.AddBoundFunction(selfType, "Append", Raverie::UnTranslatedBoundFunction, TwoParameters(templateType, core.IntegerType), core.VoidType, Raverie::FunctionOptions::None);
+  builder.AddBoundFunction(selfType, "Restart", Raverie::UnTranslatedBoundFunction, ParameterArray(), core.VoidType, Raverie::FunctionOptions::None);
 
   Raverie::HandleOf<GeometryStreamUserData> handle = RaverieAllocate(GeometryStreamUserData);
   handle->Set((spv::ExecutionMode)(uintptr_t)userData);
@@ -146,23 +82,14 @@ BoundType* InstantiateGeometryOutput(LibraryBuilder& builder,
   return selfType;
 }
 
-BoundType* InstantiateGeometryStreamMover(LibraryBuilder& builder,
-                                          StringParam baseName,
-                                          StringParam fullyQualifiedName,
-                                          const Array<Constant>& templateTypes,
-                                          const void* userData)
+BoundType* InstantiateGeometryStreamMover(LibraryBuilder& builder, StringParam baseName, StringParam fullyQualifiedName, const Array<Constant>& templateTypes, const void* userData)
 {
   Type* fromType = templateTypes[0].TypeValue;
   Type* toType = templateTypes[1].TypeValue;
 
   BoundType* selfType = builder.AddBoundType(fullyQualifiedName, TypeCopyMode::ValueType, 0);
   selfType->CreatableInScript = false;
-  builder.AddBoundFunction(selfType,
-                           "Move",
-                           Raverie::UnTranslatedBoundFunction,
-                           OneParameter(fromType),
-                           toType,
-                           Raverie::FunctionOptions::Static);
+  builder.AddBoundFunction(selfType, "Move", Raverie::UnTranslatedBoundFunction, OneParameter(fromType), toType, Raverie::FunctionOptions::Static);
 
   return selfType;
 }
@@ -207,8 +134,7 @@ RaverieDefineStaticLibrary(ShaderIntrinsicsLibrary)
     fixedArrayTemplateParams.PushBack(RaverieTypeId(Raverie::Real4x4));
     fixedArrayTemplateParams.PushBack(80);
 
-    Raverie::InstantiatedTemplate templateData = builder.InstantiateTemplate(
-        "FixedArray", fixedArrayTemplateParams, LibraryArray(RaverieInit, builder.BuiltLibrary));
+    Raverie::InstantiatedTemplate templateData = builder.InstantiateTemplate("FixedArray", fixedArrayTemplateParams, LibraryArray(RaverieInit, builder.BuiltLibrary));
     Raverie::BoundType* boneTransformsType = templateData.Type;
   }
 
@@ -230,19 +156,13 @@ RaverieDefineStaticLibrary(ShaderIntrinsicsLibrary)
     typeParam.Name = "Type";
     typeParam.Type = ConstantType::Type;
 
-    builder.AddTemplateInstantiator(
-        "PointInput", InstantiateGeometryInput, templateTypes, (int*)spv::ExecutionModeInputPoints);
-    builder.AddTemplateInstantiator(
-        "LineInput", InstantiateGeometryInput, templateTypes, (int*)spv::ExecutionModeInputLines);
-    builder.AddTemplateInstantiator(
-        "TriangleInput", InstantiateGeometryInput, templateTypes, (int*)spv::ExecutionModeTriangles);
+    builder.AddTemplateInstantiator("PointInput", InstantiateGeometryInput, templateTypes, (int*)spv::ExecutionModeInputPoints);
+    builder.AddTemplateInstantiator("LineInput", InstantiateGeometryInput, templateTypes, (int*)spv::ExecutionModeInputLines);
+    builder.AddTemplateInstantiator("TriangleInput", InstantiateGeometryInput, templateTypes, (int*)spv::ExecutionModeTriangles);
 
-    builder.AddTemplateInstantiator(
-        "PointOutput", InstantiateGeometryOutput, templateTypes, (int*)spv::ExecutionModeOutputPoints);
-    builder.AddTemplateInstantiator(
-        "LineOutput", InstantiateGeometryOutput, templateTypes, (int*)spv::ExecutionModeOutputLineStrip);
-    builder.AddTemplateInstantiator(
-        "TriangleOutput", InstantiateGeometryOutput, templateTypes, (int*)spv::ExecutionModeOutputTriangleStrip);
+    builder.AddTemplateInstantiator("PointOutput", InstantiateGeometryOutput, templateTypes, (int*)spv::ExecutionModeOutputPoints);
+    builder.AddTemplateInstantiator("LineOutput", InstantiateGeometryOutput, templateTypes, (int*)spv::ExecutionModeOutputLineStrip);
+    builder.AddTemplateInstantiator("TriangleOutput", InstantiateGeometryOutput, templateTypes, (int*)spv::ExecutionModeOutputTriangleStrip);
   }
 
   // Create the GeometryStreamMoverType

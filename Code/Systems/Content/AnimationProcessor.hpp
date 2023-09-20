@@ -28,9 +28,7 @@ typedef Array<AnimationData> AnimationDataArray;
 class AnimationProcessor
 {
 public:
-  AnimationProcessor(AnimationBuilder* animationBuilder,
-                     HierarchyDataMap& hierarchyData,
-                     AnimationNodeRedirectMap& animationRedirectMap);
+  AnimationProcessor(AnimationBuilder* animationBuilder, HierarchyDataMap& hierarchyData, AnimationNodeRedirectMap& animationRedirectMap);
   ~AnimationProcessor();
 
   void ExtractAndProcessAnimationData(const aiScene* scene);

@@ -205,8 +205,7 @@ ContentItem* UpdateGeometryContent(ContentItem* existingItem, ContentInitializer
     SetGeometryContentPhysicsMeshBuilderOptions(meshBuilder, options->mGeometryOptions);
     geometryContent->AddComponent(meshBuilder);
   }
-  else if ((options->mGeometryOptions->mPhysicsImport == PhysicsImport::NoMesh) &&
-           geometryContent->has(PhysicsMeshBuilder))
+  else if ((options->mGeometryOptions->mPhysicsImport == PhysicsImport::NoMesh) && geometryContent->has(PhysicsMeshBuilder))
   {
     // we no longer have this option selected, delete it
     geometryContent->RemoveComponent(RaverieTypeId(PhysicsMeshBuilder));
@@ -632,81 +631,58 @@ void CreateGeometryContent(ContentSystem* system)
   AddContent<GeometryContent>(system);
   // COMMON INTERCHANGE FORMATS
   // Autodesk
-  system->CreatorsByExtension["fbx"] =
-      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["fbx"] = ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Wavefront Object
-  system->CreatorsByExtension["obj"] =
-      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["obj"] = ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Collada
-  system->CreatorsByExtension["dae"] =
-      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["dae"] = ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Global Module in Basic Program
-  system->CreatorsByExtension["glb"] =
-      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["glb"] = ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // 3ds Max 3DS
-  system->CreatorsByExtension["3ds"] =
-      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["3ds"] = ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Blender 3D
-  system->CreatorsByExtension["blend"] =
-      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["blend"] = ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // 3ds Max ASE
-  system->CreatorsByExtension["ase"] =
-      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["ase"] = ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Industry Foundation Classes (IFC/Step) NEEDS ADDITIONAL TESTING TO FIGURE
   // OUT WHAT WENT WRONG
-  system->CreatorsByExtension["ifc"] =
-      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["ifc"] = ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // XGL
-  system->CreatorsByExtension["xgl"] =
-      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
-  system->CreatorsByExtension["zgl"] =
-      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["xgl"] = ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["zgl"] = ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Stanford Polygon Library
-  system->CreatorsByExtension["ply"] =
-      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["ply"] = ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // AutoCAD DXF
-  system->CreatorsByExtension["dxf"] =
-      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["dxf"] = ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // LightWave
-  system->CreatorsByExtension["lwo"] =
-      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["lwo"] = ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // LightWave Scene
-  system->CreatorsByExtension["lws"] =
-      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["lws"] = ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Modo
-  system->CreatorsByExtension["lxo"] =
-      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["lxo"] = ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Stereolithography
-  system->CreatorsByExtension["stl"] =
-      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["stl"] = ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // DirectX X
-  system->CreatorsByExtension["x"] =
-      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["x"] = ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // AC3D
-  system->CreatorsByExtension["ac"] =
-      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["ac"] = ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Milkshape 3D
-  system->CreatorsByExtension["ms3d"] =
-      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["ms3d"] = ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // TrueSpace
-  system->CreatorsByExtension["cob"] =
-      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["cob"] = ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // untested truespace format
-  system->CreatorsByExtension["scn"] =
-      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["scn"] = ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
 
   // MOTION CAPTURE FORMATS
   // Biovision BVH <- ASSIMP tokenizer does not properly handle nodes names with
   // spaces in this format. system->CreatorsByExtension["bvh"] =
   // ContentTypeEntry(MetaTypeOf(GeometryContent), MakeGeometryContent);
   // CharacterStudio Motion
-  system->CreatorsByExtension["csm"] =
-      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["csm"] = ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
 
   // GRAPHICS ENGINE FORMATS
   // Ogre XML
-  system->CreatorsByExtension["xml"] =
-      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["xml"] = ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Irrlicht Mesh
   // system->CreatorsByExtension["irrmesh"] =
   // ContentTypeEntry(MetaTypeOf(GeometryContent), MakeGeometryContent);
@@ -716,62 +692,44 @@ void CreateGeometryContent(ContentSystem* system)
 
   // GAME FILE FORMATS
   // Quake I && (not game file) -> 3D GameStudio (3DGS)
-  system->CreatorsByExtension["mdl"] =
-      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["mdl"] = ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Quake II
-  system->CreatorsByExtension["md2"] =
-      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["md2"] = ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Quake III Mesh
-  system->CreatorsByExtension["md3"] =
-      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["md3"] = ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Quake III Map/BSP, none of these files I found had models or textures
   // present in them
   // system->CreatorsByExtension["pk3"] =
   // ContentTypeEntry(MetaTypeOf(GeometryContent), MakeGeometryContent);
   // Doom 3
-  system->CreatorsByExtension["md5mesh"] =
-      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["md5mesh"] = ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Valve Model
-  system->CreatorsByExtension["smd"] =
-      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["smd"] = ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Open Game Engine Exchange
-  system->CreatorsByExtension["ogex"] =
-      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["ogex"] = ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
 
   // OTHER FILE FORMATS
   // BlitzBasic 3D
-  system->CreatorsByExtension["b3d"] =
-      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["b3d"] = ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Quick3D
-  system->CreatorsByExtension["q3o"] =
-      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
-  system->CreatorsByExtension["q3s"] =
-      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["q3o"] = ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["q3s"] = ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Neutral File Format && Sense8 WorldToolKit
-  system->CreatorsByExtension["nff"] =
-      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["nff"] = ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Object File Format
-  system->CreatorsByExtension["off"] =
-      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["off"] = ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // PovRAY Raw
-  system->CreatorsByExtension["raw"] =
-      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["raw"] = ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Terragen Terrain
-  system->CreatorsByExtension["ter"] =
-      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["ter"] = ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // 3D GameStudio (3DGS) Terrain
-  system->CreatorsByExtension["hmp"] =
-      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["hmp"] = ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Nevercenter Silo Object
-  system->CreatorsByExtension["sib"] =
-      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["sib"] = ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
 
-  system->CreatorsByExtension["amf"] =
-      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
-  system->CreatorsByExtension["x3d"] =
-      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
-  system->CreatorsByExtension["mmd"] =
-      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["amf"] = ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["x3d"] = ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+  system->CreatorsByExtension["mmd"] = ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
 
   // system->CreatorsByExtension["wrl"] =
   // ContentTypeEntry(MetaTypeOf(GeometryContent), MakeGeometryContent,

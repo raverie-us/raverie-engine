@@ -199,10 +199,7 @@ NetProperty* NetChannel::GetNetProperty(Component* component, StringParam proper
   return static_cast<NetProperty*>(ReplicaChannel::GetReplicaProperty(combinedNetPropertyName));
 }
 
-NetProperty* NetChannel::AddNetProperty(Component* component,
-                                        Property* property,
-                                        const String& netPropertyTypeName,
-                                        NetPropertyConfig* netPropertyConfig)
+NetProperty* NetChannel::AddNetProperty(Component* component, Property* property, const String& netPropertyTypeName, NetPropertyConfig* netPropertyConfig)
 {
   // Get combined net property name
   String combinedNetPropertyName = GetCombinedNetPropertyName(component, property->Name);
@@ -247,9 +244,7 @@ NetProperty* NetChannel::AddNetProperty(Component* component,
   NetPeer* netPeer = GetNetPeer();
   if (!netPeer) // Unable?
   {
-    DoNotifyError("NetChannel",
-                  String::Format("Unable to add NetProperty named '%s' - Unable to get net peer",
-                                 combinedNetPropertyName.c_str()));
+    DoNotifyError("NetChannel", String::Format("Unable to add NetProperty named '%s' - Unable to get net peer", combinedNetPropertyName.c_str()));
     return nullptr;
   }
 
@@ -260,23 +255,14 @@ NetProperty* NetChannel::AddNetProperty(Component* component,
   if (property->PropertyType == RaverieTypeId(Cog))
   {
     // Get or add corresponding net property type
-    netPropertyType = netPeer->GetOrAddReplicaPropertyType(netPropertyTypeName,
-                                                           NativeTypeOf(Cog),
-                                                           SerializeKnownExtendedVariant,
-                                                           GetComponentCogProperty,
-                                                           SetComponentCogProperty,
-                                                           netPropertyConfig);
+    netPropertyType = netPeer->GetOrAddReplicaPropertyType(netPropertyTypeName, NativeTypeOf(Cog), SerializeKnownExtendedVariant, GetComponentCogProperty, SetComponentCogProperty, netPropertyConfig);
   }
   // Is CogPath type?
   else if (property->PropertyType == RaverieTypeId(CogPath))
   {
     // Get or add corresponding net property type
-    netPropertyType = netPeer->GetOrAddReplicaPropertyType(netPropertyTypeName,
-                                                           NativeTypeOf(CogPath),
-                                                           SerializeKnownExtendedVariant,
-                                                           GetComponentCogPathProperty,
-                                                           SetComponentCogPathProperty,
-                                                           netPropertyConfig);
+    netPropertyType =
+        netPeer->GetOrAddReplicaPropertyType(netPropertyTypeName, NativeTypeOf(CogPath), SerializeKnownExtendedVariant, GetComponentCogPathProperty, SetComponentCogPathProperty, netPropertyConfig);
   }
   // Is other (Any) type?
   else
@@ -294,12 +280,7 @@ NetProperty* NetChannel::AddNetProperty(Component* component,
     }
 
     // Get or add corresponding net property type
-    netPropertyType = netPeer->GetOrAddReplicaPropertyType(netPropertyTypeName,
-                                                           nativeType,
-                                                           SerializeKnownExtendedVariant,
-                                                           GetComponentAnyProperty,
-                                                           SetComponentAnyProperty,
-                                                           netPropertyConfig);
+    netPropertyType = netPeer->GetOrAddReplicaPropertyType(netPropertyTypeName, nativeType, SerializeKnownExtendedVariant, GetComponentAnyProperty, SetComponentAnyProperty, netPropertyConfig);
   }
 
   // Unable to get or add net property type?
@@ -317,8 +298,7 @@ NetProperty* NetChannel::AddNetProperty(Component* component,
   Variant propertyData(ComponentPropertyInstanceData(property->Name, component));
 
   // Add net property
-  NetProperty* netProperty = static_cast<NetProperty*>(ReplicaChannel::AddReplicaProperty(
-      ReplicaPropertyPtr(new NetProperty(combinedNetPropertyName, netPropertyType, propertyData))));
+  NetProperty* netProperty = static_cast<NetProperty*>(ReplicaChannel::AddReplicaProperty(ReplicaPropertyPtr(new NetProperty(combinedNetPropertyName, netPropertyType, propertyData))));
 
   // Unable to add net property?
   if (!netProperty)
@@ -359,15 +339,12 @@ NetProperty* NetChannel::AddBasicNetProperty(const String& netPropertyName,
   NetPeer* netPeer = GetNetPeer();
   if (!netPeer) // Unable?
   {
-    DoNotifyError(
-        "NetChannel",
-        String::Format("Unable to add NetProperty named '%s' - Unable to get net peer", netPropertyName.c_str()));
+    DoNotifyError("NetChannel", String::Format("Unable to add NetProperty named '%s' - Unable to get net peer", netPropertyName.c_str()));
     return nullptr;
   }
 
   // Get or add corresponding net property type
-  NetPropertyType* netPropertyType = netPeer->GetOrAddReplicaPropertyType(
-      netPropertyName, nativeType, serializeValueFn, getValueFn, setValueFn, netPropertyConfig);
+  NetPropertyType* netPropertyType = netPeer->GetOrAddReplicaPropertyType(netPropertyName, nativeType, serializeValueFn, getValueFn, setValueFn, netPropertyConfig);
 
   // Unable to get or add net property type?
   if (!netPropertyType)
@@ -381,8 +358,7 @@ NetProperty* NetChannel::AddBasicNetProperty(const String& netPropertyName,
   }
 
   // Add net property
-  NetProperty* netProperty = static_cast<NetProperty*>(ReplicaChannel::AddReplicaProperty(
-      ReplicaPropertyPtr(new NetProperty(netPropertyName, netPropertyType, propertyData))));
+  NetProperty* netProperty = static_cast<NetProperty*>(ReplicaChannel::AddReplicaProperty(ReplicaPropertyPtr(new NetProperty(netPropertyName, netPropertyType, propertyData))));
 
   // Unable to add net property?
   if (!netProperty)
@@ -688,8 +664,7 @@ uint NetChannelType::GetNapDetectionInterval() const
 }
 
 // Create serialization flags
-static const SerializationFlags::Type sCreateFlags =
-    (SerializationFlags::OnSpawn | SerializationFlags::OnCloneEmplace | SerializationFlags::OnCloneSpawn);
+static const SerializationFlags::Type sCreateFlags = (SerializationFlags::OnSpawn | SerializationFlags::OnCloneEmplace | SerializationFlags::OnCloneSpawn);
 
 // Change serialization flags
 static const SerializationFlags::Type sChangeFlags = (SerializationFlags::OnChange);
@@ -710,8 +685,7 @@ void NetChannelType::SetReplicateOnOnline(bool replicateOnOnline)
   }
 
   // Set serialization flags
-  uint flags = replicateOnOnline ? (ReplicaChannelType::GetSerializationFlags() | sCreateFlags)
-                                 : (ReplicaChannelType::GetSerializationFlags() & ~sCreateFlags);
+  uint flags = replicateOnOnline ? (ReplicaChannelType::GetSerializationFlags() | sCreateFlags) : (ReplicaChannelType::GetSerializationFlags() & ~sCreateFlags);
   ReplicaChannelType::SetSerializationFlags(flags);
 }
 bool NetChannelType::GetReplicateOnOnline() const
@@ -732,8 +706,7 @@ void NetChannelType::SetReplicateOnChange(bool replicateOnChange)
   }
 
   // Set serialization flags
-  uint flags = replicateOnChange ? (ReplicaChannelType::GetSerializationFlags() | sChangeFlags)
-                                 : (ReplicaChannelType::GetSerializationFlags() & ~sChangeFlags);
+  uint flags = replicateOnChange ? (ReplicaChannelType::GetSerializationFlags() | sChangeFlags) : (ReplicaChannelType::GetSerializationFlags() & ~sChangeFlags);
   ReplicaChannelType::SetSerializationFlags(flags);
 }
 bool NetChannelType::GetReplicateOnChange() const
@@ -754,8 +727,7 @@ void NetChannelType::SetReplicateOnOffline(bool replicateOnOffline)
   }
 
   // Set serialization flags
-  uint flags = replicateOnOffline ? (ReplicaChannelType::GetSerializationFlags() | sDestroyFlags)
-                                  : (ReplicaChannelType::GetSerializationFlags() & ~sDestroyFlags);
+  uint flags = replicateOnOffline ? (ReplicaChannelType::GetSerializationFlags() | sDestroyFlags) : (ReplicaChannelType::GetSerializationFlags() & ~sDestroyFlags);
   ReplicaChannelType::SetSerializationFlags(flags);
 }
 bool NetChannelType::GetReplicateOnOffline() const

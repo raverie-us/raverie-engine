@@ -25,13 +25,7 @@ RaverieDefineType(Material, builder, type)
   RaverieBindGetterProperty(CompositionLabel)->Add(new CompositionLabelExtension());
 }
 
-Material::Material() :
-    mRenderData(nullptr),
-    mSerializedList(this),
-    mReferencedByList(this),
-    mCompositionChanged(false),
-    mPropertiesChanged(true),
-    mInputRangeVersion(-1)
+Material::Material() : mRenderData(nullptr), mSerializedList(this), mReferencedByList(this), mCompositionChanged(false), mPropertiesChanged(true), mInputRangeVersion(-1)
 {
   mSerializedList.mDisplayName = "RenderGroups";
   mReferencedByList.mDisplayName = "ReferencedBy";
@@ -93,8 +87,7 @@ void Material::SerializeMaterialBlocks(Serializer& stream)
       if (materialNodeType == nullptr)
       {
         // Create a proxy component
-        BoundType* proxyType =
-            ProxyObject<MaterialBlock>::CreateProxyType(materialNode.TypeName, ProxyReason::TypeDidntExist);
+        BoundType* proxyType = ProxyObject<MaterialBlock>::CreateProxyType(materialNode.TypeName, ProxyReason::TypeDidntExist);
         block = RaverieAllocate(MaterialBlock, proxyType);
 
         EngineLibraryExtensions::FindProxiedTypeOrigin(proxyType);
@@ -371,8 +364,7 @@ void MaterialManager::ReInitializeRemoveComponents()
       MaterialBlock* materialBlock = range.Back();
       BoundType* blockType = RaverieVirtualTypeId(materialBlock);
 
-      AddRemoveComponentOperation* op =
-          new AddRemoveComponentOperation(material, blockType, ComponentOperation::Remove);
+      AddRemoveComponentOperation* op = new AddRemoveComponentOperation(material, blockType, ComponentOperation::Remove);
       op->mNotifyModified = false;
       op->Redo();
       mReInitializeQueue.Queue(op);

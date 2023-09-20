@@ -36,10 +36,7 @@ public:
   void InterpolateDecibels(float volumeDB, float interpolationTime);
 
 private:
-  bool GetOutputSamples(BufferType* outputBuffer,
-                        const unsigned numberOfChannels,
-                        ListenerNode* listener,
-                        const bool firstRequest) override;
+  bool GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest) override;
   float GetVolumeChangeFromOutputsThreaded() override;
   void InterpolateVolumeThreaded(float volume, float time);
 
@@ -103,10 +100,7 @@ public:
   void InterpolateVolumes(float leftVolume, float rightVolume, float time);
 
 private:
-  bool GetOutputSamples(BufferType* outputBuffer,
-                        const unsigned numberOfChannels,
-                        ListenerNode* listener,
-                        const bool firstRequest) override;
+  bool GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest) override;
   float GetVolumeChangeFromOutputsThreaded() override;
   void SetVolumeThreaded(bool left, float newVolume, float time);
 
@@ -176,10 +170,7 @@ public:
   void InterpolateSemitones(float pitchSemitones, float interpolationTime);
 
 private:
-  bool GetOutputSamples(BufferType* outputBuffer,
-                        const unsigned numberOfChannels,
-                        ListenerNode* listener,
-                        const bool firstRequest) override;
+  bool GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest) override;
   void SetPitchThreaded(float semitones, float interpolationTime);
 
   PitchChangeHandler PitchObject;
@@ -206,10 +197,7 @@ public:
   void SetCutoffFrequency(float frequency);
 
 private:
-  bool GetOutputSamples(BufferType* outputBuffer,
-                        const unsigned numberOfChannels,
-                        ListenerNode* listener,
-                        const bool firstRequest) override;
+  bool GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest) override;
   void RemoveListenerThreaded(SoundEvent* event) override;
   void SetCutoffFrequencyThreaded(float frequency);
 
@@ -239,10 +227,7 @@ public:
   void SetCutoffFrequency(float frequency);
 
 private:
-  bool GetOutputSamples(BufferType* outputBuffer,
-                        const unsigned numberOfChannels,
-                        ListenerNode* listener,
-                        const bool firstRequest) override;
+  bool GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest) override;
   void RemoveListenerThreaded(SoundEvent* event) override;
   void SetCutoffFrequencyThreaded(float frequency);
 
@@ -275,10 +260,7 @@ public:
   void SetQualityFactor(float Q);
 
 private:
-  bool GetOutputSamples(BufferType* outputBuffer,
-                        const unsigned numberOfChannels,
-                        ListenerNode* listener,
-                        const bool firstRequest) override;
+  bool GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest) override;
   void RemoveListenerThreaded(SoundEvent* event) override;
   void SetCentralFrequencyThreaded(float frequency);
   void SetQualityFactorThreaded(float Q);
@@ -332,14 +314,10 @@ public:
   /// Sets the volume adjustment of all bands (the parameters in order are low
   /// pass, band 1, band 2, band 3, high pass) over the number of seconds passed
   /// in as the final parameter.
-  void
-  InterpolateAllBands(float lowPass, float band1, float band2, float band3, float highPass, float timeToInterpolate);
+  void InterpolateAllBands(float lowPass, float band1, float band2, float band3, float highPass, float timeToInterpolate);
 
 private:
-  bool GetOutputSamples(BufferType* outputBuffer,
-                        const unsigned numberOfChannels,
-                        ListenerNode* listener,
-                        const bool firstRequest) override;
+  bool GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest) override;
   void RemoveListenerThreaded(SoundEvent* event) override;
   void SetBandGainThreaded(EqualizerBands::Enum whichBand, float gain);
   void InterpolateAllThreaded(float* values, float timeToInterpolate);
@@ -389,10 +367,7 @@ public:
   void InterpolateWetValue(float value, float time);
 
 private:
-  bool GetOutputSamples(BufferType* outputBuffer,
-                        const unsigned numberOfChannels,
-                        ListenerNode* listener,
-                        const bool firstRequest) override;
+  bool GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest) override;
   void RemoveListenerThreaded(SoundEvent* event) override;
   void SetLengthMsThreaded(float time);
   void SetWetValueThreaded(float value);
@@ -445,10 +420,7 @@ public:
   void InterpolateWetValue(float wetPercent, float time);
 
 private:
-  bool GetOutputSamples(BufferType* outputBuffer,
-                        const unsigned numberOfChannels,
-                        ListenerNode* listener,
-                        const bool firstRequest) override;
+  bool GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest) override;
   void RemoveListenerThreaded(SoundEvent* event) override;
   void SetDelayMsThreaded(float time);
   void SetFeedbackThreaded(float value);
@@ -493,10 +465,7 @@ public:
   void SetFeedbackValue(float value);
 
 private:
-  bool GetOutputSamples(BufferType* outputBuffer,
-                        const unsigned numberOfChannels,
-                        ListenerNode* listener,
-                        const bool firstRequest) override;
+  bool GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest) override;
   void RemoveListenerThreaded(SoundEvent* event) override;
   void SetModFreqThreaded(float frequency);
   void SetFeedbackThreaded(float value);
@@ -560,10 +529,7 @@ public:
   void SetOffsetMillisec(float offset);
 
 private:
-  bool GetOutputSamples(BufferType* outputBuffer,
-                        const unsigned numberOfChannels,
-                        ListenerNode* listener,
-                        const bool firstRequest) override;
+  bool GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest) override;
   void RemoveListenerThreaded(SoundEvent* event) override;
   void SetModFreqThreaded(float frequency);
   void SetFeedbackThreaded(float value);
@@ -629,10 +595,7 @@ public:
   void SetKneeWidth(float knee);
 
 private:
-  bool GetOutputSamples(BufferType* outputBuffer,
-                        const unsigned numberOfChannels,
-                        ListenerNode* listener,
-                        const bool firstRequest) override;
+  bool GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest) override;
 
   // Filter for calculations
   DynamicsProcessor Filter;
@@ -687,10 +650,7 @@ public:
   void SetKneeWidth(float knee);
 
 private:
-  bool GetOutputSamples(BufferType* outputBuffer,
-                        const unsigned numberOfChannels,
-                        ListenerNode* listener,
-                        const bool firstRequest) override;
+  bool GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest) override;
 
   // Filter for calculations
   DynamicsProcessor Filter;
@@ -734,10 +694,7 @@ public:
   void SetMultiplicativeCutoff(float frequency);
 
 private:
-  bool GetOutputSamples(BufferType* outputBuffer,
-                        const unsigned numberOfChannels,
-                        ListenerNode* listener,
-                        const bool firstRequest) override;
+  bool GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest) override;
 
   // Gain of additive noise in decibels (default is -40)
   float mAdditiveNoiseDB;
@@ -789,10 +746,7 @@ public:
   void SetWetValue(float value);
 
 private:
-  bool GetOutputSamples(BufferType* outputBuffer,
-                        const unsigned numberOfChannels,
-                        ListenerNode* listener,
-                        const bool firstRequest) override;
+  bool GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest) override;
   void RemoveListenerThreaded(SoundEvent* event) override;
   void SetUseAmplitudeThreaded(bool useAmplitude);
   void SetFrequencyThreaded(float frequency);

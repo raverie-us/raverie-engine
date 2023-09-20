@@ -89,9 +89,7 @@ void GroupOperationFragment(ConstraintGroup<typename ListType::value_type>& grou
 }
 
 template <typename ListType, typename ParamType, typename Functor>
-void GroupOperationParamFragment(ConstraintGroup<typename ListType::value_type>& group,
-                                 ParamType& param,
-                                 Functor operation)
+void GroupOperationParamFragment(ConstraintGroup<typename ListType::value_type>& group, ParamType& param, Functor operation)
 {
   typedef ConstraintGroup<typename ListType::value_type> JointGroup;
   typedef ConstraintPhase<typename ListType::value_type> JointPhase;
@@ -107,10 +105,7 @@ void GroupOperationParamFragment(ConstraintGroup<typename ListType::value_type>&
 }
 
 template <typename ListType, typename ParamType1, typename ParamType2, typename Functor>
-void GroupOperationTwoParamFragment(ConstraintGroup<typename ListType::value_type>& group,
-                                    ParamType1& param1,
-                                    ParamType2& param2,
-                                    Functor operation)
+void GroupOperationTwoParamFragment(ConstraintGroup<typename ListType::value_type>& group, ParamType1& param1, ParamType2& param2, Functor operation)
 {
   typedef ConstraintGroup<typename ListType::value_type> JointGroup;
   typedef ConstraintPhase<typename ListType::value_type> JointPhase;

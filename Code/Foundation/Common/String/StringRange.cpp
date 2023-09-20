@@ -16,32 +16,20 @@ StringRange::StringRange(cstr cstring) : mOriginalString(cstring)
   mEnd = mBegin + mOriginalString.SizeInBytes();
 }
 
-StringRange::StringRange(StringParam str) :
-    mOriginalString(str),
-    mBegin(str.Data()),
-    mEnd(str.Data() + str.SizeInBytes())
+StringRange::StringRange(StringParam str) : mOriginalString(str), mBegin(str.Data()), mEnd(str.Data() + str.SizeInBytes())
 {
 }
 
-StringRange::StringRange(StringRangeParam strRange) :
-    mOriginalString(strRange.mOriginalString),
-    mBegin(strRange.mBegin),
-    mEnd(strRange.mEnd)
+StringRange::StringRange(StringRangeParam strRange) : mOriginalString(strRange.mOriginalString), mBegin(strRange.mBegin), mEnd(strRange.mEnd)
 {
 }
 
-StringRange::StringRange(StringIterator pbegin, StringIterator pend) :
-    mOriginalString(pbegin.mIteratorRange.mOriginalString),
-    mBegin(pbegin.Data()),
-    mEnd(pend.Data())
+StringRange::StringRange(StringIterator pbegin, StringIterator pend) : mOriginalString(pbegin.mIteratorRange.mOriginalString), mBegin(pbegin.Data()), mEnd(pend.Data())
 {
-  ErrorIf(pbegin.mIteratorRange.mOriginalString != pend.mIteratorRange.mOriginalString,
-          "Got two iterators from different strings");
+  ErrorIf(pbegin.mIteratorRange.mOriginalString != pend.mIteratorRange.mOriginalString, "Got two iterators from different strings");
 }
 
-StringRange::StringRange(StringIterator pbegin, size_t sizeInBytes) :
-    mOriginalString(pbegin.mIteratorRange.mOriginalString),
-    mBegin(pbegin.Data())
+StringRange::StringRange(StringIterator pbegin, size_t sizeInBytes) : mOriginalString(pbegin.mIteratorRange.mOriginalString), mBegin(pbegin.Data())
 {
   int bytesToEndFromIterator = mOriginalString.SizeInBytes() - (pbegin.Data() - mOriginalString.Data());
   // if someone really messed up bytes to end could be negative, use int.
@@ -62,8 +50,7 @@ StringRange::StringRange(cstr currentByte, cstr endByte) : mOriginalString(curre
   mEnd = mBegin + (endByte - currentByte);
 }
 
-StringRange::StringRange(cstr originalBegin, cstr currentByte, cstr endByte) :
-    mOriginalString(originalBegin, endByte - currentByte)
+StringRange::StringRange(cstr originalBegin, cstr currentByte, cstr endByte) : mOriginalString(originalBegin, endByte - currentByte)
 {
   // passing in a cstr will allocate a new buffer for the string so we need
   // to properly set up the begin and end values to point at the relevant data
@@ -72,10 +59,7 @@ StringRange::StringRange(cstr originalBegin, cstr currentByte, cstr endByte) :
 }
 
 // For internal iterator use only
-StringRange::StringRange(StringParam orginalStr, cstr currentByte, cstr endByte) :
-    mOriginalString(orginalStr),
-    mBegin(currentByte),
-    mEnd(endByte)
+StringRange::StringRange(StringParam orginalStr, cstr currentByte, cstr endByte) : mOriginalString(orginalStr), mBegin(currentByte), mEnd(endByte)
 {
 }
 
@@ -495,8 +479,7 @@ bool StringRange::IsAllWhitespace() const
 
 StringRange StringRange::SubString(StringIterator begin, StringIterator end) const
 {
-  ErrorIf(begin.mIteratorRange.mOriginalString != end.mIteratorRange.mOriginalString,
-          "String iterators from different strings");
+  ErrorIf(begin.mIteratorRange.mOriginalString != end.mIteratorRange.mOriginalString, "String iterators from different strings");
   ErrorIf(begin.mIteratorRange.mOriginalString != mOriginalString, "String iterators from different strings");
 
   StringIterator b = begin;
@@ -615,8 +598,7 @@ bool StringRange::IsValid()
 
 bool StringRange::ValidateRange() const
 {
-  return mBegin && mEnd && mBegin >= mOriginalString.Data() && mBegin <= mOriginalString.EndData() &&
-         mEnd >= mOriginalString.Data() && mEnd <= mOriginalString.EndData() && mBegin <= mEnd;
+  return mBegin && mEnd && mBegin >= mOriginalString.Data() && mBegin <= mOriginalString.EndData() && mEnd >= mOriginalString.Data() && mEnd <= mOriginalString.EndData() && mBegin <= mEnd;
 }
 
 bool StringRange::IsContinuationByte(cstr byte) const
@@ -697,8 +679,7 @@ void StringSplitRange::SkipNext()
 }
 
 // Iterator
-StringIterator::StringIterator(StringParam orginalStr, cstr currentByte) :
-    mIteratorRange(orginalStr, currentByte, orginalStr.EndData())
+StringIterator::StringIterator(StringParam orginalStr, cstr currentByte) : mIteratorRange(orginalStr, currentByte, orginalStr.EndData())
 {
 }
 

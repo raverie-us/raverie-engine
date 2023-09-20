@@ -4,8 +4,7 @@
 namespace Raverie
 {
 
-PropertyEditAction::PropertyEditAction(PropertyWidgetInitializer& init, Function* method, HandleParam instance) :
-    PropertyWidget(init)
+PropertyEditAction::PropertyEditAction(PropertyWidgetInitializer& init, Function* method, HandleParam instance) : PropertyWidget(init)
 {
   mLabel->SetActive(false);
   mMethod = method;
@@ -32,11 +31,7 @@ RaverieDefineType(AddObjectWidget, builder, type)
 {
 }
 
-AddObjectWidget::AddObjectWidget(PropertyWidgetInitializer& init,
-                                 PropertyWidgetObject* parentNode,
-                                 PropertyView* grid,
-                                 HandleParam instance) :
-    PropertyWidget(init)
+AddObjectWidget::AddObjectWidget(PropertyWidgetInitializer& init, PropertyWidgetObject* parentNode, PropertyView* grid, HandleParam instance) : PropertyWidget(init)
 {
   mMouseOver = false;
   mParentWidgetObject = parentNode;

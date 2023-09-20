@@ -264,23 +264,13 @@ public:
   void AttachCommentsToNodes(SyntaxTree& syntaxTree, Array<UserToken>& comments);
 
   // Compiles the project into an unchecked syntax tree (only parsed)
-  bool CompileUncheckedSyntaxTree(SyntaxTree& syntaxTreeOut,
-                                  Array<UserToken>& tokensOut,
-                                  EvaluationMode::Enum evaluation);
+  bool CompileUncheckedSyntaxTree(SyntaxTree& syntaxTreeOut, Array<UserToken>& tokensOut, EvaluationMode::Enum evaluation);
 
   // Compiles the project into a checked syntax tree
-  bool CompileCheckedSyntaxTree(SyntaxTree& syntaxTreeOut,
-                                LibraryBuilder& builder,
-                                Array<UserToken>& tokensOut,
-                                const Module& dependencies,
-                                EvaluationMode::Enum evaluation);
+  bool CompileCheckedSyntaxTree(SyntaxTree& syntaxTreeOut, LibraryBuilder& builder, Array<UserToken>& tokensOut, const Module& dependencies, EvaluationMode::Enum evaluation);
 
   // Compiles the project into a single library and also returns the syntax tree
-  LibraryRef Compile(StringParam libraryName,
-                     Module& dependencies,
-                     EvaluationMode::Enum evaluation,
-                     SyntaxTree& treeOut,
-                     Array<UserToken>& tokensOut);
+  LibraryRef Compile(StringParam libraryName, Module& dependencies, EvaluationMode::Enum evaluation, SyntaxTree& treeOut, Array<UserToken>& tokensOut);
 
   // Compiles the project into a single library
   LibraryRef Compile(StringParam libraryName, Module& dependencies, EvaluationMode::Enum evaluation);
@@ -293,17 +283,13 @@ public:
   // edited) The old library can be a nullptr, however it is generally
   // recommended to provide it if it has previously been compiled since it will
   // allow the auto-completer to resolve local types too
-  void GetAutoCompleteInfo(Module& dependencies,
-                           size_t cursorPosition,
-                           StringParam cursorOrigin,
-                           AutoCompleteInfo& resultOut);
+  void GetAutoCompleteInfo(Module& dependencies, size_t cursorPosition, StringParam cursorOrigin, AutoCompleteInfo& resultOut);
 
   // For every usage of an identifier there is a location where we defined that
   // identifier (variable definiton, member, type, etc) This gets the definition
   // location (and the actual resulting definition object) of whatever is under
   // the cursor
-  void
-  GetDefinitionInfo(Module& dependencies, size_t cursorPosition, StringParam cursorOrigin, CodeDefinition& resultOut);
+  void GetDefinitionInfo(Module& dependencies, size_t cursorPosition, StringParam cursorOrigin, CodeDefinition& resultOut);
 
 public:
   // A pointer to any data the user wants to attach
@@ -328,16 +314,10 @@ private:
   static String GetFriendlyTypeName(Type* type);
 
   // Internal function called by the above 'GetDefinitionInfo'
-  void GetDefinitionInfoInternal(Module& dependencies,
-                                 size_t cursorPosition,
-                                 StringParam cursorOrigin,
-                                 CodeDefinition& resultOut);
+  void GetDefinitionInfoInternal(Module& dependencies, size_t cursorPosition, StringParam cursorOrigin, CodeDefinition& resultOut);
 
   // Get auto complete information (but doesn't parse it into completions)
-  void GetAutoCompleteInfoInternal(Module& dependencies,
-                                   size_t cursorPosition,
-                                   StringParam cursorOrigin,
-                                   AutoCompleteInfo& resultOut);
+  void GetAutoCompleteInfoInternal(Module& dependencies, size_t cursorPosition, StringParam cursorOrigin, AutoCompleteInfo& resultOut);
 
   // Creates a completion for an overload using only the delegate type
   // (generally used when performing a call)

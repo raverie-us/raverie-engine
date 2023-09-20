@@ -18,18 +18,8 @@ Aabb GetAabb(HandleParam metaObject, IncludeMode::Type includeMode = IncludeMode
 Aabb GetAabb(MetaSelection* selection, IncludeMode::Type includeMode = IncludeMode::Children);
 
 // Expand the aabb by this object size
-void ExpandAabb(Cog* cog,
-                Aabb& aabb,
-                IncludeMode::Type includeMode = IncludeMode::Children,
-                bool world = true,
-                bool toParent = false,
-                bool expandTransform = false);
-void ExpandAabb(HandleParam metaObject,
-                Aabb& aabb,
-                IncludeMode::Type includeMode = IncludeMode::Children,
-                bool world = true,
-                bool toParent = false,
-                bool expandTransform = false);
+void ExpandAabb(Cog* cog, Aabb& aabb, IncludeMode::Type includeMode = IncludeMode::Children, bool world = true, bool toParent = false, bool expandTransform = false);
+void ExpandAabb(HandleParam metaObject, Aabb& aabb, IncludeMode::Type includeMode = IncludeMode::Children, bool world = true, bool toParent = false, bool expandTransform = false);
 // Expand the aabb by this object's childrens' sizes only, but not the object's
 // size itself.
 void ExpandAabbChildrenOnly(HandleParam instance, Aabb& aabb, bool world = true, bool expandTransform = false);

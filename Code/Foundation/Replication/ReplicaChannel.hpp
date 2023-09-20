@@ -76,11 +76,7 @@ public:
   /// Observes the replica channel and replicates any changes (if configured to
   /// do so) Returns true if successful, else false
   bool ObserveAndReplicateChanges(bool forceObservation = false, bool forceReplication = false, bool isRelay = false);
-  bool ObserveAndReplicateChanges(TimeMs timestamp,
-                                  uint64 frameId,
-                                  bool forceObservation = false,
-                                  bool forceReplication = false,
-                                  bool isRelay = false);
+  bool ObserveAndReplicateChanges(TimeMs timestamp, uint64 frameId, bool forceObservation = false, bool forceReplication = false, bool isRelay = false);
 
   /// Timestamp indicating when this replica channel was last changed, else
   /// cInvalidMessageTimestamp (Set immediately after a change is observed on
@@ -147,11 +143,7 @@ public:
 
   /// Reacts to all replica properties that have been legitimately changed,
   /// determined using comparisons, since this function was last called
-  void ReactToPropertyChanges(TimeMs timestamp,
-                              ReplicationPhase::Enum replicationPhase,
-                              TransmissionDirection::Enum direction,
-                              bool generateNotifications = true,
-                              bool setLastValues = true);
+  void ReactToPropertyChanges(TimeMs timestamp, ReplicationPhase::Enum replicationPhase, TransmissionDirection::Enum direction, bool generateNotifications = true, bool setLastValues = true);
 
   //
   // Internal

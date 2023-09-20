@@ -18,8 +18,7 @@ BoundType* Wrapper::Generate(LibraryBuilder& builder, Wrapper* wrapper, BoundTyp
     ErrorIf(outerBaseType->GetDefaultConstructor() == nullptr, "The base type MUST have a default constructor");
   }
 
-  BoundType* outerType =
-      builder.AddBoundType(innerType->Name, TypeCopyMode::ReferenceType, outerBaseSize + sizeof(Handle));
+  BoundType* outerType = builder.AddBoundType(innerType->Name, TypeCopyMode::ReferenceType, outerBaseSize + sizeof(Handle));
   outerType->Native = false;
   outerType->Add(wrapper);
   outerType->BaseType = outerBaseType;
@@ -36,8 +35,7 @@ BoundType* Wrapper::Generate(LibraryBuilder& builder, Wrapper* wrapper, BoundTyp
     if (innerProperty->Set != nullptr)
       setter = &FunctionCall;
 
-    GetterSetter* outerProperty = builder.AddBoundGetterSetter(
-        outerType, innerProperty->Name, innerProperty->PropertyType, setter, getter, innerProperty->GetMemberOptions());
+    GetterSetter* outerProperty = builder.AddBoundGetterSetter(outerType, innerProperty->Name, innerProperty->PropertyType, setter, getter, innerProperty->GetMemberOptions());
 
     if (outerProperty->Get != nullptr)
       outerProperty->Get->UserData = innerProperty->Get;
@@ -48,12 +46,7 @@ BoundType* Wrapper::Generate(LibraryBuilder& builder, Wrapper* wrapper, BoundTyp
   RaverieForEach (Function* innerFunction, innerType->GetFunctions())
   {
     DelegateType* delegateType = innerFunction->FunctionType;
-    Function* outerFunction = builder.AddBoundFunction(outerType,
-                                                       innerFunction->Name,
-                                                       &FunctionCall,
-                                                       delegateType->Parameters,
-                                                       delegateType->Return,
-                                                       innerFunction->GetFunctionOptions());
+    Function* outerFunction = builder.AddBoundFunction(outerType, innerFunction->Name, &FunctionCall, delegateType->Parameters, delegateType->Return, innerFunction->GetFunctionOptions());
     outerFunction->UserData = innerFunction;
   }
 
@@ -85,8 +78,7 @@ void Wrapper::ConstructorCall(Call& call, ExceptionReport& report)
     outerBaseConstructorCall.Invoke();
   }
 
-  Handle innerHandle =
-      call.GetState()->AllocateDefaultConstructedHeapObject(innerType, report, HeapFlags::ReferenceCounted);
+  Handle innerHandle = call.GetState()->AllocateDefaultConstructedHeapObject(innerType, report, HeapFlags::ReferenceCounted);
 
   // Copy the handle after our base class
   byte* outerBytes = outerThisHandle.Dereference() + outerBaseSize;

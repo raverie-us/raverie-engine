@@ -128,94 +128,94 @@ struct BasicNativeTypePrimitiveMembers
 /// (Defines required information about the type via template specialization)
 #define ForwardDeclareBasicNativeType(Name)
 
-#define DeclareBasicNativeType(T, Name)                                                                                \
-                                                                                                                       \
-  template <>                                                                                                          \
-  struct IsBasicNativeType<T>                                                                                          \
-  {                                                                                                                    \
-    static const bool Value = true;                                                                                    \
-  };                                                                                                                   \
-                                                                                                                       \
-  template <>                                                                                                          \
-  struct BasicNativeTypeToEnum<T>                                                                                      \
-  {                                                                                                                    \
-    static const BasicNativeType::Enum Value = BasicNativeType::Name;                                                  \
-  };                                                                                                                   \
-                                                                                                                       \
-  template <>                                                                                                          \
-  struct BasicNativeTypeFromEnum<BasicNativeType::Name>                                                                \
-  {                                                                                                                    \
-    typedef T Type;                                                                                                    \
+#define DeclareBasicNativeType(T, Name)                                                                                                                                                                \
+                                                                                                                                                                                                       \
+  template <>                                                                                                                                                                                          \
+  struct IsBasicNativeType<T>                                                                                                                                                                          \
+  {                                                                                                                                                                                                    \
+    static const bool Value = true;                                                                                                                                                                    \
+  };                                                                                                                                                                                                   \
+                                                                                                                                                                                                       \
+  template <>                                                                                                                                                                                          \
+  struct BasicNativeTypeToEnum<T>                                                                                                                                                                      \
+  {                                                                                                                                                                                                    \
+    static const BasicNativeType::Enum Value = BasicNativeType::Name;                                                                                                                                  \
+  };                                                                                                                                                                                                   \
+                                                                                                                                                                                                       \
+  template <>                                                                                                                                                                                          \
+  struct BasicNativeTypeFromEnum<BasicNativeType::Name>                                                                                                                                                \
+  {                                                                                                                                                                                                    \
+    typedef T Type;                                                                                                                                                                                    \
   };
 
-#define DeclareBasicNativeTypePrimitive(T, Name)                                                                       \
-                                                                                                                       \
-  DeclareBasicNativeType(T, Name)                                                                                      \
-                                                                                                                       \
-      template <>                                                                                                      \
-      struct IsBasicNativeTypeArithmetic<T>                                                                            \
-  {                                                                                                                    \
-    static const bool Value = true;                                                                                    \
-  };                                                                                                                   \
-                                                                                                                       \
-  template <>                                                                                                          \
-  struct IsBasicNativeTypeIntegral<T>                                                                                  \
-  {                                                                                                                    \
-    static const bool Value = is_integral<T>::value;                                                                   \
-  };                                                                                                                   \
-                                                                                                                       \
-  template <>                                                                                                          \
-  struct IsBasicNativeTypeFloatingPoint<T>                                                                             \
-  {                                                                                                                    \
-    static const bool Value = is_floating_point<T>::value;                                                             \
-  };                                                                                                                   \
-                                                                                                                       \
-  template <>                                                                                                          \
-  struct IsBasicNativeTypePrimitive<T>                                                                                 \
-  {                                                                                                                    \
-    static const bool Value = true;                                                                                    \
-  };                                                                                                                   \
-                                                                                                                       \
-  template <>                                                                                                          \
-  struct BasicNativeTypePrimitiveMembers<T>                                                                            \
-  {                                                                                                                    \
-    typedef T Type;                                                                                                    \
-    static const size_t Count = 1;                                                                                     \
+#define DeclareBasicNativeTypePrimitive(T, Name)                                                                                                                                                       \
+                                                                                                                                                                                                       \
+  DeclareBasicNativeType(T, Name)                                                                                                                                                                      \
+                                                                                                                                                                                                       \
+      template <>                                                                                                                                                                                      \
+      struct IsBasicNativeTypeArithmetic<T>                                                                                                                                                            \
+  {                                                                                                                                                                                                    \
+    static const bool Value = true;                                                                                                                                                                    \
+  };                                                                                                                                                                                                   \
+                                                                                                                                                                                                       \
+  template <>                                                                                                                                                                                          \
+  struct IsBasicNativeTypeIntegral<T>                                                                                                                                                                  \
+  {                                                                                                                                                                                                    \
+    static const bool Value = is_integral<T>::value;                                                                                                                                                   \
+  };                                                                                                                                                                                                   \
+                                                                                                                                                                                                       \
+  template <>                                                                                                                                                                                          \
+  struct IsBasicNativeTypeFloatingPoint<T>                                                                                                                                                             \
+  {                                                                                                                                                                                                    \
+    static const bool Value = is_floating_point<T>::value;                                                                                                                                             \
+  };                                                                                                                                                                                                   \
+                                                                                                                                                                                                       \
+  template <>                                                                                                                                                                                          \
+  struct IsBasicNativeTypePrimitive<T>                                                                                                                                                                 \
+  {                                                                                                                                                                                                    \
+    static const bool Value = true;                                                                                                                                                                    \
+  };                                                                                                                                                                                                   \
+                                                                                                                                                                                                       \
+  template <>                                                                                                                                                                                          \
+  struct BasicNativeTypePrimitiveMembers<T>                                                                                                                                                            \
+  {                                                                                                                                                                                                    \
+    typedef T Type;                                                                                                                                                                                    \
+    static const size_t Count = 1;                                                                                                                                                                     \
   };
 
-#define DeclareBasicNativeTypeMultiPrimitive(T, Name, PrimitiveT, PrimitiveCount)                                      \
-                                                                                                                       \
-  DeclareBasicNativeType(T, Name)                                                                                      \
-                                                                                                                       \
-      template <>                                                                                                      \
-      struct IsBasicNativeTypeArithmetic<T>                                                                            \
-  {                                                                                                                    \
-    static const bool Value = true;                                                                                    \
-  };                                                                                                                   \
-                                                                                                                       \
-  template <>                                                                                                          \
-  struct IsBasicNativeTypeIntegral<T>                                                                                  \
-  {                                                                                                                    \
-    static const bool Value = is_integral<PrimitiveT>::value;                                                          \
-  };                                                                                                                   \
-                                                                                                                       \
-  template <>                                                                                                          \
-  struct IsBasicNativeTypeFloatingPoint<T>                                                                             \
-  {                                                                                                                    \
-    static const bool Value = is_floating_point<PrimitiveT>::value;                                                    \
-  };                                                                                                                   \
-                                                                                                                       \
-  template <>                                                                                                          \
-  struct IsBasicNativeTypeMultiPrimitive<T>                                                                            \
-  {                                                                                                                    \
-    static const bool Value = true;                                                                                    \
-  };                                                                                                                   \
-                                                                                                                       \
-  template <>                                                                                                          \
-  struct BasicNativeTypePrimitiveMembers<T>                                                                            \
-  {                                                                                                                    \
-    typedef PrimitiveT Type;                                                                                           \
-    static const size_t Count = PrimitiveCount;                                                                        \
+#define DeclareBasicNativeTypeMultiPrimitive(T, Name, PrimitiveT, PrimitiveCount)                                                                                                                      \
+                                                                                                                                                                                                       \
+  DeclareBasicNativeType(T, Name)                                                                                                                                                                      \
+                                                                                                                                                                                                       \
+      template <>                                                                                                                                                                                      \
+      struct IsBasicNativeTypeArithmetic<T>                                                                                                                                                            \
+  {                                                                                                                                                                                                    \
+    static const bool Value = true;                                                                                                                                                                    \
+  };                                                                                                                                                                                                   \
+                                                                                                                                                                                                       \
+  template <>                                                                                                                                                                                          \
+  struct IsBasicNativeTypeIntegral<T>                                                                                                                                                                  \
+  {                                                                                                                                                                                                    \
+    static const bool Value = is_integral<PrimitiveT>::value;                                                                                                                                          \
+  };                                                                                                                                                                                                   \
+                                                                                                                                                                                                       \
+  template <>                                                                                                                                                                                          \
+  struct IsBasicNativeTypeFloatingPoint<T>                                                                                                                                                             \
+  {                                                                                                                                                                                                    \
+    static const bool Value = is_floating_point<PrimitiveT>::value;                                                                                                                                    \
+  };                                                                                                                                                                                                   \
+                                                                                                                                                                                                       \
+  template <>                                                                                                                                                                                          \
+  struct IsBasicNativeTypeMultiPrimitive<T>                                                                                                                                                            \
+  {                                                                                                                                                                                                    \
+    static const bool Value = true;                                                                                                                                                                    \
+  };                                                                                                                                                                                                   \
+                                                                                                                                                                                                       \
+  template <>                                                                                                                                                                                          \
+  struct BasicNativeTypePrimitiveMembers<T>                                                                                                                                                            \
+  {                                                                                                                                                                                                    \
+    typedef PrimitiveT Type;                                                                                                                                                                           \
+    static const size_t Count = PrimitiveCount;                                                                                                                                                        \
   };
 
 // Include basic native type template specializations

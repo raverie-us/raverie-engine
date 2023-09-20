@@ -47,9 +47,9 @@ public:
  * ************************************/
 
 // Helper macros for accessing these types
-#  define RaverieStaticType(Type) ::Raverie::TypeBinding::StaticTypeId<Type>
-#  define RaverieTypeId(Type) (RaverieStaticType(Type)::GetType())
-#  define RaverieBindingType(Type) typename RaverieStaticType(Type)::BindingType
+#define RaverieStaticType(Type) ::Raverie::TypeBinding::StaticTypeId<Type>
+#define RaverieTypeId(Type) (RaverieStaticType(Type)::GetType())
+#define RaverieBindingType(Type) typename RaverieStaticType(Type)::BindingType
 
 // This class keeps track of all BoundTypes that are natively bound
 // (any deleted type that is native must be removed from here)
@@ -145,10 +145,8 @@ public:
   };
 
 // Get the type of the pointer (using virtual behavior if possible)
-#  define RaverieVirtualTypeId(Pointer)                                                                                  \
-    ::Raverie::TypeBinding::DiscoverDerivedType<                                                                              \
-        RaverieStrip(decltype(Pointer)),                                                                                 \
-        ::Raverie::TypeBinding::CanGetDerivedType<RaverieStrip(decltype(Pointer))>::value>::Get(Pointer)
+#define RaverieVirtualTypeId(Pointer)                                                                                                                                                                  \
+  ::Raverie::TypeBinding::DiscoverDerivedType<RaverieStrip(decltype(Pointer)), ::Raverie::TypeBinding::CanGetDerivedType<RaverieStrip(decltype(Pointer))>::value>::Get(Pointer)
 
   template <typename T>
   class StripQualifiers
@@ -191,7 +189,7 @@ public:
 
 // Strip all const, pointer, reference, and volatile qualifiers from a type to
 // get its core
-#  define RaverieStrip(T) typename ::Raverie::TypeBinding::StripQualifiers<T>::Type
+#define RaverieStrip(T) typename ::Raverie::TypeBinding::StripQualifiers<T>::Type
 
   // Handles:
   //  int
@@ -241,7 +239,7 @@ public:
 // Examples: const int** -> int*, or const int& -> int*
 // To just get the type as a pointer rather than the expression, use
 // RaverieStrip(T)*
-#  define RaverieToPointer(Expression) (::Raverie::TypeBinding::InternalToPointer<RaverieStrip(decltype(Expression))>(Expression))
+#define RaverieToPointer(Expression) (::Raverie::TypeBinding::InternalToPointer<RaverieStrip(decltype(Expression))>(Expression))
 
   // Strips all forms of const from a type
   template <typename T>
@@ -540,9 +538,7 @@ public:
 
     // Based on whether this object supports direct reading or not, we choose to
     // use the qualified or unqualified type in binding
-    typedef typename TypeChooser<QualifiedType,
-                                 typename StaticTypeId<T>::UnqualifiedType,
-                                 StaticTypeId<T>::DirectRead>::Type BindingType;
+    typedef typename TypeChooser<QualifiedType, typename StaticTypeId<T>::UnqualifiedType, StaticTypeId<T>::DirectRead>::Type BindingType;
   };
 
   // A partial specialization for reference types
@@ -556,9 +552,7 @@ public:
 
     // Based on whether this object supports direct reading or not, we choose to
     // use the qualified or unqualified type in binding
-    typedef typename TypeChooser<QualifiedType,
-                                 typename StaticTypeId<T>::UnqualifiedType,
-                                 StaticTypeId<T>::DirectRead>::Type BindingType;
+    typedef typename TypeChooser<QualifiedType, typename StaticTypeId<T>::UnqualifiedType, StaticTypeId<T>::DirectRead>::Type BindingType;
   };
 
   // A partial specialization for pointer types
@@ -572,9 +566,7 @@ public:
 
     // Based on whether this object supports direct reading or not, we choose to
     // use the qualified or unqualified type in binding
-    typedef typename TypeChooser<QualifiedType,
-                                 typename StaticTypeId<T>::UnqualifiedType,
-                                 StaticTypeId<T>::DirectRead>::Type BindingType;
+    typedef typename TypeChooser<QualifiedType, typename StaticTypeId<T>::UnqualifiedType, StaticTypeId<T>::DirectRead>::Type BindingType;
   };
 
   // We need to let binding know to redirect the type id operations
@@ -608,7 +600,7 @@ public:
     // Checks if the function we were testing was virtual or not
     void AssertIfNotVirtual();
 
-#  include "VirtualTableBinding.inl"
+#include "VirtualTableBinding.inl"
   };
 
   // The signature / size that this compiler uses for function pointers in a
@@ -714,28 +706,21 @@ bool BoundTypeHelperIsRawCastable(BoundType* fromType, BoundType* toType);
 bool BoundTypeHelperIsInitialized(BoundType* type);
 bool BoundTypeHelperIsInitializedAssert(BoundType* type);
 String BoundTypeHelperGetName(BoundType* type);
-void LibraryBuilderHelperAddNativeBoundType(LibraryBuilder& builder,
-                                            BoundType* type,
-                                            BoundType* base,
-                                            TypeCopyMode::Enum mode);
+void LibraryBuilderHelperAddNativeBoundType(LibraryBuilder& builder, BoundType* type, BoundType* base, TypeCopyMode::Enum mode);
 void InitializeTypeHelper(StringParam originalName, BoundType* type, size_t size, size_t rawVirtualcount);
 template <typename T>
 T InternalReadRef(byte* stackFrame);
 
 template <typename T>
-Handle::Handle(const HandleOf<T>& rhs) :
-    StoredType(rhs.StoredType),
-    Manager(rhs.Manager),
-    Offset(rhs.Offset),
-    Flags(rhs.Flags)
+Handle::Handle(const HandleOf<T>& rhs) : StoredType(rhs.StoredType), Manager(rhs.Manager), Offset(rhs.Offset), Flags(rhs.Flags)
 {
   // The data of a handle type is always memory-copyable
   memcpy(this->Data, rhs.Data, sizeof(this->Data));
 
-#  ifdef RaverieHandleDebug
+#ifdef RaverieHandleDebug
   // Link ourselves to the global list of handles
   this->DebugLink();
-#  endif
+#endif
 
   // Increment the reference count since we're now referencing the same thing
   this->AddReference();
@@ -1002,8 +987,7 @@ public:
   {
     // Check that the derived type is bigger than the
     // base type (should be since we have Debug_SizeTest)
-    static_assert(sizeof(SelfType) >= sizeof(BaseType),
-                  "It appears either the derived class or parent class is incorrect");
+    static_assert(sizeof(SelfType) >= sizeof(BaseType), "It appears either the derived class or parent class is incorrect");
 
     // Attempt a static cast to ensure the types given were related
     // We need to use an invalid pointer (but not null) to avoid this getting
@@ -1028,96 +1012,96 @@ public:
  * ************************************/
 
 // If we're in debug mode, add extra checks...
-#  if RaverieDebug
+#if RaverieDebug
 // Checks used in the declaration of a C++ type exposed to Raverie
-#    define RaverieDeclareChecks(SelfType, BaseType)                                                                     \
-      /* Do a series of debug checks to ensure the user is using the macros                                            \
-       * correctly */                                                                                                  \
-      void RaverieDebugChecks()                                                                                          \
-      {                                                                                                                \
-        /* Check that the sizes of the type we declared as 'our type' is the                                           \
-         * same as the size of the this reference */                                                                   \
-        static_assert(sizeof(SelfType) == sizeof(*this),                                                               \
-                      "The type passed into the macro wasn't the same as the "                                         \
-                      "class it was declared in");                                                                     \
-        /* Check that the two types are related via static casting */                                                  \
-        ::Raverie::CheckTypesAreRelated<SelfType, BaseType>::Test();                                                          \
-      }                                                                                                                \
-      static void RaverieDebugDerivedHasNotBeenDeclared()                                                                \
-      {                                                                                                                \
-      }                                                                                                                \
-      static void RaverieDebugBaseHasNotBeenDeclared()                                                                   \
-      {                                                                                                                \
-      }
-#  else
-#    define RaverieDeclareChecks(SelfType, BaseType)
-#  endif
+#  define RaverieDeclareChecks(SelfType, BaseType)                                                                                                                                                     \
+    /* Do a series of debug checks to ensure the user is using the macros                                                                                                                              \
+     * correctly */                                                                                                                                                                                    \
+    void RaverieDebugChecks()                                                                                                                                                                          \
+    {                                                                                                                                                                                                  \
+      /* Check that the sizes of the type we declared as 'our type' is the                                                                                                                             \
+       * same as the size of the this reference */                                                                                                                                                     \
+      static_assert(sizeof(SelfType) == sizeof(*this),                                                                                                                                                 \
+                    "The type passed into the macro wasn't the same as the "                                                                                                                           \
+                    "class it was declared in");                                                                                                                                                       \
+      /* Check that the two types are related via static casting */                                                                                                                                    \
+      ::Raverie::CheckTypesAreRelated<SelfType, BaseType>::Test();                                                                                                                                     \
+    }                                                                                                                                                                                                  \
+    static void RaverieDebugDerivedHasNotBeenDeclared()                                                                                                                                                \
+    {                                                                                                                                                                                                  \
+    }                                                                                                                                                                                                  \
+    static void RaverieDebugBaseHasNotBeenDeclared()                                                                                                                                                   \
+    {                                                                                                                                                                                                  \
+    }
+#else
+#  define RaverieDeclareChecks(SelfType, BaseType)
+#endif
 
 /**************************** EXTERNAL REDIRECTION
  * *****************************/
-#  define RaverieDeclareCustomType(SelfType, CustomBoundType)                                                            \
-    /* A specialization so we know that type info exists for this type */                                              \
-    template <>                                                                                                        \
-    class RaverieStaticType(SelfType)                                                                                    \
-    {                                                                                                                  \
-    public:                                                                                                            \
-      typedef SelfType UnqualifiedType;                                                                                \
-      typedef SelfType QualifiedType;                                                                                  \
-      typedef SelfType BindingType;                                                                                    \
-      typedef SelfType RepresentedType;                                                                                \
-      typedef SelfType& ReadType;                                                                                      \
-      static const bool DirectRead = true;                                                                             \
-      /* Implementation of the 'get type' specialization */                                                            \
-      static ::Raverie::BoundType*(GetType)()                                                                                 \
-      {                                                                                                                \
-        static BoundType* type = (CustomBoundType);                                                                    \
-        return type;                                                                                                   \
-      }                                                                                                                \
-      /* Read our object representation from either stack data or handle data                                          \
-       */                                                                                                              \
-      static typename RaverieStaticType(SelfType)::ReadType(Read)(byte * from)                                           \
-      {                                                                                                                \
-        return *(SelfType*)from;                                                                                       \
-      }                                                                                                                \
-      /* Write our object representation to either stack data or handle data                                           \
-       */                                                                                                              \
-      static void(Write)(const SelfType& value, byte* to)                                                              \
-      {                                                                                                                \
-        memcpy(to, &value, sizeof(SelfType));                                                                          \
-      }                                                                                                                \
-    };
+#define RaverieDeclareCustomType(SelfType, CustomBoundType)                                                                                                                                            \
+  /* A specialization so we know that type info exists for this type */                                                                                                                                \
+  template <>                                                                                                                                                                                          \
+  class RaverieStaticType(SelfType)                                                                                                                                                                    \
+  {                                                                                                                                                                                                    \
+  public:                                                                                                                                                                                              \
+    typedef SelfType UnqualifiedType;                                                                                                                                                                  \
+    typedef SelfType QualifiedType;                                                                                                                                                                    \
+    typedef SelfType BindingType;                                                                                                                                                                      \
+    typedef SelfType RepresentedType;                                                                                                                                                                  \
+    typedef SelfType& ReadType;                                                                                                                                                                        \
+    static const bool DirectRead = true;                                                                                                                                                               \
+    /* Implementation of the 'get type' specialization */                                                                                                                                              \
+    static ::Raverie::BoundType*(GetType)()                                                                                                                                                            \
+    {                                                                                                                                                                                                  \
+      static BoundType* type = (CustomBoundType);                                                                                                                                                      \
+      return type;                                                                                                                                                                                     \
+    }                                                                                                                                                                                                  \
+    /* Read our object representation from either stack data or handle data                                                                                                                            \
+     */                                                                                                                                                                                                \
+    static typename RaverieStaticType(SelfType)::ReadType(Read)(byte * from)                                                                                                                           \
+    {                                                                                                                                                                                                  \
+      return *(SelfType*)from;                                                                                                                                                                         \
+    }                                                                                                                                                                                                  \
+    /* Write our object representation to either stack data or handle data                                                                                                                             \
+     */                                                                                                                                                                                                \
+    static void(Write)(const SelfType& value, byte* to)                                                                                                                                                \
+    {                                                                                                                                                                                                  \
+      memcpy(to, &value, sizeof(SelfType));                                                                                                                                                            \
+    }                                                                                                                                                                                                  \
+  };
 
 // Declare an external type
-#  define RaverieDeclareDefineRedirectType(SelfType, RedirectType, ConvertFromRedirect, ConvertToRedirect)               \
-    /* A specialization so we know that type info exists for this type */                                              \
-    template <>                                                                                                        \
-    class RaverieStaticType(SelfType)                                                                                    \
-    {                                                                                                                  \
-    public:                                                                                                            \
-      typedef SelfType UnqualifiedType;                                                                                \
-      typedef SelfType QualifiedType;                                                                                  \
-      typedef SelfType BindingType;                                                                                    \
-      typedef RedirectType RepresentedType;                                                                            \
-      typedef SelfType ReadType;                                                                                       \
-      static const bool DirectRead = false;                                                                            \
-      /* Implementation of the 'get type' specialization */                                                            \
-      static ::Raverie::BoundType*(GetType)()                                                                                 \
-      {                                                                                                                \
-        return RaverieTypeId(RepresentedType);                                                                           \
-      }                                                                                                                \
-      /* Read our object representation from either stack data or handle data                                          \
-       */                                                                                                              \
-      static typename RaverieStaticType(SelfType)::ReadType(Read)(byte * from)                                           \
-      {                                                                                                                \
-        return ConvertToRedirect(*(RepresentedType*)from);                                                             \
-      }                                                                                                                \
-      /* Write our object representation to either stack data or handle data                                           \
-       */                                                                                                              \
-      static void(Write)(const SelfType& value, byte* to)                                                              \
-      {                                                                                                                \
-        new (to) RepresentedType(ConvertFromRedirect(value));                                                          \
-      }                                                                                                                \
-    };
+#define RaverieDeclareDefineRedirectType(SelfType, RedirectType, ConvertFromRedirect, ConvertToRedirect)                                                                                               \
+  /* A specialization so we know that type info exists for this type */                                                                                                                                \
+  template <>                                                                                                                                                                                          \
+  class RaverieStaticType(SelfType)                                                                                                                                                                    \
+  {                                                                                                                                                                                                    \
+  public:                                                                                                                                                                                              \
+    typedef SelfType UnqualifiedType;                                                                                                                                                                  \
+    typedef SelfType QualifiedType;                                                                                                                                                                    \
+    typedef SelfType BindingType;                                                                                                                                                                      \
+    typedef RedirectType RepresentedType;                                                                                                                                                              \
+    typedef SelfType ReadType;                                                                                                                                                                         \
+    static const bool DirectRead = false;                                                                                                                                                              \
+    /* Implementation of the 'get type' specialization */                                                                                                                                              \
+    static ::Raverie::BoundType*(GetType)()                                                                                                                                                            \
+    {                                                                                                                                                                                                  \
+      return RaverieTypeId(RepresentedType);                                                                                                                                                           \
+    }                                                                                                                                                                                                  \
+    /* Read our object representation from either stack data or handle data                                                                                                                            \
+     */                                                                                                                                                                                                \
+    static typename RaverieStaticType(SelfType)::ReadType(Read)(byte * from)                                                                                                                           \
+    {                                                                                                                                                                                                  \
+      return ConvertToRedirect(*(RepresentedType*)from);                                                                                                                                               \
+    }                                                                                                                                                                                                  \
+    /* Write our object representation to either stack data or handle data                                                                                                                             \
+     */                                                                                                                                                                                                \
+    static void(Write)(const SelfType& value, byte* to)                                                                                                                                                \
+    {                                                                                                                                                                                                  \
+      new (to) RepresentedType(ConvertFromRedirect(value));                                                                                                                                            \
+    }                                                                                                                                                                                                  \
+  };
 
 // Can be used by redirection macros to support changing of a type to another
 // type
@@ -1129,9 +1113,8 @@ To StaticCast(const From& from)
 
 // Define an external type with a given name that can be statically casted to
 // our redirected type
-#  define RaverieDeclareDefineImplicitRedirectType(SelfType, RedirectType)                                               \
-    RaverieDeclareDefineRedirectType(                                                                                    \
-        SelfType, RedirectType, (StaticCast<SelfType, RedirectType>), (StaticCast<RedirectType, SelfType>))
+#define RaverieDeclareDefineImplicitRedirectType(SelfType, RedirectType)                                                                                                                               \
+  RaverieDeclareDefineRedirectType(SelfType, RedirectType, (StaticCast<SelfType, RedirectType>), (StaticCast<RedirectType, SelfType>))
 
 /********************************** BINDING ***********************************/
 
@@ -1147,15 +1130,15 @@ public:
   BoundType* Type;
 };
 
-#  define RaverieDeclareInheritableType(SelfType, TypeCopyMode)                                                          \
-    RaverieDeclareType(SelfType, TypeCopyMode);                                                                          \
-    ::Raverie::AutoGrabAllocatingType RaverieDerivedType;                                                                       \
-    ::Raverie::BoundType* RaverieDerivedTypeOverride() const                                                                    \
-    {                                                                                                                  \
-      if (this->RaverieDerivedType.Type != nullptr)                                                                      \
-        return this->RaverieDerivedType.Type;                                                                            \
-      return RaverieTypeId(RaverieSelf);                                                                                   \
-    }
+#define RaverieDeclareInheritableType(SelfType, TypeCopyMode)                                                                                                                                          \
+  RaverieDeclareType(SelfType, TypeCopyMode);                                                                                                                                                          \
+  ::Raverie::AutoGrabAllocatingType RaverieDerivedType;                                                                                                                                                \
+  ::Raverie::BoundType* RaverieDerivedTypeOverride() const                                                                                                                                             \
+  {                                                                                                                                                                                                    \
+    if (this->RaverieDerivedType.Type != nullptr)                                                                                                                                                      \
+      return this->RaverieDerivedType.Type;                                                                                                                                                            \
+    return RaverieTypeId(RaverieSelf);                                                                                                                                                                 \
+  }
 
 RaverieDeclareHasMemberTrait(HasRaverieDerivedTypeOverride, RaverieDerivedTypeOverride);
 
@@ -1180,23 +1163,16 @@ RaverieDeclareHasMemberTrait(HasRaverieSetupType, RaverieSetupType);
 // for internal binding) If we do not have internal binding, then we have to
 // explicitly set the base type
 template <typename RaverieSelf, typename SetupFunction>
-void SetupType(LibraryBuilder& builder,
-               BoundType* type,
-               SetupFunction setupType,
-               P_ENABLE_IF(HasRaverieSetupType<RaverieSelf>::value))
+void SetupType(LibraryBuilder& builder, BoundType* type, SetupFunction setupType, P_ENABLE_IF(HasRaverieSetupType<RaverieSelf>::value))
 {
-  LibraryBuilderHelperAddNativeBoundType(
-      builder, type, RaverieTypeId(typename RaverieSelf::RaverieBase), RaverieSelf::RaverieCopyMode);
+  LibraryBuilderHelperAddNativeBoundType(builder, type, RaverieTypeId(typename RaverieSelf::RaverieBase), RaverieSelf::RaverieCopyMode);
   if (setupType != nullptr)
     setupType(nullptr, builder, type);
   RaverieSelf::RaverieSetupType(builder, type);
 };
 
 template <typename RaverieSelf, typename SetupFunction>
-void SetupType(LibraryBuilder& builder,
-               BoundType* type,
-               SetupFunction setupType,
-               P_DISABLE_IF(HasRaverieSetupType<RaverieSelf>::value))
+void SetupType(LibraryBuilder& builder, BoundType* type, SetupFunction setupType, P_DISABLE_IF(HasRaverieSetupType<RaverieSelf>::value))
 {
   ErrorIf(setupType == nullptr,
           "No setup function provided for externally BoundType %s. "
@@ -1236,113 +1212,107 @@ BoundType* InitializeType(const char* initializingTypeName, SetupFunction setupT
 };
 
   // A helper for initializing types that belong to a library
-#  define RaverieInitializeTypeAs(Type, Name)                                                                            \
-    ::Raverie::InitializeType<Type, RaverieLibrary, void (*)(Type*, ::Raverie::LibraryBuilder&, ::Raverie::BoundType*)>(Name)
-#  define RaverieInitializeType(Type) RaverieInitializeTypeAs(Type, #  Type)
+#define RaverieInitializeTypeAs(Type, Name) ::Raverie::InitializeType<Type, RaverieLibrary, void (*)(Type*, ::Raverie::LibraryBuilder&, ::Raverie::BoundType*)>(Name)
+#define RaverieInitializeType(Type) RaverieInitializeTypeAs(Type, #Type)
 
   // A helper for initializing types that belong to a library
-#  define RaverieInitializeExternalTypeAs(Type, Name)                                                                    \
-    ::Raverie::InitializeType<Type, RaverieLibrary, void (*)(Type*, ::Raverie::LibraryBuilder&, ::Raverie::BoundType*)>(Name, RaverieSetupType)
-#  define RaverieInitializeExternalType(Type) RaverieInitializeExternalTypeAs(Type, #  Type)
+#define RaverieInitializeExternalTypeAs(Type, Name) ::Raverie::InitializeType<Type, RaverieLibrary, void (*)(Type*, ::Raverie::LibraryBuilder&, ::Raverie::BoundType*)>(Name, RaverieSetupType)
+#define RaverieInitializeExternalType(Type) RaverieInitializeExternalTypeAs(Type, #Type)
 
   // Declares a raverie derived type (belongs inside the type definition)
-#  define RaverieDeclareDerivedTypeExplicit(SelfType, BaseType, CopyMode)                                                \
-  public:                                                                                                              \
-    /* Current class being bound and it's base class */                                                                \
-    /* Classes without a base class will have RaverieBase defined as NoType */                                           \
-    typedef SelfType RaverieSelf;                                                                                        \
-    typedef BaseType RaverieBase;                                                                                        \
-    typedef RaverieSelf* RaverieSelfPointer;                                                                               \
-    typedef RaverieBase* RaverieBasePointer;                                                                               \
-    /* Get the most derived type from an instance of the class */                                                      \
-    /* Inheriting from 'IRaverieObject' will make these virtual */                                                       \
-    /* We don't want to implicitly introduce v-tables to anyone's structures                                           \
-     */                                                                                                                \
-    /*virtual*/ ::Raverie::BoundType* RaverieGetDerivedType() const                                                             \
-    {                                                                                                                  \
-      return ::Raverie::GetDerivedTypeOverride<RaverieSelf>(this);                                                              \
-    }                                                                                                                  \
-    /* This lets binding know how the class should be treated when just                                                \
-     * referred to by its name */                                                                                      \
-    static const ::Raverie::TypeCopyMode::Enum RaverieCopyMode = CopyMode;                                                      \
-    /* This function is to be implemented by the user so that */                                                       \
-    /* they may choose what they want to bind to reflection */                                                         \
-    static void RaverieSetupType(::Raverie::LibraryBuilder& builder, ::Raverie::BoundType* type)
+#define RaverieDeclareDerivedTypeExplicit(SelfType, BaseType, CopyMode)                                                                                                                                \
+public:                                                                                                                                                                                                \
+  /* Current class being bound and it's base class */                                                                                                                                                  \
+  /* Classes without a base class will have RaverieBase defined as NoType */                                                                                                                           \
+  typedef SelfType RaverieSelf;                                                                                                                                                                        \
+  typedef BaseType RaverieBase;                                                                                                                                                                        \
+  typedef RaverieSelf* RaverieSelfPointer;                                                                                                                                                             \
+  typedef RaverieBase* RaverieBasePointer;                                                                                                                                                             \
+  /* Get the most derived type from an instance of the class */                                                                                                                                        \
+  /* Inheriting from 'IRaverieObject' will make these virtual */                                                                                                                                       \
+  /* We don't want to implicitly introduce v-tables to anyone's structures                                                                                                                             \
+   */                                                                                                                                                                                                  \
+  /*virtual*/ ::Raverie::BoundType* RaverieGetDerivedType() const                                                                                                                                      \
+  {                                                                                                                                                                                                    \
+    return ::Raverie::GetDerivedTypeOverride<RaverieSelf>(this);                                                                                                                                       \
+  }                                                                                                                                                                                                    \
+  /* This lets binding know how the class should be treated when just                                                                                                                                  \
+   * referred to by its name */                                                                                                                                                                        \
+  static const ::Raverie::TypeCopyMode::Enum RaverieCopyMode = CopyMode;                                                                                                                               \
+  /* This function is to be implemented by the user so that */                                                                                                                                         \
+  /* they may choose what they want to bind to reflection */                                                                                                                                           \
+  static void RaverieSetupType(::Raverie::LibraryBuilder& builder, ::Raverie::BoundType* type)
 
   // Declares a raverie base type (belongs inside the type definition)
-#  define RaverieDeclareBaseTypeExplicit(SelfType, CopyMode)                                                             \
-    RaverieDeclareDerivedTypeExplicit(SelfType, ::Raverie::NoType, CopyMode)
+#define RaverieDeclareBaseTypeExplicit(SelfType, CopyMode) RaverieDeclareDerivedTypeExplicit(SelfType, ::Raverie::NoType, CopyMode)
 
   // Completely prevents binding from occurring with this type,
   // including calls like RaverieTypeId() and any sort of bind macro
-#  define RaverieDoNotAllowBinding() static void RaverieDoNotBind();
+#define RaverieDoNotAllowBinding() static void RaverieDoNotBind();
 
   // Declares a raverie type (belongs inside the type definition)
   // Implicitly deduces self and base types being bound
-#  define RaverieDeclareType(ClassType, CopyMode)                                                                        \
-  public:                                                                                                              \
-    /* Binding macros need the current class being bound */                                                            \
-    /* This is a really neat trick where we never need to declare our base                                             \
-     * type */                                                                                                         \
-    /* because of how typedefs are inherited (and they only apply to members                                           \
-     * below */                                                                                                        \
-    /* The only issue is the base case (no base class), which we use SFINAE */                                         \
-    /* to detect if we even inherited a RaverieSelf typedef */                                                           \
-    template <typename RaverieT>                                                                                         \
-    static typename RaverieT::RaverieSelf* SfinaeBase(int);                                                                \
-    template <typename RaverieT>                                                                                         \
-    static ::Raverie::NoType SfinaeBase(...);                                                                                 \
-    typedef typename ::Raverie::remove_pointer<decltype(SfinaeBase<ClassType>(0))>::type RaverieTempBase;                       \
-    RaverieDeclareDerivedTypeExplicit(ClassType, RaverieTempBase, CopyMode)
+#define RaverieDeclareType(ClassType, CopyMode)                                                                                                                                                        \
+public:                                                                                                                                                                                                \
+  /* Binding macros need the current class being bound */                                                                                                                                              \
+  /* This is a really neat trick where we never need to declare our base                                                                                                                               \
+   * type */                                                                                                                                                                                           \
+  /* because of how typedefs are inherited (and they only apply to members                                                                                                                             \
+   * below */                                                                                                                                                                                          \
+  /* The only issue is the base case (no base class), which we use SFINAE */                                                                                                                           \
+  /* to detect if we even inherited a RaverieSelf typedef */                                                                                                                                           \
+  template <typename RaverieT>                                                                                                                                                                         \
+  static typename RaverieT::RaverieSelf* SfinaeBase(int);                                                                                                                                              \
+  template <typename RaverieT>                                                                                                                                                                         \
+  static ::Raverie::NoType SfinaeBase(...);                                                                                                                                                            \
+  typedef typename ::Raverie::remove_pointer<decltype(SfinaeBase<ClassType>(0))>::type RaverieTempBase;                                                                                                \
+  RaverieDeclareDerivedTypeExplicit(ClassType, RaverieTempBase, CopyMode)
 
-#  define RaverieDefineType(SelfType, builder, type)                                                                     \
-    void SelfType::RaverieSetupType(::Raverie::LibraryBuilder& builder, ::Raverie::BoundType* type)
+#define RaverieDefineType(SelfType, builder, type) void SelfType::RaverieSetupType(::Raverie::LibraryBuilder& builder, ::Raverie::BoundType* type)
 
-#  define RaverieDefineTemplateType(SelfType, builder, type)                                                             \
-    template <>                                                                                                        \
-    void SelfType::RaverieSetupType(::Raverie::LibraryBuilder& builder, ::Raverie::BoundType* type)
+#define RaverieDefineTemplateType(SelfType, builder, type)                                                                                                                                             \
+  template <>                                                                                                                                                                                          \
+  void SelfType::RaverieSetupType(::Raverie::LibraryBuilder& builder, ::Raverie::BoundType* type)
 
-#  define RaverieDeclareExternalType(SelfType)                                                                           \
-    void RaverieSetupType(SelfType*, ::Raverie::LibraryBuilder& builder, ::Raverie::BoundType* type);
+#define RaverieDeclareExternalType(SelfType) void RaverieSetupType(SelfType*, ::Raverie::LibraryBuilder& builder, ::Raverie::BoundType* type);
 
   // The declaration of the external type must be within the same namespace as
   // the definition Alternatively, all the externally bound types can be defined
   // ABOVE the library initialization
-#  define RaverieDefineExternalDerivedType(SelfType, SelfBaseType, TypeCopyMode, builder, type)                          \
-    /* This is just a forward declared template which is literally defined                                             \
-     * below by the user */                                                                                            \
-    /* We want RaverieSelf and RaverieBase to act as if they are typedefs (because                                         \
-     * many binding macros depend on them) */                                                                          \
-    template <typename RaverieSelf, typename RaverieBase>                                                                  \
-    void RaverieSetupExternalType(SelfType*, ::Raverie::LibraryBuilder& builder, ::Raverie::BoundType* type);                          \
-    void RaverieSetupType(SelfType*, ::Raverie::LibraryBuilder& builder, ::Raverie::BoundType* type)                                   \
-    {                                                                                                                  \
-      builder.AddNativeBoundType(type, RaverieTypeId(SelfBaseType), TypeCopyMode);                                       \
-      RaverieSetupExternalType<SelfType, SelfBaseType>((SelfType*)nullptr, builder, type);                               \
-    }                                                                                                                  \
-    template <typename RaverieSelf, typename RaverieBase>                                                                  \
-    void RaverieSetupExternalType(SelfType*, ::Raverie::LibraryBuilder& builder, ::Raverie::BoundType* type)
+#define RaverieDefineExternalDerivedType(SelfType, SelfBaseType, TypeCopyMode, builder, type)                                                                                                          \
+  /* This is just a forward declared template which is literally defined                                                                                                                               \
+   * below by the user */                                                                                                                                                                              \
+  /* We want RaverieSelf and RaverieBase to act as if they are typedefs (because                                                                                                                       \
+   * many binding macros depend on them) */                                                                                                                                                            \
+  template <typename RaverieSelf, typename RaverieBase>                                                                                                                                                \
+  void RaverieSetupExternalType(SelfType*, ::Raverie::LibraryBuilder& builder, ::Raverie::BoundType* type);                                                                                            \
+  void RaverieSetupType(SelfType*, ::Raverie::LibraryBuilder& builder, ::Raverie::BoundType* type)                                                                                                     \
+  {                                                                                                                                                                                                    \
+    builder.AddNativeBoundType(type, RaverieTypeId(SelfBaseType), TypeCopyMode);                                                                                                                       \
+    RaverieSetupExternalType<SelfType, SelfBaseType>((SelfType*)nullptr, builder, type);                                                                                                               \
+  }                                                                                                                                                                                                    \
+  template <typename RaverieSelf, typename RaverieBase>                                                                                                                                                \
+  void RaverieSetupExternalType(SelfType*, ::Raverie::LibraryBuilder& builder, ::Raverie::BoundType* type)
 
-#  define RaverieDefineExternalBaseType(SelfType, CopyMode, builder, type)                                               \
-    RaverieDefineExternalDerivedType(SelfType, ::Raverie::NoType, CopyMode, builder, type)
+#define RaverieDefineExternalBaseType(SelfType, CopyMode, builder, type) RaverieDefineExternalDerivedType(SelfType, ::Raverie::NoType, CopyMode, builder, type)
 
   /************************************* ENUM
    * ************************************/
-#  define RaverieBindEnumValues(enumType)                                                                                \
-    for (uint i = 0; i < enumType::Size; ++i)                                                                          \
-    {                                                                                                                  \
-      RaverieFullBindEnumValue(builder, type, enumType::Values[i], enumType::Names[i]);                                  \
-    }
+#define RaverieBindEnumValues(enumType)                                                                                                                                                                \
+  for (uint i = 0; i < enumType::Size; ++i)                                                                                                                                                            \
+  {                                                                                                                                                                                                    \
+    RaverieFullBindEnumValue(builder, type, enumType::Values[i], enumType::Names[i]);                                                                                                                  \
+  }
 
-#  define RaverieDefineEnum(enumType)                                                                                    \
-    RaverieDefineExternalBaseType(enumType::Enum, ::Raverie::TypeCopyMode::ValueType, builder, type)                            \
-    {                                                                                                                  \
-      RaverieFullBindEnum(builder, type, ::Raverie::SpecialType::Enumeration);                                                  \
-      RaverieBindEnumValues(enumType);                                                                                   \
-    }
+#define RaverieDefineEnum(enumType)                                                                                                                                                                    \
+  RaverieDefineExternalBaseType(enumType::Enum, ::Raverie::TypeCopyMode::ValueType, builder, type)                                                                                                     \
+  {                                                                                                                                                                                                    \
+    RaverieFullBindEnum(builder, type, ::Raverie::SpecialType::Enumeration);                                                                                                                           \
+    RaverieBindEnumValues(enumType);                                                                                                                                                                   \
+  }
 
-#  define RaverieInitializeEnum(enumType) RaverieInitializeExternalTypeAs(enumType::Enum, #  enumType);
-#  define RaverieInitializeEnumAs(enumType, name) RaverieInitializeExternalTypeAs(enumType::Enum, name);
+#define RaverieInitializeEnum(enumType) RaverieInitializeExternalTypeAs(enumType::Enum, #enumType);
+#define RaverieInitializeEnumAs(enumType, name) RaverieInitializeExternalTypeAs(enumType::Enum, name);
 
 /********************************** PRIMITIVE
  * **********************************/
@@ -1379,4 +1349,3 @@ RaverieDeclareDefineImplicitRedirectType(unsigned long, Integer);
 
 RaverieDeclareDefineImplicitRedirectType(unsigned long long, DoubleInteger);
 } // namespace Raverie
-

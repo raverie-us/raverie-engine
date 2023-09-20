@@ -21,8 +21,7 @@ bool IsNumeric(Rune r)
 
 bool IsNumericHex(Rune r)
 {
-  return IsDigit(r) || r.value == '.' || r.value == '-' || r.value == '+' || (r.value >= 'a' && r.value <= 'f') ||
-         (r.value >= 'A' && r.value <= 'F');
+  return IsDigit(r) || r.value == '.' || r.value == '-' || r.value == '+' || (r.value >= 'a' && r.value <= 'f') || (r.value >= 'A' && r.value <= 'F');
 }
 
 bool IsNumericStart(Rune r)

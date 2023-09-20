@@ -21,11 +21,7 @@ void OutputErrorStringCallback(ErrorEvent* e, void* stringPointer)
   outputString = e->GetFormattedMessage(MessageFormat::Raverie);
 }
 
-CompilationErrors::CompilationErrors() :
-    UserData(nullptr),
-    WasError(false),
-    IgnoreMultipleErrors(true),
-    TolerantMode(false)
+CompilationErrors::CompilationErrors() : UserData(nullptr), WasError(false), IgnoreMultipleErrors(true), TolerantMode(false)
 {
 }
 
@@ -34,22 +30,14 @@ void CompilationErrors::RaiseArgs(const CodeLocation& location, int errorCode, v
   return RaiseArgs(location, String(), LocationArray(), errorCode, args);
 }
 
-void CompilationErrors::RaiseArgs(const CodeLocation& location,
-                                  StringParam extra,
-                                  const CodeLocation& associatedLocation,
-                                  int errorCode,
-                                  va_list args)
+void CompilationErrors::RaiseArgs(const CodeLocation& location, StringParam extra, const CodeLocation& associatedLocation, int errorCode, va_list args)
 {
   LocationArray associatedLocations;
   associatedLocations.PushBack(&associatedLocation);
   return RaiseArgs(location, String(), associatedLocations, errorCode, args);
 }
 
-void CompilationErrors::RaiseArgs(const CodeLocation& location,
-                                  StringParam extra,
-                                  const LocationArray& associatedLocations,
-                                  int errorCode,
-                                  va_list args)
+void CompilationErrors::RaiseArgs(const CodeLocation& location, StringParam extra, const LocationArray& associatedLocations, int errorCode, va_list args)
 {
   // If there already was an error and we're set to ignore multiple errors, exit
   // out early
@@ -104,8 +92,7 @@ void CompilationErrors::Raise(const CodeLocation& location, int errorCode, ...)
   va_end(argList);
 }
 
-void CompilationErrors::Raise(
-    const CodeLocation& location, StringParam extra, const CodeLocation& associatedLocation, int errorCode, ...)
+void CompilationErrors::Raise(const CodeLocation& location, StringParam extra, const CodeLocation& associatedLocation, int errorCode, ...)
 {
   // Create a variable argument list
   va_list argList;
@@ -120,8 +107,7 @@ void CompilationErrors::Raise(
   va_end(argList);
 }
 
-void CompilationErrors::Raise(
-    const CodeLocation& location, StringParam extra, const LocationArray& associatedLocations, int errorCode, ...)
+void CompilationErrors::Raise(const CodeLocation& location, StringParam extra, const LocationArray& associatedLocations, int errorCode, ...)
 {
   // Create a variable argument list
   va_list argList;

@@ -42,12 +42,7 @@ public:
   /// matches this value. All audio samples will be adjusted equally.
   float mMaxVolume;
 
-  SoundBuilder() :
-      DirectBuilderComponent(0, SoundExtension, "Sound"),
-      mFileLoadType(AudioFileLoadType::Auto),
-      mNormalize(false),
-      mMaxVolume(0.9f),
-      mStreamed(false)
+  SoundBuilder() : DirectBuilderComponent(0, SoundExtension, "Sound"), mFileLoadType(AudioFileLoadType::Auto), mNormalize(false), mMaxVolume(0.9f), mStreamed(false)
   {
   }
 

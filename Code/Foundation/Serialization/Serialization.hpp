@@ -114,14 +114,7 @@ DeclareEnum3(SerializerType,
 
 // Since the serializer doesn't have access to Meta, we can't do an 'IsA'
 // check/dynamic cast, so use this instead
-DeclareEnum7(SerializerClass,
-             BinaryLoader,
-             BinarySaver,
-             TextLoader,
-             TextSaver,
-             DataTreeLoader,
-             DefaultSerializer,
-             SerializerBuilder);
+DeclareEnum7(SerializerClass, BinaryLoader, BinarySaver, TextLoader, TextSaver, DataTreeLoader, DefaultSerializer, SerializerBuilder);
 
 // Flags used to change how the polymorphic node is saved out
 DeclareBitField2(PolymorphicSaveFlags,
@@ -215,8 +208,7 @@ public:
   virtual bool SimpleField(cstr typeName, cstr fieldName, StringRange& stringRange);
   virtual bool EnumField(cstr enumTypeName, cstr fieldName, uint& enumValue, BoundType* type) = 0;
   virtual bool StringField(cstr typeName, cstr fieldName, StringRange& stringRange) = 0;
-  virtual bool ArrayField(
-      cstr typeName, cstr fieldName, byte* data, ArrayType arrayType, uint numberOfElements, uint sizeOftype) = 0;
+  virtual bool ArrayField(cstr typeName, cstr fieldName, byte* data, ArrayType arrayType, uint numberOfElements, uint sizeOftype) = 0;
 
   virtual DataBlock ExtractAsDataBlock();
 
@@ -266,18 +258,18 @@ protected:
 
 #define SerializeRename(variable, oldFieldName) stream.SerializeFieldRename(oldFieldName, variable)
 
-#define SerializeByteBufferBlock(name, byteBufferBlock)                                                                \
-  if (stream.GetMode() == SerializerMode::Loading)                                                                     \
-  {                                                                                                                    \
-    String temp;                                                                                                       \
-    stream.SerializeFieldDefault(name, temp, String());                                                                \
-    Raverie::DecodeBinary(byteBufferBlock, temp);                                                                         \
-  }                                                                                                                    \
-  else                                                                                                                 \
-  {                                                                                                                    \
-    String temp;                                                                                                       \
-    Raverie::EncodeBinary(byteBufferBlock, temp);                                                                         \
-    stream.SerializeFieldDefault(name, temp, String());                                                                \
+#define SerializeByteBufferBlock(name, byteBufferBlock)                                                                                                                                                \
+  if (stream.GetMode() == SerializerMode::Loading)                                                                                                                                                     \
+  {                                                                                                                                                                                                    \
+    String temp;                                                                                                                                                                                       \
+    stream.SerializeFieldDefault(name, temp, String());                                                                                                                                                \
+    Raverie::DecodeBinary(byteBufferBlock, temp);                                                                                                                                                      \
+  }                                                                                                                                                                                                    \
+  else                                                                                                                                                                                                 \
+  {                                                                                                                                                                                                    \
+    String temp;                                                                                                                                                                                       \
+    Raverie::EncodeBinary(byteBufferBlock, temp);                                                                                                                                                      \
+    stream.SerializeFieldDefault(name, temp, String());                                                                                                                                                \
   }
 
 } // namespace Raverie

@@ -58,8 +58,7 @@ TypeBinding::VirtualTableCounter::VirtualTableCounter()
 void TypeBinding::VirtualTableCounter::AssertIfNotVirtual()
 {
   // Perform the error checking
-  ErrorIf(StaticDebugIsVirtual == false || this->InstanceDebugIsVirtual == false,
-          "Method being tested was not virtual!");
+  ErrorIf(StaticDebugIsVirtual == false || this->InstanceDebugIsVirtual == false, "Method being tested was not virtual!");
 
   // Reset our state back, just in case we use this again
   StaticDebugIsVirtual = false;
@@ -124,18 +123,14 @@ String BoundTypeHelperGetName(BoundType* type)
   return type->Name;
 }
 
-void LibraryBuilderHelperAddNativeBoundType(LibraryBuilder& builder,
-                                            BoundType* type,
-                                            BoundType* base,
-                                            TypeCopyMode::Enum mode)
+void LibraryBuilderHelperAddNativeBoundType(LibraryBuilder& builder, BoundType* type, BoundType* base, TypeCopyMode::Enum mode)
 {
   return builder.AddNativeBoundType(type, base, mode);
 }
 
 void InitializeTypeHelper(StringParam originalName, BoundType* type, size_t size, size_t rawVirtualcount)
 {
-  String typeName =
-      LibraryBuilder::FixIdentifier(originalName, TokenCheck::IsUpper | TokenCheck::SkipPastScopeResolution, '\0');
+  String typeName = LibraryBuilder::FixIdentifier(originalName, TokenCheck::IsUpper | TokenCheck::SkipPastScopeResolution, '\0');
   type->Name = typeName;
   type->TemplateBaseName = typeName;
   type->Size = size;

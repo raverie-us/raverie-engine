@@ -21,10 +21,7 @@ public:
 
   // Parses a single expression in the context of a function (evaluation of
   // local variables, etc)
-  void ParseExpressionInFunctionAndClass(const Array<UserToken>& expression,
-                                         const Array<UserToken>& function,
-                                         const Array<UserToken>& classTokensWithoutFunction,
-                                         SyntaxTree& syntaxTree);
+  void ParseExpressionInFunctionAndClass(const Array<UserToken>& expression, const Array<UserToken>& function, const Array<UserToken>& classTokensWithoutFunction, SyntaxTree& syntaxTree);
 
   // From a token stream, just attempt to parse a single type
   SyntaxType* ParseType(const Array<UserToken>& type);
@@ -182,9 +179,7 @@ private:
 
   // Parse a specialized function (code reuse)
   template <typename FunctionNodeType>
-  FunctionNodeType* SpecializedFunction(Grammar::Enum type,
-                                        String functionName,
-                                        bool (Parser::*postArgs)(FunctionNodeType* node));
+  FunctionNodeType* SpecializedFunction(Grammar::Enum type, String functionName, bool (Parser::*postArgs)(FunctionNodeType* node));
 
   // Parse a function definition
   FunctionNode* Function();
@@ -210,10 +205,7 @@ private:
 
   // A binary operator helper for parsing expressions (with right to left
   // associativity)
-  ExpressionNode* BinaryOperatorRightToLeftAssociative(ExpressionFn currentPrecedence,
-                                                       ExpressionFn nextPrecedence,
-                                                       int parameters,
-                                                       ...);
+  ExpressionNode* BinaryOperatorRightToLeftAssociative(ExpressionFn currentPrecedence, ExpressionFn nextPrecedence, int parameters, ...);
 
   // A binary operator helper for parsing expressions (with left to right
   // associativity)

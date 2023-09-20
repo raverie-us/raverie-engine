@@ -6,23 +6,7 @@ namespace Raverie
 
 DeclareEnum7(RaverieShaderIRBaseType, Op, ConstantLiteral, DataType, Function, Block, Comment, Extension);
 DeclareEnum3(BlockType, Direct, Selection, Loop);
-DeclareEnum16(ShaderIRTypeBaseType,
-              Bool,
-              Float,
-              Int,
-              Uint,
-              Vector,
-              Matrix,
-              Struct,
-              Image,
-              Sampler,
-              SampledImage,
-              FixedArray,
-              RuntimeArray,
-              Void,
-              Function,
-              Pointer,
-              Unknown)
+DeclareEnum16(ShaderIRTypeBaseType, Bool, Float, Int, Uint, Vector, Matrix, Struct, Image, Sampler, SampledImage, FixedArray, RuntimeArray, Void, Function, Pointer, Unknown)
 
     typedef spv::Op OpType;
 class RaverieShaderIRLibrary;

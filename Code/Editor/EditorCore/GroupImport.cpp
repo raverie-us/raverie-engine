@@ -100,8 +100,7 @@ void RunGroupImport(ImportOptions& options)
   ResourceLibrary* resourceLibrary = Z::gResources->GetResourceLibrary(library->Name);
 
   Status status;
-  HandleOf<ResourcePackage> packageHandle =
-      Z::gContentSystem->BuildContentItems(status, contentToBuild, library, false);
+  HandleOf<ResourcePackage> packageHandle = Z::gContentSystem->BuildContentItems(status, contentToBuild, library, false);
   ResourcePackage* package = packageHandle;
   DoNotifyStatus(status);
 

@@ -81,21 +81,10 @@ public:
 
   //-------------- Internals
   typedef Pair<UiWidget*, Vec4> CachedFloatingWidget;
-  void RenderWidgets(RenderTasksEvent* e,
-                     RenderTarget* color,
-                     RenderTarget* depth,
-                     MaterialBlock* renderPass,
-                     UiWidget* widget,
-                     Vec4Param colorTransform,
-                     Array<CachedFloatingWidget>* floatingWidgets);
+  void
+  RenderWidgets(RenderTasksEvent* e, RenderTarget* color, RenderTarget* depth, MaterialBlock* renderPass, UiWidget* widget, Vec4Param colorTransform, Array<CachedFloatingWidget>* floatingWidgets);
 
-  void AddGraphical(RenderTasksEvent* e,
-                    RenderTarget* color,
-                    RenderTarget* depth,
-                    MaterialBlock* renderPass,
-                    Cog* widgetCog,
-                    StencilDrawMode::Enum stencilMode,
-                    uint stencilIncrement);
+  void AddGraphical(RenderTasksEvent* e, RenderTarget* color, RenderTarget* depth, MaterialBlock* renderPass, Cog* widgetCog, StencilDrawMode::Enum stencilMode, uint stencilIncrement);
 
   /// Clears the GraphicalRangeInterface and
   void FlushGraphicals(RenderTasksEvent* e, RenderTarget* color, RenderTarget* depth, MaterialBlock* renderPass);

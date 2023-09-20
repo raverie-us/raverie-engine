@@ -7,14 +7,10 @@ namespace Intersection
 class Mpr
 {
 public:
-  Intersection::Type Test(const SupportShape* shapeA,
-                          const SupportShape* shapeB,
-                          Intersection::Manifold* manifold = nullptr);
+  Intersection::Type Test(const SupportShape* shapeA, const SupportShape* shapeB, Intersection::Manifold* manifold = nullptr);
 
   /// Check to see if (and when) two moving shapes are intersecting
-  Intersection::Type SweptTest(const SupportShape* shapeA,
-                               const SupportShape* shapeB,
-                               Intersection::Manifold* manifold = nullptr);
+  Intersection::Type SweptTest(const SupportShape* shapeA, const SupportShape* shapeB, Intersection::Manifold* manifold = nullptr);
 
   void DrawDebug(uint debugFlag) const;
 

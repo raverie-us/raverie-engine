@@ -9,17 +9,11 @@ namespace Raverie
 FragmentedReceipt::FragmentedReceipt() : mReceiptId(0), mPacketRecords(), mIsComplete(false)
 {
 }
-FragmentedReceipt::FragmentedReceipt(MessageReceiptId receiptId) :
-    mReceiptId(receiptId),
-    mPacketRecords(),
-    mIsComplete(false)
+FragmentedReceipt::FragmentedReceipt(MessageReceiptId receiptId) : mReceiptId(receiptId), mPacketRecords(), mIsComplete(false)
 {
 }
 
-FragmentedReceipt::FragmentedReceipt(MoveReference<FragmentedReceipt> rhs) :
-    mReceiptId(rhs->mReceiptId),
-    mPacketRecords(RaverieMove(rhs->mPacketRecords)),
-    mIsComplete(rhs->mIsComplete)
+FragmentedReceipt::FragmentedReceipt(MoveReference<FragmentedReceipt> rhs) : mReceiptId(rhs->mReceiptId), mPacketRecords(RaverieMove(rhs->mPacketRecords)), mIsComplete(rhs->mIsComplete)
 {
 }
 
@@ -219,8 +213,7 @@ void LinkOutbox::RecordFragmentReceipt(const OutPacket& packet, const OutMessage
     return;
 
   // Add new fragmented receipt if one does not already exist
-  ArraySet<FragmentedReceipt>::iterator fragmentedReceiptIter =
-      mFragmentedReceipts.FindIterator(message.GetReceiptID());
+  ArraySet<FragmentedReceipt>::iterator fragmentedReceiptIter = mFragmentedReceipts.FindIterator(message.GetReceiptID());
   if (fragmentedReceiptIter == mFragmentedReceipts.End()) // Doesn't exist?
   {
     // Add new fragmented receipt
@@ -238,8 +231,7 @@ void LinkOutbox::RecordFragmentReceipt(const OutPacket& packet, const OutMessage
   if (prevPacket)
   {
     // Remove previous packet record
-    ArrayMap<PacketSequenceId, ACKState::Enum>::pointer_bool_pair result =
-        fragmentedReceiptIter->mPacketRecords.EraseValue(prevPacket->GetSequenceId());
+    ArrayMap<PacketSequenceId, ACKState::Enum>::pointer_bool_pair result = fragmentedReceiptIter->mPacketRecords.EraseValue(prevPacket->GetSequenceId());
     Assert(result.second); // (Erase should have succeeded)
   }
   // Not a resend message?
@@ -250,9 +242,7 @@ void LinkOutbox::RecordFragmentReceipt(const OutPacket& packet, const OutMessage
     fragmentedReceiptIter->mIsComplete = message.IsFinalFragment();
   }
 }
-ACKState::Enum LinkOutbox::UpdateReceiptACKState(const OutPacket& packet,
-                                                 ACKState::Enum packetACKState,
-                                                 const OutMessage& message)
+ACKState::Enum LinkOutbox::UpdateReceiptACKState(const OutPacket& packet, ACKState::Enum packetACKState, const OutMessage& message)
 {
   // Typedefs
   typedef ArrayMap<PacketSequenceId, ACKState::Enum>::value_type packet_record_type;
@@ -264,8 +254,7 @@ ACKState::Enum LinkOutbox::UpdateReceiptACKState(const OutPacket& packet,
   //
   // Whole Message Receipt?
   //
-  ArraySet<FragmentedReceipt>::iterator fragmentedReceiptIter =
-      mFragmentedReceipts.FindIterator(message.GetReceiptID());
+  ArraySet<FragmentedReceipt>::iterator fragmentedReceiptIter = mFragmentedReceipts.FindIterator(message.GetReceiptID());
   if (fragmentedReceiptIter == mFragmentedReceipts.End())
     return packetACKState;
 
@@ -274,8 +263,7 @@ ACKState::Enum LinkOutbox::UpdateReceiptACKState(const OutPacket& packet,
   //
 
   // Update packet record ACK state
-  ArrayMap<PacketSequenceId, ACKState::Enum>::iterator packetRecordIter =
-      fragmentedReceiptIter->mPacketRecords.FindIterator(packet.GetSequenceId());
+  ArrayMap<PacketSequenceId, ACKState::Enum>::iterator packetRecordIter = fragmentedReceiptIter->mPacketRecords.FindIterator(packet.GetSequenceId());
   Assert(packetRecordIter != fragmentedReceiptIter->mPacketRecords.End());
   Assert(packetRecordIter->second == ACKState::Undetermined);
   packetRecordIter->second = packetACKState;
@@ -406,14 +394,8 @@ TimeMs LinkOutbox::GetLastSendDuration() const
   return GetDuration(mLastSendTime, mLink->GetLocalTime());
 }
 
-MessageReceiptId LinkOutbox::PushMessage(Status& status,
-                                         MoveReference<Message> message,
-                                         bool reliable,
-                                         MessageChannelId channelId,
-                                         bool receipt,
-                                         MessagePriority priority,
-                                         TimeMs lifetime,
-                                         bool isProtocol)
+MessageReceiptId
+LinkOutbox::PushMessage(Status& status, MoveReference<Message> message, bool reliable, MessageChannelId channelId, bool receipt, MessagePriority priority, TimeMs lifetime, bool isProtocol)
 {
   // Not a protocol send?
   if (!isProtocol)
@@ -477,15 +459,7 @@ MessageReceiptId LinkOutbox::PushMessage(Status& status,
   message->GetData().ClearBitsRead();
 
   // Push new outgoing message to be sent later
-  mOutMessages.Insert(OutMessagePtr(new OutMessage(RaverieMove(message),
-                                                   reliable,
-                                                   channelId,
-                                                   sequenceId,
-                                                   transferMode,
-                                                   receiptId,
-                                                   priority,
-                                                   lifetime,
-                                                   mLink->GetLocalTime())));
+  mOutMessages.Insert(OutMessagePtr(new OutMessage(RaverieMove(message), reliable, channelId, sequenceId, transferMode, receiptId, priority, lifetime, mLink->GetLocalTime())));
 
   // Success
   return receiptId;
@@ -496,8 +470,7 @@ bool LinkOutbox::WriteMessageToPacket(OutPacket& packet, Bits& remBits, OutMessa
 
   // Link not connected and this is a custom type, or message is not a fragment
   // and has expired?
-  if (mLink->GetState() != LinkState::Connected && message.IsCustomType() ||
-      !message.IsFragment() && message.HasExpired(now))
+  if (mLink->GetState() != LinkState::Connected && message.IsCustomType() || !message.IsFragment() && message.HasExpired(now))
   {
     // Receipt expired message
     if (message.IsReceipted())
@@ -527,8 +500,7 @@ bool LinkOutbox::WriteMessageToPacket(OutPacket& packet, Bits& remBits, OutMessa
     return true;
   }
 }
-PacketWriteResult::Enum
-LinkOutbox::WriteMessage(OutPacket& packet, OutMessage& message, Bits& remBits, bool isResendMessage)
+PacketWriteResult::Enum LinkOutbox::WriteMessage(OutPacket& packet, OutMessage& message, Bits& remBits, bool isResendMessage)
 {
   // Get message size
   Bits messageSize = message.GetTotalBits();
@@ -612,9 +584,7 @@ LinkOutbox::WriteMessage(OutPacket& packet, OutMessage& message, Bits& remBits, 
     // or This is the first custom or protocol message being written (we should
     // force fragmentation)?
     Bits messageAsFragmentHeaderSize = message.GetHeaderBits(true);
-    if ((remBits >= (MinMessageFragmentDataBits + messageAsFragmentHeaderSize)) &&
-        (message.IsFragment() ||
-         (message.IsCustomType() ? !packet.HasCustomMessages() : !packet.HasProtocolMessages())))
+    if ((remBits >= (MinMessageFragmentDataBits + messageAsFragmentHeaderSize)) && (message.IsFragment() || (message.IsCustomType() ? !packet.HasCustomMessages() : !packet.HasProtocolMessages())))
     {
       // Should not send this message?
       if (!isResendMessage && !ShouldSendMessage(message)) // Stop?
@@ -699,16 +669,14 @@ void LinkOutbox::Update(const ACKArray& remoteACKs, const NAKArray& remoteNAKs)
     //
 
     // For all resend packets
-    for (Array<OutPacket>::iterator resendPacketIter = mResendPackets.Begin();
-         resendPacketIter != mResendPackets.End();)
+    for (Array<OutPacket>::iterator resendPacketIter = mResendPackets.Begin(); resendPacketIter != mResendPackets.End();)
     {
       // Get resend packet
       OutPacket& resendPacket = *resendPacketIter;
 
       // Write resend messages
       Array<OutMessage>& resendMessages = resendPacket.GetMessages();
-      for (Array<OutMessage>::iterator resendMessageIter = resendMessages.Begin();
-           resendMessageIter != resendMessages.End();)
+      for (Array<OutMessage>::iterator resendMessageIter = resendMessages.Begin(); resendMessageIter != resendMessages.End();)
       {
         // Packet full?
         if (remBits < MinMessageHeaderBits)
@@ -739,8 +707,7 @@ void LinkOutbox::Update(const ACKArray& remoteACKs, const NAKArray& remoteNAKs)
     //
 
     // For all new queued outgoing messages
-    for (OutMessages::iterator iter = mOutMessages.End();
-         iter != mOutMessages.Begin();) // Note: We are iterating in reverse here
+    for (OutMessages::iterator iter = mOutMessages.End(); iter != mOutMessages.Begin();) // Note: We are iterating in reverse here
     {
       // Packet full?
       if (remBits < MinMessageHeaderBits)
@@ -792,8 +759,7 @@ void LinkOutbox::RemoveExpiredMessages(OutPacket& packet)
   {
     // Link not connected and this is a custom type, or message is not a
     // fragment and has expired?
-    if (mLink->GetState() != LinkState::Connected && iter->IsCustomType() ||
-        !iter->IsFragment() && iter->HasExpired(now))
+    if (mLink->GetState() != LinkState::Connected && iter->IsCustomType() || !iter->IsFragment() && iter->HasExpired(now))
     {
       // Receipt expired message
       if (iter->IsReceipted())

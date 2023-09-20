@@ -195,7 +195,8 @@ public:
   void SetBasis(uint index, real x, real y, real z);
   void SetCross(uint index, real x, real y, real z);
 
-  union {
+  union
+  {
     struct
     {
 #if ColumnBasis == 1

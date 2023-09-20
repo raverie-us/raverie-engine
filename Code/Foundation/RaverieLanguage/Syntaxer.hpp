@@ -67,9 +67,7 @@ private:
   // map
   void PopulateDependencies();
 
-  void FindDependencyCycles(BoundType* type,
-                            HashMap<BoundType*, DependencyState::Enum>& dependencies,
-                            const CodeLocation& location);
+  void FindDependencyCycles(BoundType* type, HashMap<BoundType*, DependencyState::Enum>& dependencies, const CodeLocation& location);
 
   // Print out an error message corresponding to a given node
   void ErrorAt(SyntaxNode* node, int errorCode, ...);
@@ -78,25 +76,16 @@ private:
   void ErrorAtArgs(SyntaxNode* node, int errorCode, va_list argList);
 
   // Replace a populated array of syntax types
-  void ReplaceTypes(SyntaxTypes& types,
-                    Array<const UserToken*>& names,
-                    const BoundSyntaxType* instanceType,
-                    const CodeLocation& location);
+  void ReplaceTypes(SyntaxTypes& types, Array<const UserToken*>& names, const BoundSyntaxType* instanceType, const CodeLocation& location);
 
   // Recursively perform a templated replacement of certain parameters
-  void PerformTemplateReplacement(SyntaxType* type,
-                                  Array<const UserToken*>& names,
-                                  const BoundSyntaxType* instanceType);
-  void PerformTemplateReplacement(SyntaxNode* node,
-                                  Array<const UserToken*>& names,
-                                  const BoundSyntaxType* instanceType);
+  void PerformTemplateReplacement(SyntaxType* type, Array<const UserToken*>& names, const BoundSyntaxType* instanceType);
+  void PerformTemplateReplacement(SyntaxNode* node, Array<const UserToken*>& names, const BoundSyntaxType* instanceType);
 
   // Retrieves a type by name (for cases where you expect the type to exist
   // The 'classWeAreInsideOf' is only provided to give extra error information
   // to the users for implicit members (not necessary)
-  BoundType* RetrieveBoundType(BoundSyntaxType* type,
-                               const CodeLocation& location,
-                               BoundType* classWeAreInsideOf = nullptr);
+  BoundType* RetrieveBoundType(BoundSyntaxType* type, const CodeLocation& location, BoundType* classWeAreInsideOf = nullptr);
 
   // Retrieves a type if it exists (or potentially creates a type if it's a
   // qualified version of a type that exists)
@@ -109,8 +98,7 @@ private:
   // Make sure we don't have another member of the same name (an exception is
   // made for functions due to overloading) Sets WasError if another type exists
   // of the same name
-  void PreventDuplicateMemberNames(
-      BoundType* type, StringParam memberName, const CodeLocation& location, bool isStatic, bool isFunction);
+  void PreventDuplicateMemberNames(BoundType* type, StringParam memberName, const CodeLocation& location, bool isStatic, bool isFunction);
 
   // Make sure we don't have another member of the same name on a base class (an
   // exception is made for functions due to overloading) Sets WasError if
@@ -155,12 +143,7 @@ private:
 
   // Collect/setup all the functions (the owner can be passed in for extension
   // functions) Otherwise the owner is obtained from the typing context stack
-  void SetupGenericFunction(GenericFunctionNode* node,
-                            TypingContext* context,
-                            const UserToken& name,
-                            FunctionOptions::Enum options,
-                            Type* returnType,
-                            BoundType* owner = nullptr);
+  void SetupGenericFunction(GenericFunctionNode* node, TypingContext* context, const UserToken& name, FunctionOptions::Enum options, Type* returnType, BoundType* owner = nullptr);
 
   // Collect all the constructors
   void CollectConstructor(ConstructorNode*& node, TypingContext* context);
@@ -185,9 +168,7 @@ private:
 
   // Helper functions
   template <typename FunctionNodeType>
-  void PushFunctionHelper(FunctionNodeType* node,
-                          TypingContext* context,
-                          void (Syntaxer::*postArgs)(FunctionNodeType* node));
+  void PushFunctionHelper(FunctionNodeType* node, TypingContext* context, void (Syntaxer::*postArgs)(FunctionNodeType* node));
 
   // Store the function in the code context
   void PushFunction(GenericFunctionNode*& node, TypingContext* context);
@@ -335,10 +316,7 @@ private:
   // is so similar, we functionalized it The template type should be the
   // operator node type
   template <typename NodeType>
-  void BuildGetSetSideEffectIndexerNodes(NodeType*& node,
-                                         IndexerCallNode* indexer,
-                                         ExpressionNode* NodeType::*operandMemberThatWasIndexer,
-                                         TypingContext* context);
+  void BuildGetSetSideEffectIndexerNodes(NodeType*& node, IndexerCallNode* indexer, ExpressionNode* NodeType::*operandMemberThatWasIndexer, TypingContext* context);
 
   // When we hit a binary operator that has side effects and the left operand is
   // an indexer We need to transform the binary operator into being a child of

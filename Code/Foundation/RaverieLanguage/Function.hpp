@@ -79,9 +79,7 @@ public:
   CodeLocation* GetCodeLocationFromProgramCounter(size_t programCounter);
 
   // Allocate an argumentless opcode
-  Opcode& AllocateArgumentFreeOpcode(Instruction::Enum instruction,
-                                     DebugOrigin::Enum debugOrigin,
-                                     const CodeLocation& debugLocation);
+  Opcode& AllocateArgumentFreeOpcode(Instruction::Enum instruction, DebugOrigin::Enum debugOrigin, const CodeLocation& debugLocation);
 
   // Allocate an opcode of type T
   template <typename T>
@@ -108,11 +106,11 @@ public:
     // We use the compacted indices for debugging
     this->OpcodeCompactedIndices.PushBack(compactedIndex);
 
-#  ifdef RaverieDebug
+#ifdef RaverieDebug
     // Add the debug info to the list
     this->OpcodeDebug.PushBack(&opcode);
     opcode.DebugOrigin = debugOrigin;
-#  endif
+#endif
 
     // Set the instruction
     opcode.Instruction = instruction;
@@ -227,9 +225,8 @@ public:
   // are in debugging)
   HashMap<size_t, CodeLocation> OpcodeLocationToCodeLocation;
 
-#  ifdef RaverieDebug
+#ifdef RaverieDebug
   PodArray<Opcode*> OpcodeDebug;
-#  endif
+#endif
 };
 } // namespace Raverie
-

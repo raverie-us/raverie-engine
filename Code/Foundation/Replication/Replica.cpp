@@ -419,8 +419,7 @@ bool Replica::UsesReverseReplicaChannels() const
 
     //    Replica channel has client change authority?
     // OR Replica channel type has dynamic change authority mode?
-    if (replicaChannel->GetAuthority() == Authority::Client ||
-        replicaChannelType->GetAuthorityMode() == AuthorityMode::Dynamic)
+    if (replicaChannel->GetAuthority() == Authority::Client || replicaChannelType->GetAuthorityMode() == AuthorityMode::Dynamic)
       return true; // Uses reverse replica channels
   }
 
@@ -448,18 +447,13 @@ void Replica::SetEmplaceId(EmplaceId emplaceId)
   mEmplaceId = emplaceId;
 }
 
-void Replica::ReactToChannelPropertyChanges(TimeMs timestamp,
-                                            ReplicationPhase::Enum replicationPhase,
-                                            TransmissionDirection::Enum direction,
-                                            bool generateNotifications,
-                                            bool setLastValues)
+void Replica::ReactToChannelPropertyChanges(TimeMs timestamp, ReplicationPhase::Enum replicationPhase, TransmissionDirection::Enum direction, bool generateNotifications, bool setLastValues)
 {
   // For all replica channels
   forRange (ReplicaChannel* replicaChannel, GetReplicaChannels().All())
   {
     // React to property changes
-    replicaChannel->ReactToPropertyChanges(
-        timestamp, replicationPhase, direction, generateNotifications, setLastValues);
+    replicaChannel->ReactToPropertyChanges(timestamp, replicationPhase, direction, generateNotifications, setLastValues);
   }
 }
 

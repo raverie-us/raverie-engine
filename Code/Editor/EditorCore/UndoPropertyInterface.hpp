@@ -14,10 +14,7 @@ public:
   PropertyToUndo(OperationQueue* propQueue);
 
   /// PropertyInterface Interface.
-  void ChangeProperty(HandleParam object,
-                      PropertyPathParam property,
-                      PropertyState& state,
-                      PropertyAction::Enum action) override;
+  void ChangeProperty(HandleParam object, PropertyPathParam property, PropertyState& state, PropertyAction::Enum action) override;
   void MarkPropertyModified(HandleParam object, PropertyPathParam property) override;
   void RevertProperty(HandleParam object, PropertyPathParam property) override;
   void InvokeFunction(HandleParam object, Raverie::Function* function) override;
@@ -36,11 +33,7 @@ public:
   // The objectType should be the type of objects the selection contains.
   UndoMetaComposition(PropertyInterface* propertyInterface, BoundType* objectType, OperationQueue* opQueue);
 
-  void AddComponent(HandleParam owner,
-                    BoundType* typeToAdd,
-                    int index = -1,
-                    bool ignoreDependencies = false,
-                    MetaCreationContext* creationContext = nullptr) override;
+  void AddComponent(HandleParam owner, BoundType* typeToAdd, int index = -1, bool ignoreDependencies = false, MetaCreationContext* creationContext = nullptr) override;
   void RemoveComponent(HandleParam owner, HandleParam component, bool ignoreDependencies = false) override;
   void MoveComponent(HandleParam owner, HandleParam component, uint destination) override;
 

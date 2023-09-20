@@ -107,15 +107,10 @@ public:
 
   /// Composite a shader for the rendering pipeline. Doesn't handle compute
   /// fragments and only allows one geometry fragment.
-  bool Composite(ShaderDefinition& shaderDef,
-                 const ShaderCapabilities& capabilities,
-                 RaverieShaderSpirVSettingsRef& settings);
+  bool Composite(ShaderDefinition& shaderDef, const ShaderCapabilities& capabilities, RaverieShaderSpirVSettingsRef& settings);
   /// Composite a compute shader. Compute properties should be passed in to override workgroup sizes.
   /// If null is passed through, the first fragment's properties are used (mostly legacy for unit testing).
-  bool CompositeCompute(ShaderDefinition& shaderDef,
-                        ComputeShaderProperties* computeProperties,
-                        const ShaderCapabilities& capabilities,
-                        RaverieShaderSpirVSettingsRef& settings);
+  bool CompositeCompute(ShaderDefinition& shaderDef, ComputeShaderProperties* computeProperties, const ShaderCapabilities& capabilities, RaverieShaderSpirVSettingsRef& settings);
 
   struct StageLinkingInfo;
   struct CompositedShaderInfo;
@@ -132,52 +127,26 @@ public:
   void CreateCpuStage(CompositedShaderInfo& compositeInfo);
 
   void ResolveInputs(StageLinkingInfo* previousStage, StageLinkingInfo* currentStage);
-  void Link(StageAttachmentLinkingInfo& prevStageInfo,
-            StageLinkingInfo* currentStage,
-            Array<RaverieShaderIRType*>& fragmentTypes,
-            StageAttachmentLinkingInfo& currStageInfo);
-  void AddStageInput(ExpectedOutputData* previousStageOutputData,
-                     StageAttachmentLinkingInfo* currentStage,
-                     StringParam fieldVarName,
-                     StringParam fieldAttributeName);
+  void Link(StageAttachmentLinkingInfo& prevStageInfo, StageLinkingInfo* currentStage, Array<RaverieShaderIRType*>& fragmentTypes, StageAttachmentLinkingInfo& currStageInfo);
+  void AddStageInput(ExpectedOutputData* previousStageOutputData, StageAttachmentLinkingInfo* currentStage, StringParam fieldVarName, StringParam fieldAttributeName);
   ShaderIRFieldMeta* FindUniform(ShaderFieldKey& fieldKey, FragmentType::Enum fragmentType);
   ShaderIRFieldMeta* FindHardwareBuiltInInput(ShaderFieldKey& fieldKey, FragmentType::Enum fragmentType);
   ShaderIRFieldMeta* FindHardwareBuiltInOutput(ShaderFieldKey& fieldKey, FragmentType::Enum fragmentType);
   ShaderFieldKey MakeFieldKey(ShaderIRFieldMeta* fieldMeta, ShaderIRAttribute* attribute);
   static String MakePropertyName(StringParam fieldName, StringParam ownerType);
   static String GetFieldInOutName(ShaderIRFieldMeta* fieldMeta, ShaderIRAttribute* attribute);
-  static void GetStageFieldName(ShaderIRFieldMeta* fieldMeta,
-                                ShaderIRAttribute* attribute,
-                                String& fieldVarNameOut,
-                                String& fieldAttributeNameOut);
+  static void GetStageFieldName(ShaderIRFieldMeta* fieldMeta, ShaderIRAttribute* attribute, String& fieldVarNameOut, String& fieldAttributeNameOut);
   void ResolveGpuStage(CompositedShaderInfo& compositeInfo);
 
   void ResolveStageLinkOrder(CompositedShaderInfo& compositeInfo);
 
-  void GenerateRaverieComposite(StageLinkingInfo* currentStage,
-                              ShaderStageDescription& stageResults,
-                              ShaderIRAttributeList& extraAttributes);
-  void GenerateBasicRaverieComposite(StageLinkingInfo* currentStage,
-                                   ShaderStageDescription& stageResults,
-                                   ShaderIRAttributeList& extraAttributes);
-  void GenerateGeometryRaverieComposite(StageLinkingInfo* currentStage,
-                                      ShaderStageDescription& stageResults,
-                                      ShaderIRAttributeList& extraAttributes);
-  void GenerateComputeRaverieComposite(StageLinkingInfo* currentStage,
-                                     ShaderStageDescription& stageResults,
-                                     ShaderIRAttributeList& extraAttributes);
-  void CreateFragmentAndCopyInputs(StageLinkingInfo* currentStage,
-                                   ShaderCodeBuilder& builder,
-                                   StringParam currentClassName,
-                                   RaverieShaderIRType* fragmentType,
-                                   StringParam fragmentVarName);
-  void DeclareFieldsInOrder(ShaderCodeBuilder& builder,
-                            StageAttachmentLinkingInfo& linkingInfo,
-                            OrderedHashSet<ShaderFieldKey>& orderMap);
-  void DeclareFieldsWithAttribute(ShaderCodeBuilder& builder,
-                                  StageAttachmentLinkingInfo& linkingInfo,
-                                  OrderedHashSet<ShaderFieldKey>& fieldSet,
-                                  StringParam attributeName);
+  void GenerateRaverieComposite(StageLinkingInfo* currentStage, ShaderStageDescription& stageResults, ShaderIRAttributeList& extraAttributes);
+  void GenerateBasicRaverieComposite(StageLinkingInfo* currentStage, ShaderStageDescription& stageResults, ShaderIRAttributeList& extraAttributes);
+  void GenerateGeometryRaverieComposite(StageLinkingInfo* currentStage, ShaderStageDescription& stageResults, ShaderIRAttributeList& extraAttributes);
+  void GenerateComputeRaverieComposite(StageLinkingInfo* currentStage, ShaderStageDescription& stageResults, ShaderIRAttributeList& extraAttributes);
+  void CreateFragmentAndCopyInputs(StageLinkingInfo* currentStage, ShaderCodeBuilder& builder, StringParam currentClassName, RaverieShaderIRType* fragmentType, StringParam fragmentVarName);
+  void DeclareFieldsInOrder(ShaderCodeBuilder& builder, StageAttachmentLinkingInfo& linkingInfo, OrderedHashSet<ShaderFieldKey>& orderMap);
+  void DeclareFieldsWithAttribute(ShaderCodeBuilder& builder, StageAttachmentLinkingInfo& linkingInfo, OrderedHashSet<ShaderFieldKey>& fieldSet, StringParam attributeName);
   String MakeFragmentVarName(ShaderIRTypeMeta* typeMeta);
 
   void GenerateStageDescriptions(CompositedShaderInfo& compositeInfo, ShaderDefinition& shaderDef);
@@ -281,11 +250,7 @@ public:
 
     void AddResolvedField(ShaderIRFieldMeta* fieldMeta, StringParam attributeName);
     void AddResolvedFieldProperty(ShaderIRFieldMeta* fieldMeta, ShaderIRAttribute* attribute);
-    void AddResolvedStageField(SpirVNameSettings& nameSettings,
-                               ShaderIRFieldMeta* fieldMeta,
-                               StringParam fieldName,
-                               StringParam attributeName,
-                               StringParam attributeParameter);
+    void AddResolvedStageField(SpirVNameSettings& nameSettings, ShaderIRFieldMeta* fieldMeta, StringParam fieldName, StringParam attributeName, StringParam attributeParameter);
     // Create or return a field by the given name/type. Creates or finds the
     // attribute by the given name and returns it.
     ShaderIRAttribute* AddResolvedField(StringParam fieldName, StringParam fieldType, StringParam attributeName);

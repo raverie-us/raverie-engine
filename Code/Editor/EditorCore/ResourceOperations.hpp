@@ -33,9 +33,7 @@ void EditResourceExternal(Resource* resource);
 void RemoveResource(Resource* resource);
 
 // Load a resource from a content item
-Resource* LoadResourceFromNewContentItem(ResourceManager* resourceManager,
-                                         ContentItem* newContentItem,
-                                         Resource* resource);
+Resource* LoadResourceFromNewContentItem(ResourceManager* resourceManager, ContentItem* newContentItem, Resource* resource);
 
 // Get what the file name should be for this resource
 String GetResourceFileName(ResourceManager* resourceManager, StringParam resourceName, ContentItem* current = NULL);
@@ -43,12 +41,6 @@ String GetResourceFileName(ResourceManager* resourceManager, StringParam resourc
 // Where to place deleted files
 String GetEditorTrash();
 
-Resource* NewResourceOnWrite(ResourceManager* resourceManager,
-                             BoundType* type,
-                             StringParam property,
-                             Space* space,
-                             Resource* resource,
-                             Archetype* archetype,
-                             bool modified);
+Resource* NewResourceOnWrite(ResourceManager* resourceManager, BoundType* type, StringParam property, Space* space, Resource* resource, Archetype* archetype, bool modified);
 
 } // namespace Raverie

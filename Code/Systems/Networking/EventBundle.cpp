@@ -61,11 +61,7 @@ uint EventBundleMetaComposition::GetComponentIndex(HandleParam instance, BoundTy
   return eventBundle->GetEventIndexByType(boundType);
 }
 
-void EventBundleMetaComposition::AddComponent(HandleParam instance,
-                                              HandleParam subObject,
-                                              int index,
-                                              bool ignoreDependencies,
-                                              MetaCreationContext* creationContext)
+void EventBundleMetaComposition::AddComponent(HandleParam instance, HandleParam subObject, int index, bool ignoreDependencies, MetaCreationContext* creationContext)
 {
   // Get event bundle instance
   EventBundle* eventBundle = instance.Get<EventBundle*>();
@@ -133,42 +129,22 @@ RaverieDefineType(EventBundle, builder, type)
   type->Add(new EventBundleMetaComposition);
 }
 
-EventBundle::EventBundle() :
-    mGameSession(nullptr),
-    mBitStream(),
-    mEvents(),
-    mNeedToSerialize(false),
-    mNeedToDeserialize(false)
+EventBundle::EventBundle() : mGameSession(nullptr), mBitStream(), mEvents(), mNeedToSerialize(false), mNeedToDeserialize(false)
 {
 }
 
-EventBundle::EventBundle(Event* event) :
-    mGameSession(nullptr),
-    mBitStream(),
-    mEvents(),
-    mNeedToSerialize(false),
-    mNeedToDeserialize(false)
+EventBundle::EventBundle(Event* event) : mGameSession(nullptr), mBitStream(), mEvents(), mNeedToSerialize(false), mNeedToDeserialize(false)
 {
   // Add specified event
   AddEvent(event);
 }
 
-EventBundle::EventBundle(GameSession* gameSession) :
-    mGameSession(gameSession),
-    mBitStream(),
-    mEvents(),
-    mNeedToSerialize(false),
-    mNeedToDeserialize(false)
+EventBundle::EventBundle(GameSession* gameSession) : mGameSession(gameSession), mBitStream(), mEvents(), mNeedToSerialize(false), mNeedToDeserialize(false)
 {
   Assert(mGameSession);
 }
 
-EventBundle::EventBundle(GameSession* gameSession, Event* event) :
-    mGameSession(gameSession),
-    mBitStream(),
-    mEvents(),
-    mNeedToSerialize(false),
-    mNeedToDeserialize(false)
+EventBundle::EventBundle(GameSession* gameSession, Event* event) : mGameSession(gameSession), mBitStream(), mEvents(), mNeedToSerialize(false), mNeedToDeserialize(false)
 {
   Assert(mGameSession);
 
@@ -176,12 +152,7 @@ EventBundle::EventBundle(GameSession* gameSession, Event* event) :
   AddEvent(event);
 }
 
-EventBundle::EventBundle(const EventBundle& rhs) :
-    mGameSession(rhs.mGameSession),
-    mBitStream(),
-    mEvents(),
-    mNeedToSerialize(false),
-    mNeedToDeserialize(false)
+EventBundle::EventBundle(const EventBundle& rhs) : mGameSession(rhs.mGameSession), mBitStream(), mEvents(), mNeedToSerialize(false), mNeedToDeserialize(false)
 {
   // Assert(mGameSession);
 
@@ -499,8 +470,7 @@ bool EventBundle::DeserializeBitStreamToEvents()
   // Gamesession not set?
   if (!mGameSession)
   {
-    DoNotifyException("Invalid EventBundle Operation",
-                      "EventBundle needs a GameSession in order to deserialize Events");
+    DoNotifyException("Invalid EventBundle Operation", "EventBundle needs a GameSession in order to deserialize Events");
     return false;
   }
 

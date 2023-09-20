@@ -20,13 +20,8 @@ PendingHostPing::PendingHostPing() :
 {
 }
 
-PendingHostPing::PendingHostPing(Network::Enum network,
-                                 TimeMs creationTime,
-                                 TimeMs timeout,
-                                 HostPingType::Enum hostPingType,
-                                 const IpAddress& theirIpAddress,
-                                 uint pingId,
-                                 const EventBundle& pingBundle) :
+PendingHostPing::PendingHostPing(
+    Network::Enum network, TimeMs creationTime, TimeMs timeout, HostPingType::Enum hostPingType, const IpAddress& theirIpAddress, uint pingId, const EventBundle& pingBundle) :
     mNetwork(network),
     mCreationTime(creationTime),
     mLastSendTime(0),
@@ -41,13 +36,8 @@ PendingHostPing::PendingHostPing(Network::Enum network,
   mTheirIpAddresses.PushBack(theirIpAddress);
 }
 
-PendingHostPing::PendingHostPing(Network::Enum network,
-                                 TimeMs creationTime,
-                                 TimeMs timeout,
-                                 HostPingType::Enum hostPingType,
-                                 const Array<IpAddress>& theirIpAddresses,
-                                 uint pingId,
-                                 const EventBundle& pingBundle) :
+PendingHostPing::PendingHostPing(
+    Network::Enum network, TimeMs creationTime, TimeMs timeout, HostPingType::Enum hostPingType, const Array<IpAddress>& theirIpAddresses, uint pingId, const EventBundle& pingBundle) :
     mNetwork(network),
     mCreationTime(creationTime),
     mLastSendTime(0),

@@ -19,7 +19,8 @@ public:
 
   void Serialize(Serializer& stream) override;
 
-  union {
+  union
+  {
     MaxAlignmentType mAligned;
     Material* mOwner;
   };

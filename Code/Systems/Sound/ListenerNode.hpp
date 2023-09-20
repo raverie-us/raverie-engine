@@ -13,10 +13,7 @@ public:
   ListenerWorldPositionInfo() : mPosition(Vec3::cZero), mVelocity(Vec3::cZero)
   {
   }
-  ListenerWorldPositionInfo(const Vec3& position, const Vec3& velocity, const Mat3& worldMatrix) :
-      mPosition(position),
-      mVelocity(velocity),
-      mWorldMatrix(worldMatrix)
+  ListenerWorldPositionInfo(const Vec3& position, const Vec3& velocity, const Mat3& worldMatrix) : mPosition(position), mVelocity(velocity), mWorldMatrix(worldMatrix)
   {
   }
 
@@ -56,10 +53,7 @@ public:
   Vec3 GetRelativeFacingThreaded(Vec3Param facingDirection);
 
 private:
-  bool GetOutputSamples(BufferType* outputBuffer,
-                        const unsigned numberOfChannels,
-                        ListenerNode* listener,
-                        const bool firstRequest) override;
+  bool GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest) override;
   void SetPositionDataThreaded(ListenerWorldPositionInfo positionInfo);
   void SetActiveThreaded(bool active);
 

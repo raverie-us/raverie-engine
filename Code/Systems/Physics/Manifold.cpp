@@ -34,8 +34,7 @@ Manifold::Manifold()
   Restitution = real(0.0);
 }
 
-Memory::Pool* Manifold::sManifoldPool =
-    new Memory::Pool("Manifolds", Memory::GetNamedHeap("Physics"), sizeof(Manifold), 2000);
+Memory::Pool* Manifold::sManifoldPool = new Memory::Pool("Manifolds", Memory::GetNamedHeap("Physics"), sizeof(Manifold), 2000);
 
 void* Manifold::operator new(size_t size)
 {
@@ -222,8 +221,7 @@ bool Manifold::CorrectFor2D()
 
   // we want to correct the normal between two objects if they are both
   // 2d or one of them is 2d and the other is not dynamic.
-  if ((collider1->Is2D() && collider2->Is2D()) || (collider1->Is2D() && !collider2->IsDynamic()) ||
-      (collider2->Is2D() && !collider1->IsDynamic()))
+  if ((collider1->Is2D() && collider2->Is2D()) || (collider1->Is2D() && !collider2->IsDynamic()) || (collider2->Is2D() && !collider1->IsDynamic()))
   {
     // now loop through all of the contacts
     //(loop backwards because it's easier to deal with removing some).
@@ -349,23 +347,19 @@ uint Manifold::SortCachedPoints(Vec3Param bodyPointA)
   // calculate the areas of each quad to determine which points to keep
   if (maxPenetrationIndex != 0)
   {
-    areas[0] =
-        ComputeQuadArea(bodyPointA, Contacts[1].BodyPoints[0], Contacts[2].BodyPoints[0], Contacts[3].BodyPoints[0]);
+    areas[0] = ComputeQuadArea(bodyPointA, Contacts[1].BodyPoints[0], Contacts[2].BodyPoints[0], Contacts[3].BodyPoints[0]);
   }
   if (maxPenetrationIndex != 1)
   {
-    areas[1] =
-        ComputeQuadArea(bodyPointA, Contacts[0].BodyPoints[0], Contacts[2].BodyPoints[0], Contacts[3].BodyPoints[0]);
+    areas[1] = ComputeQuadArea(bodyPointA, Contacts[0].BodyPoints[0], Contacts[2].BodyPoints[0], Contacts[3].BodyPoints[0]);
   }
   if (maxPenetrationIndex != 2)
   {
-    areas[2] =
-        ComputeQuadArea(bodyPointA, Contacts[0].BodyPoints[0], Contacts[1].BodyPoints[0], Contacts[3].BodyPoints[0]);
+    areas[2] = ComputeQuadArea(bodyPointA, Contacts[0].BodyPoints[0], Contacts[1].BodyPoints[0], Contacts[3].BodyPoints[0]);
   }
   if (maxPenetrationIndex != 3)
   {
-    areas[3] =
-        ComputeQuadArea(bodyPointA, Contacts[0].BodyPoints[0], Contacts[1].BodyPoints[0], Contacts[2].BodyPoints[0]);
+    areas[3] = ComputeQuadArea(bodyPointA, Contacts[0].BodyPoints[0], Contacts[1].BodyPoints[0], Contacts[2].BodyPoints[0]);
   }
 
   uint index;

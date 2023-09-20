@@ -161,31 +161,19 @@ struct ShaderInterfaceType
   virtual ShaderInterfaceField* GetField(const ShaderFieldKey& fieldKey) = 0;
   // Returns a pointer to the field at the given index. If needed, instructions
   // will be written to the given block.
-  virtual RaverieShaderIROp* GetFieldPointerByIndex(size_t index,
-                                                  EntryPointGeneration* entryPointGeneration,
-                                                  BasicBlock* block,
-                                                  spv::StorageClass storageClass) = 0;
+  virtual RaverieShaderIROp* GetFieldPointerByIndex(size_t index, EntryPointGeneration* entryPointGeneration, BasicBlock* block, spv::StorageClass storageClass) = 0;
 
   // Declare an interface struct type to contain the given interface group
   // variables.
-  virtual void DeclareInterfaceType(EntryPointGeneration* entryPointGeneration,
-                                    InterfaceInfoGroup& interfaceGroup,
-                                    EntryPointInfo* entryPointInfo){};
+  virtual void DeclareInterfaceType(EntryPointGeneration* entryPointGeneration, InterfaceInfoGroup& interfaceGroup, EntryPointInfo* entryPointInfo){};
   // Decorates the interface type and all of its sub-members.
-  virtual void DecorateInterfaceType(EntryPointGeneration* entryPointGeneration,
-                                     InterfaceInfoGroup& interfaceGroup,
-                                     EntryPointInfo* entryPointInfo){};
+  virtual void DecorateInterfaceType(EntryPointGeneration* entryPointGeneration, InterfaceInfoGroup& interfaceGroup, EntryPointInfo* entryPointInfo){};
   // Create the instance for the given interface struct. Also applies instance
   // decorations to the newly created instance.
-  virtual void DefineInterfaceType(EntryPointGeneration* entryPointGeneration,
-                                   InterfaceInfoGroup& interfaceGroup,
-                                   EntryPointInfo* entryPointInfo){};
+  virtual void DefineInterfaceType(EntryPointGeneration* entryPointGeneration, InterfaceInfoGroup& interfaceGroup, EntryPointInfo* entryPointInfo){};
   // Copies the given interface type instance to/from the copyHelper's self type
   // (based upon the storage class).
-  virtual void CopyInterfaceType(EntryPointGeneration* entryPointGeneration,
-                                 InterfaceInfoGroup& interfaceGroup,
-                                 EntryPointInfo* entryPointInfo,
-                                 EntryPointHelperFunctionData& copyHelperData){};
+  virtual void CopyInterfaceType(EntryPointGeneration* entryPointGeneration, InterfaceInfoGroup& interfaceGroup, EntryPointInfo* entryPointInfo, EntryPointHelperFunctionData& copyHelperData){};
 };
 
 struct ShaderInterfaceStruct : public ShaderInterfaceType
@@ -197,32 +185,16 @@ struct ShaderInterfaceStruct : public ShaderInterfaceType
   size_t GetFieldCount() override;
   ShaderInterfaceField* GetFieldAtIndex(size_t index) override;
   ShaderInterfaceField* GetField(const ShaderFieldKey& fieldKey) override;
-  RaverieShaderIROp* GetFieldPointerByIndex(size_t index,
-                                          EntryPointGeneration* entryPointGeneration,
-                                          BasicBlock* block,
-                                          spv::StorageClass storageClass) override;
+  RaverieShaderIROp* GetFieldPointerByIndex(size_t index, EntryPointGeneration* entryPointGeneration, BasicBlock* block, spv::StorageClass storageClass) override;
 
   // Get the field by index off of the given instance. Used internally and when
   // this is a sub-type in an array.
-  RaverieShaderIROp* GetFieldPointerByIndex(RaverieShaderIROp* instance,
-                                          size_t index,
-                                          EntryPointGeneration* entryPointGeneration,
-                                          BasicBlock* block,
-                                          spv::StorageClass storageClass);
+  RaverieShaderIROp* GetFieldPointerByIndex(RaverieShaderIROp* instance, size_t index, EntryPointGeneration* entryPointGeneration, BasicBlock* block, spv::StorageClass storageClass);
 
-  void DeclareInterfaceType(EntryPointGeneration* entryPointGeneration,
-                            InterfaceInfoGroup& interfaceGroup,
-                            EntryPointInfo* entryPointInfo) override;
-  void DecorateInterfaceType(EntryPointGeneration* entryPointGeneration,
-                             InterfaceInfoGroup& interfaceGroup,
-                             EntryPointInfo* entryPointInfo) override;
-  void DefineInterfaceType(EntryPointGeneration* entryPointGeneration,
-                           InterfaceInfoGroup& interfaceGroup,
-                           EntryPointInfo* entryPointInfo) override;
-  void CopyInterfaceType(EntryPointGeneration* entryPointGeneration,
-                         InterfaceInfoGroup& interfaceGroup,
-                         EntryPointInfo* entryPointInfo,
-                         EntryPointHelperFunctionData& copyHelperData) override;
+  void DeclareInterfaceType(EntryPointGeneration* entryPointGeneration, InterfaceInfoGroup& interfaceGroup, EntryPointInfo* entryPointInfo) override;
+  void DecorateInterfaceType(EntryPointGeneration* entryPointGeneration, InterfaceInfoGroup& interfaceGroup, EntryPointInfo* entryPointInfo) override;
+  void DefineInterfaceType(EntryPointGeneration* entryPointGeneration, InterfaceInfoGroup& interfaceGroup, EntryPointInfo* entryPointInfo) override;
+  void CopyInterfaceType(EntryPointGeneration* entryPointGeneration, InterfaceInfoGroup& interfaceGroup, EntryPointInfo* entryPointInfo, EntryPointHelperFunctionData& copyHelperData) override;
 
   RaverieShaderIRType* mType;
   RaverieShaderIROp* mInstance;
@@ -239,31 +211,19 @@ struct ShaderInterfaceGlobals : public ShaderInterfaceType
   size_t GetFieldCount() override;
   ShaderInterfaceField* GetFieldAtIndex(size_t index) override;
   ShaderInterfaceField* GetField(const ShaderFieldKey& fieldKey) override;
-  RaverieShaderIROp* GetFieldPointerByIndex(size_t index,
-                                          EntryPointGeneration* entryPointGeneration,
-                                          BasicBlock* block,
-                                          spv::StorageClass storageClass) override;
+  RaverieShaderIROp* GetFieldPointerByIndex(size_t index, EntryPointGeneration* entryPointGeneration, BasicBlock* block, spv::StorageClass storageClass) override;
 
   // Declare an interface struct type to contain the given interface group
   // variables.
-  void DeclareInterfaceType(EntryPointGeneration* entryPointGeneration,
-                            InterfaceInfoGroup& interfaceGroup,
-                            EntryPointInfo* entryPointInfo) override;
+  void DeclareInterfaceType(EntryPointGeneration* entryPointGeneration, InterfaceInfoGroup& interfaceGroup, EntryPointInfo* entryPointInfo) override;
   // Decorates the interface type and all of its sub-members.
-  void DecorateInterfaceType(EntryPointGeneration* entryPointGeneration,
-                             InterfaceInfoGroup& interfaceGroup,
-                             EntryPointInfo* entryPointInfo) override;
+  void DecorateInterfaceType(EntryPointGeneration* entryPointGeneration, InterfaceInfoGroup& interfaceGroup, EntryPointInfo* entryPointInfo) override;
   // Create the instance for the given interface struct. Also applies instance
   // decorations to the newly created instance.
-  void DefineInterfaceType(EntryPointGeneration* entryPointGeneration,
-                           InterfaceInfoGroup& interfaceGroup,
-                           EntryPointInfo* entryPointInfo) override;
+  void DefineInterfaceType(EntryPointGeneration* entryPointGeneration, InterfaceInfoGroup& interfaceGroup, EntryPointInfo* entryPointInfo) override;
   // Copies the given interface type instance to/from the copyHelper's self type
   // (based upon the storage class).
-  void CopyInterfaceType(EntryPointGeneration* entryPointGeneration,
-                         InterfaceInfoGroup& interfaceGroup,
-                         EntryPointInfo* entryPointInfo,
-                         EntryPointHelperFunctionData& copyHelperData) override;
+  void CopyInterfaceType(EntryPointGeneration* entryPointGeneration, InterfaceInfoGroup& interfaceGroup, EntryPointInfo* entryPointInfo, EntryPointHelperFunctionData& copyHelperData) override;
 
   Array<ShaderInterfaceField> mFields;
   Array<RaverieShaderIRType*> mFieldTypes;
@@ -280,11 +240,7 @@ struct ShaderInterfaceStructArray : public ShaderInterfaceStruct
   bool ContainsField(const ShaderFieldKey& fieldKey);
   // Get a pointer to a field in the sub-struct at the given index. Emits access
   // code to the given block
-  RaverieShaderIROp* GetPointerByIndex(IRaverieShaderIR* index,
-                                     ShaderFieldKey& fieldKey,
-                                     EntryPointGeneration* entryPointGeneration,
-                                     BasicBlock* block,
-                                     spv::StorageClass storageClass);
+  RaverieShaderIROp* GetPointerByIndex(IRaverieShaderIR* index, ShaderFieldKey& fieldKey, EntryPointGeneration* entryPointGeneration, BasicBlock* block, spv::StorageClass storageClass);
 
   // The contained struct sub-type.
   ShaderInterfaceStruct* mStructType;
@@ -337,22 +293,10 @@ public:
   EntryPointGeneration();
   ~EntryPointGeneration();
 
-  void DeclareVertexInterface(RaverieSpirVFrontEnd* translator,
-                              Raverie::GenericFunctionNode* node,
-                              RaverieShaderIRFunction* function,
-                              RaverieSpirVFrontEndContext* context);
-  void DeclareGeometryInterface(RaverieSpirVFrontEnd* translator,
-                                Raverie::GenericFunctionNode* node,
-                                RaverieShaderIRFunction* function,
-                                RaverieSpirVFrontEndContext* context);
-  void DeclarePixelInterface(RaverieSpirVFrontEnd* translator,
-                             Raverie::GenericFunctionNode* node,
-                             RaverieShaderIRFunction* function,
-                             RaverieSpirVFrontEndContext* context);
-  void DeclareComputeInterface(RaverieSpirVFrontEnd* translator,
-                               Raverie::GenericFunctionNode* node,
-                               RaverieShaderIRFunction* function,
-                               RaverieSpirVFrontEndContext* context);
+  void DeclareVertexInterface(RaverieSpirVFrontEnd* translator, Raverie::GenericFunctionNode* node, RaverieShaderIRFunction* function, RaverieSpirVFrontEndContext* context);
+  void DeclareGeometryInterface(RaverieSpirVFrontEnd* translator, Raverie::GenericFunctionNode* node, RaverieShaderIRFunction* function, RaverieSpirVFrontEndContext* context);
+  void DeclarePixelInterface(RaverieSpirVFrontEnd* translator, Raverie::GenericFunctionNode* node, RaverieShaderIRFunction* function, RaverieSpirVFrontEndContext* context);
+  void DeclareComputeInterface(RaverieSpirVFrontEnd* translator, Raverie::GenericFunctionNode* node, RaverieShaderIRFunction* function, RaverieSpirVFrontEndContext* context);
 
   void Clear();
 
@@ -371,27 +315,15 @@ public:
   };
 
   // Returns the self variable instance.
-  void CreateEntryPointFunction(Raverie::GenericFunctionNode* node,
-                                RaverieShaderIRFunction* function,
-                                RaverieShaderIROp*& selfVarOp,
-                                BasicBlock*& entryPointBlock);
-  void BuildBasicEntryPoint(Raverie::GenericFunctionNode* node,
-                            RaverieShaderIRFunction* function,
-                            RaverieShaderIRFunction* copyInputsFn,
-                            RaverieShaderIRFunction* copyOutputsFn);
+  void CreateEntryPointFunction(Raverie::GenericFunctionNode* node, RaverieShaderIRFunction* function, RaverieShaderIROp*& selfVarOp, BasicBlock*& entryPointBlock);
+  void BuildBasicEntryPoint(Raverie::GenericFunctionNode* node, RaverieShaderIRFunction* function, RaverieShaderIRFunction* copyInputsFn, RaverieShaderIRFunction* copyOutputsFn);
   RaverieShaderIRFunction* CreateGlobalsInitializerFunction(Raverie::GenericFunctionNode* node);
   EntryPointHelperFunctionData GenerateCopyHelper(RaverieShaderIRFunction* userMainFn, StringParam name);
 
   // Geometry Shader Stage helpers
-  EntryPointHelperFunctionData GenerateGeometryCopyHelper(RaverieShaderIRFunction* userMainFn,
-                                                          StringParam name,
-                                                          RaverieShaderIRType* inputStreamType,
-                                                          RaverieShaderIROp*& inputStreamVar);
-  void WriteGeometryStageInterface(RaverieShaderIRFunction* function,
-                                   GeometryStageInfo& stageInfo,
-                                   EntryPointInfo* entryPointInfo,
-                                   EntryPointHelperFunctionData& copyInputsData,
-                                   RaverieShaderIROp* copyInputsStreamVar);
+  EntryPointHelperFunctionData GenerateGeometryCopyHelper(RaverieShaderIRFunction* userMainFn, StringParam name, RaverieShaderIRType* inputStreamType, RaverieShaderIROp*& inputStreamVar);
+  void WriteGeometryStageInterface(
+      RaverieShaderIRFunction* function, GeometryStageInfo& stageInfo, EntryPointInfo* entryPointInfo, EntryPointHelperFunctionData& copyInputsData, RaverieShaderIROp* copyInputsStreamVar);
   void CollectGeometryStreamTypes(RaverieShaderIRFunction* function, GeometryStageInfo& stageInfo);
   void DeclareGeometryVertexInputs(GeometryStageInfo& stageInfo,
                                    EntryPointInfo* entryPointInfo,
@@ -405,21 +337,14 @@ public:
                                                          GeometryInOutTypeInfo& info,
                                                          Array<ShaderInterfaceType*>& inputStreamInterfaceTypes,
                                                          Array<ShaderInterfaceType*>& inputVertexInterfaceTypes);
-  void DeclareGeometryVertexOutputs(GeometryStageInfo& stageInfo,
-                                    EntryPointInfo* entryPointInfo,
-                                    ShaderInterfaceInfo& vertexOutputInterfaceInfo,
-                                    Array<ShaderInterfaceType*>& inputStreamInterfaceTypes);
-  void WriteGeometryInterfaceOutput(InterfaceInfoGroup& interfaceGroup,
-                                    EntryPointInfo* entryPointInfo,
-                                    Array<ShaderInterfaceType*>& interfaceTypes);
+  void
+  DeclareGeometryVertexOutputs(GeometryStageInfo& stageInfo, EntryPointInfo* entryPointInfo, ShaderInterfaceInfo& vertexOutputInterfaceInfo, Array<ShaderInterfaceType*>& inputStreamInterfaceTypes);
+  void WriteGeometryInterfaceOutput(InterfaceInfoGroup& interfaceGroup, EntryPointInfo* entryPointInfo, Array<ShaderInterfaceType*>& interfaceTypes);
   void WriteGeometryAppendFunctions(GeometryStageInfo& stageInfo,
                                     EntryPointInfo* entryPointInfo,
                                     Array<ShaderInterfaceType*>& outputVertexInterfaceTypes,
                                     Array<ShaderInterfaceType*>& inputStreamInterfaceTypes);
-  void GenerateProvokingVertexAppend(GeometryStageInfo& stageInfo,
-                                     EntryPointInfo* entryPointInfo,
-                                     GeometryAppendFunctionData& appendFnData,
-                                     RaverieShaderIRType* outputStreamType);
+  void GenerateProvokingVertexAppend(GeometryStageInfo& stageInfo, EntryPointInfo* entryPointInfo, GeometryAppendFunctionData& appendFnData, RaverieShaderIRType* outputStreamType);
   RaverieShaderIRFunction* CloneAppendFn(RaverieShaderIRFunction* originalAppendFn);
   void CopyGeometryOutputInterface(GeometryStageInfo& stageInfo,
                                    EntryPointInfo* entryPointInfo,
@@ -427,24 +352,12 @@ public:
                                    ShaderInterfaceType& interfaceType,
                                    Array<ShaderInterfaceType*>& inputStreamInterfaceTypes);
 
-  void CollectInterfaceVariables(RaverieShaderIRFunction* function,
-                                 ShaderInterfaceInfo& interfaceInfo,
-                                 ShaderStage::Enum shaderStage);
-  void CollectInputInterfaceVariables(RaverieShaderIRFunction* function,
-                                      ShaderInterfaceInfo& interfaceInfo,
-                                      RaverieShaderIRType* type,
-                                      ShaderStage::Enum shaderStage);
-  void CollectOutputInterfaceVariables(RaverieShaderIRFunction* function,
-                                       ShaderInterfaceInfo& interfaceInfo,
-                                       RaverieShaderIRType* type,
-                                       ShaderStage::Enum shaderStage);
-  void CollectUniformInterfaceVariables(RaverieShaderIRFunction* function,
-                                        ShaderInterfaceInfo& interfaceInfo,
-                                        RaverieShaderIRType* type,
-                                        ShaderStage::Enum shaderStage);
+  void CollectInterfaceVariables(RaverieShaderIRFunction* function, ShaderInterfaceInfo& interfaceInfo, ShaderStage::Enum shaderStage);
+  void CollectInputInterfaceVariables(RaverieShaderIRFunction* function, ShaderInterfaceInfo& interfaceInfo, RaverieShaderIRType* type, ShaderStage::Enum shaderStage);
+  void CollectOutputInterfaceVariables(RaverieShaderIRFunction* function, ShaderInterfaceInfo& interfaceInfo, RaverieShaderIRType* type, ShaderStage::Enum shaderStage);
+  void CollectUniformInterfaceVariables(RaverieShaderIRFunction* function, ShaderInterfaceInfo& interfaceInfo, RaverieShaderIRType* type, ShaderStage::Enum shaderStage);
 
-  void ProcessUniformBlockSettings(ShaderStage::Enum stageToProcess,
-                                   HashMap<ShaderFieldKey, UniformBufferDescription*>& mapping);
+  void ProcessUniformBlockSettings(ShaderStage::Enum stageToProcess, HashMap<ShaderFieldKey, UniformBufferDescription*>& mapping);
   InterfaceInfoGroup* ProcessBuiltIn(RaverieShaderIRFunction* function,
                                      ShaderInterfaceInfo& interfaceInfo,
                                      ShaderStage::Enum shaderStage,
@@ -452,101 +365,52 @@ public:
                                      ShaderIRAttribute* attribute,
                                      spv::StorageClass storageClass,
                                      StringParam name);
-  InterfaceInfoGroup* ProcessUniformBlock(RaverieShaderIRFunction* function,
-                                          ShaderInterfaceInfo& interfaceInfo,
-                                          ShaderIRFieldMeta* fieldMeta,
-                                          ShaderIRAttribute* attribute,
-                                          HashMap<ShaderFieldKey, UniformBufferDescription*>& mapping);
+  InterfaceInfoGroup* ProcessUniformBlock(
+      RaverieShaderIRFunction* function, ShaderInterfaceInfo& interfaceInfo, ShaderIRFieldMeta* fieldMeta, ShaderIRAttribute* attribute, HashMap<ShaderFieldKey, UniformBufferDescription*>& mapping);
 
-  void DeclareStageBlocks(ShaderInterfaceInfo& interfaceInfo,
-                          EntryPointInfo* entryPointInfo,
-                          EntryPointHelperFunctionData& copyInputsData,
-                          EntryPointHelperFunctionData& copyOutputsData);
+  void DeclareStageBlocks(ShaderInterfaceInfo& interfaceInfo, EntryPointInfo* entryPointInfo, EntryPointHelperFunctionData& copyInputsData, EntryPointHelperFunctionData& copyOutputsData);
   void DeclareGroupBlocks(ShaderInterfaceInfo::InterfaceGroupMap& interfaceGroups,
                           EntryPointInfo* entryPointInfo,
                           EntryPointHelperFunctionData& copyInputsData,
                           EntryPointHelperFunctionData& copyOutputsData,
                           Array<ShaderInterfaceType*>& outArray);
-  void DeclareBlock(InterfaceInfoGroup& interfaceGroup,
-                    EntryPointInfo* entryPointInfo,
-                    EntryPointHelperFunctionData& copyHelperData,
-                    Array<ShaderInterfaceType*>& outArray);
-  void DeclareBlockStruct(InterfaceInfoGroup& interfaceGroup,
-                          EntryPointInfo* entryPointInfo,
-                          EntryPointHelperFunctionData& copyHelperData,
-                          Array<ShaderInterfaceType*>& outArray);
-  void DeclareBlockNoStruct(InterfaceInfoGroup& interfaceGroup,
-                            EntryPointInfo* entryPointInfo,
-                            EntryPointHelperFunctionData& copyHelperData,
-                            Array<ShaderInterfaceType*>& outArray);
+  void DeclareBlock(InterfaceInfoGroup& interfaceGroup, EntryPointInfo* entryPointInfo, EntryPointHelperFunctionData& copyHelperData, Array<ShaderInterfaceType*>& outArray);
+  void DeclareBlockStruct(InterfaceInfoGroup& interfaceGroup, EntryPointInfo* entryPointInfo, EntryPointHelperFunctionData& copyHelperData, Array<ShaderInterfaceType*>& outArray);
+  void DeclareBlockNoStruct(InterfaceInfoGroup& interfaceGroup, EntryPointInfo* entryPointInfo, EntryPointHelperFunctionData& copyHelperData, Array<ShaderInterfaceType*>& outArray);
 
-  void CopyField(BasicBlock* targetFnBlock,
-                 RaverieShaderIRType* sourceLoadType,
-                 RaverieShaderIROp* source,
-                 RaverieShaderIROp* dest);
-  void CopyFromInterfaceType(BasicBlock* block,
-                             RaverieShaderIROp* dest,
-                             RaverieShaderIROp* source,
-                             ShaderInterfaceType* sourceInterface,
-                             spv::StorageClass destStorageClass,
-                             spv::StorageClass sourceStorageClass);
-  RaverieShaderIROp* GetMemberInstanceFrom(BasicBlock* block,
-                                         RaverieShaderIROp* source,
-                                         int sourceOffset,
-                                         spv::StorageClass sourceStorageClass);
-  RaverieShaderIROp* GetNamedMemberInstanceFrom(BasicBlock* block,
-                                              RaverieShaderIROp* source,
-                                              StringParam memberName,
-                                              spv::StorageClass sourceStorageClass);
-  RaverieShaderIROp* GetNamedMemberInstanceFrom(BasicBlock* block,
-                                              RaverieShaderIROp* source,
-                                              const ShaderFieldKey& fieldKey,
-                                              spv::StorageClass sourceStorageClass);
+  void CopyField(BasicBlock* targetFnBlock, RaverieShaderIRType* sourceLoadType, RaverieShaderIROp* source, RaverieShaderIROp* dest);
+  void CopyFromInterfaceType(
+      BasicBlock* block, RaverieShaderIROp* dest, RaverieShaderIROp* source, ShaderInterfaceType* sourceInterface, spv::StorageClass destStorageClass, spv::StorageClass sourceStorageClass);
+  RaverieShaderIROp* GetMemberInstanceFrom(BasicBlock* block, RaverieShaderIROp* source, int sourceOffset, spv::StorageClass sourceStorageClass);
+  RaverieShaderIROp* GetNamedMemberInstanceFrom(BasicBlock* block, RaverieShaderIROp* source, StringParam memberName, spv::StorageClass sourceStorageClass);
+  RaverieShaderIROp* GetNamedMemberInstanceFrom(BasicBlock* block, RaverieShaderIROp* source, const ShaderFieldKey& fieldKey, spv::StorageClass sourceStorageClass);
 
   void DecorateUniformGroups(ShaderInterfaceInfo& interfaceInfo);
   void DecorateUniformGroup(InterfaceInfoGroup& infoGroup);
   void AddOffsetDecorations(InterfaceInfoGroup& infoGroup);
-  void AddMemberTypeDecorations(RaverieShaderIRType* memberType,
-                                InterfaceInfoGroup::FieldInfo& fieldInfo,
-                                ShaderResourceReflectionData& memberReflection);
+  void AddMemberTypeDecorations(RaverieShaderIRType* memberType, InterfaceInfoGroup::FieldInfo& fieldInfo, ShaderResourceReflectionData& memberReflection);
   void AddVertexLocationDecorations(InterfaceInfoGroup& infoGroup);
   void AddPixelLocationDecorations(InterfaceInfoGroup& infoGroup);
   void AddFlatDecorations(InterfaceInfoGroup& infoGroup);
-  void WriteTypeDecorations(Array<InterfaceInfoGroup::DecorationParam>& decorations,
-                            BasicBlock* decorationBlock,
-                            IRaverieShaderIR* toDecorate);
-  void WriteMemberDecorations(Array<InterfaceInfoGroup::DecorationParam>& decorations,
-                              BasicBlock* decorationBlock,
-                              IRaverieShaderIR* toDecorate,
-                              RaverieShaderIRConstantLiteral* memberIndexLiteral);
+  void WriteTypeDecorations(Array<InterfaceInfoGroup::DecorationParam>& decorations, BasicBlock* decorationBlock, IRaverieShaderIR* toDecorate);
+  void WriteMemberDecorations(Array<InterfaceInfoGroup::DecorationParam>& decorations, BasicBlock* decorationBlock, IRaverieShaderIR* toDecorate, RaverieShaderIRConstantLiteral* memberIndexLiteral);
   void FindAndDecorateGlobals(RaverieShaderIRType* currentType, EntryPointInfo* entryPointInfo);
   void AddInterfaceTypesToEntryPoint(TypeDependencyCollector& collector, EntryPointInfo* entryPointInfo);
   void DecorateImagesAndSamplers(TypeDependencyCollector& collector, EntryPointInfo* entryPointInfo);
   void DecorateRuntimeArrays(TypeDependencyCollector& collector, EntryPointInfo* entryPointInfo);
   /// Add decorations for a runtime array struct.
-  void AddRuntimeArrayDecorations(BasicBlock* decorationBlock,
-                                  RaverieShaderIRType* raverieRuntimeArrayType,
-                                  RaverieShaderIRType* spirvRuntimeArrayType,
-                                  RaverieShaderIRType* elementType,
-                                  ShaderStageResource& stageResource);
+  void AddRuntimeArrayDecorations(
+      BasicBlock* decorationBlock, RaverieShaderIRType* raverieRuntimeArrayType, RaverieShaderIRType* spirvRuntimeArrayType, RaverieShaderIRType* elementType, ShaderStageResource& stageResource);
   /// Recursively decorate a struct (currently setup for runtime arrays)
-  void RecursivelyDecorateStructType(BasicBlock* decorationBlock,
-                                     RaverieShaderIRType* structType,
-                                     ShaderStageResource& stageResource);
+  void RecursivelyDecorateStructType(BasicBlock* decorationBlock, RaverieShaderIRType* structType, ShaderStageResource& stageResource);
 
   u32 FindBindingId();
 
   // Copy reflection data from the internal interface info to the entry point
   void CopyReflectionDataToEntryPoint(EntryPointInfo* entryPointInfo, ShaderInterfaceInfo& interfaceInfo);
-  void CopyReflectionData(Array<ShaderStageResource>& resourceList,
-                          ShaderInterfaceInfo& interfaceInfo,
-                          InterfaceInfoGroup& group);
-  void CopyReflectionDataStruct(Array<ShaderStageResource>& resourceList,
-                                ShaderInterfaceInfo& interfaceInfo,
-                                InterfaceInfoGroup& group);
-  void CopyReflectionDataGlobals(Array<ShaderStageResource>& resourceList,
-                                 ShaderInterfaceInfo& interfaceInfo,
-                                 InterfaceInfoGroup& group);
+  void CopyReflectionData(Array<ShaderStageResource>& resourceList, ShaderInterfaceInfo& interfaceInfo, InterfaceInfoGroup& group);
+  void CopyReflectionDataStruct(Array<ShaderStageResource>& resourceList, ShaderInterfaceInfo& interfaceInfo, InterfaceInfoGroup& group);
+  void CopyReflectionDataGlobals(Array<ShaderStageResource>& resourceList, ShaderInterfaceInfo& interfaceInfo, InterfaceInfoGroup& group);
 
   // Create a shader interface field from the interface group and the field
   // index.
@@ -562,16 +426,11 @@ public:
   // Finds a field from a collection of interface types. If necessary, any new
   // op-codes will be written into the given block and the provided storage
   // class will be used.
-  RaverieShaderIROp* FindField(ShaderFieldKey& fieldKey,
-                             Array<ShaderInterfaceType*>& interfaces,
-                             BasicBlock* block,
-                             spv::StorageClass storageClass);
+  RaverieShaderIROp* FindField(ShaderFieldKey& fieldKey, Array<ShaderInterfaceType*>& interfaces, BasicBlock* block, spv::StorageClass storageClass);
   // Walks the given type meta to find an attribute with the given field meta
   // (for name overrides). Returns the first field that fulfills the meta,
   // otherwise null.
-  ShaderIRFieldMeta* FindFieldViaAttribute(ShaderIRTypeMeta* typeMeta,
-                                           StringParam attributeName,
-                                           ShaderFieldKey& fieldKey);
+  ShaderIRFieldMeta* FindFieldViaAttribute(ShaderIRTypeMeta* typeMeta, StringParam attributeName, ShaderFieldKey& fieldKey);
   // Default callback we use for api perspective position.
   static void PerspectiveTransformAppendVertexCallback(AppendCallbackData& callbackData, void* userData);
 

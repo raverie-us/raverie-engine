@@ -19,13 +19,7 @@ RaverieDefineType(MeshBuilder, builder, type)
 }
 
 MeshBuilder::MeshBuilder() :
-    mCombineMeshes(false),
-    mGenerateSmoothNormals(false),
-    mSmoothingAngleDegreesThreshold(30.f),
-    mGenerateTangentSpace(true),
-    mInvertUvYAxis(false),
-    mFlipWindingOrder(false),
-    mFlipNormals(false)
+    mCombineMeshes(false), mGenerateSmoothNormals(false), mSmoothingAngleDegreesThreshold(30.f), mGenerateTangentSpace(true), mInvertUvYAxis(false), mFlipWindingOrder(false), mFlipNormals(false)
 {
 }
 
@@ -65,11 +59,7 @@ void MeshBuilder::BuildListing(ResourceListing& listing)
   }
 }
 
-VertexAttribute::VertexAttribute(VertexSemantic::Enum semantic, VertexElementType::Enum type, byte count, byte offset) :
-    mSemantic(semantic),
-    mType(type),
-    mCount(count),
-    mOffset(offset)
+VertexAttribute::VertexAttribute(VertexSemantic::Enum semantic, VertexElementType::Enum type, byte count, byte offset) : mSemantic(semantic), mType(type), mCount(count), mOffset(offset)
 {
 }
 

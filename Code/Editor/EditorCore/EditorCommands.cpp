@@ -476,12 +476,7 @@ void GroupSelected(Editor* editor, Space* space)
     ObjectTranslateTool* tTool = translateToolCog->has(ObjectTranslateTool);
     if (tTool && tTool->GetSnapping())
     {
-      center = GizmoSnapping::GetSnappedPosition(center,
-                                                 Vec3(0, 0, 0),
-                                                 Quat::cIdentity,
-                                                 tTool->GetDragMode(),
-                                                 GizmoSnapMode::WorldGrid,
-                                                 tTool->GetSnapDistance());
+      center = GizmoSnapping::GetSnappedPosition(center, Vec3(0, 0, 0), Quat::cIdentity, tTool->GetDragMode(), GizmoSnapMode::WorldGrid, tTool->GetSnapDistance());
     }
 
     // Create the transform object
@@ -827,8 +822,7 @@ void CameraFocusSpace(Space* space, Cog* cameraObject, const Aabb& focusAabb, Ed
   actions->SetRealTime(true);
   if ((focusMode == EditFocusMode::AutoTime && actions->IsEmpty()) || focusMode == EditFocusMode::Center)
   {
-    Action* action =
-        AnimatePropertyGetSet(EditorCameraController, LookTarget, Ease::Quad::Out, controller, 0.5f, lookCenter);
+    Action* action = AnimatePropertyGetSet(EditorCameraController, LookTarget, Ease::Quad::Out, controller, 0.5f, lookCenter);
     actions->Add(action, ActionExecuteMode::FrameUpdate);
   }
   else
@@ -843,13 +837,11 @@ void CameraFocusSpace(Space* space, Cog* cameraObject, const Aabb& focusAabb, Ed
     }
     else
     {
-      Action* zoom =
-          AnimatePropertyGetSet(EditorCameraController, LookDistance, Ease::Quad::Out, controller, 0.5f, lookDistance);
+      Action* zoom = AnimatePropertyGetSet(EditorCameraController, LookDistance, Ease::Quad::Out, controller, 0.5f, lookDistance);
       group->Add(zoom);
     }
 
-    Action* look =
-        AnimatePropertyGetSet(EditorCameraController, LookTarget, Ease::Quad::Out, controller, 0.5f, lookCenter);
+    Action* look = AnimatePropertyGetSet(EditorCameraController, LookTarget, Ease::Quad::Out, controller, 0.5f, lookCenter);
     group->Add(look);
 
     actions->Add(group, ActionExecuteMode::FrameUpdate);

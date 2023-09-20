@@ -94,10 +94,6 @@ struct Policy<CogId>
 
 const CogId cInvalidCogId = CogId(cInvalidObjectRawId, cInvalidObjectRawId);
 
-Cog* RestoreLink(CogId* id,
-                 CogCreationContext* context,
-                 Component* component = NULL,
-                 StringParam propertyName = String(),
-                 bool isError = true);
+Cog* RestoreLink(CogId* id, CogCreationContext* context, Component* component = NULL, StringParam propertyName = String(), bool isError = true);
 
 } // namespace Raverie

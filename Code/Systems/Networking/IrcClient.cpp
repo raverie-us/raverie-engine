@@ -331,10 +331,7 @@ void IrcClient::SocketError(TextErrorEvent* event)
 {
   // Forward the event
   this->DispatchEvent(event->EventId, event);
-  DoNotifyWarning(
-      "Irc Client",
-      BuildString(
-          "An error occurred: ", event->Text, ". If you were disconnected, use the 'Chat' command to reconnect"));
+  DoNotifyWarning("Irc Client", BuildString("An error occurred: ", event->Text, ". If you were disconnected, use the 'Chat' command to reconnect"));
 }
 
 // Occurs when we connect to the remote server

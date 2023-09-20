@@ -173,9 +173,7 @@ void AudioMixer::MixLoopThreaded()
     double timeDiff = (double)(clock() - time) / CLOCKS_PER_SEC;
     if (timeDiff > maxTime)
     {
-      AddTaskThreaded(Raverie::CreateFunctor(&ExternalSystemInterface::SendAudioError,
-                                          ExternalInterface,
-                                          Raverie::String("Mix took too long (informational message, not an error)")));
+      AddTaskThreaded(Raverie::CreateFunctor(&ExternalSystemInterface::SendAudioError, ExternalInterface, Raverie::String("Mix took too long (informational message, not an error)")));
     }
 #endif
 
@@ -734,51 +732,27 @@ const float cSqrt2Inv = 1.0f / Math::Sqrt(2.0f);
 
 const float ChannelMatrix1[cMaxChannels] = {cSqrt2Inv, cSqrt2Inv, 1.0f, 0.0f, 0.5f, 0.5f, 0.5f, 0.5f};
 
-const float ChannelMatrix2[cMaxChannels * 2] = {1.0f,
-                                                0.0f,
-                                                cSqrt2Inv,
-                                                0.0f,
-                                                cSqrt2Inv,
-                                                0.0f,
-                                                cSqrt2Inv,
-                                                0.0f,
-                                                0.0f,
-                                                1.0f,
-                                                cSqrt2Inv,
-                                                0.0f,
-                                                0.0f,
-                                                cSqrt2Inv,
-                                                0.0f,
-                                                cSqrt2Inv};
+const float ChannelMatrix2[cMaxChannels * 2] = {1.0f, 0.0f, cSqrt2Inv, 0.0f, cSqrt2Inv, 0.0f, cSqrt2Inv, 0.0f, 0.0f, 1.0f, cSqrt2Inv, 0.0f, 0.0f, cSqrt2Inv, 0.0f, cSqrt2Inv};
 
-const float ChannelMatrix3[cMaxChannels * 3] = {1.0f, 0.0f, 0.0f, 0.0f, cSqrt2Inv, 0.0f,      cSqrt2Inv, 0.0f,
-                                                0.0f, 1.0f, 0.0f, 0.0f, 0.0f,      cSqrt2Inv, 0.0f,      cSqrt2Inv,
-                                                0.0f, 0.0f, 1.0f, 0.0f, 0.0f,      0.0f,      0.0f,      0.0f};
+const float ChannelMatrix3[cMaxChannels * 3] = {1.0f, 0.0f,      0.0f, 0.0f,      cSqrt2Inv, 0.0f, cSqrt2Inv, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+                                                0.0f, cSqrt2Inv, 0.0f, cSqrt2Inv, 0.0f,      0.0f, 1.0f,      0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
 
-const float ChannelMatrix4[cMaxChannels * 4] = {
-    1.0f, 0.0f, cSqrt2Inv, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, cSqrt2Inv, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-    0.0f, 0.0f, 0.0f,      0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,      0.0f, 0.0f, 1.0f, 0.0f, 1.0f};
+const float ChannelMatrix4[cMaxChannels * 4] = {1.0f, 0.0f, cSqrt2Inv, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, cSqrt2Inv, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+                                                0.0f, 0.0f, 0.0f,      0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,      0.0f, 0.0f, 1.0f, 0.0f, 1.0f};
 
-const float ChannelMatrix5[cMaxChannels * 5] = {1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-                                                0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-                                                0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-                                                1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f};
+const float ChannelMatrix5[cMaxChannels * 5] = {1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+                                                0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f};
 
-const float ChannelMatrix6[cMaxChannels * 6] = {1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-                                                0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-                                                0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-                                                1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f};
+const float ChannelMatrix6[cMaxChannels * 6] = {1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+                                                0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f};
 
-const float ChannelMatrix7[cMaxChannels * 7] = {
-    1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-    0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-    0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f};
+const float ChannelMatrix7[cMaxChannels * 7] = {1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+                                                0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+                                                0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f};
 
-const float ChannelMatrix8[cMaxChannels * 8] = {
-    1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-    0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-    0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-    0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f};
+const float ChannelMatrix8[cMaxChannels * 8] = {1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
+                                                0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+                                                0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f};
 
 } // namespace AudioChannelTranslation
 
@@ -866,8 +840,7 @@ float* AudioFrame::GetSamples(const unsigned outputChannels)
           else
             output[Center] = (mSamples[0] + mSamples[1]) * AudioChannelTranslation::cSqrt2Inv;
 
-          output[BackLeft] = output[BackRight] = output[SideLeft] = output[SideRight] =
-              (mSamples[0] - mSamples[1]) * AudioChannelTranslation::cSqrt2Inv;
+          output[BackLeft] = output[BackRight] = output[SideLeft] = output[SideRight] = (mSamples[0] - mSamples[1]) * AudioChannelTranslation::cSqrt2Inv;
         }
         else
         {

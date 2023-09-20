@@ -63,15 +63,15 @@ void WakeUpConnected(EdgeListType& edgeList)
 
 } // namespace JointHelpers
 
-#define DeclareJointAccessors(type, name)                                                                              \
-  type Get##Name() const                                                                                               \
-  {                                                                                                                    \
-    return m##name;                                                                                                    \
-  }                                                                                                                    \
-  void Set##Name(const type& var)                                                                                      \
-  {                                                                                                                    \
-    m##name = var;                                                                                                     \
-    JointHelpers::ForceAwakeJoint(this);                                                                               \
+#define DeclareJointAccessors(type, name)                                                                                                                                                              \
+  type Get##Name() const                                                                                                                                                                               \
+  {                                                                                                                                                                                                    \
+    return m##name;                                                                                                                                                                                    \
+  }                                                                                                                                                                                                    \
+  void Set##Name(const type& var)                                                                                                                                                                      \
+  {                                                                                                                                                                                                    \
+    m##name = var;                                                                                                                                                                                     \
+    JointHelpers::ForceAwakeJoint(this);                                                                                                                                                               \
   }
 
 } // namespace Physics

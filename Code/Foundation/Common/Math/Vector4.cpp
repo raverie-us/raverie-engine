@@ -126,8 +126,7 @@ Vector4 Vector4::operator*(Vec4Param rhs) const
 
 Vector4 Vector4::operator/(Vec4Param rhs) const
 {
-  ErrorIf(rhs.x == real(0.0) || rhs.y == real(0.0) || rhs.z == real(0.0) || rhs.w == real(0.0),
-          "Vector4 - Division by Zero.");
+  ErrorIf(rhs.x == real(0.0) || rhs.y == real(0.0) || rhs.z == real(0.0) || rhs.w == real(0.0), "Vector4 - Division by Zero.");
   return Vector4(x / rhs.x, y / rhs.y, z / rhs.z, w / rhs.w);
 }
 
@@ -365,8 +364,7 @@ real Vector4::AngleBetween(Vec4Param a, Vec4Param b)
 
 bool Vector4::ApproximatelyEqual(Vec4Param lhs, Vec4Param rhs, real epsilon)
 {
-  return Math::Equal(lhs.x, rhs.x, epsilon) && Math::Equal(lhs.y, rhs.y, epsilon) &&
-         Math::Equal(lhs.z, rhs.z, epsilon) && Math::Equal(lhs.w, rhs.w, epsilon);
+  return Math::Equal(lhs.x, rhs.x, epsilon) && Math::Equal(lhs.y, rhs.y, epsilon) && Math::Equal(lhs.z, rhs.z, epsilon) && Math::Equal(lhs.w, rhs.w, epsilon);
 }
 
 bool Vector4::Valid() const

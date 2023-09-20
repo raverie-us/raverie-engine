@@ -150,8 +150,8 @@ RaverieDefineStaticLibrary(PhysicsLibrary)
   RaverieInitializeType(CustomJoint);
   RaverieInitializeType(ConstraintConfigBlock);
   // Joints and JointBlocks
-#define JointType(jointType)                                                                                           \
-  RaverieInitializeType(jointType);                                                                                      \
+#define JointType(jointType)                                                                                                                                                                           \
+  RaverieInitializeType(jointType);                                                                                                                                                                    \
   RaverieInitializeType(jointType##Block);
 #include "JointList.hpp"
 #undef JointType

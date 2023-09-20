@@ -17,12 +17,7 @@ AnyHashMapRange::AnyHashMapRange() : ModifyId(0)
 {
 }
 
-HashMapUserData::HashMapUserData() :
-    KeyType(nullptr),
-    ValueType(nullptr),
-    PairRangeType(nullptr),
-    ValueRangeType(nullptr),
-    KeyRangeType(nullptr)
+HashMapUserData::HashMapUserData() : KeyType(nullptr), ValueType(nullptr), PairRangeType(nullptr), ValueRangeType(nullptr), KeyRangeType(nullptr)
 {
 }
 
@@ -115,8 +110,7 @@ void HashMapGetOrError(Call& call, ExceptionReport& report)
 
   if (value == nullptr)
   {
-    call.GetState()->ThrowException(
-        report, String::Format("The key '%s' was not found within the map", key.ToString().c_str()));
+    call.GetState()->ThrowException(report, String::Format("The key '%s' was not found within the map", key.ToString().c_str()));
     return;
   }
 
@@ -219,9 +213,7 @@ void HashMapSetOrError(Call& call, ExceptionReport& report)
   // exist
   if (Any* foundValue = self->FindPointer(key))
   {
-    String message = String::Format("The key '%s' already existed within the map with a value of '%s'",
-                                    key.ToString().c_str(),
-                                    foundValue->ToString().c_str());
+    String message = String::Format("The key '%s' already existed within the map with a value of '%s'", key.ToString().c_str(), foundValue->ToString().c_str());
     call.GetState()->ThrowException(report, message);
     return;
   }
@@ -249,8 +241,7 @@ void HashMapRemoveOrError(Call& call, ExceptionReport& report)
 
   if (value == nullptr)
   {
-    call.GetState()->ThrowException(
-        report, String::Format("The key '%s' was not found within the map", key.ToString().c_str()));
+    call.GetState()->ThrowException(report, String::Format("The key '%s' was not found within the map", key.ToString().c_str()));
     return;
   }
 
@@ -312,8 +303,7 @@ void HashMapAll(Call& call, ExceptionReport& report)
   HashMapUserData& userData = GetHashMapUserData(call);
 
   // Create the range type that we will return
-  Handle rangeHandle = call.GetState()->AllocateDefaultConstructedHeapObject(
-      userData.*RangeMemberType, report, HeapFlags::ReferenceCounted);
+  Handle rangeHandle = call.GetState()->AllocateDefaultConstructedHeapObject(userData.*RangeMemberType, report, HeapFlags::ReferenceCounted);
 
   // If we threw an exception, we need to early out and let the stack unroll
   if (report.HasThrownExceptions())
@@ -330,11 +320,7 @@ void HashMapAll(Call& call, ExceptionReport& report)
   call.SetHandle(Call::Return, rangeHandle);
 }
 
-BoundType* Core::InstantiateHashMap(LibraryBuilder& builder,
-                                    StringParam baseName,
-                                    StringParam fullyQualifiedName,
-                                    const Array<Constant>& templateTypes,
-                                    const void* userData)
+BoundType* Core::InstantiateHashMap(LibraryBuilder& builder, StringParam baseName, StringParam fullyQualifiedName, const Array<Constant>& templateTypes, const void* userData)
 {
   // Error checking
   ErrorIf(templateTypes.Size() != 2, "The HashMap template should only take two template arguments");
@@ -346,16 +332,13 @@ BoundType* Core::InstantiateHashMap(LibraryBuilder& builder,
   // We could have put core in our userdata, but no real need
   Core& core = Core::GetInstance();
 
-  BoundType* pairRangeType =
-      builder.InstantiateTemplate("HashMapRange", RaverieConstants(keyType, valueType), Module()).Type;
+  BoundType* pairRangeType = builder.InstantiateTemplate("HashMapRange", RaverieConstants(keyType, valueType), Module()).Type;
   BoundType* keyRangeType = builder.InstantiateTemplate("HashMapKeyRange", RaverieConstants(keyType), Module()).Type;
-  BoundType* valueRangeType =
-      builder.InstantiateTemplate("HashMapValueRange", RaverieConstants(valueType), Module()).Type;
+  BoundType* valueRangeType = builder.InstantiateTemplate("HashMapValueRange", RaverieConstants(valueType), Module()).Type;
 
   // Create the array type instance (arrays and any other containers should be
   // reference types!)
-  BoundType* containerType =
-      builder.AddBoundType(baseName, fullyQualifiedName, TypeCopyMode::ReferenceType, sizeof(AnyHashMap));
+  BoundType* containerType = builder.AddBoundType(baseName, fullyQualifiedName, TypeCopyMode::ReferenceType, sizeof(AnyHashMap));
 
   HashMapUserData containerUserData;
   containerUserData.KeyType = keyType;
@@ -373,59 +356,31 @@ BoundType* Core::InstantiateHashMap(LibraryBuilder& builder,
   ParameterArray setParameters = TwoParameters(keyType, "key", valueType, "value");
 
   // Add the constructor
-  builder.AddBoundFunction(containerType,
-                           "GetOrDefault",
-                           HashMapGetOrDefault,
-                           TwoParameters(keyType, "key", valueType, "defaultValue"),
-                           valueType,
-                           FunctionOptions::None);
-  builder.AddBoundFunction(
-      containerType, "GetOrDefault", HashMapGetOrDefaultNull, keyOnlyParameters, valueType, FunctionOptions::None);
-  builder.AddBoundFunction(
-      containerType, "GetOrError", HashMapGetOrError, keyOnlyParameters, valueType, FunctionOptions::None);
+  builder.AddBoundFunction(containerType, "GetOrDefault", HashMapGetOrDefault, TwoParameters(keyType, "key", valueType, "defaultValue"), valueType, FunctionOptions::None);
+  builder.AddBoundFunction(containerType, "GetOrDefault", HashMapGetOrDefaultNull, keyOnlyParameters, valueType, FunctionOptions::None);
+  builder.AddBoundFunction(containerType, "GetOrError", HashMapGetOrError, keyOnlyParameters, valueType, FunctionOptions::None);
 
-  builder.AddBoundFunction(
-      containerType, "Contains", HashMapContains, keyOnlyParameters, core.BooleanType, FunctionOptions::None);
+  builder.AddBoundFunction(containerType, "Contains", HashMapContains, keyOnlyParameters, core.BooleanType, FunctionOptions::None);
 
-  builder.AddBoundFunction(
-      containerType, "SetOrOverwrite", HashMapSetOrOverwrite, setParameters, core.BooleanType, FunctionOptions::None);
-  builder.AddBoundFunction(
-      containerType, "SetOrIgnore", HashMapSetOrIgnore, setParameters, core.BooleanType, FunctionOptions::None);
-  builder.AddBoundFunction(
-      containerType, "SetOrError", HashMapSetOrError, setParameters, core.VoidType, FunctionOptions::None);
+  builder.AddBoundFunction(containerType, "SetOrOverwrite", HashMapSetOrOverwrite, setParameters, core.BooleanType, FunctionOptions::None);
+  builder.AddBoundFunction(containerType, "SetOrIgnore", HashMapSetOrIgnore, setParameters, core.BooleanType, FunctionOptions::None);
+  builder.AddBoundFunction(containerType, "SetOrError", HashMapSetOrError, setParameters, core.VoidType, FunctionOptions::None);
 
   // Operator overloading
-  builder.AddBoundFunction(
-      containerType, OperatorInsert, HashMapSetOrError, setParameters, core.VoidType, FunctionOptions::None);
-  builder.AddBoundFunction(
-      containerType, OperatorGet, HashMapGetOrError, keyOnlyParameters, valueType, FunctionOptions::None);
-  builder.AddBoundFunction(
-      containerType, OperatorSet, HashMapSetOrOverwrite, setParameters, core.BooleanType, FunctionOptions::None);
+  builder.AddBoundFunction(containerType, OperatorInsert, HashMapSetOrError, setParameters, core.VoidType, FunctionOptions::None);
+  builder.AddBoundFunction(containerType, OperatorGet, HashMapGetOrError, keyOnlyParameters, valueType, FunctionOptions::None);
+  builder.AddBoundFunction(containerType, OperatorSet, HashMapSetOrOverwrite, setParameters, core.BooleanType, FunctionOptions::None);
 
-  builder.AddBoundFunction(
-      containerType, "RemoveOrError", HashMapRemoveOrError, keyOnlyParameters, core.VoidType, FunctionOptions::None);
-  builder.AddBoundFunction(containerType,
-                           "RemoveOrIgnore",
-                           HashMapRemoveOrIgnore,
-                           keyOnlyParameters,
-                           core.BooleanType,
-                           FunctionOptions::None);
+  builder.AddBoundFunction(containerType, "RemoveOrError", HashMapRemoveOrError, keyOnlyParameters, core.VoidType, FunctionOptions::None);
+  builder.AddBoundFunction(containerType, "RemoveOrIgnore", HashMapRemoveOrIgnore, keyOnlyParameters, core.BooleanType, FunctionOptions::None);
 
-  builder.AddBoundFunction(
-      containerType, "Clear", HashMapClear, ParameterArray(), core.VoidType, FunctionOptions::None);
+  builder.AddBoundFunction(containerType, "Clear", HashMapClear, ParameterArray(), core.VoidType, FunctionOptions::None);
 
   builder.AddBoundGetterSetter(containerType, "Count", core.IntegerType, nullptr, HashMapGetCount, MemberOptions::None);
 
-  builder.AddBoundGetterSetter(
-      containerType, "All", pairRangeType, nullptr, HashMapAll<&HashMapUserData::PairRangeType>, MemberOptions::None);
-  builder.AddBoundGetterSetter(
-      containerType, "Keys", keyRangeType, nullptr, HashMapAll<&HashMapUserData::KeyRangeType>, MemberOptions::None);
-  builder.AddBoundGetterSetter(containerType,
-                               "Values",
-                               valueRangeType,
-                               nullptr,
-                               HashMapAll<&HashMapUserData::ValueRangeType>,
-                               MemberOptions::None);
+  builder.AddBoundGetterSetter(containerType, "All", pairRangeType, nullptr, HashMapAll<&HashMapUserData::PairRangeType>, MemberOptions::None);
+  builder.AddBoundGetterSetter(containerType, "Keys", keyRangeType, nullptr, HashMapAll<&HashMapUserData::KeyRangeType>, MemberOptions::None);
+  builder.AddBoundGetterSetter(containerType, "Values", valueRangeType, nullptr, HashMapAll<&HashMapUserData::ValueRangeType>, MemberOptions::None);
 
   // Return the array type we instantiated
   return containerType;
@@ -522,8 +477,7 @@ void HashMapRangeCurrent(Call& call, ExceptionReport& report)
   {
     // Create the range type that we will return
     BoundType* keyValueType = (BoundType*)call.GetFunction()->FunctionType->Return;
-    Handle keyValueHandle =
-        call.GetState()->AllocateDefaultConstructedHeapObject(keyValueType, report, HeapFlags::ReferenceCounted);
+    Handle keyValueHandle = call.GetState()->AllocateDefaultConstructedHeapObject(keyValueType, report, HeapFlags::ReferenceCounted);
 
     // If we threw an exception, we need to early out and let the stack unroll
     if (report.HasThrownExceptions())
@@ -557,14 +511,9 @@ void HashMapRangeCurrent(Call& call, ExceptionReport& report)
   }
 }
 
-BoundType* Core::InstantiateHashMapRange(LibraryBuilder& builder,
-                                         StringParam baseName,
-                                         StringParam fullyQualifiedName,
-                                         const Array<Constant>& templateTypes,
-                                         const void* userData)
+BoundType* Core::InstantiateHashMapRange(LibraryBuilder& builder, StringParam baseName, StringParam fullyQualifiedName, const Array<Constant>& templateTypes, const void* userData)
 {
-  BoundType* rangeType =
-      builder.AddBoundType(baseName, fullyQualifiedName, TypeCopyMode::ReferenceType, sizeof(AnyHashMapRange));
+  BoundType* rangeType = builder.AddBoundType(baseName, fullyQualifiedName, TypeCopyMode::ReferenceType, sizeof(AnyHashMapRange));
 
   // The user-data will be the 'HashMapRangeMode' enumeration
   rangeType->UserData = userData;
@@ -591,10 +540,8 @@ BoundType* Core::InstantiateHashMapRange(LibraryBuilder& builder,
 
   RaverieFullBindMethod(builder, rangeType, &AnyHashMapRange::MoveNext, RaverieNoOverload, "MoveNext", RaverieNoNames);
   RaverieFullBindMethod(builder, rangeType, &AnyHashMapRange::Reset, RaverieNoOverload, "Reset", RaverieNoNames);
-  RaverieFullBindGetterSetter(
-      builder, rangeType, &AnyHashMapRange::IsEmpty, RaverieNoOverload, RaverieNoSetter, RaverieNoOverload, "IsEmpty");
-  RaverieFullBindGetterSetter(
-      builder, rangeType, &AnyHashMapRange::IsNotEmpty, RaverieNoOverload, RaverieNoSetter, RaverieNoOverload, "IsNotEmpty");
+  RaverieFullBindGetterSetter(builder, rangeType, &AnyHashMapRange::IsEmpty, RaverieNoOverload, RaverieNoSetter, RaverieNoOverload, "IsEmpty");
+  RaverieFullBindGetterSetter(builder, rangeType, &AnyHashMapRange::IsNotEmpty, RaverieNoOverload, RaverieNoSetter, RaverieNoOverload, "IsNotEmpty");
   builder.AddBoundGetterSetter(rangeType, "All", rangeType, nullptr, HashMapRangeAll, MemberOptions::None);
   builder.AddBoundGetterSetter(rangeType, "Current", currentType, nullptr, HashMapRangeCurrent, MemberOptions::None);
   return rangeType;
@@ -677,11 +624,7 @@ void KeyValueSetValue(Call& call, ExceptionReport& report)
   self->second.AssignFrom(newValueData, userData.ValueType);
 }
 
-BoundType* Core::InstantiateKeyValue(LibraryBuilder& builder,
-                                     StringParam baseName,
-                                     StringParam fullyQualifiedName,
-                                     const Array<Constant>& templateTypes,
-                                     const void* userData)
+BoundType* Core::InstantiateKeyValue(LibraryBuilder& builder, StringParam baseName, StringParam fullyQualifiedName, const Array<Constant>& templateTypes, const void* userData)
 {
   // Error checking
   ErrorIf(templateTypes.Size() != 2, "The KeyValue template should only take two template arguments");
@@ -691,8 +634,7 @@ BoundType* Core::InstantiateKeyValue(LibraryBuilder& builder,
   Type* valueType = templateTypes[1].TypeValue;
 
   // Create the pair type instance
-  BoundType* keyValueType =
-      builder.AddBoundType(baseName, fullyQualifiedName, TypeCopyMode::ReferenceType, sizeof(AnyKeyValue));
+  BoundType* keyValueType = builder.AddBoundType(baseName, fullyQualifiedName, TypeCopyMode::ReferenceType, sizeof(AnyKeyValue));
 
   KeyValueUserData newUserData;
   newUserData.KeyType = keyType;
@@ -704,8 +646,7 @@ BoundType* Core::InstantiateKeyValue(LibraryBuilder& builder,
   RaverieFullBindDestructor(builder, keyValueType, AnyKeyValue);
 
   builder.AddBoundGetterSetter(keyValueType, "Key", keyType, KeyValueSetKey, KeyValueGetKey, MemberOptions::None);
-  builder.AddBoundGetterSetter(
-      keyValueType, "Value", valueType, KeyValueSetValue, KeyValueGetValue, MemberOptions::None);
+  builder.AddBoundGetterSetter(keyValueType, "Value", valueType, KeyValueSetValue, KeyValueGetValue, MemberOptions::None);
 
   return keyValueType;
 }

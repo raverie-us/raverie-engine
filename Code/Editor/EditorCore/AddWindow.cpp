@@ -17,9 +17,7 @@ RaverieDefineType(PostAddResourceEvent, builder, type)
 {
 }
 
-PostAddResourceEvent::PostAddResourceEvent(PostAddOp& postAdd, ResourceAdd* resource) :
-    mPostAdd(postAdd),
-    mResourceAdd(resource)
+PostAddResourceEvent::PostAddResourceEvent(PostAddOp& postAdd, ResourceAdd* resource) : mPostAdd(postAdd), mResourceAdd(resource)
 {
 }
 
@@ -471,10 +469,7 @@ RaverieDefineType(ResourceTemplateSearch, builder, type)
 {
 }
 
-ResourceTemplateSearch::ResourceTemplateSearch(Composite* parent) :
-    ColoredComposite(parent, Vec4(0.22f, 0.22f, 0.22f, 1.0f)),
-    mTemplateCount(0),
-    mManager(nullptr)
+ResourceTemplateSearch::ResourceTemplateSearch(Composite* parent) : ColoredComposite(parent, Vec4(0.22f, 0.22f, 0.22f, 1.0f)), mTemplateCount(0), mManager(nullptr)
 {
   SetLayout(CreateStackLayout());
 
@@ -686,10 +681,7 @@ RaverieDefineType(ResourceTemplateDisplay, builder, type)
 {
 }
 
-ResourceTemplateDisplay::ResourceTemplateDisplay(Composite* parent, PostAddOp& postAdd) :
-    ColoredComposite(parent, Vec4(0.27f, 0.27f, 0.27f, 1.0f)),
-    mPostAdd(postAdd),
-    mPreviewWidget(nullptr)
+ResourceTemplateDisplay::ResourceTemplateDisplay(Composite* parent, PostAddOp& postAdd) : ColoredComposite(parent, Vec4(0.27f, 0.27f, 0.27f, 1.0f)), mPostAdd(postAdd), mPreviewWidget(nullptr)
 {
   SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Pixels(0, 0), Thickness::cZero));
 
@@ -1140,8 +1132,7 @@ void ResourceTemplateDisplay::OnCreate(Event*)
         Property* property = mPostAdd.mProperty.GetPropertyFromRoot(instance);
 
         if (property && RaverieVirtualTypeId(resourceAdd.SourceResource)->IsA(property->PropertyType))
-          ChangeAndQueueProperty(
-              Z::gEditor->GetOperationQueue(), instance, mPostAdd.mProperty, resourceAdd.SourceResource);
+          ChangeAndQueueProperty(Z::gEditor->GetOperationQueue(), instance, mPostAdd.mProperty, resourceAdd.SourceResource);
       }
     }
 

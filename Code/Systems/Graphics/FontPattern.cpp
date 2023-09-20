@@ -5,10 +5,7 @@
 namespace Raverie
 {
 
-FontProcessor::FontProcessor(RenderQueues* renderQueues, ViewNode* viewNode, Vec4 vertexColor) :
-    mRenderQueues(renderQueues),
-    mViewNode(viewNode),
-    mVertexColor(vertexColor)
+FontProcessor::FontProcessor(RenderQueues* renderQueues, ViewNode* viewNode, Vec4 vertexColor) : mRenderQueues(renderQueues), mViewNode(viewNode), mVertexColor(vertexColor)
 {
 }
 
@@ -46,10 +43,7 @@ void FontProcessorVertexArray::ProcessRenderRune(RenderRune& rune, Vec2 position
   mVertices.PushBack(v0);
 }
 
-FontProcessorFindCharPosition::FontProcessorFindCharPosition(int charIndex, Vec2 startPositon) :
-    mFindIndex(charIndex),
-    mCurrentIndex(0),
-    mCharPosition(startPositon)
+FontProcessorFindCharPosition::FontProcessorFindCharPosition(int charIndex, Vec2 startPositon) : mFindIndex(charIndex), mCurrentIndex(0), mCharPosition(startPositon)
 {
 }
 

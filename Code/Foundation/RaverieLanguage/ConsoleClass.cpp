@@ -54,24 +54,15 @@ RaverieDefineType(ScriptConsole, builder, type)
   RaverieFullBindMethod(builder, type, &ScriptConsole::Write, (void (*)(AnyParam)), "Write", nullptr);
   RaverieFullBindMethod(builder, type, &ScriptConsole::Write, (void (*)(AnyParam, AnyParam)), "Write", nullptr);
   RaverieFullBindMethod(builder, type, &ScriptConsole::Write, (void (*)(AnyParam, AnyParam, AnyParam)), "Write", nullptr);
-  RaverieFullBindMethod(
-      builder, type, &ScriptConsole::Write, (void (*)(AnyParam, AnyParam, AnyParam, AnyParam)), "Write", nullptr);
-  RaverieFullBindMethod(
-      builder, type, &ScriptConsole::Write, (void (*)(AnyParam, AnyParam, AnyParam, AnyParam, AnyParam)), "Write", nullptr);
+  RaverieFullBindMethod(builder, type, &ScriptConsole::Write, (void (*)(AnyParam, AnyParam, AnyParam, AnyParam)), "Write", nullptr);
+  RaverieFullBindMethod(builder, type, &ScriptConsole::Write, (void (*)(AnyParam, AnyParam, AnyParam, AnyParam, AnyParam)), "Write", nullptr);
 
   RaverieFullBindMethod(builder, type, &ScriptConsole::WriteLine, (void (*)()), "WriteLine", nullptr);
   RaverieFullBindMethod(builder, type, &ScriptConsole::WriteLine, (void (*)(AnyParam)), "WriteLine", nullptr);
   RaverieFullBindMethod(builder, type, &ScriptConsole::WriteLine, (void (*)(AnyParam, AnyParam)), "WriteLine", nullptr);
-  RaverieFullBindMethod(
-      builder, type, &ScriptConsole::WriteLine, (void (*)(AnyParam, AnyParam, AnyParam)), "WriteLine", nullptr);
-  RaverieFullBindMethod(
-      builder, type, &ScriptConsole::WriteLine, (void (*)(AnyParam, AnyParam, AnyParam, AnyParam)), "WriteLine", nullptr);
-  RaverieFullBindMethod(builder,
-                      type,
-                      &ScriptConsole::WriteLine,
-                      (void (*)(AnyParam, AnyParam, AnyParam, AnyParam, AnyParam)),
-                      "WriteLine",
-                      nullptr);
+  RaverieFullBindMethod(builder, type, &ScriptConsole::WriteLine, (void (*)(AnyParam, AnyParam, AnyParam)), "WriteLine", nullptr);
+  RaverieFullBindMethod(builder, type, &ScriptConsole::WriteLine, (void (*)(AnyParam, AnyParam, AnyParam, AnyParam)), "WriteLine", nullptr);
+  RaverieFullBindMethod(builder, type, &ScriptConsole::WriteLine, (void (*)(AnyParam, AnyParam, AnyParam, AnyParam, AnyParam)), "WriteLine", nullptr);
 
   RaverieFullBindMethod(builder, type, &ScriptConsole::DumpValue, (void (*)(AnyParam)), "DumpValue", nullptr);
   RaverieFullBindMethod(builder, type, &ScriptConsole::DumpValue, (void (*)(AnyParam, Integer)), "DumpValue", nullptr);
@@ -390,8 +381,7 @@ void ScriptConsole::WriteLine(QuaternionParam value)
   WriteData(BuildString(QuaternionToString(value), NewLine));
 }
 
-void ScriptConsole::DumpValue(
-    StringBuilderExtended& builder, Type* type, const byte* value, Integer howDeep, Integer currentDepth)
+void ScriptConsole::DumpValue(StringBuilderExtended& builder, Type* type, const byte* value, Integer howDeep, Integer currentDepth)
 {
   // First write the generic value of the type...
   String baseValueString = type->GenericToString(value);

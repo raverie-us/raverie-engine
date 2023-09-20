@@ -72,11 +72,7 @@ public:
 
   void LoadingStart();
   /// Update engine while doing blocking operations.
-  void LoadingUpdate(StringParam operation,
-                     StringParam currentTask,
-                     StringParam progress,
-                     ProgressType::Enum progressType,
-                     float percentage = 0.0f);
+  void LoadingUpdate(StringParam operation, StringParam currentTask, StringParam progress, ProgressType::Enum progressType, float percentage = 0.0f);
   void LoadingFinish();
 
   /// Should normally not be manually called.

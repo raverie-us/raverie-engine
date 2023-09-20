@@ -29,10 +29,7 @@ static const bool cHotKeysEditable = false;
 class BindingConflictEvent : public Event
 {
 public:
-  BindingConflictEvent(CommandEntry* newCommand, CommandEntry* existingComnnad, HotKeyBinding* newBinding) :
-      mNewCommand(newCommand),
-      mExistingCommad(existingComnnad),
-      mNewBinding(newBinding)
+  BindingConflictEvent(CommandEntry* newCommand, CommandEntry* existingComnnad, HotKeyBinding* newBinding) : mNewCommand(newCommand), mExistingCommad(existingComnnad), mNewBinding(newBinding)
   {
   }
 
@@ -192,8 +189,7 @@ public:
 
   void OnKeyUp(KeyboardEvent* event)
   {
-    if (!event->mKeyboard->KeyIsDown(Keys::Control) && !event->mKeyboard->KeyIsDown(Keys::Shift) &&
-        !event->mKeyboard->KeyIsDown(Keys::Alt))
+    if (!event->mKeyboard->KeyIsDown(Keys::Control) && !event->mKeyboard->KeyIsDown(Keys::Shift) && !event->mKeyboard->KeyIsDown(Keys::Alt))
     {
       mModifier1 = Keys::Unknown;
       mModifier2 = Keys::Unknown;
@@ -519,13 +515,13 @@ public:
   }
 };
 
-#define CommandSortFunctor(name, operation)                                                                            \
-  struct name : public binary_function<CommandEntry, CommandEntry, bool>                                               \
-  {                                                                                                                    \
-    bool operator()(const CommandEntry& left, const CommandEntry& right) const                                         \
-    {                                                                                                                  \
-      return left.operation(right);                                                                                    \
-    }                                                                                                                  \
+#define CommandSortFunctor(name, operation)                                                                                                                                                            \
+  struct name : public binary_function<CommandEntry, CommandEntry, bool>                                                                                                                               \
+  {                                                                                                                                                                                                    \
+    bool operator()(const CommandEntry& left, const CommandEntry& right) const                                                                                                                         \
+    {                                                                                                                                                                                                  \
+      return left.operation(right);                                                                                                                                                                    \
+    }                                                                                                                                                                                                  \
   };
 
 bool CommandEntry::operator<(const CommandEntry& rhs) const
@@ -555,8 +551,7 @@ CommandSortFunctor(CompareCogCommand, IsCogCommand) bool CommandEntry::IsCogComm
     return false;
 }
 
-CommandSortFunctor(CompareNotCogCommand,
-                   IsNotCogCommand) bool CommandEntry::IsNotCogCommand(const CommandEntry& rhs) const
+CommandSortFunctor(CompareNotCogCommand, IsNotCogCommand) bool CommandEntry::IsNotCogCommand(const CommandEntry& rhs) const
 {
   if (!mIsACogCommand && rhs.mIsACogCommand)
     return true;
@@ -840,10 +835,7 @@ RaverieDefineType(HotKeyEditor, builder, type)
 
 HashMap<unsigned, String> HotKeyEditor::sKeyMap;
 
-HotKeyEditor::HotKeyEditor(Composite* parent) :
-    Composite(parent),
-    mCogCommandSortToggle(true),
-    mCurrentSort(CommandCompare::None)
+HotKeyEditor::HotKeyEditor(Composite* parent) : Composite(parent), mCogCommandSortToggle(true), mCurrentSort(CommandCompare::None)
 {
   mHotKeys = HotKeyCommands::GetInstance();
 

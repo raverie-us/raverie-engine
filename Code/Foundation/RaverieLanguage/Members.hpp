@@ -18,8 +18,7 @@ enum Enum
   Boolean,
   Type
 };
-static const cstr Names[] = {
-    "Null", "String", "Integer", "DoubleInteger", "Real", "DoubleReal", "Boolean", "Type", nullptr};
+static const cstr Names[] = {"Null", "String", "Integer", "DoubleInteger", "Real", "DoubleReal", "Boolean", "Type", nullptr};
 } // namespace ConstantType
 
 // A constant can be any of the following primitives
@@ -358,4 +357,3 @@ public:
   Property* EventProperty;
 };
 } // namespace Raverie
-

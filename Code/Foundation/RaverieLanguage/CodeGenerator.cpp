@@ -216,8 +216,7 @@ void CodeGenerator::FunctionContext(GenericFunctionNode*& node, GeneratorContext
   if (Type::IsSame(function->FunctionType->Return, core.VoidType) && node->AllPathsReturn == false)
   {
     // Generate an implicit return opcode at the end of the function
-    function->AllocateArgumentFreeOpcode(
-        Instruction::Return, DebugOrigin::FunctionContext, node->Location.GetEndOnlyLocation());
+    function->AllocateArgumentFreeOpcode(Instruction::Return, DebugOrigin::FunctionContext, node->Location.GetEndOnlyLocation());
   }
 
   // We are exiting this function, so pop it off
@@ -280,12 +279,7 @@ void CodeGenerator::GenerateLocalVariable(LocalVariableNode*& node, GeneratorCon
 
     // Generate a copy to copy the initial value to the local register
     // The register is not yet initialized, so this must be an init copy
-    this->GenerateCopyInitialize(function,
-                                 node->CreatedVariable->ResultType,
-                                 node->InitialValue->Access,
-                                 Operand(node->CreatedVariable->Local),
-                                 DebugOrigin::LocalVariable,
-                                 node->Location);
+    this->GenerateCopyInitialize(function, node->CreatedVariable->ResultType, node->InitialValue->Access, Operand(node->CreatedVariable->Local), DebugOrigin::LocalVariable, node->Location);
   }
 }
 
@@ -306,8 +300,7 @@ void CodeGenerator::GenerateMemberVariable(MemberVariableNode*& node, GeneratorC
   // The function should always be the pre-constructor
   // Note: If we're generating initialization code for a static field, then we
   // end up pushing another function onto the stack below
-  ErrorIf(function != context->ClassTypeStack.Back()->PreConstructor,
-          "The function on the top of the stack should be the pre-constructor");
+  ErrorIf(function != context->ClassTypeStack.Back()->PreConstructor, "The function on the top of the stack should be the pre-constructor");
 
   // Error checking
   ErrorIf(node->IsGetterSetter && node->InitialValue != nullptr, "Properties should not have initial values");
@@ -344,12 +337,7 @@ void CodeGenerator::GenerateMemberVariable(MemberVariableNode*& node, GeneratorC
       // Generate a copy to copy the initial value to the member
       // Since this is copying over un-initialized memory, then this is a init
       // copy
-      this->GenerateCopyInitialize(function,
-                                   node->ResultType,
-                                   node->InitialValue->Access,
-                                   destination,
-                                   DebugOrigin::MemberVariable,
-                                   node->Location);
+      this->GenerateCopyInitialize(function, node->ResultType, node->InitialValue->Access, destination, DebugOrigin::MemberVariable, node->Location);
     }
 
     // For both static and instance fields, we want to generate an initializer
@@ -357,12 +345,7 @@ void CodeGenerator::GenerateMemberVariable(MemberVariableNode*& node, GeneratorC
     // should be generated during the Syntaxer, just in case we ever expose the
     // ability to access it However, initializers are a pretty internal detail
     // (only used by patching and static variable initialization)
-    Function* initializer = this->Builder->CreateRawFunction(field->Owner,
-                                                             FieldInitializerName,
-                                                             VirtualMachine::ExecuteNext,
-                                                             ParameterArray(),
-                                                             RaverieTypeId(void),
-                                                             functionOptions);
+    Function* initializer = this->Builder->CreateRawFunction(field->Owner, FieldInitializerName, VirtualMachine::ExecuteNext, ParameterArray(), RaverieTypeId(void), functionOptions);
 
     // Push the function onto the stack so that children can access it
     // (the top of the stack will be the most relevant function to them)
@@ -400,12 +383,7 @@ void CodeGenerator::GenerateMemberVariable(MemberVariableNode*& node, GeneratorC
     // Generate a copy to copy the initial value to the member
     // Since this is copying over un-initialized memory, then this is a init
     // copy
-    this->GenerateCopyInitialize(initializer,
-                                 node->ResultType,
-                                 node->InitialValue->Access,
-                                 destination,
-                                 DebugOrigin::MemberVariable,
-                                 node->Location);
+    this->GenerateCopyInitialize(initializer, node->ResultType, node->InitialValue->Access, destination, DebugOrigin::MemberVariable, node->Location);
 
     // Generate the return opcode, which simply just stops execution of a
     // function
@@ -469,8 +447,7 @@ void CodeGenerator::GenerateIfRoot(IfRootNode*& node, GeneratorContext* context)
     // Generate an opcode that will jump if the given conditional-expression is
     // false For now, we'll leave out the "jump to" address as we don't yet know
     // where to go The jump-to address will be filled in upon the post pass
-    IfOpcode& ifOpcode = function->AllocateOpcode<IfOpcode>(
-        Instruction::IfFalseRelativeGoTo, DebugOrigin::If, ifPart->Condition->Location);
+    IfOpcode& ifOpcode = function->AllocateOpcode<IfOpcode>(Instruction::IfFalseRelativeGoTo, DebugOrigin::If, ifPart->Condition->Location);
     ifOpcode.Condition = ifPart->Condition->Access;
 
     // Loop through all the statements and generate opcode for each
@@ -489,8 +466,7 @@ void CodeGenerator::GenerateIfRoot(IfRootNode*& node, GeneratorContext* context)
       // after we've
       IfEndJump& endJump = jumpsAfterEveryElse.PushBack();
       endJump.JumpInstructionIndex = function->GetCurrentOpcodeIndex();
-      endJump.Opcode =
-          &function->AllocateOpcode<RelativeJumpOpcode>(Instruction::RelativeGoTo, DebugOrigin::If, ifPart->Location);
+      endJump.Opcode = &function->AllocateOpcode<RelativeJumpOpcode>(Instruction::RelativeGoTo, DebugOrigin::If, ifPart->Location);
     }
 
     // Jump to wherever the statements inside the if-statement end
@@ -549,9 +525,7 @@ void CodeGenerator::GenerateLoopStatementsAndContinues(GeneratorContext* context
   }
 }
 
-void CodeGenerator::GenerateBackwardsLoopJump(GeneratorContext* context,
-                                              size_t backwardsJumpInstructionIndex,
-                                              const CodeLocation& debugLocation)
+void CodeGenerator::GenerateBackwardsLoopJump(GeneratorContext* context, size_t backwardsJumpInstructionIndex, const CodeLocation& debugLocation)
 {
   // Get a pointer to the current function that we're building
   Function* function = context->FunctionStack.Back();
@@ -561,8 +535,7 @@ void CodeGenerator::GenerateBackwardsLoopJump(GeneratorContext* context,
 
   // Generate one more opcode that will jump back up the beginning (before the
   // condition is checked)
-  RelativeJumpOpcode& jumpOpcode =
-      function->AllocateOpcode<RelativeJumpOpcode>(Instruction::RelativeGoTo, DebugOrigin::While, debugLocation);
+  RelativeJumpOpcode& jumpOpcode = function->AllocateOpcode<RelativeJumpOpcode>(Instruction::RelativeGoTo, DebugOrigin::While, debugLocation);
   jumpOpcode.JumpOffset = jumpOffset;
 }
 
@@ -600,8 +573,7 @@ void CodeGenerator::GenerateTimeout(TimeoutNode*& node, GeneratorContext* contex
   function->AllocateOpcode<Opcode>(Instruction::BeginScope, DebugOrigin::Timeout, node->Location);
 
   // Generate the beginning of the timeout with seconds
-  TimeoutOpcode& timeout =
-      function->AllocateOpcode<TimeoutOpcode>(Instruction::BeginTimeout, DebugOrigin::Timeout, node->Location);
+  TimeoutOpcode& timeout = function->AllocateOpcode<TimeoutOpcode>(Instruction::BeginTimeout, DebugOrigin::Timeout, node->Location);
   timeout.LengthSeconds = node->Seconds;
 
   // Generate all the statements code and continues
@@ -634,8 +606,7 @@ void CodeGenerator::GenerateWhile(WhileNode*& node, GeneratorContext* context)
   // Generate an opcode that will jump if the given conditional-expression is
   // false For now, we'll leave out the "jump to" address as we don't yet know
   // where to go The jump-to address will be filled in upon the post pass
-  IfOpcode& ifOpcode = function->AllocateOpcode<IfOpcode>(
-      Instruction::IfFalseRelativeGoTo, DebugOrigin::While, node->Condition->Location);
+  IfOpcode& ifOpcode = function->AllocateOpcode<IfOpcode>(Instruction::IfFalseRelativeGoTo, DebugOrigin::While, node->Condition->Location);
   ifOpcode.Condition = node->Condition->Access;
 
   // Generate all the statements code and continues
@@ -684,8 +655,7 @@ void CodeGenerator::GenerateDoWhile(DoWhileNode*& node, GeneratorContext* contex
   // Generate an opcode that will jump if the given conditional-expression is
   // false For now, we'll leave out the "jump to" address as we don't yet know
   // where to go The jump-to address will be filled in upon the post pass
-  IfOpcode& ifOpcode = function->AllocateOpcode<IfOpcode>(
-      Instruction::IfTrueRelativeGoTo, DebugOrigin::DoWhile, node->Condition->Location);
+  IfOpcode& ifOpcode = function->AllocateOpcode<IfOpcode>(Instruction::IfTrueRelativeGoTo, DebugOrigin::DoWhile, node->Condition->Location);
   ifOpcode.Condition = node->Condition->Access;
   ifOpcode.JumpOffset = jumpOffset;
 
@@ -698,8 +668,7 @@ void CodeGenerator::GenerateDoWhile(DoWhileNode*& node, GeneratorContext* contex
   // then we need to take special care because we do NOT need another EndScope
   // opcode The EndScope NEEDS to be run in the case of a break statement,
   // however, because breaks are within the BeginScope/EndScope
-  RelativeJumpOpcode& jumpPastEndScopeWhenConditionMet = function->AllocateOpcode<RelativeJumpOpcode>(
-      Instruction::RelativeGoTo, DebugOrigin::DoWhile, node->Condition->Location);
+  RelativeJumpOpcode& jumpPastEndScopeWhenConditionMet = function->AllocateOpcode<RelativeJumpOpcode>(Instruction::RelativeGoTo, DebugOrigin::DoWhile, node->Condition->Location);
 
   // Generate the break (note that we have to have an EndScope after this, but
   // not after the condition fails)
@@ -755,8 +724,7 @@ void CodeGenerator::GenerateFor(ForNode*& node, GeneratorContext* context)
   // Generate an opcode that will jump if the given conditional-expression is
   // false For now, we'll leave out the "jump to" address as we don't yet know
   // where to go The jump-to address will be filled in upon the post pass
-  IfOpcode& ifOpcode =
-      function->AllocateOpcode<IfOpcode>(Instruction::IfFalseRelativeGoTo, DebugOrigin::For, node->Condition->Location);
+  IfOpcode& ifOpcode = function->AllocateOpcode<IfOpcode>(Instruction::IfFalseRelativeGoTo, DebugOrigin::For, node->Condition->Location);
   ifOpcode.Condition = node->Condition->Access;
 
   // Generate all the statements code, the continues
@@ -833,8 +801,7 @@ void CodeGenerator::GenerateBreak(BreakNode*& node, GeneratorContext* context)
 
   // Make an opcode that will jump to the end of the loop
   node->InstructionIndex = function->GetCurrentOpcodeIndex();
-  node->JumpOpcode =
-      &function->AllocateOpcode<RelativeJumpOpcode>(Instruction::RelativeGoTo, DebugOrigin::Break, node->Location);
+  node->JumpOpcode = &function->AllocateOpcode<RelativeJumpOpcode>(Instruction::RelativeGoTo, DebugOrigin::Break, node->Location);
 }
 
 void CodeGenerator::GenerateContinue(ContinueNode*& node, GeneratorContext* context)
@@ -844,8 +811,7 @@ void CodeGenerator::GenerateContinue(ContinueNode*& node, GeneratorContext* cont
 
   // Make an opcode that will jump to the end of the loop
   node->InstructionIndex = function->GetCurrentOpcodeIndex();
-  node->JumpOpcode =
-      &function->AllocateOpcode<RelativeJumpOpcode>(Instruction::RelativeGoTo, DebugOrigin::Continue, node->Location);
+  node->JumpOpcode = &function->AllocateOpcode<RelativeJumpOpcode>(Instruction::RelativeGoTo, DebugOrigin::Continue, node->Location);
 }
 
 void CodeGenerator::GenerateBinaryOperation(BinaryOperatorNode*& node, GeneratorContext* context)
@@ -957,12 +923,7 @@ void CodeGenerator::GenerateBinaryOperation(BinaryOperatorNode*& node, Generator
       // This could be removed if we just had the left operand directly output
       // to our own local, instead of its own Copy the resulting value from the
       // left to the output, even though it may not be the final result
-      GenerateCopyInitialize(function,
-                             node->ResultType,
-                             node->LeftOperand->Access,
-                             node->Access,
-                             DebugOrigin::BinaryOperation,
-                             node->Location);
+      GenerateCopyInitialize(function, node->ResultType, node->LeftOperand->Access, node->Access, DebugOrigin::BinaryOperation, node->Location);
 
       // Store the index that we generated the if opcode (so we know how far to
       // relative jump)
@@ -970,8 +931,7 @@ void CodeGenerator::GenerateBinaryOperation(BinaryOperatorNode*& node, Generator
 
       // The condition (regardless of whether testing false or true) is always
       // based on the left argument
-      IfOpcode& ifOpcode =
-          function->AllocateOpcode<IfOpcode>(ifInstruction, DebugOrigin::BinaryOperation, node->Location);
+      IfOpcode& ifOpcode = function->AllocateOpcode<IfOpcode>(ifInstruction, DebugOrigin::BinaryOperation, node->Location);
       ifOpcode.Condition = node->LeftOperand->Access;
 
       // Now generate opcode to evaluate the right argument
@@ -984,13 +944,7 @@ void CodeGenerator::GenerateBinaryOperation(BinaryOperatorNode*& node, Generator
       // (may be skipped by above if) Not that it really matters for value
       // types, but this copy is an 'Assignment', because technically the local
       // will always be initialized above
-      CreateCopyOpcode(function,
-                       CopyMode::Assignment,
-                       node->ResultType,
-                       node->RightOperand->Access,
-                       node->Access,
-                       DebugOrigin::BinaryOperation,
-                       node->Location);
+      CreateCopyOpcode(function, CopyMode::Assignment, node->ResultType, node->RightOperand->Access, node->Access, DebugOrigin::BinaryOperation, node->Location);
 
       // The jump we generated before will skip directly to here, after the
       // right argument gets evaluated
@@ -1006,8 +960,7 @@ void CodeGenerator::GenerateBinaryOperation(BinaryOperatorNode*& node, Generator
       context->Walker->Walk(this, node->RightOperand, context);
 
       // Create the opcode
-      BinaryRValueOpcode& opcode =
-          function->AllocateOpcode<BinaryRValueOpcode>(info.Instruction, debug, node->Location);
+      BinaryRValueOpcode& opcode = function->AllocateOpcode<BinaryRValueOpcode>(info.Instruction, debug, node->Location);
 
       // We always output to the stack
       opcode.Output = node->Access.HandleConstantLocal;
@@ -1064,13 +1017,11 @@ void CodeGenerator::GeneratePropertyDelegateOperation(PropertyDelegateOperatorNo
     // Make sure that we make a handle out of the left argument (will be used as
     // our this handle) We'll save this new handle on the stack in the location
     // that we allocated above
-    GenerateHandleInitialize(
-        function, thisType, thisSource, Operand(thisHandle), DebugOrigin::FunctionMemberAccess, node->Location);
+    GenerateHandleInitialize(function, thisType, thisSource, Operand(thisHandle), DebugOrigin::FunctionMemberAccess, node->Location);
   }
 
   // Make an opcode that will jump to the end of the loop
-  CreatePropertyDelegateOpcode& opcode = function->AllocateOpcode<CreatePropertyDelegateOpcode>(
-      Instruction::PropertyDelegate, DebugOrigin::PropertyDelegate, node->Location);
+  CreatePropertyDelegateOpcode& opcode = function->AllocateOpcode<CreatePropertyDelegateOpcode>(Instruction::PropertyDelegate, DebugOrigin::PropertyDelegate, node->Location);
 
   // Tell the opcode the type it will be creating (this cast should always be
   // safe, because property delegates are always bound types)
@@ -1190,8 +1141,7 @@ void CodeGenerator::GenerateFieldAccess(MemberAccessNode*& node, GeneratorContex
     // the stack!) Even when we access a static field (and then we access a
     // member on that field, eg TypeMemberAccess -> MemberAccess) we still need
     // to copy the handle to a stack local before we use it further
-    if (node->LeftOperand->Access.Type == OperandType::Field ||
-        node->LeftOperand->Access.Type == OperandType::StaticField)
+    if (node->LeftOperand->Access.Type == OperandType::Field || node->LeftOperand->Access.Type == OperandType::StaticField)
     {
       // Allocate a register to store the handle
       handleIndex = function->AllocateRegister(leftType->GetCopyableSize());
@@ -1199,12 +1149,7 @@ void CodeGenerator::GenerateFieldAccess(MemberAccessNode*& node, GeneratorContex
       // Generate a copy to bring the handle to the local register
       // Since we are not assigning (we're copying this to the stack) then
       // this is a copy over uninitialized memory
-      GenerateCopyInitialize(function,
-                             leftType,
-                             node->LeftOperand->Access,
-                             Operand(handleIndex),
-                             DebugOrigin::DataMemberAccess,
-                             node->Location);
+      GenerateCopyInitialize(function, leftType, node->LeftOperand->Access, Operand(handleIndex), DebugOrigin::DataMemberAccess, node->Location);
     }
 
     // Set our primary index to be the handle index
@@ -1224,8 +1169,7 @@ void CodeGenerator::GenerateFieldAccess(MemberAccessNode*& node, GeneratorContex
     {
       // Simply just offset the primary index so that it points at the member on
       // the stack
-      node->Access.HandleConstantLocal =
-          (OperandIndex)(node->LeftOperand->Access.HandleConstantLocal + node->AccessedField->Offset);
+      node->Access.HandleConstantLocal = (OperandIndex)(node->LeftOperand->Access.HandleConstantLocal + node->AccessedField->Offset);
 
       // Our secondary index is zero since we don't use it
       node->Access.FieldOffset = 0;
@@ -1305,8 +1249,7 @@ void CodeGenerator::GenerateFunctionDelegateMemberAccess(MemberAccessNode*& node
   }
   else
   {
-    this->CreateStaticDelegate(
-        function, node->AccessedFunction, node->Access, node->Location, DebugOrigin::FunctionMemberAccess);
+    this->CreateStaticDelegate(function, node->AccessedFunction, node->Access, node->Location, DebugOrigin::FunctionMemberAccess);
   }
 }
 
@@ -1360,12 +1303,10 @@ void CodeGenerator::GeneratePropertyGetMemberAccess(MemberAccessNode*& node, Gen
 
     // Generate opcode for calling the function (we still need to copy arguments
     // ourselves)
-    GenerateCallOpcodePreArgs(
-        function, get->FunctionType, delegateLocal, node->Location, DebugOrigin::PropertyGetMemberAccess);
+    GenerateCallOpcodePreArgs(function, get->FunctionType, delegateLocal, node->Location, DebugOrigin::PropertyGetMemberAccess);
 
     // Generate opcode for finishing up the call to the function
-    GenerateCallOpcodePostArgs(
-        function, get->FunctionType, &node->Access, node->Location, DebugOrigin::PropertyGetMemberAccess);
+    GenerateCallOpcodePostArgs(function, get->FunctionType, &node->Access, node->Location, DebugOrigin::PropertyGetMemberAccess);
   }
   // Check if we're ONLY being written to
   else if ((node->IoUsage & IoMode::WriteLValue) != 0)
@@ -1428,8 +1369,7 @@ void CodeGenerator::GeneratePropertySetMemberAccess(MemberAccessNode*& node, Gen
 
     // Generate opcode for calling the function (we still need to copy arguments
     // ourselves)
-    GenerateCallOpcodePreArgs(
-        function, set->FunctionType, delegateLocal, node->Location, DebugOrigin::PropertySetMemberAccess);
+    GenerateCallOpcodePreArgs(function, set->FunctionType, delegateLocal, node->Location, DebugOrigin::PropertySetMemberAccess);
 
     // Check if we were read, then we assume that 'get' was
     // already called, and our modified value is on the stack
@@ -1442,27 +1382,16 @@ void CodeGenerator::GeneratePropertySetMemberAccess(MemberAccessNode*& node, Gen
               "should be the property type");
 
       // Generate the opcode for copying a parameter in a function call
-      GenerateCopyToParameter(function,
-                              node->ResultType,
-                              node->Access,
-                              set->FunctionType->Parameters.Front().StackOffset,
-                              DebugOrigin::PropertySetMemberAccess,
-                              node->Location);
+      GenerateCopyToParameter(function, node->ResultType, node->Access, set->FunctionType->Parameters.Front().StackOffset, DebugOrigin::PropertySetMemberAccess, node->Location);
     }
     else
     {
       // Generate the opcode for copying a parameter in a function call
-      GenerateCopyToParameter(function,
-                              property->PropertyType,
-                              node->Access,
-                              set->FunctionType->Parameters.Front().StackOffset,
-                              DebugOrigin::PropertySetMemberAccess,
-                              node->Location);
+      GenerateCopyToParameter(function, property->PropertyType, node->Access, set->FunctionType->Parameters.Front().StackOffset, DebugOrigin::PropertySetMemberAccess, node->Location);
     }
 
     // Generate opcode for finishing up the call to the function
-    GenerateCallOpcodePostArgs(
-        function, set->FunctionType, nullptr, node->Location, DebugOrigin::PropertySetMemberAccess);
+    GenerateCallOpcodePostArgs(function, set->FunctionType, nullptr, node->Location, DebugOrigin::PropertySetMemberAccess);
   }
 }
 
@@ -1474,30 +1403,23 @@ void CodeGenerator::GenerateInitializer(InitializerNode*& node, GeneratorContext
   // If the function we're calling is a member function (not a static function)
   if (node->InitializerFunction->This != nullptr)
   {
-    this->CreateInstanceDelegateAndThisHandle(
-        function,
-        node->InitializerFunction,
-        function->This->ResultType,     // The this type is the type we're compiling
-        Operand(function->This->Local), // Get the 'this' handle from the local variable
-        node->Access,
-        false,
-        node->Location,
-        DebugOrigin::FunctionMemberAccess);
+    this->CreateInstanceDelegateAndThisHandle(function,
+                                              node->InitializerFunction,
+                                              function->This->ResultType,     // The this type is the type we're compiling
+                                              Operand(function->This->Local), // Get the 'this' handle from the local variable
+                                              node->Access,
+                                              false,
+                                              node->Location,
+                                              DebugOrigin::FunctionMemberAccess);
   }
   else
   {
-    this->CreateStaticDelegate(
-        function, node->InitializerFunction, node->Access, node->Location, DebugOrigin::FunctionMemberAccess);
+    this->CreateStaticDelegate(function, node->InitializerFunction, node->Access, node->Location, DebugOrigin::FunctionMemberAccess);
   }
 }
 
 template <typename T>
-T& CodeGenerator::DelegateOpcode(Function* caller,
-                                 Function* toCall,
-                                 OperandIndex delegateDest,
-                                 const CodeLocation& location,
-                                 Instruction::Enum instruction,
-                                 DebugOrigin::Enum debug)
+T& CodeGenerator::DelegateOpcode(Function* caller, Function* toCall, OperandIndex delegateDest, const CodeLocation& location, Instruction::Enum instruction, DebugOrigin::Enum debug)
 {
   // Create an opcode that will create a delegate
   T& opcode = caller->AllocateOpcode<T>(instruction, debug, location);
@@ -1510,14 +1432,8 @@ T& CodeGenerator::DelegateOpcode(Function* caller,
   return opcode;
 }
 
-void CodeGenerator::CreateInstanceDelegateAndThisHandle(Function* caller,
-                                                        Function* toCall,
-                                                        Type* thisType,
-                                                        const Operand& thisSource,
-                                                        Operand& delegateDestOut,
-                                                        bool canBeVirtual,
-                                                        const CodeLocation& location,
-                                                        DebugOrigin::Enum debug)
+void CodeGenerator::CreateInstanceDelegateAndThisHandle(
+    Function* caller, Function* toCall, Type* thisType, const Operand& thisSource, Operand& delegateDestOut, bool canBeVirtual, const CodeLocation& location, DebugOrigin::Enum debug)
 {
   // Note: 'thisSource' is NOT necessarily a handle
   // as it is possible to invoke a function on value types (we need to generate
@@ -1535,29 +1451,22 @@ void CodeGenerator::CreateInstanceDelegateAndThisHandle(Function* caller,
     // Make sure that we make a handle out of the left argument (will be used as
     // our this handle) We'll save this new handle on the stack in the location
     // that we allocated above
-    GenerateHandleInitialize(
-        caller, thisType, thisSource, Operand(thisHandleLocal), DebugOrigin::FunctionMemberAccess, location);
+    GenerateHandleInitialize(caller, thisType, thisSource, Operand(thisHandleLocal), DebugOrigin::FunctionMemberAccess, location);
   }
 
   // Now create the delegate (the 'this' handle could be copied, or not)
-  this->CreateInstanceDelegateWithThisHandle(
-      caller, toCall, thisHandle, delegateDestOut, canBeVirtual, location, debug);
+  this->CreateInstanceDelegateWithThisHandle(caller, toCall, thisHandle, delegateDestOut, canBeVirtual, location, debug);
 }
 
-void CodeGenerator::CreateInstanceDelegateWithThisHandle(Function* caller,
-                                                         Function* toCall,
-                                                         const Operand& thisHandle,
-                                                         Operand& delegateDestOut,
-                                                         bool canBeVirtual,
-                                                         const CodeLocation& location,
-                                                         DebugOrigin::Enum debug)
+void CodeGenerator::CreateInstanceDelegateWithThisHandle(
+    Function* caller, Function* toCall, const Operand& thisHandle, Operand& delegateDestOut, bool canBeVirtual, const CodeLocation& location, DebugOrigin::Enum debug)
 {
   // This expression's result will be stored in the last created register
   CreateLocal(caller, toCall->FunctionType->GetCopyableSize(), delegateDestOut);
 
   // Create an instance delegate opcode
-  CreateInstanceDelegateOpcode& delegateOpcode = DelegateOpcode<CreateInstanceDelegateOpcode>(
-      caller, toCall, delegateDestOut.HandleConstantLocal, location, Instruction::CreateInstanceDelegate, debug);
+  CreateInstanceDelegateOpcode& delegateOpcode =
+      DelegateOpcode<CreateInstanceDelegateOpcode>(caller, toCall, delegateDestOut.HandleConstantLocal, location, Instruction::CreateInstanceDelegate, debug);
 
   // Mark whether or not this member can be virtual
   delegateOpcode.CanBeVirtual = canBeVirtual;
@@ -1566,15 +1475,13 @@ void CodeGenerator::CreateInstanceDelegateWithThisHandle(Function* caller,
   delegateOpcode.ThisHandle = thisHandle;
 }
 
-void CodeGenerator::CreateStaticDelegate(
-    Function* caller, Function* toCall, Operand& delegateDest, const CodeLocation& location, DebugOrigin::Enum debug)
+void CodeGenerator::CreateStaticDelegate(Function* caller, Function* toCall, Operand& delegateDest, const CodeLocation& location, DebugOrigin::Enum debug)
 {
   // This expression's result will be stored in the last created register
   CreateLocal(caller, toCall->FunctionType->GetCopyableSize(), delegateDest);
 
   // Create a static delegate opcode
-  DelegateOpcode<CreateStaticDelegateOpcode>(
-      caller, toCall, delegateDest.HandleConstantLocal, location, Instruction::CreateStaticDelegate, debug);
+  DelegateOpcode<CreateStaticDelegateOpcode>(caller, toCall, delegateDest.HandleConstantLocal, location, Instruction::CreateStaticDelegate, debug);
 }
 
 void CodeGenerator::GenerateTypeCast(TypeCastNode*& node, GeneratorContext* context)
@@ -1612,8 +1519,7 @@ void CodeGenerator::GenerateTypeId(TypeIdNode*& node, GeneratorContext* context)
     node->Access.FieldOffset = 0;
 
     // Create a handle in constant space for the type pointer
-    Handle& handle =
-        function->AllocateConstant<Handle>(node->ResultType->GetCopyableSize(), node->Access.HandleConstantLocal);
+    Handle& handle = function->AllocateConstant<Handle>(node->ResultType->GetCopyableSize(), node->Access.HandleConstantLocal);
 
     // Set the handle manager and type of the handle
     // We know explicitly that the string handle manager is a shared manager
@@ -1630,8 +1536,7 @@ void CodeGenerator::GenerateTypeId(TypeIdNode*& node, GeneratorContext* context)
 
     // Set the register indices for the operands, and set the location that the
     // result should be stored into
-    TypeIdOpcode& opcode =
-        function->AllocateOpcode<TypeIdOpcode>(Instruction::TypeId, DebugOrigin::TypeId, node->Location);
+    TypeIdOpcode& opcode = function->AllocateOpcode<TypeIdOpcode>(Instruction::TypeId, DebugOrigin::TypeId, node->Location);
     opcode.Expression = node->Value->Access;
     opcode.SaveTypeHandleLocal = node->Access.HandleConstantLocal;
     opcode.CompileTimeType = node->CompileTimeType;
@@ -1650,8 +1555,7 @@ void CodeGenerator::GenerateMemberId(MemberIdNode*& node, GeneratorContext* cont
   node->Access.FieldOffset = 0;
 
   // Create a handle in constant space for the type pointer
-  Handle& handle =
-      function->AllocateConstant<Handle>(node->ResultType->GetCopyableSize(), node->Access.HandleConstantLocal);
+  Handle& handle = function->AllocateConstant<Handle>(node->ResultType->GetCopyableSize(), node->Access.HandleConstantLocal);
 
   // Set the handle manager and type of the handle
   // We know explicitly that the string handle manager is a shared manager
@@ -1691,12 +1595,7 @@ void CodeGenerator::GenerateReturnValue(ReturnNode*& node, GeneratorContext* con
     // Generate a copy opcode for the return type to the return value
     // The return value should be uninitialized memory before this point
     // so this must be an initialized copy
-    GenerateCopyToReturn(function,
-                         returnValue->ResultType,
-                         returnValue->Access,
-                         Operand(0),
-                         DebugOrigin::ReturnValue,
-                         returnValue->Location);
+    GenerateCopyToReturn(function, returnValue->ResultType, returnValue->Access, Operand(0), DebugOrigin::ReturnValue, returnValue->Location);
   }
 
   // Generate the return opcode, which simply just stops execution of a function
@@ -1764,13 +1663,7 @@ void CodeGenerator::GenerateFunctionCall(FunctionCallNode*& node, GeneratorConte
     }
 
     // Create an instance delegate for the constructor
-    this->CreateInstanceDelegateWithThisHandle(function,
-                                               creationNode->ConstructorFunction,
-                                               Operand(creationNode->ThisHandleLocal),
-                                               delegateLocal,
-                                               false,
-                                               node->Location,
-                                               debugOrigin);
+    this->CreateInstanceDelegateWithThisHandle(function, creationNode->ConstructorFunction, Operand(creationNode->ThisHandleLocal), delegateLocal, false, node->Location, debugOrigin);
 
     // The delegate type should be grabbed from the constructor
     delegateType = creationNode->ConstructorFunction->FunctionType;
@@ -1800,23 +1693,14 @@ void CodeGenerator::GenerateFunctionCall(FunctionCallNode*& node, GeneratorConte
     context->Walker->Walk(this, currentArgument, context);
 
     // Generate the opcode for copying a parameter in a function call
-    GenerateCopyToParameter(function,
-                            currentArgument->ResultType,
-                            currentArgument->Access,
-                            delegateType->Parameters[i].StackOffset,
-                            DebugOrigin::FunctionCall,
-                            currentArgument->Location);
+    GenerateCopyToParameter(function, currentArgument->ResultType, currentArgument->Access, delegateType->Parameters[i].StackOffset, DebugOrigin::FunctionCall, currentArgument->Location);
   }
 
   // Generate opcode for finishing up the call to the function
   GenerateCallOpcodePostArgs(function, delegateType, returnValueAccess, node->Location, debugOrigin);
 }
 
-void CodeGenerator::GenerateCallOpcodePreArgs(Function* caller,
-                                              DelegateType* delegateTypeToCall,
-                                              const Operand& delegateOperand,
-                                              const CodeLocation& location,
-                                              DebugOrigin::Enum debugOrigin)
+void CodeGenerator::GenerateCallOpcodePreArgs(Function* caller, DelegateType* delegateTypeToCall, const Operand& delegateOperand, const CodeLocation& location, DebugOrigin::Enum debugOrigin)
 {
   // Record the current offset in instructions (this is not where we will jump
   // to)
@@ -1825,8 +1709,7 @@ void CodeGenerator::GenerateCallOpcodePreArgs(Function* caller,
   // Allocate the prep-for-function instruction, and give it the index that the
   // function lives as well as the register that we'd like to store the return
   // value
-  PrepForFunctionCallOpcode& prepOpcode =
-      caller->AllocateOpcode<PrepForFunctionCallOpcode>(Instruction::PrepForFunctionCall, debugOrigin, location);
+  PrepForFunctionCallOpcode& prepOpcode = caller->AllocateOpcode<PrepForFunctionCallOpcode>(Instruction::PrepForFunctionCall, debugOrigin, location);
   prepOpcode.Delegate = delegateOperand;
 
   // We basically always generate the copy opcode for copying a 'this'
@@ -1856,19 +1739,14 @@ void CodeGenerator::GenerateCallOpcodePreArgs(Function* caller,
     Core& core = Core::GetInstance();
 
     // Copy the handle from the delegate local into the first argument
-    GenerateCopyToParameter(
-        caller, core.NullType, handleOperand, delegateTypeToCall->ThisHandleStackOffset, debugOrigin, location);
+    GenerateCopyToParameter(caller, core.NullType, handleOperand, delegateTypeToCall->ThisHandleStackOffset, debugOrigin, location);
   }
 
   // We want to jump to the next opcode if the function is static
   prepOpcode.JumpOffsetIfStatic = (OperandIndex)(caller->GetCurrentOpcodeIndex() - opcodePosBeforeThisCopy);
 }
 
-void CodeGenerator::GenerateCallOpcodePostArgs(Function* caller,
-                                               DelegateType* delegateTypeToCall,
-                                               Operand* returnAccessOut,
-                                               const CodeLocation& location,
-                                               DebugOrigin::Enum debugOrigin)
+void CodeGenerator::GenerateCallOpcodePostArgs(Function* caller, DelegateType* delegateTypeToCall, Operand* returnAccessOut, const CodeLocation& location, DebugOrigin::Enum debugOrigin)
 {
   // Generate an opcode for a function call (the last parameter is where the
   // return value will be stored)
@@ -1897,8 +1775,7 @@ void CodeGenerator::GenerateCallOpcodePostArgs(Function* caller,
     CreateLocal(caller, delegateTypeToCall->Return->GetCopyableSize(), *returnAccessOut);
 
     // Generate the opcode for copying a return in a function call
-    GenerateCopyFromReturn(
-        caller, delegateTypeToCall->Return, 0, returnAccessOut->HandleConstantLocal, debugOrigin, location);
+    GenerateCopyFromReturn(caller, delegateTypeToCall->Return, 0, returnAccessOut->HandleConstantLocal, debugOrigin, location);
   }
 }
 
@@ -1909,8 +1786,7 @@ void CodeGenerator::GenerateStringInterpolants(StringInterpolantNode*& node, Gen
 
   // We need to create a temporary string builder that we use to efficiently
   // concatenate strings together
-  function->AllocateOpcode<BeginStringBuilderOpcode>(
-      Instruction::BeginStringBuilder, DebugOrigin::StringInterpolant, node->Location);
+  function->AllocateOpcode<BeginStringBuilderOpcode>(Instruction::BeginStringBuilder, DebugOrigin::StringInterpolant, node->Location);
 
   // Walk through all the children we want to stringify
   for (size_t i = 0; i < node->Elements.Size(); ++i)
@@ -1923,8 +1799,7 @@ void CodeGenerator::GenerateStringInterpolants(StringInterpolantNode*& node, Gen
 
     // Set the register indices for the operands, and set the location that the
     // result should be stored into
-    AddToStringBuilderOpcode& opcode = function->AllocateOpcode<AddToStringBuilderOpcode>(
-        Instruction::AddToStringBuilder, DebugOrigin::StringInterpolant, node->Location);
+    AddToStringBuilderOpcode& opcode = function->AllocateOpcode<AddToStringBuilderOpcode>(Instruction::AddToStringBuilder, DebugOrigin::StringInterpolant, node->Location);
     opcode.Value = elementNode->Access;
     opcode.TypeToConvert = elementNode->ResultType;
   }
@@ -1934,8 +1809,7 @@ void CodeGenerator::GenerateStringInterpolants(StringInterpolantNode*& node, Gen
 
   // Finish off the string builder (with all our additions to it) and store the
   // resulting string on the stack
-  EndStringBuilderOpcode& endOpcode = function->AllocateOpcode<EndStringBuilderOpcode>(
-      Instruction::EndStringBuilder, DebugOrigin::StringInterpolant, node->Location);
+  EndStringBuilderOpcode& endOpcode = function->AllocateOpcode<EndStringBuilderOpcode>(Instruction::EndStringBuilder, DebugOrigin::StringInterpolant, node->Location);
   endOpcode.SaveStringHandleLocal = node->Access.HandleConstantLocal;
 }
 
@@ -1957,8 +1831,7 @@ void CodeGenerator::CollectValue(ValueNode*& node, GeneratorContext* context)
   case Grammar::IntegerLiteral:
   {
     // Read the value as an Integer (and allocate a constant for it)
-    function->AllocateConstant<Integer>(node->ResultType->GetCopyableSize(), node->Access.HandleConstantLocal) =
-        atoi(node->Value.Token.c_str());
+    function->AllocateConstant<Integer>(node->ResultType->GetCopyableSize(), node->Access.HandleConstantLocal) = atoi(node->Value.Token.c_str());
     break;
   }
 
@@ -1966,8 +1839,7 @@ void CodeGenerator::CollectValue(ValueNode*& node, GeneratorContext* context)
   case Grammar::DoubleIntegerLiteral:
   {
     // Read the value as an Integer (and allocate a constant for it)
-    function->AllocateConstant<DoubleInteger>(node->ResultType->GetCopyableSize(), node->Access.HandleConstantLocal) =
-        (DoubleInteger)strtoull(node->Value.Token.c_str(), nullptr, 10);
+    function->AllocateConstant<DoubleInteger>(node->ResultType->GetCopyableSize(), node->Access.HandleConstantLocal) = (DoubleInteger)strtoull(node->Value.Token.c_str(), nullptr, 10);
     break;
   }
 
@@ -1975,8 +1847,7 @@ void CodeGenerator::CollectValue(ValueNode*& node, GeneratorContext* context)
   case Grammar::RealLiteral:
   {
     // Read the value as a Real (and allocate a constant for it)
-    function->AllocateConstant<Real>(node->ResultType->GetCopyableSize(), node->Access.HandleConstantLocal) =
-        (Real)atof(node->Value.Token.c_str());
+    function->AllocateConstant<Real>(node->ResultType->GetCopyableSize(), node->Access.HandleConstantLocal) = (Real)atof(node->Value.Token.c_str());
     break;
   }
 
@@ -1984,8 +1855,7 @@ void CodeGenerator::CollectValue(ValueNode*& node, GeneratorContext* context)
   case Grammar::DoubleRealLiteral:
   {
     // Read the value as a DoubleReal (and allocate a constant for it)
-    function->AllocateConstant<DoubleReal>(node->ResultType->GetCopyableSize(), node->Access.HandleConstantLocal) =
-        (DoubleReal)atof(node->Value.Token.c_str());
+    function->AllocateConstant<DoubleReal>(node->ResultType->GetCopyableSize(), node->Access.HandleConstantLocal) = (DoubleReal)atof(node->Value.Token.c_str());
     break;
   }
 
@@ -1996,8 +1866,7 @@ void CodeGenerator::CollectValue(ValueNode*& node, GeneratorContext* context)
     Core& core = Core::GetInstance();
 
     // Create a new handle that will point at a string node
-    Handle& handle =
-        function->AllocateConstant<Handle>(core.StringType->GetCopyableSize(), node->Access.HandleConstantLocal);
+    Handle& handle = function->AllocateConstant<Handle>(core.StringType->GetCopyableSize(), node->Access.HandleConstantLocal);
 
     // Set the handle manager and type of the handle
     // We know explicitly that the string handle manager is a shared manager
@@ -2040,7 +1909,7 @@ void CodeGenerator::CollectValue(ValueNode*& node, GeneratorContext* context)
   case Grammar::Null:
   {
     RaverieTodo("We probably want to eventually share null constants, also "
-             "examine the behavior of using sizeof(Delegate)!");
+                "examine the behavior of using sizeof(Delegate)!");
 
     // At the moment, since we use null for handles, delegates, etc, we just
     // allocate wiped space (with 0s) that is big enough to support all nullable
@@ -2074,8 +1943,7 @@ void CodeGenerator::GenerateDelete(DeleteNode*& node, GeneratorContext* context)
 
   // Set the register indices for the operands, and set the location that the
   // result should be stored into
-  DeleteObjectOpcode& opcode = function->AllocateOpcode<DeleteObjectOpcode>(
-      Instruction::DeleteObject, DebugOrigin::DeleteObject, node->Location);
+  DeleteObjectOpcode& opcode = function->AllocateOpcode<DeleteObjectOpcode>(Instruction::DeleteObject, DebugOrigin::DeleteObject, node->Location);
   opcode.Object = node->DeletedObject->Access;
 }
 
@@ -2089,8 +1957,7 @@ void CodeGenerator::GenerateThrow(ThrowNode*& node, GeneratorContext* context)
 
   // Set the register indices for the operands, and set the location that the
   // result should be stored into
-  ThrowExceptionOpcode& opcode = function->AllocateOpcode<ThrowExceptionOpcode>(
-      Instruction::ThrowException, DebugOrigin::ThrowException, node->Location);
+  ThrowExceptionOpcode& opcode = function->AllocateOpcode<ThrowExceptionOpcode>(Instruction::ThrowException, DebugOrigin::ThrowException, node->Location);
   opcode.Exception = node->Exception->Access;
 }
 
@@ -2141,8 +2008,7 @@ void CodeGenerator::GenerateStaticTypeOrCreationCall(StaticTypeNode*& node, Gene
   {
     // Set the register indices for the operands, and set the location that the
     // result should be stored into
-    CreateTypeOpcode& opcode =
-        function->AllocateOpcode<CreateTypeOpcode>(Instruction::NewObject, DebugOrigin::NewObject, node->Location);
+    CreateTypeOpcode& opcode = function->AllocateOpcode<CreateTypeOpcode>(Instruction::NewObject, DebugOrigin::NewObject, node->Location);
     opcode.SaveHandleLocal = node->Access.HandleConstantLocal;
     opcode.CreatedType = node->ReferencedType;
 
@@ -2154,8 +2020,7 @@ void CodeGenerator::GenerateStaticTypeOrCreationCall(StaticTypeNode*& node, Gene
   {
     // Set the register indices for the operands, and set the location that the
     // result should be stored into
-    CreateLocalTypeOpcode& opcode = function->AllocateOpcode<CreateLocalTypeOpcode>(
-        Instruction::LocalObject, DebugOrigin::LocalObject, node->Location);
+    CreateLocalTypeOpcode& opcode = function->AllocateOpcode<CreateLocalTypeOpcode>(Instruction::LocalObject, DebugOrigin::LocalObject, node->Location);
     opcode.CreatedType = node->ReferencedType;
 
     // Error checking
@@ -2166,8 +2031,7 @@ void CodeGenerator::GenerateStaticTypeOrCreationCall(StaticTypeNode*& node, Gene
     // location This handle gets used in calling the preconstructor (inside the
     // 'LocalObject' instruction) and in calling the actual constructor (inside
     // of 'FunctionCall')
-    OperandIndex handleIndex =
-        function->AllocateRegister(this->Builder->ReferenceOf(node->ReferencedType)->GetCopyableSize());
+    OperandIndex handleIndex = function->AllocateRegister(this->Builder->ReferenceOf(node->ReferencedType)->GetCopyableSize());
     opcode.SaveHandleLocal = handleIndex;
 
     // The object should be allocated here on the stack
@@ -2178,12 +2042,7 @@ void CodeGenerator::GenerateStaticTypeOrCreationCall(StaticTypeNode*& node, Gene
   }
 }
 
-void CodeGenerator::GenerateHandleInitialize(Function* function,
-                                             Type* type,
-                                             const Operand& source,
-                                             const Operand& destination,
-                                             DebugOrigin::Enum debugOrigin,
-                                             const CodeLocation& location)
+void CodeGenerator::GenerateHandleInitialize(Function* function, Type* type, const Operand& source, const Operand& destination, DebugOrigin::Enum debugOrigin, const CodeLocation& location)
 {
   // If the type is a handle...
   if (Type::IsHandleType(type))
@@ -2248,10 +2107,7 @@ void CodeGenerator::CreateLocal(Function* function, size_t size, Operand& access
   accessOut.Type = OperandType::Local;
 }
 
-void CodeGenerator::CreateRValueUnaryOpcode(Function* function,
-                                            UnaryOperatorNode& node,
-                                            Instruction::Enum instruction,
-                                            DebugOrigin::Enum debugOrigin)
+void CodeGenerator::CreateRValueUnaryOpcode(Function* function, UnaryOperatorNode& node, Instruction::Enum instruction, DebugOrigin::Enum debugOrigin)
 {
   // Create the opcode
   UnaryRValueOpcode& opcode = function->AllocateOpcode<UnaryRValueOpcode>(instruction, debugOrigin, node.Location);
@@ -2267,10 +2123,7 @@ void CodeGenerator::CreateRValueUnaryOpcode(Function* function,
   opcode.SingleOperand = node.Operand->Access;
 }
 
-void CodeGenerator::CreateLValueUnaryOpcode(Function* function,
-                                            UnaryOperatorNode& node,
-                                            Instruction::Enum instruction,
-                                            DebugOrigin::Enum debugOrigin)
+void CodeGenerator::CreateLValueUnaryOpcode(Function* function, UnaryOperatorNode& node, Instruction::Enum instruction, DebugOrigin::Enum debugOrigin)
 {
   // Create the opcode
   UnaryLValueOpcode& opcode = function->AllocateOpcode<UnaryLValueOpcode>(instruction, debugOrigin, node.Location);
@@ -2284,10 +2137,7 @@ void CodeGenerator::CreateLValueUnaryOpcode(Function* function,
   opcode.SingleOperand = node.Operand->Access;
 }
 
-void CodeGenerator::CreateConversionOpcode(Function* function,
-                                           TypeCastNode& node,
-                                           Instruction::Enum instruction,
-                                           DebugOrigin::Enum debugOrigin)
+void CodeGenerator::CreateConversionOpcode(Function* function, TypeCastNode& node, Instruction::Enum instruction, DebugOrigin::Enum debugOrigin)
 {
   // Create the opcode
   ConversionOpcode& opcode = function->AllocateOpcode<ConversionOpcode>(instruction, debugOrigin, node.Location);
@@ -2377,8 +2227,7 @@ void CodeGenerator::GenerateConversion(Function* function, TypeCastNode& node, D
   else if (castOperation == CastOperation::ToAny)
   {
     // Create the opcode
-    AnyConversionOpcode& opcode =
-        function->AllocateOpcode<AnyConversionOpcode>(Instruction::ConvertToAny, debugOrigin, node.Location);
+    AnyConversionOpcode& opcode = function->AllocateOpcode<AnyConversionOpcode>(Instruction::ConvertToAny, debugOrigin, node.Location);
 
     // This expression's result will be stored in the last created register
     size_t anySize = node.ResultType->GetCopyableSize();
@@ -2403,8 +2252,7 @@ void CodeGenerator::GenerateConversion(Function* function, TypeCastNode& node, D
   else if (castOperation == CastOperation::FromAny)
   {
     // Create the opcode
-    AnyConversionOpcode& opcode =
-        function->AllocateOpcode<AnyConversionOpcode>(Instruction::ConvertFromAny, debugOrigin, node.Location);
+    AnyConversionOpcode& opcode = function->AllocateOpcode<AnyConversionOpcode>(Instruction::ConvertFromAny, debugOrigin, node.Location);
 
     // This expression's result will be stored in the last created register
     CreateLocal(function, node.ResultType->GetCopyableSize(), node.Access);
@@ -2415,8 +2263,7 @@ void CodeGenerator::GenerateConversion(Function* function, TypeCastNode& node, D
     // We pull the value out of our node's operand
     // (the operand is the left side of the 'as', eg 5 as Real, 5 would be the
     // Operand)
-    ErrorIf(node.Operand->ResultType != core.AnythingType,
-            "When converting from an Any, the Operand should always be an Any");
+    ErrorIf(node.Operand->ResultType != core.AnythingType, "When converting from an Any, the Operand should always be an Any");
     opcode.ToConvert = node.Operand->Access;
 
     // The conversion opcode needs to know about the type its converting to
@@ -2427,12 +2274,10 @@ void CodeGenerator::GenerateConversion(Function* function, TypeCastNode& node, D
   else if (castOperation == CastOperation::DynamicDown)
   {
     // Create the opcode
-    DowncastConversionOpcode& opcode =
-        function->AllocateOpcode<DowncastConversionOpcode>(Instruction::ConvertDowncast, debugOrigin, node.Location);
+    DowncastConversionOpcode& opcode = function->AllocateOpcode<DowncastConversionOpcode>(Instruction::ConvertDowncast, debugOrigin, node.Location);
 
     // This expression's result will be stored in the last created register
-    ErrorIf(node.ResultType->GetCopyableSize() != sizeof(Handle),
-            "We only support downcasting of handles at the moment");
+    ErrorIf(node.ResultType->GetCopyableSize() != sizeof(Handle), "We only support downcasting of handles at the moment");
     CreateLocal(function, node.ResultType->GetCopyableSize(), node.Access);
 
     // We always output to the stack (it's a conversion, not a storage operator)
@@ -2459,13 +2304,8 @@ void CodeGenerator::GenerateConversion(Function* function, TypeCastNode& node, D
   }
 }
 
-void CodeGenerator::CreateCopyOpcode(Function* function,
-                                     CopyMode::Enum mode,
-                                     Type* type,
-                                     const Operand& source,
-                                     const Operand& destination,
-                                     DebugOrigin::Enum debugOrigin,
-                                     const CodeLocation& location)
+void CodeGenerator::CreateCopyOpcode(
+    Function* function, CopyMode::Enum mode, Type* type, const Operand& source, const Operand& destination, DebugOrigin::Enum debugOrigin, const CodeLocation& location)
 {
   // The instruction that we will end up using
   Instruction::Enum instruction = Instruction::InvalidInstruction;
@@ -2521,46 +2361,25 @@ void CodeGenerator::CreateCopyOpcode(Function* function,
   opcode.Size = type->GetCopyableSize();
 }
 
-void CodeGenerator::GenerateCopyToReturn(Function* function,
-                                         Type* type,
-                                         const Operand& source,
-                                         const Operand& destination,
-                                         DebugOrigin::Enum debugOrigin,
-                                         const CodeLocation& location)
+void CodeGenerator::GenerateCopyToReturn(Function* function, Type* type, const Operand& source, const Operand& destination, DebugOrigin::Enum debugOrigin, const CodeLocation& location)
 {
   return CreateCopyOpcode(function, CopyMode::ToReturn, type, source, destination, debugOrigin, location);
 }
 
-void CodeGenerator::GenerateCopyInitialize(Function* function,
-                                           Type* type,
-                                           const Operand& source,
-                                           const Operand& destination,
-                                           DebugOrigin::Enum debugOrigin,
-                                           const CodeLocation& location)
+void CodeGenerator::GenerateCopyInitialize(Function* function, Type* type, const Operand& source, const Operand& destination, DebugOrigin::Enum debugOrigin, const CodeLocation& location)
 {
   return CreateCopyOpcode(function, CopyMode::Initialize, type, source, destination, debugOrigin, location);
 }
 
-void CodeGenerator::GenerateCopyToParameter(Function* function,
-                                            Type* type,
-                                            const Operand& source,
-                                            OperandIndex destRegister,
-                                            DebugOrigin::Enum debugOrigin,
-                                            const CodeLocation& location)
+void CodeGenerator::GenerateCopyToParameter(Function* function, Type* type, const Operand& source, OperandIndex destRegister, DebugOrigin::Enum debugOrigin, const CodeLocation& location)
 {
   return CreateCopyOpcode(function, CopyMode::ToParameter, type, source, Operand(destRegister), debugOrigin, location);
 }
 
-void CodeGenerator::GenerateCopyFromReturn(Function* function,
-                                           Type* type,
-                                           OperandIndex sourceRegister,
-                                           OperandIndex destRegister,
-                                           DebugOrigin::Enum debugOrigin,
-                                           const CodeLocation& location)
+void CodeGenerator::GenerateCopyFromReturn(Function* function, Type* type, OperandIndex sourceRegister, OperandIndex destRegister, DebugOrigin::Enum debugOrigin, const CodeLocation& location)
 {
   // Side note, copying returns always copies to an uninitialized
   // place in memory so it must always be an initializing copy
-  return CreateCopyOpcode(
-      function, CopyMode::FromReturn, type, Operand(sourceRegister), Operand(destRegister), debugOrigin, location);
+  return CreateCopyOpcode(function, CopyMode::FromReturn, type, Operand(sourceRegister), Operand(destRegister), debugOrigin, location);
 }
 } // namespace Raverie

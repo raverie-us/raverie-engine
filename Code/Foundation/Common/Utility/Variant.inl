@@ -78,12 +78,8 @@ UnqualifiedType& Variant::GetOrError() const
     return *value;
 
   Error("%s%s",
-        String::Format("Unable to get stored value of specified type '%s' from Variant - ",
-                       NativeTypeOf(T)->mDebugTypeName)
-            .c_str(),
-        (mNativeType == nullptr
-             ? "Variant is empty"
-             : String::Format("Variant's stored value is type '%s'", mNativeType->mDebugTypeName).c_str()));
+        String::Format("Unable to get stored value of specified type '%s' from Variant - ", NativeTypeOf(T)->mDebugTypeName).c_str(),
+        (mNativeType == nullptr ? "Variant is empty" : String::Format("Variant's stored value is type '%s'", mNativeType->mDebugTypeName).c_str()));
   return GetInvalidObject<UnqualifiedType>();
 }
 template <typename T, typename UnqualifiedType>
@@ -215,10 +211,7 @@ void Variant::Assign(MoveReference<T> rhs)
 // Primitive Member Access (Arithmetic Types Only)
 //
 
-template <typename T,
-          typename UnqualifiedType,
-          TF_ENABLE_IF_DEF(IsBasicNativeTypeArithmetic<UnqualifiedType>::Value),
-          typename PrimitiveType>
+template <typename T, typename UnqualifiedType, TF_ENABLE_IF_DEF(IsBasicNativeTypeArithmetic<UnqualifiedType>::Value), typename PrimitiveType>
 PrimitiveType& Variant::GetPrimitiveMemberOrError(size_t index) const
 {
   // Get stored value's primitive member at the specified index
@@ -230,16 +223,11 @@ PrimitiveType& Variant::GetPrimitiveMemberOrError(size_t index) const
                        "specified type '%s' from Variant - ",
                        NativeTypeOf(T)->mDebugTypeName)
             .c_str(),
-        (mNativeType == nullptr
-             ? "Variant is empty"
-             : String::Format("Variant's stored value is type '%s'", mNativeType->mDebugTypeName).c_str()));
+        (mNativeType == nullptr ? "Variant is empty" : String::Format("Variant's stored value is type '%s'", mNativeType->mDebugTypeName).c_str()));
   return GetInvalidObject<PrimitiveType>();
 }
 
-template <typename T,
-          typename UnqualifiedType,
-          TF_ENABLE_IF_DEF(IsBasicNativeTypeArithmetic<UnqualifiedType>::Value),
-          typename PrimitiveType>
+template <typename T, typename UnqualifiedType, TF_ENABLE_IF_DEF(IsBasicNativeTypeArithmetic<UnqualifiedType>::Value), typename PrimitiveType>
 PrimitiveType& Variant::GetPrimitiveMemberOrDefault(size_t index, const PrimitiveType& defaultValue) const
 {
   // Get stored value's primitive member at the specified index
@@ -249,10 +237,7 @@ PrimitiveType& Variant::GetPrimitiveMemberOrDefault(size_t index, const Primitiv
   return (PrimitiveType&)defaultValue;
 }
 
-template <typename T,
-          typename UnqualifiedType,
-          TF_ENABLE_IF_DEF(IsBasicNativeTypeArithmetic<UnqualifiedType>::Value),
-          typename PrimitiveType>
+template <typename T, typename UnqualifiedType, TF_ENABLE_IF_DEF(IsBasicNativeTypeArithmetic<UnqualifiedType>::Value), typename PrimitiveType>
 PrimitiveType* Variant::GetPrimitiveMemberOrNull(size_t index) const
 {
   // Primitive member info

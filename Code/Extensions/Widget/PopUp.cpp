@@ -73,8 +73,7 @@ void FloatingComposite::Slide(Vec3Param offset, float time)
   AnimateTo(this, destinatino, GetSize(), time);
 }
 
-PopUp::PopUp(Widget* target, PopUpCloseMode::Enum popCloseMode, StringParam className) :
-    FloatingComposite(target->GetRootWidget()->GetPopUp(), className)
+PopUp::PopUp(Widget* target, PopUpCloseMode::Enum popCloseMode, StringParam className) : FloatingComposite(target->GetRootWidget()->GetPopUp(), className)
 {
   mMoved = false;
   mCloseMode = popCloseMode;

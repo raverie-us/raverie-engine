@@ -299,8 +299,7 @@ int RaverieMain(int argc, char* argv[])
         BoundType* programType = library->BoundTypes.FindValue("Program", nullptr);
         if (programType != nullptr)
         {
-          Function* mainFunction =
-              programType->FindFunction("Main", Array<Type*>(), RaverieTypeId(int), FindMemberOptions::None);
+          Function* mainFunction = programType->FindFunction("Main", Array<Type*>(), RaverieTypeId(int), FindMemberOptions::None);
           if (mainFunction != nullptr)
           {
             Module libraries;
@@ -309,8 +308,7 @@ int RaverieMain(int argc, char* argv[])
             EventConnect(state, Events::ExceptionUnhandled, DefaultExceptionCallback);
             {
               ExceptionReport report;
-              Handle programHandle =
-                  state->AllocateDefaultConstructedHeapObject(programType, report, HeapFlags::ReferenceCounted);
+              Handle programHandle = state->AllocateDefaultConstructedHeapObject(programType, report, HeapFlags::ReferenceCounted);
 
               if (report.HasThrownExceptions())
               {

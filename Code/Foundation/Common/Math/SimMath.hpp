@@ -23,8 +23,7 @@ namespace Simd
 // with VecShuffle(v1,v2,0,1,2,3), the result is [x2, y2, z1, w1].
 // So the first two values are from the second vector and the
 // second two values are from the first vector.
-#define VecShuffle(v1, v2, v2Index1, v2Index2, v1Index1, v1Index2)                                                     \
-  _mm_shuffle_ps(v1, v2, _MM_SHUFFLE(v2Index1, v2Index2, v1Index1, v1Index2))
+#define VecShuffle(v1, v2, v2Index1, v2Index2, v1Index1, v1Index2) _mm_shuffle_ps(v1, v2, _MM_SHUFFLE(v2Index1, v2Index2, v1Index1, v1Index2))
 
 // Alias class to hold __m128 union to compile union
 // operator overloads with Clang/LLVM

@@ -4,13 +4,7 @@
 namespace Raverie
 {
 template <typename TokenType>
-GrammarNode<TokenType>::GrammarNode() :
-    mType(GrammarNodeType::Epsilon),
-    mLhs(nullptr),
-    mRhs(nullptr),
-    mOperand(nullptr),
-    mGrammarSet(nullptr),
-    mOrderId(0)
+GrammarNode<TokenType>::GrammarNode() : mType(GrammarNodeType::Epsilon), mLhs(nullptr), mRhs(nullptr), mOperand(nullptr), mGrammarSet(nullptr), mOrderId(0)
 {
 }
 
@@ -23,9 +17,7 @@ GrammarNode<TokenType>::~GrammarNode()
 }
 
 template <typename TokenType>
-GrammarNode<TokenType>& GrammarNode<TokenType>::MakeBinary(GrammarNode& lhs,
-                                                           GrammarNode& rhs,
-                                                           GrammarNodeType::Enum type)
+GrammarNode<TokenType>& GrammarNode<TokenType>::MakeBinary(GrammarNode& lhs, GrammarNode& rhs, GrammarNodeType::Enum type)
 {
   GrammarNode& node = *new GrammarNode();
   node.mType = type;
@@ -260,13 +252,7 @@ TokenType Capture<TokenType>::GetFirstToken(StringParam name, const TokenType& f
 }
 
 template <typename TokenType>
-ParseNodeInfo<TokenType>::ParseNodeInfo() :
-    mRule(nullptr),
-    mStartInclusive(0),
-    mEndExclusive(0),
-    mAccepted(false),
-    mFailed(false),
-    mCapture(nullptr)
+ParseNodeInfo<TokenType>::ParseNodeInfo() : mRule(nullptr), mStartInclusive(0), mEndExclusive(0), mAccepted(false), mFailed(false), mCapture(nullptr)
 {
 }
 
@@ -547,8 +533,7 @@ RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::~RecursiveDesce
 }
 
 template <typename TokenType, typename StreamType, typename ParseHandlerType>
-RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::RecursiveDescentParser(
-    const RecursiveDescentParser& rhs)
+RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::RecursiveDescentParser(const RecursiveDescentParser& rhs)
 {
   this->mTokenMode = rhs.mTokenMode;
   this->mDebug = rhs.mDebug;
@@ -622,9 +607,7 @@ void RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::Parse()
 }
 
 template <typename TokenType, typename StreamType, typename ParseHandlerType>
-void RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::ReplaceAndBackup(StringParam text,
-                                                                                       size_t startInclusive,
-                                                                                       size_t endExclusive)
+void RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::ReplaceAndBackup(StringParam text, size_t startInclusive, size_t endExclusive)
 {
   this->mStream->Replace(text, startInclusive, endExclusive);
   this->mIndex = startInclusive;
@@ -880,8 +863,7 @@ bool RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::EvaluateGr
         if (this->mLastAttemptedAccept != nullptr)
         {
           String rangeSet = this->mLastAttemptedAccept->GetRangeSetString();
-          String message =
-              String::Format("Attempted to parse '%s', but instead we got '%s'", rangeSet.c_str(), nextUnit.c_str());
+          String message = String::Format("Attempted to parse '%s', but instead we got '%s'", rangeSet.c_str(), nextUnit.c_str());
           this->SetError(message);
         }
         else
@@ -1059,8 +1041,7 @@ bool RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::EvaluateGr
 }
 
 template <typename TokenType, typename StreamType, typename ParseHandlerType>
-void RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::EvaluateReplacement(ReplacementNode* node,
-                                                                                          StringBuilder& builder)
+void RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::EvaluateReplacement(ReplacementNode* node, StringBuilder& builder)
 {
   switch (node->mType)
   {
@@ -1117,8 +1098,7 @@ void RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::EvaluateRe
 }
 
 template <typename TokenType, typename StreamType, typename ParseHandlerType>
-void RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::EvaluateCapture(
-    CaptureExpressionNode* node, Array<Capture<TokenType>*>& capturesOut)
+void RecursiveDescentParser<TokenType, StreamType, ParseHandlerType>::EvaluateCapture(CaptureExpressionNode* node, Array<Capture<TokenType>*>& capturesOut)
 {
   switch (node->mType)
   {
@@ -1258,12 +1238,7 @@ TokenRange<ParseHandlerType>::TokenRange() : mSet(nullptr), mHasRunFirstIteratio
 }
 
 template <typename ParseHandlerType>
-TokenRange<ParseHandlerType>::TokenRange(GrammarSet<Character>& set,
-                                         GrammarRule<Character>& rule,
-                                         StringParam input,
-                                         bool debug) :
-    mSet(&set),
-    mHasRunFirstIteration(false)
+TokenRange<ParseHandlerType>::TokenRange(GrammarSet<Character>& set, GrammarRule<Character>& rule, StringParam input, bool debug) : mSet(&set), mHasRunFirstIteration(false)
 {
   this->mParser.mDebug = debug;
   this->mParser.mStream = &this->mStream;
@@ -1273,11 +1248,7 @@ TokenRange<ParseHandlerType>::TokenRange(GrammarSet<Character>& set,
 }
 
 template <typename ParseHandlerType>
-TokenRange<ParseHandlerType>::TokenRange(const TokenRange& rhs) :
-    mParser(rhs.mParser),
-    mStream(rhs.mStream),
-    mSet(rhs.mSet),
-    mHasRunFirstIteration(rhs.mHasRunFirstIteration)
+TokenRange<ParseHandlerType>::TokenRange(const TokenRange& rhs) : mParser(rhs.mParser), mStream(rhs.mStream), mSet(rhs.mSet), mHasRunFirstIteration(rhs.mHasRunFirstIteration)
 {
   this->mParser.mStream = &this->mStream;
 }
@@ -1331,8 +1302,7 @@ void TokenRange<ParseHandlerType>::PopFront()
 
   // While we still have a valid range, and we're finding ignorable tokens (or
   // error tokens) Then skip them by parsing again
-  while (!this->Empty() &&
-         (this->mSet->mIgnore.Contains(this->mParser.mAcceptedRule) || this->mParser.mStatus.Failed()))
+  while (!this->Empty() && (this->mSet->mIgnore.Contains(this->mParser.mAcceptedRule) || this->mParser.mStatus.Failed()))
     this->mParser.Parse();
 }
 

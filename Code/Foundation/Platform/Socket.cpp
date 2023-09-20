@@ -91,10 +91,7 @@ void SocketAddress::SetIpv4(Status& status, StringParam host, uint port)
   status.SetFailed("Socket not implemented");
 }
 
-void SocketAddress::SetIpv4(Status& status,
-                            StringParam host,
-                            uint port,
-                            SocketAddressResolutionFlags::Enum addressResolutionFlags)
+void SocketAddress::SetIpv4(Status& status, StringParam host, uint port, SocketAddressResolutionFlags::Enum addressResolutionFlags)
 {
   status.SetFailed("Socket not implemented");
 }
@@ -104,10 +101,7 @@ void SocketAddress::SetIpv6(Status& status, StringParam host, uint port)
   status.SetFailed("Socket not implemented");
 }
 
-void SocketAddress::SetIpv6(Status& status,
-                            StringParam host,
-                            uint port,
-                            SocketAddressResolutionFlags::Enum addressResolutionFlags)
+void SocketAddress::SetIpv6(Status& status, StringParam host, uint port, SocketAddressResolutionFlags::Enum addressResolutionFlags)
 {
   status.SetFailed("Socket not implemented");
 }
@@ -144,31 +138,20 @@ SocketAddress ResolveSocketAddress(Status& status,
   return SocketAddress();
 }
 
-SocketAddress ResolveSocketAddress(Status& status,
-                                   StringParam host,
-                                   StringParam service,
-                                   SocketAddressFamily::Enum addressFamily,
-                                   SocketProtocol::Enum protocol,
-                                   SocketAddressResolutionFlags::Enum addressResolutionFlags)
+SocketAddress ResolveSocketAddress(
+    Status& status, StringParam host, StringParam service, SocketAddressFamily::Enum addressFamily, SocketProtocol::Enum protocol, SocketAddressResolutionFlags::Enum addressResolutionFlags)
 {
   status.SetFailed("Socket not implemented");
   return SocketAddress();
 }
 
-SocketAddress ResolveSocketAddress(Status& status,
-                                   StringParam host,
-                                   StringParam service,
-                                   SocketAddressFamily::Enum addressFamily,
-                                   SocketAddressResolutionFlags::Enum addressResolutionFlags)
+SocketAddress ResolveSocketAddress(Status& status, StringParam host, StringParam service, SocketAddressFamily::Enum addressFamily, SocketAddressResolutionFlags::Enum addressResolutionFlags)
 {
   status.SetFailed("Socket not implemented");
   return SocketAddress();
 }
 
-SocketAddress ResolveSocketAddress(Status& status,
-                                   StringParam host,
-                                   StringParam service,
-                                   SocketAddressResolutionFlags::Enum addressResolutionFlags)
+SocketAddress ResolveSocketAddress(Status& status, StringParam host, StringParam service, SocketAddressResolutionFlags::Enum addressResolutionFlags)
 {
   status.SetFailed("Socket not implemented");
   return SocketAddress();
@@ -193,33 +176,23 @@ Array<SocketAddress> ResolveAllSocketAddresses(Status& status,
   return addresses;
 }
 
-Array<SocketAddress> ResolveAllSocketAddresses(Status& status,
-                                               StringParam host,
-                                               StringParam service,
-                                               SocketAddressFamily::Enum addressFamily,
-                                               SocketProtocol::Enum protocol,
-                                               SocketAddressResolutionFlags::Enum addressResolutionFlags)
+Array<SocketAddress> ResolveAllSocketAddresses(
+    Status& status, StringParam host, StringParam service, SocketAddressFamily::Enum addressFamily, SocketProtocol::Enum protocol, SocketAddressResolutionFlags::Enum addressResolutionFlags)
 {
   status.SetFailed("Socket not implemented");
   Array<SocketAddress> addresses;
   return addresses;
 }
 
-Array<SocketAddress> ResolveAllSocketAddresses(Status& status,
-                                               StringParam host,
-                                               StringParam service,
-                                               SocketAddressFamily::Enum addressFamily,
-                                               SocketAddressResolutionFlags::Enum addressResolutionFlags)
+Array<SocketAddress>
+ResolveAllSocketAddresses(Status& status, StringParam host, StringParam service, SocketAddressFamily::Enum addressFamily, SocketAddressResolutionFlags::Enum addressResolutionFlags)
 {
   status.SetFailed("Socket not implemented");
   Array<SocketAddress> addresses;
   return addresses;
 }
 
-Array<SocketAddress> ResolveAllSocketAddresses(Status& status,
-                                               StringParam host,
-                                               StringParam service,
-                                               SocketAddressResolutionFlags::Enum addressResolutionFlags)
+Array<SocketAddress> ResolveAllSocketAddresses(Status& status, StringParam host, StringParam service, SocketAddressResolutionFlags::Enum addressResolutionFlags)
 {
   status.SetFailed("Socket not implemented");
   Array<SocketAddress> addresses;
@@ -233,9 +206,7 @@ Array<SocketAddress> ResolveAllSocketAddresses(Status& status, StringParam host,
   return addresses;
 }
 
-Pair<String, String> ResolveHostAndServiceNames(Status& status,
-                                                const SocketAddress& address,
-                                                SocketNameResolutionFlags::Enum nameResolutionFlags)
+Pair<String, String> ResolveHostAndServiceNames(Status& status, const SocketAddress& address, SocketNameResolutionFlags::Enum nameResolutionFlags)
 {
   status.SetFailed("Socket not implemented");
   return Pair<String, String>();
@@ -446,10 +417,7 @@ SocketAddress Socket::GetConnectedRemoteAddress() const
   return SocketAddress();
 }
 
-void Socket::Open(Status& status,
-                  SocketAddressFamily::Enum addressFamily,
-                  SocketType::Enum type,
-                  SocketProtocol::Enum protocol)
+void Socket::Open(Status& status, SocketAddressFamily::Enum addressFamily, SocketType::Enum type, SocketProtocol::Enum protocol)
 {
   status.SetFailed("Socket not implemented");
 }
@@ -495,8 +463,7 @@ size_t Socket::Send(Status& status, const byte* data, size_t dataLength, SocketF
   return 0;
 }
 
-size_t
-Socket::SendTo(Status& status, const byte* data, size_t dataLength, const SocketAddress& to, SocketFlags::Enum flags)
+size_t Socket::SendTo(Status& status, const byte* data, size_t dataLength, const SocketAddress& to, SocketFlags::Enum flags)
 {
   status.SetFailed("Socket not implemented");
   return 0;
@@ -508,8 +475,7 @@ size_t Socket::Receive(Status& status, byte* dataOut, size_t dataLength, SocketF
   return 0;
 }
 
-size_t
-Socket::ReceiveFrom(Status& status, byte* dataOut, size_t dataLength, SocketAddress& from, SocketFlags::Enum flags)
+size_t Socket::ReceiveFrom(Status& status, byte* dataOut, size_t dataLength, SocketAddress& from, SocketFlags::Enum flags)
 {
   status.SetFailed("Socket not implemented");
   return 0;

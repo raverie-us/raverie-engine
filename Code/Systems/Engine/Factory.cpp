@@ -318,8 +318,7 @@ Cog* Factory::BuildFromStream(CogCreationContext* context, Serializer& stream)
             // proxy the object and re-create it under the proxy
             if (component == nullptr && componentMeta->HasAttribute(ObjectAttributes::cProxy) == nullptr)
             {
-              componentMeta =
-                  ProxyObject<Component>::CreateProxyType(componentNode.TypeName, ProxyReason::AllocationException);
+              componentMeta = ProxyObject<Component>::CreateProxyType(componentNode.TypeName, ProxyReason::AllocationException);
               component = RaverieAllocate(Component, componentMeta, HeapFlags::NonReferenceCounted);
             }
 
@@ -454,8 +453,7 @@ Cog* Factory::BuildFromArchetype(BoundType* expectedMetaType, Archetype* archety
 
   // Validation - make sure the archetype Contains the expected type
   if (archetype->mStoredType != expectedMetaType)
-    return TypeCheckFail(
-        "an Archetype", archetype->mStoredType->Name.c_str(), archetype->Name.c_str(), expectedMetaType);
+    return TypeCheckFail("an Archetype", archetype->mStoredType->Name.c_str(), archetype->Name.c_str(), expectedMetaType);
 
   const bool CacheBinaryArchetypes = true;
   if (archetype->mBinaryCache && CacheBinaryArchetypes)
@@ -533,8 +531,7 @@ Space* Factory::CreateSpaceFromStream(Serializer& stream, uint flags, GameSessio
   return (Space*)CreateFromStream(nullptr, stream, flags, gameSession);
 }
 
-Cog* Factory::CreateCheckedType(
-    BoundType* expectedType, Space* space, StringParam filename, uint flags, GameSession* gameSession)
+Cog* Factory::CreateCheckedType(BoundType* expectedType, Space* space, StringParam filename, uint flags, GameSession* gameSession)
 {
   CogInitializer initializer(space, gameSession);
   initializer.Flags = flags;

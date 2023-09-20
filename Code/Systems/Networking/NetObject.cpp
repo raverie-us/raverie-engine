@@ -91,16 +91,7 @@ RaverieDefineType(NetObject, builder, type)
   RaverieBindFieldProperty(mNetPropertyInfos);
 }
 
-NetObject::NetObject() :
-    Replica(),
-    Component(),
-    mInitLevelResourceIdName(),
-    mIsAncestor(false),
-    mFamilyTreeId(0),
-    mIsOnline(false),
-    mNetUserOwnerUserId(0),
-    mAutomaticChannel(),
-    mNetPropertyInfos()
+NetObject::NetObject() : Replica(), Component(), mInitLevelResourceIdName(), mIsAncestor(false), mFamilyTreeId(0), mIsOnline(false), mNetUserOwnerUserId(0), mAutomaticChannel(), mNetPropertyInfos()
 {
   ResetConfig();
 }
@@ -128,11 +119,9 @@ void NetObject::Serialize(Serializer& stream)
   SerializeNameDefault(mDetectOutgoingChanges, GetDetectOutgoingChanges());
   SerializeNameDefault(mAcceptIncomingChanges, GetAcceptIncomingChanges());
   SerializeNameDefault(mAllowNapping, GetAllowNapping());
-  stream.SerializeFieldDefault(
-      "AccurateTimestampOnOnline", mAccurateTimestampOnInitialization, accurateTimestampsByDefault);
+  stream.SerializeFieldDefault("AccurateTimestampOnOnline", mAccurateTimestampOnInitialization, accurateTimestampsByDefault);
   SerializeNameDefault(mAccurateTimestampOnChange, accurateTimestampsByDefault);
-  stream.SerializeFieldDefault(
-      "AccurateTimestampOnOffline", mAccurateTimestampOnUninitialization, accurateTimestampsByDefault);
+  stream.SerializeFieldDefault("AccurateTimestampOnOffline", mAccurateTimestampOnUninitialization, accurateTimestampsByDefault);
   SerializeResourceName(mAutomaticChannel, NetChannelConfigManager);
   SerializeNameDefault(mNetPropertyInfos, NetPropertyInfoArray());
 }
@@ -512,9 +501,7 @@ void NetObject::OnRegisterCppNetProperties(RegisterCppNetProperties* event)
   NetChannel* netObjectChannel = AddNetChannel("NetObject");
   if (!netObjectChannel) // Unable?
   {
-    DoNotifyError("Unable to Add Built-In C++ NetProperties",
-                  String::Format("Unable to add built-in 'NetObject' channel on the NetObject '%s'",
-                                 owner->GetDescription().c_str()));
+    DoNotifyError("Unable to Add Built-In C++ NetProperties", String::Format("Unable to add built-in 'NetObject' channel on the NetObject '%s'", owner->GetDescription().c_str()));
     return;
   }
 
@@ -530,12 +517,7 @@ void NetObject::OnRegisterCppNetProperties(RegisterCppNetProperties* event)
   netObjectChannel->GetNetChannelType()->SetEventOnIncomingPropertyChange(true);
 
   // Add name net property (replicates object name changes)
-  NetProperty* nameProperty = netObjectChannel->AddBasicNetProperty("Name",
-                                                                    Variant(this),
-                                                                    NativeTypeOf(String),
-                                                                    SerializeKnownExtendedVariant,
-                                                                    GetNetObjectNameProperty,
-                                                                    SetNetObjectNameProperty);
+  NetProperty* nameProperty = netObjectChannel->AddBasicNetProperty("Name", Variant(this), NativeTypeOf(String), SerializeKnownExtendedVariant, GetNetObjectNameProperty, SetNetObjectNameProperty);
   if (!nameProperty) // Unable?
   {
     DoNotifyError("Unable to Add Built-In C++ NetProperties",
@@ -546,12 +528,8 @@ void NetObject::OnRegisterCppNetProperties(RegisterCppNetProperties* event)
   }
 
   // Add parent net property (replicates parent changes)
-  NetProperty* parentProperty = netObjectChannel->AddBasicNetProperty("Parent",
-                                                                      Variant(this),
-                                                                      NativeTypeOf(NetObjectId),
-                                                                      SerializeKnownExtendedVariant,
-                                                                      GetNetObjectParentProperty,
-                                                                      SetNetObjectParentProperty);
+  NetProperty* parentProperty =
+      netObjectChannel->AddBasicNetProperty("Parent", Variant(this), NativeTypeOf(NetObjectId), SerializeKnownExtendedVariant, GetNetObjectParentProperty, SetNetObjectParentProperty);
   if (!parentProperty) // Unable?
   {
     DoNotifyError("Unable to Add Built-In C++ NetProperties",
@@ -562,8 +540,7 @@ void NetObject::OnRegisterCppNetProperties(RegisterCppNetProperties* event)
   }
 
   // Add owning network user net property (replicates network owner changes)
-  NetProperty* netUserOwnerIdProperty =
-      netObjectChannel->AddBasicNetProperty("NetUserOwnerUserId", mNetUserOwnerUserId);
+  NetProperty* netUserOwnerIdProperty = netObjectChannel->AddBasicNetProperty("NetUserOwnerUserId", mNetUserOwnerUserId);
   if (!netUserOwnerIdProperty) // Unable?
   {
     DoNotifyError("Unable to Add Built-In C++ NetProperties",
@@ -615,8 +592,7 @@ void NetObject::AddScriptNetProperties()
       String netPropertyTypeName = "Default";
 
       // Net property has a "netPropertyConfig" attribute parameter?
-      AttributeParameter* netPropertyConfigAttributeParameter =
-          netPropertyAttribute->HasAttributeParameter("netPropertyConfig");
+      AttributeParameter* netPropertyConfigAttributeParameter = netPropertyAttribute->HasAttributeParameter("netPropertyConfig");
       if (netPropertyConfigAttributeParameter)
       {
         // Set net property type name
@@ -635,8 +611,7 @@ void NetObject::AddScriptNetProperties()
       String netChannelName = mAutomaticChannel->Name;
 
       // Net property has a "netChannelConfig" attribute parameter?
-      AttributeParameter* netChannelConfigAttributeParameter =
-          netPropertyAttribute->HasAttributeParameter("netChannelConfig");
+      AttributeParameter* netChannelConfigAttributeParameter = netPropertyAttribute->HasAttributeParameter("netChannelConfig");
       if (netChannelConfigAttributeParameter)
       {
         // Set desired net channel name
@@ -652,8 +627,7 @@ void NetObject::AddScriptNetProperties()
 
       // Add net property to the specified channel (which will also be added and
       // configured if it doesn't already exist)
-      bool result = AddNetPropertyToChannel(
-          component, property, netPropertyTypeName, netPropertyConfig, netChannelName, netChannelConfig);
+      bool result = AddNetPropertyToChannel(component, property, netPropertyTypeName, netPropertyConfig, netChannelName, netChannelConfig);
       Assert(result);
     }
   }
@@ -725,8 +699,7 @@ void NetObject::AddConfiguredNetProperties()
 
     // Add net property to the specified channel (which will also be added and
     // configured if it doesn't already exist)
-    bool result = AddNetPropertyToChannel(
-        component, property, netPropertyInfo.mNetPropertyConfig, netPropertyInfo.mNetChannelConfig);
+    bool result = AddNetPropertyToChannel(component, property, netPropertyInfo.mNetPropertyConfig, netPropertyInfo.mNetChannelConfig);
     Assert(result);
   }
 }
@@ -739,9 +712,7 @@ void NetObject::AddNetChannelAuthorityNetProperties()
   NetChannel* netObjectChannel = GetNetChannel("NetObject");
   if (!netObjectChannel) // Unable?
   {
-    DoNotifyError("Unable to Add Built-In Authority NetProperties",
-                  String::Format("Unable to get built-in 'NetObject' channel on the NetObject '%s'",
-                                 owner->GetDescription().c_str()));
+    DoNotifyError("Unable to Add Built-In Authority NetProperties", String::Format("Unable to get built-in 'NetObject' channel on the NetObject '%s'", owner->GetDescription().c_str()));
     return;
   }
 
@@ -759,12 +730,8 @@ void NetObject::AddNetChannelAuthorityNetProperties()
 
       // Add net channel authority net property (replicates net channel
       // authority changes)
-      NetProperty* authorityProperty = netObjectChannel->AddBasicNetProperty(netPropertyName,
-                                                                             Variant(replicaChannel),
-                                                                             NativeTypeOf(Any),
-                                                                             SerializeKnownExtendedVariant,
-                                                                             GetNetChannelAuthorityProperty,
-                                                                             SetNetChannelAuthorityProperty);
+      NetProperty* authorityProperty = netObjectChannel->AddBasicNetProperty(
+          netPropertyName, Variant(replicaChannel), NativeTypeOf(Any), SerializeKnownExtendedVariant, GetNetChannelAuthorityProperty, SetNetChannelAuthorityProperty);
       if (!authorityProperty) // Unable?
       {
         DoNotifyError("Unable to Add Built-In Authority NetProperties",
@@ -978,8 +945,7 @@ void NetObject::BringNetObjectOnline()
         // Emplace net object by level now
         // (We cannot frame-delay this operation, nor is there any benefit to
         // doing so for clients)
-        if (!netPeer->EmplaceNetObjectBySpaceAndLevel(owner,
-                                                      owner->GetSpace(),
+        if (!netPeer->EmplaceNetObjectBySpaceAndLevel(owner, owner->GetSpace(),
                                                       GetInitializationLevelResourceIdName())) // Unable?
           return;
       }
@@ -1644,8 +1610,7 @@ bool NetObject::DoesThisNetPropertyAlreadyBelongToAChannel(Component* component,
     if (replicaProperty) // Found?
     {
       // Get property info
-      ComponentPropertyInstanceData componentPropertyMetaData =
-          replicaProperty->GetPropertyData().GetOrError<ComponentPropertyInstanceData>();
+      ComponentPropertyInstanceData componentPropertyMetaData = replicaProperty->GetPropertyData().GetOrError<ComponentPropertyInstanceData>();
       Assert(componentPropertyMetaData.mPropertyName == propertyName);
 
       // Component matches?
@@ -1676,9 +1641,7 @@ NetChannel* NetObject::AddNetChannel(const String& netChannelName, NetChannelCon
   // Already valid? (Net object is already online?)
   if (Replica::IsValid())
   {
-    DoNotifyError(
-        "NetObject",
-        String::Format("Unable to add NetChannel named '%s' - NetObject is already online", netChannelName.c_str()));
+    DoNotifyError("NetObject", String::Format("Unable to add NetChannel named '%s' - NetObject is already online", netChannelName.c_str()));
     return nullptr;
   }
 
@@ -1691,16 +1654,11 @@ NetChannel* NetObject::AddNetChannel(const String& netChannelName, NetChannelCon
   NetChannelType* netChannelType = netPeer->GetOrAddReplicaChannelType(netChannelName, netChannelConfig);
 
   // Add net channel
-  return static_cast<NetChannel*>(
-      Replica::AddReplicaChannel(ReplicaChannelPtr(new NetChannel(netChannelName, netChannelType))));
+  return static_cast<NetChannel*>(Replica::AddReplicaChannel(ReplicaChannelPtr(new NetChannel(netChannelName, netChannelType))));
 }
 
-bool NetObject::AddNetPropertyToChannel(Component* component,
-                                        Property* property,
-                                        const String& netPropertyTypeName,
-                                        NetPropertyConfig* netPropertyConfig,
-                                        const String& netChannelName,
-                                        NetChannelConfig* netChannelConfig)
+bool NetObject::AddNetPropertyToChannel(
+    Component* component, Property* property, const String& netPropertyTypeName, NetPropertyConfig* netPropertyConfig, const String& netChannelName, NetChannelConfig* netChannelConfig)
 {
   // (Net object should not be online yet)
   Assert(!Replica::IsValid());
@@ -1753,17 +1711,9 @@ bool NetObject::AddNetPropertyToChannel(Component* component,
   // Success
   return true;
 }
-bool NetObject::AddNetPropertyToChannel(Component* component,
-                                        Property* property,
-                                        NetPropertyConfig* netPropertyConfig,
-                                        NetChannelConfig* netChannelConfig)
+bool NetObject::AddNetPropertyToChannel(Component* component, Property* property, NetPropertyConfig* netPropertyConfig, NetChannelConfig* netChannelConfig)
 {
-  return AddNetPropertyToChannel(component,
-                                 property,
-                                 netPropertyConfig->GetName(),
-                                 netPropertyConfig,
-                                 netChannelConfig->GetName(),
-                                 netChannelConfig);
+  return AddNetPropertyToChannel(component, property, netPropertyConfig->GetName(), netPropertyConfig, netChannelConfig->GetName(), netChannelConfig);
 }
 
 bool NetObject::RemoveNetChannel(const String& netChannelName)

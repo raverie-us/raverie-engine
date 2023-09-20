@@ -23,8 +23,7 @@ public:
   StreamStatus::Enum InitializeStream(StreamTypes::Enum whichStream, Raverie::String* resultMessage);
   // Starts the specified audio stream, which will use the provided callback
   // function to either request or provide audio data.
-  StreamStatus::Enum
-  StartStream(StreamTypes::Enum whichStream, Raverie::String* resultMessage, IOCallbackType* callback, void* callbackData);
+  StreamStatus::Enum StartStream(StreamTypes::Enum whichStream, Raverie::String* resultMessage, IOCallbackType* callback, void* callbackData);
   // Stops the specified audio stream
   StreamStatus::Enum StopStream(StreamTypes::Enum whichStream, Raverie::String* resultMessage);
   // Shuts down the underlying audio API

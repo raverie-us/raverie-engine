@@ -22,7 +22,8 @@ struct PhysicsPair
     return mObjects[index];
   }
 
-  union {
+  union
+  {
     struct
     {
       T A, B;
@@ -54,7 +55,8 @@ struct ColliderPair
 
   bool operator>(const ColliderPair& rhs) const;
 
-  union {
+  union
+  {
     struct
     {
       Collider *A, *B;

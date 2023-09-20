@@ -4,28 +4,19 @@
 namespace Raverie
 {
 
-void FixedArrayDefaultConstructor(RaverieSpirVFrontEnd* translator,
-                                  Raverie::Type* resultType,
-                                  RaverieSpirVFrontEndContext* context)
+void FixedArrayDefaultConstructor(RaverieSpirVFrontEnd* translator, Raverie::Type* resultType, RaverieSpirVFrontEndContext* context)
 {
   // Just build a variable op for the given fixed array type
   RaverieShaderIRType* shaderType = translator->FindType(resultType, nullptr);
   context->PushIRStack(translator->BuildOpVariable(shaderType->mPointerType, context));
 }
 
-void FixedArrayBackupConstructor(RaverieSpirVFrontEnd* translator,
-                                 Raverie::FunctionCallNode* fnCallNode,
-                                 Raverie::StaticTypeNode* staticTypeNode,
-                                 RaverieSpirVFrontEndContext* context)
+void FixedArrayBackupConstructor(RaverieSpirVFrontEnd* translator, Raverie::FunctionCallNode* fnCallNode, Raverie::StaticTypeNode* staticTypeNode, RaverieSpirVFrontEndContext* context)
 {
   FixedArrayDefaultConstructor(translator, staticTypeNode->ResultType, context);
 }
 
-bool ValidateIndexLiteral(RaverieSpirVFrontEnd* translator,
-                          Raverie::ExpressionNode* node,
-                          RaverieShaderIROp* indexOperand,
-                          int maxValue,
-                          RaverieSpirVFrontEndContext* context)
+bool ValidateIndexLiteral(RaverieSpirVFrontEnd* translator, Raverie::ExpressionNode* node, RaverieShaderIROp* indexOperand, int maxValue, RaverieSpirVFrontEndContext* context)
 {
   // Check if this is a constant (literal). If not we can't validate.
   if (indexOperand->mOpType != OpType::OpConstant)
@@ -45,10 +36,7 @@ bool ValidateIndexLiteral(RaverieSpirVFrontEnd* translator,
   return false;
 }
 
-void ResolveFixedArrayGet(RaverieSpirVFrontEnd* translator,
-                          Raverie::FunctionCallNode* functionCallNode,
-                          Raverie::MemberAccessNode* memberAccessNode,
-                          RaverieSpirVFrontEndContext* context)
+void ResolveFixedArrayGet(RaverieSpirVFrontEnd* translator, Raverie::FunctionCallNode* functionCallNode, Raverie::MemberAccessNode* memberAccessNode, RaverieSpirVFrontEndContext* context)
 {
   // Get the 'this' array type and component type
   Raverie::Type* raverieArrayType = memberAccessNode->LeftOperand->ResultType;
@@ -66,16 +54,12 @@ void ResolveFixedArrayGet(RaverieSpirVFrontEnd* translator,
   // Generate the access chain to get the element within the array
   IRaverieShaderIR* leftOperand = translator->WalkAndGetResult(memberAccessNode->LeftOperand, context);
   RaverieShaderIROp* selfInstance = translator->GetOrGeneratePointerTypeFromIR(leftOperand, context);
-  IRaverieShaderIR* accessChainOp =
-      translator->BuildCurrentBlockAccessChain(elementType, selfInstance, indexOperand, context);
+  IRaverieShaderIR* accessChainOp = translator->BuildCurrentBlockAccessChain(elementType, selfInstance, indexOperand, context);
 
   context->PushIRStack(accessChainOp);
 }
 
-void ResolveFixedArraySet(RaverieSpirVFrontEnd* translator,
-                          Raverie::FunctionCallNode* functionCallNode,
-                          Raverie::MemberAccessNode* memberAccessNode,
-                          RaverieSpirVFrontEndContext* context)
+void ResolveFixedArraySet(RaverieSpirVFrontEnd* translator, Raverie::FunctionCallNode* functionCallNode, Raverie::MemberAccessNode* memberAccessNode, RaverieSpirVFrontEndContext* context)
 {
   // Get the 'this' array type and component type
   Raverie::Type* raverieArrayType = memberAccessNode->LeftOperand->ResultType;
@@ -93,8 +77,7 @@ void ResolveFixedArraySet(RaverieSpirVFrontEnd* translator,
   // Generate the access chain to get the element within the array
   IRaverieShaderIR* leftOperand = translator->WalkAndGetResult(memberAccessNode->LeftOperand, context);
   RaverieShaderIROp* selfInstance = translator->GetOrGeneratePointerTypeFromIR(leftOperand, context);
-  IRaverieShaderIR* accessChainOp =
-      translator->BuildCurrentBlockAccessChain(elementType, selfInstance, indexOperand, context);
+  IRaverieShaderIR* accessChainOp = translator->BuildCurrentBlockAccessChain(elementType, selfInstance, indexOperand, context);
 
   // Get the source value
   IRaverieShaderIR* sourceIR = translator->WalkAndGetResult(functionCallNode->Arguments[1], context);
@@ -104,10 +87,7 @@ void ResolveFixedArraySet(RaverieSpirVFrontEnd* translator,
   translator->BuildStoreOp(currentBlock, accessChainOp, sourceIR, context);
 }
 
-void ResolveFixedArrayCount(RaverieSpirVFrontEnd* translator,
-                            Raverie::FunctionCallNode* functionCallNode,
-                            Raverie::MemberAccessNode* memberAccessNode,
-                            RaverieSpirVFrontEndContext* context)
+void ResolveFixedArrayCount(RaverieSpirVFrontEnd* translator, Raverie::FunctionCallNode* functionCallNode, Raverie::MemberAccessNode* memberAccessNode, RaverieSpirVFrontEndContext* context)
 {
   // Return the integer constant expression as the array count (could call the
   // intrinsic for count but why not use this)
@@ -116,9 +96,7 @@ void ResolveFixedArrayCount(RaverieSpirVFrontEnd* translator,
   context->PushIRStack(arrayType->mParameters[1]);
 }
 
-void FixedArrayExpressionInitializerResolver(RaverieSpirVFrontEnd* translator,
-                                             Raverie::ExpressionInitializerNode*& node,
-                                             RaverieSpirVFrontEndContext* context)
+void FixedArrayExpressionInitializerResolver(RaverieSpirVFrontEnd* translator, Raverie::ExpressionInitializerNode*& node, RaverieSpirVFrontEndContext* context)
 {
   RaverieShaderIRType* fixedArrayType = translator->FindType(node->ResultType, node);
 
@@ -127,16 +105,14 @@ void FixedArrayExpressionInitializerResolver(RaverieSpirVFrontEnd* translator,
   size_t statementCount = node->InitializerStatements.Size();
   if (fixedArrayType->mComponents != statementCount)
   {
-    String errMsg = String::Format(
-        "Array initializer was given %d item(s) and it expected %d.", statementCount, fixedArrayType->mComponents);
+    String errMsg = String::Format("Array initializer was given %d item(s) and it expected %d.", statementCount, fixedArrayType->mComponents);
     translator->SendTranslationError(node->Location, errMsg);
     context->PushIRStack(translator->GenerateDummyIR(node, context));
     return;
   }
 
   // Start constructing the array by walking all of the arguments
-  RaverieShaderIROp* compositeConstructOp =
-      translator->BuildIROpNoBlockAdd(OpType::OpCompositeConstruct, fixedArrayType, context);
+  RaverieShaderIROp* compositeConstructOp = translator->BuildIROpNoBlockAdd(OpType::OpCompositeConstruct, fixedArrayType, context);
   for (size_t i = 0; i < node->InitializerStatements.Size(); ++i)
   {
     Raverie::ExpressionNode* expNode = node->InitializerStatements[i];
@@ -150,8 +126,7 @@ void FixedArrayExpressionInitializerResolver(RaverieSpirVFrontEnd* translator,
     Raverie::FunctionCallNode* addCallNode = Raverie::Type::DynamicCast<Raverie::FunctionCallNode*>(expNode);
     if (addCallNode != nullptr)
     {
-      Raverie::MemberAccessNode* memberAccessNode =
-          Raverie::Type::DynamicCast<Raverie::MemberAccessNode*>(addCallNode->LeftOperand);
+      Raverie::MemberAccessNode* memberAccessNode = Raverie::Type::DynamicCast<Raverie::MemberAccessNode*>(addCallNode->LeftOperand);
       if (memberAccessNode != nullptr && memberAccessNode->Name == Raverie::OperatorInsert)
         argumentValueNode = addCallNode->Arguments[0];
       else
@@ -193,8 +168,7 @@ void FixedArrayExpressionInitializerResolver(RaverieSpirVFrontEnd* translator,
   // target variable to copy to. If this is a function call node then the this
   // is either the result from a function or a constructor call, both of which
   // require no copy back.
-  Raverie::FunctionCallNode* functionCallNode =
-      Raverie::Type::DynamicCast<Raverie::FunctionCallNode*>(localVariableNode->InitialValue);
+  Raverie::FunctionCallNode* functionCallNode = Raverie::Type::DynamicCast<Raverie::FunctionCallNode*>(localVariableNode->InitialValue);
   if (functionCallNode != nullptr)
     return;
 
@@ -231,11 +205,7 @@ void FixedArrayResolver(RaverieSpirVFrontEnd* translator, Raverie::BoundType* ra
   int length = (int)raverieFixedArrayType->TemplateArguments[1].IntegerValue;
 
   // Create the array type
-  RaverieShaderIRType* fixedArrayType = translator->MakeTypeAndPointer(shaderLibrary,
-                                                                     ShaderIRTypeBaseType::FixedArray,
-                                                                     raverieFixedArrayType->Name,
-                                                                     raverieFixedArrayType,
-                                                                     spv::StorageClassFunction);
+  RaverieShaderIRType* fixedArrayType = translator->MakeTypeAndPointer(shaderLibrary, ShaderIRTypeBaseType::FixedArray, raverieFixedArrayType->Name, raverieFixedArrayType, spv::StorageClassFunction);
 
   // Set the parameters (and currently components for convenience)
   fixedArrayType->mComponents = length;
@@ -251,19 +221,13 @@ void FixedArrayResolver(RaverieSpirVFrontEnd* translator, Raverie::BoundType* ra
   TypeResolvers& typeResolver = shaderLibrary->mTypeResolvers[raverieFixedArrayType];
   typeResolver.mBackupConstructorResolver = FixedArrayBackupConstructor;
   typeResolver.mDefaultConstructorResolver = FixedArrayDefaultConstructor;
-  typeResolver.RegisterFunctionResolver(
-      GetMemberOverloadedFunction(raverieFixedArrayType, Raverie::OperatorGet, intTypeName), ResolveFixedArrayGet);
-  typeResolver.RegisterFunctionResolver(
-      GetMemberOverloadedFunction(raverieFixedArrayType, Raverie::OperatorSet, intTypeName, raverieElementType->ToString()),
-      ResolveFixedArraySet);
+  typeResolver.RegisterFunctionResolver(GetMemberOverloadedFunction(raverieFixedArrayType, Raverie::OperatorGet, intTypeName), ResolveFixedArrayGet);
+  typeResolver.RegisterFunctionResolver(GetMemberOverloadedFunction(raverieFixedArrayType, Raverie::OperatorSet, intTypeName, raverieElementType->ToString()), ResolveFixedArraySet);
   typeResolver.RegisterFunctionResolver(GetInstanceProperty(raverieFixedArrayType, "Count")->Get, ResolveFixedArrayCount);
   typeResolver.mExpressionInitializerListResolver = FixedArrayExpressionInitializerResolver;
 }
 
-void ResolveRuntimeArrayGet(RaverieSpirVFrontEnd* translator,
-                            Raverie::FunctionCallNode* functionCallNode,
-                            Raverie::MemberAccessNode* memberAccessNode,
-                            RaverieSpirVFrontEndContext* context)
+void ResolveRuntimeArrayGet(RaverieSpirVFrontEnd* translator, Raverie::FunctionCallNode* functionCallNode, Raverie::MemberAccessNode* memberAccessNode, RaverieSpirVFrontEndContext* context)
 {
   // Get the 'this' array type and component type (from the containing struct
   // type)
@@ -286,16 +250,12 @@ void ResolveRuntimeArrayGet(RaverieSpirVFrontEnd* translator,
   // Note: We have to do a special access chain so the result type is of the
   // correct storage class (uniform)
   RaverieShaderIROp* selfInstance = translator->GetOrGeneratePointerTypeFromIR(leftOperand, context);
-  IRaverieShaderIR* accessChainOp =
-      translator->BuildCurrentBlockAccessChain(elementType, selfInstance, constant0, indexOperand, context);
+  IRaverieShaderIR* accessChainOp = translator->BuildCurrentBlockAccessChain(elementType, selfInstance, constant0, indexOperand, context);
 
   context->PushIRStack(accessChainOp);
 }
 
-void ResolveRuntimeArraySet(RaverieSpirVFrontEnd* translator,
-                            Raverie::FunctionCallNode* functionCallNode,
-                            Raverie::MemberAccessNode* memberAccessNode,
-                            RaverieSpirVFrontEndContext* context)
+void ResolveRuntimeArraySet(RaverieSpirVFrontEnd* translator, Raverie::FunctionCallNode* functionCallNode, Raverie::MemberAccessNode* memberAccessNode, RaverieSpirVFrontEndContext* context)
 {
   // Get the 'this' array type and component type
   Raverie::Type* raverieArrayType = memberAccessNode->LeftOperand->ResultType;
@@ -311,8 +271,7 @@ void ResolveRuntimeArraySet(RaverieSpirVFrontEnd* translator,
   RaverieShaderIROp* constant0 = translator->GetIntegerConstant(0, context);
   IRaverieShaderIR* leftOperand = translator->WalkAndGetResult(memberAccessNode->LeftOperand, context);
   RaverieShaderIROp* selfInstance = translator->GetOrGeneratePointerTypeFromIR(leftOperand, context);
-  IRaverieShaderIR* accessChainOp =
-      translator->BuildCurrentBlockAccessChain(elementType, selfInstance, constant0, indexOperand, context);
+  IRaverieShaderIR* accessChainOp = translator->BuildCurrentBlockAccessChain(elementType, selfInstance, constant0, indexOperand, context);
 
   // Get the source value
   IRaverieShaderIR* sourceIR = translator->WalkAndGetResult(functionCallNode->Arguments[1], context);
@@ -322,10 +281,7 @@ void ResolveRuntimeArraySet(RaverieSpirVFrontEnd* translator,
   translator->BuildStoreOp(currentBlock, accessChainOp, sourceIR, context);
 }
 
-void ResolveRuntimeArrayCount(RaverieSpirVFrontEnd* translator,
-                              Raverie::FunctionCallNode* functionCallNode,
-                              Raverie::MemberAccessNode* memberAccessNode,
-                              RaverieSpirVFrontEndContext* context)
+void ResolveRuntimeArrayCount(RaverieSpirVFrontEnd* translator, Raverie::FunctionCallNode* functionCallNode, Raverie::MemberAccessNode* memberAccessNode, RaverieSpirVFrontEndContext* context)
 {
   // The runtime array length instruction is a bit odd as it requires the struct
   // the array is contained in as well as the member index offset into the
@@ -339,11 +295,9 @@ void ResolveRuntimeArrayCount(RaverieSpirVFrontEnd* translator,
   IRaverieShaderIR* structOwnerOp = translator->WalkAndGetResult(memberAccessNode->LeftOperand, context);
   // We create the runtime array wrapper struct such that the real array is always at member index 0
   RaverieShaderIRConstantLiteral* zeroLiteral = translator->GetOrCreateConstantIntegerLiteral(0);
-  IRaverieShaderIR* uintLengthResult =
-      translator->BuildCurrentBlockIROp(OpType::OpArrayLength, uintType, structOwnerOp, zeroLiteral, context);
+  IRaverieShaderIR* uintLengthResult = translator->BuildCurrentBlockIROp(OpType::OpArrayLength, uintType, structOwnerOp, zeroLiteral, context);
   // Cast to a signed int. Note: This will do very bad things if the sign bit is set on the unsigned int.
-  IRaverieShaderIR* intLengthResult =
-      translator->BuildCurrentBlockIROp(OpType::OpBitcast, intType, uintLengthResult, context);
+  IRaverieShaderIR* intLengthResult = translator->BuildCurrentBlockIROp(OpType::OpBitcast, intType, uintLengthResult, context);
   context->PushIRStack(intLengthResult);
 }
 
@@ -378,14 +332,12 @@ void RuntimeArrayResolver(RaverieSpirVFrontEnd* translator, Raverie::BoundType* 
   String internalArrayName = BuildString("SpirV", raverieTypeName);
 
   // Create the true runtime array type
-  RaverieShaderIRType* runtimeArrayType = translator->MakeTypeAndPointer(
-      shaderLibrary, ShaderIRTypeBaseType::RuntimeArray, internalArrayName, nullptr, spv::StorageClassStorageBuffer);
+  RaverieShaderIRType* runtimeArrayType = translator->MakeTypeAndPointer(shaderLibrary, ShaderIRTypeBaseType::RuntimeArray, internalArrayName, nullptr, spv::StorageClassStorageBuffer);
   runtimeArrayType->mParameters.PushBack(elementType);
   translator->MakeShaderTypeMeta(runtimeArrayType, nullptr);
 
   // Now generate the wrapper struct around the runtime array
-  RaverieShaderIRType* wrapperStructType =
-      translator->MakeStructType(shaderLibrary, raverieTypeName, raverieRuntimeArrayType, spv::StorageClassStorageBuffer);
+  RaverieShaderIRType* wrapperStructType = translator->MakeStructType(shaderLibrary, raverieTypeName, raverieRuntimeArrayType, spv::StorageClassStorageBuffer);
   wrapperStructType->AddMember(runtimeArrayType, "Data");
   // Always use the actual type name with "Buffer" appended for the wrapper type
   // name
@@ -398,13 +350,9 @@ void RuntimeArrayResolver(RaverieSpirVFrontEnd* translator, Raverie::BoundType* 
   // Register resolvers for the few functions we care about.
   // Note: Add is illegal since this is provided by the client
   TypeResolvers& typeResolver = shaderLibrary->mTypeResolvers[raverieRuntimeArrayType];
-  typeResolver.RegisterFunctionResolver(
-      GetMemberOverloadedFunction(raverieRuntimeArrayType, Raverie::OperatorGet, intTypeName), ResolveRuntimeArrayGet);
-  typeResolver.RegisterFunctionResolver(
-      GetMemberOverloadedFunction(raverieRuntimeArrayType, Raverie::OperatorSet, intTypeName, raverieElementType->ToString()),
-      ResolveRuntimeArraySet);
-  typeResolver.RegisterFunctionResolver(GetInstanceProperty(raverieRuntimeArrayType, "Count")->Get,
-                                        ResolveRuntimeArrayCount);
+  typeResolver.RegisterFunctionResolver(GetMemberOverloadedFunction(raverieRuntimeArrayType, Raverie::OperatorGet, intTypeName), ResolveRuntimeArrayGet);
+  typeResolver.RegisterFunctionResolver(GetMemberOverloadedFunction(raverieRuntimeArrayType, Raverie::OperatorSet, intTypeName, raverieElementType->ToString()), ResolveRuntimeArraySet);
+  typeResolver.RegisterFunctionResolver(GetInstanceProperty(raverieRuntimeArrayType, "Count")->Get, ResolveRuntimeArrayCount);
 }
 
 void GeometryStreamInputResolver(RaverieSpirVFrontEnd* translator, Raverie::BoundType* raverieInputStreamType)
@@ -420,11 +368,8 @@ void GeometryStreamInputResolver(RaverieSpirVFrontEnd* translator, Raverie::Boun
   int length = streamUserData->mSize;
 
   // Create the array type
-  RaverieShaderIRType* inputStreamType = translator->MakeTypeAndPointer(shaderLibrary,
-                                                                      ShaderIRTypeBaseType::FixedArray,
-                                                                      raverieInputStreamType->Name,
-                                                                      raverieInputStreamType,
-                                                                      spv::StorageClassFunction);
+  RaverieShaderIRType* inputStreamType =
+      translator->MakeTypeAndPointer(shaderLibrary, ShaderIRTypeBaseType::FixedArray, raverieInputStreamType->Name, raverieInputStreamType, spv::StorageClassFunction);
   // Set the parameters (and currently components for convenience)
   inputStreamType->mComponents = length;
   inputStreamType->mParameters.PushBack(elementType);
@@ -439,20 +384,13 @@ void GeometryStreamInputResolver(RaverieSpirVFrontEnd* translator, Raverie::Boun
   TypeResolvers& typeResolver = shaderLibrary->mTypeResolvers[raverieInputStreamType];
   typeResolver.mBackupConstructorResolver = FixedArrayBackupConstructor;
   typeResolver.mDefaultConstructorResolver = FixedArrayDefaultConstructor;
-  typeResolver.RegisterFunctionResolver(
-      GetMemberOverloadedFunction(raverieInputStreamType, Raverie::OperatorGet, intTypeName), ResolveFixedArrayGet);
-  typeResolver.RegisterFunctionResolver(
-      GetMemberOverloadedFunction(raverieInputStreamType, Raverie::OperatorSet, intTypeName, raverieElementType->ToString()),
-      ResolveFixedArraySet);
-  typeResolver.RegisterFunctionResolver(GetInstanceProperty(raverieInputStreamType, "Count")->Get,
-                                        ResolveFixedArrayCount);
+  typeResolver.RegisterFunctionResolver(GetMemberOverloadedFunction(raverieInputStreamType, Raverie::OperatorGet, intTypeName), ResolveFixedArrayGet);
+  typeResolver.RegisterFunctionResolver(GetMemberOverloadedFunction(raverieInputStreamType, Raverie::OperatorSet, intTypeName, raverieElementType->ToString()), ResolveFixedArraySet);
+  typeResolver.RegisterFunctionResolver(GetInstanceProperty(raverieInputStreamType, "Count")->Get, ResolveFixedArrayCount);
   typeResolver.mExpressionInitializerListResolver = FixedArrayExpressionInitializerResolver;
 }
 
-void OutputStreamRestart(RaverieSpirVFrontEnd* translator,
-                         Raverie::FunctionCallNode* functionCallNode,
-                         Raverie::MemberAccessNode* memberAccessNode,
-                         RaverieSpirVFrontEndContext* context)
+void OutputStreamRestart(RaverieSpirVFrontEnd* translator, Raverie::FunctionCallNode* functionCallNode, Raverie::MemberAccessNode* memberAccessNode, RaverieSpirVFrontEndContext* context)
 {
   translator->BuildCurrentBlockIROp(OpType::OpEndPrimitive, nullptr, context);
 }
@@ -471,11 +409,7 @@ void GeometryStreamOutputResolver(RaverieSpirVFrontEnd* translator, Raverie::Bou
   RaverieShaderIRType* intType = translator->mLibrary->FindType(raverieIntType);
 
   // Create the array type
-  RaverieShaderIRType* fixedArrayType = translator->MakeTypeAndPointer(shaderLibrary,
-                                                                     ShaderIRTypeBaseType::Struct,
-                                                                     raverieFixedArrayType->Name,
-                                                                     raverieFixedArrayType,
-                                                                     spv::StorageClassFunction);
+  RaverieShaderIRType* fixedArrayType = translator->MakeTypeAndPointer(shaderLibrary, ShaderIRTypeBaseType::Struct, raverieFixedArrayType->Name, raverieFixedArrayType, spv::StorageClassFunction);
   fixedArrayType->mDebugResultName = "OutputStream";
   // Add the element type
   fixedArrayType->AddMember(elementType, "Output");
@@ -483,17 +417,12 @@ void GeometryStreamOutputResolver(RaverieSpirVFrontEnd* translator, Raverie::Bou
 
   // Create the append function. We need this to be an actual function that will
   // be late bound later via the entry point.
-  Raverie::Function* raverieAppendFn =
-      GetMemberOverloadedFunction(raverieFixedArrayType, "Append", raverieElementType->ToString(), intTypeName);
-  RaverieShaderIRFunction* appendFn =
-      translator->GenerateIRFunction(nullptr, nullptr, fixedArrayType, raverieAppendFn, raverieAppendFn->Name, context);
+  Raverie::Function* raverieAppendFn = GetMemberOverloadedFunction(raverieFixedArrayType, "Append", raverieElementType->ToString(), intTypeName);
+  RaverieShaderIRFunction* appendFn = translator->GenerateIRFunction(nullptr, nullptr, fixedArrayType, raverieAppendFn, raverieAppendFn->Name, context);
   // Add the parameters for the function
-  translator->BuildIROp(&appendFn->mParameterBlock, OpType::OpFunctionParameter, fixedArrayType->mPointerType, context)
-      ->mDebugResultName = "stream";
-  translator->BuildIROp(&appendFn->mParameterBlock, OpType::OpFunctionParameter, elementType, context)
-      ->mDebugResultName = "outputData";
-  translator->BuildIROp(&appendFn->mParameterBlock, OpType::OpFunctionParameter, intType, context)->mDebugResultName =
-      "vertexId";
+  translator->BuildIROp(&appendFn->mParameterBlock, OpType::OpFunctionParameter, fixedArrayType->mPointerType, context)->mDebugResultName = "stream";
+  translator->BuildIROp(&appendFn->mParameterBlock, OpType::OpFunctionParameter, elementType, context)->mDebugResultName = "outputData";
+  translator->BuildIROp(&appendFn->mParameterBlock, OpType::OpFunctionParameter, intType, context)->mDebugResultName = "vertexId";
   // Make this a valid function by adding the first block with a return
   // statement
   BasicBlock* firstBlock = translator->BuildBlockNoStack(String(), context);
@@ -504,8 +433,7 @@ void GeometryStreamOutputResolver(RaverieSpirVFrontEnd* translator, Raverie::Bou
   TypeResolvers& typeResolver = shaderLibrary->mTypeResolvers[raverieFixedArrayType];
   typeResolver.mBackupConstructorResolver = FixedArrayBackupConstructor;
   typeResolver.mDefaultConstructorResolver = FixedArrayDefaultConstructor;
-  typeResolver.RegisterFunctionResolver(GetMemberOverloadedFunction(raverieFixedArrayType, "Restart"),
-                                        OutputStreamRestart);
+  typeResolver.RegisterFunctionResolver(GetMemberOverloadedFunction(raverieFixedArrayType, "Restart"), OutputStreamRestart);
   typeResolver.mExpressionInitializerListResolver = FixedArrayExpressionInitializerResolver;
 }
 

@@ -51,8 +51,7 @@ void ComputeEdgeInfoForTriangleA(Triangle& triA, uint indexA, Triangle& triB, Tr
       if (pointDifference.LengthSq() > equalVertexThreshold)
         continue;
 
-      if (numSharedVertices == 1 &&
-          (sharedVerticesA[numSharedVertices - 1] == iA || sharedVerticesB[numSharedVertices - 1] == iB))
+      if (numSharedVertices == 1 && (sharedVerticesA[numSharedVertices - 1] == iA || sharedVerticesB[numSharedVertices - 1] == iB))
         continue;
 
       // they are close enough, so mark what indices we are looking at
@@ -281,8 +280,7 @@ void GenerateInternalEdgeInfoDynamic(HeightMapCollider* collider, uint contactId
   // @JoshD: Using local position seems problematic with non-uniform scale (the
   // angles change)
   real cellSize = heightMap->mUnitsPerPatch / HeightPatch::Size;
-  Vec2 patchStart =
-      heightMap->GetLocalPosition(patchIndex) - Vec2(heightMap->mUnitsPerPatch, heightMap->mUnitsPerPatch) * 0.5f;
+  Vec2 patchStart = heightMap->GetLocalPosition(patchIndex) - Vec2(heightMap->mUnitsPerPatch, heightMap->mUnitsPerPatch) * 0.5f;
   Vec2 cellStart = patchStart + Math::ToVec2(cellIndex) * cellSize;
 
   // For a given cell, there are potentially 4 extra triangles that need to be
@@ -303,12 +301,9 @@ void GenerateInternalEdgeInfoDynamic(HeightMapCollider* collider, uint contactId
 
   // The 4 vertices of the current cell always need to be sampled
   float h11 = heightMap->SampleHeight(absIndex, Math::cInfinite);
-  float h12 =
-      heightMap->SampleHeight(heightMap->GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(1, 0)), Math::cInfinite);
-  float h21 =
-      heightMap->SampleHeight(heightMap->GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(0, 1)), Math::cInfinite);
-  float h22 =
-      heightMap->SampleHeight(heightMap->GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(1, 1)), Math::cInfinite);
+  float h12 = heightMap->SampleHeight(heightMap->GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(1, 0)), Math::cInfinite);
+  float h21 = heightMap->SampleHeight(heightMap->GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(0, 1)), Math::cInfinite);
+  float h22 = heightMap->SampleHeight(heightMap->GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(1, 1)), Math::cInfinite);
 
   // If we are on the bottom left triangle then only build adjacency for the
   // 3 adjacent triangles: (h21, h12, h22), (h20, h11, h21), (h11, h02, h12)
@@ -323,10 +318,8 @@ void GenerateInternalEdgeInfoDynamic(HeightMapCollider* collider, uint contactId
     Vec3 p21 = Vec3(cellStart.x + cellSize * 1, h21, cellStart.y + cellSize * 0);
     Triangle mainTri = Triangle(p11, p12, p21);
 
-    float h20 =
-        heightMap->SampleHeight(heightMap->GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(-1, 1)), Math::cInfinite);
-    float h02 =
-        heightMap->SampleHeight(heightMap->GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(1, -1)), Math::cInfinite);
+    float h20 = heightMap->SampleHeight(heightMap->GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(-1, 1)), Math::cInfinite);
+    float h02 = heightMap->SampleHeight(heightMap->GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(1, -1)), Math::cInfinite);
 
     // Try each adjacent triangle if it exists
     if (h22 != Math::cInfinite)
@@ -361,10 +354,8 @@ void GenerateInternalEdgeInfoDynamic(HeightMapCollider* collider, uint contactId
     Vec3 p22 = Vec3(cellStart.x + cellSize * 1, h22, cellStart.y + cellSize * 1);
     Triangle mainTri = Triangle(p21, p12, p22);
 
-    float h31 =
-        heightMap->SampleHeight(heightMap->GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(0, 1)), Math::cInfinite);
-    float h13 =
-        heightMap->SampleHeight(heightMap->GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(1, -1)), Math::cInfinite);
+    float h31 = heightMap->SampleHeight(heightMap->GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(0, 1)), Math::cInfinite);
+    float h13 = heightMap->SampleHeight(heightMap->GetAbsoluteIndex(patchIndex, cellIndex + CellIndex(1, -1)), Math::cInfinite);
 
     // Try each adjacent triangle if it exists
     if (h11 != Math::cInfinite)
@@ -409,8 +400,7 @@ struct StateInfo
   uint mConvexTestFlag;
 };
 
-void TestEdgeCloseness(
-    Vec3Param contactPoint, Vec3Param point1, Vec3Param point2, real angle, uint testEdgeIndex, StateInfo& stateInfo)
+void TestEdgeCloseness(Vec3Param contactPoint, Vec3Param point1, Vec3Param point2, real angle, uint testEdgeIndex, StateInfo& stateInfo)
 {
   // if this edge is too sharp, then we don't correct the edge
   real maxAngleThreshold = Math::cTwoPi;
@@ -468,8 +458,7 @@ void TestEdgeCloseness(
 
 // clamps the normal to the voronoi region (on one side) if it is outside the
 // bounds
-bool ClampNormal(
-    Vec3Param edge, Vec3Param triNormal, Vec3Param localContactNormal, real voronoiAngle, Vec3Ref clampedLocalNormal)
+bool ClampNormal(Vec3Param edge, Vec3Param triNormal, Vec3Param localContactNormal, real voronoiAngle, Vec3Ref clampedLocalNormal)
 {
   // build our remaining vector needed for out basis
   Vec3 edgeCross = Math::Cross(edge, triNormal);
@@ -844,8 +833,7 @@ void CorrectInternalEdgeNormal(GenericPhysicsMesh* mesh, Physics::Manifold* mani
         if (!edgeCorrected[j])
           continue;
 
-        real distance =
-            (manifold->Contacts[i].WorldPoints[objectIndex] - manifold->Contacts[j].WorldPoints[objectIndex]).Length();
+        real distance = (manifold->Contacts[i].WorldPoints[objectIndex] - manifold->Contacts[j].WorldPoints[objectIndex]).Length();
         if (!hasClosest)
         {
           closestDistance = distance;
@@ -869,10 +857,7 @@ void CorrectInternalEdgeNormal(GenericPhysicsMesh* mesh, Physics::Manifold* mani
   }
 }
 
-void CorrectInternalEdgeNormal(HeightMapCollider* collider,
-                               Physics::Manifold* manifold,
-                               uint objectIndex,
-                               uint contactId)
+void CorrectInternalEdgeNormal(HeightMapCollider* collider, Physics::Manifold* manifold, uint objectIndex, uint contactId)
 {
   // get the collided triangle and it's normal
   Triangle tri = collider->GetTriangle(contactId);

@@ -9,8 +9,7 @@ namespace Simd
 
 // loading
 SimMat3 LoadMat3(const scalar vals[12]);
-SimMat3
-SetMat3(scalar m00, scalar m01, scalar m02, scalar m10, scalar m11, scalar m12, scalar m20, scalar m21, scalar m22);
+SimMat3 SetMat3(scalar m00, scalar m01, scalar m02, scalar m10, scalar m11, scalar m12, scalar m20, scalar m21, scalar m22);
 SimMat3 UnAlignedLoadMat3(const scalar vals[12]);
 // storing
 void StoreMat3(scalar vals[12], SimMat3Param mat);

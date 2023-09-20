@@ -49,15 +49,7 @@ RaverieDefineType(SoundEntry, builder, type)
   RaverieBindMethodProperty(StopPreview);
 }
 
-SoundEntry::SoundEntry() :
-    mLoopEndTime(0),
-    mLoopStartTime(0),
-    mWeight(1.0f),
-    mStartTime(0.0f),
-    mEndTime(0.0f),
-    mLoopTailLength(0.0f),
-    mSound(nullptr),
-    mCrossFadeLoopTail(false)
+SoundEntry::SoundEntry() : mLoopEndTime(0), mLoopStartTime(0), mWeight(1.0f), mStartTime(0.0f), mEndTime(0.0f), mLoopTailLength(0.0f), mSound(nullptr), mCrossFadeLoopTail(false)
 {
   mSound = SoundManager::GetDefault();
   if (mSound)
@@ -274,21 +266,13 @@ RaverieDefineType(SoundCue, builder, type)
   RaverieBindGetterSetterProperty(Volume)->Add(new EditorSlider(0.0f, 2.0f, 0.01f));
   RaverieBindGetterSetterProperty(Decibels)->Add(new EditorSlider(-32.0f, 6.0f, 0.1f));
   RaverieBindFieldProperty(mUseDecibelVariation)->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  RaverieBindGetterSetterProperty(VolumeVariation)
-      ->Add(new EditorSlider(0.0f, 1.0f, 0.01f))
-      ->RaverieFilterNotBool(mUseDecibelVariation);
-  RaverieBindGetterSetterProperty(DecibelVariation)
-      ->Add(new EditorSlider(0.0f, 6.0f, 0.1f))
-      ->RaverieFilterBool(mUseDecibelVariation);
+  RaverieBindGetterSetterProperty(VolumeVariation)->Add(new EditorSlider(0.0f, 1.0f, 0.01f))->RaverieFilterNotBool(mUseDecibelVariation);
+  RaverieBindGetterSetterProperty(DecibelVariation)->Add(new EditorSlider(0.0f, 6.0f, 0.1f))->RaverieFilterBool(mUseDecibelVariation);
   RaverieBindGetterSetterProperty(Pitch)->Add(new EditorSlider(-2.0f, 2.0f, 0.1f));
   RaverieBindGetterSetterProperty(Semitones)->Add(new EditorSlider(-24.0f, 24.0f, 0.1f));
   RaverieBindFieldProperty(mUseSemitoneVariation)->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  RaverieBindGetterSetterProperty(PitchVariation)
-      ->Add(new EditorSlider(0.0f, 1.0f, 0.1f))
-      ->RaverieFilterNotBool(mUseSemitoneVariation);
-  RaverieBindGetterSetterProperty(SemitoneVariation)
-      ->Add(new EditorSlider(0.0f, 12.0f, 0.1f))
-      ->RaverieFilterBool(mUseSemitoneVariation);
+  RaverieBindGetterSetterProperty(PitchVariation)->Add(new EditorSlider(0.0f, 1.0f, 0.1f))->RaverieFilterNotBool(mUseSemitoneVariation);
+  RaverieBindGetterSetterProperty(SemitoneVariation)->Add(new EditorSlider(0.0f, 12.0f, 0.1f))->RaverieFilterBool(mUseSemitoneVariation);
   RaverieBindGetterSetterProperty(Attenuator);
   RaverieBindFieldProperty(mShowMusicOptions)->AddAttribute(PropertyAttributes::cInvalidatesObject);
   RaverieBindGetterSetterProperty(BeatsPerMinute)->RaverieFilterBool(mShowMusicOptions);

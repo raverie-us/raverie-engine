@@ -14,8 +14,7 @@ RaverieDefineType(MultiConvexMeshSubMeshData, builder, type)
 
   // Explicitly bind the derived type versions of these functions
   // (auto-binding can do weird things with the base class overloads)
-  RaverieFullBindGetterSetter(
-      builder, type, &RaverieSelf::All, RaverieInstanceOverload(RangeType), nullptr, RaverieNoOverload, "All");
+  RaverieFullBindGetterSetter(builder, type, &RaverieSelf::All, RaverieInstanceOverload(RangeType), nullptr, RaverieNoOverload, "All");
   RaverieFullBindMethod(builder, type, &RaverieSelf::Add, RaverieInstanceOverload(SubConvexMesh*), "Add", RaverieNoNames);
   RaverieFullBindMethod(builder, type, &RaverieSelf::RemoveAt, RaverieInstanceOverload(void, int), "RemoveAt", "arrayIndex");
   RaverieBindMethod(Get);
@@ -202,8 +201,7 @@ bool SubConvexMesh::CastRay(const Ray& localRay, MultiConvexMesh* mesh, ProxyRes
 
     Intersection::IntersectionPoint pointData;
     //  the ray for intersection with the triangle
-    Intersection::IntersectionType tResult =
-        Intersection::RayTriangle(localRay.Start, localRay.Direction, tri[0], tri[1], tri[2], &pointData);
+    Intersection::IntersectionType tResult = Intersection::RayTriangle(localRay.Start, localRay.Direction, tri[0], tri[1], tri[2], &pointData);
 
     if (tResult <= Intersection::None)
       continue;

@@ -202,4 +202,3 @@ private:
   Composition* mCurrentComposition;
 };
 } // namespace Raverie
-

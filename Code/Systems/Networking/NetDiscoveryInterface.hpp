@@ -35,10 +35,10 @@ public:
   /// into account if it was direct or indirect info).
   void UpdateToBasic(bool isIndirect);
 
-  TimeMs mRoundTripTime = 0; ///< Round trip time (from our peer to this host).
-  BitStream mBasicHostInfo;  ///< Basic host info (limited to 480 bytes).
-  BitStream mExtraHostInfo;  ///< Extra host info (requires that connection is
-                             ///< established).
+  TimeMs mRoundTripTime = 0;                                            ///< Round trip time (from our peer to this host).
+  BitStream mBasicHostInfo;                                             ///< Basic host info (limited to 480 bytes).
+  BitStream mExtraHostInfo;                                             ///< Extra host info (requires that connection is
+                                                                        ///< established).
   NetRefreshResult::Enum mRefreshResult = NetRefreshResult::NoResponse; ///< How far in the process did this host
                                                                         ///< get?
 };
@@ -80,8 +80,8 @@ public:
   Network::Enum mNetwork = Network::LAN;                                     ///< Network request is on.
   bool mAllowDiscovery = false;                                              ///< Should refresh allow new discoveries?
   NetDiscoveryStage::Enum mDiscoveryStage = NetDiscoveryStage::Unresponding; ///< How far along is this host request?
-  bool mRemoveStaleHosts = true;     ///< Should hosts that did not respond be removed?
-  bool mAquireExtraHostInfo = false; ///< Does this request want extra host info.
+  bool mRemoveStaleHosts = true;                                             ///< Should hosts that did not respond be removed?
+  bool mAquireExtraHostInfo = false;                                         ///< Does this request want extra host info.
 };
 
 typedef UniquePointer<OpenHostRequest> OpenHostRequestPtr;
@@ -146,8 +146,7 @@ public:
   /// Refresh all hosts that it possibly can.
   virtual void RefreshAll(bool allowDiscovery, bool getExtraHostInfo, bool removeStaleHosts) = 0;
   /// Refresh just one host.
-  virtual void
-  SingleHostRefresh(IpAddress const& thierIp, bool allowDiscovery, bool getExtraHostInfo, bool removeStaleHosts) = 0;
+  virtual void SingleHostRefresh(IpAddress const& thierIp, bool allowDiscovery, bool getExtraHostInfo, bool removeStaleHosts) = 0;
 
   virtual void HandleCancelSingleHostRequest(SingleHostRequest& singleHostRequest) = 0;
   virtual void HandleCancelMultiHostRequest(MultiHostRequest& multiHostRequest) = 0;
@@ -161,9 +160,7 @@ public:
   /// to decide how they want to handle the pong in terms of doing additional
   /// host discovery or not. (LAN will call it good, internet will likely want
   /// to do another more direct search)
-  virtual void HandlePong(IpAddress const& theirIpAddress,
-                          NetHostPongData& netHostPongdata,
-                          PendingHostPing& pendingHostPing) = 0;
+  virtual void HandlePong(IpAddress const& theirIpAddress, NetHostPongData& netHostPongdata, PendingHostPing& pendingHostPing) = 0;
 
   virtual void OnEngineUpdate(UpdateEvent* event) = 0;
 
@@ -203,14 +200,9 @@ public:
   void GetExpectedHosts(Network::Enum network, ArraySet<IpAddress>& outIpAddressList);
 
   /// Helper to create and get a pointer to a new open host request.
-  SingleHostRequest* CreateSingleHostRequest(Network::Enum network,
-                                             bool allowDiscovery,
-                                             IpAddress const& theirIpAddress,
-                                             bool removeStaleHosts,
-                                             bool extraHostInfo);
+  SingleHostRequest* CreateSingleHostRequest(Network::Enum network, bool allowDiscovery, IpAddress const& theirIpAddress, bool removeStaleHosts, bool extraHostInfo);
   /// Helper to create and get a pointer to a new open host request.
-  MultiHostRequest*
-  CreateMultiHostRequest(Network::Enum network, bool allowDiscovery, bool removeStaleHosts, bool extraHostInfo);
+  MultiHostRequest* CreateMultiHostRequest(Network::Enum network, bool allowDiscovery, bool removeStaleHosts, bool extraHostInfo);
 
   /// Helper for dispatching NetEvents.
   /// Dispatches a responding host event. Creates NetHosts as appropriate.
@@ -232,9 +224,7 @@ public:
   /// Returns the IP of the host that was pinged. (it is not theirIpAddress in
   /// the case of a master server pong) Pong helper extracts data from the pong
   /// and creates responding host data (or updates it).
-  IpAddress PongHelper(IpAddress const& theirIpAddress,
-                       NetHostPongData& netHostPongData,
-                       PendingHostPing& pendingHostPing);
+  IpAddress PongHelper(IpAddress const& theirIpAddress, NetHostPongData& netHostPongData, PendingHostPing& pendingHostPing);
 
   bool PongIsForThisProject(NetHostPongData const& netHostPongData, PendingHostPing const& pendingHostPing);
 

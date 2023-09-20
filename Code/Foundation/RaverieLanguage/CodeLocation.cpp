@@ -71,17 +71,12 @@ String CodeLocation::GetFormattedString(MessageFormat::Enum format) const
     // If we have no function name...
     if (this->Function.Empty())
     {
-      return String::Format(
-          "  In %s at line %d, character %d", this->Origin.c_str(), this->PrimaryLine, this->PrimaryCharacter);
+      return String::Format("  In %s at line %d, character %d", this->Origin.c_str(), this->PrimaryLine, this->PrimaryCharacter);
     }
     // Otherwise, a function name was provided
     else
     {
-      return String::Format("  In %s at line %d, character %d (within function %s)",
-                            this->Origin.c_str(),
-                            this->PrimaryLine,
-                            this->PrimaryCharacter,
-                            this->Function.c_str());
+      return String::Format("  In %s at line %d, character %d (within function %s)", this->Origin.c_str(), this->PrimaryLine, this->PrimaryCharacter, this->Function.c_str());
     }
   }
 
@@ -95,8 +90,7 @@ String CodeLocation::GetFormattedString(MessageFormat::Enum format) const
     // Otherwise, a function name was provided
     else
     {
-      return String::Format(
-          "  File \"%s\", line %d, in %s", this->Origin.c_str(), this->PrimaryLine, this->Function.c_str());
+      return String::Format("  File \"%s\", line %d, in %s", this->Origin.c_str(), this->PrimaryLine, this->Function.c_str());
     }
   }
 

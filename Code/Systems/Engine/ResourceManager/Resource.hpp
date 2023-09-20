@@ -317,27 +317,27 @@ public:
   void RestoreUndoData(HandleParam object, AnyParam undoData);
 };
 
-#define ResourceProperty(type, name)                                                                                   \
-  HandleOf<type> m##name;                                                                                              \
-  type* Get##name()                                                                                                    \
-  {                                                                                                                    \
-    return m##name;                                                                                                    \
-  }                                                                                                                    \
-  void Set##name(type* newResource)                                                                                    \
-  {                                                                                                                    \
-    if (newResource)                                                                                                   \
-      m##name = newResource;                                                                                           \
+#define ResourceProperty(type, name)                                                                                                                                                                   \
+  HandleOf<type> m##name;                                                                                                                                                                              \
+  type* Get##name()                                                                                                                                                                                    \
+  {                                                                                                                                                                                                    \
+    return m##name;                                                                                                                                                                                    \
+  }                                                                                                                                                                                                    \
+  void Set##name(type* newResource)                                                                                                                                                                    \
+  {                                                                                                                                                                                                    \
+    if (newResource)                                                                                                                                                                                   \
+      m##name = newResource;                                                                                                                                                                           \
   }
 
-#define ResourceHandleProperty(type, name)                                                                             \
-  HandleOf<type> m##name;                                                                                              \
-  type* Get##name()                                                                                                    \
-  {                                                                                                                    \
-    return m##name;                                                                                                    \
-  }                                                                                                                    \
-  void Set##name(type* newResource)                                                                                    \
-  {                                                                                                                    \
-    m##name = newResource;                                                                                             \
+#define ResourceHandleProperty(type, name)                                                                                                                                                             \
+  HandleOf<type> m##name;                                                                                                                                                                              \
+  type* Get##name()                                                                                                                                                                                    \
+  {                                                                                                                                                                                                    \
+    return m##name;                                                                                                                                                                                    \
+  }                                                                                                                                                                                                    \
+  void Set##name(type* newResource)                                                                                                                                                                    \
+  {                                                                                                                                                                                                    \
+    m##name = newResource;                                                                                                                                                                             \
   }
 
 } // namespace Raverie

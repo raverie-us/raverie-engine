@@ -694,8 +694,7 @@ void Widget::BuildLocalMatrix(Mat4& output)
   Build2dTransform(output, this->mTranslation, this->mAngle);
 }
 
-void Widget::RenderUpdate(
-    ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
+void Widget::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   DebugValidate();
   Mat4 localTx;
@@ -742,11 +741,7 @@ ViewNode& Widget::AddRenderNodes(ViewBlock& viewBlock, FrameBlock& frameBlock, W
   return viewNode;
 }
 
-void Widget::CreateRenderData(ViewBlock& viewBlock,
-                              FrameBlock& frameBlock,
-                              WidgetRect clipRect,
-                              Array<StreamedVertex>& vertices,
-                              PrimitiveType::Enum primitiveType)
+void Widget::CreateRenderData(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Array<StreamedVertex>& vertices, PrimitiveType::Enum primitiveType)
 {
   DebugValidate();
   if (vertices.Empty())

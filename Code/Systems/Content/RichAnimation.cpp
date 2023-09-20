@@ -240,12 +240,7 @@ void CreateSubTracks(TrackNode* parent, cstr names, RichAnimation* richAnim)
   }
 }
 
-TrackNode::TrackNode(StringParam name,
-                     StringParam path,
-                     TrackType::Enum type,
-                     BoundType* targetMeta,
-                     TrackNode* parent,
-                     RichAnimation* richAnim)
+TrackNode::TrackNode(StringParam name, StringParam path, TrackType::Enum type, BoundType* targetMeta, TrackNode* parent, RichAnimation* richAnim)
 {
   Name = name;
   Path = path;
@@ -508,8 +503,7 @@ Any SubPropertySample<Quat, 3>(TrackNode* vectorNode, float t)
 
 Any TrackNode::SampleTrack(float t)
 {
-  ErrorIf(Type == TrackType::Object || Type == TrackType::Component,
-          "Only Property and SubProperty tracks can be sampled.");
+  ErrorIf(Type == TrackType::Object || Type == TrackType::Component, "Only Property and SubProperty tracks can be sampled.");
 
   /// Float types can sample the baked curve directly, but vector types
   /// need to sample each SubProperty track to build a final sampled vector type
@@ -551,9 +545,7 @@ Any SubSample<Quat>(AnyParam sample, uint element)
 
 Any TrackNode::SampleObject(Cog* animGraphObject)
 {
-  ReturnIf(Type == TrackType::Object || Type == TrackType::Component,
-           Any(),
-           "Cannot sample object or component track directly.");
+  ReturnIf(Type == TrackType::Object || Type == TrackType::Component, Any(), "Cannot sample object or component track directly.");
 
   // If we're a sub property track, we want to sample only the element
   // of the vector type
@@ -634,8 +626,7 @@ TrackNode* TrackNode::IsValid(Cog* animGraphObject, Status& status)
     if (prop == nullptr)
     {
       String componentName = Parent->Name;
-      String message =
-          String::Format("Failed to find Property '%s' on Component '%s'", Name.c_str(), componentName.c_str());
+      String message = String::Format("Failed to find Property '%s' on Component '%s'", Name.c_str(), componentName.c_str());
       status.SetFailed(message);
     }
     // If the type has changed from the initial type the track was created with
@@ -809,8 +800,7 @@ TrackNode* TrackNode::GetComponentTrack()
 
 TrackNode* TrackNode::GetPropertyTrack()
 {
-  ErrorIf(Type == TrackType::Object || Type == TrackType::Component,
-          "Cannot get a property track from an object or component track.");
+  ErrorIf(Type == TrackType::Object || Type == TrackType::Component, "Cannot get a property track from an object or component track.");
 
   // If we're the property track, simply return ourselves
   if (Type == TrackType::Property)
@@ -866,8 +856,7 @@ void CreateSubKeyFrames<Quat, 3>(TrackNode* parent, float time, AnyParam value)
 
 KeyFrame* TrackNode::CreateKeyFrame(float time, AnyParam value)
 {
-  ErrorIf(Type == TrackType::Object || Type == TrackType::Component,
-          "Key frames can only be added to Property and SubProperty tracks.");
+  ErrorIf(Type == TrackType::Object || Type == TrackType::Component, "Key frames can only be added to Property and SubProperty tracks.");
 
   // If this property node is of a vector type, we want to create key frames
   // on the SubProperty tracks
@@ -1431,8 +1420,7 @@ TrackNode* RichAnimation::GetObjectTrack(StringRange path, bool createNew)
   return GetObjectTrack(mRoot, pathRange, String(), createNew);
 }
 
-TrackNode*
-RichAnimation::GetPropertyTrack(TrackNode* objectTrack, StringParam path, BoundType* targetMeta, bool createNew)
+TrackNode* RichAnimation::GetPropertyTrack(TrackNode* objectTrack, StringParam path, BoundType* targetMeta, bool createNew)
 {
   // First we have to get the component track
   String componentName = ComponentNameFromPath(path);
@@ -1468,8 +1456,7 @@ TrackNode* RichAnimation::GetDirectChildTrack(TrackNode* parent, StringParam pat
   return nullptr;
 }
 
-TrackNode*
-RichAnimation::GetComponentTrack(TrackNode* objectTrack, StringParam component, BoundType* targetMeta, bool createNew)
+TrackNode* RichAnimation::GetComponentTrack(TrackNode* objectTrack, StringParam component, BoundType* targetMeta, bool createNew)
 {
   // Recurse down from the object track to find the property track
   TrackNode* componentTrack = GetDirectChildTrack(objectTrack, component);
@@ -1483,8 +1470,7 @@ RichAnimation::GetComponentTrack(TrackNode* objectTrack, StringParam component, 
   return componentTrack;
 }
 
-TrackNode* RichAnimation::GetPropertyTrack(
-    Cog* object, Cog* animGraphObject, BoundType* componentType, StringParam propertyName, bool createNew)
+TrackNode* RichAnimation::GetPropertyTrack(Cog* object, Cog* animGraphObject, BoundType* componentType, StringParam propertyName, bool createNew)
 {
   // Find the object track (it will be created if it doesn't exist)
   String objectPath = GetObjectPath(object, animGraphObject);
@@ -1686,8 +1672,7 @@ void RichAnimationBuilder::BuildContent(BuildOptions& buildOptions)
   if (!success)
   {
     buildOptions.Failure = true;
-    buildOptions.Message =
-        String::Format("Failed to bake rich animation file at %s to %s", sourceFile.c_str(), destFile.c_str());
+    buildOptions.Message = String::Format("Failed to bake rich animation file at %s to %s", sourceFile.c_str(), destFile.c_str());
   }
 
   // Update the file time so that NeedsBuilding works.

@@ -10,13 +10,14 @@ void CommandLineToStringArray()
 {
   forRange (String arg, gCommandLine.Split(" "))
   {
-      gCommandLineArguments.PushBack(arg);
+    gCommandLineArguments.PushBack(arg);
   }
 }
 
 bool ParseCommandLineStringArray(StringMap& parsedCommandLineArguments, Array<String>& commandLineArguments)
 {
-  forRange(String& arg, commandLineArguments.All()) {
+  forRange (String& arg, commandLineArguments.All())
+  {
     ZPrint("Raw Argument: %s\n", arg.c_str());
   }
 

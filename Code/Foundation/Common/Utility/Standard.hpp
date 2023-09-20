@@ -19,19 +19,18 @@ extern char gDiscardBuffer[2];
 
 #define RaverieVSPrintf(destination, bufferSizeBytes, format, args) vsprintf_s(destination, bufferSizeBytes, format, args)
 
-#define RaverieSPrintf(destination, bufferSizeBytes, format, ...)                                                         \
-  sprintf_s(destination, bufferSizeBytes, format, __VA_ARGS__)
+#define RaverieSPrintf(destination, bufferSizeBytes, format, ...) sprintf_s(destination, bufferSizeBytes, format, __VA_ARGS__)
 
 #define RaverieStrCpy(destination, bufferSizeBytes, source) strcpy_s(destination, bufferSizeBytes, source)
 
 #define RaverieCStringCopy(dest, destSize, source, sourceSize) strncpy_s(dest, (destSize), source, sourceSize);
 
-#define RaverieVSPrintfCount(format, pargs, extraSize, resultSize)                                                        \
-  do                                                                                                                   \
-  {                                                                                                                    \
-    va_list sizeArgs;                                                                                                  \
-    va_copy(sizeArgs, pargs);                                                                                          \
-    resultSize = vsnprintf(gDiscardBuffer, 1, format, sizeArgs) + extraSize;                                           \
+#define RaverieVSPrintfCount(format, pargs, extraSize, resultSize)                                                                                                                                     \
+  do                                                                                                                                                                                                   \
+  {                                                                                                                                                                                                    \
+    va_list sizeArgs;                                                                                                                                                                                  \
+    va_copy(sizeArgs, pargs);                                                                                                                                                                          \
+    resultSize = vsnprintf(gDiscardBuffer, 1, format, sizeArgs) + extraSize;                                                                                                                           \
   } while (false)
 
 #define RaverieSPrintfCount(format, ...) snprintf(gDiscardBuffer, 1, format, __VA_ARGS__)

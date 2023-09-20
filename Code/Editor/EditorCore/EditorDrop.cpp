@@ -43,8 +43,7 @@ bool DropOnObject(MetaDropEvent* event, Cog* droppedOn)
             else
               displayString = metaObjectDrop->Name;
 
-            event->Result = String::Format(
-                "Set %s.%s to %s", component.StoredType->Name.c_str(), property->Name.c_str(), displayString.c_str());
+            event->Result = String::Format("Set %s.%s to %s", component.StoredType->Name.c_str(), property->Name.c_str(), displayString.c_str());
           }
           else
           {
@@ -114,8 +113,7 @@ bool DropOnObjectViewport(MetaDropEvent* event, Viewport* viewport, Space* space
     }
     else
     {
-      Cog* object =
-          Z::gEditor->Tools->mCreationTool->CreateWithViewport(viewport, dropPosition, CoreArchetypes::Sprite);
+      Cog* object = Z::gEditor->Tools->mCreationTool->CreateWithViewport(viewport, dropPosition, CoreArchetypes::Sprite);
       if (object)
       {
         Sprite* sprite = object->has(Sprite);
@@ -136,8 +134,7 @@ bool DropOnObjectViewport(MetaDropEvent* event, Viewport* viewport, Space* space
     }
     else
     {
-      Cog* object =
-          Z::gEditor->Tools->mCreationTool->CreateWithViewport(viewport, dropPosition, CoreArchetypes::Transform);
+      Cog* object = Z::gEditor->Tools->mCreationTool->CreateWithViewport(viewport, dropPosition, CoreArchetypes::Transform);
       if (object)
       {
         object->AddComponentByName("Model");
@@ -159,8 +156,7 @@ bool DropOnObjectViewport(MetaDropEvent* event, Viewport* viewport, Space* space
     }
     else
     {
-      Cog* object =
-          Z::gEditor->Tools->mCreationTool->CreateWithViewport(viewport, dropPosition, CoreArchetypes::Transform);
+      Cog* object = Z::gEditor->Tools->mCreationTool->CreateWithViewport(viewport, dropPosition, CoreArchetypes::Transform);
       if (object)
       {
         object->AddComponentByName("SoundEmitter");

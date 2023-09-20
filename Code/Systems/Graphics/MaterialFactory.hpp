@@ -21,8 +21,7 @@ public:
 
   bool CanAddComponent(HandleParam owner, BoundType* typeToAdd, AddInfo* info = nullptr) override;
 
-  void UpdateRestrictedComponents(HashMap<LibraryRef, RaverieShaderIRLibraryRef>& libraries,
-                                  RaverieFragmentTypeMap& fragmentTypes);
+  void UpdateRestrictedComponents(HashMap<LibraryRef, RaverieShaderIRLibraryRef>& libraries, RaverieFragmentTypeMap& fragmentTypes);
 
   ShaderInputType::Enum GetShaderInputType(Type* type);
   typedef HashMap<Type*, ShaderInputType::Enum> ShaderInputTypeMap;

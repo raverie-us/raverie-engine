@@ -30,15 +30,15 @@ public:
   byte mValue;
 };
 
-#define DeclareByteEnumGetSet(enumType, name)                                                                          \
-  ByteEnum<enumType> m##name;                                                                                          \
-  enumType Get##name()                                                                                                 \
-  {                                                                                                                    \
-    return m##name;                                                                                                    \
-  }                                                                                                                    \
-  void Set##name(enumType value)                                                                                       \
-  {                                                                                                                    \
-    m##name = value;                                                                                                   \
+#define DeclareByteEnumGetSet(enumType, name)                                                                                                                                                          \
+  ByteEnum<enumType> m##name;                                                                                                                                                                          \
+  enumType Get##name()                                                                                                                                                                                 \
+  {                                                                                                                                                                                                    \
+    return m##name;                                                                                                                                                                                    \
+  }                                                                                                                                                                                                    \
+  void Set##name(enumType value)                                                                                                                                                                       \
+  {                                                                                                                                                                                                    \
+    m##name = value;                                                                                                                                                                                   \
   }
 
 } // namespace Raverie

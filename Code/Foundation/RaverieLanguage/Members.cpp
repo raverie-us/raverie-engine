@@ -17,10 +17,8 @@ RaverieDefineType(Member, builder, type)
   RaverieFullBindField(builder, type, &Member::Name, "Name", PropertyBinding::Get);
   RaverieFullBindField(builder, type, &Member::Owner, "Owner", PropertyBinding::Get);
   RaverieFullBindField(builder, type, &Member::IsStatic, "IsStatic", PropertyBinding::Get);
-  RaverieFullBindGetterSetter(
-      builder, type, &Member::GetOwningLibrary, RaverieNoOverload, RaverieNoSetter, RaverieNoOverload, "Library");
-  RaverieFullBindGetterSetter(
-      builder, type, &Member::GetTypeOrNull, RaverieNoOverload, RaverieNoSetter, RaverieNoOverload, "Type");
+  RaverieFullBindGetterSetter(builder, type, &Member::GetOwningLibrary, RaverieNoOverload, RaverieNoSetter, RaverieNoOverload, "Library");
+  RaverieFullBindGetterSetter(builder, type, &Member::GetTypeOrNull, RaverieNoOverload, RaverieNoSetter, RaverieNoOverload, "Type");
 }
 
 RaverieDefineType(Property, builder, type)
@@ -335,8 +333,7 @@ bool Member::ValidateInstanceHandle(const Any& instance, Handle& thisHandle)
     }
   }
 
-  ExecutableState::CallingState->ThrowException(
-      "The 'this' instance handle was either null or not of the correct type");
+  ExecutableState::CallingState->ThrowException("The 'this' instance handle was either null or not of the correct type");
   return false;
 }
 
@@ -473,18 +470,11 @@ Type* Variable::GetTypeOrNull()
   return this->ResultType;
 }
 
-SendsEvent::SendsEvent() :
-    SentType(Core::GetInstance().ErrorType),
-    Owner(Core::GetInstance().ErrorType),
-    EventProperty(nullptr)
+SendsEvent::SendsEvent() : SentType(Core::GetInstance().ErrorType), Owner(Core::GetInstance().ErrorType), EventProperty(nullptr)
 {
 }
 
-SendsEvent::SendsEvent(BoundType* owner, StringParam name, BoundType* sentType) :
-    Name(name),
-    SentType(sentType),
-    Owner(owner),
-    EventProperty(nullptr)
+SendsEvent::SendsEvent(BoundType* owner, StringParam name, BoundType* sentType) : Name(name), SentType(sentType), Owner(owner), EventProperty(nullptr)
 {
 }
 

@@ -13,17 +13,10 @@ RaverieDefineType(StringBuilderExtended, builder, type)
 
   RaverieFullBindMethod(builder, type, &StringBuilderExtended::Clear, RaverieNoOverload, "Clear", nullptr);
 
-  RaverieFullBindMethod(
-      builder, type, &StringBuilderExtended::Write, (void (StringBuilderExtended::*)(AnyParam)), "Write", nullptr);
+  RaverieFullBindMethod(builder, type, &StringBuilderExtended::Write, (void(StringBuilderExtended::*)(AnyParam)), "Write", nullptr);
 
-  RaverieFullBindMethod(
-      builder, type, &StringBuilderExtended::WriteLine, (void (StringBuilderExtended::*)()), "WriteLine", nullptr);
-  RaverieFullBindMethod(builder,
-                      type,
-                      &StringBuilderExtended::WriteLine,
-                      (void (StringBuilderExtended::*)(AnyParam)),
-                      "WriteLine",
-                      nullptr);
+  RaverieFullBindMethod(builder, type, &StringBuilderExtended::WriteLine, (void(StringBuilderExtended::*)()), "WriteLine", nullptr);
+  RaverieFullBindMethod(builder, type, &StringBuilderExtended::WriteLine, (void(StringBuilderExtended::*)(AnyParam)), "WriteLine", nullptr);
 }
 
 void StringBuilderExtended::Write(AnyParam value)
@@ -358,16 +351,12 @@ RaverieDefineType(RuneIterator, builder, type)
   builder.AddBoundGetterSetter(type, "IsNotEmpty", boolType, nullptr, &RuneIterator::IsNotEmpty, MemberOptions::None);
 
   // Iterator interface
-  builder.AddBoundFunction(
-      type, "Increment", &RuneIterator::Increment, ParameterArray(), voidType, MemberOptions::None);
-  builder.AddBoundFunction(
-      type, "Decrement", &RuneIterator::Decrement, ParameterArray(), voidType, MemberOptions::None);
+  builder.AddBoundFunction(type, "Increment", &RuneIterator::Increment, ParameterArray(), voidType, MemberOptions::None);
+  builder.AddBoundFunction(type, "Decrement", &RuneIterator::Decrement, ParameterArray(), voidType, MemberOptions::None);
   builder.AddBoundFunction(type, "Equals", &RuneIterator::Equals, OneParameter(type), boolType, MemberOptions::None);
 
-  builder.AddBoundGetterSetter(
-      type, "ByteIndex", integerType, nullptr, &RuneIterator::GetByteIndex, MemberOptions::None);
-  builder.AddBoundGetterSetter(
-      type, "OriginalString", stringType, nullptr, &StringRangeExtended::GetOriginalString, FunctionOptions::None);
+  builder.AddBoundGetterSetter(type, "ByteIndex", integerType, nullptr, &RuneIterator::GetByteIndex, MemberOptions::None);
+  builder.AddBoundGetterSetter(type, "OriginalString", stringType, nullptr, &StringRangeExtended::GetOriginalString, FunctionOptions::None);
 }
 
 String RuneIterator::ToString(const BoundType* type, const byte* data)
@@ -499,127 +488,68 @@ RaverieDefineType(StringRangeExtended, builder, type)
   // Range interface
   builder.AddBoundGetterSetter(type, "All", type, nullptr, &StringRangeExtended::All, MemberOptions::None);
   RaverieFullBindMethod(builder, type, &StringRangeExtended::MoveNext, RaverieNoOverload, "MoveNext", nullptr);
-  builder.AddBoundGetterSetter(
-      type, "Current", RaverieTypeId(ScriptRune), nullptr, &StringRangeExtended::Current, MemberOptions::None);
+  builder.AddBoundGetterSetter(type, "Current", RaverieTypeId(ScriptRune), nullptr, &StringRangeExtended::Current, MemberOptions::None);
   builder.AddBoundGetterSetter(type, "Empty", booleanType, nullptr, &StringRangeExtended::Empty, MemberOptions::None);
-  builder.AddBoundGetterSetter(
-      type, "IsNotEmpty", booleanType, nullptr, &StringRangeExtended::IsNotEmpty, MemberOptions::None);
+  builder.AddBoundGetterSetter(type, "IsNotEmpty", booleanType, nullptr, &StringRangeExtended::IsNotEmpty, MemberOptions::None);
 
-  builder
-      .AddBoundGetterSetter(type, "Begin", iteratorType, nullptr, &StringRangeExtended::Begin, FunctionOptions::None)
-      ->Description = RaverieDocumentString("Returns the RuneIterator at the start of this range.");
-  RaverieFullBindMethod(builder, type, &StringRangeExtended::CompareTo, RaverieNoOverload, "CompareTo", nullptr)
-      ->Description = RaverieDocumentString("Compares this StringRange to the given StringRange and returns an "
-                                          "Integer to denote their relative sort order.");
-  RaverieFullBindMethod(builder, type, &StringRangeExtended::Contains, RaverieNoOverload, "Contains", nullptr)
-      ->Description = RaverieDocumentString("Returns if the string Contains the specified substring.");
-  builder.AddBoundGetterSetter(type, "End", iteratorType, nullptr, &StringRangeExtended::End, FunctionOptions::None)
-      ->Description = RaverieDocumentString("Returns the RuneIterator at the end (one past the "
-                                          "last Rune) of this range.");
-  RaverieFullBindMethod(builder, type, &StringRangeExtended::EndsWith, RaverieNoOverload, "EndsWith", nullptr)
-      ->Description = RaverieDocumentString("Returns true if the string ends with the specified substring.");
-  builder
-      .AddBoundFunction(
-          type, "FindFirstOf", &StringRangeExtended::FindFirstOf, OneParameter(type), type, FunctionOptions::None)
-      ->Description = RaverieDocumentString("Returns a StringRange that Contains the first "
-                                          "occurrence of given StringRange.");
-  builder
-      .AddBoundFunction(
-          type, "FindLastOf", &StringRangeExtended::FindLastOf, OneParameter(type), type, FunctionOptions::None)
-      ->Description = RaverieDocumentString("Returns a StringRange that Contains the last "
-                                          "occurrence of given StringRange.");
-  builder
-      .AddBoundFunction(type,
-                        "FindRangeInclusive",
-                        &StringRangeExtended::FindRangeInclusive,
-                        TwoParameters(type, "startRange", "endRange"),
-                        type,
-                        FunctionOptions::None)
-      ->Description = RaverieDocumentString("Finds the first StringRange that starts with 'startRange' and ends with "
-                                          "'endRange'. This substring includes 'startRange' and 'endRange'.");
-  builder
-      .AddBoundFunction(type,
-                        "FindRangeExclusive",
-                        &StringRangeExtended::FindRangeExclusive,
-                        TwoParameters(type, "startRange", "endRange"),
-                        type,
-                        FunctionOptions::None)
-      ->Description = RaverieDocumentString("Finds the first StringRange that starts with 'startRange' and ends with "
-                                          "'endRange'. This substring excludes 'startRange' and 'endRange'.");
-  RaverieFullBindMethod(builder, type, &StringRangeExtended::Replace, RaverieNoOverload, "Replace", "oldValue newValue")
-      ->Description = RaverieDocumentString("Returns a new string with all occurances of a "
-                                          "substrings replaced with another substring.");
-  builder
-      .AddBoundFunction(type,
-                        "Split",
-                        StringRangeExtended::Split,
-                        OneParameter(type, "separator"),
-                        splitRangeType,
-                        FunctionOptions::None)
-      ->Description = RaverieDocumentString("Splits the string, according to the separator "
-                                          "string, into a range of substrings.");
-  builder
-      .AddBoundFunction(type,
-                        "SubString",
-                        &StringRangeExtended::SubString,
-                        TwoParameters(iteratorType, "begin", "end"),
-                        type,
-                        FunctionOptions::None)
-      ->Description = RaverieDocumentString("Constructs a StringRange from the given begin and end iterators.");
-  builder
-      .AddBoundFunction(type,
-                        "SubStringBytes",
-                        &StringRangeExtended::SubStringBytes,
-                        TwoParameters(integerType, "startByteIndex", "lengthInBytes"),
-                        type,
-                        FunctionOptions::None)
-      ->Description = RaverieDocumentString("Constructs a substring based upon a number of bytes. WARNING: strings "
-                                          "are UTF8 so indexing by bytes could produce unexpected results on "
-                                          "non-ascii strings.");
-  RaverieFullBindMethod(builder, type, &StringRangeExtended::StartsWith, RaverieNoOverload, "StartsWith", nullptr)
-      ->Description = RaverieDocumentString("Returns true if the string starts with the specified substring.");
-  builder.AddBoundFunction(type, "Trim", &StringRangeExtended::Trim, ParameterArray(), type, FunctionOptions::None)
-      ->Description = RaverieDocumentString("Trims all leading and trailing whitespace.");
-  builder
-      .AddBoundFunction(type, "TrimEnd", &StringRangeExtended::TrimEnd, ParameterArray(), type, FunctionOptions::None)
-      ->Description = RaverieDocumentString("Trims all trailing whitespace.");
-  builder
-      .AddBoundFunction(
-          type, "TrimStart", &StringRangeExtended::TrimStart, ParameterArray(), type, FunctionOptions::None)
-      ->Description = RaverieDocumentString("Trims all leading whitespace.");
+  builder.AddBoundGetterSetter(type, "Begin", iteratorType, nullptr, &StringRangeExtended::Begin, FunctionOptions::None)->Description =
+      RaverieDocumentString("Returns the RuneIterator at the start of this range.");
+  RaverieFullBindMethod(builder, type, &StringRangeExtended::CompareTo, RaverieNoOverload, "CompareTo", nullptr)->Description =
+      RaverieDocumentString("Compares this StringRange to the given StringRange and returns an "
+                            "Integer to denote their relative sort order.");
+  RaverieFullBindMethod(builder, type, &StringRangeExtended::Contains, RaverieNoOverload, "Contains", nullptr)->Description =
+      RaverieDocumentString("Returns if the string Contains the specified substring.");
+  builder.AddBoundGetterSetter(type, "End", iteratorType, nullptr, &StringRangeExtended::End, FunctionOptions::None)->Description =
+      RaverieDocumentString("Returns the RuneIterator at the end (one past the "
+                            "last Rune) of this range.");
+  RaverieFullBindMethod(builder, type, &StringRangeExtended::EndsWith, RaverieNoOverload, "EndsWith", nullptr)->Description =
+      RaverieDocumentString("Returns true if the string ends with the specified substring.");
+  builder.AddBoundFunction(type, "FindFirstOf", &StringRangeExtended::FindFirstOf, OneParameter(type), type, FunctionOptions::None)->Description =
+      RaverieDocumentString("Returns a StringRange that Contains the first "
+                            "occurrence of given StringRange.");
+  builder.AddBoundFunction(type, "FindLastOf", &StringRangeExtended::FindLastOf, OneParameter(type), type, FunctionOptions::None)->Description =
+      RaverieDocumentString("Returns a StringRange that Contains the last "
+                            "occurrence of given StringRange.");
+  builder.AddBoundFunction(type, "FindRangeInclusive", &StringRangeExtended::FindRangeInclusive, TwoParameters(type, "startRange", "endRange"), type, FunctionOptions::None)->Description =
+      RaverieDocumentString("Finds the first StringRange that starts with 'startRange' and ends with "
+                            "'endRange'. This substring includes 'startRange' and 'endRange'.");
+  builder.AddBoundFunction(type, "FindRangeExclusive", &StringRangeExtended::FindRangeExclusive, TwoParameters(type, "startRange", "endRange"), type, FunctionOptions::None)->Description =
+      RaverieDocumentString("Finds the first StringRange that starts with 'startRange' and ends with "
+                            "'endRange'. This substring excludes 'startRange' and 'endRange'.");
+  RaverieFullBindMethod(builder, type, &StringRangeExtended::Replace, RaverieNoOverload, "Replace", "oldValue newValue")->Description =
+      RaverieDocumentString("Returns a new string with all occurances of a "
+                            "substrings replaced with another substring.");
+  builder.AddBoundFunction(type, "Split", StringRangeExtended::Split, OneParameter(type, "separator"), splitRangeType, FunctionOptions::None)->Description =
+      RaverieDocumentString("Splits the string, according to the separator "
+                            "string, into a range of substrings.");
+  builder.AddBoundFunction(type, "SubString", &StringRangeExtended::SubString, TwoParameters(iteratorType, "begin", "end"), type, FunctionOptions::None)->Description =
+      RaverieDocumentString("Constructs a StringRange from the given begin and end iterators.");
+  builder.AddBoundFunction(type, "SubStringBytes", &StringRangeExtended::SubStringBytes, TwoParameters(integerType, "startByteIndex", "lengthInBytes"), type, FunctionOptions::None)->Description =
+      RaverieDocumentString("Constructs a substring based upon a number of bytes. WARNING: strings "
+                            "are UTF8 so indexing by bytes could produce unexpected results on "
+                            "non-ascii strings.");
+  RaverieFullBindMethod(builder, type, &StringRangeExtended::StartsWith, RaverieNoOverload, "StartsWith", nullptr)->Description =
+      RaverieDocumentString("Returns true if the string starts with the specified substring.");
+  builder.AddBoundFunction(type, "Trim", &StringRangeExtended::Trim, ParameterArray(), type, FunctionOptions::None)->Description = RaverieDocumentString("Trims all leading and trailing whitespace.");
+  builder.AddBoundFunction(type, "TrimEnd", &StringRangeExtended::TrimEnd, ParameterArray(), type, FunctionOptions::None)->Description = RaverieDocumentString("Trims all trailing whitespace.");
+  builder.AddBoundFunction(type, "TrimStart", &StringRangeExtended::TrimStart, ParameterArray(), type, FunctionOptions::None)->Description = RaverieDocumentString("Trims all leading whitespace.");
   RaverieFullBindMethod(builder, type, &StringRangeExtended::ToLower, RaverieNoOverload, "ToLower", nullptr)->Description =
       RaverieDocumentString("Returns a copy of the string that has been converted to lowercase.");
-  builder
-      .AddBoundFunction(
-          type, "ToString", &StringRangeExtended::ConvertToString, ParameterArray(), stringType, FunctionOptions::None)
-      ->Description = RaverieDocumentString("Returns a new string of the current range.");
+  builder.AddBoundFunction(type, "ToString", &StringRangeExtended::ConvertToString, ParameterArray(), stringType, FunctionOptions::None)->Description =
+      RaverieDocumentString("Returns a new string of the current range.");
   RaverieFullBindMethod(builder, type, &StringRangeExtended::ToUpper, RaverieNoOverload, "ToUpper", nullptr)->Description =
       RaverieDocumentString("Returns a copy of the string that has been converted to uppercase.");
 
-  builder
-      .AddBoundGetterSetter(
-          type, "OriginalString", stringType, nullptr, &StringRangeExtended::GetOriginalString, FunctionOptions::None)
-      ->Description = RaverieDocumentString("Returns the entire string that this range was constructed from.");
-  builder
-      .AddBoundFunction(type,
-                        "RuneIteratorFromByteIndex",
-                        &StringRangeExtended::RuneIteratorFromByteIndex,
-                        OneParameter(integerType, "byteIndex"),
-                        iteratorType,
-                        FunctionOptions::None)
+  builder.AddBoundGetterSetter(type, "OriginalString", stringType, nullptr, &StringRangeExtended::GetOriginalString, FunctionOptions::None)->Description =
+      RaverieDocumentString("Returns the entire string that this range was constructed from.");
+  builder.AddBoundFunction(type, "RuneIteratorFromByteIndex", &StringRangeExtended::RuneIteratorFromByteIndex, OneParameter(integerType, "byteIndex"), iteratorType, FunctionOptions::None)
       ->Description = RaverieDocumentString("Finds the iterator from a byte index. WARNING: Strings are UTF8 and "
-                                          "constructing an iterator from bytes indices can make an iterator in the "
-                                          "middle of a rune.");
-  builder
-      .AddBoundFunction(type,
-                        "RuneIteratorFromRuneIndex",
-                        &StringRangeExtended::RuneIteratorFromRuneIndex,
-                        OneParameter(integerType, "runeIndex"),
-                        iteratorType,
-                        FunctionOptions::None)
+                                            "constructing an iterator from bytes indices can make an iterator in the "
+                                            "middle of a rune.");
+  builder.AddBoundFunction(type, "RuneIteratorFromRuneIndex", &StringRangeExtended::RuneIteratorFromRuneIndex, OneParameter(integerType, "runeIndex"), iteratorType, FunctionOptions::None)
       ->Description = RaverieDocumentString("Finds the iterator from a rune index (the 'character' index). WARNING: "
-                                          "this may be slow as finding an iterator from rune index requires a "
-                                          "linear search.");
+                                            "this may be slow as finding an iterator from rune index requires a "
+                                            "linear search.");
 }
 
 String StringRangeExtended::ToString(const BoundType* type, const byte* data)
@@ -780,8 +710,7 @@ void StringRangeExtended::RuneIteratorFromByteIndex(Call& call, ExceptionReport&
   RuneIteratorFromByteIndexInternal(call, report, self->mOriginalStringReference, self->mRange, byteIndex);
 }
 
-void StringRangeExtended::RuneIteratorFromByteIndexInternal(
-    Call& call, ExceptionReport& report, StringParam strRef, StringRange range, int byteIndex)
+void StringRangeExtended::RuneIteratorFromByteIndexInternal(Call& call, ExceptionReport& report, StringParam strRef, StringRange range, int byteIndex)
 {
   int sizeInBytes = (int)range.SizeInBytes();
 
@@ -810,8 +739,7 @@ void StringRangeExtended::RuneIteratorFromRuneIndex(Call& call, ExceptionReport&
   RuneIteratorFromRuneIndexInternal(call, report, self->mOriginalStringReference, self->mRange, byteIndex);
 }
 
-void StringRangeExtended::RuneIteratorFromRuneIndexInternal(
-    Call& call, ExceptionReport& report, StringParam strRef, StringRange range, int runeIndex)
+void StringRangeExtended::RuneIteratorFromRuneIndexInternal(Call& call, ExceptionReport& report, StringParam strRef, StringRange range, int runeIndex)
 {
   if (runeIndex < 0)
   {
@@ -863,10 +791,7 @@ void StringRangeExtended::SubString(Call& call, ExceptionReport& report)
   if (RuneIterator::ValidateIteratorOrder(beginIterator, endIterator) == false)
     return;
 
-  SetResultStringRange(call,
-                       report,
-                       self->mOriginalStringReference,
-                       StringRange(beginIterator.mRange.Begin(), endIterator.mRange.Begin()));
+  SetResultStringRange(call, report, self->mOriginalStringReference, StringRange(beginIterator.mRange.Begin(), endIterator.mRange.Begin()));
 }
 
 void StringRangeExtended::SubStringBytes(Call& call, ExceptionReport& report)
@@ -926,26 +851,18 @@ String StringRangeExtended::ToUpper()
   return mRange.ToUpper();
 }
 
-void StringRangeExtended::SetResultStringRange(Call& call,
-                                               ExceptionReport& report,
-                                               const String& strRef,
-                                               StringRange result)
+void StringRangeExtended::SetResultStringRange(Call& call, ExceptionReport& report, const String& strRef, StringRange result)
 {
-  Handle rangeHandle = call.GetState()->AllocateDefaultConstructedHeapObject(
-      RaverieTypeId(StringRangeExtended), report, HeapFlags::ReferenceCounted);
+  Handle rangeHandle = call.GetState()->AllocateDefaultConstructedHeapObject(RaverieTypeId(StringRangeExtended), report, HeapFlags::ReferenceCounted);
   StringRangeExtended& stringRange = *(StringRangeExtended*)rangeHandle.Dereference();
   stringRange.mOriginalStringReference = strRef;
   stringRange.mRange = result;
   call.SetHandle(Call::Return, rangeHandle);
 }
 
-void StringRangeExtended::SetResultStringSplitRange(Call& call,
-                                                    ExceptionReport& report,
-                                                    StringParam strRef,
-                                                    const Raverie::StringSplitRange& result)
+void StringRangeExtended::SetResultStringSplitRange(Call& call, ExceptionReport& report, StringParam strRef, const Raverie::StringSplitRange& result)
 {
-  Handle rangeHandle =
-      call.GetState()->AllocateHeapObject(RaverieTypeId(StringSplitRangeExtended), report, HeapFlags::ReferenceCounted);
+  Handle rangeHandle = call.GetState()->AllocateHeapObject(RaverieTypeId(StringSplitRangeExtended), report, HeapFlags::ReferenceCounted);
   StringSplitRangeExtended& stringRange = *(StringSplitRangeExtended*)rangeHandle.Dereference();
   stringRange.mOriginalStringReference = strRef;
   stringRange.mSplitRange = result;
@@ -954,8 +871,7 @@ void StringRangeExtended::SetResultStringSplitRange(Call& call,
 
 void StringRangeExtended::SetResultIterator(Call& call, ExceptionReport& report, StringRange result)
 {
-  Handle rangeHandle = call.GetState()->AllocateDefaultConstructedHeapObject(
-      RaverieTypeId(RuneIterator), report, HeapFlags::ReferenceCounted);
+  Handle rangeHandle = call.GetState()->AllocateDefaultConstructedHeapObject(RaverieTypeId(RuneIterator), report, HeapFlags::ReferenceCounted);
   RuneIterator& stringRange = *(RuneIterator*)rangeHandle.Dereference();
   stringRange.mRange = result;
   call.SetHandle(Call::Return, rangeHandle);
@@ -974,8 +890,7 @@ bool StringRangeExtended::ValidateRange(StringParam strRef, const StringRange& r
   if (range.Begin() == range.End())
     return true;
 
-  if (range.Begin() < strRef.Begin() || range.Begin() > strRef.End() || range.End() < strRef.Begin() ||
-      range.End() > strRef.End() || range.Begin() > range.End())
+  if (range.Begin() < strRef.Begin() || range.Begin() > strRef.End() || range.End() < strRef.Begin() || range.End() > strRef.End() || range.Begin() > range.End())
   {
     ExecutableState* state = ExecutableState::CallingState;
     ExceptionReport& report = state->GetCallingReport();
@@ -994,16 +909,9 @@ RaverieDefineType(StringSplitRangeExtended, builder, type)
 
   // Range interface
   builder.AddBoundGetterSetter(type, "All", type, nullptr, &StringSplitRangeExtended::All, MemberOptions::None);
-  builder.AddBoundFunction(
-      type, "MoveNext", &StringSplitRangeExtended::MoveNext, ParameterArray(), RaverieTypeId(void), MemberOptions::None);
-  builder.AddBoundGetterSetter(type,
-                               "Current",
-                               RaverieTypeId(StringRangeExtended),
-                               nullptr,
-                               &StringSplitRangeExtended::Current,
-                               MemberOptions::None);
-  builder.AddBoundGetterSetter(
-      type, "IsNotEmpty", RaverieTypeId(Boolean), nullptr, &StringSplitRangeExtended::IsNotEmpty, MemberOptions::None);
+  builder.AddBoundFunction(type, "MoveNext", &StringSplitRangeExtended::MoveNext, ParameterArray(), RaverieTypeId(void), MemberOptions::None);
+  builder.AddBoundGetterSetter(type, "Current", RaverieTypeId(StringRangeExtended), nullptr, &StringSplitRangeExtended::Current, MemberOptions::None);
+  builder.AddBoundGetterSetter(type, "IsNotEmpty", RaverieTypeId(Boolean), nullptr, &StringSplitRangeExtended::IsNotEmpty, MemberOptions::None);
 }
 
 void StringSplitRangeExtended::All(Call& call, ExceptionReport& report)

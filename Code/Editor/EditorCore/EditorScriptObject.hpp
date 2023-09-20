@@ -59,9 +59,7 @@ public:
 };
 
 template <typename DataType>
-EditorScriptObjects<DataType>::EditorScriptObjects(StringParam attributeName) :
-    mAttributeName(attributeName),
-    mAutoRegister("autoRegister")
+EditorScriptObjects<DataType>::EditorScriptObjects(StringParam attributeName) : mAttributeName(attributeName), mAutoRegister("autoRegister")
 {
   ConnectThisTo(Z::gEditor, Events::ProjectLoaded, OnProjectLoaded);
 

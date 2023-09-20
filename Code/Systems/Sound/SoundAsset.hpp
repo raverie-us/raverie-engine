@@ -17,10 +17,7 @@ public:
 
   // Appends the specified number of samples to the array, starting at the
   // specified frame index.
-  virtual void AppendSamplesThreaded(BufferType* buffer,
-                                     const unsigned frameIndex,
-                                     unsigned numberOfSamples,
-                                     unsigned instanceID) = 0;
+  virtual void AppendSamplesThreaded(BufferType* buffer, const unsigned frameIndex, unsigned numberOfSamples, unsigned instanceID) = 0;
   // Resets a streaming file back to the beginning.
   virtual void ResetStreamingFile(unsigned instanceID)
   {
@@ -66,10 +63,7 @@ public:
 
   // Appends the specified number of samples to the array, starting at the
   // specified frame index.
-  void AppendSamplesThreaded(BufferType* buffer,
-                             const unsigned frameIndex,
-                             unsigned numberOfSamples,
-                             unsigned instanceID) override;
+  void AppendSamplesThreaded(BufferType* buffer, const unsigned frameIndex, unsigned numberOfSamples, unsigned instanceID) override;
   // Called by the decoder to pass off decoded samples
   void DecodingCallback(DecodedPacket* packet);
 
@@ -89,12 +83,10 @@ class StreamingDataPerInstance
 public:
   // The file object must be already open, and will not be closed by this
   // decoder
-  StreamingDataPerInstance(
-      Status& status, File* inputFile, ThreadLock* lock, unsigned channels, unsigned frames, unsigned instanceID);
+  StreamingDataPerInstance(Status& status, File* inputFile, ThreadLock* lock, unsigned channels, unsigned frames, unsigned instanceID);
   // The input data buffer must already exist, and will not be deleted by this
   // decoder
-  StreamingDataPerInstance(
-      Status& status, byte* inputData, unsigned dataSize, unsigned channels, unsigned frames, unsigned instanceID);
+  StreamingDataPerInstance(Status& status, byte* inputData, unsigned dataSize, unsigned channels, unsigned frames, unsigned instanceID);
 
   // Resets the data to start streaming from the beginning of the file
   void Reset();
@@ -122,18 +114,12 @@ class StreamingSoundAsset : public SoundAsset
 public:
   RaverieDeclareType(StreamingSoundAsset, TypeCopyMode::ReferenceType);
 
-  StreamingSoundAsset(Status& status,
-                      const String& fileName,
-                      AudioFileLoadType::Enum loadType,
-                      const String& assetName);
+  StreamingSoundAsset(Status& status, const String& fileName, AudioFileLoadType::Enum loadType, const String& assetName);
   ~StreamingSoundAsset();
 
   // Appends the specified number of samples to the array, starting at the
   // specified frame index.
-  void AppendSamplesThreaded(BufferType* buffer,
-                             const unsigned frameIndex,
-                             unsigned numberOfSamples,
-                             unsigned instanceID) override;
+  void AppendSamplesThreaded(BufferType* buffer, const unsigned frameIndex, unsigned numberOfSamples, unsigned instanceID) override;
   // Resets a streaming file back to the beginning.
   void ResetStreamingFile(unsigned instanceID) override;
   // Adds data for a new instance. Does not check for duplicates.
@@ -146,10 +132,7 @@ private:
   // found.
   StreamingDataPerInstance* GetInstanceData(unsigned instanceID);
   // Copies available decoded samples into the provided buffer
-  void CopySamplesIntoBuffer(float* outputBuffer,
-                             unsigned sampleIndex,
-                             unsigned samplesRequested,
-                             StreamingDataPerInstance* data);
+  void CopySamplesIntoBuffer(float* outputBuffer, unsigned sampleIndex, unsigned samplesRequested, StreamingDataPerInstance* data);
 
   // Decoded data per instance
   InList<StreamingDataPerInstance> mDataPerInstanceList;

@@ -8,8 +8,7 @@ class StageRequirementsGatherer;
 
 /// Context for stage requirements gathering. Used to store state needed during
 /// iteration.
-class StageRequirementsGathererContext
-    : public Raverie::WalkerContext<StageRequirementsGatherer, StageRequirementsGathererContext>
+class StageRequirementsGathererContext : public Raverie::WalkerContext<StageRequirementsGatherer, StageRequirementsGathererContext>
 {
 public:
   HashMap<Raverie::Type*, Raverie::ClassNode*> mTypeMap;
@@ -56,18 +55,13 @@ private:
   void WalkMemberAccessNode(Raverie::MemberAccessNode*& node, StageRequirementsGathererContext* context);
   void WalkStaticTypeNode(Raverie::StaticTypeNode*& node, StageRequirementsGathererContext* context);
 
-  void MergeCurrent(RaverieShaderIRLibrary* shaderLibrary,
-                    Raverie::Member* raverieMember,
-                    Raverie::SyntaxNode* node,
-                    StageRequirementsGathererContext* context);
+  void MergeCurrent(RaverieShaderIRLibrary* shaderLibrary, Raverie::Member* raverieMember, Raverie::SyntaxNode* node, StageRequirementsGathererContext* context);
 
   void BuildLibraryMap(RaverieShaderIRLibrary* library, StageRequirementsGathererContext* context);
 
   ShaderStage::Enum GetRequiredStages(Raverie::Member* raverieObject, Raverie::ReflectionObject* owner);
   String GetStageName(ShaderStage::Enum stage);
-  void CheckAndDispatchErrors(Raverie::Member* raverieObject,
-                              Raverie::ReflectionObject* owner,
-                              StageRequirementsGathererContext* context);
+  void CheckAndDispatchErrors(Raverie::Member* raverieObject, Raverie::ReflectionObject* owner, StageRequirementsGathererContext* context);
 
   ShaderCompilationErrors* mErrors;
   RaverieShaderSpirVSettings* mSettings;

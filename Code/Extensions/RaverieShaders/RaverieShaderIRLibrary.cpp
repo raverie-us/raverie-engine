@@ -4,7 +4,6 @@
 namespace Raverie
 {
 
-//-------------------------------------------------------------------FragmentSharedKey
 FragmentSharedKey::FragmentSharedKey()
 {
   mStorageClass = spv::StorageClassFunction;
@@ -29,8 +28,7 @@ size_t FragmentSharedKey::Hash() const
 
 bool FragmentSharedKey::operator==(const FragmentSharedKey& rhs) const
 {
-  bool isEqual =
-      (mStorageClass == rhs.mStorageClass) && (mFieldType == rhs.mFieldType) && (mVariableName == rhs.mVariableName);
+  bool isEqual = (mStorageClass == rhs.mStorageClass) && (mFieldType == rhs.mFieldType) && (mVariableName == rhs.mVariableName);
   return isEqual;
 }
 
@@ -119,10 +117,7 @@ MemberPropertySetterResolverIRFn TypeResolvers::FindSetterResolver(Raverie::Func
   return resolver;
 }
 
-void OperatorResolvers::RegisterBinaryOpResolver(Raverie::Type* lhsType,
-                                                 Raverie::Type* rhsType,
-                                                 Raverie::Grammar::Enum op,
-                                                 BinaryOpResolverIRFn resolver)
+void OperatorResolvers::RegisterBinaryOpResolver(Raverie::Type* lhsType, Raverie::Type* rhsType, Raverie::Grammar::Enum op, BinaryOpResolverIRFn resolver)
 {
   BinaryOperatorKey opId(lhsType, rhsType, op);
   mBinaryOpResolvers.InsertOrError(opId, resolver);
@@ -133,9 +128,7 @@ BinaryOpResolverIRFn OperatorResolvers::FindOpResolver(BinaryOperatorKey& opId)
   return mBinaryOpResolvers.FindValue(opId, nullptr);
 }
 
-void OperatorResolvers::RegisterUnaryOpResolver(Raverie::Type* type,
-                                                Raverie::Grammar::Enum op,
-                                                UnaryOpResolverIRFn resolver)
+void OperatorResolvers::RegisterUnaryOpResolver(Raverie::Type* type, Raverie::Grammar::Enum op, UnaryOpResolverIRFn resolver)
 {
   UnaryOperatorKey opId(type, op);
   mUnaryOpResolvers.InsertOrError(opId, resolver);
@@ -146,9 +139,7 @@ UnaryOpResolverIRFn OperatorResolvers::FindOpResolver(UnaryOperatorKey& opId)
   return mUnaryOpResolvers.FindValue(opId, nullptr);
 }
 
-void OperatorResolvers::RegisterTypeCastOpResolver(Raverie::Type* fromType,
-                                                   Raverie::Type* toType,
-                                                   TypeCastResolverIRFn resolver)
+void OperatorResolvers::RegisterTypeCastOpResolver(Raverie::Type* fromType, Raverie::Type* toType, TypeCastResolverIRFn resolver)
 {
   TypeCastKey opId(fromType, toType);
   mTypeCastResolvers.InsertOrError(opId, resolver);
@@ -176,9 +167,7 @@ StageRequirementsData::StageRequirementsData()
   mDependency = nullptr;
 }
 
-void StageRequirementsData::Combine(Raverie::Member* dependency,
-                                    const Raverie::CodeLocation& location,
-                                    ShaderStage::Enum requiredStage)
+void StageRequirementsData::Combine(Raverie::Member* dependency, const Raverie::CodeLocation& location, ShaderStage::Enum requiredStage)
 {
   // Only set the dependency and call location on the first non-empty stage
   // requirement.
@@ -229,8 +218,7 @@ GlobalVariableData* RaverieShaderIRModule::FindGlobalVariable(RaverieShaderIROp*
   return nullptr;
 }
 
-GlobalVariableData* RaverieShaderIRModule::FindFragmentSharedVariable(const FragmentSharedKey& key,
-                                                                    bool checkDependencies)
+GlobalVariableData* RaverieShaderIRModule::FindFragmentSharedVariable(const FragmentSharedKey& key, bool checkDependencies)
 {
   // Check each library, if any library finds the shared variable then return it
   for (size_t i = 0; i < Size(); ++i)
@@ -243,8 +231,7 @@ GlobalVariableData* RaverieShaderIRModule::FindFragmentSharedVariable(const Frag
   return nullptr;
 }
 
-TemplateTypeIRResloverFn RaverieShaderIRModule::FindTemplateResolver(const TemplateTypeKey& templateKey,
-                                                                   bool checkDependencies)
+TemplateTypeIRResloverFn RaverieShaderIRModule::FindTemplateResolver(const TemplateTypeKey& templateKey, bool checkDependencies)
 {
   // Check each library, if any library finds the type then return that type
   for (size_t i = 0; i < Size(); ++i)
@@ -282,8 +269,7 @@ RaverieShaderIRFunction* RaverieShaderIRModule::FindFunction(Raverie::Function* 
   return nullptr;
 }
 
-SpirVExtensionInstruction* RaverieShaderIRModule::FindExtensionInstruction(Raverie::Function* raverieFunction,
-                                                                         bool checkDependencies)
+SpirVExtensionInstruction* RaverieShaderIRModule::FindExtensionInstruction(Raverie::Function* raverieFunction, bool checkDependencies)
 {
   for (size_t i = 0; i < Size(); ++i)
   {
@@ -295,8 +281,7 @@ SpirVExtensionInstruction* RaverieShaderIRModule::FindExtensionInstruction(Raver
   return nullptr;
 }
 
-RaverieShaderExtensionImport* RaverieShaderIRModule::FindExtensionLibraryImport(SpirVExtensionLibrary* extensionLibrary,
-                                                                            bool checkDependencies)
+RaverieShaderExtensionImport* RaverieShaderIRModule::FindExtensionLibraryImport(SpirVExtensionLibrary* extensionLibrary, bool checkDependencies)
 {
   for (size_t i = 0; i < Size(); ++i)
   {
@@ -455,8 +440,7 @@ GlobalVariableData* RaverieShaderIRLibrary::FindGlobalVariable(RaverieShaderIROp
   return mDependencies->FindGlobalVariable(globalInstance, checkDependencies);
 }
 
-GlobalVariableData* RaverieShaderIRLibrary::FindFragmentSharedVariable(const FragmentSharedKey& key,
-                                                                     bool checkDependencies)
+GlobalVariableData* RaverieShaderIRLibrary::FindFragmentSharedVariable(const FragmentSharedKey& key, bool checkDependencies)
 {
   GlobalVariableData* result = mFragmentSharedGlobalVariables.FindValue(key, nullptr);
   if (result != nullptr)
@@ -472,14 +456,12 @@ GlobalVariableData* RaverieShaderIRLibrary::FindFragmentSharedVariable(const Fra
   return mDependencies->FindFragmentSharedVariable(key, checkDependencies);
 }
 
-void RaverieShaderIRLibrary::RegisterTemplateResolver(const TemplateTypeKey& templateKey,
-                                                    TemplateTypeIRResloverFn resolver)
+void RaverieShaderIRLibrary::RegisterTemplateResolver(const TemplateTypeKey& templateKey, TemplateTypeIRResloverFn resolver)
 {
   mTemplateResolvers.InsertOrError(templateKey, resolver);
 }
 
-TemplateTypeIRResloverFn RaverieShaderIRLibrary::FindTemplateResolver(const TemplateTypeKey& templateKey,
-                                                                    bool checkDependencies)
+TemplateTypeIRResloverFn RaverieShaderIRLibrary::FindTemplateResolver(const TemplateTypeKey& templateKey, bool checkDependencies)
 {
   // Try to find the type in this library
   TemplateTypeIRResloverFn resolver = mTemplateResolvers.FindValue(templateKey, nullptr);
@@ -578,9 +560,7 @@ TypeCastResolverIRFn RaverieShaderIRLibrary::FindOperatorResolver(TypeCastKey& o
   return FindOperatorResolverTemplate<TypeCastKey, TypeCastResolverIRFn>(opId, checkDependencies);
 }
 
-MemberAccessResolverIRFn RaverieShaderIRLibrary::FindFieldResolver(Raverie::Type* raverieType,
-                                                                 Raverie::Field* raverieField,
-                                                                 bool checkDependencies)
+MemberAccessResolverIRFn RaverieShaderIRLibrary::FindFieldResolver(Raverie::Type* raverieType, Raverie::Field* raverieField, bool checkDependencies)
 {
   TypeResolvers* typeResolver = FindTypeResolver(raverieType, checkDependencies);
   if (typeResolver != nullptr)
@@ -588,9 +568,7 @@ MemberAccessResolverIRFn RaverieShaderIRLibrary::FindFieldResolver(Raverie::Type
   return nullptr;
 }
 
-MemberFunctionResolverIRFn RaverieShaderIRLibrary::FindFunctionResolver(Raverie::Type* raverieType,
-                                                                      Raverie::Function* raverieFunction,
-                                                                      bool checkDependencies)
+MemberFunctionResolverIRFn RaverieShaderIRLibrary::FindFunctionResolver(Raverie::Type* raverieType, Raverie::Function* raverieFunction, bool checkDependencies)
 {
   TypeResolvers* typeResolver = FindTypeResolver(raverieType, checkDependencies);
   if (typeResolver != nullptr)
@@ -598,9 +576,7 @@ MemberFunctionResolverIRFn RaverieShaderIRLibrary::FindFunctionResolver(Raverie:
   return nullptr;
 }
 
-MemberPropertySetterResolverIRFn RaverieShaderIRLibrary::FindSetterResolver(Raverie::Type* raverieType,
-                                                                          Raverie::Function* raverieFunction,
-                                                                          bool checkDependencies)
+MemberPropertySetterResolverIRFn RaverieShaderIRLibrary::FindSetterResolver(Raverie::Type* raverieType, Raverie::Function* raverieFunction, bool checkDependencies)
 {
   TypeResolvers* typeResolver = FindTypeResolver(raverieType, checkDependencies);
   if (typeResolver != nullptr)
@@ -608,9 +584,7 @@ MemberPropertySetterResolverIRFn RaverieShaderIRLibrary::FindSetterResolver(Rave
   return nullptr;
 }
 
-ConstructorCallResolverIRFn RaverieShaderIRLibrary::FindConstructorResolver(Raverie::Type* raverieType,
-                                                                          Raverie::Function* raverieFunction,
-                                                                          bool checkDependencies)
+ConstructorCallResolverIRFn RaverieShaderIRLibrary::FindConstructorResolver(Raverie::Type* raverieType, Raverie::Function* raverieFunction, bool checkDependencies)
 {
   TypeResolvers* typeResolver = FindTypeResolver(raverieType, checkDependencies);
   if (typeResolver != nullptr)
@@ -636,8 +610,7 @@ RaverieShaderIRFunction* RaverieShaderIRLibrary::FindFunction(Raverie::Function*
   return mDependencies->FindFunction(raverieFunction, checkDependencies);
 }
 
-SpirVExtensionInstruction* RaverieShaderIRLibrary::FindExtensionInstruction(Raverie::Function* raverieFunction,
-                                                                          bool checkDependencies)
+SpirVExtensionInstruction* RaverieShaderIRLibrary::FindExtensionInstruction(Raverie::Function* raverieFunction, bool checkDependencies)
 {
   SpirVExtensionInstruction* result = mExtensionInstructions.FindValue(raverieFunction, nullptr);
   if (result != nullptr)
@@ -654,8 +627,7 @@ SpirVExtensionInstruction* RaverieShaderIRLibrary::FindExtensionInstruction(Rave
   return mDependencies->FindExtensionInstruction(raverieFunction, checkDependencies);
 }
 
-RaverieShaderExtensionImport* RaverieShaderIRLibrary::FindExtensionLibraryImport(SpirVExtensionLibrary* extensionLibrary,
-                                                                             bool checkDependencies)
+RaverieShaderExtensionImport* RaverieShaderIRLibrary::FindExtensionLibraryImport(SpirVExtensionLibrary* extensionLibrary, bool checkDependencies)
 {
   RaverieShaderExtensionImport* result = mExtensionLibraryImports.FindValue(extensionLibrary, nullptr);
   if (result != nullptr)
@@ -672,8 +644,7 @@ RaverieShaderExtensionImport* RaverieShaderIRLibrary::FindExtensionLibraryImport
   return mDependencies->FindExtensionLibraryImport(extensionLibrary, checkDependencies);
 }
 
-RaverieShaderIRConstantLiteral* RaverieShaderIRLibrary::FindConstantLiteral(Raverie::Any& literalValue,
-                                                                        bool checkDependencies)
+RaverieShaderIRConstantLiteral* RaverieShaderIRLibrary::FindConstantLiteral(Raverie::Any& literalValue, bool checkDependencies)
 {
   // Try to find the type in this library
   RaverieShaderIRConstantLiteral* result = mConstantLiterals.FindValue(literalValue, nullptr);

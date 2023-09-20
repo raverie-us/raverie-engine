@@ -5,9 +5,7 @@ namespace Raverie
 {
 
 SkeletonProcessor::SkeletonProcessor(HierarchyDataMap& hierarchyData, MeshDataMap& meshData, String& rootNodeName) :
-    mHierarchyDataMap(hierarchyData),
-    mMeshDataMap(meshData),
-    mRootNodeName(rootNodeName)
+    mHierarchyDataMap(hierarchyData), mMeshDataMap(meshData), mRootNodeName(rootNodeName)
 {
 }
 
@@ -116,8 +114,7 @@ void SkeletonProcessor::UpdateCogPaths(String nodeName)
   if (nodeName == mRootNodeName)
     mHierarchyDataMap[nodeName].mNodePath = nodeName;
   else
-    mHierarchyDataMap[nodeName].mNodePath =
-        BuildString(mRootNodeName, cAnimationPathDelimiterStr, mHierarchyDataMap[nodeName].mNodePath);
+    mHierarchyDataMap[nodeName].mNodePath = BuildString(mRootNodeName, cAnimationPathDelimiterStr, mHierarchyDataMap[nodeName].mNodePath);
 }
 
 } // namespace Raverie

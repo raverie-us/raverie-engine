@@ -29,17 +29,7 @@ void DrawBasis(Mat3Param basis, Vec3Param pos, real size)
   gDebugDraw->Add(Debug::Line(pos, pos + basis.GetBasis(2) * size).Color(Color::Blue));
 }
 
-void DrawArc(Vec3Param center,
-             Vec3Param normal,
-             Vec3Param axis,
-             real radiusA,
-             real radiusB,
-             real minAngle,
-             real maxAngle,
-             bool drawBoundaries,
-             ByteColor color,
-             real radianStepSize,
-             bool leftHanded)
+void DrawArc(Vec3Param center, Vec3Param normal, Vec3Param axis, real radiusA, real radiusB, real minAngle, real maxAngle, bool drawBoundaries, ByteColor color, real radianStepSize, bool leftHanded)
 {
   Vec3 xAxis = axis;
   Vec3 yAxis = Math::Cross(normal, axis).Normalized();
@@ -72,8 +62,7 @@ void DrawHinge(Joint* joint, AnchorAtom& anchors, Mat3Param basis0, Mat3Param ba
   JointDebugDrawConfig* drawConfig = joint->GetOwner()->has(JointDebugDrawConfig);
   real size = real(1.0);
   real detail = real(10.0);
-  uint perspective = defaultPerspective == 0 ? JointDebugDrawConfigFlags::ObjectAPerspective
-                                             : JointDebugDrawConfigFlags::ObjectBPerspective;
+  uint perspective = defaultPerspective == 0 ? JointDebugDrawConfigFlags::ObjectAPerspective : JointDebugDrawConfigFlags::ObjectBPerspective;
   if (drawConfig && drawConfig->GetActive())
   {
     size = drawConfig->mSize;
@@ -108,33 +97,13 @@ void DrawHinge(Joint* joint, AnchorAtom& anchors, Mat3Param basis0, Mat3Param ba
   {
     Vec3 normal = basis0.GetBasis(2);
     Vec3 axis = basis0.GetBasis(0);
-    DrawArc(worldAnchors.mWorldPoints[0],
-            normal,
-            axis.Normalized(),
-            size,
-            size,
-            min,
-            max,
-            drawBoundaries,
-            Color::Red,
-            real(1.0) / detail,
-            false);
+    DrawArc(worldAnchors.mWorldPoints[0], normal, axis.Normalized(), size, size, min, max, drawBoundaries, Color::Red, real(1.0) / detail, false);
   }
   if (perspective & JointDebugDrawConfigFlags::ObjectBPerspective)
   {
     Vec3 normal = basis1.GetBasis(2);
     Vec3 axis = basis1.GetBasis(0);
-    DrawArc(worldAnchors.mWorldPoints[1],
-            normal,
-            axis.Normalized(),
-            size,
-            size,
-            min,
-            max,
-            drawBoundaries,
-            Color::Blue,
-            real(1.0) / detail,
-            true);
+    DrawArc(worldAnchors.mWorldPoints[1], normal, axis.Normalized(), size, size, min, max, drawBoundaries, Color::Blue, real(1.0) / detail, true);
   }
 }
 

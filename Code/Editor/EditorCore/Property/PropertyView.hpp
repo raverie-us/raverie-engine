@@ -18,10 +18,7 @@ DeclareEvent(NameActivated);
 DeclareEvent(OpenAdd);
 } // namespace Events
 
-typedef Widget* (*CustomIconCreatorFunction)(Composite* parent,
-                                             HandleParam object,
-                                             Property* metaProperty,
-                                             void* clientData);
+typedef Widget* (*CustomIconCreatorFunction)(Composite* parent, HandleParam object, Property* metaProperty, void* clientData);
 
 /// Property Grid allow the editing of properties on objects.
 class PropertyView : public Composite

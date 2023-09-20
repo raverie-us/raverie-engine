@@ -101,8 +101,7 @@ void CopyImage(Image* dest, Image* source, int destX, int destY)
   CopyImage(dest, source, destX, destY, 0, 0, sourceWidth, sourceHeight);
 }
 
-void CopyImage(
-    Image* dest, Image* source, int startDestX, int startDestY, int sourceX, int sourceY, int sizeX, int sizeY)
+void CopyImage(Image* dest, Image* source, int startDestX, int startDestY, int sourceX, int sourceY, int sizeX, int sizeY)
 {
   ImagePixel* destData = dest->Data;
   ImagePixel* sourceData = source->Data;
@@ -297,8 +296,7 @@ void AddPixelBorders(Image* image, int frameWidth, int frameHeight, int borderWi
 
       CopyImage(&output, image, destX, destY, sourceX, sourceY, frameWidth, frameHeight);
 
-      FillPixelBorders(
-          &output, IntVec2(destX, destY), IntVec2(destX + frameWidth - 1, destY + frameHeight - 1), borderWidth);
+      FillPixelBorders(&output, IntVec2(destX, destY), IntVec2(destX + frameWidth - 1, destY + frameHeight - 1), borderWidth);
     }
   }
 

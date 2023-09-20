@@ -23,10 +23,7 @@ RaverieDefineType(ManipulatorToolEvent, builder, type)
 }
 
 ManipulatorToolEvent::ManipulatorToolEvent(ViewportMouseEvent* event) :
-    ViewportMouseEvent(*event),
-    mOperationQueue(nullptr),
-    mStartWorldRectangle(Rectangle::cZero),
-    mEndWorldRectangle(Rectangle::cZero)
+    ViewportMouseEvent(*event), mOperationQueue(nullptr), mStartWorldRectangle(Rectangle::cZero), mEndWorldRectangle(Rectangle::cZero)
 {
 }
 
@@ -278,10 +275,7 @@ bool ManipulatorTool::CheckAlignment(Array<Handle>::range& range, Vec3Param tool
   return true;
 }
 
-void ManipulatorTool::ComputeWorldToolRect(Array<Handle>::range& range,
-                                           Vec3Param toolPosition,
-                                           bool includeChildren,
-                                           bool childPass)
+void ManipulatorTool::ComputeWorldToolRect(Array<Handle>::range& range, Vec3Param toolPosition, bool includeChildren, bool childPass)
 {
   Aabb aabb;
 
@@ -320,12 +314,7 @@ void ManipulatorTool::ComputeWorldToolRect(Array<Handle>::range& range,
   SetToolRect(aabb);
 }
 
-void ManipulatorTool::ComputeLocalToolRect(Array<Handle>::range& range,
-                                           Vec3Param toolNormal,
-                                           Vec3Param pointOnToolPlane,
-                                           Aabb* aabbOut,
-                                           bool includeChildren,
-                                           bool childPass)
+void ManipulatorTool::ComputeLocalToolRect(Array<Handle>::range& range, Vec3Param toolNormal, Vec3Param pointOnToolPlane, Aabb* aabbOut, bool includeChildren, bool childPass)
 {
   bool valid = false;
   Array<Aabb> obbs;
@@ -1083,8 +1072,7 @@ void ManipulatorTool::OnMouseDragMove(ViewportMouseEvent* event)
 
     if (dispatcher != nullptr)
     {
-      PropertyEvent propertyEvent(
-          transform.mInstance, transform.mLocalTranslation, target.StartTranslation, target.EndTranslation);
+      PropertyEvent propertyEvent(transform.mInstance, transform.mLocalTranslation, target.StartTranslation, target.EndTranslation);
       dispatcher->Dispatch(Events::PropertyModifiedIntermediate, &propertyEvent);
     }
 

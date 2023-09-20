@@ -6,14 +6,14 @@
 // bytes and round up to the nearest whole value.
 #define RaverieDeclarePrivateDataBytes(SizeInBytes) MaxAlignmentType mPrivateData[RaverieAlignCount(SizeInBytes)];
 
-#define RaverieDeclarePrivateData(Type, SizeInBytes)                                                                      \
-  RaverieDeclarePrivateDataBytes(SizeInBytes);                                                                            \
-  Type(const Type& right)                                                                                              \
-  {                                                                                                                    \
-  }                                                                                                                    \
-  Type& operator=(const Type& right)                                                                                   \
-  {                                                                                                                    \
-    return *this;                                                                                                      \
+#define RaverieDeclarePrivateData(Type, SizeInBytes)                                                                                                                                                   \
+  RaverieDeclarePrivateDataBytes(SizeInBytes);                                                                                                                                                         \
+  Type(const Type& right)                                                                                                                                                                              \
+  {                                                                                                                                                                                                    \
+  }                                                                                                                                                                                                    \
+  Type& operator=(const Type& right)                                                                                                                                                                   \
+  {                                                                                                                                                                                                    \
+    return *this;                                                                                                                                                                                      \
   }
 
 // Gets the private object of a given pointer (doesn't assume self) and uses the
@@ -22,13 +22,13 @@
 
 #define RaverieGetPrivateData(Type) Type* self = (Type*)mPrivateData;
 
-#define RaverieAssertPrivateDataSize(Type)                                                                                \
-  static_assert(sizeof(Type) <= sizeof(mPrivateData),                                                                  \
-                "Increase the size of the private data because the private "                                           \
+#define RaverieAssertPrivateDataSize(Type)                                                                                                                                                             \
+  static_assert(sizeof(Type) <= sizeof(mPrivateData),                                                                                                                                                  \
+                "Increase the size of the private data because the private "                                                                                                                           \
                 "type is too big");
 
-#define RaverieConstructPrivateData(Type, ...)                                                                            \
-  Type* self = new (mPrivateData) Type();                                                                              \
+#define RaverieConstructPrivateData(Type, ...)                                                                                                                                                         \
+  Type* self = new (mPrivateData) Type();                                                                                                                                                              \
   RaverieAssertPrivateDataSize(Type);
 
 #define RaverieDestructPrivateData(Type, ...) ((Type*)mPrivateData)->~Type();

@@ -1,45 +1,45 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-#define CustomPropertySetter(type, name, propName)                                                                     \
-  ReturnType& propName(type var)                                                                                       \
-  {                                                                                                                    \
-    m##name = var;                                                                                                     \
-    return *(ReturnType*)this;                                                                                         \
+#define CustomPropertySetter(type, name, propName)                                                                                                                                                     \
+  ReturnType& propName(type var)                                                                                                                                                                       \
+  {                                                                                                                                                                                                    \
+    m##name = var;                                                                                                                                                                                     \
+    return *(ReturnType*)this;                                                                                                                                                                         \
   }
 
 #define PropertySetter(type, name) CustomPropertySetter(type, name, name)
 
-#define PropertySetterBit(name, flagName)                                                                              \
-  ReturnType& name(bool value)                                                                                         \
-  {                                                                                                                    \
-    if (value)                                                                                                         \
-      mDrawFlags |= DebugDrawFlags::flagName;                                                                          \
-    else                                                                                                               \
-      mDrawFlags &= ~DebugDrawFlags::flagName;                                                                         \
-    return *(ReturnType*)this;                                                                                         \
-  }                                                                                                                    \
-  void Set##name(bool value)                                                                                           \
-  {                                                                                                                    \
-    if (value)                                                                                                         \
-      mDrawFlags |= DebugDrawFlags::flagName;                                                                          \
-    else                                                                                                               \
-      mDrawFlags &= ~DebugDrawFlags::flagName;                                                                         \
-  }                                                                                                                    \
-  bool Get##name() const                                                                                               \
-  {                                                                                                                    \
-    return mDrawFlags & DebugDrawFlags::flagName;                                                                      \
+#define PropertySetterBit(name, flagName)                                                                                                                                                              \
+  ReturnType& name(bool value)                                                                                                                                                                         \
+  {                                                                                                                                                                                                    \
+    if (value)                                                                                                                                                                                         \
+      mDrawFlags |= DebugDrawFlags::flagName;                                                                                                                                                          \
+    else                                                                                                                                                                                               \
+      mDrawFlags &= ~DebugDrawFlags::flagName;                                                                                                                                                         \
+    return *(ReturnType*)this;                                                                                                                                                                         \
+  }                                                                                                                                                                                                    \
+  void Set##name(bool value)                                                                                                                                                                           \
+  {                                                                                                                                                                                                    \
+    if (value)                                                                                                                                                                                         \
+      mDrawFlags |= DebugDrawFlags::flagName;                                                                                                                                                          \
+    else                                                                                                                                                                                               \
+      mDrawFlags &= ~DebugDrawFlags::flagName;                                                                                                                                                         \
+  }                                                                                                                                                                                                    \
+  bool Get##name() const                                                                                                                                                                               \
+  {                                                                                                                                                                                                    \
+    return mDrawFlags & DebugDrawFlags::flagName;                                                                                                                                                      \
   }
 
-#define DebugObjectAddMethods(DebugObjectType)                                                                         \
-  void Add(const DebugObjectType& object)                                                                              \
-  {                                                                                                                    \
-    ErrorIf(mSpaceIdStack.Empty(), "No SpaceId on stack.");                                                            \
-    Add(mSpaceIdStack.Back(), object);                                                                                 \
-  }                                                                                                                    \
-  void Add(uint spaceId, const DebugObjectType& object)                                                                \
-  {                                                                                                                    \
-    AddInternal(spaceId, DebugDrawObjectAny(object));                                                                  \
+#define DebugObjectAddMethods(DebugObjectType)                                                                                                                                                         \
+  void Add(const DebugObjectType& object)                                                                                                                                                              \
+  {                                                                                                                                                                                                    \
+    ErrorIf(mSpaceIdStack.Empty(), "No SpaceId on stack.");                                                                                                                                            \
+    Add(mSpaceIdStack.Back(), object);                                                                                                                                                                 \
+  }                                                                                                                                                                                                    \
+  void Add(uint spaceId, const DebugObjectType& object)                                                                                                                                                \
+  {                                                                                                                                                                                                    \
+    AddInternal(spaceId, DebugDrawObjectAny(object));                                                                                                                                                  \
   }
 
 namespace Raverie
@@ -50,8 +50,7 @@ namespace Debug
 
 DeclareBitField8(DebugDrawFlags, BackShade, Border, Filled, OnTop, ViewAligned, ViewScaled, Special1, Special2);
 
-DeclareEnum14(
-    DebugType, None, Arc, Box, Capsule, Circle, Cone, Cylinder, Frustum, Line, LineCross, Obb, Sphere, Text, Triangle);
+DeclareEnum14(DebugType, None, Arc, Box, Capsule, Circle, Cone, Cylinder, Frustum, Line, LineCross, Obb, Sphere, Text, Triangle);
 
 class Vertex
 {
@@ -89,12 +88,7 @@ float GetViewDistance(Vec3Param location, Vec3Param eyePosition, Vec3 viewDirect
 class DebugDrawObjectBase
 {
 public:
-  DebugDrawObjectBase() :
-      mViewScaleOffset(Vec3::cZero),
-      mColor(Vec4(1.0f)),
-      mDuration(0.0f),
-      mWidth(1.0f),
-      mDrawFlags(0)
+  DebugDrawObjectBase() : mViewScaleOffset(Vec3::cZero), mColor(Vec4(1.0f)), mDuration(0.0f), mWidth(1.0f), mDrawFlags(0)
   {
   }
 
@@ -235,45 +229,27 @@ public:
   {
   }
 
-  Box(Vec3Param position, Vec2Param halfExtents) :
-      mPosition(position),
-      mHalfExtents(halfExtents),
-      mRotation(Quat::cIdentity)
+  Box(Vec3Param position, Vec2Param halfExtents) : mPosition(position), mHalfExtents(halfExtents), mRotation(Quat::cIdentity)
   {
   }
 
-  Box(Vec3Param position, float halfExtents) :
-      mPosition(position),
-      mHalfExtents(Vec2(1, 1) * halfExtents),
-      mRotation(Quat::cIdentity)
+  Box(Vec3Param position, float halfExtents) : mPosition(position), mHalfExtents(Vec2(1, 1) * halfExtents), mRotation(Quat::cIdentity)
   {
   }
 
-  Box(Vec3Param position, Vec2Param halfExtents, QuatParam rotation) :
-      mPosition(position),
-      mHalfExtents(halfExtents),
-      mRotation(rotation)
+  Box(Vec3Param position, Vec2Param halfExtents, QuatParam rotation) : mPosition(position), mHalfExtents(halfExtents), mRotation(rotation)
   {
   }
 
-  Box(Vec3Param position, float halfExtents, QuatParam rotation) :
-      mPosition(position),
-      mHalfExtents(Vec2(1, 1) * halfExtents),
-      mRotation(rotation)
+  Box(Vec3Param position, float halfExtents, QuatParam rotation) : mPosition(position), mHalfExtents(Vec2(1, 1) * halfExtents), mRotation(rotation)
   {
   }
 
-  Box(Vec3Param position, Vec3Param halfExtents, QuatParam rotation = Quat::cIdentity) :
-      mPosition(position),
-      mHalfExtents(Math::ToVector2(halfExtents)),
-      mRotation(rotation)
+  Box(Vec3Param position, Vec3Param halfExtents, QuatParam rotation = Quat::cIdentity) : mPosition(position), mHalfExtents(Math::ToVector2(halfExtents)), mRotation(rotation)
   {
   }
 
-  Box(const Raverie::Aabb& aabb) :
-      mPosition(aabb.GetCenter()),
-      mHalfExtents(Math::ToVector2(aabb.GetHalfExtents())),
-      mRotation(Quat::cIdentity)
+  Box(const Raverie::Aabb& aabb) : mPosition(aabb.GetCenter()), mHalfExtents(Math::ToVector2(aabb.GetHalfExtents())), mRotation(Quat::cIdentity)
   {
   }
 
@@ -307,10 +283,7 @@ public:
   {
   }
 
-  Capsule(Vec3Param pos, Vec3Param axis, float height, float radius) :
-      mStart(pos + axis * height),
-      mEnd(pos - axis * height),
-      mRadius(radius)
+  Capsule(Vec3Param pos, Vec3Param axis, float height, float radius) : mStart(pos + axis * height), mEnd(pos - axis * height), mRadius(radius)
   {
   }
 
@@ -370,11 +343,7 @@ public:
   {
   }
 
-  Cone(Vec3Param position, Vec3Param direction, float length, float radius) :
-      mPosition(position),
-      mDirection(direction),
-      mLength(length),
-      mRadius(radius)
+  Cone(Vec3Param position, Vec3Param direction, float length, float radius) : mPosition(position), mDirection(direction), mLength(length), mRadius(radius)
   {
   }
 
@@ -408,10 +377,7 @@ public:
   {
   }
 
-  Cylinder(Vec3Param pos, Vec3Param axis, float height, float radius) :
-      mStart(pos + axis * height),
-      mEnd(pos - axis * height),
-      mRadius(radius)
+  Cylinder(Vec3Param pos, Vec3Param axis, float height, float radius) : mStart(pos + axis * height), mEnd(pos - axis * height), mRadius(radius)
   {
   }
 
@@ -545,52 +511,31 @@ public:
   {
   }
 
-  Obb(Vec3Param position, Vec3Param halfExtents) :
-      mPosition(position),
-      mHalfExtents(halfExtents),
-      mRotation(Quat::cIdentity)
+  Obb(Vec3Param position, Vec3Param halfExtents) : mPosition(position), mHalfExtents(halfExtents), mRotation(Quat::cIdentity)
   {
   }
 
-  Obb(Vec3Param position, float halfExtents) :
-      mPosition(position),
-      mHalfExtents(Vec3(1, 1, 1) * halfExtents),
-      mRotation(Quat::cIdentity)
+  Obb(Vec3Param position, float halfExtents) : mPosition(position), mHalfExtents(Vec3(1, 1, 1) * halfExtents), mRotation(Quat::cIdentity)
   {
   }
 
-  Obb(Vec3Param position, Vec3Param extents, QuatParam rotation) :
-      mPosition(position),
-      mHalfExtents(extents),
-      mRotation(rotation)
+  Obb(Vec3Param position, Vec3Param extents, QuatParam rotation) : mPosition(position), mHalfExtents(extents), mRotation(rotation)
   {
   }
 
-  Obb(Vec3Param position, float halfExtents, QuatParam rotation) :
-      mPosition(position),
-      mHalfExtents(Vec3(1, 1, 1) * halfExtents),
-      mRotation(rotation)
+  Obb(Vec3Param position, float halfExtents, QuatParam rotation) : mPosition(position), mHalfExtents(Vec3(1, 1, 1) * halfExtents), mRotation(rotation)
   {
   }
 
-  Obb(Vec3Param position, Vec3Param extents, Mat3Param rotation) :
-      mPosition(position),
-      mHalfExtents(extents),
-      mRotation(Math::ToQuaternion(rotation))
+  Obb(Vec3Param position, Vec3Param extents, Mat3Param rotation) : mPosition(position), mHalfExtents(extents), mRotation(Math::ToQuaternion(rotation))
   {
   }
 
-  Obb(const Raverie::Obb& obb) :
-      mPosition(obb.Center),
-      mHalfExtents(obb.HalfExtents),
-      mRotation(Math::ToQuaternion(obb.Basis))
+  Obb(const Raverie::Obb& obb) : mPosition(obb.Center), mHalfExtents(obb.HalfExtents), mRotation(Math::ToQuaternion(obb.Basis))
   {
   }
 
-  Obb(const Raverie::Aabb& aabb) :
-      mPosition(aabb.GetCenter()),
-      mHalfExtents(aabb.GetHalfExtents()),
-      mRotation(Quat::cIdentity)
+  Obb(const Raverie::Aabb& aabb) : mPosition(aabb.GetCenter()), mHalfExtents(aabb.GetHalfExtents()), mRotation(Quat::cIdentity)
   {
   }
 
@@ -654,11 +599,7 @@ public:
   {
   }
 
-  Text(Vec3Param position, float textHeight, StringParam text) :
-      mPosition(position),
-      mRotation(Quat::cIdentity),
-      mTextHeight(textHeight),
-      mText(text)
+  Text(Vec3Param position, float textHeight, StringParam text) : mPosition(position), mRotation(Quat::cIdentity), mTextHeight(textHeight), mText(text)
   {
   }
 

@@ -14,8 +14,7 @@ DecodedPacket::DecodedPacket(unsigned bufferSize) : mSamples(bufferSize)
 {
 }
 
-DecodedPacket::DecodedPacket(const DecodedPacket& copy) :
-    mSamples(MoveReference<Array<float>>(const_cast<DecodedPacket&>(copy).mSamples))
+DecodedPacket::DecodedPacket(const DecodedPacket& copy) : mSamples(MoveReference<Array<float>>(const_cast<DecodedPacket&>(copy).mSamples))
 {
 }
 
@@ -42,10 +41,7 @@ void SingleChannelPacketDecoder::InitializeDecoder()
   mDecoder = opus_decoder_create(cSystemSampleRate, PacketEncoder::cChannels, &error);
 }
 
-void SingleChannelPacketDecoder::DecodePacket(const byte* packetData,
-                                              const unsigned dataSize,
-                                              float*& decodedData,
-                                              unsigned& numberOfSamples)
+void SingleChannelPacketDecoder::DecodePacket(const byte* packetData, const unsigned dataSize, float*& decodedData, unsigned& numberOfSamples)
 {
   ReturnIf(!mDecoder, , "Tried to decode packet without initializing decoder");
 
@@ -159,10 +155,7 @@ void PacketDecoder::DestroyDecoders(OpusDecoder** decoderArray, int howMany)
   }
 }
 
-int PacketDecoder::GetPacketFromMemory(byte* packetDataToWrite,
-                                       const byte* inputData,
-                                       unsigned inputDataSize,
-                                       unsigned* dataIndex)
+int PacketDecoder::GetPacketFromMemory(byte* packetDataToWrite, const byte* inputData, unsigned inputDataSize, unsigned* dataIndex)
 {
   if (!inputData || *dataIndex >= inputDataSize)
     return -1;
@@ -185,10 +178,7 @@ int ReturnError(ThreadLock* lockObject)
   return -1;
 }
 
-int PacketDecoder::GetPacketFromFile(byte* packetDataToWrite,
-                                     File* inputFile,
-                                     FilePosition* filePosition,
-                                     ThreadLock* lockObject)
+int PacketDecoder::GetPacketFromFile(byte* packetDataToWrite, File* inputFile, FilePosition* filePosition, ThreadLock* lockObject)
 {
   if (!inputFile || !inputFile->IsOpen())
     return -1;
@@ -233,15 +223,8 @@ OsInt StartThreadForDecoding(void* data)
   return 0;
 }
 
-AudioFileDecoder::AudioFileDecoder(int channels,
-                                   unsigned samplesPerChannel,
-                                   FileDecoderCallback callback,
-                                   void* callbackData) :
-    mChannels(channels),
-    mSamplesPerChannel(samplesPerChannel),
-    mCallback(callback),
-    mCallbackData(callbackData),
-    mShutDownSignal(0)
+AudioFileDecoder::AudioFileDecoder(int channels, unsigned samplesPerChannel, FileDecoderCallback callback, void* callbackData) :
+    mChannels(channels), mSamplesPerChannel(samplesPerChannel), mCallback(callback), mCallbackData(callbackData), mShutDownSignal(0)
 {
   // Set all decoder pointers to null
   memset(mDecoders, 0, sizeof(OpusDecoder*) * cMaxChannels);
@@ -358,14 +341,8 @@ void AudioFileDecoder::ClearData()
 
 // Decompressed File Decoder
 
-DecompressedDecoder::DecompressedDecoder(Status& status,
-                                         const String& fileName,
-                                         FileDecoderCallback callback,
-                                         void* callbackData) :
-    AudioFileDecoder(0, 0, callback, callbackData),
-    mCompressedData(nullptr),
-    mDataIndex(0),
-    mDataSize(0)
+DecompressedDecoder::DecompressedDecoder(Status& status, const String& fileName, FileDecoderCallback callback, void* callbackData) :
+    AudioFileDecoder(0, 0, callback, callbackData), mCompressedData(nullptr), mDataIndex(0), mDataSize(0)
 {
   // If no valid callback was provided, don't do anything
   if (!callback)
@@ -461,20 +438,8 @@ void DecompressedDecoder::ClearData()
 
 // Streaming Decoder
 
-StreamingDecoder::StreamingDecoder(Status& status,
-                                   File* inputFile,
-                                   ThreadLock* lock,
-                                   unsigned channels,
-                                   unsigned frames,
-                                   FileDecoderCallback callback,
-                                   void* callbackData) :
-    AudioFileDecoder(channels, frames, callback, callbackData),
-    mCompressedData(nullptr),
-    mDataIndex(0),
-    mDataSize(0),
-    mInputFile(inputFile),
-    mFilePosition(sizeof(FileHeader)),
-    mLock(lock)
+StreamingDecoder::StreamingDecoder(Status& status, File* inputFile, ThreadLock* lock, unsigned channels, unsigned frames, FileDecoderCallback callback, void* callbackData) :
+    AudioFileDecoder(channels, frames, callback, callbackData), mCompressedData(nullptr), mDataIndex(0), mDataSize(0), mInputFile(inputFile), mFilePosition(sizeof(FileHeader)), mLock(lock)
 {
   // If no valid callback was provided or the file is not open, don't do
   // anything
@@ -488,20 +453,8 @@ StreamingDecoder::StreamingDecoder(Status& status,
   StartDecodingThread();
 }
 
-StreamingDecoder::StreamingDecoder(Status& status,
-                                   byte* inputData,
-                                   unsigned dataSize,
-                                   unsigned channels,
-                                   unsigned frames,
-                                   FileDecoderCallback callback,
-                                   void* callbackData) :
-    AudioFileDecoder(channels, frames, callback, callbackData),
-    mCompressedData(inputData),
-    mDataIndex(0),
-    mDataSize(dataSize),
-    mInputFile(nullptr),
-    mFilePosition(sizeof(FileHeader)),
-    mLock(nullptr)
+StreamingDecoder::StreamingDecoder(Status& status, byte* inputData, unsigned dataSize, unsigned channels, unsigned frames, FileDecoderCallback callback, void* callbackData) :
+    AudioFileDecoder(channels, frames, callback, callbackData), mCompressedData(inputData), mDataIndex(0), mDataSize(dataSize), mInputFile(nullptr), mFilePosition(sizeof(FileHeader)), mLock(nullptr)
 {
   // If no valid callback or data buffer was provided, don't do anything
   if (!callback || !inputData)

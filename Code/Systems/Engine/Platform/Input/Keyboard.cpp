@@ -260,11 +260,9 @@ String Keyboard::GetKeyName(Keys::Enum key)
 
 bool Keyboard::Valid(Keys::Enum key)
 {
-  bool isValid = (key == Keys::Space) || (key == Keys::LeftBracket) || (key == Keys::RightBracket) ||
-                 (key == Keys::Comma) || (key == Keys::Period) || (key == Keys::Semicolon) || (key == Keys::Minus) ||
-                 (key == Keys::Apostrophe) || (key == Keys::Slash) || (key == Keys::Backslash) ||
-                 (key >= Keys::A && key <= Keys::Z) || (key >= Keys::Num0 && key <= Keys::Num9) ||
-                 (key >= Keys::Up && key < Keys::None);
+  bool isValid = (key == Keys::Space) || (key == Keys::LeftBracket) || (key == Keys::RightBracket) || (key == Keys::Comma) || (key == Keys::Period) || (key == Keys::Semicolon) ||
+                 (key == Keys::Minus) || (key == Keys::Apostrophe) || (key == Keys::Slash) || (key == Keys::Backslash) || (key >= Keys::A && key <= Keys::Z) ||
+                 (key >= Keys::Num0 && key <= Keys::Num9) || (key >= Keys::Up && key < Keys::None);
 
   return isValid;
 }

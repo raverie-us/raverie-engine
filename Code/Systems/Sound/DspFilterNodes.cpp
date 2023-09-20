@@ -64,10 +64,7 @@ void VolumeNode::InterpolateDecibels(float volumeDB, float time)
   InterpolateVolume(DecibelsToVolume(volumeDB), time);
 }
 
-bool VolumeNode::GetOutputSamples(BufferType* outputBuffer,
-                                  const unsigned numberOfChannels,
-                                  ListenerNode* listener,
-                                  const bool firstRequest)
+bool VolumeNode::GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest)
 {
   // If first request this mix, set the previous mix data
   if (firstRequest)
@@ -97,9 +94,7 @@ bool VolumeNode::GetOutputSamples(BufferType* outputBuffer,
         CurrentData.mInterpolating = false;
         if (firstRequest)
         {
-          Z::gSound->Mixer.AddTaskThreaded(
-              CreateFunctor(&SoundNode::DispatchEventFromMixThread, (SoundNode*)this, Events::AudioInterpolationDone),
-              this);
+          Z::gSound->Mixer.AddTaskThreaded(CreateFunctor(&SoundNode::DispatchEventFromMixThread, (SoundNode*)this, Events::AudioInterpolationDone), this);
         }
       }
     }
@@ -148,12 +143,7 @@ RaverieDefineType(PanningNode, builder, type)
   RaverieBindMethod(InterpolateVolumes);
 }
 
-PanningNode::PanningNode(StringParam name, unsigned ID) :
-    SimpleCollapseNode(name, ID, false, false),
-    mSumToMono(false),
-    mLeftVolume(1.0f),
-    mRightVolume(1.0f),
-    mActive(false)
+PanningNode::PanningNode(StringParam name, unsigned ID) : SimpleCollapseNode(name, ID, false, false), mSumToMono(false), mLeftVolume(1.0f), mRightVolume(1.0f), mActive(false)
 {
 }
 
@@ -181,12 +171,7 @@ void PanningNode::SetLeftVolume(float volume)
 
 void PanningNode::InterpolateLeftVolume(float volume, float time)
 {
-  Z::gSound->Mixer.AddTask(CreateFunctor(&PanningNode::SetVolumeThreaded,
-                                         this,
-                                         true,
-                                         Math::Clamp(volume, 0.0f, cMaxVolumeValue),
-                                         Math::Max(time, 0.0f)),
-                           this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&PanningNode::SetVolumeThreaded, this, true, Math::Clamp(volume, 0.0f, cMaxVolumeValue), Math::Max(time, 0.0f)), this);
 }
 
 float PanningNode::GetRightVolume()
@@ -201,34 +186,16 @@ void PanningNode::SetRightVolume(float volume)
 
 void PanningNode::InterpolateRightVolume(float volume, float time)
 {
-  Z::gSound->Mixer.AddTask(CreateFunctor(&PanningNode::SetVolumeThreaded,
-                                         this,
-                                         false,
-                                         Math::Clamp(volume, 0.0f, cMaxVolumeValue),
-                                         Math::Max(time, 0.0f)),
-                           this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&PanningNode::SetVolumeThreaded, this, false, Math::Clamp(volume, 0.0f, cMaxVolumeValue), Math::Max(time, 0.0f)), this);
 }
 
 void PanningNode::InterpolateVolumes(float leftVolume, float rightVolume, float time)
 {
-  Z::gSound->Mixer.AddTask(CreateFunctor(&PanningNode::SetVolumeThreaded,
-                                         this,
-                                         true,
-                                         Math::Clamp(leftVolume, 0.0f, cMaxVolumeValue),
-                                         Math::Max(time, 0.0f)),
-                           this);
-  Z::gSound->Mixer.AddTask(CreateFunctor(&PanningNode::SetVolumeThreaded,
-                                         this,
-                                         false,
-                                         Math::Clamp(rightVolume, 0.0f, cMaxVolumeValue),
-                                         Math::Max(time, 0.0f)),
-                           this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&PanningNode::SetVolumeThreaded, this, true, Math::Clamp(leftVolume, 0.0f, cMaxVolumeValue), Math::Max(time, 0.0f)), this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&PanningNode::SetVolumeThreaded, this, false, Math::Clamp(rightVolume, 0.0f, cMaxVolumeValue), Math::Max(time, 0.0f)), this);
 }
 
-bool PanningNode::GetOutputSamples(BufferType* outputBuffer,
-                                   const unsigned numberOfChannels,
-                                   ListenerNode* listener,
-                                   const bool firstRequest)
+bool PanningNode::GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest)
 {
   // If first request this mix, set the previous mix data
   if (firstRequest)
@@ -280,9 +247,7 @@ bool PanningNode::GetOutputSamples(BufferType* outputBuffer,
         {
           CurrentData.mInterpolating = false;
           if (firstRequest)
-            Z::gSound->Mixer.AddTaskThreaded(
-                CreateFunctor(&SoundNode::DispatchEventFromMixThread, (SoundNode*)this, Events::AudioInterpolationDone),
-                this);
+            Z::gSound->Mixer.AddTaskThreaded(CreateFunctor(&SoundNode::DispatchEventFromMixThread, (SoundNode*)this, Events::AudioInterpolationDone), this);
         }
       }
 
@@ -301,9 +266,7 @@ bool PanningNode::GetOutputSamples(BufferType* outputBuffer,
       {
         float values[2] = {leftValue, rightValue};
         AudioFrame frame(values, 2);
-        memcpy(outputBuffer->Data() + (currentFrame * numberOfChannels),
-               frame.GetSamples(numberOfChannels),
-               sizeof(float) * numberOfChannels);
+        memcpy(outputBuffer->Data() + (currentFrame * numberOfChannels), frame.GetSamples(numberOfChannels), sizeof(float) * numberOfChannels);
       }
     }
 
@@ -317,8 +280,7 @@ bool PanningNode::GetOutputSamples(BufferType* outputBuffer,
 
     // Check for both volumes being at or near 1.0, and if true mark as not
     // active
-    if (!CurrentData.mInterpolating && !sumToMono && IsWithinLimit(1.0f - leftVolume, 0.0f, 0.01f) &&
-        IsWithinLimit(1.0f - rightVolume, 0.0f, 0.01f))
+    if (!CurrentData.mInterpolating && !sumToMono && IsWithinLimit(1.0f - leftVolume, 0.0f, 0.01f) && IsWithinLimit(1.0f - rightVolume, 0.0f, 0.01f))
       mActive.Set(false, AudioThreads::MixThread);
   }
   else
@@ -424,10 +386,7 @@ void PitchNode::InterpolateSemitones(float pitchSemitones, float time)
   Z::gSound->Mixer.AddTask(CreateFunctor(&PitchNode::SetPitchThreaded, this, pitchSemitones, time), this);
 }
 
-bool PitchNode::GetOutputSamples(BufferType* outputBuffer,
-                                 const unsigned numberOfChannels,
-                                 ListenerNode* listener,
-                                 const bool firstRequest)
+bool PitchNode::GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest)
 {
   // If no inputs, return
   if (!GetHasInputs())
@@ -469,9 +428,7 @@ RaverieDefineType(LowPassNode, builder, type)
   RaverieBindGetterSetter(CutoffFrequency);
 }
 
-LowPassNode::LowPassNode(StringParam name, unsigned ID) :
-    SimpleCollapseNode(name, ID, false, false),
-    mCutoffFrequency(20001.0f)
+LowPassNode::LowPassNode(StringParam name, unsigned ID) : SimpleCollapseNode(name, ID, false, false), mCutoffFrequency(20001.0f)
 {
 }
 
@@ -492,10 +449,7 @@ void LowPassNode::SetCutoffFrequency(float frequency)
   Z::gSound->Mixer.AddTask(CreateFunctor(&LowPassNode::SetCutoffFrequencyThreaded, this, frequency), this);
 }
 
-bool LowPassNode::GetOutputSamples(BufferType* outputBuffer,
-                                   const unsigned numberOfChannels,
-                                   ListenerNode* listener,
-                                   const bool firstRequest)
+bool LowPassNode::GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest)
 {
   unsigned bufferSize = outputBuffer->Size();
 
@@ -564,9 +518,7 @@ RaverieDefineType(HighPassNode, builder, type)
   RaverieBindGetterSetter(CutoffFrequency);
 }
 
-HighPassNode::HighPassNode(StringParam name, unsigned ID) :
-    SimpleCollapseNode(name, ID, false, false),
-    mCutoffFrequency(10.0f)
+HighPassNode::HighPassNode(StringParam name, unsigned ID) : SimpleCollapseNode(name, ID, false, false), mCutoffFrequency(10.0f)
 {
 }
 
@@ -587,10 +539,7 @@ void HighPassNode::SetCutoffFrequency(float frequency)
   Z::gSound->Mixer.AddTask(CreateFunctor(&HighPassNode::SetCutoffFrequencyThreaded, this, frequency), this);
 }
 
-bool HighPassNode::GetOutputSamples(BufferType* outputBuffer,
-                                    const unsigned numberOfChannels,
-                                    ListenerNode* listener,
-                                    const bool firstRequest)
+bool HighPassNode::GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest)
 {
   unsigned bufferSize = outputBuffer->Size();
 
@@ -661,10 +610,7 @@ RaverieDefineType(BandPassNode, builder, type)
   RaverieBindGetterSetter(QualityFactor);
 }
 
-BandPassNode::BandPassNode(StringParam name, unsigned ID) :
-    SimpleCollapseNode(name, ID, false, false),
-    mCentralFrequency(0.0f),
-    mQuality(0.669f)
+BandPassNode::BandPassNode(StringParam name, unsigned ID) : SimpleCollapseNode(name, ID, false, false), mCentralFrequency(0.0f), mQuality(0.669f)
 {
 }
 
@@ -696,10 +642,7 @@ void BandPassNode::SetQualityFactor(float Q)
   Z::gSound->Mixer.AddTask(CreateFunctor(&BandPassNode::SetQualityFactorThreaded, this, Q), this);
 }
 
-bool BandPassNode::GetOutputSamples(BufferType* outputBuffer,
-                                    const unsigned numberOfChannels,
-                                    ListenerNode* listener,
-                                    const bool firstRequest)
+bool BandPassNode::GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest)
 {
   unsigned bufferSize = outputBuffer->Size();
 
@@ -773,13 +716,7 @@ RaverieDefineType(EqualizerNode, builder, type)
   RaverieBindMethod(InterpolateAllBands);
 }
 
-EqualizerNode::EqualizerNode(StringParam name, unsigned ID) :
-    SimpleCollapseNode(name, ID, false, false),
-    mLowPassGain(1.0f),
-    mHighPassGain(1.0f),
-    mBand1Gain(1.0f),
-    mBand2Gain(1.0f),
-    mBand3Gain(1.0f)
+EqualizerNode::EqualizerNode(StringParam name, unsigned ID) : SimpleCollapseNode(name, ID, false, false), mLowPassGain(1.0f), mHighPassGain(1.0f), mBand1Gain(1.0f), mBand2Gain(1.0f), mBand3Gain(1.0f)
 {
 }
 
@@ -797,11 +734,7 @@ float EqualizerNode::GetLowPassGain()
 void EqualizerNode::SetLowPassGain(float gain)
 {
   mLowPassGain.Set(Math::Clamp(gain, 0.0f, cMaxVolumeValue), AudioThreads::MainThread);
-  Z::gSound->Mixer.AddTask(CreateFunctor(&EqualizerNode::SetBandGainThreaded,
-                                         this,
-                                         EqualizerBands::Below80,
-                                         mLowPassGain.Get(AudioThreads::MainThread)),
-                           this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&EqualizerNode::SetBandGainThreaded, this, EqualizerBands::Below80, mLowPassGain.Get(AudioThreads::MainThread)), this);
 }
 
 float EqualizerNode::GetHighPassGain()
@@ -812,11 +745,7 @@ float EqualizerNode::GetHighPassGain()
 void EqualizerNode::SetHighPassGain(float gain)
 {
   mHighPassGain.Set(Math::Clamp(gain, 0.0f, cMaxVolumeValue), AudioThreads::MainThread);
-  Z::gSound->Mixer.AddTask(CreateFunctor(&EqualizerNode::SetBandGainThreaded,
-                                         this,
-                                         EqualizerBands::Above5000,
-                                         mHighPassGain.Get(AudioThreads::MainThread)),
-                           this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&EqualizerNode::SetBandGainThreaded, this, EqualizerBands::Above5000, mHighPassGain.Get(AudioThreads::MainThread)), this);
 }
 
 float EqualizerNode::GetBand1Gain()
@@ -827,10 +756,7 @@ float EqualizerNode::GetBand1Gain()
 void EqualizerNode::SetBand1Gain(float gain)
 {
   mBand1Gain.Set(Math::Clamp(gain, 0.0f, cMaxVolumeValue), AudioThreads::MainThread);
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(
-          &EqualizerNode::SetBandGainThreaded, this, EqualizerBands::At150, mBand1Gain.Get(AudioThreads::MainThread)),
-      this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&EqualizerNode::SetBandGainThreaded, this, EqualizerBands::At150, mBand1Gain.Get(AudioThreads::MainThread)), this);
 }
 
 float EqualizerNode::GetBand2Gain()
@@ -841,10 +767,7 @@ float EqualizerNode::GetBand2Gain()
 void EqualizerNode::SetBand2Gain(float gain)
 {
   mBand2Gain.Set(Math::Clamp(gain, 0.0f, cMaxVolumeValue), AudioThreads::MainThread);
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(
-          &EqualizerNode::SetBandGainThreaded, this, EqualizerBands::At600, mBand2Gain.Get(AudioThreads::MainThread)),
-      this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&EqualizerNode::SetBandGainThreaded, this, EqualizerBands::At600, mBand2Gain.Get(AudioThreads::MainThread)), this);
 }
 
 float EqualizerNode::GetBand3Gain()
@@ -855,14 +778,10 @@ float EqualizerNode::GetBand3Gain()
 void EqualizerNode::SetBand3Gain(float gain)
 {
   mBand3Gain.Set(Math::Clamp(gain, 0.0f, cMaxVolumeValue), AudioThreads::MainThread);
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(
-          &EqualizerNode::SetBandGainThreaded, this, EqualizerBands::At2500, mBand3Gain.Get(AudioThreads::MainThread)),
-      this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&EqualizerNode::SetBandGainThreaded, this, EqualizerBands::At2500, mBand3Gain.Get(AudioThreads::MainThread)), this);
 }
 
-void EqualizerNode::InterpolateAllBands(
-    float lowPass, float band1, float band2, float band3, float highPass, float timeToInterpolate)
+void EqualizerNode::InterpolateAllBands(float lowPass, float band1, float band2, float band3, float highPass, float timeToInterpolate)
 {
   mLowPassGain.Set(Math::Clamp(lowPass, 0.0f, cMaxVolumeValue), AudioThreads::MainThread);
   mBand1Gain.Set(Math::Clamp(band1, 0.0f, cMaxVolumeValue), AudioThreads::MainThread);
@@ -877,14 +796,10 @@ void EqualizerNode::InterpolateAllBands(
   values[EqualizerBands::At2500] = mBand3Gain.Get(AudioThreads::MainThread);
   values[EqualizerBands::Above5000] = mHighPassGain.Get(AudioThreads::MainThread);
 
-  Z::gSound->Mixer.AddTask(CreateFunctor(&EqualizerNode::InterpolateAllThreaded, this, values, timeToInterpolate),
-                           this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&EqualizerNode::InterpolateAllThreaded, this, values, timeToInterpolate), this);
 }
 
-bool EqualizerNode::GetOutputSamples(BufferType* outputBuffer,
-                                     const unsigned numberOfChannels,
-                                     ListenerNode* listener,
-                                     const bool firstRequest)
+bool EqualizerNode::GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest)
 {
   unsigned bufferSize = outputBuffer->Size();
 
@@ -958,11 +873,7 @@ RaverieDefineType(ReverbNode, builder, type)
   RaverieBindMethod(InterpolateWetValue);
 }
 
-ReverbNode::ReverbNode(StringParam name, unsigned ID) :
-    SimpleCollapseNode(name, ID, false, false),
-    mTimeSec(1.0f),
-    mWetLevelValue(0.5f),
-    mOutputFinishedThreaded(true)
+ReverbNode::ReverbNode(StringParam name, unsigned ID) : SimpleCollapseNode(name, ID, false, false), mTimeSec(1.0f), mWetLevelValue(0.5f), mOutputFinishedThreaded(true)
 {
 }
 
@@ -1022,10 +933,7 @@ void ReverbNode::InterpolateWetValue(float value, float time)
   Z::gSound->Mixer.AddTask(CreateFunctor(&ReverbNode::InterpolateWetValueThreaded, this, value, time), this);
 }
 
-bool ReverbNode::GetOutputSamples(BufferType* outputBuffer,
-                                  const unsigned numberOfChannels,
-                                  ListenerNode* listener,
-                                  const bool firstRequest)
+bool ReverbNode::GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest)
 {
   unsigned bufferSize = outputBuffer->Size();
 
@@ -1046,8 +954,7 @@ bool ReverbNode::GetOutputSamples(BufferType* outputBuffer,
     FiltersPerListener[listener] = filter;
   }
 
-  bool hasOutput =
-      filter->ProcessBuffer(mInputSamplesThreaded.Data(), outputBuffer->Data(), numberOfChannels, bufferSize);
+  bool hasOutput = filter->ProcessBuffer(mInputSamplesThreaded.Data(), outputBuffer->Data(), numberOfChannels, bufferSize);
 
   if (!isThereInput && !hasOutput)
     mOutputFinishedThreaded = true;
@@ -1103,11 +1010,7 @@ RaverieDefineType(DelayNode, builder, type)
   RaverieBindMethod(InterpolateWetValue);
 }
 
-DelayNode::DelayNode(StringParam name, unsigned ID) :
-    SimpleCollapseNode(name, ID, false, false),
-    mDelaySec(0.1f),
-    mFeedbackValue(0.0f),
-    mWetValue(0.5f)
+DelayNode::DelayNode(StringParam name, unsigned ID) : SimpleCollapseNode(name, ID, false, false), mDelaySec(0.1f), mFeedbackValue(0.0f), mWetValue(0.5f)
 {
 }
 
@@ -1179,21 +1082,15 @@ void DelayNode::SetWetValue(float wetLevel)
 
 void DelayNode::InterpolateWetPercent(float percent, float time)
 {
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&DelayNode::InterpolateWetValueThreaded, this, Math::Clamp(percent, 0.0f, 100.0f) / 100.0f, time),
-      this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&DelayNode::InterpolateWetValueThreaded, this, Math::Clamp(percent, 0.0f, 100.0f) / 100.0f, time), this);
 }
 
 void DelayNode::InterpolateWetValue(float wetLevel, float time)
 {
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&DelayNode::InterpolateWetValueThreaded, this, Math::Clamp(wetLevel, 0.0f, 1.0f), time), this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&DelayNode::InterpolateWetValueThreaded, this, Math::Clamp(wetLevel, 0.0f, 1.0f), time), this);
 }
 
-bool DelayNode::GetOutputSamples(BufferType* outputBuffer,
-                                 const unsigned numberOfChannels,
-                                 ListenerNode* listener,
-                                 const bool firstRequest)
+bool DelayNode::GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest)
 {
   unsigned outputBufferSize = outputBuffer->Size();
 
@@ -1274,11 +1171,7 @@ RaverieDefineType(FlangerNode, builder, type)
   RaverieBindGetterSetter(FeedbackValue);
 }
 
-FlangerNode::FlangerNode(StringParam name, unsigned ID) :
-    SimpleCollapseNode(name, ID, false, false),
-    mMaxDelayMS(5.0f),
-    mModFrequency(0.18f),
-    mFeedback(0.0f)
+FlangerNode::FlangerNode(StringParam name, unsigned ID) : SimpleCollapseNode(name, ID, false, false), mMaxDelayMS(5.0f), mModFrequency(0.18f), mFeedback(0.0f)
 {
 }
 
@@ -1334,10 +1227,7 @@ void FlangerNode::SetFeedbackValue(float value)
   Z::gSound->Mixer.AddTask(CreateFunctor(&FlangerNode::SetFeedbackThreaded, this, value), this);
 }
 
-bool FlangerNode::GetOutputSamples(BufferType* outputBuffer,
-                                   const unsigned numberOfChannels,
-                                   ListenerNode* listener,
-                                   const bool firstRequest)
+bool FlangerNode::GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest)
 {
   unsigned bufferSize = outputBuffer->Size();
 
@@ -1349,9 +1239,7 @@ bool FlangerNode::GetOutputSamples(BufferType* outputBuffer,
   Data* filter = FiltersPerListener.FindValue(listener, nullptr);
   if (!filter)
   {
-    filter = new Data(mModFrequency.Get(AudioThreads::MixThread),
-                      mFeedback.Get(AudioThreads::MixThread),
-                      mMaxDelayMS.Get(AudioThreads::MixThread));
+    filter = new Data(mModFrequency.Get(AudioThreads::MixThread), mFeedback.Get(AudioThreads::MixThread), mMaxDelayMS.Get(AudioThreads::MixThread));
     FiltersPerListener[listener] = filter;
   }
 
@@ -1360,8 +1248,7 @@ bool FlangerNode::GetOutputSamples(BufferType* outputBuffer,
   {
     filter->Delay.SetDelayMSec(filter->LFO.GetNextSample() * mMaxDelayMS.Get(AudioThreads::MixThread));
 
-    filter->Delay.ProcessBuffer(
-        mInputSamplesThreaded.Data() + frame, outputBuffer->Data() + frame, numberOfChannels, numberOfChannels);
+    filter->Delay.ProcessBuffer(mInputSamplesThreaded.Data() + frame, outputBuffer->Data() + frame, numberOfChannels, numberOfChannels);
   }
 
   AddBypassThreaded(outputBuffer);
@@ -1433,13 +1320,7 @@ RaverieDefineType(ChorusNode, builder, type)
   RaverieBindGetterSetter(OffsetMillisec);
 }
 
-ChorusNode::ChorusNode(StringParam name, unsigned ID) :
-    SimpleCollapseNode(name, ID, false, false),
-    mMinDelayMS(5.0f),
-    mMaxDelayMS(20.0f),
-    mModFrequency(0.1f),
-    mFeedback(0.0f),
-    mChorusOffsetMS(40.0f)
+ChorusNode::ChorusNode(StringParam name, unsigned ID) : SimpleCollapseNode(name, ID, false, false), mMinDelayMS(5.0f), mMaxDelayMS(20.0f), mModFrequency(0.1f), mFeedback(0.0f), mChorusOffsetMS(40.0f)
 {
 }
 
@@ -1515,10 +1396,7 @@ void ChorusNode::SetOffsetMillisec(float offset)
   mChorusOffsetMS.Set(Math::Max(offset, 0.0f), AudioThreads::MainThread);
 }
 
-bool ChorusNode::GetOutputSamples(BufferType* outputBuffer,
-                                  const unsigned numberOfChannels,
-                                  ListenerNode* listener,
-                                  const bool firstRequest)
+bool ChorusNode::GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest)
 {
   unsigned bufferSize = outputBuffer->Size();
 
@@ -1530,22 +1408,17 @@ bool ChorusNode::GetOutputSamples(BufferType* outputBuffer,
   Data* filter = FiltersPerListener.FindValue(listener, nullptr);
   if (!filter)
   {
-    filter = new Data(mModFrequency.Get(AudioThreads::MixThread),
-                      mMinDelayMS.Get(AudioThreads::MixThread),
-                      mFeedback.Get(AudioThreads::MixThread));
+    filter = new Data(mModFrequency.Get(AudioThreads::MixThread), mMinDelayMS.Get(AudioThreads::MixThread), mFeedback.Get(AudioThreads::MixThread));
     FiltersPerListener[listener] = filter;
   }
 
   // Apply filter
   for (unsigned frame = 0; frame < bufferSize; frame += numberOfChannels)
   {
-    filter->Delay.SetDelayMSec(
-        (filter->LFO.GetNextSample() *
-         (mMaxDelayMS.Get(AudioThreads::MixThread) - mMinDelayMS.Get(AudioThreads::MixThread))) +
-        (mMinDelayMS.Get(AudioThreads::MixThread) + mChorusOffsetMS.Get(AudioThreads::MixThread)));
+    filter->Delay.SetDelayMSec((filter->LFO.GetNextSample() * (mMaxDelayMS.Get(AudioThreads::MixThread) - mMinDelayMS.Get(AudioThreads::MixThread))) +
+                               (mMinDelayMS.Get(AudioThreads::MixThread) + mChorusOffsetMS.Get(AudioThreads::MixThread)));
 
-    filter->Delay.ProcessBuffer(
-        mInputSamplesThreaded.Data() + frame, outputBuffer->Data() + frame, numberOfChannels, numberOfChannels);
+    filter->Delay.ProcessBuffer(mInputSamplesThreaded.Data() + frame, outputBuffer->Data() + frame, numberOfChannels, numberOfChannels);
   }
 
   AddBypassThreaded(outputBuffer);
@@ -1592,14 +1465,7 @@ RaverieDefineType(CompressorNode, builder, type)
 }
 
 CompressorNode::CompressorNode(StringParam name, unsigned ID) :
-    SimpleCollapseNode(name, ID, false, false),
-    mInputGainDB(0.0f),
-    mThresholdDB(0.0f),
-    mAttackMSec(20.0f),
-    mReleaseMSec(1000.0f),
-    mRatio(1.0f),
-    mOutputGainDB(0.0f),
-    mKneeWidth(0.0f)
+    SimpleCollapseNode(name, ID, false, false), mInputGainDB(0.0f), mThresholdDB(0.0f), mAttackMSec(20.0f), mReleaseMSec(1000.0f), mRatio(1.0f), mOutputGainDB(0.0f), mKneeWidth(0.0f)
 {
   Filter.SetType(DynamicsProcessor::Compressor);
 }
@@ -1688,10 +1554,7 @@ void CompressorNode::SetKneeWidth(float knee)
   Z::gSound->Mixer.AddTask(CreateFunctor(&DynamicsProcessor::SetKneeWidth, &Filter, mKneeWidth), this);
 }
 
-bool CompressorNode::GetOutputSamples(BufferType* outputBuffer,
-                                      const unsigned numberOfChannels,
-                                      ListenerNode* listener,
-                                      const bool firstRequest)
+bool CompressorNode::GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest)
 {
   unsigned bufferSize = outputBuffer->Size();
 
@@ -1700,8 +1563,7 @@ bool CompressorNode::GetOutputSamples(BufferType* outputBuffer,
     return false;
 
   // Apply filter
-  Filter.ProcessBuffer(
-      mInputSamplesThreaded.Data(), mInputSamplesThreaded.Data(), outputBuffer->Data(), numberOfChannels, bufferSize);
+  Filter.ProcessBuffer(mInputSamplesThreaded.Data(), mInputSamplesThreaded.Data(), outputBuffer->Data(), numberOfChannels, bufferSize);
 
   AddBypassThreaded(outputBuffer);
 
@@ -1724,14 +1586,7 @@ RaverieDefineType(ExpanderNode, builder, type)
 }
 
 ExpanderNode::ExpanderNode(StringParam name, unsigned ID) :
-    SimpleCollapseNode(name, ID, false, false),
-    mInputGainDB(0.0f),
-    mThresholdDB(0.0f),
-    mAttackMSec(20.0f),
-    mReleaseMSec(1000.0f),
-    mRatio(1.0f),
-    mOutputGainDB(0.0f),
-    mKneeWidth(0.0f)
+    SimpleCollapseNode(name, ID, false, false), mInputGainDB(0.0f), mThresholdDB(0.0f), mAttackMSec(20.0f), mReleaseMSec(1000.0f), mRatio(1.0f), mOutputGainDB(0.0f), mKneeWidth(0.0f)
 {
   Filter.SetType(DynamicsProcessor::Expand);
 }
@@ -1820,10 +1675,7 @@ void ExpanderNode::SetKneeWidth(float knee)
   Z::gSound->Mixer.AddTask(CreateFunctor(&DynamicsProcessor::SetKneeWidth, &Filter, mKneeWidth), this);
 }
 
-bool ExpanderNode::GetOutputSamples(BufferType* outputBuffer,
-                                    const unsigned numberOfChannels,
-                                    ListenerNode* listener,
-                                    const bool firstRequest)
+bool ExpanderNode::GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest)
 {
   unsigned bufferSize = outputBuffer->Size();
 
@@ -1832,8 +1684,7 @@ bool ExpanderNode::GetOutputSamples(BufferType* outputBuffer,
     return false;
 
   // Apply filter
-  Filter.ProcessBuffer(
-      mInputSamplesThreaded.Data(), mInputSamplesThreaded.Data(), outputBuffer->Data(), numberOfChannels, bufferSize);
+  Filter.ProcessBuffer(mInputSamplesThreaded.Data(), mInputSamplesThreaded.Data(), outputBuffer->Data(), numberOfChannels, bufferSize);
 
   AddBypassThreaded(outputBuffer);
 
@@ -1886,8 +1737,7 @@ void AddNoiseNode::SetAdditiveGain(float decibels)
 {
   mAdditiveNoiseDB = Math::Clamp(decibels, cMinDecibelsValue, cMaxDecibelsValue);
 
-  Z::gSound->Mixer.AddTask(CreateFunctor(&AddNoiseNode::mAddGainThreaded, this, ValueFromDecibels(mAdditiveNoiseDB)),
-                           this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&AddNoiseNode::mAddGainThreaded, this, ValueFromDecibels(mAdditiveNoiseDB)), this);
 }
 
 float AddNoiseNode::GetMultiplicativeGain()
@@ -1899,8 +1749,7 @@ void AddNoiseNode::SetMultiplicativeGain(float decibels)
 {
   mMultipleNoiseDB = Math::Clamp(decibels, cMinDecibelsValue, cMaxDecibelsValue);
 
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&AddNoiseNode::mMultiplyGainThreaded, this, ValueFromDecibels(mMultipleNoiseDB)), this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&AddNoiseNode::mMultiplyGainThreaded, this, ValueFromDecibels(mMultipleNoiseDB)), this);
 }
 
 float AddNoiseNode::GetAdditiveCutoff()
@@ -1912,8 +1761,7 @@ void AddNoiseNode::SetAdditiveCutoff(float frequency)
 {
   mAdditiveNoiseCutoffHz = Math::Max(frequency, 0.0f);
 
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&AddNoiseNode::mAddPeriodThreaded, this, ValueFromFrequency(mAdditiveNoiseCutoffHz)), this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&AddNoiseNode::mAddPeriodThreaded, this, ValueFromFrequency(mAdditiveNoiseCutoffHz)), this);
 }
 
 float AddNoiseNode::GetMultiplicativeCutoff()
@@ -1925,14 +1773,10 @@ void AddNoiseNode::SetMultiplicativeCutoff(float frequency)
 {
   mMultipleNoiseCutoffHz = Math::Max(frequency, 0.0f);
 
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&AddNoiseNode::mMultiplyPeriodThreaded, this, ValueFromFrequency(mMultipleNoiseCutoffHz)), this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&AddNoiseNode::mMultiplyPeriodThreaded, this, ValueFromFrequency(mMultipleNoiseCutoffHz)), this);
 }
 
-bool AddNoiseNode::GetOutputSamples(BufferType* outputBuffer,
-                                    const unsigned numberOfChannels,
-                                    ListenerNode* listener,
-                                    const bool firstRequest)
+bool AddNoiseNode::GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest)
 {
   unsigned bufferSize = outputBuffer->Size();
 
@@ -1945,9 +1789,7 @@ bool AddNoiseNode::GetOutputSamples(BufferType* outputBuffer,
   {
     for (unsigned j = 0; j < numberOfChannels; ++j, outputRange.PopFront(), inputRange.PopFront())
     {
-      outputRange.Front() =
-          (inputRange.Front() * (1.0f - mMultiplyGainThreaded + (mMultiplyGainThreaded * mMultiplyNoiseThreaded))) +
-          (mAddGainThreaded * mAddNoiseThreaded);
+      outputRange.Front() = (inputRange.Front() * (1.0f - mMultiplyGainThreaded + (mMultiplyGainThreaded * mMultiplyNoiseThreaded))) + (mAddGainThreaded * mAddNoiseThreaded);
     }
 
     ++mAddCountThreaded;
@@ -1982,11 +1824,7 @@ RaverieDefineType(ModulationNode, builder, type)
   RaverieBindGetterSetter(WetValue);
 }
 
-ModulationNode::ModulationNode(StringParam name, unsigned ID) :
-    SimpleCollapseNode(name, ID, false, false),
-    mAmplitude(false),
-    mFrequency(10.0f),
-    mWetLevelValue(1.0f)
+ModulationNode::ModulationNode(StringParam name, unsigned ID) : SimpleCollapseNode(name, ID, false, false), mAmplitude(false), mFrequency(10.0f), mWetLevelValue(1.0f)
 {
 }
 
@@ -2017,8 +1855,7 @@ void ModulationNode::SetFrequency(float frequency)
 {
   mFrequency.Set(Math::Max(frequency, 0.0f), AudioThreads::MainThread);
 
-  Z::gSound->Mixer.AddTask(
-      CreateFunctor(&ModulationNode::SetFrequencyThreaded, this, mFrequency.Get(AudioThreads::MainThread)), this);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&ModulationNode::SetFrequencyThreaded, this, mFrequency.Get(AudioThreads::MainThread)), this);
 }
 
 float ModulationNode::GetWetPercent()
@@ -2041,10 +1878,7 @@ void ModulationNode::SetWetValue(float value)
   mWetLevelValue.Set(Math::Clamp(value, 0.0f, 1.0f), AudioThreads::MainThread);
 }
 
-bool ModulationNode::GetOutputSamples(BufferType* outputBuffer,
-                                      const unsigned numberOfChannels,
-                                      ListenerNode* listener,
-                                      const bool firstRequest)
+bool ModulationNode::GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest)
 {
   unsigned bufferSize = outputBuffer->Size();
 
@@ -2076,8 +1910,7 @@ bool ModulationNode::GetOutputSamples(BufferType* outputBuffer,
     // percent
     for (unsigned channel = 0; channel < numberOfChannels; ++channel, outputRange.PopFront(), inputRange.PopFront())
     {
-      outputRange.Front() = (inputRange.Front() * waveValue * mWetLevelValue.Get(AudioThreads::MixThread)) +
-                            (inputRange.Front() * (1.0f - mWetLevelValue.Get(AudioThreads::MixThread)));
+      outputRange.Front() = (inputRange.Front() * waveValue * mWetLevelValue.Get(AudioThreads::MixThread)) + (inputRange.Front() * (1.0f - mWetLevelValue.Get(AudioThreads::MixThread)));
     }
   }
 

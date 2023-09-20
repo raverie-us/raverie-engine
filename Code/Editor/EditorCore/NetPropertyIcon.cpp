@@ -14,13 +14,7 @@ Tweakable(Vec4, EnabledNetPropertyIcon, Vec4(1, 1, 1, 1), cLocation);
 //                               NetPropertyIcon //
 
 NetPropertyIcon::NetPropertyIcon(Composite* parent, HandleParam object, Property* metaProperty) :
-    Composite(parent),
-    mMouseOver(false),
-    mIcon(nullptr),
-    mComponentHandle(object),
-    mProperty(metaProperty),
-    mActiveSearch(),
-    mTooltip()
+    Composite(parent), mMouseOver(false), mIcon(nullptr), mComponentHandle(object), mProperty(metaProperty), mActiveSearch(), mTooltip()
 {
   // Create net property icon element
   mIcon = this->CreateAttached<Element>("NetworkIcon");
@@ -89,8 +83,7 @@ void NetPropertyIcon::UpdateTransform()
   //    Has net property attribute?
   // OR Net object has this net property info added? (Property is enabled for
   // network replication?)
-  if (mProperty->HasAttribute(PropertyAttributes::cNetProperty) ||
-      netObject->HasNetPropertyInfo(componentType, propertyName))
+  if (mProperty->HasAttribute(PropertyAttributes::cNetProperty) || netObject->HasNetPropertyInfo(componentType, propertyName))
     color = NetPropertyUi::EnabledNetPropertyIcon; // Use enabled color
   else
     color = NetPropertyUi::DisabledNetPropertyIcon; // Use disabled color

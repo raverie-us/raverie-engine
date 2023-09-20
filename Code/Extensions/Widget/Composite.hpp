@@ -62,11 +62,7 @@ public:
   // Attach a child widget
   virtual void AttachChildWidget(Widget* child, AttachType::Enum attachType = AttachType::Normal);
 
-  void RenderUpdate(ViewBlock& viewBlock,
-                    FrameBlock& frameBlock,
-                    Mat4Param parentTx,
-                    ColorTransform colorTx,
-                    WidgetRect clipRect) override;
+  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect) override;
 
   // Widget interface
   void UpdateTransform() override;

@@ -307,19 +307,19 @@ DeclareEnum3(ConvergenceState,
 #if RaverieEnableError
 
 /// Test the specified condition on all replicas provided
-#  define AssertReplicas(replicas, condition, ...)                                                                     \
-    do                                                                                                                 \
-    {                                                                                                                  \
-      /* For all replicas */                                                                                           \
-      forRange (Replica* replica, replicas.All())                                                                      \
-      {                                                                                                                \
-        /* Absent replica? */                                                                                          \
-        if (!replica)                                                                                                  \
-          continue; /* Skip */                                                                                         \
-                                                                                                                       \
-        /* Test provided condition */                                                                                  \
-        Assert(condition, __VA_ARGS__);                                                                                \
-      }                                                                                                                \
+#  define AssertReplicas(replicas, condition, ...)                                                                                                                                                     \
+    do                                                                                                                                                                                                 \
+    {                                                                                                                                                                                                  \
+      /* For all replicas */                                                                                                                                                                           \
+      forRange (Replica* replica, replicas.All())                                                                                                                                                      \
+      {                                                                                                                                                                                                \
+        /* Absent replica? */                                                                                                                                                                          \
+        if (!replica)                                                                                                                                                                                  \
+          continue; /* Skip */                                                                                                                                                                         \
+                                                                                                                                                                                                       \
+        /* Test provided condition */                                                                                                                                                                  \
+        Assert(condition, __VA_ARGS__);                                                                                                                                                                \
+      }                                                                                                                                                                                                \
     } while (gConditionalFalseConstant)
 
 #else
@@ -331,116 +331,112 @@ DeclareEnum3(ConvergenceState,
 /// Switch cases for non-boolean arithmetic types
 /// Calls the specified function with the given parameters
 /// Optionally returns or breaks afterwards
-#define SWITCH_CASES_NON_BOOL_ARITHMETIC_DO(ReturnOrEmpty, BreakOrNoOp, Fn, ...)                                       \
-                                                                                                                       \
-  /* Char Type */                                                                                                      \
-  case BasicNativeType::Char:                                                                                          \
-    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::Char>::Type>(__VA_ARGS__);                               \
-    BreakOrNoOp;                                                                                                       \
-                                                                                                                       \
-  /* Fixed-Width Signed Integral Types */                                                                              \
-  case BasicNativeType::Int8:                                                                                          \
-    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::Int8>::Type>(__VA_ARGS__);                               \
-    BreakOrNoOp;                                                                                                       \
-  case BasicNativeType::Int16:                                                                                         \
-    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::Int16>::Type>(__VA_ARGS__);                              \
-    BreakOrNoOp;                                                                                                       \
-  case BasicNativeType::Int32:                                                                                         \
-    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::Int32>::Type>(__VA_ARGS__);                              \
-    BreakOrNoOp;                                                                                                       \
-  case BasicNativeType::Int64:                                                                                         \
-    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::Int64>::Type>(__VA_ARGS__);                              \
-    BreakOrNoOp;                                                                                                       \
-                                                                                                                       \
-  /* Fixed-Width Unsigned Integral Types */                                                                            \
-  case BasicNativeType::Uint8:                                                                                         \
-    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::Uint8>::Type>(__VA_ARGS__);                              \
-    BreakOrNoOp;                                                                                                       \
-  case BasicNativeType::Uint16:                                                                                        \
-    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::Uint16>::Type>(__VA_ARGS__);                             \
-    BreakOrNoOp;                                                                                                       \
-  case BasicNativeType::Uint32:                                                                                        \
-    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::Uint32>::Type>(__VA_ARGS__);                             \
-    BreakOrNoOp;                                                                                                       \
-  case BasicNativeType::Uint64:                                                                                        \
-    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::Uint64>::Type>(__VA_ARGS__);                             \
-    BreakOrNoOp;                                                                                                       \
-                                                                                                                       \
-  /* Floating Point Types */                                                                                           \
-  case BasicNativeType::Float:                                                                                         \
-    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::Float>::Type>(__VA_ARGS__);                              \
-    BreakOrNoOp;                                                                                                       \
-  case BasicNativeType::Double:                                                                                        \
-    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::Double>::Type>(__VA_ARGS__);                             \
-    BreakOrNoOp;                                                                                                       \
-                                                                                                                       \
-  /* Multi-Primitive Math Types (Excluding Bool Types) */                                                              \
-  case BasicNativeType::IntVector2:                                                                                    \
-    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::IntVector2>::Type>(__VA_ARGS__);                         \
-    BreakOrNoOp;                                                                                                       \
-  case BasicNativeType::IntVector3:                                                                                    \
-    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::IntVector3>::Type>(__VA_ARGS__);                         \
-    BreakOrNoOp;                                                                                                       \
-  case BasicNativeType::IntVector4:                                                                                    \
-    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::IntVector4>::Type>(__VA_ARGS__);                         \
-    BreakOrNoOp;                                                                                                       \
-  case BasicNativeType::Vector2:                                                                                       \
-    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::Vector2>::Type>(__VA_ARGS__);                            \
-    BreakOrNoOp;                                                                                                       \
-  case BasicNativeType::Vector3:                                                                                       \
-    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::Vector3>::Type>(__VA_ARGS__);                            \
-    BreakOrNoOp;                                                                                                       \
-  case BasicNativeType::Vector4:                                                                                       \
-    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::Vector4>::Type>(__VA_ARGS__);                            \
-    BreakOrNoOp;                                                                                                       \
-  case BasicNativeType::Quaternion:                                                                                    \
-    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::Quaternion>::Type>(__VA_ARGS__);                         \
-    BreakOrNoOp;                                                                                                       \
-  case BasicNativeType::Matrix2:                                                                                       \
-    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::Matrix2>::Type>(__VA_ARGS__);                            \
-    BreakOrNoOp;                                                                                                       \
-  case BasicNativeType::Matrix3:                                                                                       \
-    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::Matrix3>::Type>(__VA_ARGS__);                            \
-    BreakOrNoOp;                                                                                                       \
-  case BasicNativeType::Matrix4:                                                                                       \
-    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::Matrix4>::Type>(__VA_ARGS__);                            \
+#define SWITCH_CASES_NON_BOOL_ARITHMETIC_DO(ReturnOrEmpty, BreakOrNoOp, Fn, ...)                                                                                                                       \
+                                                                                                                                                                                                       \
+  /* Char Type */                                                                                                                                                                                      \
+  case BasicNativeType::Char:                                                                                                                                                                          \
+    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::Char>::Type>(__VA_ARGS__);                                                                                                               \
+    BreakOrNoOp;                                                                                                                                                                                       \
+                                                                                                                                                                                                       \
+  /* Fixed-Width Signed Integral Types */                                                                                                                                                              \
+  case BasicNativeType::Int8:                                                                                                                                                                          \
+    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::Int8>::Type>(__VA_ARGS__);                                                                                                               \
+    BreakOrNoOp;                                                                                                                                                                                       \
+  case BasicNativeType::Int16:                                                                                                                                                                         \
+    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::Int16>::Type>(__VA_ARGS__);                                                                                                              \
+    BreakOrNoOp;                                                                                                                                                                                       \
+  case BasicNativeType::Int32:                                                                                                                                                                         \
+    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::Int32>::Type>(__VA_ARGS__);                                                                                                              \
+    BreakOrNoOp;                                                                                                                                                                                       \
+  case BasicNativeType::Int64:                                                                                                                                                                         \
+    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::Int64>::Type>(__VA_ARGS__);                                                                                                              \
+    BreakOrNoOp;                                                                                                                                                                                       \
+                                                                                                                                                                                                       \
+  /* Fixed-Width Unsigned Integral Types */                                                                                                                                                            \
+  case BasicNativeType::Uint8:                                                                                                                                                                         \
+    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::Uint8>::Type>(__VA_ARGS__);                                                                                                              \
+    BreakOrNoOp;                                                                                                                                                                                       \
+  case BasicNativeType::Uint16:                                                                                                                                                                        \
+    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::Uint16>::Type>(__VA_ARGS__);                                                                                                             \
+    BreakOrNoOp;                                                                                                                                                                                       \
+  case BasicNativeType::Uint32:                                                                                                                                                                        \
+    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::Uint32>::Type>(__VA_ARGS__);                                                                                                             \
+    BreakOrNoOp;                                                                                                                                                                                       \
+  case BasicNativeType::Uint64:                                                                                                                                                                        \
+    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::Uint64>::Type>(__VA_ARGS__);                                                                                                             \
+    BreakOrNoOp;                                                                                                                                                                                       \
+                                                                                                                                                                                                       \
+  /* Floating Point Types */                                                                                                                                                                           \
+  case BasicNativeType::Float:                                                                                                                                                                         \
+    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::Float>::Type>(__VA_ARGS__);                                                                                                              \
+    BreakOrNoOp;                                                                                                                                                                                       \
+  case BasicNativeType::Double:                                                                                                                                                                        \
+    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::Double>::Type>(__VA_ARGS__);                                                                                                             \
+    BreakOrNoOp;                                                                                                                                                                                       \
+                                                                                                                                                                                                       \
+  /* Multi-Primitive Math Types (Excluding Bool Types) */                                                                                                                                              \
+  case BasicNativeType::IntVector2:                                                                                                                                                                    \
+    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::IntVector2>::Type>(__VA_ARGS__);                                                                                                         \
+    BreakOrNoOp;                                                                                                                                                                                       \
+  case BasicNativeType::IntVector3:                                                                                                                                                                    \
+    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::IntVector3>::Type>(__VA_ARGS__);                                                                                                         \
+    BreakOrNoOp;                                                                                                                                                                                       \
+  case BasicNativeType::IntVector4:                                                                                                                                                                    \
+    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::IntVector4>::Type>(__VA_ARGS__);                                                                                                         \
+    BreakOrNoOp;                                                                                                                                                                                       \
+  case BasicNativeType::Vector2:                                                                                                                                                                       \
+    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::Vector2>::Type>(__VA_ARGS__);                                                                                                            \
+    BreakOrNoOp;                                                                                                                                                                                       \
+  case BasicNativeType::Vector3:                                                                                                                                                                       \
+    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::Vector3>::Type>(__VA_ARGS__);                                                                                                            \
+    BreakOrNoOp;                                                                                                                                                                                       \
+  case BasicNativeType::Vector4:                                                                                                                                                                       \
+    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::Vector4>::Type>(__VA_ARGS__);                                                                                                            \
+    BreakOrNoOp;                                                                                                                                                                                       \
+  case BasicNativeType::Quaternion:                                                                                                                                                                    \
+    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::Quaternion>::Type>(__VA_ARGS__);                                                                                                         \
+    BreakOrNoOp;                                                                                                                                                                                       \
+  case BasicNativeType::Matrix2:                                                                                                                                                                       \
+    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::Matrix2>::Type>(__VA_ARGS__);                                                                                                            \
+    BreakOrNoOp;                                                                                                                                                                                       \
+  case BasicNativeType::Matrix3:                                                                                                                                                                       \
+    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::Matrix3>::Type>(__VA_ARGS__);                                                                                                            \
+    BreakOrNoOp;                                                                                                                                                                                       \
+  case BasicNativeType::Matrix4:                                                                                                                                                                       \
+    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::Matrix4>::Type>(__VA_ARGS__);                                                                                                            \
     BreakOrNoOp
 
 #define SWITCH_CASES_NON_BOOL_ARITHMETIC_CALL(Fn, ...) SWITCH_CASES_NON_BOOL_ARITHMETIC_DO(, ((void)0), Fn, __VA_ARGS__)
-#define SWITCH_CASES_NON_BOOL_ARITHMETIC_CALL_AND_RETURN(Fn, ...)                                                      \
-  SWITCH_CASES_NON_BOOL_ARITHMETIC_DO(return, ((void)0), Fn, __VA_ARGS__)
-#define SWITCH_CASES_NON_BOOL_ARITHMETIC_CALL_AND_BREAK(Fn, ...)                                                       \
-  SWITCH_CASES_NON_BOOL_ARITHMETIC_DO(, break, Fn, __VA_ARGS__)
-#define SWITCH_CASES_NON_BOOL_ARITHMETIC_CALL_STORE_RESULT_AND_BREAK(Result, Fn, ...)                                  \
-  SWITCH_CASES_NON_BOOL_ARITHMETIC_DO(Result =, break, Fn, __VA_ARGS__)
+#define SWITCH_CASES_NON_BOOL_ARITHMETIC_CALL_AND_RETURN(Fn, ...) SWITCH_CASES_NON_BOOL_ARITHMETIC_DO(return, ((void)0), Fn, __VA_ARGS__)
+#define SWITCH_CASES_NON_BOOL_ARITHMETIC_CALL_AND_BREAK(Fn, ...) SWITCH_CASES_NON_BOOL_ARITHMETIC_DO(, break, Fn, __VA_ARGS__)
+#define SWITCH_CASES_NON_BOOL_ARITHMETIC_CALL_STORE_RESULT_AND_BREAK(Result, Fn, ...) SWITCH_CASES_NON_BOOL_ARITHMETIC_DO(Result =, break, Fn, __VA_ARGS__)
 
 /// Switch cases for arithmetic types
 /// Calls the specified function with the given parameters
 /// Optionally returns or breaks afterwards
-#define SWITCH_CASES_ARITHMETIC_DO(ReturnOrEmpty, BreakOrNoOp, Fn, ...)                                                \
-  SWITCH_CASES_NON_BOOL_ARITHMETIC_DO(ReturnOrEmpty, BreakOrNoOp, Fn, __VA_ARGS__);                                    \
-                                                                                                                       \
-  /* Bool Type */                                                                                                      \
-  case BasicNativeType::Bool:                                                                                          \
-    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::Bool>::Type>(__VA_ARGS__);                               \
-    BreakOrNoOp;                                                                                                       \
-                                                                                                                       \
-  /* Multi-Primitive Math Types (Only Bool Types) */                                                                   \
-  case BasicNativeType::BoolVector2:                                                                                   \
-    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::BoolVector2>::Type>(__VA_ARGS__);                        \
-    BreakOrNoOp;                                                                                                       \
-  case BasicNativeType::BoolVector3:                                                                                   \
-    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::BoolVector3>::Type>(__VA_ARGS__);                        \
-    BreakOrNoOp;                                                                                                       \
-  case BasicNativeType::BoolVector4:                                                                                   \
-    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::BoolVector4>::Type>(__VA_ARGS__);                        \
+#define SWITCH_CASES_ARITHMETIC_DO(ReturnOrEmpty, BreakOrNoOp, Fn, ...)                                                                                                                                \
+  SWITCH_CASES_NON_BOOL_ARITHMETIC_DO(ReturnOrEmpty, BreakOrNoOp, Fn, __VA_ARGS__);                                                                                                                    \
+                                                                                                                                                                                                       \
+  /* Bool Type */                                                                                                                                                                                      \
+  case BasicNativeType::Bool:                                                                                                                                                                          \
+    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::Bool>::Type>(__VA_ARGS__);                                                                                                               \
+    BreakOrNoOp;                                                                                                                                                                                       \
+                                                                                                                                                                                                       \
+  /* Multi-Primitive Math Types (Only Bool Types) */                                                                                                                                                   \
+  case BasicNativeType::BoolVector2:                                                                                                                                                                   \
+    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::BoolVector2>::Type>(__VA_ARGS__);                                                                                                        \
+    BreakOrNoOp;                                                                                                                                                                                       \
+  case BasicNativeType::BoolVector3:                                                                                                                                                                   \
+    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::BoolVector3>::Type>(__VA_ARGS__);                                                                                                        \
+    BreakOrNoOp;                                                                                                                                                                                       \
+  case BasicNativeType::BoolVector4:                                                                                                                                                                   \
+    ReturnOrEmpty Fn<BasicNativeTypeFromEnum<BasicNativeType::BoolVector4>::Type>(__VA_ARGS__);                                                                                                        \
     BreakOrNoOp
 
 #define SWITCH_CASES_ARITHMETIC_CALL(Fn, ...) SWITCH_CASES_ARITHMETIC_DO(, ((void)0), Fn, __VA_ARGS__)
 #define SWITCH_CASES_ARITHMETIC_CALL_AND_RETURN(Fn, ...) SWITCH_CASES_ARITHMETIC_DO(return, ((void)0), Fn, __VA_ARGS__)
 #define SWITCH_CASES_ARITHMETIC_CALL_AND_BREAK(Fn, ...) SWITCH_CASES_ARITHMETIC_DO(, break, Fn, __VA_ARGS__)
-#define SWITCH_CASES_ARITHMETIC_CALL_STORE_RESULT_AND_BREAK(Result, Fn, ...)                                           \
-  SWITCH_CASES_ARITHMETIC_DO(Result =, break, Fn, __VA_ARGS__)
+#define SWITCH_CASES_ARITHMETIC_CALL_STORE_RESULT_AND_BREAK(Result, Fn, ...) SWITCH_CASES_ARITHMETIC_DO(Result =, break, Fn, __VA_ARGS__)
 
 //                            Helper Functions //
 
@@ -491,9 +487,7 @@ struct PairSortPolicy<Variant, DataType>
 
 /// (Only defined for arithmetic types)
 template <typename T, TF_ENABLE_IF(IsBasicNativeTypeArithmetic<T>::Value)>
-inline Bits SerializeKnownBasicVariantArithmetic(SerializeDirection::Enum direction,
-                                                 BitStream& bitStream,
-                                                 Variant& value)
+inline Bits SerializeKnownBasicVariantArithmetic(SerializeDirection::Enum direction, BitStream& bitStream, Variant& value)
 {
   // Primitive member info
   typedef typename BasicNativeTypePrimitiveMembers<T>::Type PrimitiveType;
@@ -536,8 +530,7 @@ inline Bits SerializeKnownBasicVariant(SerializeDirection::Enum direction, BitSt
   }
 
     // Arithmetic Types
-    SWITCH_CASES_ARITHMETIC_CALL_STORE_RESULT_AND_BREAK(
-        result, SerializeKnownBasicVariantArithmetic, direction, bitStream, value);
+    SWITCH_CASES_ARITHMETIC_CALL_STORE_RESULT_AND_BREAK(result, SerializeKnownBasicVariantArithmetic, direction, bitStream, value);
 
   // String Type
   case BasicNativeType::String:
@@ -582,9 +575,7 @@ inline Bits SerializeUnknownBasicVariant(SerializeDirection::Enum direction, Bit
     }
 
     // Write variant's constant native type ID
-    if (!bitStream.SerializeQuantized(SerializeDirection::Write,
-                                      nativeTypeId,
-                                      cConstantNativeTypeIdMin,
+    if (!bitStream.SerializeQuantized(SerializeDirection::Write, nativeTypeId, cConstantNativeTypeIdMin,
                                       cConstantNativeTypeIdMax)) // Unable?
     {
       Error("Serialization failed");
@@ -596,9 +587,7 @@ inline Bits SerializeUnknownBasicVariant(SerializeDirection::Enum direction, Bit
   {
     // Read variant's constant native type ID
     NativeTypeId nativeTypeId = 0;
-    if (!bitStream.SerializeQuantized(SerializeDirection::Read,
-                                      nativeTypeId,
-                                      cConstantNativeTypeIdMin,
+    if (!bitStream.SerializeQuantized(SerializeDirection::Read, nativeTypeId, cConstantNativeTypeIdMin,
                                       cConstantNativeTypeIdMax)) // Unable?
     {
       Error("Serialization failed");

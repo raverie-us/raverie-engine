@@ -127,11 +127,7 @@ public:
   /// already known host. Listen to the NetHost event interface to handle the
   /// results. Returns true if the host was found and the refresh successfully
   /// started, else false (the host could not be found).
-  bool RefreshHost(Network::Enum network,
-                   const IpAddress& ipAddress,
-                   bool getExtraHostInfo,
-                   bool allowDiscovery,
-                   bool removeStaleHosts);
+  bool RefreshHost(Network::Enum network, const IpAddress& ipAddress, bool getExtraHostInfo, bool allowDiscovery, bool removeStaleHosts);
 
   /// Refreshes all hosts in the given network's host list.
   /// Allowing discovery will enable new hosts to be discovered in the process
@@ -421,9 +417,7 @@ public:
   /// Returns true if successful, else false.
   bool SendUserAddRequest(EventBundle* ourRequestBundle);
   /// Handles behavior after sending a network user add request.
-  void HandleSentUserAddRequest(NetPeerId theirNetPeerId,
-                                const IpAddress& theirIpAddress,
-                                EventBundle* ourRequestBundle);
+  void HandleSentUserAddRequest(NetPeerId theirNetPeerId, const IpAddress& theirIpAddress, EventBundle* ourRequestBundle);
 
   /// [Server/Offline] Receives a network user add request.
   /// Returns true if successful, else false.
@@ -431,40 +425,22 @@ public:
   /// [Server/Offline] Handles behavior after receiving a network user add
   /// request. Returns true to accept the request, else false to deny the
   /// request.
-  NetUser* HandleReceivedUserAddRequest(NetPeerId theirNetPeerId,
-                                        const IpAddress& theirIpAddress,
-                                        EventBundle* theirRequestBundle,
-                                        EventBundle* returnOurResponseBundle,
-                                        NetUserId theirNetUserId);
+  NetUser* HandleReceivedUserAddRequest(NetPeerId theirNetPeerId, const IpAddress& theirIpAddress, EventBundle* theirRequestBundle, EventBundle* returnOurResponseBundle, NetUserId theirNetUserId);
 
   /// [Server/Offline] Sends a network user add response.
   /// Returns true if successful, else false.
-  bool SendUserAddResponse(NetPeerId theirNetPeerId,
-                           NetUser* theirNetUser,
-                           EventBundle* theirRequestBundle,
-                           EventBundle* ourResponseBundle);
+  bool SendUserAddResponse(NetPeerId theirNetPeerId, NetUser* theirNetUser, EventBundle* theirRequestBundle, EventBundle* ourResponseBundle);
   /// [Server/Offline] Handles behavior after sending a network user add
   /// response.
-  void HandleSentUserAddResponse(NetPeerId theirNetPeerId,
-                                 const IpAddress& theirIpAddress,
-                                 EventBundle* theirRequestBundle,
-                                 NetUserAddResponse::Enum ourAddResponse,
-                                 EventBundle* ourResponseBundle,
-                                 NetUser* theirNetUser);
+  void HandleSentUserAddResponse(
+      NetPeerId theirNetPeerId, const IpAddress& theirIpAddress, EventBundle* theirRequestBundle, NetUserAddResponse::Enum ourAddResponse, EventBundle* ourResponseBundle, NetUser* theirNetUser);
 
   /// Receives a network user add response.
   /// Returns true if successful, else false.
-  bool ReceiveUserAddResponse(NetPeerId theirNetPeerId,
-                              const IpAddress& theirIpAddress,
-                              const Message& message,
-                              EventBundle* ourRequestBundle);
+  bool ReceiveUserAddResponse(NetPeerId theirNetPeerId, const IpAddress& theirIpAddress, const Message& message, EventBundle* ourRequestBundle);
   /// Handles behavior after receiving a network user add response.
-  void HandleReceivedUserAddResponse(NetPeerId theirNetPeerId,
-                                     const IpAddress& theirIpAddress,
-                                     EventBundle* ourRequestBundle,
-                                     NetUserAddResponse::Enum theirAddResponse,
-                                     EventBundle* theirResponseBundle,
-                                     NetUserId ourNetUserId);
+  void HandleReceivedUserAddResponse(
+      NetPeerId theirNetPeerId, const IpAddress& theirIpAddress, EventBundle* ourRequestBundle, NetUserAddResponse::Enum theirAddResponse, EventBundle* theirResponseBundle, NetUserId ourNetUserId);
 
   //
   // User Remove Handshake
@@ -646,8 +622,7 @@ public:
   bool SerializeNetEvent(BitStreamExtended& bitStream, Event* netEvent, Cog* destination);
   /// Deserializes the net event.
   /// Returns true if successful, else false.
-  bool
-  DeserializeNetEvent(const BitStreamExtended& bitStream, Event*& netEvent, Cog*& destination, NetPeerId netPeerId);
+  bool DeserializeNetEvent(const BitStreamExtended& bitStream, Event*& netEvent, Cog*& destination, NetPeerId netPeerId);
 
   /// Handles behavior when a dispatched net event is sent.
   void HandleNetEventSent(Event* netEvent, Cog* destination, NetPeerId netPeerId);
@@ -677,8 +652,7 @@ public:
   /// Finds the specified net channel type or adds and configures it if it does
   /// not exist. Returns the found or added net channel type with the specified
   /// name.
-  NetChannelType* GetOrAddReplicaChannelType(const String& netChannelTypeName,
-                                             NetChannelConfig* netChannelConfig = nullptr);
+  NetChannelType* GetOrAddReplicaChannelType(const String& netChannelTypeName, NetChannelConfig* netChannelConfig = nullptr);
 
   //
   // Property Type Management
@@ -687,12 +661,8 @@ public:
   /// Finds the specified net property type or adds and configures it if it does
   /// not exist. Returns the found or added net property type with the specified
   /// name.
-  NetPropertyType* GetOrAddReplicaPropertyType(const String& netPropertyTypeName,
-                                               NativeType* nativeType,
-                                               SerializeValueFn serializeValueFn,
-                                               GetValueFn getValueFn,
-                                               SetValueFn setValueFn,
-                                               NetPropertyConfig* netPropertyConfig = nullptr);
+  NetPropertyType* GetOrAddReplicaPropertyType(
+      const String& netPropertyTypeName, NativeType* nativeType, SerializeValueFn serializeValueFn, GetValueFn getValueFn, SetValueFn setValueFn, NetPropertyConfig* netPropertyConfig = nullptr);
 
   //
   // Replicator Replica Interface
@@ -712,10 +682,7 @@ public:
   /// Creates replicas using the replica stream and creation info (create
   /// context and replica type). Gaps may be represented as null replicas.
   /// Returns true if successful, else false.
-  bool CreateReplicas(const CreateContext& createContext,
-                      const ReplicaType& replicaType,
-                      const ReplicaStream& replicaStream,
-                      ReplicaArray& replicas);
+  bool CreateReplicas(const CreateContext& createContext, const ReplicaType& replicaType, const ReplicaStream& replicaStream, ReplicaArray& replicas);
 
   /// Deletes invalid replicas (if they were originally spawned, otherwise do
   /// nothing). Gaps may be represented as null replicas. Returns true if
@@ -733,12 +700,8 @@ public:
 
   /// Called after a replica channel property has legitimately changed,
   /// determined using comparisons, in a particular replication phase.
-  void OnReplicaChannelPropertyChange(TimeMs timestamp,
-                                      ReplicationPhase::Enum replicationPhase,
-                                      Replica* replica,
-                                      ReplicaChannel* replicaChannel,
-                                      ReplicaProperty* replicaProperty,
-                                      TransmissionDirection::Enum direction) override;
+  void OnReplicaChannelPropertyChange(
+      TimeMs timestamp, ReplicationPhase::Enum replicationPhase, Replica* replica, ReplicaChannel* replicaChannel, ReplicaProperty* replicaProperty, TransmissionDirection::Enum direction) override;
 
   //
   // Replicator Link Interface
@@ -764,9 +727,7 @@ public:
   void ClientOnConnectConfirmation(ReplicatorLink* link, BitStream& connectConfirmationData) override;
   /// [Client] Called after sending or receiving a disconnect notice.
   /// Our replicator ID is cleared and link is destroyed immediately after this.
-  void ClientOnDisconnectNotice(ReplicatorLink* link,
-                                DisconnectNoticeData& disconnectNoticeData,
-                                TransmissionDirection::Enum direction) override;
+  void ClientOnDisconnectNotice(ReplicatorLink* link, DisconnectNoticeData& disconnectNoticeData, TransmissionDirection::Enum direction) override;
 
   /// [Server] Called after receiving a connect request.
   /// If accepted, their replicator ID is assigned immediately after this.
@@ -781,22 +742,16 @@ public:
   /// [Server] Called after sending or receiving a disconnect notice.
   /// Their replicator ID is released and link is destroyed immediately after
   /// this.
-  void ServerOnDisconnectNotice(ReplicatorLink* link,
-                                DisconnectNoticeData& disconnectNoticeData,
-                                TransmissionDirection::Enum direction) override;
+  void ServerOnDisconnectNotice(ReplicatorLink* link, DisconnectNoticeData& disconnectNoticeData, TransmissionDirection::Enum direction) override;
 
   //
   // Internal
   //
 
   /// Handles behavior when a net link is connected.
-  void HandleNetLinkConnected(ReplicatorLink* link,
-                              BitStream& connectConfirmationData,
-                              TransmissionDirection::Enum direction);
+  void HandleNetLinkConnected(ReplicatorLink* link, BitStream& connectConfirmationData, TransmissionDirection::Enum direction);
   /// Handles behavior when a net link is disconnected.
-  void HandleNetLinkDisconnected(ReplicatorLink* link,
-                                 DisconnectNoticeData& disconnectNoticeData,
-                                 TransmissionDirection::Enum direction);
+  void HandleNetLinkDisconnected(ReplicatorLink* link, DisconnectNoticeData& disconnectNoticeData, TransmissionDirection::Enum direction);
 
   /// Processes a custom packet received by the peer.
   static void ProcessReceivedCustomPacket(Peer* peer, InPacket& packet);
@@ -820,9 +775,7 @@ public:
   //
 
   /// When a master receives a publishing from a server, it becomes stored.
-  void MasterServerRecievePublish(const IpAddress& theirIpAddress,
-                                  EventBundle& basicHostInfo,
-                                  Guid const& thierProjectGuid);
+  void MasterServerRecievePublish(const IpAddress& theirIpAddress, EventBundle& basicHostInfo, Guid const& thierProjectGuid);
   /// Increases lifetime of server records, removes old server records.
   void UpdateHostRecords(UpdateEvent* event);
   /// Remove a NetHostRecord by IP address from a project record map. Intended

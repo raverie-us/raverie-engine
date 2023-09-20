@@ -55,8 +55,7 @@ RelativeVelocityJoint* DynamicMotor::CreateJoint()
 {
   // Create the velocity joint
   JointCreator jointCreator;
-  Cog* jointCog = jointCreator.CreateWorldPoints(
-      mSpace->mWorldCollider->GetOwner(), GetOwner(), CoreArchetypes::ObjectLink, Vec3::cZero);
+  Cog* jointCog = jointCreator.CreateWorldPoints(mSpace->mWorldCollider->GetOwner(), GetOwner(), CoreArchetypes::ObjectLink, Vec3::cZero);
   if (jointCog == nullptr)
     return nullptr;
 

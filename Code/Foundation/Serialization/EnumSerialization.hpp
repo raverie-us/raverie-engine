@@ -3,20 +3,17 @@
 
 namespace Raverie
 {
-#define SerializeEnumName(enumName, variable)                                                                          \
-  stream.EnumField(enumName::EnumName, #variable, (uint&)variable, RaverieTypeId(enumName::Enum))
+#define SerializeEnumName(enumName, variable) stream.EnumField(enumName::EnumName, #variable, (uint&)variable, RaverieTypeId(enumName::Enum))
 
-#define SerializeEnumCustomName(enumName, variableName, variable)                                                      \
-  stream.EnumField(enumName::EnumName, variableName, (uint&)variable, RaverieTypeId(enumName::Enum))
+#define SerializeEnumCustomName(enumName, variableName, variable) stream.EnumField(enumName::EnumName, variableName, (uint&)variable, RaverieTypeId(enumName::Enum))
 
-#define SerializeEnumNameDefault(enumName, variable, defaultValue)                                                     \
-  if (!stream.EnumField(enumName::EnumName, #variable, (uint&)variable, RaverieTypeId(enumName::Enum)))                  \
+#define SerializeEnumNameDefault(enumName, variable, defaultValue)                                                                                                                                     \
+  if (!stream.EnumField(enumName::EnumName, #variable, (uint&)variable, RaverieTypeId(enumName::Enum)))                                                                                                \
     variable = defaultValue;
 
 // Bit Field Serialization
 template <typename BitFieldType>
-void SerializeBits(
-    Serializer& stream, BitFieldType& field, const cstr enumNames[], uint mask = 0, uint defaults = uint(-1))
+void SerializeBits(Serializer& stream, BitFieldType& field, const cstr enumNames[], uint mask = 0, uint defaults = uint(-1))
 {
   if (stream.GetType() == SerializerType::Text)
   {

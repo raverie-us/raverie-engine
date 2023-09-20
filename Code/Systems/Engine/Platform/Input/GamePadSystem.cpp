@@ -224,10 +224,8 @@ void Gamepad::Update(float elasped)
     Buttons[Buttons::DpadLeft].Update(this, gamepadState.GetOrCreateButton(GamepadRawButton::DpadLeft).mPressed, elasped, anyDown);
     Buttons[Buttons::DpadRight].Update(this, gamepadState.GetOrCreateButton(GamepadRawButton::DpadRight).mPressed, elasped, anyDown);
 
-    bool anyDpadDown = IsButtonHeld(Buttons::DpadUp) || IsButtonHeld(Buttons::DpadDown) ||
-                       IsButtonHeld(Buttons::DpadLeft) || IsButtonHeld(Buttons::DpadRight) ||
-                       IsButtonPressed(Buttons::DpadUp) || IsButtonPressed(Buttons::DpadDown) ||
-                       IsButtonPressed(Buttons::DpadLeft) || IsButtonPressed(Buttons::DpadRight);
+    bool anyDpadDown = IsButtonHeld(Buttons::DpadUp) || IsButtonHeld(Buttons::DpadDown) || IsButtonHeld(Buttons::DpadLeft) || IsButtonHeld(Buttons::DpadRight) || IsButtonPressed(Buttons::DpadUp) ||
+                       IsButtonPressed(Buttons::DpadDown) || IsButtonPressed(Buttons::DpadLeft) || IsButtonPressed(Buttons::DpadRight);
 
     if (anyDpadDown)
     {
@@ -244,14 +242,10 @@ void Gamepad::Update(float elasped)
       }
       else
       {
-        Buttons[Buttons::DpadUpFiltered].Update(
-            this, Buttons[Buttons::DpadUpFiltered].State != Button::Released, elasped, anyDown);
-        Buttons[Buttons::DpadDownFiltered].Update(
-            this, Buttons[Buttons::DpadDownFiltered].State != Button::Released, elasped, anyDown);
-        Buttons[Buttons::DpadLeftFiltered].Update(
-            this, Buttons[Buttons::DpadLeftFiltered].State != Button::Released, elasped, anyDown);
-        Buttons[Buttons::DpadRightFiltered].Update(
-            this, Buttons[Buttons::DpadRightFiltered].State != Button::Released, elasped, anyDown);
+        Buttons[Buttons::DpadUpFiltered].Update(this, Buttons[Buttons::DpadUpFiltered].State != Button::Released, elasped, anyDown);
+        Buttons[Buttons::DpadDownFiltered].Update(this, Buttons[Buttons::DpadDownFiltered].State != Button::Released, elasped, anyDown);
+        Buttons[Buttons::DpadLeftFiltered].Update(this, Buttons[Buttons::DpadLeftFiltered].State != Button::Released, elasped, anyDown);
+        Buttons[Buttons::DpadRightFiltered].Update(this, Buttons[Buttons::DpadRightFiltered].State != Button::Released, elasped, anyDown);
       }
     }
     else
@@ -335,7 +329,9 @@ void Gamepad::Update(float elasped)
     // Update Triggers
     mLeftTrigger = gamepadState.GetOrCreateButton(GamepadRawButton::LeftTrigger).mValue;
     mRightTrigger = gamepadState.GetOrCreateButton(GamepadRawButton::RightTrigger).mValue;
-  } else {
+  }
+  else
+  {
     Clear();
   }
 }
@@ -358,8 +354,7 @@ Gamepad* Gamepads::GetGamePad(uint i)
 {
   if (i >= cMaxGamepads)
   {
-    DoNotifyError("Invalid Controller",
-                  String::Format("A controller with index '%d' was requested, but does not exist!", i));
+    DoNotifyError("Invalid Controller", String::Format("A controller with index '%d' was requested, but does not exist!", i));
     i = 0;
   }
   Gamepad* gamepad = mGamePads[i];

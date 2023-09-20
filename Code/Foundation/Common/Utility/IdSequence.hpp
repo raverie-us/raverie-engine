@@ -23,10 +23,7 @@ public:
   }
 
   /// Move Constructor
-  IdSequence(MoveReference<IdSequence> rhs) :
-      mNext(rhs->mNext),
-      mMissing(RaverieMove(rhs->mMissing)),
-      mVerified(rhs->mVerified)
+  IdSequence(MoveReference<IdSequence> rhs) : mNext(rhs->mNext), mMissing(RaverieMove(rhs->mMissing)), mVerified(rhs->mVerified)
   {
   }
 

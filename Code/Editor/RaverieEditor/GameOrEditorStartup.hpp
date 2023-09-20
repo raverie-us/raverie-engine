@@ -6,30 +6,29 @@ namespace Raverie
 
 // To allow platforms without threads / yields (such as Emscripten) to give time back to the OS/Browser
 // we perform our initialization in phases
-DeclareEnum10(
-    StartupPhase,
-    // All meta libraries are initialized, environment initialized, config loaded, and
-    // engine created here. There will be no systems available on the engine.
-    Initialize,
-    // User may perform logic using Common/Meta/Config/Environment.
-    // Use should set window creation settings, etc.
-    UserInitialize,
-    // Adds all the engine systems, initializes the content system (no loading yet), and creates the main window.
-    Startup,
-    // User may decide to queue any jobs such as processing content or loading packages.
-    UserStartup,
-    // All jobs are performed until there are none left (may yield back to the OS/Browser periodically).
-    ProcessJobs,
-    // Called when all jobs are complete (allows the engine to do anything with the results of completed jobs).
-    JobsComplete,
-    // After all jobs are completed, use this opportunity to create your version of a main object (Editor/Game).
-    UserCreation,
-    // Engine is automatically updated until it is no longer active / closed.
-    EngineUpdate,
-    // All libraries are shutdown and the engine is destroyed.
-    Shutdown,
-    // We delete this entire startup object
-    Terminate);
+DeclareEnum10(StartupPhase,
+              // All meta libraries are initialized, environment initialized, config loaded, and
+              // engine created here. There will be no systems available on the engine.
+              Initialize,
+              // User may perform logic using Common/Meta/Config/Environment.
+              // Use should set window creation settings, etc.
+              UserInitialize,
+              // Adds all the engine systems, initializes the content system (no loading yet), and creates the main window.
+              Startup,
+              // User may decide to queue any jobs such as processing content or loading packages.
+              UserStartup,
+              // All jobs are performed until there are none left (may yield back to the OS/Browser periodically).
+              ProcessJobs,
+              // Called when all jobs are complete (allows the engine to do anything with the results of completed jobs).
+              JobsComplete,
+              // After all jobs are completed, use this opportunity to create your version of a main object (Editor/Game).
+              UserCreation,
+              // Engine is automatically updated until it is no longer active / closed.
+              EngineUpdate,
+              // All libraries are shutdown and the engine is destroyed.
+              Shutdown,
+              // We delete this entire startup object
+              Terminate);
 
 // Runs through phases of initialization, allowing platforms that don't support threading
 // to yeild time back to the OS/Browser between updates. This also unifies Editor/Game startup.

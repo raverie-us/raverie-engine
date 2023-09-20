@@ -31,17 +31,13 @@ public:
   ~RaverieShaderSpirVBinaryBackend();
 
   void TranslateType(RaverieShaderIRType* type, ShaderStreamWriter& writer);
-  void TranslateType(RaverieShaderIRType* type,
-                     ShaderStreamWriter& writer,
-                     ShaderStageInterfaceReflection& reflectionData);
+  void TranslateType(RaverieShaderIRType* type, ShaderStreamWriter& writer, ShaderStageInterfaceReflection& reflectionData);
 
 private:
   // Prototype of generating one library with multiple entry points.
   // Not currently used or tested. Also would need to be updated for multiple
   // reflection objects.
-  void TranslateLibrary(RaverieShaderIRLibrary* library,
-                        ShaderStreamWriter& writer,
-                        ShaderStageInterfaceReflection& reflectionData);
+  void TranslateLibrary(RaverieShaderIRLibrary* library, ShaderStreamWriter& writer, ShaderStageInterfaceReflection& reflectionData);
 
   // Debugging helper
   void ValidateIdMap(RaverieShaderToSpirVContext* context);
@@ -57,26 +53,15 @@ private:
   /// to spirv binary.
   void EmitSpirvBinary(TypeDependencyCollector& collector, RaverieShaderToSpirVContext* context);
 
-  void GenerateDummyMain(RaverieShaderIRType* type,
-                         RaverieShaderIRLibrary* library,
-                         TypeDependencyCollector& collector,
-                         RaverieShaderToSpirVContext* context);
+  void GenerateDummyMain(RaverieShaderIRType* type, RaverieShaderIRLibrary* library, TypeDependencyCollector& collector, RaverieShaderToSpirVContext* context);
   void GenerateGlobalsInitializerFunction(TypeDependencyCollector& collector, RaverieShaderToSpirVContext* context);
-  void RegisterLateBoundFunctions(LateBoundFunctionMap& lateBoundFunctionMap,
-                                  TypeDependencyCollector& collector,
-                                  RaverieShaderToSpirVContext* context);
+  void RegisterLateBoundFunctions(LateBoundFunctionMap& lateBoundFunctionMap, TypeDependencyCollector& collector, RaverieShaderToSpirVContext* context);
   void Clear();
 
   void AddDecorationCapabilities(TypeDependencyCollector& collector, RaverieShaderToSpirVContext* context);
-  void AddDecorationCapabilities(EntryPointInfo* entryPoint,
-                                 TypeDependencyCollector& collector,
-                                 RaverieShaderToSpirVContext* context);
-  void AddDecorationCapabilities(RaverieShaderIROp* decorationOp,
-                                 TypeDependencyCollector& collector,
-                                 RaverieShaderToSpirVContext* context);
-  void AddMemberDecorationCapabilities(RaverieShaderIROp* memberDecorationOp,
-                                       TypeDependencyCollector& collector,
-                                       RaverieShaderToSpirVContext* context);
+  void AddDecorationCapabilities(EntryPointInfo* entryPoint, TypeDependencyCollector& collector, RaverieShaderToSpirVContext* context);
+  void AddDecorationCapabilities(RaverieShaderIROp* decorationOp, TypeDependencyCollector& collector, RaverieShaderToSpirVContext* context);
+  void AddMemberDecorationCapabilities(RaverieShaderIROp* memberDecorationOp, TypeDependencyCollector& collector, RaverieShaderToSpirVContext* context);
 
   template <typename T>
   void GenerateListIds(OrderedHashSet<T>& input, RaverieShaderToSpirVContext* context);
@@ -93,8 +78,7 @@ private:
   void WriteDebug(OpList& ops, RaverieShaderToSpirVContext* context);
   void WriteDebugName(IRaverieShaderIR* resultIR, StringParam debugName, RaverieShaderToSpirVContext* context);
   void WriteDecorations(RaverieShaderToSpirVContext* context);
-  void WriteSpecializationConstantBindingDecorations(TypeDependencyCollector& typeCollector,
-                                                     RaverieShaderToSpirVContext* context);
+  void WriteSpecializationConstantBindingDecorations(TypeDependencyCollector& typeCollector, RaverieShaderToSpirVContext* context);
   RaverieShaderIROp* FindSpecialiationConstantCompositeId(RaverieShaderIROp* op);
 
   void WriteTypesGlobalsAndConstants(IRList& typesGlobalsAndConstants, RaverieShaderToSpirVContext* context);
@@ -106,9 +90,7 @@ private:
   void WriteFunction(RaverieShaderIRFunction* function, RaverieShaderToSpirVContext* context);
 
   void WriteBlock(BasicBlock* block, RaverieShaderToSpirVContext* context);
-  void WriteBlockInstructions(BasicBlock* block,
-                              Array<IRaverieShaderIR*>& instructions,
-                              RaverieShaderToSpirVContext* context);
+  void WriteBlockInstructions(BasicBlock* block, Array<IRaverieShaderIR*>& instructions, RaverieShaderToSpirVContext* context);
   void WriteIROp(BasicBlock* block, RaverieShaderIROp* op, RaverieShaderToSpirVContext* context);
   void WriteIROpGeneric(RaverieShaderIROp* op, RaverieShaderToSpirVContext* context);
   void WriteIROpGenericNoReturnType(RaverieShaderIROp* op, RaverieShaderToSpirVContext* context);

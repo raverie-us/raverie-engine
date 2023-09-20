@@ -92,65 +92,62 @@ public:
 };
 
 // Call within the class definition
-#define DeclareThreadSafeReferenceCountedHandleNoData(type)                                                            \
-  static ThreadLock mLock;                                                                                             \
-  static u64 mCurrentId;                                                                                               \
-  static HashMap<u64, type*> mLiveObjects;                                                                             \
-  int GetReferenceCount()                                                                                              \
-  {                                                                                                                    \
-    return mReferenceCount.mCount;                                                                                     \
-  }                                                                                                                    \
-  void AddReference()                                                                                                  \
-  {                                                                                                                    \
-    ++mReferenceCount.mCount;                                                                                          \
-  }                                                                                                                    \
-  int Release()                                                                                                        \
-  {                                                                                                                    \
-    ErrorIf(mReferenceCount.mCount == 0, "Invalid Release. ReferenceCount is zero.");                                  \
-    int referenceCount = --mReferenceCount.mCount;                                                                     \
-    if (referenceCount == 0)                                                                                           \
-      delete this;                                                                                                     \
-    return referenceCount;                                                                                             \
+#define DeclareThreadSafeReferenceCountedHandleNoData(type)                                                                                                                                            \
+  static ThreadLock mLock;                                                                                                                                                                             \
+  static u64 mCurrentId;                                                                                                                                                                               \
+  static HashMap<u64, type*> mLiveObjects;                                                                                                                                                             \
+  int GetReferenceCount()                                                                                                                                                                              \
+  {                                                                                                                                                                                                    \
+    return mReferenceCount.mCount;                                                                                                                                                                     \
+  }                                                                                                                                                                                                    \
+  void AddReference()                                                                                                                                                                                  \
+  {                                                                                                                                                                                                    \
+    ++mReferenceCount.mCount;                                                                                                                                                                          \
+  }                                                                                                                                                                                                    \
+  int Release()                                                                                                                                                                                        \
+  {                                                                                                                                                                                                    \
+    ErrorIf(mReferenceCount.mCount == 0, "Invalid Release. ReferenceCount is zero.");                                                                                                                  \
+    int referenceCount = --mReferenceCount.mCount;                                                                                                                                                     \
+    if (referenceCount == 0)                                                                                                                                                                           \
+      delete this;                                                                                                                                                                                     \
+    return referenceCount;                                                                                                                                                                             \
   }
 
 // Call within the class definition
-#define DeclareThreadSafeReferenceCountedHandle(type)                                                                  \
-  DeclareThreadSafeReferenceCountedHandleNoData(type) HandleIdData<u64> mHandleId;                                     \
+#define DeclareThreadSafeReferenceCountedHandle(type)                                                                                                                                                  \
+  DeclareThreadSafeReferenceCountedHandleNoData(type) HandleIdData<u64> mHandleId;                                                                                                                     \
   ReferenceCountData mReferenceCount;
 
 // Call in the cpp file next to the class implementation
-#define DefineThreadSafeReferenceCountedHandle(type)                                                                   \
-  ThreadLock type::mLock;                                                                                              \
-  u64 type::mCurrentId = 1;                                                                                            \
+#define DefineThreadSafeReferenceCountedHandle(type)                                                                                                                                                   \
+  ThreadLock type::mLock;                                                                                                                                                                              \
+  u64 type::mCurrentId = 1;                                                                                                                                                                            \
   HashMap<u64, type*> type::mLiveObjects;
 
 // Call in the constructor of the object
-#define ConstructThreadSafeReferenceCountedHandle()                                                                    \
-  ErrorIf(RaverieVirtualTypeId(this)->HandleManager !=                                                                   \
-              RaverieManagerId(ThreadSafeReferenceCountedHandleManager<RaverieSelf>),                                      \
-          "Set type->HandleManager = "                                                                                 \
-          "RaverieManagerId(ThreadSafeReferenceCountedHandleManager<RaverieSelf>; in "                                     \
-          "binding");                                                                                                  \
-  mLock.Lock();                                                                                                        \
-  mHandleId.mId = mCurrentId++;                                                                                        \
-  mLiveObjects.Insert(mHandleId.mId, this);                                                                            \
-  mLock.Unlock();                                                                                                      \
+#define ConstructThreadSafeReferenceCountedHandle()                                                                                                                                                    \
+  ErrorIf(RaverieVirtualTypeId(this)->HandleManager != RaverieManagerId(ThreadSafeReferenceCountedHandleManager<RaverieSelf>),                                                                         \
+          "Set type->HandleManager = "                                                                                                                                                                 \
+          "RaverieManagerId(ThreadSafeReferenceCountedHandleManager<RaverieSelf>; in "                                                                                                                 \
+          "binding");                                                                                                                                                                                  \
+  mLock.Lock();                                                                                                                                                                                        \
+  mHandleId.mId = mCurrentId++;                                                                                                                                                                        \
+  mLiveObjects.Insert(mHandleId.mId, this);                                                                                                                                                            \
+  mLock.Unlock();                                                                                                                                                                                      \
   mReferenceCount.mCount = 1;
 
 // Call in the destructor of the object
-#define DestructThreadSafeReferenceCountedHandle()                                                                     \
-  mLock.Lock();                                                                                                        \
-  bool isErased = mLiveObjects.Erase(mHandleId.mId);                                                                   \
-  mLock.Unlock();                                                                                                      \
+#define DestructThreadSafeReferenceCountedHandle()                                                                                                                                                     \
+  mLock.Lock();                                                                                                                                                                                        \
+  bool isErased = mLiveObjects.Erase(mHandleId.mId);                                                                                                                                                   \
+  mLock.Unlock();                                                                                                                                                                                      \
   ErrorIf(!isErased, "The handle was not in the live objects map, but should have been");
 
 // Call in the meta definition of the object
-#define RaverieBindThreadSafeReferenceCountedHandle()                                                                     \
-  type->HandleManager = RaverieManagerId(ThreadSafeReferenceCountedHandleManager<RaverieSelf>);
+#define RaverieBindThreadSafeReferenceCountedHandle() type->HandleManager = RaverieManagerId(ThreadSafeReferenceCountedHandleManager<RaverieSelf>);
 
 // Call in engine/system initialization for type that will be using this manager
-#define RaverieRegisterThreadSafeReferenceCountedHandleManager(type)                                                      \
-  RaverieRegisterSharedHandleManager(ThreadSafeReferenceCountedHandleManager<type>);
+#define RaverieRegisterThreadSafeReferenceCountedHandleManager(type) RaverieRegisterSharedHandleManager(ThreadSafeReferenceCountedHandleManager<type>);
 
 // Inherit from this class to get all standard behavior of this handle manager
 class ThreadSafeReferenceCounted

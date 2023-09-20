@@ -12,18 +12,12 @@ RespondingHostData::RespondingHostData() : mRoundTripTime(0), mBasicHostInfo(), 
 }
 
 RespondingHostData::RespondingHostData(RespondingHostData const& rhs) :
-    mRoundTripTime(rhs.mRoundTripTime),
-    mBasicHostInfo(rhs.mBasicHostInfo),
-    mExtraHostInfo(rhs.mExtraHostInfo),
-    mRefreshResult(rhs.mRefreshResult)
+    mRoundTripTime(rhs.mRoundTripTime), mBasicHostInfo(rhs.mBasicHostInfo), mExtraHostInfo(rhs.mExtraHostInfo), mRefreshResult(rhs.mRefreshResult)
 {
 }
 
 RespondingHostData::RespondingHostData(MoveReference<RespondingHostData> rhs) :
-    mRoundTripTime(rhs->mRoundTripTime),
-    mBasicHostInfo(RaverieMove(rhs->mBasicHostInfo)),
-    mExtraHostInfo(RaverieMove(rhs->mExtraHostInfo)),
-    mRefreshResult(rhs->mRefreshResult)
+    mRoundTripTime(rhs->mRoundTripTime), mBasicHostInfo(RaverieMove(rhs->mBasicHostInfo)), mExtraHostInfo(RaverieMove(rhs->mExtraHostInfo)), mRefreshResult(rhs->mRefreshResult)
 {
 }
 
@@ -52,11 +46,7 @@ void RespondingHostData::UpdateToBasic(bool isIndirect)
 //  Net Discovery Interface
 //
 
-NetDiscoveryInterface::NetDiscoveryInterface(NetPeer* netPeer) :
-    NetPeerConnectionInterface(netPeer),
-    mDiscoveryMode(NetDiscoveryMode::Idle),
-    mPingManager(netPeer),
-    mPendingCancelRefreshes(false)
+NetDiscoveryInterface::NetDiscoveryInterface(NetPeer* netPeer) : NetPeerConnectionInterface(netPeer), mDiscoveryMode(NetDiscoveryMode::Idle), mPingManager(netPeer), mPendingCancelRefreshes(false)
 {
 }
 
@@ -162,11 +152,7 @@ void NetDiscoveryInterface::Initialize()
   SetPingManagerCallbacks();
 }
 
-SingleHostRequest* NetDiscoveryInterface::CreateSingleHostRequest(Network::Enum network,
-                                                                  bool allowDiscovery,
-                                                                  IpAddress const& theirIpAddress,
-                                                                  bool removeStaleHosts,
-                                                                  bool extraHostInfo)
+SingleHostRequest* NetDiscoveryInterface::CreateSingleHostRequest(Network::Enum network, bool allowDiscovery, IpAddress const& theirIpAddress, bool removeStaleHosts, bool extraHostInfo)
 {
   // TODO: Avoid duplicate single host requests. Cancel the duplicate refresh,
   // start again.
@@ -177,8 +163,7 @@ SingleHostRequest* NetDiscoveryInterface::CreateSingleHostRequest(Network::Enum 
   newRequest->mAllowDiscovery = allowDiscovery;
   newRequest->mIpAddress = theirIpAddress;
   newRequest->mDiscoveryStage = NetDiscoveryStage::Unresponding;
-  newRequest->mPreviouslyKnown =
-      mNetPeer->GetHostByAddress(network, theirIpAddress) != nullptr; // did we have this host before we refreshed it?
+  newRequest->mPreviouslyKnown = mNetPeer->GetHostByAddress(network, theirIpAddress) != nullptr; // did we have this host before we refreshed it?
   newRequest->mRemoveStaleHosts = removeStaleHosts;
   newRequest->mAquireExtraHostInfo = extraHostInfo;
 
@@ -194,10 +179,7 @@ SingleHostRequest* NetDiscoveryInterface::CreateSingleHostRequest(Network::Enum 
   return newRequest;
 }
 
-MultiHostRequest* NetDiscoveryInterface::CreateMultiHostRequest(Network::Enum network,
-                                                                bool allowDiscovery,
-                                                                bool removeStaleHosts,
-                                                                bool extraHostInfo)
+MultiHostRequest* NetDiscoveryInterface::CreateMultiHostRequest(Network::Enum network, bool allowDiscovery, bool removeStaleHosts, bool extraHostInfo)
 {
   // Create Request
   MultiHostRequest* newRequest = new MultiHostRequest();
@@ -333,7 +315,7 @@ MultiHostRequest* NetDiscoveryInterface::GetMultiHostRequest()
 {
   Assert(mDiscoveryMode == NetDiscoveryMode::RefreshList); // should be in refresh list discovery
                                                            // mode.
-  Assert(mOpenHostRequests.Size() == 1); // should have exactly one open host request (a multi host request.)
+  Assert(mOpenHostRequests.Size() == 1);                   // should have exactly one open host request (a multi host request.)
 
   return reinterpret_cast<MultiHostRequest*>(mOpenHostRequests[0].mPointer);
 }
@@ -362,9 +344,7 @@ void NetDiscoveryInterface::TerminateInternalEvent(IpAddress const& eventIp, Eve
   // might put other stuff here.
 }
 
-IpAddress NetDiscoveryInterface::PongHelper(IpAddress const& theirIpAddress,
-                                            NetHostPongData& netHostPongData,
-                                            PendingHostPing& pendingHostPing)
+IpAddress NetDiscoveryInterface::PongHelper(IpAddress const& theirIpAddress, NetHostPongData& netHostPongData, PendingHostPing& pendingHostPing)
 {
   if (mOpenHostRequests.Empty())
     return IpAddress(); // we have no open host requests. so ignore pongs.
@@ -416,8 +396,7 @@ IpAddress NetDiscoveryInterface::PongHelper(IpAddress const& theirIpAddress,
       return IpAddress(); // pong was fabricated, canceled or expired.
     hostRequest = singleHostRequest;
 
-    hostRequest->mDiscoveryStage =
-        fromMasterServer ? NetDiscoveryStage::BasicHostInfo : NetDiscoveryStage::BasicHostInfoDirect;
+    hostRequest->mDiscoveryStage = fromMasterServer ? NetDiscoveryStage::BasicHostInfo : NetDiscoveryStage::BasicHostInfoDirect;
   }
   // now actually store the data they delivered!
   RespondingHostData* respondingHostData = mRespondingHostData.FindPointer(pingedHostIp);
@@ -456,11 +435,9 @@ IpAddress NetDiscoveryInterface::PongHelper(IpAddress const& theirIpAddress,
   return pingedHostIp;
 }
 
-bool NetDiscoveryInterface::PongIsForThisProject(NetHostPongData const& netHostPongData,
-                                                 PendingHostPing const& pendingHostPing)
+bool NetDiscoveryInterface::PongIsForThisProject(NetHostPongData const& netHostPongData, PendingHostPing const& pendingHostPing)
 {
-  return pendingHostPing.mHostPingType == HostPingType::MasterServerRefreshHost ||
-         mNetPeer->GetOurProjectGuid() == netHostPongData.mProjectGuid;
+  return pendingHostPing.mHostPingType == HostPingType::MasterServerRefreshHost || mNetPeer->GetOurProjectGuid() == netHostPongData.mProjectGuid;
 }
 
 void NetDiscoveryInterface::EndSingleRefresh(SingleHostRequest* hostRequest)
@@ -476,9 +453,7 @@ void NetDiscoveryInterface::EndSingleRefresh(SingleHostRequest* hostRequest)
 // OpenHostRequest Implementation
 //
 
-void OpenHostRequest::FlushHost(NetPeer& netPeer,
-                                NetDiscoveryInterface& netDiscoveryInstance,
-                                IpAddress const& ipAddress)
+void OpenHostRequest::FlushHost(NetPeer& netPeer, NetDiscoveryInterface& netDiscoveryInstance, IpAddress const& ipAddress)
 {
   // dispatch single host events as needed.
   netDiscoveryInstance.DispatchHost(ipAddress, *this);
@@ -523,8 +498,7 @@ bool SingleHostRequest::IsStaleHost(IpAddress const& hostIpAddress)
 void SingleHostRequest::BeginExtraHostInfo()
 {
   // start the connections required in order to transfer extra host info
-  Assert(mDiscoveryStage == NetDiscoveryStage::BasicHostInfo ||
-         mDiscoveryStage == NetDiscoveryStage::BasicHostInfoDirect);
+  Assert(mDiscoveryStage == NetDiscoveryStage::BasicHostInfo || mDiscoveryStage == NetDiscoveryStage::BasicHostInfoDirect);
   mDiscoveryStage = NetDiscoveryStage::ExtraHostInfo;
 }
 
@@ -576,8 +550,7 @@ bool MultiHostRequest::IsStaleHost(IpAddress const& hostIpAddress)
 
 void MultiHostRequest::BeginExtraHostInfo()
 {
-  Assert(mDiscoveryStage == NetDiscoveryStage::BasicHostInfo ||
-         mDiscoveryStage == NetDiscoveryStage::BasicHostInfoDirect);
+  Assert(mDiscoveryStage == NetDiscoveryStage::BasicHostInfo || mDiscoveryStage == NetDiscoveryStage::BasicHostInfoDirect);
   mDiscoveryStage = NetDiscoveryStage::ExtraHostInfo;
   // start the connections required in order to transfer extra host info
 }

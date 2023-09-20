@@ -210,11 +210,6 @@ public:
   Guid mUniqueNodeId;
 };
 
-bool ReadDataSet(Status& status,
-                 StringRange data,
-                 StringParam source,
-                 DataTreeLoader* loader,
-                 uint* fileVersion,
-                 DataNode* fileRoot);
+bool ReadDataSet(Status& status, StringRange data, StringParam source, DataTreeLoader* loader, uint* fileVersion, DataNode* fileRoot);
 
 } // namespace Raverie

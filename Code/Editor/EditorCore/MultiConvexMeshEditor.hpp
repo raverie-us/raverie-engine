@@ -23,11 +23,7 @@ class MultiConvexMeshDrawer : public Widget
 public:
   MultiConvexMeshDrawer(Composite* parent, MultiConvexMeshEditor* editor);
 
-  void RenderUpdate(ViewBlock& viewBlock,
-                    FrameBlock& frameBlock,
-                    Mat4Param parentTx,
-                    ColorTransform colorTx,
-                    WidgetRect clipRect) override;
+  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect) override;
 
   void DrawOuterContour(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect);
   void DrawPoints(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect);

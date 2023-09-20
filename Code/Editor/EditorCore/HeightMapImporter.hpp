@@ -90,14 +90,9 @@ public:
   void SetGridSize(Vec2 gridSize);
   Vec2 GetGridSize();
 
-  void RenderUpdate(ViewBlock& viewBlock,
-                    FrameBlock& frameBlock,
-                    Mat4Param parentTx,
-                    ColorTransform colorTx,
-                    WidgetRect clipRect) override;
+  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect) override;
   void SetupGrid(FrameBlock& frameBlock, Mat4Param localToView);
-  void
-  SetupLines(FrameBlock& frameBlock, uint axis, float spacing, Vec2 totalSize, Mat4Param localToView, uint lineCount);
+  void SetupLines(FrameBlock& frameBlock, uint axis, float spacing, Vec2 totalSize, Mat4Param localToView, uint lineCount);
 
 private:
   Vec4 mLineColor;

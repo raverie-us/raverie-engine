@@ -11,9 +11,7 @@ RaverieDefineType(HeightMapBrushStroke, builder, type)
   RaverieBindMethod(AddPoint);
 }
 
-HeightMapBrushStroke::HeightMapBrushStroke(float radius, float featherRadius) :
-    mRadius(radius),
-    mFeatherRadius(featherRadius)
+HeightMapBrushStroke::HeightMapBrushStroke(float radius, float featherRadius) : mRadius(radius), mFeatherRadius(featherRadius)
 {
 }
 

@@ -254,9 +254,7 @@ public:
   }
 
   /// Move Constructor
-  LockedRange(MoveReference<LockedRange> rhs) :
-      mContainer(RaverieMove(rhs->mContainer)),
-      mRange(mContainer.All()) // This is correct
+  LockedRange(MoveReference<LockedRange> rhs) : mContainer(RaverieMove(rhs->mContainer)), mRange(mContainer.All()) // This is correct
   {
   }
 

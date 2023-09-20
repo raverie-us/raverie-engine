@@ -40,11 +40,9 @@ struct JointCreator
   /// Both world points on the joint are set to the same world point value.
   Cog* CreateWorldPoints(Cog* objectA, Cog* objectB, StringParam jointName, Vec3Param bothWorldPoints);
   /// Create a joint (by component name) attached to the two given cogs.
-  Cog*
-  CreateWorldPoints(Cog* objectA, Cog* objectB, StringParam jointName, Vec3Param worldPointA, Vec3Param worldPointB);
+  Cog* CreateWorldPoints(Cog* objectA, Cog* objectB, StringParam jointName, Vec3Param worldPointA, Vec3Param worldPointB);
   /// Create a joint (by component name) attached to the two given cogs.
-  Cog*
-  CreateLocalPoints(Cog* objectA, Cog* objectB, StringParam jointName, Vec3Param localPointA, Vec3Param localPointB);
+  Cog* CreateLocalPoints(Cog* objectA, Cog* objectB, StringParam jointName, Vec3Param localPointA, Vec3Param localPointB);
 
   /// Create a joint (by archetype) attached to the two given cogs.
   Cog* Create(Cog* objectA, Cog* objectB, Archetype* jointArchetype);
@@ -52,11 +50,9 @@ struct JointCreator
   /// Both world points on the joint are set to the same world point value.
   Cog* CreateWorldPoints(Cog* objectA, Cog* objectB, Archetype* jointArchetype, Vec3Param bothWorldPoints);
   /// Create a joint (by archetype) attached to the two given cogs.
-  Cog* CreateWorldPoints(
-      Cog* objectA, Cog* objectB, Archetype* jointArchetype, Vec3Param worldPointA, Vec3Param worldPointB);
+  Cog* CreateWorldPoints(Cog* objectA, Cog* objectB, Archetype* jointArchetype, Vec3Param worldPointA, Vec3Param worldPointB);
   /// Create a joint (by archetype) attached to the two given cogs.
-  Cog* CreateLocalPoints(
-      Cog* objectA, Cog* objectB, Archetype* jointArchetype, Vec3Param localPointA, Vec3Param localPointB);
+  Cog* CreateLocalPoints(Cog* objectA, Cog* objectB, Archetype* jointArchetype, Vec3Param localPointA, Vec3Param localPointB);
 
   /// Add a JointLimit to the given joint cog.
   JointLimit* AddJointLimit(Cog* joint);

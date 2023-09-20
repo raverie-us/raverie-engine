@@ -20,10 +20,7 @@ protected:
   /// Run the optimzer with the given primary pass and flags.
   /// Operates on the given input stream and writes to the given output stream.
   /// Primarily a helper for the several passes that use the optimizer.
-  bool RunOptimizer(int primaryPass,
-                    Array<String>& flags,
-                    ShaderByteStream& inputByteStream,
-                    ShaderByteStream& outputByteStream);
+  bool RunOptimizer(int primaryPass, Array<String>& flags, ShaderByteStream& inputByteStream, ShaderByteStream& outputByteStream);
 
   // Helpers
 

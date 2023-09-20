@@ -11,16 +11,9 @@ class ObjectRestoreState;
 void ChangeAndQueueProperty(OperationQueue* queue, HandleParam object, PropertyPathParam property, AnyParam newValue);
 
 /// Removes the component and queues the operation.
-bool QueueRemoveComponent(OperationQueue* queue,
-                          HandleParam object,
-                          BoundType* componentMeta,
-                          bool ignoreDependencies = false);
+bool QueueRemoveComponent(OperationQueue* queue, HandleParam object, BoundType* componentMeta, bool ignoreDependencies = false);
 /// Queues a component remove operation with the given serialized component.
-void QueueRemoveComponent(OperationQueue* queue,
-                          HandleParam object,
-                          BoundType* componentMeta,
-                          StringParam componentData,
-                          uint componentIndex);
+void QueueRemoveComponent(OperationQueue* queue, HandleParam object, BoundType* componentMeta, StringParam componentData, uint componentIndex);
 
 /// Adds the component of the given name and queues the operation.
 bool QueueAddComponent(OperationQueue* queue, HandleParam object, BoundType* componentType);
@@ -87,11 +80,7 @@ DeclareEnum2(ComponentOperation, Add, Remove);
 class AddRemoveComponentOperation : public MetaOperation
 {
 public:
-  AddRemoveComponentOperation(HandleParam object,
-                              BoundType* componentMeta,
-                              ComponentOperation::Enum mode,
-                              StringParam componentData = String(),
-                              uint componentIndex = uint(-1));
+  AddRemoveComponentOperation(HandleParam object, BoundType* componentMeta, ComponentOperation::Enum mode, StringParam componentData = String(), uint componentIndex = uint(-1));
   ~AddRemoveComponentOperation();
 
   /// Operation Interface.

@@ -37,8 +37,7 @@ public:
   SelectTool* mTool;
   MetaSelection mCurrentSelection;
 
-  GroupSelectDrag(Composite* owner, Mouse* mouse, EditorViewport* editorViewport, SelectTool* tool) :
-      MouseManipulation(mouse, owner)
+  GroupSelectDrag(Composite* owner, Mouse* mouse, EditorViewport* editorViewport, SelectTool* tool) : MouseManipulation(mouse, owner)
   {
     mViewport = editorViewport;
     mTool = tool;
@@ -110,15 +109,12 @@ public:
     // Clamp to the view port size
     Vec2 minSelectSize = viewport->ViewportToScreen(Vec2(0, 0));
     Vec2 maxSelectSize = viewport->ViewportToScreen(viewport->GetSize());
-    upperLeftScreen =
-        Vec2(Math::Max(upperLeftScreen.x, minSelectSize.x), Math::Max(upperLeftScreen.y, minSelectSize.y));
-    lowerRightScreen =
-        Vec2(Math::Min(lowerRightScreen.x, maxSelectSize.x), Math::Min(lowerRightScreen.y, maxSelectSize.y));
+    upperLeftScreen = Vec2(Math::Max(upperLeftScreen.x, minSelectSize.x), Math::Max(upperLeftScreen.y, minSelectSize.y));
+    lowerRightScreen = Vec2(Math::Min(lowerRightScreen.x, maxSelectSize.x), Math::Min(lowerRightScreen.y, maxSelectSize.y));
 
     // If the drag area is too small do nothing
     const float minDragSize = 5.0f;
-    if ((upperLeftScreen - lowerRightScreen).Length() < minDragSize || upperLeftScreen.x == lowerRightScreen.x ||
-        upperLeftScreen.y == lowerRightScreen.y)
+    if ((upperLeftScreen - lowerRightScreen).Length() < minDragSize || upperLeftScreen.x == lowerRightScreen.x || upperLeftScreen.y == lowerRightScreen.y)
       return;
 
     // Update the drag area

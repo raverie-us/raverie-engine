@@ -51,35 +51,10 @@ bool ReadImageInfo(byte* encoded, size_t size, ImageInfo& info);
 
 // You may set 'requireFormat' to 'None' if you want to load the texture in
 // whatever format it's stored in.
-void LoadImage(Status& status,
-               Stream* stream,
-               byte** output,
-               uint* width,
-               uint* height,
-               TextureFormat::Enum* format,
-               TextureFormat::Enum requireFormat = TextureFormat::None);
-void LoadImage(Status& status,
-               File& file,
-               byte** output,
-               uint* width,
-               uint* height,
-               TextureFormat::Enum* format,
-               TextureFormat::Enum requireFormat = TextureFormat::None);
-void LoadImage(Status& status,
-               StringParam filename,
-               byte** output,
-               uint* width,
-               uint* height,
-               TextureFormat::Enum* format,
-               TextureFormat::Enum requireFormat = TextureFormat::None);
-void LoadImage(Status& status,
-               byte* encoded,
-               size_t size,
-               byte** output,
-               uint* width,
-               uint* height,
-               TextureFormat::Enum* format,
-               TextureFormat::Enum requireFormat = TextureFormat::None);
+void LoadImage(Status& status, Stream* stream, byte** output, uint* width, uint* height, TextureFormat::Enum* format, TextureFormat::Enum requireFormat = TextureFormat::None);
+void LoadImage(Status& status, File& file, byte** output, uint* width, uint* height, TextureFormat::Enum* format, TextureFormat::Enum requireFormat = TextureFormat::None);
+void LoadImage(Status& status, StringParam filename, byte** output, uint* width, uint* height, TextureFormat::Enum* format, TextureFormat::Enum requireFormat = TextureFormat::None);
+void LoadImage(Status& status, byte* encoded, size_t size, byte** output, uint* width, uint* height, TextureFormat::Enum* format, TextureFormat::Enum requireFormat = TextureFormat::None);
 void LoadImage(Status& status, Stream* stream, Image* imageOut);
 void LoadImage(Status& status, File& file, Image* imageOut);
 void LoadImage(Status& status, StringParam filename, Image* imageOut);
@@ -88,33 +63,12 @@ void LoadImage(Status& status, byte* encoded, size_t size, Image* imageOut);
 // These are the formats we can save
 DeclareEnum5(ImageSaveFormat, Png, Bmp, Tga, Hdr, Jpg);
 
-void SaveImage(Status& status,
-               Stream* stream,
-               const byte* image,
-               uint width,
-               uint height,
-               TextureFormat::Enum format,
-               ImageSaveFormat::Enum imageType = ImageSaveFormat::Png);
-void SaveImage(Status& status,
-               File& file,
-               const byte* image,
-               uint width,
-               uint height,
-               TextureFormat::Enum format,
-               ImageSaveFormat::Enum imageType = ImageSaveFormat::Png);
-void SaveImage(Status& status,
-               StringParam filename,
-               const byte* image,
-               uint width,
-               uint height,
-               TextureFormat::Enum format,
-               ImageSaveFormat::Enum imageType = ImageSaveFormat::Png);
+void SaveImage(Status& status, Stream* stream, const byte* image, uint width, uint height, TextureFormat::Enum format, ImageSaveFormat::Enum imageType = ImageSaveFormat::Png);
+void SaveImage(Status& status, File& file, const byte* image, uint width, uint height, TextureFormat::Enum format, ImageSaveFormat::Enum imageType = ImageSaveFormat::Png);
+void SaveImage(Status& status, StringParam filename, const byte* image, uint width, uint height, TextureFormat::Enum format, ImageSaveFormat::Enum imageType = ImageSaveFormat::Png);
 void SaveImage(Status& status, Stream* stream, Image* image, ImageSaveFormat::Enum imageType = ImageSaveFormat::Png);
 void SaveImage(Status& status, File& file, Image* image, ImageSaveFormat::Enum imageType = ImageSaveFormat::Png);
-void SaveImage(Status& status,
-               StringParam filename,
-               Image* image,
-               ImageSaveFormat::Enum imageType = ImageSaveFormat::Png);
+void SaveImage(Status& status, StringParam filename, Image* image, ImageSaveFormat::Enum imageType = ImageSaveFormat::Png);
 
 // To save a file to memory, create your own ByteBufferMemoryStream,
 // ArrayByteMemoryStream, or FixedMemoryStream with a computed size from

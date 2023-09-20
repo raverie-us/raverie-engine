@@ -32,11 +32,7 @@ public:
 
   PixelGridArea(Composite* parent, SpriteSheetImporter* owner);
 
-  void RenderUpdate(ViewBlock& viewBlock,
-                    FrameBlock& frameBlock,
-                    Mat4Param parentTx,
-                    ColorTransform colorTx,
-                    WidgetRect clipRect) override;
+  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect) override;
 };
 
 // Sprite Sheet Importer
@@ -47,8 +43,7 @@ public:
 
   SpriteSheetImporter(Composite* parent);
 
-  void
-  ComputeFrameWidthAndCount(int& frameSize, int& frameCount, int newFrameSize, int spacing, int sourceSize, int offset);
+  void ComputeFrameWidthAndCount(int& frameSize, int& frameCount, int newFrameSize, int spacing, int sourceSize, int offset);
   void UpdateTexture();
   void LoadImages(Array<String>& files);
   void LoadSprite(SpriteSource* spriteSource);
@@ -83,15 +78,8 @@ public:
   void UpdateZoomedSize();
   void UpdateTransform() override;
 
-  void DrawLines(Array<StreamedVertex>& lines,
-                 uint axis,
-                 float zoom,
-                 float spacing,
-                 Vec2 totalSize,
-                 Vec2 startOffset,
-                 uint lineCount);
-  void DrawRedirect(
-      ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect);
+  void DrawLines(Array<StreamedVertex>& lines, uint axis, float zoom, float spacing, Vec2 totalSize, Vec2 startOffset, uint lineCount);
+  void DrawRedirect(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect);
   void NudgePosition(IntVec2 move);
   void AddFrame(IntVec2 gridCell);
   void RemoveFrame(int frameIndex);

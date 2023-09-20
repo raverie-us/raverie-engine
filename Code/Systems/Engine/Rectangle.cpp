@@ -135,11 +135,7 @@ Thickness::Thickness(float splat) : Left(splat), Top(splat), Right(splat), Botto
 {
 }
 
-Thickness::Thickness(float left, float top, float right, float bottom) :
-    Left(left),
-    Top(top),
-    Right(right),
-    Bottom(bottom)
+Thickness::Thickness(float left, float top, float right, float bottom) : Left(left), Top(top), Right(right), Bottom(bottom)
 {
 }
 
@@ -147,11 +143,7 @@ Thickness::Thickness(Vec4 vector) : Left(vector.x), Top(vector.y), Right(vector.
 {
 }
 
-Thickness::Thickness(float leftRight, float topBottom) :
-    Left(leftRight),
-    Top(topBottom),
-    Right(leftRight),
-    Bottom(topBottom)
+Thickness::Thickness(float leftRight, float topBottom) : Left(leftRight), Top(topBottom), Right(leftRight), Bottom(topBottom)
 {
 }
 

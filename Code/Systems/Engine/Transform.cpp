@@ -94,8 +94,7 @@ void SetRotationLookAt(Transform* transform, Vec3 lookAtPoint, Vec3 up, Facing::
   transform->SetWorldRotation(LookAt(transform->GetWorldTranslation(), lookAtPoint, up, facing));
 }
 
-Memory::Pool* Transform::sCachedWorldMatrixPool =
-    new Memory::Pool("TransformWorldMatrixCache", Memory::GetRoot(), sizeof(Mat4), 100);
+Memory::Pool* Transform::sCachedWorldMatrixPool = new Memory::Pool("TransformWorldMatrixCache", Memory::GetRoot(), sizeof(Mat4), 100);
 
 bool Transform::sCacheWorldMatrices = true;
 
@@ -267,8 +266,7 @@ void Transform::UpdateAll(uint flags)
   SetDirty();
   TransformUpdateInfo info;
   info.mTransform = this;
-  info.TransformFlags =
-      TransformUpdateFlags::Translation | TransformUpdateFlags::Scale | TransformUpdateFlags::Rotation | flags;
+  info.TransformFlags = TransformUpdateFlags::Translation | TransformUpdateFlags::Scale | TransformUpdateFlags::Rotation | flags;
   GetOwner()->TransformUpdate(info);
 }
 
@@ -805,7 +803,9 @@ Vec3 Transform::ClampTranslation(Space* space, Cog* owner, Vec3 translation)
     String objName = owner->GetDescription();
     String errStr = String::Format("Translation [%g, %g, %g] set beyond the range of [%g, %g] on object %s. "
                                    "The translation will be clamped to this range.",
-                                   translation.x, translation.y, translation.z,
+                                   translation.x,
+                                   translation.y,
+                                   translation.z,
                                    -maxTranslation,
                                    maxTranslation,
                                    objName.c_str());

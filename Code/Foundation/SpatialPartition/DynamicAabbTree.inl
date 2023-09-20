@@ -20,8 +20,7 @@ DynamicTreeNode<ClientDataType>::~DynamicTreeNode()
 }
 
 template <typename ClientDataType>
-Memory::Pool* DynamicTreeNode<ClientDataType>::sDynamicNodePool =
-    new Memory::Pool("DynamicNodes", Memory::GetNamedHeap("BroadPhase"), sizeof(DynamicTreeNode<ClientDataType>), 200);
+Memory::Pool* DynamicTreeNode<ClientDataType>::sDynamicNodePool = new Memory::Pool("DynamicNodes", Memory::GetNamedHeap("BroadPhase"), sizeof(DynamicTreeNode<ClientDataType>), 200);
 
 template <typename ClientDataType>
 void* DynamicTreeNode<ClientDataType>::operator new(size_t size)
@@ -81,8 +80,7 @@ void DynamicTreePolicy<ClientDataType>::InsertNode(NodeType*& root, NodeType* le
 }
 
 template <typename ClientDataType>
-typename DynamicTreePolicy<ClientDataType>::NodeType* DynamicTreePolicy<ClientDataType>::RemoveNode(NodeType*& root,
-                                                                                                    NodeType* leafNode)
+typename DynamicTreePolicy<ClientDataType>::NodeType* DynamicTreePolicy<ClientDataType>::RemoveNode(NodeType*& root, NodeType* leafNode)
 {
   ErrorIf(leafNode->mChild1 != nullptr, "Can only remove leaf nodes.");
   ErrorIf(leafNode->mChild2 != nullptr, "Can only remove leaf nodes.");

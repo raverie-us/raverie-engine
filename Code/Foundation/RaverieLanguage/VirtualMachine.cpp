@@ -42,9 +42,7 @@ inline void VirtualMachine::GenericPow<Integer4>(Integer4& out, const Integer4& 
 }
 
 template <>
-void VirtualMachine::GenericPow<DoubleInteger>(DoubleInteger& out,
-                                               const DoubleInteger& base,
-                                               const DoubleInteger& exponent)
+void VirtualMachine::GenericPow<DoubleInteger>(DoubleInteger& out, const DoubleInteger& base, const DoubleInteger& exponent)
 {
   out = IntegralPower(base, exponent);
 }
@@ -268,8 +266,7 @@ bool VirtualMachine::GenericIsZero<Real4>(const Real4& value)
 // Get a reference to a member variable (field), given the place in the
 // registers that the handle exists, and the member index...
 template <typename T>
-RaverieForceInline T&
-GetField(PerFrameData* stackFrame, PerFrameData* reportFrame, OperandIndex handleOperand, size_t memberOperand)
+RaverieForceInline T& GetField(PerFrameData* stackFrame, PerFrameData* reportFrame, OperandIndex handleOperand, size_t memberOperand)
 {
   // Grab the handle to the object
   Handle& handle = *(Handle*)(stackFrame->Frame + handleOperand);
@@ -390,8 +387,7 @@ RaverieForceInline void IfHandler(PerFrameData* stackFrame, const Opcode& opcode
   }
 }
 
-RaverieForceInline void CopyHandlerEx(
-    PerFrameData* ourFrame, PerFrameData* topFrame, const byte*& sourceOut, byte*& destinationOut, const CopyOpcode& op)
+RaverieForceInline void CopyHandlerEx(PerFrameData* ourFrame, PerFrameData* topFrame, const byte*& sourceOut, byte*& destinationOut, const CopyOpcode& op)
 {
   // When we copy to parameters, it's always a destination
   // (we are placing parameters in the place they must go before we call)
@@ -429,11 +425,7 @@ RaverieForceInline void CopyHandlerEx(
 // (where we copied to) unless we're performing a 'FromReturn' copy, where
 // it will return a pointer to the source handle (for cleanup purposes!)
 template <typename CopyType>
-RaverieForceInline void CopyHandler(PerFrameData* ourFrame,
-                                 PerFrameData* topFrame,
-                                 CopyType*& sourceTyped,
-                                 CopyType*& destinationTyped,
-                                 const CopyOpcode& op)
+RaverieForceInline void CopyHandler(PerFrameData* ourFrame, PerFrameData* topFrame, CopyType*& sourceTyped, CopyType*& destinationTyped, const CopyOpcode& op)
 {
   const byte* source;
   byte* destination;
@@ -502,144 +494,132 @@ void VirtualMachine::PatchDummy(Call& call, ExceptionReport& report)
   call.GetFunction()->FunctionType->Return->GenericDefaultConstruct(returnValue);
 }
 
-typedef void (*VirtualInstructionFn)(ExecutableState* state,
-                                     Call& call,
-                                     ExceptionReport& report,
-                                     size_t& programCounter,
-                                     PerFrameData* ourFrame,
-                                     const Opcode& opcode);
+typedef void (*VirtualInstructionFn)(ExecutableState* state, Call& call, ExceptionReport& report, size_t& programCounter, PerFrameData* ourFrame, const Opcode& opcode);
 VirtualInstructionFn InstructionTable[Instruction::Count] = {0};
-#define RaverieVirtualInstruction(Name)                                                                                  \
-  void VirtualMachine::Instruction##Name(ExecutableState* state,                                                       \
-                                         Call& call,                                                                   \
-                                         ExceptionReport& report,                                                      \
-                                         size_t& programCounter,                                                       \
-                                         PerFrameData* ourFrame,                                                       \
-                                         const Opcode& opcode)
+#define RaverieVirtualInstruction(Name)                                                                                                                                                                \
+  void VirtualMachine::Instruction##Name(ExecutableState* state, Call& call, ExceptionReport& report, size_t& programCounter, PerFrameData* ourFrame, const Opcode& opcode)
 
-#define RaverieCaseBinaryRValue2(argType1, argType2, resultType, operation, expression)                                  \
-  RaverieVirtualInstruction(operation##argType1)                                                                         \
-  {                                                                                                                    \
-    const BinaryRValueOpcode& op = (const BinaryRValueOpcode&)opcode;                                                  \
-    const argType1& left = GetOperand<argType1>(ourFrame, ourFrame, op.Left);                                          \
-    const argType2& right = GetOperand<argType2>(ourFrame, ourFrame, op.Right);                                        \
-    resultType& output = GetLocal<resultType>(ourFrame->Frame, op.Output);                                             \
-    expression;                                                                                                        \
-    programCounter += sizeof(BinaryRValueOpcode);                                                                      \
+#define RaverieCaseBinaryRValue2(argType1, argType2, resultType, operation, expression)                                                                                                                \
+  RaverieVirtualInstruction(operation##argType1)                                                                                                                                                       \
+  {                                                                                                                                                                                                    \
+    const BinaryRValueOpcode& op = (const BinaryRValueOpcode&)opcode;                                                                                                                                  \
+    const argType1& left = GetOperand<argType1>(ourFrame, ourFrame, op.Left);                                                                                                                          \
+    const argType2& right = GetOperand<argType2>(ourFrame, ourFrame, op.Right);                                                                                                                        \
+    resultType& output = GetLocal<resultType>(ourFrame->Frame, op.Output);                                                                                                                             \
+    expression;                                                                                                                                                                                        \
+    programCounter += sizeof(BinaryRValueOpcode);                                                                                                                                                      \
   }
 
-#define RaverieCaseBinaryLValue2(argType1, argType2, operation, expression)                                              \
-  RaverieVirtualInstruction(operation##argType1)                                                                         \
-  {                                                                                                                    \
-    const BinaryLValueOpcode& op = (const BinaryLValueOpcode&)opcode;                                                  \
-    argType1& output = GetOperand<argType1>(ourFrame, ourFrame, op.Output);                                            \
-    const argType2& right = GetOperand<argType2>(ourFrame, ourFrame, op.Right);                                        \
-    expression;                                                                                                        \
-    programCounter += sizeof(BinaryLValueOpcode);                                                                      \
+#define RaverieCaseBinaryLValue2(argType1, argType2, operation, expression)                                                                                                                            \
+  RaverieVirtualInstruction(operation##argType1)                                                                                                                                                       \
+  {                                                                                                                                                                                                    \
+    const BinaryLValueOpcode& op = (const BinaryLValueOpcode&)opcode;                                                                                                                                  \
+    argType1& output = GetOperand<argType1>(ourFrame, ourFrame, op.Output);                                                                                                                            \
+    const argType2& right = GetOperand<argType2>(ourFrame, ourFrame, op.Right);                                                                                                                        \
+    expression;                                                                                                                                                                                        \
+    programCounter += sizeof(BinaryLValueOpcode);                                                                                                                                                      \
   }
 
-#define RaverieCaseBinaryRValue(argType, resultType, operation, expression)                                              \
-  RaverieCaseBinaryRValue2(argType, argType, resultType, operation, expression)
+#define RaverieCaseBinaryRValue(argType, resultType, operation, expression) RaverieCaseBinaryRValue2(argType, argType, resultType, operation, expression)
 
-#define RaverieCaseBinaryLValue(argType, operation, expression)                                                          \
-  RaverieCaseBinaryLValue2(argType, argType, operation, expression)
+#define RaverieCaseBinaryLValue(argType, operation, expression) RaverieCaseBinaryLValue2(argType, argType, operation, expression)
 
-#define RaverieCaseUnaryRValue(argType, resultType, operation, expression)                                               \
-  RaverieVirtualInstruction(operation##argType)                                                                          \
-  {                                                                                                                    \
-    const UnaryRValueOpcode& op = (const UnaryRValueOpcode&)opcode;                                                    \
-    const argType& operand = GetOperand<argType>(ourFrame, ourFrame, op.SingleOperand);                                \
-    resultType& output = GetLocal<resultType>(ourFrame->Frame, op.Output);                                             \
-    expression;                                                                                                        \
-    programCounter += sizeof(UnaryRValueOpcode);                                                                       \
+#define RaverieCaseUnaryRValue(argType, resultType, operation, expression)                                                                                                                             \
+  RaverieVirtualInstruction(operation##argType)                                                                                                                                                        \
+  {                                                                                                                                                                                                    \
+    const UnaryRValueOpcode& op = (const UnaryRValueOpcode&)opcode;                                                                                                                                    \
+    const argType& operand = GetOperand<argType>(ourFrame, ourFrame, op.SingleOperand);                                                                                                                \
+    resultType& output = GetLocal<resultType>(ourFrame->Frame, op.Output);                                                                                                                             \
+    expression;                                                                                                                                                                                        \
+    programCounter += sizeof(UnaryRValueOpcode);                                                                                                                                                       \
   }
 
-#define RaverieCaseUnaryLValue(argType, operation, expression)                                                           \
-  RaverieVirtualInstruction(operation##argType)                                                                          \
-  {                                                                                                                    \
-    const UnaryLValueOpcode& op = (const UnaryLValueOpcode&)opcode;                                                    \
-    argType& operand = GetOperand<argType>(ourFrame, ourFrame, op.SingleOperand);                                      \
-    expression;                                                                                                        \
-    programCounter += sizeof(UnaryLValueOpcode);                                                                       \
+#define RaverieCaseUnaryLValue(argType, operation, expression)                                                                                                                                         \
+  RaverieVirtualInstruction(operation##argType)                                                                                                                                                        \
+  {                                                                                                                                                                                                    \
+    const UnaryLValueOpcode& op = (const UnaryLValueOpcode&)opcode;                                                                                                                                    \
+    argType& operand = GetOperand<argType>(ourFrame, ourFrame, op.SingleOperand);                                                                                                                      \
+    expression;                                                                                                                                                                                        \
+    programCounter += sizeof(UnaryLValueOpcode);                                                                                                                                                       \
   }
 
-#define RaverieCaseConversion(fromType, toType, expression)                                                              \
-  RaverieVirtualInstruction(Convert##fromType##To##toType)                                                               \
-  {                                                                                                                    \
-    const ConversionOpcode& op = (const ConversionOpcode&)opcode;                                                      \
-    const fromType& value = GetOperand<fromType>(ourFrame, ourFrame, op.ToConvert);                                    \
-    toType& output = GetLocal<toType>(ourFrame->Frame, op.Output);                                                     \
-    expression;                                                                                                        \
-    programCounter += sizeof(ConversionOpcode);                                                                        \
+#define RaverieCaseConversion(fromType, toType, expression)                                                                                                                                            \
+  RaverieVirtualInstruction(Convert##fromType##To##toType)                                                                                                                                             \
+  {                                                                                                                                                                                                    \
+    const ConversionOpcode& op = (const ConversionOpcode&)opcode;                                                                                                                                      \
+    const fromType& value = GetOperand<fromType>(ourFrame, ourFrame, op.ToConvert);                                                                                                                    \
+    toType& output = GetLocal<toType>(ourFrame->Frame, op.Output);                                                                                                                                     \
+    expression;                                                                                                                                                                                        \
+    programCounter += sizeof(ConversionOpcode);                                                                                                                                                        \
   }
 
-#define RaverieCaseSimpleCopy(T)                                                                                         \
-  RaverieVirtualInstruction(Copy##T)                                                                                     \
-  {                                                                                                                    \
-    PerFrameData* topFrame = state->StackFrames.Back();                                                                \
-    T* source;                                                                                                         \
-    T* destination;                                                                                                    \
-    CopyHandler<T>(ourFrame, topFrame, source, destination, (const CopyOpcode&)opcode);                                \
+#define RaverieCaseSimpleCopy(T)                                                                                                                                                                       \
+  RaverieVirtualInstruction(Copy##T)                                                                                                                                                                   \
+  {                                                                                                                                                                                                    \
+    PerFrameData* topFrame = state->StackFrames.Back();                                                                                                                                                \
+    T* source;                                                                                                                                                                                         \
+    T* destination;                                                                                                                                                                                    \
+    CopyHandler<T>(ourFrame, topFrame, source, destination, (const CopyOpcode&)opcode);                                                                                                                \
   }
 
-#define RaverieCaseComplexCopy(T)                                                                                        \
-  RaverieVirtualInstruction(Copy##T)                                                                                     \
-  {                                                                                                                    \
-    /* Grab the rest of the data */                                                                                    \
-    const CopyOpcode& op = (const CopyOpcode&)opcode;                                                                  \
-                                                                                                                       \
-    /* Get the current frame on the top of the stack */                                                                \
-    PerFrameData* topFrame = state->StackFrames.Back();                                                                \
-                                                                                                                       \
-    T* source;                                                                                                         \
-    T* destination;                                                                                                    \
-    CopyHandler<T>(ourFrame, topFrame, source, destination, op);                                                       \
-                                                                                                                       \
-    /* We need to make sure we cleanup any primitives */                                                               \
-    /* If this is just a standard copy from our stack to our stack... */                                               \
-    switch (op.Mode)                                                                                                   \
-    {                                                                                                                  \
-    case CopyMode::Initialize:                                                                                         \
-    {                                                                                                                  \
-      /* For any standard copy, if it's to the stack then */                                                           \
-      /* we just let our own stack frame clean it up */                                                                \
-      /* Note: Copies to properties are considered on the stack */                                                     \
-      /* We don't queue cleans for field initializers because the destructors                                          \
-       * will clean those up */                                                                                        \
-      OperandType::Enum destType = op.Destination.Type;                                                                \
-      if (destType != OperandType::Field && destType != OperandType::StaticField)                                      \
-      {                                                                                                                \
-        /* Queue the destination to be cleaned up */                                                                   \
-        ourFrame->Queue##T##Cleanup(destination);                                                                      \
-      }                                                                                                                \
-      break;                                                                                                           \
-    }                                                                                                                  \
-                                                                                                                       \
-    case CopyMode::ToParameter:                                                                                        \
-    {                                                                                                                  \
-      /* For parameter copies, our stack frame will still clean it up */                                               \
-      /* but the cleanup must occur right after the function is called */                                              \
-      /* eg PopFrame (which will pop the top!) */                                                                      \
-      topFrame->Queue##T##Cleanup(destination);                                                                        \
-      break;                                                                                                           \
-    }                                                                                                                  \
-                                                                                                                       \
-    case CopyMode::FromReturn:                                                                                         \
-    {                                                                                                                  \
-      /* Note: The primitive used here is actually the source primitive! */                                            \
-      /* See the comment above 'CopyHandler' */                                                                        \
-      /* For returns, we need to clean up the primitive immediately after */                                           \
-      /* copy since that space could be reused by anyone else */                                                       \
-      source->~T();                                                                                                    \
-                                                                                                                       \
-      /* We also need to queue our own frame to clean */                                                               \
-      /* up where we copied it to */                                                                                   \
-      ourFrame->Queue##T##Cleanup(destination);                                                                        \
-      break;                                                                                                           \
-    }                                                                                                                  \
-    default:                                                                                                           \
-      break;                                                                                                           \
-    }                                                                                                                  \
+#define RaverieCaseComplexCopy(T)                                                                                                                                                                      \
+  RaverieVirtualInstruction(Copy##T)                                                                                                                                                                   \
+  {                                                                                                                                                                                                    \
+    /* Grab the rest of the data */                                                                                                                                                                    \
+    const CopyOpcode& op = (const CopyOpcode&)opcode;                                                                                                                                                  \
+                                                                                                                                                                                                       \
+    /* Get the current frame on the top of the stack */                                                                                                                                                \
+    PerFrameData* topFrame = state->StackFrames.Back();                                                                                                                                                \
+                                                                                                                                                                                                       \
+    T* source;                                                                                                                                                                                         \
+    T* destination;                                                                                                                                                                                    \
+    CopyHandler<T>(ourFrame, topFrame, source, destination, op);                                                                                                                                       \
+                                                                                                                                                                                                       \
+    /* We need to make sure we cleanup any primitives */                                                                                                                                               \
+    /* If this is just a standard copy from our stack to our stack... */                                                                                                                               \
+    switch (op.Mode)                                                                                                                                                                                   \
+    {                                                                                                                                                                                                  \
+    case CopyMode::Initialize:                                                                                                                                                                         \
+    {                                                                                                                                                                                                  \
+      /* For any standard copy, if it's to the stack then */                                                                                                                                           \
+      /* we just let our own stack frame clean it up */                                                                                                                                                \
+      /* Note: Copies to properties are considered on the stack */                                                                                                                                     \
+      /* We don't queue cleans for field initializers because the destructors                                                                                                                          \
+       * will clean those up */                                                                                                                                                                        \
+      OperandType::Enum destType = op.Destination.Type;                                                                                                                                                \
+      if (destType != OperandType::Field && destType != OperandType::StaticField)                                                                                                                      \
+      {                                                                                                                                                                                                \
+        /* Queue the destination to be cleaned up */                                                                                                                                                   \
+        ourFrame->Queue##T##Cleanup(destination);                                                                                                                                                      \
+      }                                                                                                                                                                                                \
+      break;                                                                                                                                                                                           \
+    }                                                                                                                                                                                                  \
+                                                                                                                                                                                                       \
+    case CopyMode::ToParameter:                                                                                                                                                                        \
+    {                                                                                                                                                                                                  \
+      /* For parameter copies, our stack frame will still clean it up */                                                                                                                               \
+      /* but the cleanup must occur right after the function is called */                                                                                                                              \
+      /* eg PopFrame (which will pop the top!) */                                                                                                                                                      \
+      topFrame->Queue##T##Cleanup(destination);                                                                                                                                                        \
+      break;                                                                                                                                                                                           \
+    }                                                                                                                                                                                                  \
+                                                                                                                                                                                                       \
+    case CopyMode::FromReturn:                                                                                                                                                                         \
+    {                                                                                                                                                                                                  \
+      /* Note: The primitive used here is actually the source primitive! */                                                                                                                            \
+      /* See the comment above 'CopyHandler' */                                                                                                                                                        \
+      /* For returns, we need to clean up the primitive immediately after */                                                                                                                           \
+      /* copy since that space could be reused by anyone else */                                                                                                                                       \
+      source->~T();                                                                                                                                                                                    \
+                                                                                                                                                                                                       \
+      /* We also need to queue our own frame to clean */                                                                                                                                               \
+      /* up where we copied it to */                                                                                                                                                                   \
+      ourFrame->Queue##T##Cleanup(destination);                                                                                                                                                        \
+      break;                                                                                                                                                                                           \
+    }                                                                                                                                                                                                  \
+    default:                                                                                                                                                                                           \
+      break;                                                                                                                                                                                           \
+    }                                                                                                                                                                                                  \
   }
 
 // Note: These macros mirror those inside of InstructionEnum and Shared (for
@@ -649,74 +629,63 @@ VirtualInstructionFn InstructionTable[Instruction::Count] = {0};
 #define RaverieCopyCases(WithType) RaverieCaseSimpleCopy(WithType)
 
 // Equality and inequality
-#define RaverieEqualityCases(WithType, ResultType)                                                                       \
-  RaverieCaseBinaryRValue(WithType, ResultType, TestInequality, output = left != right);                                 \
+#define RaverieEqualityCases(WithType, ResultType)                                                                                                                                                     \
+  RaverieCaseBinaryRValue(WithType, ResultType, TestInequality, output = left != right);                                                                                                               \
   RaverieCaseBinaryRValue(WithType, ResultType, TestEquality, output = left == right);
 
 // Less and greater comparison
-#define RaverieComparisonCases(WithType, ResultType)                                                                     \
-  RaverieCaseBinaryRValue(WithType, ResultType, TestLessThan, output = left < right);                                    \
-  RaverieCaseBinaryRValue(WithType, ResultType, TestLessThanOrEqualTo, output = left <= right);                          \
-  RaverieCaseBinaryRValue(WithType, ResultType, TestGreaterThan, output = left > right);                                 \
+#define RaverieComparisonCases(WithType, ResultType)                                                                                                                                                   \
+  RaverieCaseBinaryRValue(WithType, ResultType, TestLessThan, output = left < right);                                                                                                                  \
+  RaverieCaseBinaryRValue(WithType, ResultType, TestLessThanOrEqualTo, output = left <= right);                                                                                                        \
+  RaverieCaseBinaryRValue(WithType, ResultType, TestGreaterThan, output = left > right);                                                                                                               \
   RaverieCaseBinaryRValue(WithType, ResultType, TestGreaterThanOrEqualTo, output = left >= right);
 
 // Generic numeric operators, copy, equality
-#define RaverieNumericCases(WithType, ComparisonType)                                                                    \
-  RaverieCopyCases(WithType) RaverieEqualityCases(WithType, ComparisonType) /* No case for unary plus */                   \
-      RaverieCaseUnaryRValue(WithType, WithType, Negate, output = -operand);                                             \
-  RaverieCaseUnaryLValue(WithType, Increment, GenericIncrement(operand));                                                \
-  RaverieCaseUnaryLValue(WithType, Decrement, GenericDecrement(operand));                                                \
-  RaverieCaseBinaryRValue(WithType, WithType, Add, output = left + right);                                               \
-  RaverieCaseBinaryRValue(WithType, WithType, Subtract, output = left - right);                                          \
-  RaverieCaseBinaryRValue(WithType, WithType, Multiply, output = left * right);                                          \
-  RaverieCaseBinaryRValue(WithType, WithType, Divide, GenericIsZeroThrow(ourFrame, right, "divide");                     \
-                        output = left / right);                                                                        \
-  RaverieCaseBinaryRValue(WithType, WithType, Modulo, GenericIsZeroThrow(ourFrame, right, "modulo");                     \
-                        GenericMod(output, left, right));                                                              \
-  RaverieCaseBinaryRValue(WithType, WithType, Pow, GenericPow(output, left, right));                                     \
-  RaverieCaseBinaryLValue(WithType, AssignmentAdd, output += right);                                                     \
-  RaverieCaseBinaryLValue(WithType, AssignmentSubtract, output -= right);                                                \
-  RaverieCaseBinaryLValue(WithType, AssignmentMultiply, output *= right);                                                \
-  RaverieCaseBinaryLValue(WithType, AssignmentDivide, GenericIsZeroThrow(ourFrame, right, "divide"); output /= right);   \
-  RaverieCaseBinaryLValue(WithType, AssignmentModulo, GenericIsZeroThrow(ourFrame, right, "modulo");                     \
-                        GenericMod(output, output, right));                                                            \
+#define RaverieNumericCases(WithType, ComparisonType)                                                                                                                                                  \
+  RaverieCopyCases(WithType) RaverieEqualityCases(WithType, ComparisonType) /* No case for unary plus */                                                                                               \
+      RaverieCaseUnaryRValue(WithType, WithType, Negate, output = -operand);                                                                                                                           \
+  RaverieCaseUnaryLValue(WithType, Increment, GenericIncrement(operand));                                                                                                                              \
+  RaverieCaseUnaryLValue(WithType, Decrement, GenericDecrement(operand));                                                                                                                              \
+  RaverieCaseBinaryRValue(WithType, WithType, Add, output = left + right);                                                                                                                             \
+  RaverieCaseBinaryRValue(WithType, WithType, Subtract, output = left - right);                                                                                                                        \
+  RaverieCaseBinaryRValue(WithType, WithType, Multiply, output = left * right);                                                                                                                        \
+  RaverieCaseBinaryRValue(WithType, WithType, Divide, GenericIsZeroThrow(ourFrame, right, "divide"); output = left / right);                                                                           \
+  RaverieCaseBinaryRValue(WithType, WithType, Modulo, GenericIsZeroThrow(ourFrame, right, "modulo"); GenericMod(output, left, right));                                                                 \
+  RaverieCaseBinaryRValue(WithType, WithType, Pow, GenericPow(output, left, right));                                                                                                                   \
+  RaverieCaseBinaryLValue(WithType, AssignmentAdd, output += right);                                                                                                                                   \
+  RaverieCaseBinaryLValue(WithType, AssignmentSubtract, output -= right);                                                                                                                              \
+  RaverieCaseBinaryLValue(WithType, AssignmentMultiply, output *= right);                                                                                                                              \
+  RaverieCaseBinaryLValue(WithType, AssignmentDivide, GenericIsZeroThrow(ourFrame, right, "divide"); output /= right);                                                                                 \
+  RaverieCaseBinaryLValue(WithType, AssignmentModulo, GenericIsZeroThrow(ourFrame, right, "modulo"); GenericMod(output, output, right));                                                               \
   RaverieCaseBinaryLValue(WithType, AssignmentPow, GenericPow(output, output, right));
 
 // Generic numeric operators, copy, equality, comparison
 #define RaverieScalarCases(WithType) RaverieNumericCases(WithType, Boolean) RaverieComparisonCases(WithType, Boolean)
 
 // Vector operations, generic numeric operators, copy, equality
-#define RaverieVectorCases(VectorType, ScalarType, ComparisonType)                                                       \
-  RaverieNumericCases(VectorType, Boolean) RaverieComparisonCases(VectorType, ComparisonType)                              \
-      RaverieCaseBinaryRValue2(VectorType, ScalarType, VectorType, ScalarMultiply, output = left * right);               \
-  RaverieCaseBinaryRValue2(                                                                                              \
-      VectorType, ScalarType, VectorType, ScalarDivide, GenericIsZeroThrow(ourFrame, right, "divide");                 \
-      output = left / right);                                                                                          \
-  RaverieCaseBinaryRValue2(                                                                                              \
-      VectorType, ScalarType, VectorType, ScalarModulo, GenericIsZeroThrow(ourFrame, right, "modulo");                 \
-      GenericScalarMod(output, left, right));                                                                          \
-  RaverieCaseBinaryRValue2(VectorType, ScalarType, VectorType, ScalarPow, GenericScalarPow(output, left, right));        \
-  RaverieCaseBinaryLValue2(VectorType, ScalarType, AssignmentScalarMultiply, output *= right);                           \
-  RaverieCaseBinaryLValue2(                                                                                              \
-      VectorType, ScalarType, AssignmentScalarDivide, GenericIsZeroThrow(ourFrame, right, "divide"); output /= right); \
-  RaverieCaseBinaryLValue2(                                                                                              \
-      VectorType, ScalarType, AssignmentScalarModulo, GenericIsZeroThrow(ourFrame, right, "modulo");                   \
-      GenericScalarMod(output, output, right));                                                                        \
+#define RaverieVectorCases(VectorType, ScalarType, ComparisonType)                                                                                                                                     \
+  RaverieNumericCases(VectorType, Boolean) RaverieComparisonCases(VectorType, ComparisonType) RaverieCaseBinaryRValue2(VectorType, ScalarType, VectorType, ScalarMultiply, output = left * right);     \
+  RaverieCaseBinaryRValue2(VectorType, ScalarType, VectorType, ScalarDivide, GenericIsZeroThrow(ourFrame, right, "divide"); output = left / right);                                                    \
+  RaverieCaseBinaryRValue2(VectorType, ScalarType, VectorType, ScalarModulo, GenericIsZeroThrow(ourFrame, right, "modulo"); GenericScalarMod(output, left, right));                                    \
+  RaverieCaseBinaryRValue2(VectorType, ScalarType, VectorType, ScalarPow, GenericScalarPow(output, left, right));                                                                                      \
+  RaverieCaseBinaryLValue2(VectorType, ScalarType, AssignmentScalarMultiply, output *= right);                                                                                                         \
+  RaverieCaseBinaryLValue2(VectorType, ScalarType, AssignmentScalarDivide, GenericIsZeroThrow(ourFrame, right, "divide"); output /= right);                                                            \
+  RaverieCaseBinaryLValue2(VectorType, ScalarType, AssignmentScalarModulo, GenericIsZeroThrow(ourFrame, right, "modulo"); GenericScalarMod(output, output, right));                                    \
   RaverieCaseBinaryLValue2(VectorType, ScalarType, AssignmentScalarPow, GenericScalarPow(output, output, right));
 
 // Special integral operators, generic numeric operators, copy, equality, and
 // comparison
-#define RaverieIntegralCases(WithType)                                                                                   \
-  RaverieCaseUnaryRValue(WithType, WithType, BitwiseNot, output = ~operand);                                             \
-  RaverieCaseBinaryRValue(WithType, WithType, BitshiftLeft, output = left << right);                                     \
-  RaverieCaseBinaryRValue(WithType, WithType, BitshiftRight, output = left >> right);                                    \
-  RaverieCaseBinaryRValue(WithType, WithType, BitwiseOr, output = left | right);                                         \
-  RaverieCaseBinaryRValue(WithType, WithType, BitwiseXor, output = left ^ right);                                        \
-  RaverieCaseBinaryRValue(WithType, WithType, BitwiseAnd, output = left & right);                                        \
-  RaverieCaseBinaryLValue(WithType, AssignmentBitshiftLeft, output <<= right);                                           \
-  RaverieCaseBinaryLValue(WithType, AssignmentBitshiftRight, output >>= right);                                          \
-  RaverieCaseBinaryLValue(WithType, AssignmentBitwiseOr, output |= right);                                               \
-  RaverieCaseBinaryLValue(WithType, AssignmentBitwiseXor, output ^= right);                                              \
+#define RaverieIntegralCases(WithType)                                                                                                                                                                 \
+  RaverieCaseUnaryRValue(WithType, WithType, BitwiseNot, output = ~operand);                                                                                                                           \
+  RaverieCaseBinaryRValue(WithType, WithType, BitshiftLeft, output = left << right);                                                                                                                   \
+  RaverieCaseBinaryRValue(WithType, WithType, BitshiftRight, output = left >> right);                                                                                                                  \
+  RaverieCaseBinaryRValue(WithType, WithType, BitwiseOr, output = left | right);                                                                                                                       \
+  RaverieCaseBinaryRValue(WithType, WithType, BitwiseXor, output = left ^ right);                                                                                                                      \
+  RaverieCaseBinaryRValue(WithType, WithType, BitwiseAnd, output = left & right);                                                                                                                      \
+  RaverieCaseBinaryLValue(WithType, AssignmentBitshiftLeft, output <<= right);                                                                                                                         \
+  RaverieCaseBinaryLValue(WithType, AssignmentBitshiftRight, output >>= right);                                                                                                                        \
+  RaverieCaseBinaryLValue(WithType, AssignmentBitwiseOr, output |= right);                                                                                                                             \
+  RaverieCaseBinaryLValue(WithType, AssignmentBitwiseXor, output ^= right);                                                                                                                            \
   RaverieCaseBinaryLValue(WithType, AssignmentBitwiseAnd, output &= right);
 
 RaverieVirtualInstruction(InternalDebugBreakpoint)
@@ -807,8 +776,7 @@ RaverieVirtualInstruction(ToHandle)
     ourFrame->QueueHandleCleanup(&handle);
 
     // Initialize the stack handle to point at the given location
-    state->InitializeStackHandle(
-        handle, ourFrame->Frame + op.ToHandle.HandleConstantLocal, ourFrame->Scopes.Back(), op.Type);
+    state->InitializeStackHandle(handle, ourFrame->Frame + op.ToHandle.HandleConstantLocal, ourFrame->Scopes.Back(), op.Type);
   }
   else if (op.ToHandle.Type == OperandType::StaticField)
   {
@@ -897,8 +865,7 @@ RaverieVirtualInstruction(CreateInstanceDelegate)
   if (op.BoundFunction->IsVirtual && op.CanBeVirtual && thisHandle.StoredType != nullptr)
   {
     // Find the function on our derived type that matches the signature / name
-    Function* function = thisHandle.StoredType->FindFunction(
-        op.BoundFunction->Name, op.BoundFunction->FunctionType, FindMemberOptions::None);
+    Function* function = thisHandle.StoredType->FindFunction(op.BoundFunction->Name, op.BoundFunction->FunctionType, FindMemberOptions::None);
     if (function != nullptr)
       delegate.BoundFunction = function;
     else
@@ -1036,8 +1003,7 @@ RaverieVirtualInstruction(LocalObject)
   BoundType* createdType = op.CreatedType;
 
   // Allocate the object
-  Handle handle =
-      state->AllocateStackObject(ourFrame->Frame + op.StackLocal, ourFrame->Scopes.Back(), createdType, report);
+  Handle handle = state->AllocateStackObject(ourFrame->Frame + op.StackLocal, ourFrame->Scopes.Back(), createdType, report);
 
   // If allocating the stack object threw an exception...
   if (report.HasThrownExceptions())
@@ -1114,8 +1080,7 @@ RaverieVirtualInstruction(PropertyDelegate)
   // Set the delegate's function index to the opcode's index
   propertyDelegate->Get.BoundFunction = op.ReferencedProperty->Get;
   propertyDelegate->Set.BoundFunction = op.ReferencedProperty->Set;
-  propertyDelegate->ReferencedProperty =
-      Handle((const byte*)op.ReferencedProperty, RaverieTypeId(Property), nullptr, state);
+  propertyDelegate->ReferencedProperty = Handle((const byte*)op.ReferencedProperty, RaverieTypeId(Property), nullptr, state);
 
   // If this is a static property, then we don't have a this handle
   if (!op.ReferencedProperty->IsStatic)
@@ -1203,9 +1168,7 @@ RaverieVirtualInstruction(DeleteObject)
   if (result == false)
   {
     // The user handle type could not be deleted!
-    state->ThrowException(report,
-                          String::Format("We attempted to delete a '%s' handle, but we aren't allowed to",
-                                         handle.Manager->GetName().c_str()));
+    state->ThrowException(report, String::Format("We attempted to delete a '%s' handle, but we aren't allowed to", handle.Manager->GetName().c_str()));
 
     // Jump back since we just threw an exception
     longjmp(ourFrame->ExceptionJump, ExceptionJumpResult);
@@ -1406,8 +1369,7 @@ RaverieVirtualInstruction(ConvertStringToStringRangeExtended)
   else
   {
     // Construct a new handle for the string range
-    Handle rangeHandle = call.GetState()->AllocateDefaultConstructedHeapObject(
-        RaverieTypeId(StringRangeExtended), report, HeapFlags::ReferenceCounted);
+    Handle rangeHandle = call.GetState()->AllocateDefaultConstructedHeapObject(RaverieTypeId(StringRangeExtended), report, HeapFlags::ReferenceCounted);
     StringRangeExtended& stringRange = *(StringRangeExtended*)rangeHandle.Dereference();
 
     stringRange.mRange = value->All();
@@ -1462,17 +1424,14 @@ RaverieCaseComplexCopy(Delegate);
 RaverieCaseComplexCopy(Any);
 
 // Primitive type instructions
-RaverieIntegralCases(Byte) RaverieScalarCases(Byte) RaverieIntegralCases(Integer) RaverieScalarCases(Integer)
-    RaverieVectorCases(Integer2, Integer, Boolean2) RaverieVectorCases(Integer3, Integer, Boolean3)
-        RaverieVectorCases(Integer4, Integer, Boolean4) RaverieIntegralCases(Integer2) RaverieIntegralCases(Integer3)
-            RaverieIntegralCases(Integer4) RaverieScalarCases(Real) RaverieVectorCases(Real2, Real, Boolean2)
-                RaverieVectorCases(Real3, Real, Boolean3) RaverieVectorCases(Real4, Real, Boolean4)
-                    RaverieScalarCases(DoubleReal) RaverieIntegralCases(DoubleInteger) RaverieScalarCases(DoubleInteger)
+RaverieIntegralCases(Byte) RaverieScalarCases(Byte) RaverieIntegralCases(Integer) RaverieScalarCases(Integer) RaverieVectorCases(Integer2, Integer, Boolean2)
+    RaverieVectorCases(Integer3, Integer, Boolean3) RaverieVectorCases(Integer4, Integer, Boolean4) RaverieIntegralCases(Integer2) RaverieIntegralCases(Integer3) RaverieIntegralCases(Integer4)
+        RaverieScalarCases(Real) RaverieVectorCases(Real2, Real, Boolean2) RaverieVectorCases(Real3, Real, Boolean3) RaverieVectorCases(Real4, Real, Boolean4) RaverieScalarCases(DoubleReal)
+            RaverieIntegralCases(DoubleInteger) RaverieScalarCases(DoubleInteger)
 
-                        RaverieEqualityCases(Boolean, Boolean) RaverieEqualityCases(Handle, Boolean)
-                            RaverieEqualityCases(Delegate, Boolean) RaverieEqualityCases(Any, Boolean)
+                RaverieEqualityCases(Boolean, Boolean) RaverieEqualityCases(Handle, Boolean) RaverieEqualityCases(Delegate, Boolean) RaverieEqualityCases(Any, Boolean)
 
-                                RaverieCopyCases(Boolean)
+                    RaverieCopyCases(Boolean)
     // Handle, Delegate, and Value copy (assignment) operators are handled
     // specially above
 
@@ -1525,15 +1484,9 @@ RaverieCaseConversion(Boolean3, Real3, output = Real3((Real)value.x, (Real)value
 
 RaverieCaseConversion(Integer4, Real4, output = Real4((Real)value.x, (Real)value.y, (Real)value.z, (Real)value.w));
 RaverieCaseConversion(Integer4, Boolean4, output = Boolean4(value.x != 0, value.y != 0, value.z != 0, value.w != 0));
-RaverieCaseConversion(Real4,
-                    Integer4,
-                    output = Integer4((Integer)value.x, (Integer)value.y, (Integer)value.z, (Integer)value.w));
-RaverieCaseConversion(Real4,
-                    Boolean4,
-                    output = Boolean4(value.x != 0.0f, value.y != 0.0f, value.z != 0.0f, value.w != 0.0f));
-RaverieCaseConversion(Boolean4,
-                    Integer4,
-                    output = Integer4((Integer)value.x, (Integer)value.y, (Integer)value.z, (Integer)value.w));
+RaverieCaseConversion(Real4, Integer4, output = Integer4((Integer)value.x, (Integer)value.y, (Integer)value.z, (Integer)value.w));
+RaverieCaseConversion(Real4, Boolean4, output = Boolean4(value.x != 0.0f, value.y != 0.0f, value.z != 0.0f, value.w != 0.0f));
+RaverieCaseConversion(Boolean4, Integer4, output = Integer4((Integer)value.x, (Integer)value.y, (Integer)value.z, (Integer)value.w));
 RaverieCaseConversion(Boolean4, Real4, output = Real4((Real)value.x, (Real)value.y, (Real)value.z, (Real)value.w));
 
 void VirtualMachine::InitializeJumpTable()

@@ -65,12 +65,14 @@ void Shell::OpenFile(FileDialogInfo& config)
   ImportOpenFileDialog(&config, config.mMultiple, accept.c_str());
 }
 
-void RaverieExportNamed(ExportOpenFileDialogAdd)(void* dialog, const char* filePath) {
+void RaverieExportNamed(ExportOpenFileDialogAdd)(void* dialog, const char* filePath)
+{
   FileDialogInfo& config = *(FileDialogInfo*)dialog;
   config.mFiles.PushBack(filePath);
 }
 
-void RaverieExportNamed(ExportOpenFileDialogFinish)(void* dialog) {
+void RaverieExportNamed(ExportOpenFileDialogFinish)(void* dialog)
+{
   FileDialogInfo& config = *(FileDialogInfo*)dialog;
   config.mCallback(config.mFiles, config.mUserData);
 }
@@ -104,35 +106,45 @@ void Shell::Close()
 {
 }
 
-void Shell::SetProgress(const char* textOrNull, float percent) {
+void Shell::SetProgress(const char* textOrNull, float percent)
+{
   // We batch all loading of multiple content libraries in the beginning under a single "loading" window
   // If we finished initial loading, then let code hide and show loading screens
-  if (mInitialLoadingComplete) {
+  if (mInitialLoadingComplete)
+  {
     ImportProgressUpdate(textOrNull, percent);
-  } else {
+  }
+  else
+  {
     // Otherwise we always show the loading screen and ignore if it's null
     ImportProgressUpdate(textOrNull == nullptr ? "" : textOrNull, percent);
   }
 }
 
-GamepadRawState& Shell::GetOrCreateGamepad(uint32_t gamepadIndex) {
-  if (mGamepads.Size() <= gamepadIndex) {
+GamepadRawState& Shell::GetOrCreateGamepad(uint32_t gamepadIndex)
+{
+  if (mGamepads.Size() <= gamepadIndex)
+  {
     mGamepads.Resize(gamepadIndex + 1);
   }
 
   return mGamepads[gamepadIndex];
 }
 
-GamepadRawButtonState& GamepadRawState::GetOrCreateButton(uint32_t buttonIndex) {
-  if (mButtons.Size() < buttonIndex) {
+GamepadRawButtonState& GamepadRawState::GetOrCreateButton(uint32_t buttonIndex)
+{
+  if (mButtons.Size() < buttonIndex)
+  {
     mButtons.Resize(buttonIndex + 1);
   }
 
   return mButtons[buttonIndex];
 }
 
-GamepadRawAxisState& GamepadRawState::GetOrCreateAxis(uint32_t axisIndex) {
-  if (mAxes.Size() < axisIndex) {
+GamepadRawAxisState& GamepadRawState::GetOrCreateAxis(uint32_t axisIndex)
+{
+  if (mAxes.Size() < axisIndex)
+  {
     mAxes.Resize(axisIndex + 1);
   }
 

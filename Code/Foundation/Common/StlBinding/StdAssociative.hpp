@@ -18,19 +18,10 @@ inline void DeleteOp(std::Pair<const keytype, type>& entry)
 /// Examples: ResourceMap, Creator Maps, etc.
 /// Does not provide in order transversal.
 template <typename keyType, typename dataType>
-class StdHashMap : public std::tr1::unordered_map<keyType,
-                                                  dataType,
-                                                  std::tr1::hash<keyType>,
-                                                  std::equal_to<keyType>,
-                                                  Zallocator<std::Pair<const keyType, dataType>>>
+class StdHashMap : public std::tr1::unordered_map<keyType, dataType, std::tr1::hash<keyType>, std::equal_to<keyType>, Zallocator<std::Pair<const keyType, dataType>>>
 {
 public:
-  typedef std::tr1::unordered_map<keyType,
-                                  dataType,
-                                  std::tr1::hash<keyType>,
-                                  std::equal_to<keyType>,
-                                  Zallocator<std::Pair<const keyType, dataType>>>
-      base_type;
+  typedef std::tr1::unordered_map<keyType, dataType, std::tr1::hash<keyType>, std::equal_to<keyType>, Zallocator<std::Pair<const keyType, dataType>>> base_type;
   typedef IteratorRange<base_type> range;
   typedef typename base_type::iterator iterator;
   typedef StdHashMap<keyType, dataType> this_type;

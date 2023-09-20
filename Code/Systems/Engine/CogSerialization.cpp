@@ -333,8 +333,7 @@ void CogCreationContext::AssignSubContextId(Cog* cog)
     {
       u64 id64 = mCurrentSubContextId;
       String hexId = ToString(id64, false).SubStringFromByteIndices(8, 16);
-      DebugPrint(
-          "Setting Cog.SubContextId: %s (%u) on \"%s\"\n", hexId.c_str(), cog->mSubContextId, cog->mName.c_str());
+      DebugPrint("Setting Cog.SubContextId: %s (%u) on \"%s\"\n", hexId.c_str(), cog->mSubContextId, cog->mName.c_str());
     }
   }
 }

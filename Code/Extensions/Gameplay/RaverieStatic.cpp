@@ -193,8 +193,7 @@ SoundSystem* RaverieStatic::GetAudio()
 }
 
 // RaverieScriptConnection
-RaverieScriptConnection::RaverieScriptConnection(EventDispatcher* dispatcher, StringParam eventId, DelegateParam delagate) :
-    EventConnection(dispatcher, eventId)
+RaverieScriptConnection::RaverieScriptConnection(EventDispatcher* dispatcher, StringParam eventId, DelegateParam delagate) : EventConnection(dispatcher, eventId)
 {
   Flags.SetFlag(ConnectionFlags::Script);
   mDelegate = delagate;
@@ -227,8 +226,7 @@ void RaverieScriptConnection::RaiseError(StringParam message)
   {
     String namedMessage = BuildString(function->Name, ": ", message);
     String fullMessage = location->GetFormattedStringWithMessage(MessageFormat::Python, namedMessage);
-    RaverieScriptManager::GetInstance()->DispatchScriptError(
-        Events::UnhandledException, namedMessage, fullMessage, *location);
+    RaverieScriptManager::GetInstance()->DispatchScriptError(Events::UnhandledException, namedMessage, fullMessage, *location);
     return;
   }
 

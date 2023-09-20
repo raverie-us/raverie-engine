@@ -9,9 +9,7 @@ namespace Raverie
 // Used to store attenuation information for each instance
 struct InstanceAttenuation
 {
-  InstanceAttenuation(SoundAttenuatorNode* attenuatorNode, SoundAttenuator* attenuator) :
-      mAttenuatorNode(attenuatorNode),
-      mAttenuator(attenuator)
+  InstanceAttenuation(SoundAttenuatorNode* attenuatorNode, SoundAttenuator* attenuator) : mAttenuatorNode(attenuatorNode), mAttenuator(attenuator)
   {
   }
   InstanceAttenuation() : mAttenuatorNode(nullptr)

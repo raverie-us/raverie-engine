@@ -18,8 +18,7 @@ public:
   void Serialize(Serializer& stream) override;
 
   // ParticleEmitter Interface
-  int EmitParticles(
-      ParticleList* particleList, float dt, Mat4Ref transform, Vec3Param velocity, float timeAlive) override;
+  int EmitParticles(ParticleList* particleList, float dt, Mat4Ref transform, Vec3Param velocity, float timeAlive) override;
 
 private:
 };
@@ -38,8 +37,7 @@ public:
   void Serialize(Serializer& stream) override;
 
   // ParticleEmitter Interface
-  int EmitParticles(
-      ParticleList* particleList, float dt, Mat4Ref transform, Vec3Param velocity, float timeAlive) override;
+  int EmitParticles(ParticleList* particleList, float dt, Mat4Ref transform, Vec3Param velocity, float timeAlive) override;
 };
 
 DeclareEnum3(MeshEmitMode, Vertex, Edge, Face);
@@ -58,8 +56,7 @@ public:
   void Initialize(CogInitializer& initializer) override;
 
   // ParticleEmitter Interface
-  int EmitParticles(
-      ParticleList* particleList, float dt, Mat4Ref transform, Vec3Param velocity, float timeAlive) override;
+  int EmitParticles(ParticleList* particleList, float dt, Mat4Ref transform, Vec3Param velocity, float timeAlive) override;
 
   void GetNextEmitPoint(Vec3Ptr position, Vec3Ptr normal);
 

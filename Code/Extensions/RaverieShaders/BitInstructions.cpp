@@ -4,10 +4,7 @@
 namespace Raverie
 {
 
-void ResolveIntBitCount(RaverieSpirVFrontEnd* translator,
-                        Raverie::FunctionCallNode* functionCallNode,
-                        Raverie::MemberAccessNode* memberAccessNode,
-                        RaverieSpirVFrontEndContext* context)
+void ResolveIntBitCount(RaverieSpirVFrontEnd* translator, Raverie::FunctionCallNode* functionCallNode, Raverie::MemberAccessNode* memberAccessNode, RaverieSpirVFrontEndContext* context)
 {
   RaverieShaderIRType* resultType = translator->FindType(functionCallNode->ResultType, functionCallNode);
 
@@ -37,15 +34,11 @@ void RegisterBitOps(RaverieSpirVFrontEnd* translator, RaverieShaderIRLibrary* sh
     Raverie::BoundType* raverieType = types.mIntegerVectorTypes[i];
     String raverieTypeName = raverieType->ToString();
 
-    mathTypeResolver.RegisterFunctionResolver(GetStaticFunction(mathType, "CountBits", raverieTypeName),
-                                              ResolveIntBitCount);
+    mathTypeResolver.RegisterFunctionResolver(GetStaticFunction(mathType, "CountBits", raverieTypeName), ResolveIntBitCount);
 
-    opResolvers.RegisterBinaryOpResolver(
-        raverieType, raverieType, Raverie::Grammar::BitwiseOr, ResolveBinaryOperator<OpType::OpBitwiseOr>);
-    opResolvers.RegisterBinaryOpResolver(
-        raverieType, raverieType, Raverie::Grammar::BitwiseAnd, ResolveBinaryOperator<OpType::OpBitwiseAnd>);
-    opResolvers.RegisterBinaryOpResolver(
-        raverieType, raverieType, Raverie::Grammar::BitwiseXor, ResolveBinaryOperator<OpType::OpBitwiseXor>);
+    opResolvers.RegisterBinaryOpResolver(raverieType, raverieType, Raverie::Grammar::BitwiseOr, ResolveBinaryOperator<OpType::OpBitwiseOr>);
+    opResolvers.RegisterBinaryOpResolver(raverieType, raverieType, Raverie::Grammar::BitwiseAnd, ResolveBinaryOperator<OpType::OpBitwiseAnd>);
+    opResolvers.RegisterBinaryOpResolver(raverieType, raverieType, Raverie::Grammar::BitwiseXor, ResolveBinaryOperator<OpType::OpBitwiseXor>);
     opResolvers.RegisterUnaryOpResolver(raverieType, Raverie::Grammar::BitwiseNot, ResolveUnaryOperator<OpType::OpNot>);
   }
 }

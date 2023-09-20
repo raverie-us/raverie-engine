@@ -381,13 +381,7 @@ String CogPath::ComputePath(Status& status, Cog* from, Cog* to, CogPathPreferenc
   }
 }
 
-String CogPath::ComputePath(Status& status,
-                            Cog* from,
-                            Cog* to,
-                            CogPathPreference::Enum pref0,
-                            CogPathPreference::Enum pref1,
-                            CogPathPreference::Enum pref2,
-                            bool ambiguityIsError)
+String CogPath::ComputePath(Status& status, Cog* from, Cog* to, CogPathPreference::Enum pref0, CogPathPreference::Enum pref1, CogPathPreference::Enum pref2, bool ambiguityIsError)
 {
   String newPath;
   String errorMessage;
@@ -600,20 +594,15 @@ void CogPathParser::Parse(Status& status, CogPathCompiled& output)
   {
     status.State = StatusState::Failure;
 
-    bool tokenHasName = mToken.mType == CogPathTokenType::NamedCog || mToken.mType == CogPathTokenType::NamedSpace ||
-                        mToken.mType == CogPathTokenType::Invalid;
+    bool tokenHasName = mToken.mType == CogPathTokenType::NamedCog || mToken.mType == CogPathTokenType::NamedSpace || mToken.mType == CogPathTokenType::Invalid;
 
     if (tokenHasName)
     {
-      status.Message = String::Format("The path was malformed (hit an unexpected '%s' '%s' token)",
-                                      CogPathTokenType::Names[mToken.mType],
-                                      mToken.mText.c_str());
+      status.Message = String::Format("The path was malformed (hit an unexpected '%s' '%s' token)", CogPathTokenType::Names[mToken.mType], mToken.mText.c_str());
     }
     else
     {
-      status.Message = String::Format("The path was malformed (hit an unexpected '%s' '%s' token)",
-                                      CogPathTokenType::Names[mToken.mType],
-                                      CogPathToken::GetFixedTokenText(mToken.mType));
+      status.Message = String::Format("The path was malformed (hit an unexpected '%s' '%s' token)", CogPathTokenType::Names[mToken.mType], CogPathToken::GetFixedTokenText(mToken.mType));
     }
   }
 }
@@ -782,8 +771,7 @@ Cog* CogPath::Resolve(Status& status, Cog* startFrom, const CogPathCompiled& pat
     {
       status.State = StatusState::Failure;
       if (!status.IgnoreMessage)
-        status.Message =
-            String::Format("The root cog by the name of '%s' could not be found in the space", root.mValue.c_str());
+        status.Message = String::Format("The root cog by the name of '%s' could not be found in the space", root.mValue.c_str());
       return nullptr;
     }
 
@@ -810,8 +798,7 @@ Cog* CogPath::Resolve(Status& status, Cog* startFrom, const CogPathCompiled& pat
       {
         status.State = StatusState::Failure;
         if (!status.IgnoreMessage)
-          status.Message = String::Format(
-              "The cog '%s' had no child named '%s'", previousCog->GetDescription().c_str(), element.mValue.c_str());
+          status.Message = String::Format("The cog '%s' had no child named '%s'", previousCog->GetDescription().c_str(), element.mValue.c_str());
         return nullptr;
       }
 
@@ -930,8 +917,7 @@ Cog* CogPath::RestoreLink(CogInitializer& initializer, Cog* owner, Component* co
   if (owner != nullptr)
     mSharedNode->mRelativeTo = owner;
 
-  Raverie::RestoreLink(
-      &mSharedNode->mResolvedCog, initializer.Context, component, propertyName, GetErrorOnDirectLinkFail());
+  Raverie::RestoreLink(&mSharedNode->mResolvedCog, initializer.Context, component, propertyName, GetErrorOnDirectLinkFail());
   Cog* newCog = mSharedNode->mResolvedCog;
   if (newCog)
   {
@@ -951,13 +937,7 @@ Cog* CogPath::RestoreLink(CogInitializer& initializer, Cog* owner, Component* co
     {
       Status status;
       status.IgnoreMessage = true;
-      mSharedNode->mPath = ComputePath(status,
-                                       mSharedNode->mRelativeTo,
-                                       cog,
-                                       mSharedNode->mPathPreference0,
-                                       mSharedNode->mPathPreference1,
-                                       mSharedNode->mPathPreference2,
-                                       false);
+      mSharedNode->mPath = ComputePath(status, mSharedNode->mRelativeTo, cog, mSharedNode->mPathPreference0, mSharedNode->mPathPreference1, mSharedNode->mPathPreference2, false);
     }
   }
 
@@ -1009,8 +989,7 @@ void CogPath::SetCog(Cog* to)
 
     Status status;
     status.IgnoreMessage = (GetErrorOnPathCantCompute() == false);
-    String newPath =
-        ComputePath(status, from, to, node->mPathPreference0, node->mPathPreference1, node->mPathPreference2, false);
+    String newPath = ComputePath(status, from, to, node->mPathPreference0, node->mPathPreference1, node->mPathPreference2, false);
 
     if (OperationQueue::IsListeningForSideEffects() && !OperationQueue::sSideEffectContextStack.Empty())
       OperationQueue::RegisterSideEffect(this, "Path", node->mPath);
@@ -1285,27 +1264,13 @@ bool Policy<CogPath>::Serialize(Serializer& stream, cstr fieldName, CogPath& pat
   if (stream.Start("CogPath", fieldName, StructureType::Object))
   {
     stream.SerializeFieldDefault("Path", value.mPath, String());
-    SerializeBits(stream,
-                  value.mFlags,
-                  CogPathFlags::Names,
-                  0,
-                  CogPathFlags::UpdateCogOnPathChange | CogPathFlags::UpdatePathOnCogChange |
-                      CogPathFlags::UpdateCogOnInitialize);
+    SerializeBits(stream, value.mFlags, CogPathFlags::Names, 0, CogPathFlags::UpdateCogOnPathChange | CogPathFlags::UpdatePathOnCogChange | CogPathFlags::UpdateCogOnInitialize);
     stream.SerializeFieldDefault("Cog", value.mResolvedCog, CogId(), "ResolvedCog");
-    if (!stream.EnumField("CogPathPreference",
-                          "PathPreference0",
-                          (uint&)value.mPathPreference0,
-                          RaverieTypeId(CogPathPreference::Enum)))
+    if (!stream.EnumField("CogPathPreference", "PathPreference0", (uint&)value.mPathPreference0, RaverieTypeId(CogPathPreference::Enum)))
       value.mPathPreference0 = CogPathPreference::CogRelative;
-    if (!stream.EnumField("CogPathPreference",
-                          "PathPreference1",
-                          (uint&)value.mPathPreference1,
-                          RaverieTypeId(CogPathPreference::Enum)))
+    if (!stream.EnumField("CogPathPreference", "PathPreference1", (uint&)value.mPathPreference1, RaverieTypeId(CogPathPreference::Enum)))
       value.mPathPreference1 = CogPathPreference::SpaceRelative;
-    if (!stream.EnumField("CogPathPreference",
-                          "PathPreference2",
-                          (uint&)value.mPathPreference2,
-                          RaverieTypeId(CogPathPreference::Enum)))
+    if (!stream.EnumField("CogPathPreference", "PathPreference2", (uint&)value.mPathPreference2, RaverieTypeId(CogPathPreference::Enum)))
       value.mPathPreference2 = CogPathPreference::Absolute;
     stream.End("CogPath", StructureType::Object);
 
@@ -1353,10 +1318,7 @@ bool CogPathMetaComposition::CanAddComponent(HandleParam owner, BoundType* typeT
   return false;
 }
 
-bool CogPathMetaSerialization::SerializeReferenceProperty(BoundType* meta,
-                                                          cstr fieldName,
-                                                          Any& value,
-                                                          Serializer& serializer)
+bool CogPathMetaSerialization::SerializeReferenceProperty(BoundType* meta, cstr fieldName, Any& value, Serializer& serializer)
 {
   // If we are saving a cog path
   if (serializer.GetMode() == SerializerMode::Saving)

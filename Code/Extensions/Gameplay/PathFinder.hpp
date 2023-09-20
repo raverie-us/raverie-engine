@@ -37,10 +37,7 @@ public:
     {
     }
 
-    PathFinderNode(NodeKeyParam nodeKey, PathFinderNode* cameFrom, float costSoFar) :
-        mKey(nodeKey),
-        mCameFrom(cameFrom),
-        mCostSoFar(costSoFar)
+    PathFinderNode(NodeKeyParam nodeKey, PathFinderNode* cameFrom, float costSoFar) : mKey(nodeKey), mCameFrom(cameFrom), mCostSoFar(costSoFar)
     {
     }
 
@@ -49,11 +46,7 @@ public:
     float mCostSoFar;
   };
 
-  void FindNodePath(NodeKeyParam start,
-                    NodeKeyParam goal,
-                    Array<NodeKey>& pathOut,
-                    size_t maxIterations,
-                    const bool* cancel = nullptr)
+  void FindNodePath(NodeKeyParam start, NodeKeyParam goal, Array<NodeKey>& pathOut, size_t maxIterations, const bool* cancel = nullptr)
   {
     const float cTieBreaker = 1.00001f;
 
@@ -184,10 +177,7 @@ public:
   virtual StringParam GetCustomEventName() = 0;
 
   template <typename NodeKey, typename Algorithm>
-  HandleOf<ArrayClass<NodeKey>> FindPathHelper(CopyOnWriteHandle<Algorithm>& algorithm,
-                                               const NodeKey& start,
-                                               const NodeKey& goal,
-                                               size_t maxIterations)
+  HandleOf<ArrayClass<NodeKey>> FindPathHelper(CopyOnWriteHandle<Algorithm>& algorithm, const NodeKey& start, const NodeKey& goal, size_t maxIterations)
   {
     HandleOf<ArrayClass<NodeKey>> array = RaverieAllocate(ArrayClass<NodeKey>);
     algorithm->FindNodePath(start, goal, array->NativeArray, maxIterations);
@@ -195,11 +185,7 @@ public:
   }
 
   template <typename NodeKey, typename Algorithm>
-  void GenericFindPathHelper(CopyOnWriteHandle<Algorithm>& algorithm,
-                             VariantParam start,
-                             VariantParam goal,
-                             Array<Variant>& pathOut,
-                             size_t maxIterations)
+  void GenericFindPathHelper(CopyOnWriteHandle<Algorithm>& algorithm, VariantParam start, VariantParam goal, Array<Variant>& pathOut, size_t maxIterations)
   {
     Array<NodeKey> path;
     algorithm->FindNodePath(start.GetOrDefault<NodeKey>(), goal.GetOrDefault<NodeKey>(), path, maxIterations);
@@ -209,10 +195,7 @@ public:
   }
 
   template <typename NodeKey, typename Algorithm>
-  HandleOf<PathFinderRequest> FindPathThreadedHelper(CopyOnWriteHandle<Algorithm>& algorithm,
-                                                     const NodeKey& start,
-                                                     const NodeKey& goal,
-                                                     size_t maxIterations)
+  HandleOf<PathFinderRequest> FindPathThreadedHelper(CopyOnWriteHandle<Algorithm>& algorithm, const NodeKey& start, const NodeKey& goal, size_t maxIterations)
   {
     typedef PathFinderJob<NodeKey, Algorithm> PathFinderAlgorithmJob;
     PathFinderAlgorithmJob* job = new PathFinderAlgorithmJob();
@@ -231,13 +214,9 @@ public:
   }
 
   template <typename NodeKey, typename Algorithm>
-  HandleOf<PathFinderRequest> GenericFindPathThreadedHelper(CopyOnWriteHandle<Algorithm>& algorithm,
-                                                            VariantParam start,
-                                                            VariantParam goal,
-                                                            size_t maxIterations)
+  HandleOf<PathFinderRequest> GenericFindPathThreadedHelper(CopyOnWriteHandle<Algorithm>& algorithm, VariantParam start, VariantParam goal, size_t maxIterations)
   {
-    return FindPathThreadedHelper<NodeKey, Algorithm>(
-        algorithm, start.GetOrDefault<NodeKey>(), goal.GetOrDefault<NodeKey>(), maxIterations);
+    return FindPathThreadedHelper<NodeKey, Algorithm>(algorithm, start.GetOrDefault<NodeKey>(), goal.GetOrDefault<NodeKey>(), maxIterations);
   }
 
   /// Finds a path between world positions (or returns an empty array if no path
@@ -349,8 +328,7 @@ public:
 
     toSend->mDuration = (float)timer.UpdateAndGetTime();
 
-    Z::gDispatch->DispatchOn(
-        mMainThreadPathFinder, mMainThreadPathFinderDispatcher, Events::PathFinderFinishedGeneric, toSend);
+    Z::gDispatch->DispatchOn(mMainThreadPathFinder, mMainThreadPathFinderDispatcher, Events::PathFinderFinishedGeneric, toSend);
   }
 
   int Cancel() override

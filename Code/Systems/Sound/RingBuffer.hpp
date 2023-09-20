@@ -12,14 +12,7 @@ namespace Raverie
 class RingBuffer
 {
 public:
-  RingBuffer() :
-      BufferSize(0),
-      Buffer(nullptr),
-      WriteIndex(0),
-      ReadIndex(0),
-      ElementSizeBytes(0),
-      SmallMask(0),
-      BigMask(0)
+  RingBuffer() : BufferSize(0), Buffer(nullptr), WriteIndex(0), ReadIndex(0), ElementSizeBytes(0), SmallMask(0), BigMask(0)
   {
   }
 

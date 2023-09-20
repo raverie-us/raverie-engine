@@ -37,9 +37,7 @@ String GenerateDocumentationString(StringParam className);
 
 /// Creates the full template name but with the template type names instead of
 /// the instance type names
-String BuildDocumentationFullTemplateName(StringParam baseName,
-                                          Array<Constant>& templateArgs,
-                                          TypeReplacementMap& replacements);
+String BuildDocumentationFullTemplateName(StringParam baseName, Array<Constant>& templateArgs, TypeReplacementMap& replacements);
 
 /// If type is in replacement map (or contains a token that is) return type with
 /// that replaced
@@ -47,10 +45,7 @@ String ReplaceTypeIfOnList(String& type, TypeReplacementMap* replacements);
 
 /// Insert templated type into the replacement map, used when loading templated
 /// types from meta.
-void InsertIntoReplacementsMap(InstantiateTemplateInfo& templateHandler,
-                               Array<Constant>& dummyTypes,
-                               ArrayMap<String, String>& replacements,
-                               String* fullName);
+void InsertIntoReplacementsMap(InstantiateTemplateInfo& templateHandler, Array<Constant>& dummyTypes, ArrayMap<String, String>& replacements, String* fullName);
 
 ///// CLASSES /////
 class ExceptionDoc : public Object
@@ -343,10 +338,7 @@ public:
 
   /// Helper for LoadFromMeta, loop for instantiating and loading information
   /// from templated types
-  void GetDocumentationFromTemplateHandler(StringParam libName,
-                                           InstantiateTemplateInfo& templateHandler,
-                                           LibraryBuilder& builder,
-                                           ArrayMap<String, String>& allTemplateReplacements);
+  void GetDocumentationFromTemplateHandler(StringParam libName, InstantiateTemplateInfo& templateHandler, LibraryBuilder& builder, ArrayMap<String, String>& allTemplateReplacements);
 
   /// Load list of classes from the Meta Database
   void LoadFromMeta();

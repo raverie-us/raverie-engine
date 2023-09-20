@@ -13,21 +13,21 @@ DeclareEnum3(SpriteFill, Stretch, NineSlice, Tiled);
 
 // Put u64 at the bottom so when this is in a structure with other members
 // the structure padding is self contained
-#define SpriteDataMembers()                                                                                            \
-  u32 FrameSizeX;                                                                                                      \
-  u32 FrameSizeY;                                                                                                      \
-  u32 FrameCount;                                                                                                      \
-  float FrameDelay;                                                                                                    \
-  float PixelsPerUnit;                                                                                                 \
-  float OriginX;                                                                                                       \
-  float OriginY;                                                                                                       \
-  SpriteSampling::Enum Sampling;                                                                                       \
-  bool Looping;                                                                                                        \
-  Vec4 Slices;                                                                                                         \
-  u32 Fill;                                                                                                            \
-  SpriteData& GetSpriteData()                                                                                          \
-  {                                                                                                                    \
-    return *(SpriteData*)&FrameSizeX;                                                                                  \
+#define SpriteDataMembers()                                                                                                                                                                            \
+  u32 FrameSizeX;                                                                                                                                                                                      \
+  u32 FrameSizeY;                                                                                                                                                                                      \
+  u32 FrameCount;                                                                                                                                                                                      \
+  float FrameDelay;                                                                                                                                                                                    \
+  float PixelsPerUnit;                                                                                                                                                                                 \
+  float OriginX;                                                                                                                                                                                       \
+  float OriginY;                                                                                                                                                                                       \
+  SpriteSampling::Enum Sampling;                                                                                                                                                                       \
+  bool Looping;                                                                                                                                                                                        \
+  Vec4 Slices;                                                                                                                                                                                         \
+  u32 Fill;                                                                                                                                                                                            \
+  SpriteData& GetSpriteData()                                                                                                                                                                          \
+  {                                                                                                                                                                                                    \
+    return *(SpriteData*)&FrameSizeX;                                                                                                                                                                  \
   }
 
 // Sprite Data is the extra 'Tag' data passed along with a sprite

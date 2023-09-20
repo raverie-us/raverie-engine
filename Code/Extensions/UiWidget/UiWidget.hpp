@@ -119,14 +119,14 @@ DeclareBitField11(UiWidgetFlags,
 
 // Macros to make it easy to define setters / getters for all the flags. The
 // reason we need
-#define DeclareWidgetFlagSetterGetter(flag)                                                                            \
-  bool Get##flag()                                                                                                     \
-  {                                                                                                                    \
-    return mFlags.IsSet(UiWidgetFlags::flag);                                                                          \
-  }                                                                                                                    \
-  void Set##flag(bool state)                                                                                           \
-  {                                                                                                                    \
-    mFlags.SetState(UiWidgetFlags::flag, state);                                                                       \
+#define DeclareWidgetFlagSetterGetter(flag)                                                                                                                                                            \
+  bool Get##flag()                                                                                                                                                                                     \
+  {                                                                                                                                                                                                    \
+    return mFlags.IsSet(UiWidgetFlags::flag);                                                                                                                                                          \
+  }                                                                                                                                                                                                    \
+  void Set##flag(bool state)                                                                                                                                                                           \
+  {                                                                                                                                                                                                    \
+    mFlags.SetState(UiWidgetFlags::flag, state);                                                                                                                                                       \
   }
 
 // Widget Cast Results Range
@@ -241,30 +241,29 @@ public:
   Vec2 GetWorldLocation(Location::Enum location);
   void SetWorldLocation(Location::Enum location, Vec2Param worldTranslation);
 
-#define LocationGetterSetter(location)                                                                                 \
-  Vec2 GetLocal##location()                                                                                            \
-  {                                                                                                                    \
-    return GetLocalLocation(Location::location);                                                                       \
-  }                                                                                                                    \
-  void SetLocal##location(Vec2Param localTranslation)                                                                  \
-  {                                                                                                                    \
-    SetLocalLocation(Location::location, localTranslation);                                                            \
-  }                                                                                                                    \
-  Vec2 GetWorld##location()                                                                                            \
-  {                                                                                                                    \
-    return GetWorldLocation(Location::location);                                                                       \
-  }                                                                                                                    \
-  void SetWorld##location(Vec2Param worldTranslation)                                                                  \
-  {                                                                                                                    \
-    SetWorldLocation(Location::location, worldTranslation);                                                            \
+#define LocationGetterSetter(location)                                                                                                                                                                 \
+  Vec2 GetLocal##location()                                                                                                                                                                            \
+  {                                                                                                                                                                                                    \
+    return GetLocalLocation(Location::location);                                                                                                                                                       \
+  }                                                                                                                                                                                                    \
+  void SetLocal##location(Vec2Param localTranslation)                                                                                                                                                  \
+  {                                                                                                                                                                                                    \
+    SetLocalLocation(Location::location, localTranslation);                                                                                                                                            \
+  }                                                                                                                                                                                                    \
+  Vec2 GetWorld##location()                                                                                                                                                                            \
+  {                                                                                                                                                                                                    \
+    return GetWorldLocation(Location::location);                                                                                                                                                       \
+  }                                                                                                                                                                                                    \
+  void SetWorld##location(Vec2Param worldTranslation)                                                                                                                                                  \
+  {                                                                                                                                                                                                    \
+    SetWorldLocation(Location::location, worldTranslation);                                                                                                                                            \
   }
 
-  LocationGetterSetter(TopLeft) LocationGetterSetter(TopCenter) LocationGetterSetter(TopRight)
-      LocationGetterSetter(CenterLeft) LocationGetterSetter(Center) LocationGetterSetter(CenterRight)
-          LocationGetterSetter(BottomLeft) LocationGetterSetter(BottomCenter) LocationGetterSetter(BottomRight)
+  LocationGetterSetter(TopLeft) LocationGetterSetter(TopCenter) LocationGetterSetter(TopRight) LocationGetterSetter(CenterLeft) LocationGetterSetter(Center) LocationGetterSetter(CenterRight)
+      LocationGetterSetter(BottomLeft) LocationGetterSetter(BottomCenter) LocationGetterSetter(BottomRight)
 #undef LocationGetterSetter
 
-              float GetLocalTop();
+          float GetLocalTop();
   void SetLocalTop(float localTop);
   float GetWorldTop();
   void SetWorldTop(float worldTop);
@@ -388,7 +387,8 @@ public:
 private:
   friend class UiRootWidget;
 
-  union {
+  union
+  {
     UiSizePolicy::Enum mSizePolicy[Axis::Size];
     struct
     {

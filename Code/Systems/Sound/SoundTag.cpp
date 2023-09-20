@@ -74,8 +74,7 @@ void TagObject::RemoveInstanceThreaded(SoundInstance* instance)
     // If we are modifying the volume, interpolate back to 1.0
     if (mModifyingVolumeThreaded && data->mVolumeModifier)
     {
-      data->mVolumeModifier->Reset(
-          data->mVolumeModifier->GetCurrentVolume(), 1.0f, cPropertyChangeFrames, cPropertyChangeFrames);
+      data->mVolumeModifier->Reset(data->mVolumeModifier->GetCurrentVolume(), 1.0f, cPropertyChangeFrames, cPropertyChangeFrames);
       data->mVolumeModifier = nullptr;
     }
 
@@ -138,8 +137,7 @@ void TagObject::SetCompressorThresholdDb(float decibels)
   mCompressorThreshold = decibels;
 
   // TODO no handle
-  Z::gSound->Mixer.AddTask(CreateFunctor(&DynamicsProcessor::SetThreshold, &CompressorObjectThreaded, decibels),
-                           nullptr);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&DynamicsProcessor::SetThreshold, &CompressorObjectThreaded, decibels), nullptr);
 }
 
 float TagObject::GetCompressorAttackMs()
@@ -152,8 +150,7 @@ void TagObject::SetCompressorAttackMs(float milliseconds)
   mCompressorAttackMs = milliseconds;
 
   // TODO no handle
-  Z::gSound->Mixer.AddTask(CreateFunctor(&DynamicsProcessor::SetAttackMSec, &CompressorObjectThreaded, milliseconds),
-                           nullptr);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&DynamicsProcessor::SetAttackMSec, &CompressorObjectThreaded, milliseconds), nullptr);
 }
 
 float TagObject::GetCompressorReleaseMs()
@@ -166,8 +163,7 @@ void TagObject::SetCompressorReleaseMs(float milliseconds)
   mCompressorReleaseMs = milliseconds;
 
   // TODO no handle
-  Z::gSound->Mixer.AddTask(CreateFunctor(&DynamicsProcessor::SetReleaseMSec, &CompressorObjectThreaded, milliseconds),
-                           nullptr);
+  Z::gSound->Mixer.AddTask(CreateFunctor(&DynamicsProcessor::SetReleaseMSec, &CompressorObjectThreaded, milliseconds), nullptr);
 }
 
 float TagObject::GetCompresorRatio()
@@ -285,8 +281,7 @@ void TagObject::UpdateForMixThreaded(unsigned howManyFrames, unsigned channels)
       compressorInput = GetTotalInstanceOutputThreaded(howManyFrames, channels);
     // Otherwise get the output from the other tag
     else
-      compressorInput =
-          mCompressorInputTag.Get(AudioThreads::MixThread)->GetTotalInstanceOutputThreaded(howManyFrames, channels);
+      compressorInput = mCompressorInputTag.Get(AudioThreads::MixThread)->GetTotalInstanceOutputThreaded(howManyFrames, channels);
 
     // Reset the buffer of volume modifiers
     mCompressorVolumesThreaded.Clear();
@@ -299,11 +294,7 @@ void TagObject::UpdateForMixThreaded(unsigned howManyFrames, unsigned channels)
       mCompressorVolumesThreaded.Resize(compressorInput->Size(), 1.0f);
 
       // Run the compressor filter, using the tag output as the envelope input
-      CompressorObjectThreaded.ProcessBuffer(mCompressorVolumesThreaded.Data(),
-                                             compressorInput->Data(),
-                                             mCompressorVolumesThreaded.Data(),
-                                             channels,
-                                             mCompressorVolumesThreaded.Size());
+      CompressorObjectThreaded.ProcessBuffer(mCompressorVolumesThreaded.Data(), compressorInput->Data(), mCompressorVolumesThreaded.Data(), channels, mCompressorVolumesThreaded.Size());
     }
   }
 
@@ -636,8 +627,7 @@ void SoundTag::SetEQHighPassGain(float gain)
     mTagObject->SetEQBandGain(EqualizerBands::Above5000, Math::Clamp(gain, 0.0f, cMaxVolumeValue));
 }
 
-void SoundTag::EQSetAllBands(
-    float below80Hz, float at150Hz, float at600Hz, float at2500Hz, float above5000Hz, float timeToInterpolate)
+void SoundTag::EQSetAllBands(float below80Hz, float at150Hz, float at600Hz, float at2500Hz, float above5000Hz, float timeToInterpolate)
 {
   if (mTagObject)
   {
@@ -648,8 +638,7 @@ void SoundTag::EQSetAllBands(
     values[EqualizerBands::At2500] = Math::Clamp(at2500Hz, 0.0f, cMaxVolumeValue);
     values[EqualizerBands::Above5000] = Math::Clamp(above5000Hz, 0.0f, cMaxVolumeValue);
 
-    Z::gSound->Mixer.AddTask(
-        CreateFunctor(&TagObject::InterpolateEQBandsThreaded, *mTagObject, values, timeToInterpolate), nullptr);
+    Z::gSound->Mixer.AddTask(CreateFunctor(&TagObject::InterpolateEQBandsThreaded, *mTagObject, values, timeToInterpolate), nullptr);
   }
 }
 

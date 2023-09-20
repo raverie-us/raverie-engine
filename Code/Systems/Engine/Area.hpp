@@ -68,41 +68,38 @@ public:
   Vec2 GetWorldLocation(Location::Enum location);
   void SetWorldLocation(Location::Enum location, Vec2Param worldTranslation);
 
-#define OffsetOfGetter(location)                                                                                       \
-  Vec2 Get##location()                                                                                                 \
-  {                                                                                                                    \
-    return LocalOffsetOf(Location::location);                                                                          \
+#define OffsetOfGetter(location)                                                                                                                                                                       \
+  Vec2 Get##location()                                                                                                                                                                                 \
+  {                                                                                                                                                                                                    \
+    return LocalOffsetOf(Location::location);                                                                                                                                                          \
   }
-  OffsetOfGetter(TopLeft) OffsetOfGetter(TopCenter) OffsetOfGetter(TopRight) OffsetOfGetter(CenterLeft)
-      OffsetOfGetter(Center) OffsetOfGetter(CenterRight) OffsetOfGetter(BottomLeft) OffsetOfGetter(BottomCenter)
-          OffsetOfGetter(BottomRight)
+  OffsetOfGetter(TopLeft) OffsetOfGetter(TopCenter) OffsetOfGetter(TopRight) OffsetOfGetter(CenterLeft) OffsetOfGetter(Center) OffsetOfGetter(CenterRight) OffsetOfGetter(BottomLeft)
+      OffsetOfGetter(BottomCenter) OffsetOfGetter(BottomRight)
 #undef OffsetOfGetter
 
-#define LocationGetterSetter(location)                                                                                 \
-  Vec2 GetLocal##location()                                                                                            \
-  {                                                                                                                    \
-    return GetLocalLocation(Location::location);                                                                       \
-  }                                                                                                                    \
-  void SetLocal##location(Vec2Param localTranslation)                                                                  \
-  {                                                                                                                    \
-    SetLocalLocation(Location::location, localTranslation);                                                            \
-  }                                                                                                                    \
-  Vec2 GetWorld##location()                                                                                            \
-  {                                                                                                                    \
-    return GetWorldLocation(Location::location);                                                                       \
-  }                                                                                                                    \
-  void SetWorld##location(Vec2Param worldTranslation)                                                                  \
-  {                                                                                                                    \
-    SetWorldLocation(Location::location, worldTranslation);                                                            \
+#define LocationGetterSetter(location)                                                                                                                                                                 \
+  Vec2 GetLocal##location()                                                                                                                                                                            \
+  {                                                                                                                                                                                                    \
+    return GetLocalLocation(Location::location);                                                                                                                                                       \
+  }                                                                                                                                                                                                    \
+  void SetLocal##location(Vec2Param localTranslation)                                                                                                                                                  \
+  {                                                                                                                                                                                                    \
+    SetLocalLocation(Location::location, localTranslation);                                                                                                                                            \
+  }                                                                                                                                                                                                    \
+  Vec2 GetWorld##location()                                                                                                                                                                            \
+  {                                                                                                                                                                                                    \
+    return GetWorldLocation(Location::location);                                                                                                                                                       \
+  }                                                                                                                                                                                                    \
+  void SetWorld##location(Vec2Param worldTranslation)                                                                                                                                                  \
+  {                                                                                                                                                                                                    \
+    SetWorldLocation(Location::location, worldTranslation);                                                                                                                                            \
   }
 
-              LocationGetterSetter(TopLeft) LocationGetterSetter(TopCenter) LocationGetterSetter(TopRight)
-                  LocationGetterSetter(CenterLeft) LocationGetterSetter(Center) LocationGetterSetter(CenterRight)
-                      LocationGetterSetter(BottomLeft) LocationGetterSetter(BottomCenter)
-                          LocationGetterSetter(BottomRight)
+          LocationGetterSetter(TopLeft) LocationGetterSetter(TopCenter) LocationGetterSetter(TopRight) LocationGetterSetter(CenterLeft) LocationGetterSetter(Center) LocationGetterSetter(CenterRight)
+              LocationGetterSetter(BottomLeft) LocationGetterSetter(BottomCenter) LocationGetterSetter(BottomRight)
 #undef LocationGetterSetter
 
-                              float GetLocalTop();
+                  float GetLocalTop();
   void SetLocalTop(float localTop);
   float GetWorldTop();
   void SetWorldTop(float worldTop);

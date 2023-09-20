@@ -21,9 +21,7 @@ RaverieDefineType(EditorViewport, builder, type)
 {
 }
 
-EditorViewport::EditorViewport(Composite* parent, OwnerShip::Enum ownership) :
-    Composite(parent),
-    mIgnoreSpaceModifications(false)
+EditorViewport::EditorViewport(Composite* parent, OwnerShip::Enum ownership) : Composite(parent), mIgnoreSpaceModifications(false)
 {
   mTools = Z::gEditor->Tools;
   mOwnerShip = ownership;
@@ -329,8 +327,7 @@ void EditorViewport::OnSpaceLevelLoaded(Event* event)
 
   if (levelSettings == NULL)
   {
-    levelSettings = Z::gFactory->CreateCheckedType(
-        RaverieTypeId(Cog), editSpace, CoreArchetypes::LevelSettings, 0, editSpace->GetGameSession());
+    levelSettings = Z::gFactory->CreateCheckedType(RaverieTypeId(Cog), editSpace, CoreArchetypes::LevelSettings, 0, editSpace->GetGameSession());
     levelSettings->ClearArchetype();
   }
 

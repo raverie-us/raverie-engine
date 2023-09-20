@@ -181,8 +181,7 @@ CollisionFilter* PhysicsEventManager::GetFilter(Manifold* manifold, PhysicsSpace
   return space->mCollisionTable->FindFilter(pair);
 }
 
-void PhysicsEventManager::CreateEvent(
-    Physics::Manifold* manifold, PhysicsSpace* space, uint collisionType, uint blockType, bool immediateSend)
+void PhysicsEventManager::CreateEvent(Physics::Manifold* manifold, PhysicsSpace* space, uint collisionType, uint blockType, bool immediateSend)
 {
   // Always send the normal collision event (whether or not this is
   // correct behavior I'll worry about later, right now it should never be
@@ -242,8 +241,7 @@ void PhysicsEventManager::CreateEvent(
     AddEvent(eventObj);
 }
 
-void PhysicsEventManager::CreateCollisionEvent(
-    Manifold* manifold, uint contactId, uint eventType, StringParam collisionType, bool immediateSend)
+void PhysicsEventManager::CreateCollisionEvent(Manifold* manifold, uint contactId, uint eventType, StringParam collisionType, bool immediateSend)
 {
   ManifoldPoint& point = manifold->Contacts[contactId];
   CollisionEvent* eventObj;
@@ -261,10 +259,7 @@ void PhysicsEventManager::CreateCollisionEvent(
   }
 }
 
-CollisionEvent* PhysicsEventManager::CreateCollisionEventInternal(Manifold* manifold,
-                                                                  ManifoldPoint& point,
-                                                                  uint eventType,
-                                                                  StringParam collisionType)
+CollisionEvent* PhysicsEventManager::CreateCollisionEventInternal(Manifold* manifold, ManifoldPoint& point, uint eventType, StringParam collisionType)
 {
   // Make sure that the objects send events (optimization) and events of type
   if (!manifold->GetSendsMessages())

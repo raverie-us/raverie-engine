@@ -217,15 +217,10 @@ Type PointSphere(Vec3Param point, Vec3Param sphereCenter, real sphereRadius)
 }
 
 // Test to see if the given point lies on or inside the given tetrahedron.
-Type PointTetrahedron(Vec3Param point,
-                      Vec3Param tetrahedronPointA,
-                      Vec3Param tetrahedronPointB,
-                      Vec3Param tetrahedronPointC,
-                      Vec3Param tetrahedronPointD)
+Type PointTetrahedron(Vec3Param point, Vec3Param tetrahedronPointA, Vec3Param tetrahedronPointB, Vec3Param tetrahedronPointC, Vec3Param tetrahedronPointD)
 {
   Vec4 barycentricCoordinates;
-  Geometry::BarycentricTetrahedron(
-      point, tetrahedronPointA, tetrahedronPointB, tetrahedronPointC, tetrahedronPointD, &barycentricCoordinates);
+  Geometry::BarycentricTetrahedron(point, tetrahedronPointA, tetrahedronPointB, tetrahedronPointC, tetrahedronPointD, &barycentricCoordinates);
   for (uint i = 0; i < 4; ++i)
   {
     if (!Math::InRange(barycentricCoordinates[i], real(0.0), real(1.0)))
@@ -240,8 +235,7 @@ Type PointTetrahedron(Vec3Param point,
 // Test to see if the given point lies on or inside the given counterclockwise
 // triangle. Treats the point as if it was lying on the plane of the triangle,
 // so this can be more accurately described as "point vs triangular prism".
-Type PointTriangle(
-    Vec3Param point, Vec3Param trianglePointA, Vec3Param trianglePointB, Vec3Param trianglePointC, real epsilon)
+Type PointTriangle(Vec3Param point, Vec3Param trianglePointA, Vec3Param trianglePointB, Vec3Param trianglePointC, real epsilon)
 {
   // Compute the vectors
   Vec3 vec[3] = {trianglePointC - trianglePointA, trianglePointB - trianglePointA, point - trianglePointA};

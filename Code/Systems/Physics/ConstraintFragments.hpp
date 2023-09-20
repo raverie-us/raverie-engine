@@ -45,14 +45,7 @@ void MotorFragment(ConstraintMolecule& constraintMol, ConstraintMolecule& motorM
 void RigidConstraintFragment(real& molError, real& molBias, real& molGamma, real baumgarte);
 void RigidConstraintFragment(ConstraintMolecule& mol, real baumgarte);
 /// Computes the bias and gamma for a soft constraint.
-void SoftConstraintFragment(real& molMass,
-                            real& molError,
-                            real& molBias,
-                            real& molGamma,
-                            real springFrequencyHz,
-                            real springDampRatio,
-                            real baumgarte,
-                            real dt);
+void SoftConstraintFragment(real& molMass, real& molError, real& molBias, real& molGamma, real springFrequencyHz, real springDampRatio, real baumgarte, real dt);
 void SoftConstraintFragment(ConstraintMolecule& mol, SpringAtom& spring, real baumgarte, real dt);
 /// Special fragment for contacts that deals with restitution
 void ContactNormalFragment(ConstraintMolecule& mol, real baumgarte, real restitutionBias);

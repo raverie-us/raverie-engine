@@ -13,11 +13,7 @@ Tweakable(real, LabelRightPadding, real(5.0), cLocation);
 Tweakable(real, LabelYPadding, real(5.0), cLocation);
 } // namespace CollisionTableSettings
 
-CollisionMatrixItem::CollisionMatrixItem(Composite* parent,
-                                         CollisionTableEditor* tableEditor,
-                                         CollisionFilter* filter,
-                                         CollisionFilter& searchFilter) :
-    Composite(parent)
+CollisionMatrixItem::CollisionMatrixItem(Composite* parent, CollisionTableEditor* tableEditor, CollisionFilter* filter, CollisionFilter& searchFilter) : Composite(parent)
 {
   mTableEditor = tableEditor;
   mFilter = filter;
@@ -78,8 +74,7 @@ void CollisionMatrixItem::OnRightMouseUp(MouseEvent* event)
     mFilter = mTableEditor->AddFilter(mSearchFilter.TypeA, mSearchFilter.TypeB);
 
   // Cycle to the next state
-  CollisionFilterCollisionFlags::Enum newState =
-      (CollisionFilterCollisionFlags::Enum)((mFilter->GetCollisionFlag() + 1) % CollisionFilterCollisionFlags::Size);
+  CollisionFilterCollisionFlags::Enum newState = (CollisionFilterCollisionFlags::Enum)((mFilter->GetCollisionFlag() + 1) % CollisionFilterCollisionFlags::Size);
   mFilter->SetCollisionFlag(newState);
 
   // Mark the table as modified and update the visuals
@@ -152,11 +147,7 @@ void CollisionMatrixItem::UpdateDisplay()
   mTableEditor->RefreshPropertyView();
 }
 
-CollisionGroupLabel::CollisionGroupLabel(Composite* parent,
-                                         CollisionTableEditor* tableEditor,
-                                         CollisionGroup* group,
-                                         bool vertical) :
-    Composite(parent)
+CollisionGroupLabel::CollisionGroupLabel(Composite* parent, CollisionTableEditor* tableEditor, CollisionGroup* group, bool vertical) : Composite(parent)
 {
   mTableEditor = tableEditor;
   mGroup = group;
@@ -392,8 +383,7 @@ Vec2 CollisionTableMatrix::GetMinSize()
   return mMinSize;
 }
 
-void CollisionTableMatrix::CreateLabels(
-    Array<CollisionGroup*>& groups, float height, float buffer, float& xStart, float& yStart)
+void CollisionTableMatrix::CreateLabels(Array<CollisionGroup*>& groups, float height, float buffer, float& xStart, float& yStart)
 {
   // Cap the max length for a label as 100 pixels,
   // otherwise long names could cause the ui to be too big
@@ -442,8 +432,7 @@ void CollisionTableMatrix::CreateLabels(
   yStart = maxHeight;
 }
 
-void CollisionTableMatrix::CreateMatrix(
-    Array<CollisionGroup*>& groups, float xStart, float yStart, Vec2Param size, float buffer)
+void CollisionTableMatrix::CreateMatrix(Array<CollisionGroup*>& groups, float xStart, float yStart, Vec2Param size, float buffer)
 {
   uint count = groups.Size();
 

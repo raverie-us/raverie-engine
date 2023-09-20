@@ -45,11 +45,7 @@ public:
   Handle GetComponent(HandleParam owner, BoundType* componentType) override;
   Handle GetComponentAt(HandleParam owner, uint index) override;
   Handle MakeObject(BoundType* typeToCreate) override;
-  void AddComponent(HandleParam owner,
-                    HandleParam component,
-                    int index = -1,
-                    bool ignoreDependencies = false,
-                    MetaCreationContext* creationContext = nullptr) override;
+  void AddComponent(HandleParam owner, HandleParam component, int index = -1, bool ignoreDependencies = false, MetaCreationContext* creationContext = nullptr) override;
   void RemoveComponent(HandleParam owner, HandleParam component, bool ignoreDependencies = false) override;
 };
 

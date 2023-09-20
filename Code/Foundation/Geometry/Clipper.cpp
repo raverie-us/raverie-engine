@@ -85,11 +85,7 @@ bool operator==(const Simplex& a, const Simplex& b)
 
 // Since edge could have already been divided we need to figure out where
 // in the vertex list we need to Insert the new point
-void InsertPoint(Memory::Pool* pool,
-                 InList<LinkedVertex<Vec2_t>>* vertices,
-                 LinkedVertex<Vec2_t>* head,
-                 LinkedVertex<Vec2_t>* tail,
-                 const Vec2_t& point)
+void InsertPoint(Memory::Pool* pool, InList<LinkedVertex<Vec2_t>>* vertices, LinkedVertex<Vec2_t>* head, LinkedVertex<Vec2_t>* tail, const Vec2_t& point)
 {
   Vec2_t axis = tail->position - head->position;
 
@@ -480,8 +476,7 @@ void Subdivide(Array<Vec2_t>* polygonA, Array<Vec2_t>* polygonB)
 
       // Compute edge/edge intersections
       Vec2_t point(float_t(0.0), float_t(0.0));
-      Intersection::IntersectionType result =
-          TestSegmentSegment(a1->position, a2->position, b1->position, b2->position, &point);
+      Intersection::IntersectionType result = TestSegmentSegment(a1->position, a2->position, b1->position, b2->position, &point);
 
       // the intersection result between e1 and e2 is a line segment
       // We need to Insert the endpoints from each edge into the other polygon
@@ -594,11 +589,7 @@ void Build(const Array<Vec2_t>& contour, Array<Simplex>* chain)
   }
 }
 
-void Select(Csg::Operation::Enum operation,
-            const Array<Simplex>& chainA,
-            const Array<Simplex>& chainB,
-            Array<Simplex>* selectedA,
-            Array<Simplex>* selectedB)
+void Select(Csg::Operation::Enum operation, const Array<Simplex>& chainA, const Array<Simplex>& chainB, Array<Simplex>* selectedA, Array<Simplex>* selectedB)
 {
   // Magic constants for Intersect, Union, Subtract
   static f32 operationTable[3][2] = {{1.f, 1.f}, {0.f, 0.f}, {0.f, 1.f}};

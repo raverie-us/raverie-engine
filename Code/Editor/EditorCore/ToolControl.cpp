@@ -20,11 +20,7 @@ RaverieDefineType(ToolUiEvent, builder, type)
   RaverieBindDocumented();
 }
 
-ToolUiEvent::ToolUiEvent(Composite* parent) :
-    mParent(parent),
-    mNeedsPropertyGrid(false),
-    mCustomUi(nullptr),
-    mSelectTool(nullptr)
+ToolUiEvent::ToolUiEvent(Composite* parent) : mParent(parent), mNeedsPropertyGrid(false), mCustomUi(nullptr), mSelectTool(nullptr)
 {
 }
 
@@ -58,9 +54,7 @@ public:
   {
   }
 
-  ObjectPropertyNode* BuildObjectTree(ObjectPropertyNode* parent,
-                                      HandleParam object,
-                                      Property* objectProperty = nullptr) override
+  ObjectPropertyNode* BuildObjectTree(ObjectPropertyNode* parent, HandleParam object, Property* objectProperty = nullptr) override
   {
     BoundType* objectType = object.StoredType;
     if (objectType->IsA(RaverieTypeId(Cog)))

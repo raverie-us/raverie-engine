@@ -52,14 +52,7 @@ inline StringRange SkipRestOfLine(StringRange range)
 }
 
 template <typename FontProcessor>
-void AddTextRange(FontProcessor& processor,
-                  RenderFont* font,
-                  StringRange text,
-                  Vec2 textStart,
-                  TextAlign::Enum align,
-                  Vec2 pixelScale,
-                  Vec2 textAreaSize,
-                  bool clipText = false)
+void AddTextRange(FontProcessor& processor, RenderFont* font, StringRange text, Vec2 textStart, TextAlign::Enum align, Vec2 pixelScale, Vec2 textAreaSize, bool clipText = false)
 {
   String displayText(text);
   if (clipText)
@@ -104,13 +97,7 @@ void AddTextRange(FontProcessor& processor,
 }
 
 template <typename FontProcessor>
-Vec2 ProcessTextRange(FontProcessor& processor,
-                      RenderFont* font,
-                      StringRange text,
-                      Vec2 textStart,
-                      TextAlign::Enum textAlign,
-                      Vec2 pixelScale,
-                      Vec2 textAreaSize)
+Vec2 ProcessTextRange(FontProcessor& processor, RenderFont* font, StringRange text, Vec2 textStart, TextAlign::Enum textAlign, Vec2 pixelScale, Vec2 textAreaSize)
 {
   Vec2 t = textStart;
 

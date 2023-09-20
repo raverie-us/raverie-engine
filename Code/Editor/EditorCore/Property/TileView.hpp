@@ -119,11 +119,7 @@ public:
   float GetItemSize();
   void SetItemSize(float size);
 
-  virtual TileViewWidget* CreateTileViewWidget(Composite* parent,
-                                               StringParam name,
-                                               HandleParam instance,
-                                               DataIndex index,
-                                               PreviewImportance::Enum minImportance = PreviewImportance::None);
+  virtual TileViewWidget* CreateTileViewWidget(Composite* parent, StringParam name, HandleParam instance, DataIndex index, PreviewImportance::Enum minImportance = PreviewImportance::None);
 
   ScrollArea* GetScrollArea();
 

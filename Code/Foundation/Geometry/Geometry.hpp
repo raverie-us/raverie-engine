@@ -39,45 +39,24 @@ real SignedDistanceToPlane(Vec3Param point, Vec3Param planeNormal, real planeDis
 
 /// Calculate the barycentric coordinates of the point with respect to the
 /// triangle. Returns XYZ correspond to triangle's ABC points, respectively.
-void BarycentricTriangle(Vec3Param point,
-                         Vec3Param trianglePointA,
-                         Vec3Param trianglePointB,
-                         Vec3Param trianglePointC,
-                         Vec3Ptr barycentricCoordinates);
+void BarycentricTriangle(Vec3Param point, Vec3Param trianglePointA, Vec3Param trianglePointB, Vec3Param trianglePointC, Vec3Ptr barycentricCoordinates);
 
 /// Calculate the barycentric coordinates of the point with respect to the
 /// tetrahedron. Returns XYZW correspond to tetrahedron's ABCD points,
 /// respectively.
-void BarycentricTetrahedron(Vec3Param point,
-                            Vec3Param tetrahedronPointA,
-                            Vec3Param tetrahedronPointB,
-                            Vec3Param tetrahedronPointC,
-                            Vec3Param tetrahedronPointD,
-                            Vec4Ptr barycentricCoordinates);
+void BarycentricTetrahedron(Vec3Param point, Vec3Param tetrahedronPointA, Vec3Param tetrahedronPointB, Vec3Param tetrahedronPointC, Vec3Param tetrahedronPointD, Vec4Ptr barycentricCoordinates);
 
 /// Clip the set of coplanar polygon points against the plane.
-uint ClipPolygonWithPlane(const Vec3* polygonPoints,
-                          uint polygonPointCount,
-                          Vec3Param planeNormal,
-                          real planeDistance,
-                          Vec3Ptr clippedPoints);
+uint ClipPolygonWithPlane(const Vec3* polygonPoints, uint polygonPointCount, Vec3Param planeNormal, real planeDistance, Vec3Ptr clippedPoints);
 
 /// Clip the set of coplanar polygon points against the given clipping planes.
 /// The planes are stored in a Vector4 with the plane normal in the (x,y,z) and
 /// the plane's distance in the w.
-uint ClipPolygonWithPlanes(const Vec4* clipperPlanes,
-                           uint clipperPlaneCount,
-                           const Vec3* polygonPoints,
-                           uint polygonPointCount,
-                           Vec3Ptr clippedPoints);
+uint ClipPolygonWithPlanes(const Vec4* clipperPlanes, uint clipperPlaneCount, const Vec3* polygonPoints, uint polygonPointCount, Vec3Ptr clippedPoints);
 
 /// Clip the set of coplanar polygon points against the planes that define the
 /// clipping polygon.
-uint ClipPolygonWithPolygon(const Vec3* clipperPoints,
-                            uint clipperPointCount,
-                            const Vec3* polygonPoints,
-                            uint polygonPointCount,
-                            Vec3Ptr clippedPoints);
+uint ClipPolygonWithPolygon(const Vec3* clipperPoints, uint clipperPointCount, const Vec3* polygonPoints, uint polygonPointCount, Vec3Ptr clippedPoints);
 
 /// Calculate the barycenter of the given point set.
 void CalculateBarycenter(const Vec3* points, uint count, Vec3Ptr barycenter);
@@ -90,49 +69,26 @@ void ComputeBestFitPlane(const Vec3* polyPoints, uint polyPointCount, Vec3Ptr pl
 
 /// Calculate the volume of a triangular mesh, if no scale is provided then it
 /// assumes a scale of (1, 1, 1).
-real CalculateTriMeshVolume(const Vec3* triMeshPoints,
-                            const uint* triMeshTriangles,
-                            uint triangleCount,
-                            Vec3Param scale = NoScale);
-real CalculateTriMeshVolume(const Array<Vec3>& triMeshPoints,
-                            const Array<uint>& triMeshTriangles,
-                            Vec3Param scale = NoScale);
+real CalculateTriMeshVolume(const Vec3* triMeshPoints, const uint* triMeshTriangles, uint triangleCount, Vec3Param scale = NoScale);
+real CalculateTriMeshVolume(const Array<Vec3>& triMeshPoints, const Array<uint>& triMeshTriangles, Vec3Param scale = NoScale);
 
 /// Calculate the center of mass of a triangular mesh, assuming uniform density.
 /// If no scale is provided then it assumes a scale of (1, 1, 1).
-Vec3 CalculateTriMeshCenterOfMass(const Vec3* triMeshPoints,
-                                  const uint* triMeshTriangles,
-                                  uint triangleCount,
-                                  Vec3Param scale = NoScale);
-Vec3 CalculateTriMeshCenterOfMass(const Array<Vec3>& triMeshPoints,
-                                  const Array<uint>& triMeshTriangles,
-                                  Vec3Param scale = NoScale);
+Vec3 CalculateTriMeshCenterOfMass(const Vec3* triMeshPoints, const uint* triMeshTriangles, uint triangleCount, Vec3Param scale = NoScale);
+Vec3 CalculateTriMeshCenterOfMass(const Array<Vec3>& triMeshPoints, const Array<uint>& triMeshTriangles, Vec3Param scale = NoScale);
 
 /// Scale can be applied afterwards to centerOfMass as scale * centerOfMass
 /// and volume can be scaled as scale.x * scale.y * scale.z * volume
-void CalculateTriMeshCenterOfMassAndVolume(
-    const Vec3* triMeshPoints, const uint* triMeshTriangles, uint triangleCount, Vec3Ref centerOfMass, real& volume);
-void CalculateTriMeshCenterOfMassAndVolume(const Array<Vec3>& triMeshPoints,
-                                           const Array<uint>& triMeshTriangles,
-                                           Vec3Ref centerOfMass,
-                                           real& volume);
+void CalculateTriMeshCenterOfMassAndVolume(const Vec3* triMeshPoints, const uint* triMeshTriangles, uint triangleCount, Vec3Ref centerOfMass, real& volume);
+void CalculateTriMeshCenterOfMassAndVolume(const Array<Vec3>& triMeshPoints, const Array<uint>& triMeshTriangles, Vec3Ref centerOfMass, real& volume);
 
 /// Calculate the inertia tensor of a triangular mesh. Providing the center of
 /// mass for the mesh is optional, but will increase the accuracy of the inertia
 /// tensor calculations (otherwise the origin is used). Assumes a mass of 1,
 /// which allows for the mass to be easily factored in later. If no scale is
 /// provided then it assumes a scale of (1, 1, 1).
-void CalculateTriMeshInertiaTensor(const Vec3* triMeshPoints,
-                                   const uint* triMeshTriangles,
-                                   uint triangleCount,
-                                   Vec3Param centerOfMass,
-                                   Mat3Ptr inertiaTensor,
-                                   Vec3Param scale = NoScale);
-void CalculateTriMeshInertiaTensor(const Array<Vec3>& triMeshPoints,
-                                   const Array<uint>& triMeshTriangles,
-                                   Vec3Param centerOfMass,
-                                   Mat3Ptr inertiaTensor,
-                                   Vec3Param scale = NoScale);
+void CalculateTriMeshInertiaTensor(const Vec3* triMeshPoints, const uint* triMeshTriangles, uint triangleCount, Vec3Param centerOfMass, Mat3Ptr inertiaTensor, Vec3Param scale = NoScale);
+void CalculateTriMeshInertiaTensor(const Array<Vec3>& triMeshPoints, const Array<uint>& triMeshTriangles, Vec3Param centerOfMass, Mat3Ptr inertiaTensor, Vec3Param scale = NoScale);
 
 #undef NoScale
 
@@ -140,50 +96,28 @@ void CalculateTriMeshInertiaTensor(const Array<Vec3>& triMeshPoints,
 /// with one computed about a different center of mass. This is used to compute
 /// the total inertia tensor of an object made out of sub pieces. (Parallel axis
 /// theorem)
-void CombineInertiaTensor(Mat3Ref totalInertiaTensor,
-                          Vec3Param totalCenterOfMass,
-                          Mat3Param localInertiaTensor,
-                          Vec3Param localCenterOfMass,
-                          real localMass);
+void CombineInertiaTensor(Mat3Ref totalInertiaTensor, Vec3Param totalCenterOfMass, Mat3Param localInertiaTensor, Vec3Param localCenterOfMass, real localMass);
 
 /// Find the point furthest in the direction on an axis-aligned bounding box.
 void SupportAabb(Vec3Param direction, Vec3Param aabbMinPoint, Vec3Param aabbMaxPoint, Vec3Ptr support);
 
 /// Find the point furthest in the direction on a capsule.
-void SupportCapsule(
-    Vec3Param direction, Vec3Param capsulePointA, Vec3Param capsulePointB, real capsuleRadius, Vec3Ptr support);
+void SupportCapsule(Vec3Param direction, Vec3Param capsulePointA, Vec3Param capsulePointB, real capsuleRadius, Vec3Ptr support);
 
 // Find the point furthest in the direction on a cylinder.
-void SupportCylinder(
-    Vec3Param direction, Vec3Param cylinderPointA, Vec3Param cylinderPointB, real cylinderRadius, Vec3Ptr support);
+void SupportCylinder(Vec3Param direction, Vec3Param cylinderPointA, Vec3Param cylinderPointB, real cylinderRadius, Vec3Ptr support);
 
 /// Find the point furthest in the direction on a cylinder.
-void SupportCylinder(Vec3Param direction,
-                     Vec3Param cylinderCenter,
-                     real cylinderHalfHeight,
-                     real cylinderRadius,
-                     Mat3Param cylinderBasis,
-                     Vec3Ptr support);
+void SupportCylinder(Vec3Param direction, Vec3Param cylinderCenter, real cylinderHalfHeight, real cylinderRadius, Mat3Param cylinderBasis, Vec3Ptr support);
 
 /// Find the point furthest in the direction on an ellipsoid.
-void SupportEllipsoid(Vec3Param direction,
-                      Vec3Param ellipsoidCenter,
-                      Vec3Param ellipsoidRadii,
-                      Mat3Param ellipsoidBasis,
-                      Vec3Ptr support);
+void SupportEllipsoid(Vec3Param direction, Vec3Param ellipsoidCenter, Vec3Param ellipsoidRadii, Mat3Param ellipsoidBasis, Vec3Ptr support);
 
 /// Find the point furthest in the direction on an oriented bounding box.
-void SupportObb(
-    Vec3Param direction, Vec3Param obbCenter, Vec3Param obbHalfExtents, Mat3Param obbBasis, Vec3Ptr support);
+void SupportObb(Vec3Param direction, Vec3Param obbCenter, Vec3Param obbHalfExtents, Mat3Param obbBasis, Vec3Ptr support);
 
 /// Find the point furthest in the direction for a given set of points.
-void SupportPointSet(Vec3Param direction,
-                     const Vec3Ptr points,
-                     uint pointCount,
-                     Vec3Param center,
-                     Vec3Param scale,
-                     Mat3Param basis,
-                     Vec3Ptr support);
+void SupportPointSet(Vec3Param direction, const Vec3Ptr points, uint pointCount, Vec3Param center, Vec3Param scale, Mat3Param basis, Vec3Ptr support);
 
 /// Find the point furthest in the direction on a segment.
 void SupportSegment(Vec3Param direction, Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Ptr support);
@@ -192,16 +126,10 @@ void SupportSegment(Vec3Param direction, Vec3Param segmentStart, Vec3Param segme
 void SupportSphere(Vec3Param direction, Vec3Param sphereCenter, real sphereRadius, Vec3Ptr support);
 
 /// Find the point furthest in the direction on a tetrahedron.
-void SupportTetrahedron(Vec3Param direction,
-                        Vec3Param tetrahedronPointA,
-                        Vec3Param tetrahedronPointB,
-                        Vec3Param tetrahedronPointC,
-                        Vec3Param tetrahedronPointD,
-                        Vec3Ptr support);
+void SupportTetrahedron(Vec3Param direction, Vec3Param tetrahedronPointA, Vec3Param tetrahedronPointB, Vec3Param tetrahedronPointC, Vec3Param tetrahedronPointD, Vec3Ptr support);
 
 /// Find the point furthest in the direction on a triangle.
-void SupportTriangle(
-    Vec3Param direction, Vec3Param trianglePointA, Vec3Param trianglePointB, Vec3Param trianglePointC, Vec3Ptr support);
+void SupportTriangle(Vec3Param direction, Vec3Param trianglePointA, Vec3Param trianglePointB, Vec3Param trianglePointC, Vec3Ptr support);
 
 /// Get the normal on an axis-aligned bounding box at the specified point on the
 /// given axis-aligned bounding box.
@@ -211,15 +139,11 @@ Vec3 NormalFromPointOnAabb(Vec3Param point, Vec3Param aabbMinPoint, Vec3Param aa
 Vec3 NormalFromPointOnCapsule(Vec3Param point, Vec3Param capsulePointA, Vec3Param capsulePointB, real capsuleRadius);
 
 /// Get the normal on a cylinder at the specified point on the given cylinder.
-Vec3 NormalFromPointOnCylinder(
-    Vec3Param point, Vec3Param cylinderCenter, real cylinderRadius, real cylinderHalfHeight, Mat3Param cylinderBasis);
+Vec3 NormalFromPointOnCylinder(Vec3Param point, Vec3Param cylinderCenter, real cylinderRadius, real cylinderHalfHeight, Mat3Param cylinderBasis);
 
 /// Get the normal on an ellipsoid at the specified point on the given
 /// ellipsoid.
-Vec3 NormalFromPointOnEllipsoid(Vec3Param point,
-                                Vec3Param ellipsoidCenter,
-                                Vec3Param ellipsoidRadii,
-                                Mat3Param ellipsoidBasis);
+Vec3 NormalFromPointOnEllipsoid(Vec3Param point, Vec3Param ellipsoidCenter, Vec3Param ellipsoidRadii, Mat3Param ellipsoidBasis);
 
 /// Get the normal on an oriented bounding box at the specified point on the
 /// given oriented bounding box.
@@ -230,38 +154,24 @@ Vec3 NormalFromPointOnSphere(Vec3Param point, Vec3Param sphereCenter, real spher
 
 /// Get the normal on a torus at the specified point on the given torus. The
 /// torus's z-axis is the axis going through its hole.
-Vec3 NormalFromPointOnTorus(
-    Vec3Param point, Vec3Param torusCenter, real torusRingRadius, real torusTubeRadius, Mat3Param torusBasis);
+Vec3 NormalFromPointOnTorus(Vec3Param point, Vec3Param torusCenter, real torusRingRadius, real torusTubeRadius, Mat3Param torusBasis);
 
 /// Get the normal on a triangle at the specified point on the given triangle.
-Vec3 NormalFromPointOnTriangle(Vec3Param point,
-                               Vec3Param trianglePointA,
-                               Vec3Param trianglePointB,
-                               Vec3Param trianglePointC);
+Vec3 NormalFromPointOnTriangle(Vec3Param point, Vec3Param trianglePointA, Vec3Param trianglePointB, Vec3Param trianglePointC);
 
 /// Get the texture coordinates on a cylinder at the specified point on the
 /// given cylinder.
-Vec2 TextureCoordinatesFromPointOnCylinder(
-    Vec3Param point, Vec3Param cylinderCenter, real cylinderHalfHeight, real cylinderRadius, Mat3Param cylinderBasis);
+Vec2 TextureCoordinatesFromPointOnCylinder(Vec3Param point, Vec3Param cylinderCenter, real cylinderHalfHeight, real cylinderRadius, Mat3Param cylinderBasis);
 
 /// Get the texture coordinates on an ellipsoid at the specified point on the
 /// given ellipsoid.
-Vec2 TextureCoordinatesFromPointOnEllipsoid(Vec3Param point,
-                                            Vec3Param ellipsoidCenter,
-                                            Vec3Param ellipsoidRadii,
-                                            Mat3Param ellipsoidBasis);
+Vec2 TextureCoordinatesFromPointOnEllipsoid(Vec3Param point, Vec3Param ellipsoidCenter, Vec3Param ellipsoidRadii, Mat3Param ellipsoidBasis);
 
 /// Get the texture coordinates on an oriented bounding box at the specified
 /// point on the given oriented bounding box.
-Vec2 TextureCoordinatesFromPointOnObb(Vec3Param point,
-                                      Vec3Param obbCenter,
-                                      Vec3Param obbHalfExtents,
-                                      Mat3Param obbBasis);
+Vec2 TextureCoordinatesFromPointOnObb(Vec3Param point, Vec3Param obbCenter, Vec3Param obbHalfExtents, Mat3Param obbBasis);
 
 /// Get the texture coordinates on a sphere at the specified point on the
 /// sphere.
-Vec2 TextureCoordinatesFromPointOnSphere(Vec3Param point,
-                                         Vec3Param sphereCenter,
-                                         real sphereRadius,
-                                         Mat3Param sphereBasis);
+Vec2 TextureCoordinatesFromPointOnSphere(Vec3Param point, Vec3Param sphereCenter, real sphereRadius, Mat3Param sphereBasis);
 } // namespace Geometry

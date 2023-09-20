@@ -29,11 +29,7 @@ public:
   ScrubberDrawer(AnimationScrubber* parent);
 
   /// WidgetCustomDraw interface.
-  void RenderUpdate(ViewBlock& viewBlock,
-                    FrameBlock& frameBlock,
-                    Mat4Param parentTx,
-                    ColorTransform colorTx,
-                    WidgetRect clipRect) override;
+  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect) override;
 
   void DrawHashes(Array<StreamedVertex>& lines, ByteColor color, ScrollingGraph::range r, float hashHeight);
 
@@ -41,8 +37,7 @@ public:
   void DrawHashMarks(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Array<StreamedVertex>& lines);
 
   /// Draws the ghost play head line.
-  void
-  DrawGhostPlayHead(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Array<StreamedVertex>& lines);
+  void DrawGhostPlayHead(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Array<StreamedVertex>& lines);
 
   /// Draws the play head line and the text.
   void DrawPlayHead(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Array<StreamedVertex>& lines);
@@ -428,8 +423,7 @@ public:
   float mStartPos;
   float mGraphStart;
 
-  ScrubberManipulator(Mouse* mouse, AnimationScrubber* scrubber, ScrubberMode::Type mode, float startPos = 0.0f) :
-      MouseManipulation(mouse, scrubber)
+  ScrubberManipulator(Mouse* mouse, AnimationScrubber* scrubber, ScrubberMode::Type mode, float startPos = 0.0f) : MouseManipulation(mouse, scrubber)
   {
     mScrubber = scrubber;
     mMode = mode;
@@ -580,8 +574,7 @@ public:
   }
 };
 
-AnimationScrubber::AnimationScrubber(Composite* parent, AnimationEditor* editor, ScrollingGraph* graphData) :
-    Composite(parent)
+AnimationScrubber::AnimationScrubber(Composite* parent, AnimationEditor* editor, ScrollingGraph* graphData) : Composite(parent)
 {
   mEditor = editor;
   mEditorData = nullptr;
@@ -1015,8 +1008,7 @@ ScrubberDrawer::ScrubberDrawer(AnimationScrubber* parent) : Widget(parent)
   mScrubber = parent;
 }
 
-void ScrubberDrawer::RenderUpdate(
-    ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
+void ScrubberDrawer::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 
@@ -1032,10 +1024,7 @@ void ScrubberDrawer::RenderUpdate(
   CreateRenderData(viewBlock, frameBlock, clipRect, lines, PrimitiveType::Lines);
 }
 
-void ScrubberDrawer::DrawHashes(Array<StreamedVertex>& lines,
-                                ByteColor color,
-                                ScrollingGraph::range r,
-                                float hashHeight)
+void ScrubberDrawer::DrawHashes(Array<StreamedVertex>& lines, ByteColor color, ScrollingGraph::range r, float hashHeight)
 {
   forRange (ScrollingGraph::HashMark entry, r)
   {
@@ -1050,10 +1039,7 @@ void ScrubberDrawer::DrawHashes(Array<StreamedVertex>& lines,
   }
 }
 
-void ScrubberDrawer::DrawHashMarks(ViewBlock& viewBlock,
-                                   FrameBlock& frameBlock,
-                                   WidgetRect clipRect,
-                                   Array<StreamedVertex>& lines)
+void ScrubberDrawer::DrawHashMarks(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Array<StreamedVertex>& lines)
 {
   ScrollingGraph& graphData = *mScrubber->mGraphData;
 
@@ -1080,10 +1066,7 @@ void ScrubberDrawer::DrawHashMarks(ViewBlock& viewBlock,
   }
 }
 
-void ScrubberDrawer::DrawGhostPlayHead(ViewBlock& viewBlock,
-                                       FrameBlock& frameBlock,
-                                       WidgetRect clipRect,
-                                       Array<StreamedVertex>& lines)
+void ScrubberDrawer::DrawGhostPlayHead(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Array<StreamedVertex>& lines)
 {
   if (!mScrubber->mShowGhostPlayHead)
     return;
@@ -1095,10 +1078,7 @@ void ScrubberDrawer::DrawGhostPlayHead(ViewBlock& viewBlock,
   lines.PushBack(StreamedVertex(SnapToPixels(Vec3(localX, mScrubber->mSize.y, 0)), Vec2(0, 0), color));
 }
 
-void ScrubberDrawer::DrawPlayHead(ViewBlock& viewBlock,
-                                  FrameBlock& frameBlock,
-                                  WidgetRect clipRect,
-                                  Array<StreamedVertex>& lines)
+void ScrubberDrawer::DrawPlayHead(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Array<StreamedVertex>& lines)
 {
   float playHead = mScrubber->GetPlayHead();
   float localX = mScrubber->ToPixels(playHead);

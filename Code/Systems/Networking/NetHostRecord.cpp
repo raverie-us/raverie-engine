@@ -22,11 +22,7 @@ RaverieDefineType(NetHostRecord, builder, type)
 NetHostRecord::NetHostRecord() : mLifetime(0.0f), mIpAddress(), mBasicHostInfo(), mProjectGuid()
 {
 }
-NetHostRecord::NetHostRecord(NetHostRecord const& ref) :
-    mLifetime(ref.mLifetime),
-    mIpAddress(ref.mIpAddress),
-    mBasicHostInfo(ref.mBasicHostInfo),
-    mProjectGuid(ref.mProjectGuid)
+NetHostRecord::NetHostRecord(NetHostRecord const& ref) : mLifetime(ref.mLifetime), mIpAddress(ref.mIpAddress), mBasicHostInfo(ref.mBasicHostInfo), mProjectGuid(ref.mProjectGuid)
 {
 }
 

@@ -23,13 +23,7 @@ bool IsHdrSaveFormat(TextureFormat::Enum format);
 
 // Both Load/Save will leave the stream at the end, or wherever they failed.
 // Supported texture formats: RGB32f
-void LoadHdr(Status& status,
-             Stream* stream,
-             byte** output,
-             uint* width,
-             uint* height,
-             TextureFormat::Enum* format,
-             TextureFormat::Enum requireFormat = TextureFormat::None);
+void LoadHdr(Status& status, Stream* stream, byte** output, uint* width, uint* height, TextureFormat::Enum* format, TextureFormat::Enum requireFormat = TextureFormat::None);
 void SaveHdr(Status& status, Stream* stream, const byte* image, uint width, uint height, TextureFormat::Enum format);
 
 void RgbeToRgb32f(byte* rgbe, float* rgb32f);

@@ -5,9 +5,7 @@ namespace Raverie
 {
 
 TextureProcessor::TextureProcessor(TextureContent* textureContent, String outputPath, String inputFile) :
-    mTextureContent(textureContent),
-    mOutputPath(outputPath),
-    mFilename(FilePath::GetFileNameWithoutExtension(inputFile))
+    mTextureContent(textureContent), mOutputPath(outputPath), mFilename(FilePath::GetFileNameWithoutExtension(inputFile))
 {
 }
 

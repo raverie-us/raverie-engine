@@ -23,16 +23,8 @@ public:
   /// IP address. Specify port 0 to indicate we should send a ping message on
   /// all ports within our inclusive host range (configured with
   /// SetHostPortRangeStart/End). Returns true if successful, else false.
-  bool PingHost(Network::Enum network,
-                const IpAddress& theirIpAddress,
-                HostPingType::Enum hostPingType,
-                TimeMs timeout,
-                const EventBundle& pingBundle);
-  bool PingHost(Network::Enum network,
-                const Array<IpAddress>& theirIpAddress,
-                HostPingType::Enum hostPingType,
-                TimeMs timeout,
-                const EventBundle& pingBundle);
+  bool PingHost(Network::Enum network, const IpAddress& theirIpAddress, HostPingType::Enum hostPingType, TimeMs timeout, const EventBundle& pingBundle);
+  bool PingHost(Network::Enum network, const Array<IpAddress>& theirIpAddress, HostPingType::Enum hostPingType, TimeMs timeout, const EventBundle& pingBundle);
 
   /// Sends a host ping message.
   /// Returns true if successful, else false.
@@ -43,8 +35,7 @@ public:
 
   /// Sends a host pong message.
   /// Returns true if successful, else false.
-  bool SendHostPong(
-      const IpAddress& theirIpAddress, uint pingId, uint sendAttemptId, uint theirManagerId, BitStream& pongData);
+  bool SendHostPong(const IpAddress& theirIpAddress, uint pingId, uint sendAttemptId, uint theirManagerId, BitStream& pongData);
   /// Receives a host pong message.
   /// Returns true if successful, else false.
   bool ReceiveHostPong(const IpAddress& theirIpAddress, const Message& message);

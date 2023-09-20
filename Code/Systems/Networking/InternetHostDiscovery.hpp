@@ -52,10 +52,7 @@ public:
   /// Refresh all hosts that it possibly can.
   virtual void RefreshAll(bool allowDiscovery, bool getExtraHostInfo, bool removeStaleHosts) override;
   /// Refresh just one host.
-  virtual void SingleHostRefresh(IpAddress const& thierIp,
-                                 bool allowDiscovery,
-                                 bool getExtraHostInfo,
-                                 bool removeStaleHosts) override;
+  virtual void SingleHostRefresh(IpAddress const& thierIp, bool allowDiscovery, bool getExtraHostInfo, bool removeStaleHosts) override;
 
   virtual void HandleCancelSingleHostRequest(SingleHostRequest& singleHostRequest);
   virtual void HandleCancelMultiHostRequest(MultiHostRequest& multiHostRequest);
@@ -64,9 +61,7 @@ public:
   virtual bool HandlePing(IpAddress const& theirIpAddress, NetHostPingData& netHostPingData) override;
   virtual void HandlePingCancelled(PendingHostPing& pendingHostPing) override;
   virtual void HandlePingTimeout(PendingHostPing& pendingHostPing) override;
-  virtual void HandlePong(IpAddress const& theirIpAddress,
-                          NetHostPongData& netHostPongdata,
-                          PendingHostPing& pendingHostPing) override;
+  virtual void HandlePong(IpAddress const& theirIpAddress, NetHostPongData& netHostPongdata, PendingHostPing& pendingHostPing) override;
 
   virtual void OnEngineUpdate(UpdateEvent* event);
 

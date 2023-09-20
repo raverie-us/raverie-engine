@@ -8,27 +8,18 @@ namespace Raverie
 /// perform queries without having to provide a callback function.
 /// Note: this range will become completely invalidated if any operations are
 /// performed on the StaticAabbTree.
-template <typename ClientDataType,
-          typename QueryType,
-          typename ArrayType = Array<AabbNode<ClientDataType>*>,
-          typename PolicyType = BroadPhasePolicy<QueryType, Aabb>>
-struct StaticTreeRange
-    : public BroadPhaseTreeRange<ClientDataType, AabbNode<ClientDataType>, QueryType, PolicyType, ArrayType>
+template <typename ClientDataType, typename QueryType, typename ArrayType = Array<AabbNode<ClientDataType>*>, typename PolicyType = BroadPhasePolicy<QueryType, Aabb>>
+struct StaticTreeRange : public BroadPhaseTreeRange<ClientDataType, AabbNode<ClientDataType>, QueryType, PolicyType, ArrayType>
 {
   typedef BroadPhaseTreeRange<ClientDataType, AabbNode<ClientDataType>, QueryType, PolicyType, ArrayType> BaseType;
 
   /// Constructs a range using the default BroadPhase.
-  StaticTreeRange(ArrayType* scratchBuffer, typename BaseType::NodeTypeDef* root, const QueryType& queryObj) :
-      BaseType(scratchBuffer, root, queryObj, PolicyType())
+  StaticTreeRange(ArrayType* scratchBuffer, typename BaseType::NodeTypeDef* root, const QueryType& queryObj) : BaseType(scratchBuffer, root, queryObj, PolicyType())
   {
   }
 
   /// Constructs a range using the policy type passed in.
-  StaticTreeRange(ArrayType* scratchBuffer,
-                  typename BaseType::NodeTypeDef* root,
-                  const QueryType& queryObj,
-                  PolicyType policy) :
-      BaseType(scratchBuffer, root, queryObj, policy)
+  StaticTreeRange(ArrayType* scratchBuffer, typename BaseType::NodeTypeDef* root, const QueryType& queryObj, PolicyType policy) : BaseType(scratchBuffer, root, queryObj, policy)
   {
   }
 };
@@ -102,9 +93,7 @@ public:
   /// should use the forRangeBroadphaseTreePolicy macro instead of calling this
   /// directly.
   template <typename QueryType, typename ArrayType, typename Policy>
-  StaticTreeRange<ClientDataType, QueryType, ArrayType, Policy> QueryWithPolicy(const QueryType& queryObj,
-                                                                                ArrayType& scratchBuffer,
-                                                                                Policy policy)
+  StaticTreeRange<ClientDataType, QueryType, ArrayType, Policy> QueryWithPolicy(const QueryType& queryObj, ArrayType& scratchBuffer, Policy policy)
   {
     typedef StaticTreeRange<ClientDataType, QueryType, ArrayType, Policy> RangeType;
 

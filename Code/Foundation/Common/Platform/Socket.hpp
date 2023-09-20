@@ -94,27 +94,16 @@ Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, SocketA
 /// times out Note: Preferred socket address order is documented in RFC 3484
 /// (Named getaddrinfo on most platforms)
 SocketAddress ResolveSocketAddress(Status& status,
-                                              StringParam host,
-                                              StringParam service,
-                                              SocketAddressFamily::Enum addressFamily,
-                                              SocketProtocol::Enum protocol,
-                                              SocketType::Enum type,
-                                              SocketAddressResolutionFlags::Enum addressResolutionFlags);
-SocketAddress ResolveSocketAddress(Status& status,
-                                              StringParam host,
-                                              StringParam service,
-                                              SocketAddressFamily::Enum addressFamily,
-                                              SocketProtocol::Enum protocol,
-                                              SocketAddressResolutionFlags::Enum addressResolutionFlags);
-SocketAddress ResolveSocketAddress(Status& status,
-                                              StringParam host,
-                                              StringParam service,
-                                              SocketAddressFamily::Enum addressFamily,
-                                              SocketAddressResolutionFlags::Enum addressResolutionFlags);
-SocketAddress ResolveSocketAddress(Status& status,
-                                              StringParam host,
-                                              StringParam service,
-                                              SocketAddressResolutionFlags::Enum addressResolutionFlags);
+                                   StringParam host,
+                                   StringParam service,
+                                   SocketAddressFamily::Enum addressFamily,
+                                   SocketProtocol::Enum protocol,
+                                   SocketType::Enum type,
+                                   SocketAddressResolutionFlags::Enum addressResolutionFlags);
+SocketAddress ResolveSocketAddress(
+    Status& status, StringParam host, StringParam service, SocketAddressFamily::Enum addressFamily, SocketProtocol::Enum protocol, SocketAddressResolutionFlags::Enum addressResolutionFlags);
+SocketAddress ResolveSocketAddress(Status& status, StringParam host, StringParam service, SocketAddressFamily::Enum addressFamily, SocketAddressResolutionFlags::Enum addressResolutionFlags);
+SocketAddress ResolveSocketAddress(Status& status, StringParam host, StringParam service, SocketAddressResolutionFlags::Enum addressResolutionFlags);
 SocketAddress ResolveSocketAddress(Status& status, StringParam host, StringParam service);
 
 /// Resolves all associated socket addresses (in preferred socket address order)
@@ -126,27 +115,17 @@ SocketAddress ResolveSocketAddress(Status& status, StringParam host, StringParam
 /// address order is documented in RFC 3484 (Named getaddrinfo on most
 /// platforms)
 Array<SocketAddress> ResolveAllSocketAddresses(Status& status,
-                                                          StringParam host,
-                                                          StringParam service,
-                                                          SocketAddressFamily::Enum addressFamily,
-                                                          SocketProtocol::Enum protocol,
-                                                          SocketType::Enum type,
-                                                          SocketAddressResolutionFlags::Enum addressResolutionFlags);
-Array<SocketAddress> ResolveAllSocketAddresses(Status& status,
-                                                          StringParam host,
-                                                          StringParam service,
-                                                          SocketAddressFamily::Enum addressFamily,
-                                                          SocketProtocol::Enum protocol,
-                                                          SocketAddressResolutionFlags::Enum addressResolutionFlags);
-Array<SocketAddress> ResolveAllSocketAddresses(Status& status,
-                                                          StringParam host,
-                                                          StringParam service,
-                                                          SocketAddressFamily::Enum addressFamily,
-                                                          SocketAddressResolutionFlags::Enum addressResolutionFlags);
-Array<SocketAddress> ResolveAllSocketAddresses(Status& status,
-                                                          StringParam host,
-                                                          StringParam service,
-                                                          SocketAddressResolutionFlags::Enum addressResolutionFlags);
+                                               StringParam host,
+                                               StringParam service,
+                                               SocketAddressFamily::Enum addressFamily,
+                                               SocketProtocol::Enum protocol,
+                                               SocketType::Enum type,
+                                               SocketAddressResolutionFlags::Enum addressResolutionFlags);
+Array<SocketAddress> ResolveAllSocketAddresses(
+    Status& status, StringParam host, StringParam service, SocketAddressFamily::Enum addressFamily, SocketProtocol::Enum protocol, SocketAddressResolutionFlags::Enum addressResolutionFlags);
+Array<SocketAddress>
+ResolveAllSocketAddresses(Status& status, StringParam host, StringParam service, SocketAddressFamily::Enum addressFamily, SocketAddressResolutionFlags::Enum addressResolutionFlags);
+Array<SocketAddress> ResolveAllSocketAddresses(Status& status, StringParam host, StringParam service, SocketAddressResolutionFlags::Enum addressResolutionFlags);
 Array<SocketAddress> ResolveAllSocketAddresses(Status& status, StringParam host, StringParam service);
 
 /// Resolves the host name and service name from a socket address as specified
@@ -155,25 +134,19 @@ Array<SocketAddress> ResolveAllSocketAddresses(Status& status, StringParam host,
 /// Service returned may contain either a service name (like "http") or port
 /// number string (like "80") Will block until name resolution completes or
 /// times out (Named getnameinfo on most platforms)
-Pair<String, String> ResolveHostAndServiceNames(Status& status,
-                                                           const SocketAddress& address,
-                                                           SocketNameResolutionFlags::Enum nameResolutionFlags);
+Pair<String, String> ResolveHostAndServiceNames(Status& status, const SocketAddress& address, SocketNameResolutionFlags::Enum nameResolutionFlags);
 Pair<String, String> ResolveHostAndServiceNames(Status& status, const SocketAddress& address);
 
 /// Converts a valid socket address to a numeric address string, else String()
 /// Note: Only translates the address host portion, does not translate port
 /// numbers (Named inet_ntop on most platforms)
-String SocketAddressToString(Status& status,
-                                        SocketAddressFamily::Enum addressFamily,
-                                        const SocketAddress& address);
+String SocketAddressToString(Status& status, SocketAddressFamily::Enum addressFamily, const SocketAddress& address);
 String SocketAddressToString(SocketAddressFamily::Enum addressFamily, const SocketAddress& address);
 
 /// Converts a valid numeric address string to a socket address, else
 /// SocketAddress() Note: Only translates the address host portion, does not
 /// translate port numbers (Named inet_pton on most platforms)
-SocketAddress StringToSocketAddress(Status& status,
-                                               SocketAddressFamily::Enum addressFamily,
-                                               StringParam address);
+SocketAddress StringToSocketAddress(Status& status, SocketAddressFamily::Enum addressFamily, StringParam address);
 SocketAddress StringToSocketAddress(SocketAddressFamily::Enum addressFamily, StringParam address);
 
 /// Returns true if the socket address represents a valid IPv4 host, else false
@@ -348,8 +321,7 @@ public:
 
   /// Opens the closed socket as a host for the specified protocol (closes the
   /// socket if already open)
-  void
-  Open(Status& status, SocketAddressFamily::Enum addressFamily, SocketType::Enum type, SocketProtocol::Enum protocol);
+  void Open(Status& status, SocketAddressFamily::Enum addressFamily, SocketType::Enum type, SocketProtocol::Enum protocol);
 
   /// Associates the open socket with the specified local address
   /// For IP addresses, if the host or port are left empty the OS will
@@ -402,11 +374,7 @@ public:
   /// Will block if the send buffer is full (unless the socket is set to
   /// non-blocking) Returns the number of bytes sent (0 if an error occurs,
   /// status will contain the error)
-  size_t SendTo(Status& status,
-                const byte* data,
-                size_t dataLength,
-                const SocketAddress& to,
-                SocketFlags::Enum flags = SocketFlags::None);
+  size_t SendTo(Status& status, const byte* data, size_t dataLength, const SocketAddress& to, SocketFlags::Enum flags = SocketFlags::None);
 
   /// Receives data on the connected socket from the connected remote address
   /// Will block if the receive buffer is empty (unless the socket is set to
@@ -418,11 +386,7 @@ public:
   /// Will block if the receive buffer is empty (unless the socket is set to
   /// non-blocking) Returns the number of bytes received (0 if an error occurs,
   /// status will contain the error)
-  size_t ReceiveFrom(Status& status,
-                     byte* dataOut,
-                     size_t dataLength,
-                     SocketAddress& from,
-                     SocketFlags::Enum flags = SocketFlags::None);
+  size_t ReceiveFrom(Status& status, byte* dataOut, size_t dataLength, SocketAddress& from, SocketFlags::Enum flags = SocketFlags::None);
 
   /// Returns true if the specified socket capability is ready for use, else
   /// false In a high efficiency situation, mechanisms other than select should

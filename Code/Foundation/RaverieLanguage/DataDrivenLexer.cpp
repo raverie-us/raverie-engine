@@ -7,8 +7,7 @@ namespace Raverie
 // To simplify our parsing, we work with generic nodes (and only specific nodes
 // in specific cases) Because of this, we need to ensure that the sizes always
 // match
-static_assert(sizeof(GrammarNode<Character>) == sizeof(GrammarNode<Token>),
-              "The sizes of the grammar nodes do not match");
+static_assert(sizeof(GrammarNode<Character>) == sizeof(GrammarNode<Token>), "The sizes of the grammar nodes do not match");
 
 DataDrivenLexerShared::DataDrivenLexerShared()
 {
@@ -72,16 +71,13 @@ DataDrivenLexerShared::DataDrivenLexerShared()
   this->mTokenizer = &Tokenizer;
   this->mParser = &Parser;
 
-  TokenStart |= Whitespace | SingleLineComment | Identifier | TokenLiteral | StringLiteral | IntegerLiteral |
-                OpenBracket | CloseBracket | OpenCurley | CloseCurley;
-  TokenStart |= OpenParenthesis | CloseParenthesis | Comma | MemberAccess | Semicolon | Colon | RewriteAssignment |
-                OrAssignment | ZeroOrMore | OneOrMore | Optional | Or | Capture | CaptureRule;
+  TokenStart |= Whitespace | SingleLineComment | Identifier | TokenLiteral | StringLiteral | IntegerLiteral | OpenBracket | CloseBracket | OpenCurley | CloseCurley;
+  TokenStart |= OpenParenthesis | CloseParenthesis | Comma | MemberAccess | Semicolon | Colon | RewriteAssignment | OrAssignment | ZeroOrMore | OneOrMore | Optional | Or | Capture | CaptureRule;
   Whitespace |= +T(" \t\r\n\v\f");
   SingleLineComment |= T("/") << T("/") << *T("^\r\n");
   Identifier |= T("a-zA-Z_") << *T("a-zA-Z_0-9");
   TokenLiteral |= T("<") << Identifier << T(">");
-  StringLiteral |=
-      T("\"") << *(T("^\"\\") | T("\\") << T("^")) << T("\"") | T("\'") << *(T("^\'\\") | T("\\") << T("^")) << T("\'");
+  StringLiteral |= T("\"") << *(T("^\"\\") | T("\\") << T("^")) << T("\"") | T("\'") << *(T("^\'\\") | T("\\") << T("^")) << T("\'");
   IntegerLiteral |= +T("0-9");
   OpenBracket |= T("[");
   CloseBracket |= T("]");
@@ -135,36 +131,28 @@ DataDrivenLexerShared::DataDrivenLexerShared()
   Scope |= (P(Tokenizer) | P(Parser)) << P(OpenCurley) << *Statement << P(CloseCurley);
   Statement |= IgnoreStatement | KeywordStatement | RuleStatement | ReplacementStatement;
   IgnoreStatement |= P(Ignore) << P("RuleName", P(Identifier)) << P(Semicolon);
-  KeywordStatement |= P(Keyword) << P("RuleName", P(Identifier)) << P(Colon) << P("Keyword", P(StringLiteral))
-                                 << P(Semicolon);
-  RuleStatement |= P("RuleName", P(Identifier))
-                   << P("Assignment", P(OrAssignment) | P(RewriteAssignment)) << GrammarExpression << P(Semicolon);
+  KeywordStatement |= P(Keyword) << P("RuleName", P(Identifier)) << P(Colon) << P("Keyword", P(StringLiteral)) << P(Semicolon);
+  RuleStatement |= P("RuleName", P(Identifier)) << P("Assignment", P(OrAssignment) | P(RewriteAssignment)) << GrammarExpression << P(Semicolon);
   GrammarExpressionGrouped |= P(OpenParenthesis) << GrammarExpression << P(CloseParenthesis);
   GrammarExpressionCapture |= P(Capture) << P("CaptureName", P(Identifier)) << GrammarExpressionGrouped;
   GrammarExpressionCaptureRule |= P(CaptureRule) << P("CaptureName", P(Identifier));
   GrammarExpression |= GrammarExpressionOr;
   GrammarExpressionOr |= GrammarExpressionConcatenate << *(P(Or) << GrammarExpressionConcatenate);
   GrammarExpressionConcatenate |= +GrammarExpressionUnary;
-  GrammarExpressionUnary |=
-      P("UnaryOperator", P(ZeroOrMore) | P(OneOrMore) | P(Optional)) << GrammarExpressionUnary | GrammarExpressionValue;
-  GrammarExpressionValue |= P("Value", P(Identifier) | P(StringLiteral) | P(TokenLiteral) | P(Epsilon)) |
-                            GrammarExpressionGrouped | GrammarExpressionCapture | GrammarExpressionCaptureRule;
-  ReplacementStatement |= P(Replace) << GrammarExpression << P(In) << P("RuleName", P(Identifier))
-                                     << (ReplacementWith | ReplacementUsing);
+  GrammarExpressionUnary |= P("UnaryOperator", P(ZeroOrMore) | P(OneOrMore) | P(Optional)) << GrammarExpressionUnary | GrammarExpressionValue;
+  GrammarExpressionValue |= P("Value", P(Identifier) | P(StringLiteral) | P(TokenLiteral) | P(Epsilon)) | GrammarExpressionGrouped | GrammarExpressionCapture | GrammarExpressionCaptureRule;
+  ReplacementStatement |= P(Replace) << GrammarExpression << P(In) << P("RuleName", P(Identifier)) << (ReplacementWith | ReplacementUsing);
   ReplacementWith |= P(With) << ReplacementExpression << P(Semicolon);
   ReplacementUsing |= P("Member", P(Identifier) << ~(P(MemberAccess) << P(Identifier)));
   ReplacementExpression |= ReplacementExpressionConcatenate;
   ReplacementExpressionConcatenate |= +ReplacementExpressionPost;
-  ReplacementExpressionPost |=
-      ReplacementExpressionText | CaptureExpression << ~(ReplacementExpressionJoin | ReplacementExpressionForeach);
+  ReplacementExpressionPost |= ReplacementExpressionText | CaptureExpression << ~(ReplacementExpressionJoin | ReplacementExpressionForeach);
   ReplacementExpressionText |= P("ReplacementText", P(StringLiteral));
   ReplacementExpressionJoin |= P(OpenParenthesis) << ReplacementExpression << P(CloseParenthesis);
   ReplacementExpressionForeach |= P(OpenCurley) << ReplacementExpression << P(CloseCurley);
   CaptureExpression |= CaptureExpressionName << *CaptureExpressionNestedIndex;
   CaptureExpressionName |= P("CaptureName", P(Identifier));
-  CaptureExpressionNestedIndex |=
-      P(OpenBracket) << (P("StartIndex", P(IntegerLiteral)) << ~(P(Comma) << P("EndIndex", P(IntegerLiteral))) |
-                         P("NestedCaptureName", P(Identifier)));
+  CaptureExpressionNestedIndex |= P(OpenBracket) << (P("StartIndex", P(IntegerLiteral)) << ~(P(Comma) << P("EndIndex", P(IntegerLiteral))) | P("NestedCaptureName", P(Identifier)));
 
   this->mParserStart = &ParserStart;
   this->mIgnoreStatement = &IgnoreStatement;
@@ -193,9 +181,7 @@ DataDrivenLexerShared& DataDrivenLexerShared::GetInstance()
   return instance;
 }
 
-void DataDrivenLexer::Parse(StringParam input,
-                            GrammarSet<Character>& userTokenGrammar,
-                            GrammarSet<Token>& userParserGrammar)
+void DataDrivenLexer::Parse(StringParam input, GrammarSet<Character>& userTokenGrammar, GrammarSet<Token>& userParserGrammar)
 {
   this->mMode = DataDrivenLexerMode::Tokenizer;
   this->mUserTokenGrammar = &userTokenGrammar;

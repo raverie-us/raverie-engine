@@ -18,9 +18,7 @@ void DataNode::operator delete(void* pMem, size_t size)
   return sPool->Deallocate(pMem, size);
 }
 
-DataNode::DataNode(DataNodeType::Enum nodeType, DataNode* parent) :
-    mNumberOfChildren(0),
-    mUniqueNodeId(PolymorphicNode::cInvalidUniqueNodeId)
+DataNode::DataNode(DataNodeType::Enum nodeType, DataNode* parent) : mNumberOfChildren(0), mUniqueNodeId(PolymorphicNode::cInvalidUniqueNodeId)
 {
   mNodeType = nodeType;
   mPatchState = PatchState::None;
@@ -414,8 +412,7 @@ void DataNode::Patch(DataNode* patchNode, DataTreeContext& c)
     if (this->mNodeType != patchNode->mNodeType)
     {
       c.Error = true;
-      String parseError =
-          String::Format("Nodes with name \"%s\" were of different types.", this->mPropertyName.c_str());
+      String parseError = String::Format("Nodes with name \"%s\" were of different types.", this->mPropertyName.c_str());
       c.Message = String::Format("Error patching file '%s' . Error: %s", c.Filename.c_str(), parseError.c_str());
       ErrorIf(true, c.Message.c_str());
       return;
@@ -508,8 +505,7 @@ bool IsVectorType(StringParam typeName)
 {
   BoundType* propertyType = MetaDatabase::FindType(typeName);
 
-  return (propertyType == RaverieTypeId(Vec2) || propertyType == RaverieTypeId(Vec3) || propertyType == RaverieTypeId(Vec4) ||
-          propertyType == RaverieTypeId(Quat));
+  return (propertyType == RaverieTypeId(Vec2) || propertyType == RaverieTypeId(Vec3) || propertyType == RaverieTypeId(Vec4) || propertyType == RaverieTypeId(Quat));
 }
 
 void DataNode::SaveToStream(Serializer& stream)
@@ -577,8 +573,7 @@ void DataNode::SaveToStream(Serializer& stream)
   }
 }
 
-DataNode*
-FindRenamedNode(StringParam className, StringParam propertyTypeName, StringParam propertyName, DataNode* parent)
+DataNode* FindRenamedNode(StringParam className, StringParam propertyTypeName, StringParam propertyName, DataNode* parent)
 {
   bool foundDuplicate;
 
@@ -760,8 +755,7 @@ bool PatchDataTree(DataNode*& node, DataTreeLoader* loader, DataTreeContext& c, 
       // Store what the node was inherited from
       newNode->mInheritedFromId = inheritId;
       ErrorIf(resolveMethod == PatchResolveMethod::Error, "Do not return a tree if there was an error.");
-      ErrorIf(resolveMethod == PatchResolveMethod::RemoveNode,
-              "Do not return a tree if you want to remove the old one.");
+      ErrorIf(resolveMethod == PatchResolveMethod::RemoveNode, "Do not return a tree if you want to remove the old one.");
     }
 
     // Do nothing if we were given an error back
@@ -868,8 +862,7 @@ void Compare(DataNode* lhs, DataNode* rhs)
   }
 }
 
-bool ReadDataSet(
-    Status& status, StringRange data, StringParam source, DataTreeLoader* loader, uint* fileVersion, DataNode* fileRoot)
+bool ReadDataSet(Status& status, StringRange data, StringParam source, DataTreeLoader* loader, uint* fileVersion, DataNode* fileRoot)
 {
   ProfileScopeFunctionArgs(source);
   DataTreeContext parseContext;

@@ -112,8 +112,7 @@ public:
   static String ReadData();
 
   // Helper for writing out objects
-  static void
-  DumpValue(StringBuilderExtended& builder, Type* type, const byte* value, Integer howDeep, Integer currentDepth);
+  static void DumpValue(StringBuilderExtended& builder, Type* type, const byte* value, Integer howDeep, Integer currentDepth);
 
 public:
   // Responsible for the console sending and receiveing events (how we hook up

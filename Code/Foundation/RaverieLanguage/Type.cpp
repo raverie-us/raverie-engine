@@ -27,15 +27,12 @@ RaverieDefineType(Type, builder, type)
 
   RaverieFullBindGetterSetter(builder, type, &Type::ToString, RaverieNoOverload, RaverieNoSetter, RaverieNoOverload, "Name");
 
-  RaverieFullBindGetterSetter(
-      builder, type, &Type::IsHandle, RaverieNoOverload, RaverieNoSetter, RaverieNoOverload, "IsHandle");
+  RaverieFullBindGetterSetter(builder, type, &Type::IsHandle, RaverieNoOverload, RaverieNoSetter, RaverieNoOverload, "IsHandle");
   RaverieFullBindGetterSetter(builder, type, &Type::IsValue, RaverieNoOverload, RaverieNoSetter, RaverieNoOverload, "IsValue");
-  RaverieFullBindGetterSetter(
-      builder, type, &Type::IsDelegate, RaverieNoOverload, RaverieNoSetter, RaverieNoOverload, "IsDelegate");
+  RaverieFullBindGetterSetter(builder, type, &Type::IsDelegate, RaverieNoOverload, RaverieNoSetter, RaverieNoOverload, "IsDelegate");
   RaverieFullBindGetterSetter(builder, type, &Type::IsEnum, RaverieNoOverload, RaverieNoSetter, RaverieNoOverload, "IsEnum");
   RaverieFullBindGetterSetter(builder, type, &Type::IsFlags, RaverieNoOverload, RaverieNoSetter, RaverieNoOverload, "IsFlags");
-  RaverieFullBindGetterSetter(
-      builder, type, &Type::IsEnumOrFlags, RaverieNoOverload, RaverieNoSetter, RaverieNoOverload, "IsEnumOrFlags");
+  RaverieFullBindGetterSetter(builder, type, &Type::IsEnumOrFlags, RaverieNoOverload, RaverieNoSetter, RaverieNoOverload, "IsEnumOrFlags");
   RaverieFullBindGetterSetter(builder, type, &Type::IsAny, RaverieNoOverload, RaverieNoSetter, RaverieNoOverload, "IsAny");
 
   RaverieFullBindField(builder, type, &BoundType::SourceLibrary, "Library", PropertyBinding::Get);
@@ -56,10 +53,8 @@ RaverieDefineType(DelegateType, builder, type)
 {
   type->HandleManager = RaverieManagerId(PointerManager);
 
-  RaverieFullBindGetterSetter(
-      builder, type, &DelegateType::GetSignatureString, RaverieNoOverload, RaverieNoSetter, RaverieNoOverload, "Signature");
-  RaverieFullBindGetterSetter(
-      builder, type, &DelegateType::GetParameters, RaverieNoOverload, RaverieNoSetter, RaverieNoOverload, "Parameters");
+  RaverieFullBindGetterSetter(builder, type, &DelegateType::GetSignatureString, RaverieNoOverload, RaverieNoSetter, RaverieNoOverload, "Signature");
+  RaverieFullBindGetterSetter(builder, type, &DelegateType::GetParameters, RaverieNoOverload, RaverieNoSetter, RaverieNoOverload, "Parameters");
   RaverieFullBindField(builder, type, &DelegateType::Return, "Return", PropertyBinding::Get);
 }
 
@@ -76,184 +71,43 @@ RaverieDefineType(BoundType, builder, type)
   RaverieFullBindField(builder, type, &BoundType::BaseType, "BaseType", PropertyBinding::Get);
   RaverieFullBindField(builder, type, &BoundType::TemplateBaseName, "TemplateBaseName", PropertyBinding::Get);
   RaverieFullBindField(builder, type, &BoundType::Native, "IsNative", PropertyBinding::Get);
-  RaverieFullBindGetterSetter(builder,
-                            type,
-                            &BoundType::IsTypeOrBaseNative,
-                            RaverieNoOverload,
-                            RaverieNoSetter,
-                            RaverieNoOverload,
-                            "IsTypeOrBaseNative");
+  RaverieFullBindGetterSetter(builder, type, &BoundType::IsTypeOrBaseNative, RaverieNoOverload, RaverieNoSetter, RaverieNoOverload, "IsTypeOrBaseNative");
 
   RaverieFullBindField(builder, type, &BoundType::Destructor, "Destructor", PropertyBinding::Get);
   RaverieFullBindField(builder, type, &BoundType::PreConstructor, "PreConstructor", PropertyBinding::Get);
 
-  RaverieFullBindMethod(builder,
-                      type,
-                      &BoundType::InstantiatePreConstructedObject,
-                      RaverieNoOverload,
-                      "InstantiatePreConstructedObject",
-                      RaverieNoNames);
+  RaverieFullBindMethod(builder, type, &BoundType::InstantiatePreConstructedObject, RaverieNoOverload, "InstantiatePreConstructedObject", RaverieNoNames);
 
-  RaverieFullBindGetterSetter(builder,
-                            type,
-                            &BoundType::GetGetterSetters,
-                            (MemberRange<GetterSetter>(BoundType::*)()),
-                            RaverieNoSetter,
-                            RaverieNoOverload,
-                            "GetterSetters");
-  RaverieFullBindGetterSetter(builder,
-                            type,
-                            &BoundType::GetFields,
-                            (MemberRange<Field>(BoundType::*)()),
-                            RaverieNoSetter,
-                            RaverieNoOverload,
-                            "Fields");
-  RaverieFullBindGetterSetter(builder,
-                            type,
-                            &BoundType::GetProperties,
-                            (MemberRange<Property>(BoundType::*)()),
-                            RaverieNoSetter,
-                            RaverieNoOverload,
-                            "Properties");
-  RaverieFullBindGetterSetter(builder,
-                            type,
-                            &BoundType::GetFunctions,
-                            (MemberRange<Function>(BoundType::*)()),
-                            RaverieNoSetter,
-                            RaverieNoOverload,
-                            "Functions");
-  RaverieFullBindGetterSetter(builder,
-                            type,
-                            &BoundType::GetMembers,
-                            (MemberRange<Member>(BoundType::*)()),
-                            RaverieNoSetter,
-                            RaverieNoOverload,
-                            "Members");
-  RaverieFullBindGetterSetter(builder,
-                            type,
-                            &BoundType::GetDefaultConstructor,
-                            (Function * (BoundType::*)()),
-                            RaverieNoSetter,
-                            RaverieNoOverload,
-                            "DefaultConstructor");
+  RaverieFullBindGetterSetter(builder, type, &BoundType::GetGetterSetters, (MemberRange<GetterSetter>(BoundType::*)()), RaverieNoSetter, RaverieNoOverload, "GetterSetters");
+  RaverieFullBindGetterSetter(builder, type, &BoundType::GetFields, (MemberRange<Field>(BoundType::*)()), RaverieNoSetter, RaverieNoOverload, "Fields");
+  RaverieFullBindGetterSetter(builder, type, &BoundType::GetProperties, (MemberRange<Property>(BoundType::*)()), RaverieNoSetter, RaverieNoOverload, "Properties");
+  RaverieFullBindGetterSetter(builder, type, &BoundType::GetFunctions, (MemberRange<Function>(BoundType::*)()), RaverieNoSetter, RaverieNoOverload, "Functions");
+  RaverieFullBindGetterSetter(builder, type, &BoundType::GetMembers, (MemberRange<Member>(BoundType::*)()), RaverieNoSetter, RaverieNoOverload, "Members");
+  RaverieFullBindGetterSetter(builder, type, &BoundType::GetDefaultConstructor, (Function * (BoundType::*)()), RaverieNoSetter, RaverieNoOverload, "DefaultConstructor");
 
-  RaverieFullBindMethod(builder,
-                      type,
-                      &BoundType::GetGetterSetters,
-                      (MemberRange<GetterSetter>(BoundType::*)(Members::Enum)),
-                      "GetGetterSetters",
-                      "options");
-  RaverieFullBindMethod(builder,
-                      type,
-                      &BoundType::GetProperties,
-                      (MemberRange<Property>(BoundType::*)(Members::Enum)),
-                      "GetProperties",
-                      "options");
-  RaverieFullBindMethod(
-      builder, type, &BoundType::GetFields, (MemberRange<Field>(BoundType::*)(Members::Enum)), "GetFields", "options");
-  RaverieFullBindMethod(builder,
-                      type,
-                      &BoundType::GetFunctions,
-                      (MemberRange<Function>(BoundType::*)(Members::Enum)),
-                      "GetFunctions",
-                      "options");
-  RaverieFullBindMethod(builder,
-                      type,
-                      &BoundType::GetFunctions,
-                      (MemberRange<Function>(BoundType::*)(StringParam, Members::Enum)),
-                      "GetFunctions",
-                      "name, options");
-  RaverieFullBindMethod(builder,
-                      type,
-                      &BoundType::GetMembers,
-                      (MemberRange<Member>(BoundType::*)(Members::Enum)),
-                      "GetMembers",
-                      "options");
-  RaverieFullBindMethod(builder,
-                      type,
-                      &BoundType::GetGetterSetter,
-                      (GetterSetter * (BoundType::*)(StringParam)),
-                      "GetGetterSetter",
-                      "name");
-  RaverieFullBindMethod(builder,
-                      type,
-                      &BoundType::GetGetterSetter,
-                      (GetterSetter * (BoundType::*)(StringParam, Members::Enum)),
-                      "GetGetterSetter",
-                      "name, options");
-  RaverieFullBindMethod(builder,
-                      type,
-                      &BoundType::GetGetterSetter,
-                      (GetterSetter * (BoundType::*)(StringParam, Type*, Members::Enum)),
-                      "GetGetterSetter",
-                      "name, declaredType, options");
-  RaverieFullBindMethod(
-      builder, type, &BoundType::GetProperty, (Property * (BoundType::*)(StringParam)), "GetProperty", "name");
-  RaverieFullBindMethod(builder,
-                      type,
-                      &BoundType::GetProperty,
-                      (Property * (BoundType::*)(StringParam, Members::Enum)),
-                      "GetProperty",
-                      "name, options");
-  RaverieFullBindMethod(builder,
-                      type,
-                      &BoundType::GetProperty,
-                      (Property * (BoundType::*)(StringParam, Type*, Members::Enum)),
-                      "GetProperty",
-                      "name, declaredType, options");
+  RaverieFullBindMethod(builder, type, &BoundType::GetGetterSetters, (MemberRange<GetterSetter>(BoundType::*)(Members::Enum)), "GetGetterSetters", "options");
+  RaverieFullBindMethod(builder, type, &BoundType::GetProperties, (MemberRange<Property>(BoundType::*)(Members::Enum)), "GetProperties", "options");
+  RaverieFullBindMethod(builder, type, &BoundType::GetFields, (MemberRange<Field>(BoundType::*)(Members::Enum)), "GetFields", "options");
+  RaverieFullBindMethod(builder, type, &BoundType::GetFunctions, (MemberRange<Function>(BoundType::*)(Members::Enum)), "GetFunctions", "options");
+  RaverieFullBindMethod(builder, type, &BoundType::GetFunctions, (MemberRange<Function>(BoundType::*)(StringParam, Members::Enum)), "GetFunctions", "name, options");
+  RaverieFullBindMethod(builder, type, &BoundType::GetMembers, (MemberRange<Member>(BoundType::*)(Members::Enum)), "GetMembers", "options");
+  RaverieFullBindMethod(builder, type, &BoundType::GetGetterSetter, (GetterSetter * (BoundType::*)(StringParam)), "GetGetterSetter", "name");
+  RaverieFullBindMethod(builder, type, &BoundType::GetGetterSetter, (GetterSetter * (BoundType::*)(StringParam, Members::Enum)), "GetGetterSetter", "name, options");
+  RaverieFullBindMethod(builder, type, &BoundType::GetGetterSetter, (GetterSetter * (BoundType::*)(StringParam, Type*, Members::Enum)), "GetGetterSetter", "name, declaredType, options");
+  RaverieFullBindMethod(builder, type, &BoundType::GetProperty, (Property * (BoundType::*)(StringParam)), "GetProperty", "name");
+  RaverieFullBindMethod(builder, type, &BoundType::GetProperty, (Property * (BoundType::*)(StringParam, Members::Enum)), "GetProperty", "name, options");
+  RaverieFullBindMethod(builder, type, &BoundType::GetProperty, (Property * (BoundType::*)(StringParam, Type*, Members::Enum)), "GetProperty", "name, declaredType, options");
   RaverieFullBindMethod(builder, type, &BoundType::GetField, (Field * (BoundType::*)(StringParam)), "GetField", "name");
-  RaverieFullBindMethod(builder,
-                      type,
-                      &BoundType::GetField,
-                      (Field * (BoundType::*)(StringParam, Members::Enum)),
-                      "GetField",
-                      "name, options");
-  RaverieFullBindMethod(builder,
-                      type,
-                      &BoundType::GetField,
-                      (Field * (BoundType::*)(StringParam, Type*, Members::Enum)),
-                      "GetField",
-                      "name, declaredType, options");
-  RaverieFullBindMethod(
-      builder, type, &BoundType::GetFunction, (Function * (BoundType::*)(StringParam)), "GetFunction", "name");
-  RaverieFullBindMethod(builder,
-                      type,
-                      &BoundType::GetFunction,
-                      (Function * (BoundType::*)(StringParam, Members::Enum)),
-                      "GetFunction",
-                      "name, options");
-  RaverieFullBindMethod(builder,
-                      type,
-                      &BoundType::GetFunction,
-                      (Function * (BoundType::*)(StringParam, DelegateType*, Members::Enum)),
-                      "GetFunction",
-                      "name, signatureType, options");
-  RaverieFullBindMethod(
-      builder, type, &BoundType::GetMember, (Member * (BoundType::*)(StringParam)), "GetMember", "name");
-  RaverieFullBindMethod(builder,
-                      type,
-                      &BoundType::GetMember,
-                      (Member * (BoundType::*)(StringParam, Members::Enum)),
-                      "GetMember",
-                      "name, options");
-  RaverieFullBindMethod(builder,
-                      type,
-                      &BoundType::GetMember,
-                      (Member * (BoundType::*)(StringParam, Type*, Members::Enum)),
-                      "GetMember",
-                      "name, declaredType, options");
-  RaverieFullBindMethod(builder,
-                      type,
-                      &BoundType::GetDefaultConstructor,
-                      (Function * (BoundType::*)(bool)),
-                      "GetDefaultConstructor",
-                      "inherited");
-  RaverieFullBindMethod(builder,
-                      type,
-                      &BoundType::GetConstructor,
-                      (Function * (BoundType::*)(DelegateType*, bool)),
-                      "GetConstructor",
-                      "signatureType, inherited");
+  RaverieFullBindMethod(builder, type, &BoundType::GetField, (Field * (BoundType::*)(StringParam, Members::Enum)), "GetField", "name, options");
+  RaverieFullBindMethod(builder, type, &BoundType::GetField, (Field * (BoundType::*)(StringParam, Type*, Members::Enum)), "GetField", "name, declaredType, options");
+  RaverieFullBindMethod(builder, type, &BoundType::GetFunction, (Function * (BoundType::*)(StringParam)), "GetFunction", "name");
+  RaverieFullBindMethod(builder, type, &BoundType::GetFunction, (Function * (BoundType::*)(StringParam, Members::Enum)), "GetFunction", "name, options");
+  RaverieFullBindMethod(builder, type, &BoundType::GetFunction, (Function * (BoundType::*)(StringParam, DelegateType*, Members::Enum)), "GetFunction", "name, signatureType, options");
+  RaverieFullBindMethod(builder, type, &BoundType::GetMember, (Member * (BoundType::*)(StringParam)), "GetMember", "name");
+  RaverieFullBindMethod(builder, type, &BoundType::GetMember, (Member * (BoundType::*)(StringParam, Members::Enum)), "GetMember", "name, options");
+  RaverieFullBindMethod(builder, type, &BoundType::GetMember, (Member * (BoundType::*)(StringParam, Type*, Members::Enum)), "GetMember", "name, declaredType, options");
+  RaverieFullBindMethod(builder, type, &BoundType::GetDefaultConstructor, (Function * (BoundType::*)(bool)), "GetDefaultConstructor", "inherited");
+  RaverieFullBindMethod(builder, type, &BoundType::GetConstructor, (Function * (BoundType::*)(DelegateType*, bool)), "GetConstructor", "signatureType, inherited");
 }
 
 Type::Type() : SourceLibrary(nullptr)
@@ -367,8 +221,7 @@ bool Type::IsEnumOrFlagsType(Type* type)
   BoundType* boundType = Type::DynamicCast<BoundType*>(type);
 
   // If the type is a bound type set to flags or enumeration...
-  return boundType != nullptr &&
-         (boundType->SpecialType == SpecialType::Flags || boundType->SpecialType == SpecialType::Enumeration);
+  return boundType != nullptr && (boundType->SpecialType == SpecialType::Flags || boundType->SpecialType == SpecialType::Enumeration);
 }
 
 bool Type::IsAnyType(Type* type)
@@ -447,8 +300,7 @@ bool Type::IsSame(Type* a, Type* b)
   bool result = (hashA == hashB);
 
   // We better not get the same hash when hashing two different types...
-  ErrorIf(result && RaverieVirtualTypeId(a) != RaverieVirtualTypeId(b),
-          "The same hash/guid was computed for two different types!");
+  ErrorIf(result && RaverieVirtualTypeId(a) != RaverieVirtualTypeId(b), "The same hash/guid was computed for two different types!");
 
   // Return the result (true if they are the same, false otherwise)
   return result;
@@ -520,7 +372,7 @@ bool Type::BoundIsA(BoundType* type, BoundType* base)
   {
     // If the base type is the same as the current type...
     RaverieTodo("Using the names of the BoundType to compare isn't technically "
-             "correct");
+                "correct");
     if (base == type || base->Name == type->Name)
       return true;
 
@@ -992,8 +844,7 @@ size_t BoundType::GetCopyableSize() const
 size_t BoundType::GetAllocatedSize() const
 {
   // Return the size of the class since it's already been computed
-  ErrorIf(this->Size == UndeterminedSize && this->SourceLibrary->TolerantMode == false,
-          "Attempting to get the size of a class when it has not been determined!");
+  ErrorIf(this->Size == UndeterminedSize && this->SourceLibrary->TolerantMode == false, "Attempting to get the size of a class when it has not been determined!");
   return this->Size;
 }
 
@@ -1422,8 +1273,7 @@ Function* BoundType::GetDefaultConstructor(const FunctionArray* constructors)
     Function* constructor = (*constructors)[i];
 
     // Make sure none of the constructors have return values
-    ErrorIf(constructor->FunctionType->Return != RaverieTypeId(void),
-            "A constructor was bound with a non-void return type");
+    ErrorIf(constructor->FunctionType->Return != RaverieTypeId(void), "A constructor was bound with a non-void return type");
 
     // As long as we have no parameters... this is the default constructor!
     if (constructor->FunctionType->Parameters.Empty())
@@ -1446,8 +1296,7 @@ Function* BoundType::GetCopyConstructor(const FunctionArray* constructors)
     Function* constructor = (*constructors)[i];
 
     // Make sure none of the constructors have return values
-    ErrorIf(constructor->FunctionType->Return != RaverieTypeId(void),
-            "A constructor was bound with a non-void return type");
+    ErrorIf(constructor->FunctionType->Return != RaverieTypeId(void), "A constructor was bound with a non-void return type");
 
     // The copy constructor must have one argument
     ParameterArray& parameters = constructor->FunctionType->Parameters;
@@ -1554,10 +1403,7 @@ Property* BoundType::FindProperty(StringParam name, FindMemberOptions::Flags opt
   }
 }
 
-Function* BoundType::FindFunction(StringParam name,
-                                  const Array<Type*>& parameters,
-                                  Type* returnType,
-                                  FindMemberOptions::Flags options) const
+Function* BoundType::FindFunction(StringParam name, const Array<Type*>& parameters, Type* returnType, FindMemberOptions::Flags options) const
 {
   // The map of functions we'll look in (either static or instance)
   const FunctionMultiMap* functions = nullptr;
@@ -1851,8 +1697,7 @@ AddMemberResult::Enum BoundType::AddRawGetterSetter(GetterSetter* property)
 
   // Map the name of the property to the property itself
   bool inserted = map.InsertNoOverwrite(property->Name, property);
-  ErrorIf(
-      inserted == false, "Another property with the same name (%s) was added to the BoundType", property->Name.c_str());
+  ErrorIf(inserted == false, "Another property with the same name (%s) was added to the BoundType", property->Name.c_str());
 
   // Add the property to the list of all properties
   this->AllProperties.PushBack(property);
@@ -1924,11 +1769,7 @@ String DelegateParameter::GetNameOrGenerate()
   return this->Name;
 }
 
-DelegateType::DelegateType() :
-    Return(nullptr),
-    ReturnStackOffset(0),
-    ThisHandleStackOffset(0),
-    TotalStackSizeExcludingThisHandle(0)
+DelegateType::DelegateType() : Return(nullptr), ReturnStackOffset(0), ThisHandleStackOffset(0), TotalStackSizeExcludingThisHandle(0)
 {
 }
 

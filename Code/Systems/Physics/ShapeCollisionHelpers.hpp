@@ -33,19 +33,17 @@ void IntersectionToPhysicsManifold(Intersection::Manifold* iManifold, Physics::M
 // saves a bit of typing...
 // The only full manifolds now are [triangle,obb], [aabb,obb], and [obb,obb].
 // Also need to make sure we handle the backwards case
-#define DeclareFullManifoldSpecialization(Type1, Type2)                                                                \
-  template <>                                                                                                          \
-  inline void IntersectionToPhysicsManifold<Type1, Type2>(Intersection::Manifold * iManifold,                          \
-                                                          Physics::Manifold * pManifold)                               \
-  {                                                                                                                    \
-    IntersectionToPhysicsManifoldFull(iManifold, pManifold);                                                           \
-  }                                                                                                                    \
-                                                                                                                       \
-  template <>                                                                                                          \
-  inline void IntersectionToPhysicsManifold<Type2, Type1>(Intersection::Manifold * iManifold,                          \
-                                                          Physics::Manifold * pManifold)                               \
-  {                                                                                                                    \
-    IntersectionToPhysicsManifoldFull(iManifold, pManifold);                                                           \
+#define DeclareFullManifoldSpecialization(Type1, Type2)                                                                                                                                                \
+  template <>                                                                                                                                                                                          \
+  inline void IntersectionToPhysicsManifold<Type1, Type2>(Intersection::Manifold * iManifold, Physics::Manifold * pManifold)                                                                           \
+  {                                                                                                                                                                                                    \
+    IntersectionToPhysicsManifoldFull(iManifold, pManifold);                                                                                                                                           \
+  }                                                                                                                                                                                                    \
+                                                                                                                                                                                                       \
+  template <>                                                                                                                                                                                          \
+  inline void IntersectionToPhysicsManifold<Type2, Type1>(Intersection::Manifold * iManifold, Physics::Manifold * pManifold)                                                                           \
+  {                                                                                                                                                                                                    \
+    IntersectionToPhysicsManifoldFull(iManifold, pManifold);                                                                                                                                           \
   }
 
 // silly to macro this now, but if we had more this would be a lot cleaner...
@@ -79,28 +77,16 @@ void BaseManifoldToProxyResult(Intersection::Manifold* manifold, ProxyResult* re
 // (supposedly that is necessary for dealing with rays starting inside of a
 // shape, the point0 point1 issue was fixed in intersection).
 template <typename CastType>
-void ManifoldToProxyResult(const CastType& castShape,
-                           Collider* collider,
-                           Intersection::Manifold* manifold,
-                           ProxyResult* result)
+void ManifoldToProxyResult(const CastType& castShape, Collider* collider, Intersection::Manifold* manifold, ProxyResult* result)
 {
   result->mTime = manifold->PointAt(0).T;
 
   BaseManifoldToProxyResult(manifold, result);
 }
 
-void ManifoldToProxyResult(const Aabb& castShape,
-                           Collider* collider,
-                           Intersection::Manifold* manifold,
-                           ProxyResult* result);
-void ManifoldToProxyResult(const Frustum& castShape,
-                           Collider* collider,
-                           Intersection::Manifold* manifold,
-                           ProxyResult* result);
-void ManifoldToProxyResult(const Sphere& castShape,
-                           Collider* collider,
-                           Intersection::Manifold* manifold,
-                           ProxyResult* result);
+void ManifoldToProxyResult(const Aabb& castShape, Collider* collider, Intersection::Manifold* manifold, ProxyResult* result);
+void ManifoldToProxyResult(const Frustum& castShape, Collider* collider, Intersection::Manifold* manifold, ProxyResult* result);
+void ManifoldToProxyResult(const Sphere& castShape, Collider* collider, Intersection::Manifold* manifold, ProxyResult* result);
 
 // Unfortunately, these need a collider because of how the cylinder version
 // works
@@ -125,8 +111,7 @@ Vec3 NormalFromPointOnShape(const Triangle& triangle, Collider* shapeCollider, V
 // ignore
 // this call on)
 template <typename CastType, typename ShapeType>
-void GetNormalFromPointOnShape(
-    const CastType& castShape, const ShapeType& shape, Collider* shapeCollider, Vec3Param point, Vec3Ref normal)
+void GetNormalFromPointOnShape(const CastType& castShape, const ShapeType& shape, Collider* shapeCollider, Vec3Param point, Vec3Ref normal)
 {
   // we don't do anything with this case, but set the normal to a valid
   // value so later calculations don't blow up (a normalize with a garbage
@@ -135,15 +120,13 @@ void GetNormalFromPointOnShape(
 }
 
 template <typename ShapeType>
-void GetNormalFromPointOnShape(
-    const Ray& castShape, const ShapeType& shape, Collider* shapeCollider, Vec3Param point, Vec3Ref normal)
+void GetNormalFromPointOnShape(const Ray& castShape, const ShapeType& shape, Collider* shapeCollider, Vec3Param point, Vec3Ref normal)
 {
   normal = NormalFromPointOnShape(shape, shapeCollider, point, castShape.Start);
 }
 
 template <typename ShapeType>
-void GetNormalFromPointOnShape(
-    const Segment& castShape, const ShapeType& shape, Collider* shapeCollider, Vec3Param point, Vec3Ref normal)
+void GetNormalFromPointOnShape(const Segment& castShape, const ShapeType& shape, Collider* shapeCollider, Vec3Param point, Vec3Ref normal)
 {
   normal = NormalFromPointOnShape(shape, shapeCollider, point, castShape.Start);
 }

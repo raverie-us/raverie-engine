@@ -41,9 +41,7 @@ class RaverieCompileFragmentEvent : public Event
 {
 public:
   RaverieDeclareType(RaverieCompileFragmentEvent, TypeCopyMode::ReferenceType);
-  RaverieCompileFragmentEvent(Module& dependencies,
-                            Array<RaverieDocumentResource*>& fragments,
-                            ResourceLibrary* owningLibrary);
+  RaverieCompileFragmentEvent(Module& dependencies, Array<RaverieDocumentResource*>& fragments, ResourceLibrary* owningLibrary);
 
   Module& mDependencies;
   Array<RaverieDocumentResource*>& mFragments;
@@ -57,13 +55,7 @@ class ResourceEntry
 {
 public:
   ResourceEntry();
-  ResourceEntry(uint order,
-                StringParam type,
-                StringParam name,
-                StringParam location,
-                ResourceId id,
-                ContentItem* libraryResource,
-                BuilderComponent* builder);
+  ResourceEntry(uint order, StringParam type, StringParam name, StringParam location, ResourceId id, ContentItem* libraryResource, BuilderComponent* builder);
 
   uint LoadOrder;
   String Type;

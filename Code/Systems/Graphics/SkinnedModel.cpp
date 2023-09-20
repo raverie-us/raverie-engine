@@ -115,8 +115,7 @@ void SkinnedModel::ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock
   frameNode.mLocalToWorld = frameNode.mLocalToWorld * mMesh->mBindOffsetInv;
   frameNode.mLocalToWorldNormal = frameNode.mLocalToWorldNormal * Math::ToMatrix3(mMesh->mBindOffsetInv);
 
-  frameNode.mBoneMatrixRange =
-      mSkeleton->GetBoneTransforms(skinningBuffer, frameBlock.mRenderQueues->mSkinningBufferVersion);
+  frameNode.mBoneMatrixRange = mSkeleton->GetBoneTransforms(skinningBuffer, frameBlock.mRenderQueues->mSkinningBufferVersion);
 
   frameNode.mIndexRemapRange.start = indexRemapBuffer.Size();
   indexRemapBuffer.Append(mBoneIndexRemap.All());

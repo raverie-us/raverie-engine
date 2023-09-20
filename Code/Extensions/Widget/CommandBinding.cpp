@@ -164,8 +164,7 @@ void MetaScriptShortcutAttribute::PostProcess(Status& status, ReflectionObject* 
       // currently being processed.
       if (foundCommand->Name != type->Name)
       {
-        String message =
-            BuildString(foundCommand->Shortcut, " is already used by the '", foundCommand->Name, "' command.");
+        String message = BuildString(foundCommand->Shortcut, " is already used by the '", foundCommand->Name, "' command.");
         status.SetFailed(message);
         return;
       }

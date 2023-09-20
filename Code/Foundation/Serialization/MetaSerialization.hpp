@@ -8,8 +8,7 @@ struct PolymorphicNode;
 
 // See SerializationAttributes::cSerializationPrimitive
 #define RaverieBindSerializationPrimitive() type->AddAttribute(SerializationAttributes::cSerializationPrimitive)
-#define RaverieBindSerializationPrimitiveExternal(type)                                                                   \
-  RaverieTypeId(type)->AddAttribute(SerializationAttributes::cSerializationPrimitive)
+#define RaverieBindSerializationPrimitiveExternal(type) RaverieTypeId(type)->AddAttribute(SerializationAttributes::cSerializationPrimitive)
 
 // Meta Serialization
 class MetaSerialization : public ReferenceCountedEventObject
@@ -144,14 +143,10 @@ struct Policy<Variant>
 
 } // namespace Serialization
 
-#define RaverieSerialize(DefaultValue)                                                                                    \
-  AddAttributeChainable(PropertyAttributes::cSerialize)->Add(new MetaSerializedProperty(DefaultValue))
+#define RaverieSerialize(DefaultValue) AddAttributeChainable(PropertyAttributes::cSerialize)->Add(new MetaSerializedProperty(DefaultValue))
 
 template <typename T>
-bool PrimitiveMetaSerialization<T>::SerializePrimitiveProperty(BoundType* meta,
-                                                               cstr fieldName,
-                                                               Any& value,
-                                                               Serializer& serializer)
+bool PrimitiveMetaSerialization<T>::SerializePrimitiveProperty(BoundType* meta, cstr fieldName, Any& value, Serializer& serializer)
 {
   if (serializer.GetMode() == SerializerMode::Saving)
   {

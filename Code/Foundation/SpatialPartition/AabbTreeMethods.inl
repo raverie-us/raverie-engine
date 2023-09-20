@@ -19,8 +19,7 @@ bool NodeSortZ(const NodeType* left, const NodeType* right)
 }
 
 template <typename NodeType>
-NodeType* BuildTreeTopDownNodes(Array<NodeType*>& leafNodes,
-                                typename PartitionNodeMethod<NodeType>::PartitionNodeAxisMethod partitionMethod)
+NodeType* BuildTreeTopDownNodes(Array<NodeType*>& leafNodes, typename PartitionNodeMethod<NodeType>::PartitionNodeAxisMethod partitionMethod)
 {
   // this case seems to be happening for some reason. If we continue down
   // this path, we will crash in minimize volume sum.
@@ -261,8 +260,7 @@ uint MidPointNodes(Array<NodeType*>& leafNodes)
 //------------------------------------- Old functions (still used, can't remove)
 
 template <typename NodeType, typename ObjectType>
-NodeType* BuildTreeTopDown(Array<ObjectType>& leafNodes,
-                           typename PartitionMethod<ObjectType>::PartitionAxisMethod partitionMethod)
+NodeType* BuildTreeTopDown(Array<ObjectType>& leafNodes, typename PartitionMethod<ObjectType>::PartitionAxisMethod partitionMethod)
 {
   // If there is only one object
   if (leafNodes.Size() == 1)
@@ -281,8 +279,7 @@ NodeType* BuildTreeTopDown(Array<ObjectType>& leafNodes,
   right.Assign(leafNodes.Begin() + separationIndex, leafNodes.End());
 
   // Allocate a new node
-  return new NodeType(BuildTreeTopDown<NodeType, ObjectType>(left, partitionMethod),
-                      BuildTreeTopDown<NodeType, ObjectType>(right, partitionMethod));
+  return new NodeType(BuildTreeTopDown<NodeType, ObjectType>(left, partitionMethod), BuildTreeTopDown<NodeType, ObjectType>(right, partitionMethod));
 }
 
 template <typename ObjectType>
@@ -525,8 +522,7 @@ bool SegmentNodeTest(NodeType* tree, CastDataParam castData, real& t)
 template <typename NodeType>
 bool AabbNodeTest(NodeType* tree, CastDataParam castData, real& t)
 {
-  if (Intersection::None !=
-      Intersection::AabbAabb(tree->mAabb.mMin, tree->mAabb.mMax, castData.GetAabb().mMin, castData.GetAabb().mMax))
+  if (Intersection::None != Intersection::AabbAabb(tree->mAabb.mMin, tree->mAabb.mMax, castData.GetAabb().mMin, castData.GetAabb().mMax))
   {
     t = (tree->mAabb.GetCenter() - castData.GetSphere().mCenter).Length();
     return true;
@@ -538,8 +534,7 @@ bool AabbNodeTest(NodeType* tree, CastDataParam castData, real& t)
 template <typename NodeType>
 bool SphereNodeTest(NodeType* tree, CastDataParam castData, real& t)
 {
-  if (Intersection::AabbSphere(
-          tree->mAabb.mMin, tree->mAabb.mMax, castData.GetSphere().mCenter, castData.GetSphere().mRadius, nullptr))
+  if (Intersection::AabbSphere(tree->mAabb.mMin, tree->mAabb.mMax, castData.GetSphere().mCenter, castData.GetSphere().mRadius, nullptr))
   {
     t = (tree->mAabb.GetCenter() - castData.GetSphere().mCenter).Length();
     return true;
@@ -551,8 +546,7 @@ bool SphereNodeTest(NodeType* tree, CastDataParam castData, real& t)
 template <typename NodeType>
 bool FrustumNodeTest(NodeType* tree, CastDataParam castData, real& t)
 {
-  if (Intersection::None != Intersection::AabbFrustumApproximation(
-                                tree->mAabb.mMin, tree->mAabb.mMax, &castData.GetFrustum().Planes[0].GetData()))
+  if (Intersection::None != Intersection::AabbFrustumApproximation(tree->mAabb.mMin, tree->mAabb.mMax, &castData.GetFrustum().Planes[0].GetData()))
   {
     t = (tree->mAabb.GetCenter() - castData.GetSphere().mCenter).Length();
     return true;

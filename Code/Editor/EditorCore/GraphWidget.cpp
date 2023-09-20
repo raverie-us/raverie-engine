@@ -25,8 +25,7 @@ GraphWidget::GraphWidget(Composite* parent) : Widget(parent)
   mFlags.SetAll();
 }
 
-void AddHashLines(
-    Array<Vec3>& lines, Vec3 pos, float size, Vec3 dir, Vec3 hashDir, uint count, uint offset, float spacing)
+void AddHashLines(Array<Vec3>& lines, Vec3 pos, float size, Vec3 dir, Vec3 hashDir, uint count, uint offset, float spacing)
 {
   for (uint i = offset; i < count + 1; ++i)
   {
@@ -37,8 +36,7 @@ void AddHashLines(
   }
 }
 
-void GraphWidget::RenderUpdate(
-    ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
+void GraphWidget::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 
@@ -88,14 +86,7 @@ void GraphWidget::RenderUpdate(
     float spacing = mSize.y / hashCountf;
 
     AddHashLines(primaryLines, lowerLeft, mSize.x, -Vec3::cYAxis, Vec3::cXAxis, hashCount, 1, spacing);
-    AddHashLines(secondaryLines,
-                 lowerLeft + Vec3(0, -spacing * 0.5f, 0),
-                 mSize.x,
-                 -Vec3::cYAxis,
-                 Vec3::cXAxis,
-                 hashCount - 1,
-                 0,
-                 spacing);
+    AddHashLines(secondaryLines, lowerLeft + Vec3(0, -spacing * 0.5f, 0), mSize.x, -Vec3::cYAxis, Vec3::cXAxis, hashCount - 1, 0, spacing);
   }
 
   // Vertical lines
@@ -106,14 +97,7 @@ void GraphWidget::RenderUpdate(
     float spacing = mSize.x / hashCountf;
 
     AddHashLines(primaryLines, lowerLeft, mSize.y, Vec3::cXAxis, -Vec3::cYAxis, hashCount, 1, spacing);
-    AddHashLines(secondaryLines,
-                 lowerLeft + Vec3(spacing * 0.5f, 0, 0),
-                 mSize.y,
-                 Vec3::cXAxis,
-                 -Vec3::cYAxis,
-                 hashCount - 1,
-                 0,
-                 spacing);
+    AddHashLines(secondaryLines, lowerLeft + Vec3(spacing * 0.5f, 0, 0), mSize.y, Vec3::cXAxis, -Vec3::cYAxis, hashCount - 1, 0, spacing);
   }
 
   // Render data for lines
@@ -157,8 +141,7 @@ void GraphWidget::RenderUpdate(
         Vec2 textSize = font->MeasureText(text);
         pos.x -= textSize.x + Pixels(2);
         pos.y -= textSize.y * 0.5f;
-        AddTextRange(
-            fontProcessor, font, text, Math::ToVector2(SnapToPixels(pos)), TextAlign::Left, Vec2(1, 1), mSize, false);
+        AddTextRange(fontProcessor, font, text, Math::ToVector2(SnapToPixels(pos)), TextAlign::Left, Vec2(1, 1), mSize, false);
       }
     }
 
@@ -179,8 +162,7 @@ void GraphWidget::RenderUpdate(
         Vec2 textSize = font->MeasureText(text);
         pos.x -= textSize.x * 0.5f;
         pos.y += textSize.y * 0.5f;
-        AddTextRange(
-            fontProcessor, font, text, Math::ToVector2(SnapToPixels(pos)), TextAlign::Left, Vec2(1, 1), mSize, false);
+        AddTextRange(fontProcessor, font, text, Math::ToVector2(SnapToPixels(pos)), TextAlign::Left, Vec2(1, 1), mSize, false);
       }
     }
   }

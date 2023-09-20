@@ -60,12 +60,10 @@ bool QueueRemoveComponent(OperationQueue* queue, HandleParam object, BoundType* 
   return true;
 }
 
-void QueueRemoveComponent(
-    OperationQueue* queue, HandleParam object, BoundType* componentMeta, StringParam componentData, uint componentIndex)
+void QueueRemoveComponent(OperationQueue* queue, HandleParam object, BoundType* componentMeta, StringParam componentData, uint componentIndex)
 {
   // Create the operation
-  AddRemoveComponentOperation* op =
-      new AddRemoveComponentOperation(object, componentMeta, ComponentOperation::Remove, componentData, componentIndex);
+  AddRemoveComponentOperation* op = new AddRemoveComponentOperation(object, componentMeta, ComponentOperation::Remove, componentData, componentIndex);
   queue->Queue(op);
   op->ComponentRemoved(object);
 }
@@ -90,8 +88,7 @@ bool QueueAddComponent(OperationQueue* queue, HandleParam object, BoundType* com
 
 void QueueAddComponent(OperationQueue* queue, HandleParam object, HandleParam component)
 {
-  AddRemoveComponentOperation* op =
-      new AddRemoveComponentOperation(object, component.StoredType, ComponentOperation::Add);
+  AddRemoveComponentOperation* op = new AddRemoveComponentOperation(object, component.StoredType, ComponentOperation::Add);
   queue->Queue(op);
   op->ComponentAdded(object);
 }
@@ -184,15 +181,12 @@ RaverieDefineType(PropertyOperation, builder, type)
   RaverieBindFieldGetter(mValueAfter);
 }
 
-PropertyOperation::PropertyOperation(HandleParam object, PropertyPathParam property, AnyParam before, AnyParam after) :
-    MetaOperation(object),
-    mPropertyPath(property)
+PropertyOperation::PropertyOperation(HandleParam object, PropertyPathParam property, AnyParam before, AnyParam after) : MetaOperation(object), mPropertyPath(property)
 {
   MetaOwner* owner = object.StoredType->HasInherited<MetaOwner>();
   if (owner && owner->GetOwner(object).IsNotNull())
   {
-    mName = BuildString(
-        GetNameFromHandle(owner->GetOwner(object)), ".", GetNameFromHandle(object), ".", property.GetStringPath());
+    mName = BuildString(GetNameFromHandle(owner->GetOwner(object)), ".", GetNameFromHandle(object), ".", property.GetStringPath());
   }
   else
   {
@@ -314,15 +308,8 @@ void PropertyOperation::OnMetaRemoved(MetaLibraryEvent* e)
   }
 }
 
-AddRemoveComponentOperation::AddRemoveComponentOperation(HandleParam object,
-                                                         BoundType* componentType,
-                                                         ComponentOperation::Enum mode,
-                                                         StringParam componentData,
-                                                         uint componentIndex) :
-    MetaOperation(object),
-    mComposition(object.StoredType),
-    mComponentType(componentType),
-    mRemovedObjectState(nullptr)
+AddRemoveComponentOperation::AddRemoveComponentOperation(HandleParam object, BoundType* componentType, ComponentOperation::Enum mode, StringParam componentData, uint componentIndex) :
+    MetaOperation(object), mComposition(object.StoredType), mComponentType(componentType), mRemovedObjectState(nullptr)
 {
   mNotifyModified = true;
 
@@ -398,8 +385,7 @@ void AddRemoveComponentOperation::AddComponentFromBuffer()
   // the instance in the game will have the Dirt Material again, instead of the
   // default it shows in the editor. Because of this, instead of actually adding
   // a new Model, we're going to revert the locally removed one.
-  if (mMode == ComponentOperation::Add && componentType != nullptr &&
-      modifications->IsChildLocallyRemoved(object, componentType))
+  if (mMode == ComponentOperation::Add && componentType != nullptr && modifications->IsChildLocallyRemoved(object, componentType))
   {
     modifications->ChildAdded(object, componentType);
 
@@ -568,8 +554,7 @@ void AddRemoveComponentOperation::ComponentRemoved(HandleParam object)
     MetaOperations::NotifyComponentsModified(object);
 }
 
-MoveComponentOperation::MoveComponentOperation(HandleParam object, HandleParam componentToMove, uint destinationIndex) :
-    MetaOperation(object)
+MoveComponentOperation::MoveComponentOperation(HandleParam object, HandleParam componentToMove, uint destinationIndex) : MetaOperation(object)
 {
   mName = BuildString("Move '", GetNameFromHandle(componentToMove), "' on '", GetNameFromHandle(object), "'");
 
@@ -633,8 +618,7 @@ void MoveComponentOperation::MoveComponent(uint from, uint to)
   mComposition->MoveComponent(object, componentToMove, to);
 }
 
-MarkPropertyModifiedOperation::MarkPropertyModifiedOperation(HandleParam object, PropertyPathParam propertyPath) :
-    MetaOperation(object)
+MarkPropertyModifiedOperation::MarkPropertyModifiedOperation(HandleParam object, PropertyPathParam propertyPath) : MetaOperation(object)
 {
   mName = BuildString("'", propertyPath.GetStringPath(), "' marked modified on '", GetNameFromHandle(object), "'");
 
@@ -668,8 +652,7 @@ void MarkPropertyModifiedOperation::SetModifiedState(bool state)
   inheritance->SetPropertyModified(instance, mPropertyPath, state);
 }
 
-RevertPropertyOperation::RevertPropertyOperation(HandleParam object, PropertyPathParam propertyPath) :
-    MetaOperation(object)
+RevertPropertyOperation::RevertPropertyOperation(HandleParam object, PropertyPathParam propertyPath) : MetaOperation(object)
 {
   mName = BuildString("Reverted '", propertyPath.GetStringPath(), "' value on '", GetNameFromHandle(object), "'");
 
@@ -708,10 +691,7 @@ void RevertPropertyOperation::Redo()
   MetaOperation::Redo();
 }
 
-RestoreChildOperation::RestoreChildOperation(HandleParam parent, ObjectState::ChildId& childId) :
-    MetaOperation(parent),
-    mChildId(childId),
-    mInheritance(parent.StoredType)
+RestoreChildOperation::RestoreChildOperation(HandleParam parent, ObjectState::ChildId& childId) : MetaOperation(parent), mChildId(childId), mInheritance(parent.StoredType)
 {
   mName = BuildString("RestoreChild on '", GetNameFromHandle(parent), "'");
 }
@@ -744,10 +724,7 @@ void RestoreChildOperation::Redo()
   MetaOperation::Redo();
 }
 
-RestoreChildOrderOperation::RestoreChildOrderOperation(HandleParam object) :
-    MetaOperation(object),
-    mMetaOperations(object.StoredType),
-    mInheritance(object.StoredType)
+RestoreChildOrderOperation::RestoreChildOrderOperation(HandleParam object) : MetaOperation(object), mMetaOperations(object.StoredType), mInheritance(object.StoredType)
 {
   mName = BuildString("RestoreChildOrder on '", GetNameFromHandle(object), "'");
 

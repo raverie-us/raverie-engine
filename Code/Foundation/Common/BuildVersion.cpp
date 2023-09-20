@@ -122,14 +122,14 @@ String GetBuildVersionName()
    */
   StringBuilder builder;
   builder.AppendFormat("%s.", GetApplicationName().c_str()); // Application [RaverieEditor]
-  builder.AppendFormat("%s.", RaverieBranchName);             // Branch [master]
+  builder.AppendFormat("%s.", RaverieBranchName);            // Branch [master]
   builder.AppendFormat("%d.", GetMajorVersion());            // Major [1]
   builder.AppendFormat("%d.", GetMinorVersion());            // Minor [5]
   builder.AppendFormat("%d.", GetPatchVersion());            // Patch [0]
   builder.AppendFormat("%d.", GetRevisionNumber());          // Revision [1501]
   builder.AppendFormat("%s.", GetShortChangeSetString());    // ShortChangeset [fb02756c46a4]
-  builder.AppendFormat("%llu.", RaverieMsSinceEpoch);         // MsSinceEpoch [1574702096290]
-  builder.AppendFormat("%s.", RaverieConfigName);             // Config [Release]
+  builder.AppendFormat("%llu.", RaverieMsSinceEpoch);        // MsSinceEpoch [1574702096290]
+  builder.AppendFormat("%s.", RaverieConfigName);            // Config [Release]
   builder.Append("zip");
   String result = builder.ToString();
   return result;

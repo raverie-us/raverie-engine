@@ -4,9 +4,7 @@
 namespace Raverie
 {
 
-MeshProcessor::MeshProcessor(MeshBuilder* meshBuilder, MeshDataMap& meshDataMap) :
-    mBuilder(meshBuilder),
-    mMeshDataMap(meshDataMap)
+MeshProcessor::MeshProcessor(MeshBuilder* meshBuilder, MeshDataMap& meshDataMap) : mBuilder(meshBuilder), mMeshDataMap(meshDataMap)
 {
 }
 

@@ -76,8 +76,7 @@ void Replace(StringBuilder& output, Replacements& replacements, StringParam sour
         if (match == lastText)
         {
           output << possibleMatches.Front().ReplaceString;
-          sourceText =
-              StringRange(sourceText.mOriginalString, sourceText.Data() + match.SizeInBytes(), sourceText.End().Data());
+          sourceText = StringRange(sourceText.mOriginalString, sourceText.Data() + match.SizeInBytes(), sourceText.End().Data());
           break;
         }
         else
@@ -93,13 +92,10 @@ void Replace(StringBuilder& output, Replacements& replacements, StringParam sour
         {
           // Only one possible match
           String& match = refinedMatches.Front().MatchString;
-          if (sourceText.SizeInBytes() >= match.SizeInBytes() &&
-              match == StringRange(sourceText.Data(), sourceText.Data(), sourceText.Data() + match.SizeInBytes()))
+          if (sourceText.SizeInBytes() >= match.SizeInBytes() && match == StringRange(sourceText.Data(), sourceText.Data(), sourceText.Data() + match.SizeInBytes()))
           {
             output << refinedMatches.Front().ReplaceString;
-            sourceText = StringRange(sourceText.Data() + match.SizeInBytes(),
-                                     sourceText.Data() + match.SizeInBytes(),
-                                     sourceText.End().Data());
+            sourceText = StringRange(sourceText.Data() + match.SizeInBytes(), sourceText.Data() + match.SizeInBytes(), sourceText.End().Data());
             break;
           }
           else

@@ -9,22 +9,8 @@ namespace Simd
 
 // loading
 SimMat4 LoadMat4x4(const scalar vals[16]);
-SimMat4 SetMat4x4(scalar m00,
-                  scalar m01,
-                  scalar m02,
-                  scalar m03,
-                  scalar m10,
-                  scalar m11,
-                  scalar m12,
-                  scalar m13,
-                  scalar m20,
-                  scalar m21,
-                  scalar m22,
-                  scalar m23,
-                  scalar m30,
-                  scalar m31,
-                  scalar m32,
-                  scalar m33);
+SimMat4 SetMat4x4(
+    scalar m00, scalar m01, scalar m02, scalar m03, scalar m10, scalar m11, scalar m12, scalar m13, scalar m20, scalar m21, scalar m22, scalar m23, scalar m30, scalar m31, scalar m32, scalar m33);
 SimMat4 UnAlignedLoadMat4x4(const scalar vals[16]);
 // storing
 void StoreMat4x4(scalar vals[16], SimMat4Param mat);

@@ -14,8 +14,7 @@ String RaverieSpirVDisassemblerBackend::GetExtension()
   return "spvtxt";
 }
 
-bool RaverieSpirVDisassemblerBackend::RunTranslationPass(ShaderTranslationPassResult& inputData,
-                                                       ShaderTranslationPassResult& outputData)
+bool RaverieSpirVDisassemblerBackend::RunTranslationPass(ShaderTranslationPassResult& inputData, ShaderTranslationPassResult& outputData)
 {
   mErrorLog.Clear();
 
@@ -25,8 +24,7 @@ bool RaverieSpirVDisassemblerBackend::RunTranslationPass(ShaderTranslationPassRe
 
   spv_text text;
   spv_diagnostic diagnostic = nullptr;
-  uint32_t options =
-      SPV_BINARY_TO_TEXT_OPTION_NONE | SPV_BINARY_TO_TEXT_OPTION_INDENT | SPV_BINARY_TO_TEXT_OPTION_FRIENDLY_NAMES;
+  uint32_t options = SPV_BINARY_TO_TEXT_OPTION_NONE | SPV_BINARY_TO_TEXT_OPTION_INDENT | SPV_BINARY_TO_TEXT_OPTION_FRIENDLY_NAMES;
 
   spv_context context = spvContextCreate((spv_target_env)mTargetEnv);
   spv_result_t spvResult = spvBinaryToText(context, data, wordCount, options, &text, &diagnostic);

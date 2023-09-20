@@ -30,10 +30,7 @@ RaverieDefineType(AnimationEditorData, builder, type)
 {
 }
 
-AnimationEditorData::AnimationEditorData(AnimationEditor* editor,
-                                         Cog* animGraphObject,
-                                         Animation* animation,
-                                         ScrollingGraph* graphData)
+AnimationEditorData::AnimationEditorData(AnimationEditor* editor, Cog* animGraphObject, Animation* animation, ScrollingGraph* graphData)
 {
   mEditor = editor;
   mGraphData = graphData;
@@ -219,8 +216,7 @@ RichAnimation* ConvertToRichAnimation(Animation* animation)
   {
     // Create the object node
     String objectName = GetObjectNameFromPath(objectTrack.GetFullPath());
-    TrackNode* objectNode =
-        new TrackNode(objectName, objectTrack.GetFullPath(), TrackType::Object, nullptr, nullptr, richAnim);
+    TrackNode* objectNode = new TrackNode(objectName, objectTrack.GetFullPath(), TrackType::Object, nullptr, nullptr, richAnim);
     objectTracks.Insert(objectNode->Path, objectNode);
 
     // Used to store all the property tracks for each unique component
@@ -255,8 +251,7 @@ RichAnimation* ConvertToRichAnimation(Animation* animation)
       // Create the component node
       String componentName = r.Front().first;
       String componentPath = componentName;
-      TrackNode* componentNode =
-          new TrackNode(componentName, componentPath, TrackType::Component, nullptr, objectNode, richAnim);
+      TrackNode* componentNode = new TrackNode(componentName, componentPath, TrackType::Component, nullptr, objectNode, richAnim);
 
       // Add each property track
       Array<PropertyTrack*>& propertyTracks = r.Front().second;
@@ -268,8 +263,7 @@ RichAnimation* ConvertToRichAnimation(Animation* animation)
         String propertyName = PropertyNameFromPath(propertyTrack->Name);
         String propertyPath = BuildString(componentName, ".", propertyName);
         BoundType* targetMeta = MetaDatabase::GetInstance()->FindType(componentNode->Name);
-        TrackNode* propertyNode =
-            new TrackNode(propertyName, propertyPath, TrackType::Property, targetMeta, componentNode, richAnim);
+        TrackNode* propertyNode = new TrackNode(propertyName, propertyPath, TrackType::Property, targetMeta, componentNode, richAnim);
         LoadKeyFramesIntoTrack(propertyNode, propertyTrack);
       }
 

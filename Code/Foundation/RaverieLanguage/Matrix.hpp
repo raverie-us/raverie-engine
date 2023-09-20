@@ -14,10 +14,7 @@ public:
   {
   }
 
-  MatrixUserData(size_t sizeX, size_t sizeY, size_t elementTypeIndex) :
-      SizeX(sizeX),
-      SizeY(sizeY),
-      ElementTypeIndex(elementTypeIndex)
+  MatrixUserData(size_t sizeX, size_t sizeY, size_t elementTypeIndex) : SizeX(sizeX), SizeY(sizeY), ElementTypeIndex(elementTypeIndex)
   {
   }
 
@@ -32,4 +29,3 @@ public:
 void CreateMatrixTypes(LibraryBuilder& builder);
 
 } // namespace Raverie
-

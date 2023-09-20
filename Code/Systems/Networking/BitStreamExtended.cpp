@@ -53,23 +53,14 @@ RaverieDefineType(BitStreamExtended, builder, type)
   RaverieBindOverloadedMethod(MeasureDoubleIntegerQuantized, RaverieStaticOverload(Bits, s64, s64));
   RaverieBindOverloadedMethod(MeasureDoubleIntegerQuantized, RaverieStaticOverload(Bits, s64, s64, s64));
 
-  RaverieBindOverloadedMethod(MeasureInteger2Quantized,
-                            RaverieStaticOverload(Bits, const Math::IntVector2&, const Math::IntVector2&));
-  RaverieBindOverloadedMethod(
-      MeasureInteger2Quantized,
-      RaverieStaticOverload(Bits, const Math::IntVector2&, const Math::IntVector2&, const Math::IntVector2&));
+  RaverieBindOverloadedMethod(MeasureInteger2Quantized, RaverieStaticOverload(Bits, const Math::IntVector2&, const Math::IntVector2&));
+  RaverieBindOverloadedMethod(MeasureInteger2Quantized, RaverieStaticOverload(Bits, const Math::IntVector2&, const Math::IntVector2&, const Math::IntVector2&));
 
-  RaverieBindOverloadedMethod(MeasureInteger3Quantized,
-                            RaverieStaticOverload(Bits, const Math::IntVector3&, const Math::IntVector3&));
-  RaverieBindOverloadedMethod(
-      MeasureInteger3Quantized,
-      RaverieStaticOverload(Bits, const Math::IntVector3&, const Math::IntVector3&, const Math::IntVector3&));
+  RaverieBindOverloadedMethod(MeasureInteger3Quantized, RaverieStaticOverload(Bits, const Math::IntVector3&, const Math::IntVector3&));
+  RaverieBindOverloadedMethod(MeasureInteger3Quantized, RaverieStaticOverload(Bits, const Math::IntVector3&, const Math::IntVector3&, const Math::IntVector3&));
 
-  RaverieBindOverloadedMethod(MeasureInteger4Quantized,
-                            RaverieStaticOverload(Bits, const Math::IntVector4&, const Math::IntVector4&));
-  RaverieBindOverloadedMethod(
-      MeasureInteger4Quantized,
-      RaverieStaticOverload(Bits, const Math::IntVector4&, const Math::IntVector4&, const Math::IntVector4&));
+  RaverieBindOverloadedMethod(MeasureInteger4Quantized, RaverieStaticOverload(Bits, const Math::IntVector4&, const Math::IntVector4&));
+  RaverieBindOverloadedMethod(MeasureInteger4Quantized, RaverieStaticOverload(Bits, const Math::IntVector4&, const Math::IntVector4&, const Math::IntVector4&));
 
   RaverieBindOverloadedMethod(MeasureRealQuantized, RaverieStaticOverload(Bits, float, float));
   RaverieBindOverloadedMethod(MeasureRealQuantized, RaverieStaticOverload(Bits, float, float, float));
@@ -77,23 +68,14 @@ RaverieDefineType(BitStreamExtended, builder, type)
   RaverieBindOverloadedMethod(MeasureDoubleRealQuantized, RaverieStaticOverload(Bits, double, double));
   RaverieBindOverloadedMethod(MeasureDoubleRealQuantized, RaverieStaticOverload(Bits, double, double, double));
 
-  RaverieBindOverloadedMethod(MeasureReal2Quantized,
-                            RaverieStaticOverload(Bits, const Math::Vector2&, const Math::Vector2&));
-  RaverieBindOverloadedMethod(
-      MeasureReal2Quantized,
-      RaverieStaticOverload(Bits, const Math::Vector2&, const Math::Vector2&, const Math::Vector2&));
+  RaverieBindOverloadedMethod(MeasureReal2Quantized, RaverieStaticOverload(Bits, const Math::Vector2&, const Math::Vector2&));
+  RaverieBindOverloadedMethod(MeasureReal2Quantized, RaverieStaticOverload(Bits, const Math::Vector2&, const Math::Vector2&, const Math::Vector2&));
 
-  RaverieBindOverloadedMethod(MeasureReal3Quantized,
-                            RaverieStaticOverload(Bits, const Math::Vector3&, const Math::Vector3&));
-  RaverieBindOverloadedMethod(
-      MeasureReal3Quantized,
-      RaverieStaticOverload(Bits, const Math::Vector3&, const Math::Vector3&, const Math::Vector3&));
+  RaverieBindOverloadedMethod(MeasureReal3Quantized, RaverieStaticOverload(Bits, const Math::Vector3&, const Math::Vector3&));
+  RaverieBindOverloadedMethod(MeasureReal3Quantized, RaverieStaticOverload(Bits, const Math::Vector3&, const Math::Vector3&, const Math::Vector3&));
 
-  RaverieBindOverloadedMethod(MeasureReal4Quantized,
-                            RaverieStaticOverload(Bits, const Math::Vector4&, const Math::Vector4&));
-  RaverieBindOverloadedMethod(
-      MeasureReal4Quantized,
-      RaverieStaticOverload(Bits, const Math::Vector4&, const Math::Vector4&, const Math::Vector4&));
+  RaverieBindOverloadedMethod(MeasureReal4Quantized, RaverieStaticOverload(Bits, const Math::Vector4&, const Math::Vector4&));
+  RaverieBindOverloadedMethod(MeasureReal4Quantized, RaverieStaticOverload(Bits, const Math::Vector4&, const Math::Vector4&, const Math::Vector4&));
 
   // Bind write operations
   RaverieBindMethod(WriteBoolean);
@@ -126,29 +108,14 @@ RaverieDefineType(BitStreamExtended, builder, type)
   RaverieBindOverloadedMethod(WriteDoubleIntegerQuantized, RaverieInstanceOverload(void, s64, s64, s64));
   RaverieBindOverloadedMethod(WriteDoubleIntegerQuantized, RaverieInstanceOverload(void, s64, s64, s64, s64));
 
-  RaverieBindOverloadedMethod(
-      WriteInteger2Quantized,
-      RaverieInstanceOverload(void, const Math::IntVector2&, const Math::IntVector2&, const Math::IntVector2&));
-  RaverieBindOverloadedMethod(
-      WriteInteger2Quantized,
-      RaverieInstanceOverload(
-          void, const Math::IntVector2&, const Math::IntVector2&, const Math::IntVector2&, const Math::IntVector2&));
+  RaverieBindOverloadedMethod(WriteInteger2Quantized, RaverieInstanceOverload(void, const Math::IntVector2&, const Math::IntVector2&, const Math::IntVector2&));
+  RaverieBindOverloadedMethod(WriteInteger2Quantized, RaverieInstanceOverload(void, const Math::IntVector2&, const Math::IntVector2&, const Math::IntVector2&, const Math::IntVector2&));
 
-  RaverieBindOverloadedMethod(
-      WriteInteger3Quantized,
-      RaverieInstanceOverload(void, const Math::IntVector3&, const Math::IntVector3&, const Math::IntVector3&));
-  RaverieBindOverloadedMethod(
-      WriteInteger3Quantized,
-      RaverieInstanceOverload(
-          void, const Math::IntVector3&, const Math::IntVector3&, const Math::IntVector3&, const Math::IntVector3&));
+  RaverieBindOverloadedMethod(WriteInteger3Quantized, RaverieInstanceOverload(void, const Math::IntVector3&, const Math::IntVector3&, const Math::IntVector3&));
+  RaverieBindOverloadedMethod(WriteInteger3Quantized, RaverieInstanceOverload(void, const Math::IntVector3&, const Math::IntVector3&, const Math::IntVector3&, const Math::IntVector3&));
 
-  RaverieBindOverloadedMethod(
-      WriteInteger4Quantized,
-      RaverieInstanceOverload(void, const Math::IntVector4&, const Math::IntVector4&, const Math::IntVector4&));
-  RaverieBindOverloadedMethod(
-      WriteInteger4Quantized,
-      RaverieInstanceOverload(
-          void, const Math::IntVector4&, const Math::IntVector4&, const Math::IntVector4&, const Math::IntVector4&));
+  RaverieBindOverloadedMethod(WriteInteger4Quantized, RaverieInstanceOverload(void, const Math::IntVector4&, const Math::IntVector4&, const Math::IntVector4&));
+  RaverieBindOverloadedMethod(WriteInteger4Quantized, RaverieInstanceOverload(void, const Math::IntVector4&, const Math::IntVector4&, const Math::IntVector4&, const Math::IntVector4&));
 
   RaverieBindOverloadedMethod(WriteRealQuantized, RaverieInstanceOverload(void, float, float, float));
   RaverieBindOverloadedMethod(WriteRealQuantized, RaverieInstanceOverload(void, float, float, float, float));
@@ -156,29 +123,14 @@ RaverieDefineType(BitStreamExtended, builder, type)
   RaverieBindOverloadedMethod(WriteDoubleRealQuantized, RaverieInstanceOverload(void, double, double, double));
   RaverieBindOverloadedMethod(WriteDoubleRealQuantized, RaverieInstanceOverload(void, double, double, double, double));
 
-  RaverieBindOverloadedMethod(
-      WriteReal2Quantized,
-      RaverieInstanceOverload(void, const Math::Vector2&, const Math::Vector2&, const Math::Vector2&));
-  RaverieBindOverloadedMethod(
-      WriteReal2Quantized,
-      RaverieInstanceOverload(
-          void, const Math::Vector2&, const Math::Vector2&, const Math::Vector2&, const Math::Vector2&));
+  RaverieBindOverloadedMethod(WriteReal2Quantized, RaverieInstanceOverload(void, const Math::Vector2&, const Math::Vector2&, const Math::Vector2&));
+  RaverieBindOverloadedMethod(WriteReal2Quantized, RaverieInstanceOverload(void, const Math::Vector2&, const Math::Vector2&, const Math::Vector2&, const Math::Vector2&));
 
-  RaverieBindOverloadedMethod(
-      WriteReal3Quantized,
-      RaverieInstanceOverload(void, const Math::Vector3&, const Math::Vector3&, const Math::Vector3&));
-  RaverieBindOverloadedMethod(
-      WriteReal3Quantized,
-      RaverieInstanceOverload(
-          void, const Math::Vector3&, const Math::Vector3&, const Math::Vector3&, const Math::Vector3&));
+  RaverieBindOverloadedMethod(WriteReal3Quantized, RaverieInstanceOverload(void, const Math::Vector3&, const Math::Vector3&, const Math::Vector3&));
+  RaverieBindOverloadedMethod(WriteReal3Quantized, RaverieInstanceOverload(void, const Math::Vector3&, const Math::Vector3&, const Math::Vector3&, const Math::Vector3&));
 
-  RaverieBindOverloadedMethod(
-      WriteReal4Quantized,
-      RaverieInstanceOverload(void, const Math::Vector4&, const Math::Vector4&, const Math::Vector4&));
-  RaverieBindOverloadedMethod(
-      WriteReal4Quantized,
-      RaverieInstanceOverload(
-          void, const Math::Vector4&, const Math::Vector4&, const Math::Vector4&, const Math::Vector4&));
+  RaverieBindOverloadedMethod(WriteReal4Quantized, RaverieInstanceOverload(void, const Math::Vector4&, const Math::Vector4&, const Math::Vector4&));
+  RaverieBindOverloadedMethod(WriteReal4Quantized, RaverieInstanceOverload(void, const Math::Vector4&, const Math::Vector4&, const Math::Vector4&, const Math::Vector4&));
 
   // Bind can-read operations
   RaverieBindMethod(CanReadBoolean);
@@ -211,23 +163,14 @@ RaverieDefineType(BitStreamExtended, builder, type)
   RaverieBindOverloadedMethod(CanReadDoubleIntegerQuantized, RaverieConstInstanceOverload(bool, s64, s64));
   RaverieBindOverloadedMethod(CanReadDoubleIntegerQuantized, RaverieConstInstanceOverload(bool, s64, s64, s64));
 
-  RaverieBindOverloadedMethod(CanReadInteger2Quantized,
-                            RaverieConstInstanceOverload(bool, const Math::IntVector2&, const Math::IntVector2&));
-  RaverieBindOverloadedMethod(
-      CanReadInteger2Quantized,
-      RaverieConstInstanceOverload(bool, const Math::IntVector2&, const Math::IntVector2&, const Math::IntVector2&));
+  RaverieBindOverloadedMethod(CanReadInteger2Quantized, RaverieConstInstanceOverload(bool, const Math::IntVector2&, const Math::IntVector2&));
+  RaverieBindOverloadedMethod(CanReadInteger2Quantized, RaverieConstInstanceOverload(bool, const Math::IntVector2&, const Math::IntVector2&, const Math::IntVector2&));
 
-  RaverieBindOverloadedMethod(CanReadInteger3Quantized,
-                            RaverieConstInstanceOverload(bool, const Math::IntVector3&, const Math::IntVector3&));
-  RaverieBindOverloadedMethod(
-      CanReadInteger3Quantized,
-      RaverieConstInstanceOverload(bool, const Math::IntVector3&, const Math::IntVector3&, const Math::IntVector3&));
+  RaverieBindOverloadedMethod(CanReadInteger3Quantized, RaverieConstInstanceOverload(bool, const Math::IntVector3&, const Math::IntVector3&));
+  RaverieBindOverloadedMethod(CanReadInteger3Quantized, RaverieConstInstanceOverload(bool, const Math::IntVector3&, const Math::IntVector3&, const Math::IntVector3&));
 
-  RaverieBindOverloadedMethod(CanReadInteger4Quantized,
-                            RaverieConstInstanceOverload(bool, const Math::IntVector4&, const Math::IntVector4&));
-  RaverieBindOverloadedMethod(
-      CanReadInteger4Quantized,
-      RaverieConstInstanceOverload(bool, const Math::IntVector4&, const Math::IntVector4&, const Math::IntVector4&));
+  RaverieBindOverloadedMethod(CanReadInteger4Quantized, RaverieConstInstanceOverload(bool, const Math::IntVector4&, const Math::IntVector4&));
+  RaverieBindOverloadedMethod(CanReadInteger4Quantized, RaverieConstInstanceOverload(bool, const Math::IntVector4&, const Math::IntVector4&, const Math::IntVector4&));
 
   RaverieBindOverloadedMethod(CanReadRealQuantized, RaverieConstInstanceOverload(bool, float, float));
   RaverieBindOverloadedMethod(CanReadRealQuantized, RaverieConstInstanceOverload(bool, float, float, float));
@@ -235,23 +178,14 @@ RaverieDefineType(BitStreamExtended, builder, type)
   RaverieBindOverloadedMethod(CanReadDoubleRealQuantized, RaverieConstInstanceOverload(bool, double, double));
   RaverieBindOverloadedMethod(CanReadDoubleRealQuantized, RaverieConstInstanceOverload(bool, double, double, double));
 
-  RaverieBindOverloadedMethod(CanReadReal2Quantized,
-                            RaverieConstInstanceOverload(bool, const Math::Vector2&, const Math::Vector2&));
-  RaverieBindOverloadedMethod(
-      CanReadReal2Quantized,
-      RaverieConstInstanceOverload(bool, const Math::Vector2&, const Math::Vector2&, const Math::Vector2&));
+  RaverieBindOverloadedMethod(CanReadReal2Quantized, RaverieConstInstanceOverload(bool, const Math::Vector2&, const Math::Vector2&));
+  RaverieBindOverloadedMethod(CanReadReal2Quantized, RaverieConstInstanceOverload(bool, const Math::Vector2&, const Math::Vector2&, const Math::Vector2&));
 
-  RaverieBindOverloadedMethod(CanReadReal3Quantized,
-                            RaverieConstInstanceOverload(bool, const Math::Vector3&, const Math::Vector3&));
-  RaverieBindOverloadedMethod(
-      CanReadReal3Quantized,
-      RaverieConstInstanceOverload(bool, const Math::Vector3&, const Math::Vector3&, const Math::Vector3&));
+  RaverieBindOverloadedMethod(CanReadReal3Quantized, RaverieConstInstanceOverload(bool, const Math::Vector3&, const Math::Vector3&));
+  RaverieBindOverloadedMethod(CanReadReal3Quantized, RaverieConstInstanceOverload(bool, const Math::Vector3&, const Math::Vector3&, const Math::Vector3&));
 
-  RaverieBindOverloadedMethod(CanReadReal4Quantized,
-                            RaverieConstInstanceOverload(bool, const Math::Vector4&, const Math::Vector4&));
-  RaverieBindOverloadedMethod(
-      CanReadReal4Quantized,
-      RaverieConstInstanceOverload(bool, const Math::Vector4&, const Math::Vector4&, const Math::Vector4&));
+  RaverieBindOverloadedMethod(CanReadReal4Quantized, RaverieConstInstanceOverload(bool, const Math::Vector4&, const Math::Vector4&));
+  RaverieBindOverloadedMethod(CanReadReal4Quantized, RaverieConstInstanceOverload(bool, const Math::Vector4&, const Math::Vector4&, const Math::Vector4&));
 
   // Bind read operations
   RaverieBindMethod(ReadBoolean);
@@ -284,29 +218,14 @@ RaverieDefineType(BitStreamExtended, builder, type)
   RaverieBindOverloadedMethod(ReadDoubleIntegerQuantized, RaverieConstInstanceOverload(s64, s64, s64));
   RaverieBindOverloadedMethod(ReadDoubleIntegerQuantized, RaverieConstInstanceOverload(s64, s64, s64, s64));
 
-  RaverieBindOverloadedMethod(
-      ReadInteger2Quantized,
-      RaverieConstInstanceOverload(Math::IntVector2, const Math::IntVector2&, const Math::IntVector2&));
-  RaverieBindOverloadedMethod(
-      ReadInteger2Quantized,
-      RaverieConstInstanceOverload(
-          Math::IntVector2, const Math::IntVector2&, const Math::IntVector2&, const Math::IntVector2&));
+  RaverieBindOverloadedMethod(ReadInteger2Quantized, RaverieConstInstanceOverload(Math::IntVector2, const Math::IntVector2&, const Math::IntVector2&));
+  RaverieBindOverloadedMethod(ReadInteger2Quantized, RaverieConstInstanceOverload(Math::IntVector2, const Math::IntVector2&, const Math::IntVector2&, const Math::IntVector2&));
 
-  RaverieBindOverloadedMethod(
-      ReadInteger3Quantized,
-      RaverieConstInstanceOverload(Math::IntVector3, const Math::IntVector3&, const Math::IntVector3&));
-  RaverieBindOverloadedMethod(
-      ReadInteger3Quantized,
-      RaverieConstInstanceOverload(
-          Math::IntVector3, const Math::IntVector3&, const Math::IntVector3&, const Math::IntVector3&));
+  RaverieBindOverloadedMethod(ReadInteger3Quantized, RaverieConstInstanceOverload(Math::IntVector3, const Math::IntVector3&, const Math::IntVector3&));
+  RaverieBindOverloadedMethod(ReadInteger3Quantized, RaverieConstInstanceOverload(Math::IntVector3, const Math::IntVector3&, const Math::IntVector3&, const Math::IntVector3&));
 
-  RaverieBindOverloadedMethod(
-      ReadInteger4Quantized,
-      RaverieConstInstanceOverload(Math::IntVector4, const Math::IntVector4&, const Math::IntVector4&));
-  RaverieBindOverloadedMethod(
-      ReadInteger4Quantized,
-      RaverieConstInstanceOverload(
-          Math::IntVector4, const Math::IntVector4&, const Math::IntVector4&, const Math::IntVector4&));
+  RaverieBindOverloadedMethod(ReadInteger4Quantized, RaverieConstInstanceOverload(Math::IntVector4, const Math::IntVector4&, const Math::IntVector4&));
+  RaverieBindOverloadedMethod(ReadInteger4Quantized, RaverieConstInstanceOverload(Math::IntVector4, const Math::IntVector4&, const Math::IntVector4&, const Math::IntVector4&));
 
   RaverieBindOverloadedMethod(ReadRealQuantized, RaverieConstInstanceOverload(float, float, float));
   RaverieBindOverloadedMethod(ReadRealQuantized, RaverieConstInstanceOverload(float, float, float, float));
@@ -314,23 +233,14 @@ RaverieDefineType(BitStreamExtended, builder, type)
   RaverieBindOverloadedMethod(ReadDoubleRealQuantized, RaverieConstInstanceOverload(double, double, double));
   RaverieBindOverloadedMethod(ReadDoubleRealQuantized, RaverieConstInstanceOverload(double, double, double, double));
 
-  RaverieBindOverloadedMethod(ReadReal2Quantized,
-                            RaverieConstInstanceOverload(Math::Vector2, const Math::Vector2&, const Math::Vector2&));
-  RaverieBindOverloadedMethod(
-      ReadReal2Quantized,
-      RaverieConstInstanceOverload(Math::Vector2, const Math::Vector2&, const Math::Vector2&, const Math::Vector2&));
+  RaverieBindOverloadedMethod(ReadReal2Quantized, RaverieConstInstanceOverload(Math::Vector2, const Math::Vector2&, const Math::Vector2&));
+  RaverieBindOverloadedMethod(ReadReal2Quantized, RaverieConstInstanceOverload(Math::Vector2, const Math::Vector2&, const Math::Vector2&, const Math::Vector2&));
 
-  RaverieBindOverloadedMethod(ReadReal3Quantized,
-                            RaverieConstInstanceOverload(Math::Vector3, const Math::Vector3&, const Math::Vector3&));
-  RaverieBindOverloadedMethod(
-      ReadReal3Quantized,
-      RaverieConstInstanceOverload(Math::Vector3, const Math::Vector3&, const Math::Vector3&, const Math::Vector3&));
+  RaverieBindOverloadedMethod(ReadReal3Quantized, RaverieConstInstanceOverload(Math::Vector3, const Math::Vector3&, const Math::Vector3&));
+  RaverieBindOverloadedMethod(ReadReal3Quantized, RaverieConstInstanceOverload(Math::Vector3, const Math::Vector3&, const Math::Vector3&, const Math::Vector3&));
 
-  RaverieBindOverloadedMethod(ReadReal4Quantized,
-                            RaverieConstInstanceOverload(Math::Vector4, const Math::Vector4&, const Math::Vector4&));
-  RaverieBindOverloadedMethod(
-      ReadReal4Quantized,
-      RaverieConstInstanceOverload(Math::Vector4, const Math::Vector4&, const Math::Vector4&, const Math::Vector4&));
+  RaverieBindOverloadedMethod(ReadReal4Quantized, RaverieConstInstanceOverload(Math::Vector4, const Math::Vector4&, const Math::Vector4&));
+  RaverieBindOverloadedMethod(ReadReal4Quantized, RaverieConstInstanceOverload(Math::Vector4, const Math::Vector4&, const Math::Vector4&, const Math::Vector4&));
 
   // Bind bitstream methods
   RaverieBindMethod(GetBitCapacity);
@@ -494,43 +404,29 @@ Bits BitStreamExtended::MeasureInteger2Quantized(const Math::IntVector2& minValu
 {
   return MeasureInteger2Quantized(minValue, maxValue, Math::IntVector2(DefaultIntegralQuantum, DefaultIntegralQuantum));
 }
-Bits BitStreamExtended::MeasureInteger2Quantized(const Math::IntVector2& minValue,
-                                                 const Math::IntVector2& maxValue,
-                                                 const Math::IntVector2& quantum)
+Bits BitStreamExtended::MeasureInteger2Quantized(const Math::IntVector2& minValue, const Math::IntVector2& maxValue, const Math::IntVector2& quantum)
 {
-  return BitStream::MeasureQuantized(minValue.x, maxValue.x, quantum.x) +
-         BitStream::MeasureQuantized(minValue.y, maxValue.y, quantum.y);
+  return BitStream::MeasureQuantized(minValue.x, maxValue.x, quantum.x) + BitStream::MeasureQuantized(minValue.y, maxValue.y, quantum.y);
 }
 
 Bits BitStreamExtended::MeasureInteger3Quantized(const Math::IntVector3& minValue, const Math::IntVector3& maxValue)
 {
-  return MeasureInteger3Quantized(
-      minValue, maxValue, Math::IntVector3(DefaultIntegralQuantum, DefaultIntegralQuantum, DefaultIntegralQuantum));
+  return MeasureInteger3Quantized(minValue, maxValue, Math::IntVector3(DefaultIntegralQuantum, DefaultIntegralQuantum, DefaultIntegralQuantum));
 }
-Bits BitStreamExtended::MeasureInteger3Quantized(const Math::IntVector3& minValue,
-                                                 const Math::IntVector3& maxValue,
-                                                 const Math::IntVector3& quantum)
+Bits BitStreamExtended::MeasureInteger3Quantized(const Math::IntVector3& minValue, const Math::IntVector3& maxValue, const Math::IntVector3& quantum)
 {
-  return BitStream::MeasureQuantized(minValue.x, maxValue.x, quantum.x) +
-         BitStream::MeasureQuantized(minValue.y, maxValue.y, quantum.y) +
+  return BitStream::MeasureQuantized(minValue.x, maxValue.x, quantum.x) + BitStream::MeasureQuantized(minValue.y, maxValue.y, quantum.y) +
          BitStream::MeasureQuantized(minValue.z, maxValue.z, quantum.z);
 }
 
 Bits BitStreamExtended::MeasureInteger4Quantized(const Math::IntVector4& minValue, const Math::IntVector4& maxValue)
 {
-  return MeasureInteger4Quantized(
-      minValue,
-      maxValue,
-      Math::IntVector4(DefaultIntegralQuantum, DefaultIntegralQuantum, DefaultIntegralQuantum, DefaultIntegralQuantum));
+  return MeasureInteger4Quantized(minValue, maxValue, Math::IntVector4(DefaultIntegralQuantum, DefaultIntegralQuantum, DefaultIntegralQuantum, DefaultIntegralQuantum));
 }
-Bits BitStreamExtended::MeasureInteger4Quantized(const Math::IntVector4& minValue,
-                                                 const Math::IntVector4& maxValue,
-                                                 const Math::IntVector4& quantum)
+Bits BitStreamExtended::MeasureInteger4Quantized(const Math::IntVector4& minValue, const Math::IntVector4& maxValue, const Math::IntVector4& quantum)
 {
-  return BitStream::MeasureQuantized(minValue.x, maxValue.x, quantum.x) +
-         BitStream::MeasureQuantized(minValue.y, maxValue.y, quantum.y) +
-         BitStream::MeasureQuantized(minValue.z, maxValue.z, quantum.z) +
-         BitStream::MeasureQuantized(minValue.w, maxValue.w, quantum.w);
+  return BitStream::MeasureQuantized(minValue.x, maxValue.x, quantum.x) + BitStream::MeasureQuantized(minValue.y, maxValue.y, quantum.y) +
+         BitStream::MeasureQuantized(minValue.z, maxValue.z, quantum.z) + BitStream::MeasureQuantized(minValue.w, maxValue.w, quantum.w);
 }
 
 Bits BitStreamExtended::MeasureRealQuantized(float minValue, float maxValue)
@@ -555,24 +451,18 @@ Bits BitStreamExtended::MeasureReal2Quantized(const Math::Vector2& minValue, con
 {
   return MeasureReal2Quantized(minValue, maxValue, Math::Vector2(DefaultFloatingPointQuantum));
 }
-Bits BitStreamExtended::MeasureReal2Quantized(const Math::Vector2& minValue,
-                                              const Math::Vector2& maxValue,
-                                              const Math::Vector2& quantum)
+Bits BitStreamExtended::MeasureReal2Quantized(const Math::Vector2& minValue, const Math::Vector2& maxValue, const Math::Vector2& quantum)
 {
-  return BitStream::MeasureQuantized(minValue.x, maxValue.x, quantum.x) +
-         BitStream::MeasureQuantized(minValue.y, maxValue.y, quantum.y);
+  return BitStream::MeasureQuantized(minValue.x, maxValue.x, quantum.x) + BitStream::MeasureQuantized(minValue.y, maxValue.y, quantum.y);
 }
 
 Bits BitStreamExtended::MeasureReal3Quantized(const Math::Vector3& minValue, const Math::Vector3& maxValue)
 {
   return MeasureReal3Quantized(minValue, maxValue, Math::Vector3(DefaultFloatingPointQuantum));
 }
-Bits BitStreamExtended::MeasureReal3Quantized(const Math::Vector3& minValue,
-                                              const Math::Vector3& maxValue,
-                                              const Math::Vector3& quantum)
+Bits BitStreamExtended::MeasureReal3Quantized(const Math::Vector3& minValue, const Math::Vector3& maxValue, const Math::Vector3& quantum)
 {
-  return BitStream::MeasureQuantized(minValue.x, maxValue.x, quantum.x) +
-         BitStream::MeasureQuantized(minValue.y, maxValue.y, quantum.y) +
+  return BitStream::MeasureQuantized(minValue.x, maxValue.x, quantum.x) + BitStream::MeasureQuantized(minValue.y, maxValue.y, quantum.y) +
          BitStream::MeasureQuantized(minValue.z, maxValue.z, quantum.z);
 }
 
@@ -580,14 +470,10 @@ Bits BitStreamExtended::MeasureReal4Quantized(const Math::Vector4& minValue, con
 {
   return MeasureReal4Quantized(minValue, maxValue, Math::Vector4(DefaultFloatingPointQuantum));
 }
-Bits BitStreamExtended::MeasureReal4Quantized(const Math::Vector4& minValue,
-                                              const Math::Vector4& maxValue,
-                                              const Math::Vector4& quantum)
+Bits BitStreamExtended::MeasureReal4Quantized(const Math::Vector4& minValue, const Math::Vector4& maxValue, const Math::Vector4& quantum)
 {
-  return BitStream::MeasureQuantized(minValue.x, maxValue.x, quantum.x) +
-         BitStream::MeasureQuantized(minValue.y, maxValue.y, quantum.y) +
-         BitStream::MeasureQuantized(minValue.z, maxValue.z, quantum.z) +
-         BitStream::MeasureQuantized(minValue.w, maxValue.w, quantum.w);
+  return BitStream::MeasureQuantized(minValue.x, maxValue.x, quantum.x) + BitStream::MeasureQuantized(minValue.y, maxValue.y, quantum.y) +
+         BitStream::MeasureQuantized(minValue.z, maxValue.z, quantum.z) + BitStream::MeasureQuantized(minValue.w, maxValue.w, quantum.w);
 }
 
 //
@@ -743,17 +629,11 @@ void BitStreamExtended::WriteDoubleIntegerQuantized(s64 value, s64 minValue, s64
   Assert(bitsWritten == MeasureDoubleIntegerQuantized(minValue, maxValue, quantum));
 }
 
-void BitStreamExtended::WriteInteger2Quantized(const Math::IntVector2& value,
-                                               const Math::IntVector2& minValue,
-                                               const Math::IntVector2& maxValue)
+void BitStreamExtended::WriteInteger2Quantized(const Math::IntVector2& value, const Math::IntVector2& minValue, const Math::IntVector2& maxValue)
 {
-  return WriteInteger2Quantized(
-      value, minValue, maxValue, Math::IntVector2(DefaultIntegralQuantum, DefaultIntegralQuantum));
+  return WriteInteger2Quantized(value, minValue, maxValue, Math::IntVector2(DefaultIntegralQuantum, DefaultIntegralQuantum));
 }
-void BitStreamExtended::WriteInteger2Quantized(const Math::IntVector2& value,
-                                               const Math::IntVector2& minValue,
-                                               const Math::IntVector2& maxValue,
-                                               const Math::IntVector2& quantum)
+void BitStreamExtended::WriteInteger2Quantized(const Math::IntVector2& value, const Math::IntVector2& minValue, const Math::IntVector2& maxValue, const Math::IntVector2& quantum)
 {
   Bits bitsWritten = 0;
   bitsWritten += BitStream::WriteQuantized(value.x, minValue.x, maxValue.x, quantum.x);
@@ -761,20 +641,11 @@ void BitStreamExtended::WriteInteger2Quantized(const Math::IntVector2& value,
   Assert(bitsWritten == MeasureInteger2Quantized(minValue, maxValue, quantum));
 }
 
-void BitStreamExtended::WriteInteger3Quantized(const Math::IntVector3& value,
-                                               const Math::IntVector3& minValue,
-                                               const Math::IntVector3& maxValue)
+void BitStreamExtended::WriteInteger3Quantized(const Math::IntVector3& value, const Math::IntVector3& minValue, const Math::IntVector3& maxValue)
 {
-  return WriteInteger3Quantized(
-      value,
-      minValue,
-      maxValue,
-      Math::IntVector3(DefaultIntegralQuantum, DefaultIntegralQuantum, DefaultIntegralQuantum));
+  return WriteInteger3Quantized(value, minValue, maxValue, Math::IntVector3(DefaultIntegralQuantum, DefaultIntegralQuantum, DefaultIntegralQuantum));
 }
-void BitStreamExtended::WriteInteger3Quantized(const Math::IntVector3& value,
-                                               const Math::IntVector3& minValue,
-                                               const Math::IntVector3& maxValue,
-                                               const Math::IntVector3& quantum)
+void BitStreamExtended::WriteInteger3Quantized(const Math::IntVector3& value, const Math::IntVector3& minValue, const Math::IntVector3& maxValue, const Math::IntVector3& quantum)
 {
   Bits bitsWritten = 0;
   bitsWritten += BitStream::WriteQuantized(value.x, minValue.x, maxValue.x, quantum.x);
@@ -783,20 +654,11 @@ void BitStreamExtended::WriteInteger3Quantized(const Math::IntVector3& value,
   Assert(bitsWritten == MeasureInteger3Quantized(minValue, maxValue, quantum));
 }
 
-void BitStreamExtended::WriteInteger4Quantized(const Math::IntVector4& value,
-                                               const Math::IntVector4& minValue,
-                                               const Math::IntVector4& maxValue)
+void BitStreamExtended::WriteInteger4Quantized(const Math::IntVector4& value, const Math::IntVector4& minValue, const Math::IntVector4& maxValue)
 {
-  return WriteInteger4Quantized(
-      value,
-      minValue,
-      maxValue,
-      Math::IntVector4(DefaultIntegralQuantum, DefaultIntegralQuantum, DefaultIntegralQuantum, DefaultIntegralQuantum));
+  return WriteInteger4Quantized(value, minValue, maxValue, Math::IntVector4(DefaultIntegralQuantum, DefaultIntegralQuantum, DefaultIntegralQuantum, DefaultIntegralQuantum));
 }
-void BitStreamExtended::WriteInteger4Quantized(const Math::IntVector4& value,
-                                               const Math::IntVector4& minValue,
-                                               const Math::IntVector4& maxValue,
-                                               const Math::IntVector4& quantum)
+void BitStreamExtended::WriteInteger4Quantized(const Math::IntVector4& value, const Math::IntVector4& minValue, const Math::IntVector4& maxValue, const Math::IntVector4& quantum)
 {
   Bits bitsWritten = 0;
   bitsWritten += BitStream::WriteQuantized(value.x, minValue.x, maxValue.x, quantum.x);
@@ -826,16 +688,11 @@ void BitStreamExtended::WriteDoubleRealQuantized(double value, double minValue, 
   Assert(bitsWritten == MeasureDoubleRealQuantized(minValue, maxValue, quantum));
 }
 
-void BitStreamExtended::WriteReal2Quantized(const Math::Vector2& value,
-                                            const Math::Vector2& minValue,
-                                            const Math::Vector2& maxValue)
+void BitStreamExtended::WriteReal2Quantized(const Math::Vector2& value, const Math::Vector2& minValue, const Math::Vector2& maxValue)
 {
   return WriteReal2Quantized(value, minValue, maxValue, Math::Vector2(DefaultFloatingPointQuantum));
 }
-void BitStreamExtended::WriteReal2Quantized(const Math::Vector2& value,
-                                            const Math::Vector2& minValue,
-                                            const Math::Vector2& maxValue,
-                                            const Math::Vector2& quantum)
+void BitStreamExtended::WriteReal2Quantized(const Math::Vector2& value, const Math::Vector2& minValue, const Math::Vector2& maxValue, const Math::Vector2& quantum)
 {
   Bits bitsWritten = 0;
   bitsWritten += BitStream::WriteQuantized(value.x, minValue.x, maxValue.x, quantum.x);
@@ -843,16 +700,11 @@ void BitStreamExtended::WriteReal2Quantized(const Math::Vector2& value,
   Assert(bitsWritten == MeasureReal2Quantized(minValue, maxValue, quantum));
 }
 
-void BitStreamExtended::WriteReal3Quantized(const Math::Vector3& value,
-                                            const Math::Vector3& minValue,
-                                            const Math::Vector3& maxValue)
+void BitStreamExtended::WriteReal3Quantized(const Math::Vector3& value, const Math::Vector3& minValue, const Math::Vector3& maxValue)
 {
   return WriteReal3Quantized(value, minValue, maxValue, Math::Vector3(DefaultFloatingPointQuantum));
 }
-void BitStreamExtended::WriteReal3Quantized(const Math::Vector3& value,
-                                            const Math::Vector3& minValue,
-                                            const Math::Vector3& maxValue,
-                                            const Math::Vector3& quantum)
+void BitStreamExtended::WriteReal3Quantized(const Math::Vector3& value, const Math::Vector3& minValue, const Math::Vector3& maxValue, const Math::Vector3& quantum)
 {
   Bits bitsWritten = 0;
   bitsWritten += BitStream::WriteQuantized(value.x, minValue.x, maxValue.x, quantum.x);
@@ -861,16 +713,11 @@ void BitStreamExtended::WriteReal3Quantized(const Math::Vector3& value,
   Assert(bitsWritten == MeasureReal3Quantized(minValue, maxValue, quantum));
 }
 
-void BitStreamExtended::WriteReal4Quantized(const Math::Vector4& value,
-                                            const Math::Vector4& minValue,
-                                            const Math::Vector4& maxValue)
+void BitStreamExtended::WriteReal4Quantized(const Math::Vector4& value, const Math::Vector4& minValue, const Math::Vector4& maxValue)
 {
   return WriteReal4Quantized(value, minValue, maxValue, Math::Vector4(DefaultFloatingPointQuantum));
 }
-void BitStreamExtended::WriteReal4Quantized(const Math::Vector4& value,
-                                            const Math::Vector4& minValue,
-                                            const Math::Vector4& maxValue,
-                                            const Math::Vector4& quantum)
+void BitStreamExtended::WriteReal4Quantized(const Math::Vector4& value, const Math::Vector4& minValue, const Math::Vector4& maxValue, const Math::Vector4& quantum)
 {
   Bits bitsWritten = 0;
   bitsWritten += BitStream::WriteQuantized(value.x, minValue.x, maxValue.x, quantum.x);
@@ -983,38 +830,29 @@ bool BitStreamExtended::CanReadDoubleIntegerQuantized(s64 minValue, s64 maxValue
   return BitStream::GetBitsUnread() >= MeasureDoubleIntegerQuantized(minValue, maxValue, quantum);
 }
 
-bool BitStreamExtended::CanReadInteger2Quantized(const Math::IntVector2& minValue,
-                                                 const Math::IntVector2& maxValue) const
+bool BitStreamExtended::CanReadInteger2Quantized(const Math::IntVector2& minValue, const Math::IntVector2& maxValue) const
 {
   return BitStream::GetBitsUnread() >= MeasureInteger2Quantized(minValue, maxValue);
 }
-bool BitStreamExtended::CanReadInteger2Quantized(const Math::IntVector2& minValue,
-                                                 const Math::IntVector2& maxValue,
-                                                 const Math::IntVector2& quantum) const
+bool BitStreamExtended::CanReadInteger2Quantized(const Math::IntVector2& minValue, const Math::IntVector2& maxValue, const Math::IntVector2& quantum) const
 {
   return BitStream::GetBitsUnread() >= MeasureInteger2Quantized(minValue, maxValue, quantum);
 }
 
-bool BitStreamExtended::CanReadInteger3Quantized(const Math::IntVector3& minValue,
-                                                 const Math::IntVector3& maxValue) const
+bool BitStreamExtended::CanReadInteger3Quantized(const Math::IntVector3& minValue, const Math::IntVector3& maxValue) const
 {
   return BitStream::GetBitsUnread() >= MeasureInteger3Quantized(minValue, maxValue);
 }
-bool BitStreamExtended::CanReadInteger3Quantized(const Math::IntVector3& minValue,
-                                                 const Math::IntVector3& maxValue,
-                                                 const Math::IntVector3& quantum) const
+bool BitStreamExtended::CanReadInteger3Quantized(const Math::IntVector3& minValue, const Math::IntVector3& maxValue, const Math::IntVector3& quantum) const
 {
   return BitStream::GetBitsUnread() >= MeasureInteger3Quantized(minValue, maxValue, quantum);
 }
 
-bool BitStreamExtended::CanReadInteger4Quantized(const Math::IntVector4& minValue,
-                                                 const Math::IntVector4& maxValue) const
+bool BitStreamExtended::CanReadInteger4Quantized(const Math::IntVector4& minValue, const Math::IntVector4& maxValue) const
 {
   return BitStream::GetBitsUnread() >= MeasureInteger4Quantized(minValue, maxValue);
 }
-bool BitStreamExtended::CanReadInteger4Quantized(const Math::IntVector4& minValue,
-                                                 const Math::IntVector4& maxValue,
-                                                 const Math::IntVector4& quantum) const
+bool BitStreamExtended::CanReadInteger4Quantized(const Math::IntVector4& minValue, const Math::IntVector4& maxValue, const Math::IntVector4& quantum) const
 {
   return BitStream::GetBitsUnread() >= MeasureInteger4Quantized(minValue, maxValue, quantum);
 }
@@ -1041,9 +879,7 @@ bool BitStreamExtended::CanReadReal2Quantized(const Math::Vector2& minValue, con
 {
   return BitStream::GetBitsUnread() >= MeasureReal2Quantized(minValue, maxValue);
 }
-bool BitStreamExtended::CanReadReal2Quantized(const Math::Vector2& minValue,
-                                              const Math::Vector2& maxValue,
-                                              const Math::Vector2& quantum) const
+bool BitStreamExtended::CanReadReal2Quantized(const Math::Vector2& minValue, const Math::Vector2& maxValue, const Math::Vector2& quantum) const
 {
   return BitStream::GetBitsUnread() >= MeasureReal2Quantized(minValue, maxValue, quantum);
 }
@@ -1052,9 +888,7 @@ bool BitStreamExtended::CanReadReal3Quantized(const Math::Vector3& minValue, con
 {
   return BitStream::GetBitsUnread() >= MeasureReal3Quantized(minValue, maxValue);
 }
-bool BitStreamExtended::CanReadReal3Quantized(const Math::Vector3& minValue,
-                                              const Math::Vector3& maxValue,
-                                              const Math::Vector3& quantum) const
+bool BitStreamExtended::CanReadReal3Quantized(const Math::Vector3& minValue, const Math::Vector3& maxValue, const Math::Vector3& quantum) const
 {
   return BitStream::GetBitsUnread() >= MeasureReal3Quantized(minValue, maxValue, quantum);
 }
@@ -1063,9 +897,7 @@ bool BitStreamExtended::CanReadReal4Quantized(const Math::Vector4& minValue, con
 {
   return BitStream::GetBitsUnread() >= MeasureReal4Quantized(minValue, maxValue);
 }
-bool BitStreamExtended::CanReadReal4Quantized(const Math::Vector4& minValue,
-                                              const Math::Vector4& maxValue,
-                                              const Math::Vector4& quantum) const
+bool BitStreamExtended::CanReadReal4Quantized(const Math::Vector4& minValue, const Math::Vector4& maxValue, const Math::Vector4& quantum) const
 {
   return BitStream::GetBitsUnread() >= MeasureReal4Quantized(minValue, maxValue, quantum);
 }
@@ -1427,9 +1259,7 @@ Math::Vector3 BitStreamExtended::ReadReal3Half() const
                                      BitStream::GetBitsWritten()));
   }
 
-  return Math::Vector3(HalfFloatConverter::ToFloat(value[0]),
-                       HalfFloatConverter::ToFloat(value[1]),
-                       HalfFloatConverter::ToFloat(value[2]));
+  return Math::Vector3(HalfFloatConverter::ToFloat(value[0]), HalfFloatConverter::ToFloat(value[1]), HalfFloatConverter::ToFloat(value[2]));
 }
 Math::Vector4 BitStreamExtended::ReadReal4Half() const
 {
@@ -1453,10 +1283,7 @@ Math::Vector4 BitStreamExtended::ReadReal4Half() const
                                      BitStream::GetBitsWritten()));
   }
 
-  return Math::Vector4(HalfFloatConverter::ToFloat(value[0]),
-                       HalfFloatConverter::ToFloat(value[1]),
-                       HalfFloatConverter::ToFloat(value[2]),
-                       HalfFloatConverter::ToFloat(value[3]));
+  return Math::Vector4(HalfFloatConverter::ToFloat(value[0]), HalfFloatConverter::ToFloat(value[1]), HalfFloatConverter::ToFloat(value[2]), HalfFloatConverter::ToFloat(value[3]));
 }
 
 //
@@ -1513,14 +1340,11 @@ s64 BitStreamExtended::ReadDoubleIntegerQuantized(s64 minValue, s64 maxValue, s6
   return value;
 }
 
-Math::IntVector2 BitStreamExtended::ReadInteger2Quantized(const Math::IntVector2& minValue,
-                                                          const Math::IntVector2& maxValue) const
+Math::IntVector2 BitStreamExtended::ReadInteger2Quantized(const Math::IntVector2& minValue, const Math::IntVector2& maxValue) const
 {
   return ReadInteger2Quantized(minValue, maxValue, Math::IntVector2(DefaultIntegralQuantum, DefaultIntegralQuantum));
 }
-Math::IntVector2 BitStreamExtended::ReadInteger2Quantized(const Math::IntVector2& minValue,
-                                                          const Math::IntVector2& maxValue,
-                                                          const Math::IntVector2& quantum) const
+Math::IntVector2 BitStreamExtended::ReadInteger2Quantized(const Math::IntVector2& minValue, const Math::IntVector2& maxValue, const Math::IntVector2& quantum) const
 {
   Assert(CanReadInteger2Quantized(minValue, maxValue, quantum));
 
@@ -1543,15 +1367,11 @@ Math::IntVector2 BitStreamExtended::ReadInteger2Quantized(const Math::IntVector2
   return value;
 }
 
-Math::IntVector3 BitStreamExtended::ReadInteger3Quantized(const Math::IntVector3& minValue,
-                                                          const Math::IntVector3& maxValue) const
+Math::IntVector3 BitStreamExtended::ReadInteger3Quantized(const Math::IntVector3& minValue, const Math::IntVector3& maxValue) const
 {
-  return ReadInteger3Quantized(
-      minValue, maxValue, Math::IntVector3(DefaultIntegralQuantum, DefaultIntegralQuantum, DefaultIntegralQuantum));
+  return ReadInteger3Quantized(minValue, maxValue, Math::IntVector3(DefaultIntegralQuantum, DefaultIntegralQuantum, DefaultIntegralQuantum));
 }
-Math::IntVector3 BitStreamExtended::ReadInteger3Quantized(const Math::IntVector3& minValue,
-                                                          const Math::IntVector3& maxValue,
-                                                          const Math::IntVector3& quantum) const
+Math::IntVector3 BitStreamExtended::ReadInteger3Quantized(const Math::IntVector3& minValue, const Math::IntVector3& maxValue, const Math::IntVector3& quantum) const
 {
   Assert(CanReadInteger3Quantized(minValue, maxValue, quantum));
 
@@ -1575,17 +1395,11 @@ Math::IntVector3 BitStreamExtended::ReadInteger3Quantized(const Math::IntVector3
   return value;
 }
 
-Math::IntVector4 BitStreamExtended::ReadInteger4Quantized(const Math::IntVector4& minValue,
-                                                          const Math::IntVector4& maxValue) const
+Math::IntVector4 BitStreamExtended::ReadInteger4Quantized(const Math::IntVector4& minValue, const Math::IntVector4& maxValue) const
 {
-  return ReadInteger4Quantized(
-      minValue,
-      maxValue,
-      Math::IntVector4(DefaultIntegralQuantum, DefaultIntegralQuantum, DefaultIntegralQuantum, DefaultIntegralQuantum));
+  return ReadInteger4Quantized(minValue, maxValue, Math::IntVector4(DefaultIntegralQuantum, DefaultIntegralQuantum, DefaultIntegralQuantum, DefaultIntegralQuantum));
 }
-Math::IntVector4 BitStreamExtended::ReadInteger4Quantized(const Math::IntVector4& minValue,
-                                                          const Math::IntVector4& maxValue,
-                                                          const Math::IntVector4& quantum) const
+Math::IntVector4 BitStreamExtended::ReadInteger4Quantized(const Math::IntVector4& minValue, const Math::IntVector4& maxValue, const Math::IntVector4& quantum) const
 {
   Assert(CanReadInteger4Quantized(minValue, maxValue, quantum));
 
@@ -1664,9 +1478,7 @@ Math::Vector2 BitStreamExtended::ReadReal2Quantized(const Math::Vector2& minValu
 {
   return ReadReal2Quantized(minValue, maxValue, Math::Vector2(DefaultFloatingPointQuantum));
 }
-Math::Vector2 BitStreamExtended::ReadReal2Quantized(const Math::Vector2& minValue,
-                                                    const Math::Vector2& maxValue,
-                                                    const Math::Vector2& quantum) const
+Math::Vector2 BitStreamExtended::ReadReal2Quantized(const Math::Vector2& minValue, const Math::Vector2& maxValue, const Math::Vector2& quantum) const
 {
   Assert(CanReadReal2Quantized(minValue, maxValue, quantum));
 
@@ -1693,9 +1505,7 @@ Math::Vector3 BitStreamExtended::ReadReal3Quantized(const Math::Vector3& minValu
 {
   return ReadReal3Quantized(minValue, maxValue, Math::Vector3(DefaultFloatingPointQuantum));
 }
-Math::Vector3 BitStreamExtended::ReadReal3Quantized(const Math::Vector3& minValue,
-                                                    const Math::Vector3& maxValue,
-                                                    const Math::Vector3& quantum) const
+Math::Vector3 BitStreamExtended::ReadReal3Quantized(const Math::Vector3& minValue, const Math::Vector3& maxValue, const Math::Vector3& quantum) const
 {
   Assert(CanReadReal3Quantized(minValue, maxValue, quantum));
 
@@ -1723,9 +1533,7 @@ Math::Vector4 BitStreamExtended::ReadReal4Quantized(const Math::Vector4& minValu
 {
   return ReadReal4Quantized(minValue, maxValue, Math::Vector4(DefaultFloatingPointQuantum));
 }
-Math::Vector4 BitStreamExtended::ReadReal4Quantized(const Math::Vector4& minValue,
-                                                    const Math::Vector4& maxValue,
-                                                    const Math::Vector4& quantum) const
+Math::Vector4 BitStreamExtended::ReadReal4Quantized(const Math::Vector4& minValue, const Math::Vector4& maxValue, const Math::Vector4& quantum) const
 {
   Assert(CanReadReal4Quantized(minValue, maxValue, quantum));
 
@@ -2083,8 +1891,7 @@ Bits Serialize<BitStreamExtended>(SerializeDirection::Enum direction, BitStream&
     {
       // Write small bitstream extended size
       // But instead write the 'Is Large' Value
-      bitStream.WriteQuantized(
-          BitStreamExtendedSmallSizeIsLargeValue, BitStreamExtendedSmallSizeBitsMin, BitStreamExtendedSmallSizeBitsMax);
+      bitStream.WriteQuantized(BitStreamExtendedSmallSizeIsLargeValue, BitStreamExtendedSmallSizeBitsMin, BitStreamExtendedSmallSizeBitsMax);
 
       // Write large bitstream extended size
       bitStream.WriteQuantized(valueBits, BitStreamExtendedLargeSizeBitsMin, BitStreamExtendedLargeSizeBitsMax);
@@ -2103,18 +1910,13 @@ Bits Serialize<BitStreamExtended>(SerializeDirection::Enum direction, BitStream&
 
     // Read small bitstream extended size
     Bits valueBits = 0;
-    ReturnIf(!bitStream.ReadQuantized(valueBits, BitStreamExtendedSmallSizeBitsMin, BitStreamExtendedSmallSizeBitsMax),
-             0,
-             "");
+    ReturnIf(!bitStream.ReadQuantized(valueBits, BitStreamExtendedSmallSizeBitsMin, BitStreamExtendedSmallSizeBitsMax), 0, "");
 
     // 'Is Large' Value?
     if (valueBits == BitStreamExtendedSmallSizeIsLargeValue)
     {
       // Read large bitstream extended size
-      ReturnIf(
-          !bitStream.ReadQuantized(valueBits, BitStreamExtendedLargeSizeBitsMin, BitStreamExtendedLargeSizeBitsMax),
-          0,
-          "");
+      ReturnIf(!bitStream.ReadQuantized(valueBits, BitStreamExtendedLargeSizeBitsMin, BitStreamExtendedLargeSizeBitsMax), 0, "");
     }
 
     // (There should be enough bits available to be read)

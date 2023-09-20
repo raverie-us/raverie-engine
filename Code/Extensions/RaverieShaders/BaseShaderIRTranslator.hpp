@@ -25,9 +25,7 @@ public:
   /// library. Each shader type in the library will contain translated classes
   /// that can be put together with a backend (e.g.
   /// RaverieSpirVDisassemblerBackend)
-  virtual bool Translate(Raverie::SyntaxTree& syntaxTree,
-                         RaverieShaderIRProject* project,
-                         RaverieShaderIRLibrary* library) = 0;
+  virtual bool Translate(Raverie::SyntaxTree& syntaxTree, RaverieShaderIRProject* project, RaverieShaderIRLibrary* library) = 0;
 
   // An intrusive reference count for memory handling
   RaverieRefLink(BaseShaderIRTranslator);

@@ -202,12 +202,7 @@ uint SampleCurve::InsertControlPoint(ControlPoint cp)
   return mControlPoints.FindIndex(cp);
 }
 
-SampleCurve::ControlPoint::ControlPoint(Vec2Param pos, Vec2Param tanIn, Vec2Param tanOut, uint editorFlags) :
-    Time(pos.x),
-    Value(pos.y),
-    TangentIn(tanIn),
-    TangentOut(tanOut),
-    EditorFlags(editorFlags)
+SampleCurve::ControlPoint::ControlPoint(Vec2Param pos, Vec2Param tanIn, Vec2Param tanOut, uint editorFlags) : Time(pos.x), Value(pos.y), TangentIn(tanIn), TangentOut(tanOut), EditorFlags(editorFlags)
 {
 }
 

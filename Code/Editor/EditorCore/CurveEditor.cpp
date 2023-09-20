@@ -41,9 +41,7 @@ public:
   /// Where the drag was started in pixels.
   Vec2 mDragStartGraph;
 
-  MultiSelectManipulation(MouseDragEvent* dragEvent, CurveEditor* editor) :
-      MouseManipulation(dragEvent->GetMouse(), editor->GetRootWidget()),
-      mEditor(editor)
+  MultiSelectManipulation(MouseDragEvent* dragEvent, CurveEditor* editor) : MouseManipulation(dragEvent->GetMouse(), editor->GetRootWidget()), mEditor(editor)
   {
     Vec2 localPixels = mEditor->ToLocal(dragEvent->StartPosition);
     mDragStartGraph = mEditor->ToGraphPosition(localPixels);
@@ -133,8 +131,7 @@ CurveDrawer::CurveDrawer(CurveEditor* curveEditor) : Widget(curveEditor)
   mCurveEditor = curveEditor;
 }
 
-void CurveDrawer::RenderUpdate(
-    ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
+void CurveDrawer::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 
@@ -202,10 +199,7 @@ void CurveDrawer::AddCurve(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetR
   CreateRenderData(viewBlock, frameBlock, clipRect, lines, PrimitiveType::Lines);
 }
 
-void CurveDrawer::AddControlPoints(ViewBlock& viewBlock,
-                                   FrameBlock& frameBlock,
-                                   WidgetRect clipRect,
-                                   CurveObject* curveObject)
+void CurveDrawer::AddControlPoints(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, CurveObject* curveObject)
 {
   Array<StreamedVertex> tangentLines;
   Array<StreamedVertex> pointLines;
@@ -274,8 +268,7 @@ void CurveDrawer::AddControlPoints(ViewBlock& viewBlock,
   CreateRenderData(viewBlock, frameBlock, clipRect, pointLines, PrimitiveType::Lines);
 }
 
-void CurveDrawer::AddPoint(
-    Array<StreamedVertex>& lines, Array<StreamedVertex>& triangles, Vec3Param pos, float size, Vec4 color, bool empty)
+void CurveDrawer::AddPoint(Array<StreamedVertex>& lines, Array<StreamedVertex>& triangles, Vec3Param pos, float size, Vec4 color, bool empty)
 {
   float halfSize = size * 0.5f;
   StreamedVertex v0(SnapToPixels(pos + Vec3(-halfSize, -halfSize, 0)), Vec2(0, 0), color);
@@ -371,10 +364,7 @@ void CurveObject::GetCurve(Vec3Array& curve)
   curve.Assign(sFunction.GetBakedCurve());
 }
 
-CurveEditing::ControlPoint* CurveObject::CreateControlPoint(Vec2Param pos,
-                                                            Vec2Param tanIn,
-                                                            Vec2Param tanOut,
-                                                            CurveEditing::CurveEditorFlags::Type flags)
+CurveEditing::ControlPoint* CurveObject::CreateControlPoint(Vec2Param pos, Vec2Param tanIn, Vec2Param tanOut, CurveEditing::CurveEditorFlags::Type flags)
 {
   ControlPoint* internalPoint = new ControlPoint(this, pos, tanIn, tanOut, flags);
 
@@ -1180,9 +1170,7 @@ RaverieDefineType(ControlPoint, builder, type)
 {
 }
 
-ControlPoint::ControlPoint(CurveObject* curve, Vec2Param pos, Vec2Param tanIn, Vec2Param tanOut, uint editorFlags) :
-    Draggable(curve),
-    mEditorFlags(editorFlags)
+ControlPoint::ControlPoint(CurveObject* curve, Vec2Param pos, Vec2Param tanIn, Vec2Param tanOut, uint editorFlags) : Draggable(curve), mEditorFlags(editorFlags)
 {
   mClientData = nullptr;
 
@@ -1495,8 +1483,7 @@ RaverieDefineType(Tangent, builder, type)
 {
 }
 
-Tangent::Tangent(CurveObject* curve, ControlPoint* controlPoint, Vec2Param direction, TangentSide::Type side) :
-    Draggable(curve)
+Tangent::Tangent(CurveObject* curve, ControlPoint* controlPoint, Vec2Param direction, TangentSide::Type side) : Draggable(curve)
 {
   ConnectThisTo(this, Events::RightMouseUp, OnRightMouseUp);
 

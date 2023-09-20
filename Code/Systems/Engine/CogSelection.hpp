@@ -17,8 +17,6 @@ bool IsAncestorPresent(Cog* cog, const Array<Handle>& metaObjects);
 void FilterChildrenAndProtected(Array<Cog*>& cogs, MetaSelection* selection, Array<Cog*>* filteredCogs = nullptr);
 /// Filter out cogs that have no ancestor within the given input container
 void FilterChildrenAndProtected(const Array<CogId>& cogsIn, Array<Cog*>& cogsOut, Array<Cog*>* filteredCogs = nullptr);
-void FilterChildrenAndProtected(const Array<Handle>& objectsIn,
-                                Array<Handle>& objectsOut,
-                                Array<Handle>* filteredObjects = nullptr);
+void FilterChildrenAndProtected(const Array<Handle>& objectsIn, Array<Handle>& objectsOut, Array<Handle>* filteredObjects = nullptr);
 
 } // namespace Raverie

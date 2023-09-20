@@ -52,24 +52,7 @@ DeclareEnum3(PrimitiveType, Points, Lines, Triangles);
 
 // Semantics are used to communicate what this element is
 // with the vertex shader
-DeclareEnum17(VertexSemantic,
-              Position,
-              Normal,
-              Tangent,
-              Bitangent,
-              Uv,
-              UvAux,
-              Color,
-              ColorAux,
-              BoneWeights,
-              BoneIndices,
-              Aux0,
-              Aux1,
-              Aux2,
-              Aux3,
-              Aux4,
-              Aux5,
-              None);
+DeclareEnum17(VertexSemantic, Position, Normal, Tangent, Bitangent, Uv, UvAux, Color, ColorAux, BoneWeights, BoneIndices, Aux0, Aux1, Aux2, Aux3, Aux4, Aux5, None);
 
 // Type of element in vertex
 DeclareEnum6(VertexElementType,
@@ -110,11 +93,7 @@ public:
   StreamedVertex()
   {
   }
-  StreamedVertex(Vec3 position, Vec2 uv, Vec4 color, Vec2 uvAux = Vec2::cZero) :
-      mPosition(position),
-      mUv(uv),
-      mColor(color),
-      mUvAux(uvAux)
+  StreamedVertex(Vec3 position, Vec2 uv, Vec4 color, Vec2 uvAux = Vec2::cZero) : mPosition(position), mUv(uv), mColor(color), mUvAux(uvAux)
   {
   }
 
@@ -291,22 +270,15 @@ bool IsDepthFormat(TextureFormat::Enum format);
 bool IsDepthStencilFormat(TextureFormat::Enum format);
 
 void YInvertNonCompressed(byte* imageData, uint width, uint height, uint pixelSize);
-void YInvertBlockCompressed(
-    byte* imageData, uint width, uint height, uint dataSize, TextureCompression::Enum compression);
+void YInvertBlockCompressed(byte* imageData, uint width, uint height, uint dataSize, TextureCompression::Enum compression);
 
-void BuildOrthographicTransformEngine(
-    Mat4& matrix, float verticalSize, float aspectRatio, float nearDistance, float farDistance);
-void BuildOrthographicTransformGl(
-    Mat4& matrix, float verticalSize, float aspectRatio, float nearDistance, float farDistance);
-void BuildOrthographicTransformDx(
-    Mat4& matrix, float verticalSize, float aspectRatio, float nearDistance, float farDistance);
+void BuildOrthographicTransformEngine(Mat4& matrix, float verticalSize, float aspectRatio, float nearDistance, float farDistance);
+void BuildOrthographicTransformGl(Mat4& matrix, float verticalSize, float aspectRatio, float nearDistance, float farDistance);
+void BuildOrthographicTransformDx(Mat4& matrix, float verticalSize, float aspectRatio, float nearDistance, float farDistance);
 
-void BuildPerspectiveTransformEngine(
-    Mat4& matrix, float verticalFov, float aspectRatio, float nearDistance, float farDistance);
-void BuildPerspectiveTransformGl(
-    Mat4& matrix, float verticalFov, float aspectRatio, float nearDistance, float farDistance);
-void BuildPerspectiveTransformDx(
-    Mat4& matrix, float verticalFov, float aspectRatio, float nearDistance, float farDistance);
+void BuildPerspectiveTransformEngine(Mat4& matrix, float verticalFov, float aspectRatio, float nearDistance, float farDistance);
+void BuildPerspectiveTransformGl(Mat4& matrix, float verticalFov, float aspectRatio, float nearDistance, float farDistance);
+void BuildPerspectiveTransformDx(Mat4& matrix, float verticalFov, float aspectRatio, float nearDistance, float farDistance);
 
 class Shader
 {
@@ -324,10 +296,7 @@ public:
   ShaderEntry()
   {
   }
-  ShaderEntry(Shader* shader) :
-      mCoreVertex(shader->mCoreVertex),
-      mComposite(shader->mComposite),
-      mRenderPass(shader->mRenderPass)
+  ShaderEntry(Shader* shader) : mCoreVertex(shader->mCoreVertex), mComposite(shader->mComposite), mRenderPass(shader->mRenderPass)
   {
   }
 
@@ -427,8 +396,7 @@ public:
   virtual ~Renderer();
 
   // should move these to a file for api dependent utility functions
-  virtual void
-  BuildOrthographicTransform(Mat4Ref matrix, float size, float aspect, float nearPlane, float farPlane) = 0;
+  virtual void BuildOrthographicTransform(Mat4Ref matrix, float size, float aspect, float nearPlane, float farPlane) = 0;
   virtual void BuildPerspectiveTransform(Mat4Ref matrix, float fov, float aspect, float nearPlane, float farPlane) = 0;
   virtual bool YInvertImageData(TextureType::Enum type)
   {
@@ -744,41 +712,10 @@ class RenderQueues
 public:
   void Clear();
 
-  void AddStreamedLineRect(ViewNode& viewNode,
-                           Vec3 pos0,
-                           Vec3 pos1,
-                           Vec2 uv0,
-                           Vec2 uv1,
-                           Vec4 color,
-                           Vec2 uvAux0 = Vec2(0, 0),
-                           Vec2 uvAux1 = Vec2(1, 1));
-  void AddStreamedQuad(ViewNode& viewNode,
-                       Vec3 pos0,
-                       Vec3 pos1,
-                       Vec2 uv0,
-                       Vec2 uv1,
-                       Vec4 color,
-                       Vec2 uvAux0 = Vec2(0, 0),
-                       Vec2 uvAux1 = Vec2(1, 1));
-  void AddStreamedQuadTiled(ViewNode& viewNode,
-                            Vec3 pos0,
-                            Vec3 pos1,
-                            Vec2 uv0,
-                            Vec2 uv1,
-                            Vec4 color,
-                            Vec2 tileSize,
-                            Vec2 uvAux0 = Vec2(0, 0),
-                            Vec2 uvAux1 = Vec2(1, 1));
-  void AddStreamedQuadNineSliced(ViewNode& viewNode,
-                                 Vec3 pos0,
-                                 Vec3 pos1,
-                                 Vec2 uv0,
-                                 Vec2 uv1,
-                                 Vec4 color,
-                                 Vec4 posSlices,
-                                 Vec4 uvSlices,
-                                 Vec2 uvAux0 = Vec2(0, 0),
-                                 Vec2 uvAux1 = Vec2(1, 1));
+  void AddStreamedLineRect(ViewNode& viewNode, Vec3 pos0, Vec3 pos1, Vec2 uv0, Vec2 uv1, Vec4 color, Vec2 uvAux0 = Vec2(0, 0), Vec2 uvAux1 = Vec2(1, 1));
+  void AddStreamedQuad(ViewNode& viewNode, Vec3 pos0, Vec3 pos1, Vec2 uv0, Vec2 uv1, Vec4 color, Vec2 uvAux0 = Vec2(0, 0), Vec2 uvAux1 = Vec2(1, 1));
+  void AddStreamedQuadTiled(ViewNode& viewNode, Vec3 pos0, Vec3 pos1, Vec2 uv0, Vec2 uv1, Vec4 color, Vec2 tileSize, Vec2 uvAux0 = Vec2(0, 0), Vec2 uvAux1 = Vec2(1, 1));
+  void AddStreamedQuadNineSliced(ViewNode& viewNode, Vec3 pos0, Vec3 pos1, Vec2 uv0, Vec2 uv1, Vec4 color, Vec4 posSlices, Vec4 uvSlices, Vec2 uvAux0 = Vec2(0, 0), Vec2 uvAux1 = Vec2(1, 1));
 
   void AddStreamedQuadView(ViewNode& viewNode, Vec3 pos[4], Vec2 uv0, Vec2 uv1, Vec4 color);
 
@@ -808,7 +745,8 @@ class RenderTask
 {
 public:
   // We use a large type to ensure alignment on all platforms.
-  union {
+  union
+  {
     u64 mId;
     MaxAlignmentType mAligned;
   };

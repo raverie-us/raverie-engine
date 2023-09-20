@@ -108,8 +108,7 @@ void PhysicsNode::Queue(Physics::BroadPhaseAction& action)
 bool PhysicsNode::IsTransformOrMassQueued()
 {
   // if there is any action queued up then the state will not be empty
-  return mQueue.mTransformAction.mState != Physics::TransformAction::Empty ||
-         mQueue.mMassAction.mState != Physics::MassAction::Empty;
+  return mQueue.mTransformAction.mState != Physics::TransformAction::Empty || mQueue.mMassAction.mState != Physics::MassAction::Empty;
 }
 
 void PhysicsNode::UpdateTransformAndMass(PhysicsSpace* space)

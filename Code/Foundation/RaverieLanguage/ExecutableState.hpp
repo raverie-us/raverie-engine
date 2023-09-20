@@ -4,7 +4,7 @@
 
 // TODO(trevor): Handle setjmp removal
 #ifdef setjmp
-#undef setjmp
+#  undef setjmp
 #endif
 
 #define jmp_buf int
@@ -308,11 +308,11 @@ public:
   // active it's parents DO NOT accumulate time
   long long AccumulatedTicks;
 
-#  if RaverieDebug
+#if RaverieDebug
   // Only used to verify that the correct frame that pushed us is the only one
   // to pop us
   PerFrameData* Frame;
-#  endif
+#endif
 };
 
 // With any function call, an exception can occur that we need to catch
@@ -418,14 +418,10 @@ public:
   // Allocates an object on the heap and returns a handle to the object
   // The object will be pre-constructed and then the copy constructor will be
   // invoked on it Note that the memory will be managed by the language itself
-  Handle AllocateCopyConstructedHeapObject(BoundType* type,
-                                           ExceptionReport& report,
-                                           HeapFlags::Enum flags,
-                                           const Handle& fromObject);
+  Handle AllocateCopyConstructedHeapObject(BoundType* type, ExceptionReport& report, HeapFlags::Enum flags, const Handle& fromObject);
 
   template <typename T>
-  HandleOf<T> AllocateDefaultConstructed(BoundType* typeToAllocate = nullptr,
-                                         HeapFlags::Enum flags = HeapFlags::ReferenceCounted)
+  HandleOf<T> AllocateDefaultConstructed(BoundType* typeToAllocate = nullptr, HeapFlags::Enum flags = HeapFlags::ReferenceCounted)
   {
     // If the user provided no specific type to allocate, then assume its the T
     // type
@@ -836,8 +832,7 @@ public:
       // Lookup the function type to get the argument name
       DelegateType* functionType = CallGetFunctionType(call);
       if (index < functionType->Parameters.Size())
-        executableState->ThrowException(
-            String::Format("Error: Parameter '%s' cannot be null.", functionType->Parameters[index].Name.c_str()));
+        executableState->ThrowException(String::Format("Error: Parameter '%s' cannot be null.", functionType->Parameters[index].Name.c_str()));
       else
         executableState->ThrowException(String::Format("Error: Argument %d cannot be null.", index));
     }
@@ -850,25 +845,25 @@ public:
   }
 };
 
-#  define RaverieCallHelperSpecialization(T, SetT)                                                                       \
-    class CallHelper<T>                                                                                     \
-    {                                                                                                                  \
-    public:                                                                                                            \
-      static T Get(Call& call, size_t index);                                                                          \
-      static void Set(Call& call, size_t index, SetT value);                                                           \
-      static byte* GetArgumentPointer(Call& call, size_t index);                                                       \
-      static T CastArgumentPointer(byte* stackPointer);                                                                \
-    };
+#define RaverieCallHelperSpecialization(T, SetT)                                                                                                                                                       \
+  class CallHelper<T>                                                                                                                                                                                  \
+  {                                                                                                                                                                                                    \
+  public:                                                                                                                                                                                              \
+    static T Get(Call& call, size_t index);                                                                                                                                                            \
+    static void Set(Call& call, size_t index, SetT value);                                                                                                                                             \
+    static byte* GetArgumentPointer(Call& call, size_t index);                                                                                                                                         \
+    static T CastArgumentPointer(byte* stackPointer);                                                                                                                                                  \
+  };
 
-#  define RaverieCallHelperTemplateSpecialization(T, SetT)                                                               \
-    class CallHelper<T>                                                                             \
-    {                                                                                                                  \
-    public:                                                                                                            \
-      static T Get(Call& call, size_t index);                                                                          \
-      static void Set(Call& call, size_t index, SetT value);                                                           \
-      static byte* GetArgumentPointer(Call& call, size_t index);                                                       \
-      static T CastArgumentPointer(byte* stackPointer);                                                                \
-    };
+#define RaverieCallHelperTemplateSpecialization(T, SetT)                                                                                                                                               \
+  class CallHelper<T>                                                                                                                                                                                  \
+  {                                                                                                                                                                                                    \
+  public:                                                                                                                                                                                              \
+    static T Get(Call& call, size_t index);                                                                                                                                                            \
+    static void Set(Call& call, size_t index, SetT value);                                                                                                                                             \
+    static byte* GetArgumentPointer(Call& call, size_t index);                                                                                                                                         \
+    static T CastArgumentPointer(byte* stackPointer);                                                                                                                                                  \
+  };
 
 // Facilitates invoking Raverie functions including parameter passing and grabbing
 // return values Also is passed into each call when implementing a custom
@@ -915,8 +910,7 @@ public:
     BoundType* valueType = RaverieVirtualTypeId(pointer);
 
     // Get the stack location and perform checks
-    byte* stack = this->GetChecked(
-        index, sizeof(typename RaverieStaticType(T)::RepresentedType), valueType, CheckPrimitive::Value, ScriptDirection::Set);
+    byte* stack = this->GetChecked(index, sizeof(typename RaverieStaticType(T)::RepresentedType), valueType, CheckPrimitive::Value, ScriptDirection::Set);
 
     // Finally, copy the input into the stack position
     InternalWriteValue<T>(value, stack);
@@ -968,11 +962,7 @@ public:
   T GetValue(size_t index)
   {
     // Get the stack location and perform checks
-    byte* stack = this->GetChecked(index,
-                                   sizeof(typename RaverieStaticType(T)::RepresentedType),
-                                   RaverieTypeId(T),
-                                   CheckPrimitive::Value,
-                                   ScriptDirection::Get);
+    byte* stack = this->GetChecked(index, sizeof(typename RaverieStaticType(T)::RepresentedType), RaverieTypeId(T), CheckPrimitive::Value, ScriptDirection::Get);
 
     // Read the value from the stack and return it (or convert it)
     return InternalReadValue<T>(stack);
@@ -996,11 +986,7 @@ public:
   byte* GetValuePointer(size_t index)
   {
     // Get the stack location and perform checks
-    return this->GetChecked(index,
-                            sizeof(typename RaverieStaticType(T)::RepresentedType),
-                            RaverieTypeId(T),
-                            CheckPrimitive::Value,
-                            ScriptDirection::Get);
+    return this->GetChecked(index, sizeof(typename RaverieStaticType(T)::RepresentedType), RaverieTypeId(T), CheckPrimitive::Value, ScriptDirection::Get);
   }
 
   // Get either a parameter, return, or this handle from the call (reference
@@ -1133,8 +1119,7 @@ public:
 
 private:
   // Run a set of checks on the given type / size
-  void PerformStandardChecks(
-      size_t size, Type* userType, Type* actualType, CheckPrimitive::Enum primitive, ScriptDirection::Enum io);
+  void PerformStandardChecks(size_t size, Type* userType, Type* actualType, CheckPrimitive::Enum primitive, ScriptDirection::Enum io);
 
   // Get a stack location to the 'this' handle and do error checking
   byte* GetThisChecked(size_t size, Type* userType, CheckPrimitive::Enum primitive, ScriptDirection::Enum io);
@@ -1143,8 +1128,7 @@ private:
   byte* GetReturnChecked(size_t size, Type* userType, CheckPrimitive::Enum primitive, ScriptDirection::Enum io);
 
   // Get a stack location to the given parameter and do error checking
-  byte* GetParameterChecked(
-      size_t parameterIndex, size_t size, Type* userType, CheckPrimitive::Enum primitive, ScriptDirection::Enum io);
+  byte* GetParameterChecked(size_t parameterIndex, size_t size, Type* userType, CheckPrimitive::Enum primitive, ScriptDirection::Enum io);
 
   // Constructor for the virtual machine call
   Call(PerFrameData* data);
@@ -1212,9 +1196,8 @@ byte* CallHelper<T>::GetArgumentPointer(Call& call, size_t index)
 
 // A helper for allocating a type within Raverie using the current executable
 // state
-#  define RaverieAllocate(T, ...) (::Raverie::ExecutableState::GetCallingState()->AllocateDefaultConstructed<T>(__VA_ARGS__))
-#  define RaverieAllocateUntyped(...)                                                                                    \
-    (::Raverie::ExecutableState::GetCallingState()->AllocateDefaultConstructedHeapObject(__VA_ARGS__))
+#define RaverieAllocate(T, ...) (::Raverie::ExecutableState::GetCallingState()->AllocateDefaultConstructed<T>(__VA_ARGS__))
+#define RaverieAllocateUntyped(...) (::Raverie::ExecutableState::GetCallingState()->AllocateDefaultConstructedHeapObject(__VA_ARGS__))
 
 template <>
 RaverieCallHelperSpecialization(Any*, Any* const&);
@@ -1368,4 +1351,3 @@ const HandleOf<T>& CallHelper<const HandleOf<T>&>::CastArgumentPointer(byte* sta
   return *CallHelper<HandleOf<T>*>::CastArgumentPointer(stackPointer);
 }
 } // namespace Raverie
-

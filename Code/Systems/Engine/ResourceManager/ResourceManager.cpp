@@ -251,8 +251,7 @@ Resource* ResourceManager::GetResource(StringParam resourceString, ResourceNotFo
 
   // Old resource id is 16 digit hex followed by (name)
   // Example 0123456789ABCDEF(SomeName)
-  if (resourceString.SizeInBytes() > cHex64Size + 2 && resourceString.Data()[resourceString.SizeInBytes() - 1] == ')' &&
-      resourceString.Data()[cHex64Size] == '(')
+  if (resourceString.SizeInBytes() > cHex64Size + 2 && resourceString.Data()[resourceString.SizeInBytes() - 1] == ')' && resourceString.Data()[cHex64Size] == '(')
   {
     // StringRange delimiter = resourceString.FindFirstOf('(');
     // StringRange delimiterEnd = resourceString.FindFirstOf(')');
@@ -390,11 +389,7 @@ Resource* ResourceManager::GetResourceNameOrId(StringRange resourceName, Resourc
 
 const String cNullResource = "null";
 
-Resource* ResourceManager::ResolveResourceStream(cstr fieldName,
-                                                 Serializer& stream,
-                                                 Resource* resourcePtr,
-                                                 ResourceNotFound::Enum ifNotFound,
-                                                 cstr defaultResourceName)
+Resource* ResourceManager::ResolveResourceStream(cstr fieldName, Serializer& stream, Resource* resourcePtr, ResourceNotFound::Enum ifNotFound, cstr defaultResourceName)
 {
   if (stream.GetMode() == SerializerMode::Saving)
   {

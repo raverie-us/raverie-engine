@@ -273,11 +273,7 @@ void SpritePreviewWidget::UpdateTransform()
 }
 
 // Sprite Tile View Widget
-SpriteTileViewWidget::SpriteTileViewWidget(Composite* parent,
-                                           TileView* tileView,
-                                           PreviewWidget* tileWidget,
-                                           DataIndex dataIndex) :
-    TileViewWidget(parent, tileView, tileWidget, dataIndex)
+SpriteTileViewWidget::SpriteTileViewWidget(Composite* parent, TileView* tileView, PreviewWidget* tileWidget, DataIndex dataIndex) : TileViewWidget(parent, tileView, tileWidget, dataIndex)
 {
   mContentMargins = Thickness(1.5f, 1.5f, 2.5f, 2.5f);
 }
@@ -300,11 +296,7 @@ void SpriteTileViewWidget::OnMouseClick(MouseEvent* event)
 
 // Sprite Frame Tile View
 TileViewWidget*
-SpriteFrameTileView::CreateTileViewWidget(Composite* parent,
-                                          StringParam name,
-                                          HandleParam instance,
-                                          DataIndex index,
-                                          PreviewImportance::Enum minImportance /*= PreviewImportance::None*/)
+SpriteFrameTileView::CreateTileViewWidget(Composite* parent, StringParam name, HandleParam instance, DataIndex index, PreviewImportance::Enum minImportance /*= PreviewImportance::None*/)
 {
   if (SpriteFrame* frame = instance.Get<SpriteFrame*>())
   {
@@ -1111,8 +1103,7 @@ void SpriteSourceEditor::UpdatePreview()
 {
   // Update all the frames on the preview sprite
   mPreview->mFrames.Clear();
-  TextureFiltering::Enum filtering =
-      mSampling == SpriteSampling::Nearest ? TextureFiltering::Nearest : TextureFiltering::Bilinear;
+  TextureFiltering::Enum filtering = mSampling == SpriteSampling::Nearest ? TextureFiltering::Nearest : TextureFiltering::Bilinear;
   for (uint i = 0; i < mSpriteData.Size(); ++i)
   {
     mSpriteData[i]->mFrameTexture->mFiltering = filtering;

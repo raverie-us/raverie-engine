@@ -4,24 +4,7 @@
 namespace Raverie
 {
 
-DeclareEnum17(DataTokenType,
-              None,
-              Enumeration,
-              Identifier,
-              Float,
-              Integer,
-              Hex,
-              StringLiteral,
-              OpenBracket,
-              CloseBracket,
-              OpenCurley,
-              CloseCurley,
-              Assignment,
-              Comma,
-              Colon,
-              True,
-              False,
-              Var);
+DeclareEnum17(DataTokenType, None, Enumeration, Identifier, Float, Integer, Hex, StringLiteral, OpenBracket, CloseBracket, OpenCurley, CloseCurley, Assignment, Comma, Colon, True, False, Var);
 
 // Data Token
 struct DataToken

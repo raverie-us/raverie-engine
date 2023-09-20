@@ -51,9 +51,7 @@ RaverieDefineType(UiWidgetCastResultsRange, builder, type)
   RaverieBindMethod(Size);
 }
 
-UiWidgetCastResultsRange::UiWidgetCastResultsRange(const UiWidgetArray& overlappingWidgets) :
-    mOverlappingWidgets(overlappingWidgets),
-    mIndex(0)
+UiWidgetCastResultsRange::UiWidgetCastResultsRange(const UiWidgetArray& overlappingWidgets) : mOverlappingWidgets(overlappingWidgets), mIndex(0)
 {
 }
 
@@ -161,9 +159,7 @@ RaverieDefineType(UiWidget, builder, type)
   RaverieBindFieldProperty(mFlexSize)->RaverieSetPropertyGroup(sLayoutGroup)->RaverieLocalModificationOverride();
 
   RaverieBindGetterSetterProperty(VerticalAlignment)->RaverieSetPropertyGroup(sLayoutGroup)->RaverieLocalModificationOverride();
-  RaverieBindGetterSetterProperty(HorizontalAlignment)
-      ->RaverieSetPropertyGroup(sLayoutGroup)
-      ->RaverieLocalModificationOverride();
+  RaverieBindGetterSetterProperty(HorizontalAlignment)->RaverieSetPropertyGroup(sLayoutGroup)->RaverieLocalModificationOverride();
 
   RaverieBindGetterSetterProperty(MarginLeft)->RaverieSetPropertyGroup(sLayoutGroup)->RaverieLocalModificationOverride();
   RaverieBindGetterSetterProperty(MarginTop)->RaverieSetPropertyGroup(sLayoutGroup)->RaverieLocalModificationOverride();
@@ -206,10 +202,8 @@ UiWidget::~UiWidget()
 void UiWidget::Serialize(Serializer& stream)
 {
   // Serialize flags
-  u32 flagMask = UiWidgetFlags::MouseOver | UiWidgetFlags::MouseOverHierarchy | UiWidgetFlags::HasFocus |
-                 UiWidgetFlags::HierarchyHasFocus;
-  u32 flagDefaults =
-      UiWidgetFlags::Active | UiWidgetFlags::Visible | UiWidgetFlags::Interactive | UiWidgetFlags::InLayout;
+  u32 flagMask = UiWidgetFlags::MouseOver | UiWidgetFlags::MouseOverHierarchy | UiWidgetFlags::HasFocus | UiWidgetFlags::HierarchyHasFocus;
+  u32 flagDefaults = UiWidgetFlags::Active | UiWidgetFlags::Visible | UiWidgetFlags::Interactive | UiWidgetFlags::InLayout;
   SerializeBits(stream, mFlags, UiWidgetFlags::Names, flagMask, flagDefaults);
 
   SerializeNameDefault(mLocalColor, Vec4(1));
@@ -433,8 +427,7 @@ UiWidget* UiWidget::CastPoint(Vec2Param worldPoint, UiWidget* ignore, bool inter
   return nullptr;
 }
 
-void CastRectInternal(
-    UiWidget* widget, RectangleParam worldRect, UiWidget* ignore, bool interactiveOnly, UiWidgetArray& overlapping)
+void CastRectInternal(UiWidget* widget, RectangleParam worldRect, UiWidget* ignore, bool interactiveOnly, UiWidgetArray& overlapping)
 {
   // Skip ignored widget
   if (widget == ignore)

@@ -23,12 +23,7 @@ struct OperationInput
   // considered collinear
   f32 CollinearAngleTolerance;
 
-  OperationInput() :
-      Operation(Operation::Union),
-      ContoursA(0),
-      ContoursB(0),
-      DistanceTolerance(0.f),
-      CollinearAngleTolerance(0.f)
+  OperationInput() : Operation(Operation::Union), ContoursA(0), ContoursB(0), DistanceTolerance(0.f), CollinearAngleTolerance(0.f)
   {
   }
 };
@@ -92,11 +87,7 @@ void Build(const Array<Vec2_t>& contour, Array<Simplex>* chain);
 void Build(const HighPrecisionContourArray& contours, Array<Simplex>* chain);
 
 // Selects valid simplices based on the given Csg operation
-void Select(Operation::Enum operation,
-            const Array<Simplex>& chainA,
-            const Array<Simplex>& chainB,
-            Array<Simplex>* selectedA,
-            Array<Simplex>* selectedB);
+void Select(Operation::Enum operation, const Array<Simplex>& chainA, const Array<Simplex>& chainB, Array<Simplex>* selectedA, Array<Simplex>* selectedB);
 
 // Merges two sets of partial simplical chains into a set of contours
 bool Merge(const Array<Simplex>& selectedA, const Array<Simplex>& selectedB, ContourArray* results);

@@ -115,8 +115,7 @@ struct TileLayout
     int tileY = tileIndex / TilesX;
 
     LayoutResult result;
-    Vec3 translation = Vec3(
-        Spacing.x + float(tileX) * (Spacing.x + TileSize.x), Spacing.y + float(tileY) * (Spacing.y + TileSize.y), 0);
+    Vec3 translation = Vec3(Spacing.x + float(tileX) * (Spacing.x + TileSize.x), Spacing.y + float(tileY) * (Spacing.y + TileSize.y), 0);
 
     result.Translation = SnapToPixels(translation);
     result.Size = TileSize;

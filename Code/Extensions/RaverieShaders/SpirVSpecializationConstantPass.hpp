@@ -46,9 +46,7 @@ public:
   SpirVSpecializationConstantPass();
   bool RunTranslationPass(ShaderTranslationPassResult& inputData, ShaderTranslationPassResult& outputData) override;
 
-  void GetSpecializationFlags(Array<String>& outFlags,
-                              ShaderStageInterfaceReflection& inputStageReflection,
-                              ShaderStageInterfaceReflection& outputStageReflection);
+  void GetSpecializationFlags(Array<String>& outFlags, ShaderStageInterfaceReflection& inputStageReflection, ShaderStageInterfaceReflection& outputStageReflection);
   /// Helper that filles out an array of flags for the optimizer.
   void SetSpecializationValues(Array<String>& outFlags, HashMap<int, String>& overrides);
 

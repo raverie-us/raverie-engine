@@ -186,15 +186,11 @@ Triangle Triangle::UniformTransform(Mat4Param transformation) const
   return Transform(transformation);
 }
 
-SweptTriangle::SweptTriangle(Triangle& triangle, Vec3Param scaledDirection) :
-    BaseTri(triangle),
-    ScaledDir(scaledDirection)
+SweptTriangle::SweptTriangle(Triangle& triangle, Vec3Param scaledDirection) : BaseTri(triangle), ScaledDir(scaledDirection)
 {
 }
 
-SweptTriangle::SweptTriangle(Vec3Param point1, Vec3Param point2, Vec3Param point3, Vec3Param scaledDirection) :
-    BaseTri(point1, point2, point3),
-    ScaledDir(scaledDirection)
+SweptTriangle::SweptTriangle(Vec3Param point1, Vec3Param point2, Vec3Param point3, Vec3Param scaledDirection) : BaseTri(point1, point2, point3), ScaledDir(scaledDirection)
 {
 }
 

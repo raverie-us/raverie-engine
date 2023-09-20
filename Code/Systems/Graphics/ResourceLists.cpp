@@ -22,11 +22,7 @@ bool GraphicsResourceList::mRenderGroupSerializedExpanded = false;
 bool GraphicsResourceList::mRenderGroupRuntimeExpanded = false;
 bool GraphicsResourceList::mChildRenderGroupListExpanded = false;
 
-GraphicsResourceList::GraphicsResourceList(Resource* owner) :
-    mReadOnly(false),
-    mOwner(owner),
-    mExpanded(nullptr),
-    mListItemCallback(nullptr)
+GraphicsResourceList::GraphicsResourceList(Resource* owner) : mReadOnly(false), mOwner(owner), mExpanded(nullptr), mListItemCallback(nullptr)
 {
 }
 

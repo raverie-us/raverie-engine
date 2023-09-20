@@ -12,8 +12,7 @@ PixelGridArea::PixelGridArea(Composite* parent, SpriteSheetImporter* owner) : Wi
   mOwner = owner;
 }
 
-void PixelGridArea::RenderUpdate(
-    ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
+void PixelGridArea::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
   mOwner->DrawRedirect(viewBlock, frameBlock, mWorldTx, colorTx, clipRect);
@@ -147,8 +146,7 @@ SpriteSheetImporter::SpriteSheetImporter(Composite* parent) : Composite(parent)
   mPropertyView->ActivateAutoUpdate();
 }
 
-void SpriteSheetImporter::ComputeFrameWidthAndCount(
-    int& frameSize, int& frameCount, int newFrameSize, int spacing, int sourceSize, int offset)
+void SpriteSheetImporter::ComputeFrameWidthAndCount(int& frameSize, int& frameCount, int newFrameSize, int spacing, int sourceSize, int offset)
 {
   frameSize = Math::Clamp(newFrameSize, (int)cMinFrameSize, sourceSize);
   int fullFrameSize = frameSize + spacing;
@@ -165,8 +163,7 @@ void SpriteSheetImporter::UpdateTexture()
   if (!mSourceTextrue)
     mSourceTextrue = Texture::CreateRuntime();
 
-  TextureFiltering::Enum filtering =
-      Sampling == SpriteSampling::Nearest ? TextureFiltering::Nearest : TextureFiltering::Bilinear;
+  TextureFiltering::Enum filtering = Sampling == SpriteSampling::Nearest ? TextureFiltering::Nearest : TextureFiltering::Bilinear;
   mSourceTextrue->SetFiltering(filtering);
 
   byte* data = (byte*)mSourcePixels.Data;
@@ -396,8 +393,7 @@ void SpriteSheetImporter::SaveDataToSpriteSource(SpriteSource* sprite, IntRect f
   sprite->mContentItem->SaveContent();
 }
 
-SpriteSource*
-SpriteSheetImporter::AddSpriteResource(StringParam name, Image& output, IntRect frameSize, uint numberOfFrames)
+SpriteSource* SpriteSheetImporter::AddSpriteResource(StringParam name, Image& output, IntRect frameSize, uint numberOfFrames)
 {
   String fileName = FilePath::Combine(GetTemporaryDirectory(), "SpriteTemp.png");
 
@@ -557,14 +553,7 @@ bool SpriteSheetImporter::AddMultiFrameSprite()
   {
     IntRect destRect = frameLayout.GetFrame(i);
     FrameArea& sourceFrame = mFrames[i];
-    CopyImage(&output,
-              &mSourcePixels,
-              destRect.X,
-              destRect.Y,
-              sourceFrame.Rect.X,
-              sourceFrame.Rect.Y,
-              sourceFrame.Rect.SizeX,
-              sourceFrame.Rect.SizeY);
+    CopyImage(&output, &mSourcePixels, destRect.X, destRect.Y, sourceFrame.Rect.X, sourceFrame.Rect.Y, sourceFrame.Rect.SizeX, sourceFrame.Rect.SizeY);
   }
 
   if (UseAlphaColorKey)
@@ -824,13 +813,7 @@ void SpriteSheetImporter::UpdateTransform()
   Composite::UpdateTransform();
 }
 
-void SpriteSheetImporter::DrawLines(Array<StreamedVertex>& lines,
-                                    uint axis,
-                                    float zoom,
-                                    float spacing,
-                                    Vec2 totalSize,
-                                    Vec2 startOffset,
-                                    uint lineCount)
+void SpriteSheetImporter::DrawLines(Array<StreamedVertex>& lines, uint axis, float zoom, float spacing, Vec2 totalSize, Vec2 startOffset, uint lineCount)
 {
   Vec4 color = ToFloatColor(Color::Red);
   for (uint line = 0; line < lineCount + 1; ++line)
@@ -847,8 +830,7 @@ void SpriteSheetImporter::DrawLines(Array<StreamedVertex>& lines,
   }
 }
 
-void SpriteSheetImporter::DrawRedirect(
-    ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
+void SpriteSheetImporter::DrawRedirect(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Mat4 oldWorldTx = mWorldTx;
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
@@ -1204,8 +1186,7 @@ void SpriteSheetImport(StringParam filename)
 void SpriteSheetImport(SpriteSource* spriteSource)
 {
   SpriteSheetImporter* importer = CreateImporter();
-  importer->LoadImage(
-      FilePath::Combine(spriteSource->mContentItem->mLibrary->SourcePath, spriteSource->mContentItem->Filename));
+  importer->LoadImage(FilePath::Combine(spriteSource->mContentItem->mLibrary->SourcePath, spriteSource->mContentItem->Filename));
 
   // This usage doesn't work properly
   // importer->LoadSprite(spriteSource);

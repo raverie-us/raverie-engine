@@ -21,11 +21,7 @@ public:
   DisplayOrigin::Type GetDisplayOrigin();
   void SetDisplayOrigin(DisplayOrigin::Type displayOrigin);
 
-  void RenderUpdate(ViewBlock& viewBlock,
-                    FrameBlock& frameBlock,
-                    Mat4Param parentTx,
-                    ColorTransform colorTx,
-                    WidgetRect clipRect) override;
+  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect) override;
 
   String GetDebugName() const override;
 };

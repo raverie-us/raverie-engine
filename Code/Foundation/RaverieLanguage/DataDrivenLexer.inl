@@ -3,31 +3,25 @@
 namespace Raverie
 {
 template <typename TokenType>
-void DataDrivenLexer::StartRule(GrammarRule<Token>* rule,
-                                GrammarSet<TokenType>& grammar,
-                                Array<Array<GrammarNode<TokenType>*>>& nodes)
+void DataDrivenLexer::StartRule(GrammarRule<Token>* rule, GrammarSet<TokenType>& grammar, Array<Array<GrammarNode<TokenType>*>>& nodes)
 {
   DataDrivenLexerShared& shared = DataDrivenLexerShared::GetInstance();
 
-  bool needsGrammarNodeStack = rule == shared.mRuleStatement || rule == shared.mGrammarExpressionOr ||
-                               rule == shared.mGrammarExpressionCapture ||
-                               rule == shared.mGrammarExpressionConcatenate || rule == shared.mGrammarExpressionUnary ||
-                               rule == shared.mReplacementStatement;
+  bool needsGrammarNodeStack = rule == shared.mRuleStatement || rule == shared.mGrammarExpressionOr || rule == shared.mGrammarExpressionCapture || rule == shared.mGrammarExpressionConcatenate ||
+                               rule == shared.mGrammarExpressionUnary || rule == shared.mReplacementStatement;
   if (needsGrammarNodeStack)
   {
     nodes.PushBack();
   }
 
   bool needsReplacementNodeStack =
-      rule == shared.mReplacementStatement || rule == shared.mReplacementExpressionConcatenate ||
-      rule == shared.mReplacementExpressionJoin || rule == shared.mReplacementExpressionForeach;
+      rule == shared.mReplacementStatement || rule == shared.mReplacementExpressionConcatenate || rule == shared.mReplacementExpressionJoin || rule == shared.mReplacementExpressionForeach;
   if (needsReplacementNodeStack)
   {
     this->mReplacementNodes.PushBack();
   }
 
-  bool needsCaptureNodeStack = rule == shared.mReplacementExpressionPost || rule == shared.mReplacementExpressionJoin ||
-                               rule == shared.mReplacementExpressionForeach;
+  bool needsCaptureNodeStack = rule == shared.mReplacementExpressionPost || rule == shared.mReplacementExpressionJoin || rule == shared.mReplacementExpressionForeach;
   if (needsCaptureNodeStack)
   {
     this->mCaptureNodes.PushBack(nullptr);
@@ -35,9 +29,7 @@ void DataDrivenLexer::StartRule(GrammarRule<Token>* rule,
 }
 
 template <typename TokenType>
-void DataDrivenLexer::EndRule(ParseNodeInfo<Token>* info,
-                              GrammarSet<TokenType>& grammar,
-                              Array<Array<GrammarNode<TokenType>*>>& nodes)
+void DataDrivenLexer::EndRule(ParseNodeInfo<Token>* info, GrammarSet<TokenType>& grammar, Array<Array<GrammarNode<TokenType>*>>& nodes)
 {
   GrammarRule<Token>* rule = info->mRule;
   DataDrivenLexerShared& shared = DataDrivenLexerShared::GetInstance();

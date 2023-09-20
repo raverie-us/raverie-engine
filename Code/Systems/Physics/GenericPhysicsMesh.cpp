@@ -219,8 +219,7 @@ void GenericPhysicsMesh::DrawFaceNormals(Mat4Param transform, ByteColor color)
   }
 }
 
-bool GenericPhysicsMesh::CastRayTriangle(
-    const Ray& localRay, const Triangle& tri, int triIndex, ProxyResult& result, BaseCastFilter& filter)
+bool GenericPhysicsMesh::CastRayTriangle(const Ray& localRay, const Triangle& tri, int triIndex, ProxyResult& result, BaseCastFilter& filter)
 {
   // Check the ray for intersection with the triangle
   Intersection::IntersectionPoint pointData;

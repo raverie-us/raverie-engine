@@ -14,13 +14,7 @@ inline static void LogAudioIoError(Raverie::StringParam message, Raverie::String
 class SDLAudioDevice
 {
 public:
-  SDLAudioDevice() :
-      mDeviceID(0),
-      mSampleRate(0),
-      mChannels(0),
-      mCallback(nullptr),
-      mCallbackData(nullptr),
-      mType(StreamTypes::Output)
+  SDLAudioDevice() : mDeviceID(0), mSampleRate(0), mChannels(0), mCallback(nullptr), mCallbackData(nullptr), mType(StreamTypes::Output)
   {
   }
 
@@ -104,14 +98,13 @@ StreamStatus::Enum AudioInputOutput::InitializeStream(StreamTypes::Enum whichStr
   if (whichStream == StreamTypes::Input)
     capture = 1;
 
-    // We don't bother to check SDL_GetNumAudioDevices because SDL's documentation says it can return
-    // -1 or 0, and still be able to open the default device (which just seems... wrong but whatever).
+  // We don't bother to check SDL_GetNumAudioDevices because SDL's documentation says it can return
+  // -1 or 0, and still be able to open the default device (which just seems... wrong but whatever).
 
   // TODO(trevor): Investigate if we need to do this still due to browser platforms
-  //return StreamStatus::DeviceProblem;
+  // return StreamStatus::DeviceProblem;
 
-  data.mDeviceID = SDL_OpenAudioDevice(
-      nullptr, capture, &want, &have, SDL_AUDIO_ALLOW_CHANNELS_CHANGE | SDL_AUDIO_ALLOW_FREQUENCY_CHANGE);
+  data.mDeviceID = SDL_OpenAudioDevice(nullptr, capture, &want, &have, SDL_AUDIO_ALLOW_CHANNELS_CHANGE | SDL_AUDIO_ALLOW_FREQUENCY_CHANGE);
 
   if (data.mDeviceID == 0)
   {
@@ -135,10 +128,7 @@ StreamStatus::Enum AudioInputOutput::InitializeStream(StreamTypes::Enum whichStr
   return StreamStatus::Initialized;
 }
 
-StreamStatus::Enum AudioInputOutput::StartStream(StreamTypes::Enum whichStream,
-                                                 Raverie::String* resultMessage,
-                                                 IOCallbackType* callback,
-                                                 void* callbackData)
+StreamStatus::Enum AudioInputOutput::StartStream(StreamTypes::Enum whichStream, Raverie::String* resultMessage, IOCallbackType* callback, void* callbackData)
 {
   SDLAudioDevice& data = ((AudioIoSdlData*)PlatformData)->Streams[whichStream];
 

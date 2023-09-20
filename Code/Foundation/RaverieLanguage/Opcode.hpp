@@ -14,9 +14,9 @@ typedef int AlignedEnum;
 
 enum Enum
 {
-#  define RaverieEnumValue(value) value,
-#  include "InstructionsEnum.inl"
-#  undef RaverieEnumValue
+#define RaverieEnumValue(value) value,
+#include "InstructionsEnum.inl"
+#undef RaverieEnumValue
   Count
 };
 
@@ -75,7 +75,7 @@ public:
   // The instruction to be generated
   Instruction::AlignedEnum Instruction;
 
-#  ifdef RaverieDebug
+#ifdef RaverieDebug
   // Make the class virtual in debug mode so that we can view a list of opcodes
   // easily Having a vtable in visual studio also gives us a reflected view of
   // the derived class
@@ -85,7 +85,7 @@ public:
 
   // The origin of the instruction for debugging purposes (who created it)
   DebugOrigin::Enum DebugOrigin;
-#  endif
+#endif
 };
 
 // The type of an operand
@@ -122,7 +122,8 @@ public:
   // What type of operand are we trying to access?
   OperandType::Enum Type;
 
-  union {
+  union
+  {
     // An offset to:
     //  - A handle on the stack
     //  - A constant within a function's constant space

@@ -172,10 +172,7 @@ RaverieDefineType(TileEditor2DSubTool, builder, type)
 {
 }
 
-TileEditor2DSubTool::TileEditor2DSubTool(TileEditor2D* owner) :
-    mOwner(owner),
-    mPrimaryActive(false),
-    mSecondaryActive(false)
+TileEditor2DSubTool::TileEditor2DSubTool(TileEditor2D* owner) : mOwner(owner), mPrimaryActive(false), mSecondaryActive(false)
 {
 }
 
@@ -599,8 +596,7 @@ void TileEditor2D::OnSelectionFinal(SelectionChangedEvent* event)
     // event first
     Z::gEditor->ShowWindow("Tools");
     TilePaletteSourceManager* manager = (TilePaletteSourceManager*)TilePaletteSourceManager::GetInstance();
-    TilePaletteSource* palette =
-        (TilePaletteSource*)manager->GetResource(cog->has(TileMap)->GetPaletteName(), ResourceNotFound::ReturnNull);
+    TilePaletteSource* palette = (TilePaletteSource*)manager->GetResource(cog->has(TileMap)->GetPaletteName(), ResourceNotFound::ReturnNull);
     mTilePalatte->SetTilePalette(palette);
   }
   else
@@ -726,11 +722,9 @@ void TileEditor2D::OnMouseMove(ViewportMouseEvent* e)
   Ray worldRay = viewport->ScreenToWorldRay(e->Position);
 
   Intersection::IntersectionPoint point;
-  Plane plane(tileMap->GetOwner()->has(Transform)->TransformNormal(Vec3(0.0, 0.0, 1.0)),
-              tileMap->GetOwner()->has(Transform)->GetWorldTranslation());
+  Plane plane(tileMap->GetOwner()->has(Transform)->TransformNormal(Vec3(0.0, 0.0, 1.0)), tileMap->GetOwner()->has(Transform)->GetWorldTranslation());
 
-  Intersection::Type type =
-      Intersection::RayPlane(worldRay.Start, worldRay.Direction, plane.GetNormal(), plane.GetDistance(), &point);
+  Intersection::Type type = Intersection::RayPlane(worldRay.Start, worldRay.Direction, plane.GetNormal(), plane.GetDistance(), &point);
   if (type == Intersection::None)
     return;
 
@@ -752,11 +746,9 @@ void TileEditor2D::OnMouseDragMove(ViewportMouseEvent* e)
   Ray worldRay = viewport->ScreenToWorldRay(e->Position);
 
   Intersection::IntersectionPoint point;
-  Plane plane(tileMap->GetOwner()->has(Transform)->TransformNormal(Vec3(0.0, 0.0, 1.0)),
-              tileMap->GetOwner()->has(Transform)->GetWorldTranslation());
+  Plane plane(tileMap->GetOwner()->has(Transform)->TransformNormal(Vec3(0.0, 0.0, 1.0)), tileMap->GetOwner()->has(Transform)->GetWorldTranslation());
 
-  Intersection::Type type =
-      Intersection::RayPlane(worldRay.Start, worldRay.Direction, plane.GetNormal(), plane.GetDistance(), &point);
+  Intersection::Type type = Intersection::RayPlane(worldRay.Start, worldRay.Direction, plane.GetNormal(), plane.GetDistance(), &point);
   if (type == Intersection::None)
     return;
 
@@ -938,8 +930,7 @@ void TileEditor2D::CreateTileMap()
 TileMap* TileEditor2D::GetTileMap()
 {
   // Disabled creation
-  TileMap* tileMap = static_cast<TileMap*>(
-      Tool::GetOrCreateEditComponent(RaverieTypeId(TileMap), cDefaultName, cDefaultArchetype, mLastEdited, false));
+  TileMap* tileMap = static_cast<TileMap*>(Tool::GetOrCreateEditComponent(RaverieTypeId(TileMap), cDefaultName, cDefaultArchetype, mLastEdited, false));
   if (tileMap == NULL && mAddTileMapWidget.IsNull())
   {
     mAddTileMapWidget = Tool::CreateViewportTextWidget("No TileMap Object, Add New +");

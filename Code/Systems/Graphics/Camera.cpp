@@ -3,10 +3,10 @@
 #include "Precompiled.hpp"
 
 // For all properties that affect the perspective transforms
-#define SetPerspectiveProperty(member, value)                                                                          \
-  if (value == member)                                                                                                 \
-    return;                                                                                                            \
-  member = value;                                                                                                      \
+#define SetPerspectiveProperty(member, value)                                                                                                                                                          \
+  if (value == member)                                                                                                                                                                                 \
+    return;                                                                                                                                                                                            \
+  member = value;                                                                                                                                                                                      \
   mDirtyPerspective = true;
 
 namespace Raverie
@@ -28,11 +28,8 @@ RaverieDefineType(Camera, builder, type)
   RaverieBindGetterSetterProperty(NearPlane);
   RaverieBindGetterSetterProperty(FarPlane);
   RaverieBindGetterSetterProperty(PerspectiveMode)->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  RaverieBindGetterSetterProperty(FieldOfView)
-      ->Add(new EditorSlider(45, 135, 1))
-      ->RaverieFilterEquality(mPerspectiveMode, PerspectiveMode::Enum, PerspectiveMode::Perspective);
-  RaverieBindGetterSetterProperty(Size)->RaverieFilterEquality(
-      mPerspectiveMode, PerspectiveMode::Enum, PerspectiveMode::Orthographic);
+  RaverieBindGetterSetterProperty(FieldOfView)->Add(new EditorSlider(45, 135, 1))->RaverieFilterEquality(mPerspectiveMode, PerspectiveMode::Enum, PerspectiveMode::Perspective);
+  RaverieBindGetterSetterProperty(Size)->RaverieFilterEquality(mPerspectiveMode, PerspectiveMode::Enum, PerspectiveMode::Orthographic);
 
   RaverieBindGetter(CameraViewportCog);
   RaverieBindGetter(WorldTranslation);
@@ -186,10 +183,8 @@ Mat4 Camera::GetPerspectiveTransform()
 
   if (mPerspectiveMode == PerspectiveMode::Perspective)
   {
-    BuildPerspectiveTransformEngine(
-        mViewToPerspective, Math::DegToRad(mFieldOfView), mAspectRatio, mNearPlane, mFarPlane);
-    Z::gRenderer->BuildPerspectiveTransform(
-        mViewToApiPerspective, Math::DegToRad(mFieldOfView), mAspectRatio, mNearPlane, mFarPlane);
+    BuildPerspectiveTransformEngine(mViewToPerspective, Math::DegToRad(mFieldOfView), mAspectRatio, mNearPlane, mFarPlane);
+    Z::gRenderer->BuildPerspectiveTransform(mViewToApiPerspective, Math::DegToRad(mFieldOfView), mAspectRatio, mNearPlane, mFarPlane);
   }
   else
   {
@@ -247,10 +242,7 @@ Frustum Camera::GetFrustum(float aspect) const
   if (mPerspectiveMode == PerspectiveMode::Perspective)
     f.Generate(position, rotation, mNearPlane, mFarPlane, aspect, Math::DegToRad(mFieldOfView));
   else
-    f.Generate(position - rotation.BasisZ() * mNearPlane,
-               -rotation.BasisZ(),
-               rotation.BasisY(),
-               Vec3(mSize * 0.5f * aspect, mSize * 0.5f, mFarPlane));
+    f.Generate(position - rotation.BasisZ() * mNearPlane, -rotation.BasisZ(), rotation.BasisY(), Vec3(mSize * 0.5f * aspect, mSize * 0.5f, mFarPlane));
 
   return f;
 }

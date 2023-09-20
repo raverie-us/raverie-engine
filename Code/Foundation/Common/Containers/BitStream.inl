@@ -29,12 +29,7 @@ inline Bits Serialize(SerializeDirection::Enum direction, BitStream& bitStream, 
 }
 
 template <typename T, typename R>
-inline Bits SerializeQuantized(SerializeDirection::Enum direction,
-                               BitStream& bitStream,
-                               T& value_,
-                               const R& minValue_,
-                               const R& maxValue_,
-                               const R& quantum_)
+inline Bits SerializeQuantized(SerializeDirection::Enum direction, BitStream& bitStream, T& value_, const R& minValue_, const R& maxValue_, const R& quantum_)
 {
   static_assert(False<T>::Value, "Requires a user-defined SerializeQuantized function");
   return 0;
@@ -192,8 +187,7 @@ inline R_ENABLE_IF(!is_scalar<T>::value, Bits) BitStream::Measure(const T& value
 }
 
 template <typename R>
-inline R_ENABLE_IF(is_enum<R>::value&& is_enum_or_integral<R>::value,
-                   Bits) BitStream::MeasureQuantized(R minValue_, R maxValue_, R quantum_)
+inline R_ENABLE_IF(is_enum<R>::value&& is_enum_or_integral<R>::value, Bits) BitStream::MeasureQuantized(R minValue_, R maxValue_, R quantum_)
 {
   // Typedefs
   typedef EXACT_INT(BYTES_TO_BITS(sizeof(R))) intType;
@@ -202,8 +196,7 @@ inline R_ENABLE_IF(is_enum<R>::value&& is_enum_or_integral<R>::value,
   return MeasureQuantized((intType)minValue_, (intType)maxValue_, (intType)quantum_);
 }
 template <typename R>
-inline R_ENABLE_IF(is_integral<R>::value&& is_integral<R>::value,
-                   Bits) BitStream::MeasureQuantized(R minValue_, R maxValue_, R quantum_)
+inline R_ENABLE_IF(is_integral<R>::value&& is_integral<R>::value, Bits) BitStream::MeasureQuantized(R minValue_, R maxValue_, R quantum_)
 {
   //
   // Setup
@@ -270,8 +263,7 @@ inline R_ENABLE_IF(is_floating_point<R>::value, Bits) BitStream::MeasureQuantize
   return bitSize;
 }
 template <Bits N, bool WrapAware, typename R>
-inline R_ENABLE_IF(is_enum_or_integral<R>::value,
-                   Bits) BitStream::MeasureQuantized(R minValue_, R maxValue_, R quantum_)
+inline R_ENABLE_IF(is_enum_or_integral<R>::value, Bits) BitStream::MeasureQuantized(R minValue_, R maxValue_, R quantum_)
 {
   // Typedefs
   typedef typename UintN<N, WrapAware>::value_type value_type;
@@ -280,8 +272,7 @@ inline R_ENABLE_IF(is_enum_or_integral<R>::value,
   return MeasureQuantized((value_type)minValue_, (value_type)maxValue_, (value_type)quantum_);
 }
 template <typename R>
-inline R_ENABLE_IF(!is_scalar<R>::value,
-                   Bits) BitStream::MeasureQuantized(const R& minValue_, const R& maxValue_, const R& quantum_)
+inline R_ENABLE_IF(!is_scalar<R>::value, Bits) BitStream::MeasureQuantized(const R& minValue_, const R& maxValue_, const R& quantum_)
 {
   // Invoke user-defined function
   return Raverie::MeasureQuantized(minValue_, maxValue_, quantum_);
@@ -318,8 +309,7 @@ inline Bits BitStream::Serialize(SerializeDirection::Enum direction, String& val
   return (direction == SerializeDirection::Write) ? Write(value) : Read(value);
 }
 template <typename T>
-inline R_ENABLE_IF(is_enum_or_integral<T>::value, Bits) BitStream::Serialize(SerializeDirection::Enum direction,
-                                                                             T& value)
+inline R_ENABLE_IF(is_enum_or_integral<T>::value, Bits) BitStream::Serialize(SerializeDirection::Enum direction, T& value)
 {
   return (direction == SerializeDirection::Write) ? Write(value) : Read(value);
 }
@@ -366,28 +356,23 @@ template <typename T, typename R>
 R_ENABLE_IF(is_enum_or_integral<T>::value&& is_enum_or_integral<R>::value, Bits)
 BitStream::SerializeQuantized(SerializeDirection::Enum direction, T& value_, R minValue_, R maxValue_, R quantum_)
 {
-  return (direction == SerializeDirection::Write) ? WriteQuantized(value_, minValue_, maxValue_, quantum_)
-                                                  : ReadQuantized(value_, minValue_, maxValue_, quantum_);
+  return (direction == SerializeDirection::Write) ? WriteQuantized(value_, minValue_, maxValue_, quantum_) : ReadQuantized(value_, minValue_, maxValue_, quantum_);
 }
 template <typename T, typename R>
 R_ENABLE_IF(is_floating_point<T>::value, Bits)
 BitStream::SerializeQuantized(SerializeDirection::Enum direction, T& value_, R minValue_, R maxValue_, R quantum_)
 {
-  return (direction == SerializeDirection::Write) ? WriteQuantized(value_, minValue_, maxValue_, quantum_)
-                                                  : ReadQuantized(value_, minValue_, maxValue_, quantum_);
+  return (direction == SerializeDirection::Write) ? WriteQuantized(value_, minValue_, maxValue_, quantum_) : ReadQuantized(value_, minValue_, maxValue_, quantum_);
 }
 template <Bits N, bool WrapAware, typename R>
 R_ENABLE_IF(is_enum_or_integral<R>::value, Bits)
-BitStream::SerializeQuantized(
-    SerializeDirection::Enum direction, UintN<N, WrapAware>& value_, R minValue_, R maxValue_, R quantum_)
+BitStream::SerializeQuantized(SerializeDirection::Enum direction, UintN<N, WrapAware>& value_, R minValue_, R maxValue_, R quantum_)
 {
-  return (direction == SerializeDirection::Write) ? WriteQuantized(value_, minValue_, maxValue_, quantum_)
-                                                  : ReadQuantized(value_, minValue_, maxValue_, quantum_);
+  return (direction == SerializeDirection::Write) ? WriteQuantized(value_, minValue_, maxValue_, quantum_) : ReadQuantized(value_, minValue_, maxValue_, quantum_);
 }
 template <typename T, typename R>
 R_ENABLE_IF(!is_scalar<T>::value, Bits)
-BitStream::SerializeQuantized(
-    SerializeDirection::Enum direction, T& value_, const R& minValue_, const R& maxValue_, const R& quantum_)
+BitStream::SerializeQuantized(SerializeDirection::Enum direction, T& value_, const R& minValue_, const R& maxValue_, const R& quantum_)
 {
   // Invoke user-defined function
   return Raverie::SerializeQuantized(direction, *this, value_, minValue_, maxValue_, quantum_);
@@ -527,8 +512,7 @@ inline R_ENABLE_IF(!is_scalar<T>::value, Bits) BitStream::Write(const T& value)
 }
 
 template <typename T, typename R>
-inline R_ENABLE_IF(is_enum<T>::value&& is_enum_or_integral<R>::value,
-                   Bits) BitStream::WriteQuantized(T value_, R minValue_, R maxValue_, R quantum_)
+inline R_ENABLE_IF(is_enum<T>::value&& is_enum_or_integral<R>::value, Bits) BitStream::WriteQuantized(T value_, R minValue_, R maxValue_, R quantum_)
 {
   // Typedefs
   typedef EXACT_INT(BYTES_TO_BITS(sizeof(T))) intType;
@@ -537,8 +521,7 @@ inline R_ENABLE_IF(is_enum<T>::value&& is_enum_or_integral<R>::value,
   return WriteQuantized((intType)value_, (intType)minValue_, (intType)maxValue_, (intType)quantum_);
 }
 template <typename T, typename R>
-inline R_ENABLE_IF(is_integral<T>::value&& is_integral<R>::value,
-                   Bits) BitStream::WriteQuantized(T value_, R minValue_, R maxValue_, R quantum_)
+inline R_ENABLE_IF(is_integral<T>::value&& is_integral<R>::value, Bits) BitStream::WriteQuantized(T value_, R minValue_, R maxValue_, R quantum_)
 {
   //
   // Setup
@@ -594,8 +577,7 @@ inline R_ENABLE_IF(is_integral<T>::value&& is_integral<R>::value,
   return WriteBits((const byte*)&rightAlignedQuantizedValue, bitSize);
 }
 template <typename T, typename R>
-inline R_ENABLE_IF(is_floating_point<T>::value,
-                   Bits) BitStream::WriteQuantized(T value_, R minValue_, R maxValue_, R quantum_)
+inline R_ENABLE_IF(is_floating_point<T>::value, Bits) BitStream::WriteQuantized(T value_, R minValue_, R maxValue_, R quantum_)
 {
   //
   // Setup
@@ -653,8 +635,7 @@ inline R_ENABLE_IF(is_floating_point<T>::value,
   return WriteBits((const byte*)&rightAlignedQuantizedValue, bitSize);
 }
 template <Bits N, bool WrapAware, typename R>
-inline R_ENABLE_IF(is_enum_or_integral<R>::value,
-                   Bits) BitStream::WriteQuantized(UintN<N, WrapAware> value_, R minValue_, R maxValue_, R quantum_)
+inline R_ENABLE_IF(is_enum_or_integral<R>::value, Bits) BitStream::WriteQuantized(UintN<N, WrapAware> value_, R minValue_, R maxValue_, R quantum_)
 {
   // Typedefs
   typedef typename UintN<N, WrapAware>::value_type value_type;
@@ -663,14 +644,10 @@ inline R_ENABLE_IF(is_enum_or_integral<R>::value,
   return WriteQuantized(value_.value(), (value_type)minValue_, (value_type)maxValue_, (value_type)quantum_);
 }
 template <typename T, typename R>
-inline R_ENABLE_IF(!is_scalar<T>::value, Bits) BitStream::WriteQuantized(const T& value_,
-                                                                         const R& minValue_,
-                                                                         const R& maxValue_,
-                                                                         const R& quantum_)
+inline R_ENABLE_IF(!is_scalar<T>::value, Bits) BitStream::WriteQuantized(const T& value_, const R& minValue_, const R& maxValue_, const R& quantum_)
 {
   // Invoke user-defined function
-  return Raverie::SerializeQuantized(
-      SerializeDirection::Write, *this, const_cast<T&>(value_), minValue_, maxValue_, quantum_);
+  return Raverie::SerializeQuantized(SerializeDirection::Write, *this, const_cast<T&>(value_), minValue_, maxValue_, quantum_);
 }
 
 inline Bits BitStream::Append(const BitStream& bitStream)
@@ -1003,8 +980,7 @@ R_ENABLE_IF(!is_scalar<T>::value, Bits)
 BitStream::ReadQuantized(T& value_, const R& minValue_, const R& maxValue_, const R& quantum_) const
 {
   // Invoke user-defined function
-  return Raverie::SerializeQuantized(
-      SerializeDirection::Read, *const_cast<BitStream*>(this), value_, minValue_, maxValue_, quantum_);
+  return Raverie::SerializeQuantized(SerializeDirection::Read, *const_cast<BitStream*>(this), value_, minValue_, maxValue_, quantum_);
 }
 
 inline void BitStream::Unread(Bits bitsToUnread) const

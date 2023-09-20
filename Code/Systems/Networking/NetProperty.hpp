@@ -49,11 +49,7 @@ public:
   RaverieDeclareType(NetPropertyType, TypeCopyMode::ReferenceType);
 
   /// Constructor.
-  NetPropertyType(const String& name,
-                  NativeType* nativeType,
-                  SerializeValueFn serializeValueFn,
-                  GetValueFn getValueFn,
-                  SetValueFn setValueFn);
+  NetPropertyType(const String& name, NativeType* nativeType, SerializeValueFn serializeValueFn, GetValueFn getValueFn, SetValueFn setValueFn);
 
   /// Destructor.
   ~NetPropertyType();
@@ -83,21 +79,21 @@ public:
 // Variant Configuration Helper Macros
 // TODO PLATFORM further investigate this macros usage, static constexpr float
 // does not compile on clang 3.7 so for now was changed to an int
-#define DeclareVariantGetSetForArithmeticTypes(property, defaultFloat, defaultInt)                                     \
-  DeclareVariantGetSetForType(property, Integer, int);                                                                 \
-  DeclareVariantGetSetForType(property, DoubleInteger, s64);                                                           \
-  DeclareVariantGetSetForType(property, Integer2, Integer2);                                                           \
-  DeclareVariantGetSetForType(property, Integer3, Integer3);                                                           \
-  DeclareVariantGetSetForType(property, Integer4, Integer4);                                                           \
-  DeclareVariantGetSetForType(property, Real, float);                                                                  \
-  DeclareVariantGetSetForType(property, DoubleReal, double);                                                           \
-  DeclareVariantGetSetForType(property, Real2, Real2);                                                                 \
-  DeclareVariantGetSetForType(property, Real3, Real3);                                                                 \
-  DeclareVariantGetSetForType(property, Real4, Real4);                                                                 \
+#define DeclareVariantGetSetForArithmeticTypes(property, defaultFloat, defaultInt)                                                                                                                     \
+  DeclareVariantGetSetForType(property, Integer, int);                                                                                                                                                 \
+  DeclareVariantGetSetForType(property, DoubleInteger, s64);                                                                                                                                           \
+  DeclareVariantGetSetForType(property, Integer2, Integer2);                                                                                                                                           \
+  DeclareVariantGetSetForType(property, Integer3, Integer3);                                                                                                                                           \
+  DeclareVariantGetSetForType(property, Integer4, Integer4);                                                                                                                                           \
+  DeclareVariantGetSetForType(property, Real, float);                                                                                                                                                  \
+  DeclareVariantGetSetForType(property, DoubleReal, double);                                                                                                                                           \
+  DeclareVariantGetSetForType(property, Real2, Real2);                                                                                                                                                 \
+  DeclareVariantGetSetForType(property, Real3, Real3);                                                                                                                                                 \
+  DeclareVariantGetSetForType(property, Real4, Real4);                                                                                                                                                 \
   DeclareVariantGetSetForType(property, Quaternion, Quaternion)
 
-#define DeclareVariantGetSetForType(property, typeName, type)                                                          \
-  void Set##property##typeName(type value);                                                                            \
+#define DeclareVariantGetSetForType(property, typeName, type)                                                                                                                                          \
+  void Set##property##typeName(type value);                                                                                                                                                            \
   type Get##property##typeName() const
 
 /// Network Property Configuration.
@@ -353,12 +349,12 @@ public:
 /// Typedefs.
 typedef Array<NetPropertyInfo> NetPropertyInfoArray;
 
-#define DeclarePropertyFilterForType(typeName)                                                                         \
-  class PropertyFilter##typeName : public MetaPropertyFilter                                                           \
-  {                                                                                                                    \
-  public:                                                                                                              \
-    RaverieDeclareType(PropertyFilter##typeName, TypeCopyMode::ReferenceType);                                           \
-    bool Filter(Member* prop, HandleParam instance) override;                                                          \
+#define DeclarePropertyFilterForType(typeName)                                                                                                                                                         \
+  class PropertyFilter##typeName : public MetaPropertyFilter                                                                                                                                           \
+  {                                                                                                                                                                                                    \
+  public:                                                                                                                                                                                              \
+    RaverieDeclareType(PropertyFilter##typeName, TypeCopyMode::ReferenceType);                                                                                                                         \
+    bool Filter(Member* prop, HandleParam instance) override;                                                                                                                                          \
   }
 
 // Variant Configuration Property Filters

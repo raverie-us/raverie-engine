@@ -19,18 +19,13 @@ public:
   MultiPropertyInterface(OperationQueue* queue, MetaSelection* selection);
 
   /// PropertyInterface Interface.
-  void ChangeProperty(HandleParam object,
-                      PropertyPathParam property,
-                      PropertyState& state,
-                      PropertyAction::Enum action) override;
+  void ChangeProperty(HandleParam object, PropertyPathParam property, PropertyState& state, PropertyAction::Enum action) override;
   void MarkPropertyModified(HandleParam object, PropertyPathParam property) override;
   void RevertProperty(HandleParam object, PropertyPathParam property) override;
   PropertyState GetValue(HandleParam object, PropertyPathParam property) override;
   void InvokeFunction(HandleParam object, Raverie::Function* method) override;
   HandleOf<MetaComposition> GetMetaComposition(BoundType* objectType) override;
-  ObjectPropertyNode* BuildObjectTree(ObjectPropertyNode* parent,
-                                      HandleParam instance,
-                                      Property* objectProperty = nullptr) override;
+  ObjectPropertyNode* BuildObjectTree(ObjectPropertyNode* parent, HandleParam instance, Property* objectProperty = nullptr) override;
   void GetObjects(HandleParam instance, Array<Handle>& objects) override;
 
   MetaSelection* mSelection;
@@ -58,11 +53,7 @@ public:
   Handle GetComponentAt(HandleParam object, uint index) override;
 
   bool CanAddComponent(HandleParam object, BoundType* typeToAdd, AddInfo* info) override;
-  void AddComponent(HandleParam owner,
-                    BoundType* typeToAdd,
-                    int index = -1,
-                    bool ignoreDependencies = false,
-                    MetaCreationContext* creationContext = nullptr) override;
+  void AddComponent(HandleParam owner, BoundType* typeToAdd, int index = -1, bool ignoreDependencies = false, MetaCreationContext* creationContext = nullptr) override;
 
   bool CanRemoveComponent(HandleParam object, HandleParam subObject, String& reason) override;
   void RemoveComponent(HandleParam owner, HandleParam component, bool ignoreDependencies = false) override;

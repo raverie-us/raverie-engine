@@ -13,10 +13,7 @@ public:
   ~TextSaver();
 
   /// Open a text file for saving. FileMode must be either Write or Append.
-  void Open(Status& status,
-            cstr file,
-            DataVersion::Enum version = DataVersion::Current,
-            FileMode::Enum fileMode = FileMode::Write);
+  void Open(Status& status, cstr file, DataVersion::Enum version = DataVersion::Current, FileMode::Enum fileMode = FileMode::Write);
   bool OpenBuffer(DataVersion::Enum version = DataVersion::Current, FileMode::Enum fileMode = FileMode::Write);
   uint GetBufferSize();
   String GetString();
@@ -52,8 +49,7 @@ public:
   bool StringField(cstr typeName, cstr fieldName, StringRange& stringRange) override;
 
   // Array Serialization
-  bool ArrayField(
-      cstr typeName, cstr fieldName, byte* data, ArrayType arrayType, uint numberOfElements, uint sizeOftype) override;
+  bool ArrayField(cstr typeName, cstr fieldName, byte* data, ArrayType arrayType, uint numberOfElements, uint sizeOftype) override;
 
   void ArraySize(uint& arraySize){};
 

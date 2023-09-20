@@ -41,8 +41,7 @@ void LoadProject(Editor* editor, Cog* projectCog, StringParam path, StringParam 
       String libraryName = libraryRef.mContentLibraryName;
       String contentFolder = FilePath::Combine(projectFolder, libraryName);
       Status loadContentLibrary;
-      ContentLibrary* contentLibrary =
-          Z::gContentSystem->LibraryFromDirectory(loadContentLibrary, libraryName, contentFolder);
+      ContentLibrary* contentLibrary = Z::gContentSystem->LibraryFromDirectory(loadContentLibrary, libraryName, contentFolder);
       if (contentLibrary)
       {
         Status status;
@@ -50,8 +49,7 @@ void LoadProject(Editor* editor, Cog* projectCog, StringParam path, StringParam 
       }
       else
       {
-        DoNotifyWarning("Missing Library",
-                        String::Format("Failed to find shared content library %s", libraryName.c_str()));
+        DoNotifyWarning("Missing Library", String::Format("Failed to find shared content library %s", libraryName.c_str()));
       }
     }
   }
@@ -60,8 +58,7 @@ void LoadProject(Editor* editor, Cog* projectCog, StringParam path, StringParam 
 
   // Load content package of project
   Status loadContentLibrary;
-  ContentLibrary* projectLibrary =
-      Z::gContentSystem->LibraryFromDirectory(loadContentLibrary, project->ProjectName, project->ContentFolder);
+  ContentLibrary* projectLibrary = Z::gContentSystem->LibraryFromDirectory(loadContentLibrary, project->ProjectName, project->ContentFolder);
 
   /// Store the library on the project
   project->ProjectContentLibrary = projectLibrary;
@@ -129,8 +126,7 @@ bool OpenProjectFile(StringParam filename)
   }
 
   // Load the project object
-  Cog* projectCog =
-      Z::gFactory->Create(Z::gEngine->GetEngineSpace(), filename, CreationFlags::ProxyComponentsExpected, nullptr);
+  Cog* projectCog = Z::gFactory->Create(Z::gEngine->GetEngineSpace(), filename, CreationFlags::ProxyComponentsExpected, nullptr);
   if (projectCog == nullptr)
   {
     DoNotifyError("Failed to load project.", "Project file invalid.");

@@ -4,11 +4,11 @@
 #pragma once
 
 // Raverie includes
-#  include "Foundation/Common/CommonStandard.hpp"
+#include "Foundation/Common/CommonStandard.hpp"
 
 // This needs to be included before anything else
 // since it disables warnings and defines macros we use
-#  include "General.hpp"
+#include "General.hpp"
 
 // Bring Raverie primitives into the Raverie namespace
 namespace Raverie
@@ -36,6 +36,7 @@ using Raverie::OwnedArray;
 using Raverie::Pair;
 using Raverie::PodArray;
 using Raverie::PodBlockArray;
+using Raverie::RaverieMove;
 using Raverie::Semaphore;
 using Raverie::Socket;
 using Raverie::SocketAddress;
@@ -50,7 +51,6 @@ using Raverie::Thread;
 using Raverie::ThreadLock;
 using Raverie::ToValue;
 using Raverie::UniquePointer;
-using Raverie::RaverieMove;
 using Raverie::Memory::Shutdown;
 
 // Math types
@@ -112,14 +112,14 @@ using std::numeric_limits;
 } // namespace Raverie
 
 // Special macros
-#  define RaverieForEach(VariableName, Range) forRange (VariableName, Range)
-#  define RaverieRefForEach(VariableName, Range) forRangeRef (VariableName, Range)
-#  define RaverieForRange(VariableName, RangeName, Range) RaverieForRangeVar (VariableName, RangeName, Range)
-#  define RaverieRefForRange(VariableName, RangeName, Range) RaverieForRangeRefVar (VariableName, RangeName, Range)
+#define RaverieForEach(VariableName, Range) forRange (VariableName, Range)
+#define RaverieRefForEach(VariableName, Range) forRangeRef (VariableName, Range)
+#define RaverieForRange(VariableName, RangeName, Range) RaverieForRangeVar (VariableName, RangeName, Range)
+#define RaverieRefForRange(VariableName, RangeName, Range) RaverieForRangeRefVar (VariableName, RangeName, Range)
 
 // Raverie Includes
-#  include "ForwardDeclarations.hpp"
-#  include "SharedReference.hpp"
+#include "ForwardDeclarations.hpp"
+#include "SharedReference.hpp"
 
 // Standard Raverie Type-defines
 namespace Raverie
@@ -212,91 +212,91 @@ String GetDocumentationStringOrEmpty(StringParam string);
 String GetDocumentationCStringOrEmpty(cstr string);
 
 // If the user disabled documentation at compile-time...
-#  if defined(RaverieDisableDocumentation)
+#if defined(RaverieDisableDocumentation)
 // Defines a documentation string and allows users to easily disable
 // documentation via globally defining 'RaverieDisableDocumentation'
-#    define RaverieDocumentString(DocumentationString) Raverie::String()
+#  define RaverieDocumentString(DocumentationString) Raverie::String()
 
 // Defines a static member function that allows us to query the documentation
 // for a particular member (including properties, functions, and fields)
-#    define RaverieDocument(Member, DocumentationString)                                                                 \
-      static Raverie::String Member##Documentation()                                                                     \
-      {                                                                                                                \
-        return Raverie::String();                                                                                        \
-      }
-#  else
+#  define RaverieDocument(Member, DocumentationString)                                                                                                                                                 \
+    static Raverie::String Member##Documentation()                                                                                                                                                     \
+    {                                                                                                                                                                                                  \
+      return Raverie::String();                                                                                                                                                                        \
+    }
+#else
 // Defines a documentation string and allows users to easily disable
 // documentation via globally defining 'RaverieDisableDocumentation'
-#    define RaverieDocumentString(DocumentationString) Raverie::GetDocumentationStringOrEmpty(DocumentationString)
+#  define RaverieDocumentString(DocumentationString) Raverie::GetDocumentationStringOrEmpty(DocumentationString)
 
 // Defines a global function that allows us to query the documentation for a
 // particular type including classes, enums, primitives, etc)
-#    define RaverieDocument(Name, DocumentationString)                                                                   \
-      static Raverie::String Name##Documentation()                                                                       \
-      {                                                                                                                \
-        static Raverie::String Documentation = GetDocumentationCStringOrEmpty(DocumentationString);                      \
-        return Documentation;                                                                                          \
-      }
-#  endif
+#  define RaverieDocument(Name, DocumentationString)                                                                                                                                                   \
+    static Raverie::String Name##Documentation()                                                                                                                                                       \
+    {                                                                                                                                                                                                  \
+      static Raverie::String Documentation = GetDocumentationCStringOrEmpty(DocumentationString);                                                                                                      \
+      return Documentation;                                                                                                                                                                            \
+    }
+#endif
 } // namespace Raverie
 
 // To speed up compilation, we also put all of our includes here rather than
 // being inside any of the headers NOTE: These headers must be sorted in order
 // of dependencies (e.g. Delegate has a Handle, so Handle must come first)
-#  include "Handle.hpp"
-#  include "Delegate.hpp"
-#  include "Traits.hpp"
-#  include "Binding.hpp"
-#  include "CodeLocation.hpp"
-#  include "Range.hpp"
-#  include "UntypedBlockArray.hpp"
-#  include "DestructibleBuffer.hpp"
-#  include "Composition.hpp"
-#  include "Members.hpp"
-#  include "Opcode.hpp"
-#  include "StringConstants.hpp"
-#  include "Function.hpp"
-#  include "Type.hpp"
-#  include "MultiPrimitive.hpp"
-#  include "StringBuilderClass.hpp"
-#  include "Documentation.hpp"
-#  include "Library.hpp"
-#  include "StaticLibrary.hpp"
-#  include "Core.hpp"
-#  include "SyntaxTreeHelpers.hpp"
-#  include "GrammarConstants.hpp"
-#  include "Shared.hpp"
-#  include "Token.hpp"
-#  include "SyntaxTree.hpp"
-#  include "Events.hpp"
-#  include "ArrayClass.hpp"
-#  include "CodeGenerator.hpp"
-#  include "ErrorDatabase.hpp"
-#  include "CompilationErrors.hpp"
-#  include "ConsoleClass.hpp"
-#  include "WebSocket.hpp"
-#  include "Debugging.hpp"
-#  include "HandleManager.hpp"
-#  include "Timer.hpp"
-#  include "ExecutableState.hpp"
-#  include "Any.hpp"
-#  include "Formatter.hpp"
-#  include "HashContainer.hpp"
-#  include "Json.hpp"
-#  include "Matrix.hpp"
-#  include "OverloadResolver.hpp"
-#  include "Parser.hpp"
-#  include "Project.hpp"
-#  include "RandomClass.hpp"
-#  include "Setup.hpp"
-#  include "Sha1.hpp"
-#  include "StubCode.hpp"
-#  include "Syntaxer.hpp"
-#  include "TemplateBinding.hpp"
-#  include "RangeBinding.hpp"
-#  include "Tokenizer.hpp"
-#  include "VirtualMachine.hpp"
-#  include "Base64.hpp"
-#  include "DataDrivenLexer.hpp"
-#  include "Wrapper.hpp"
-#  include "Color.hpp"
+#include "Handle.hpp"
+#include "Delegate.hpp"
+#include "Traits.hpp"
+#include "Binding.hpp"
+#include "CodeLocation.hpp"
+#include "Range.hpp"
+#include "UntypedBlockArray.hpp"
+#include "DestructibleBuffer.hpp"
+#include "Composition.hpp"
+#include "Members.hpp"
+#include "Opcode.hpp"
+#include "StringConstants.hpp"
+#include "Function.hpp"
+#include "Type.hpp"
+#include "MultiPrimitive.hpp"
+#include "StringBuilderClass.hpp"
+#include "Documentation.hpp"
+#include "Library.hpp"
+#include "StaticLibrary.hpp"
+#include "Core.hpp"
+#include "SyntaxTreeHelpers.hpp"
+#include "GrammarConstants.hpp"
+#include "Shared.hpp"
+#include "Token.hpp"
+#include "SyntaxTree.hpp"
+#include "Events.hpp"
+#include "ArrayClass.hpp"
+#include "CodeGenerator.hpp"
+#include "ErrorDatabase.hpp"
+#include "CompilationErrors.hpp"
+#include "ConsoleClass.hpp"
+#include "WebSocket.hpp"
+#include "Debugging.hpp"
+#include "HandleManager.hpp"
+#include "Timer.hpp"
+#include "ExecutableState.hpp"
+#include "Any.hpp"
+#include "Formatter.hpp"
+#include "HashContainer.hpp"
+#include "Json.hpp"
+#include "Matrix.hpp"
+#include "OverloadResolver.hpp"
+#include "Parser.hpp"
+#include "Project.hpp"
+#include "RandomClass.hpp"
+#include "Setup.hpp"
+#include "Sha1.hpp"
+#include "StubCode.hpp"
+#include "Syntaxer.hpp"
+#include "TemplateBinding.hpp"
+#include "RangeBinding.hpp"
+#include "Tokenizer.hpp"
+#include "VirtualMachine.hpp"
+#include "Base64.hpp"
+#include "DataDrivenLexer.hpp"
+#include "Wrapper.hpp"
+#include "Color.hpp"

@@ -47,8 +47,7 @@ void ShaderIntrinsicsStaticRaverieLibrary::Parse(RaverieSpirVFrontEnd* translato
 
   // Declare the unsigned int type. As this is currently a hack type, only do this for the scalar version. @JoshD:
   // Cleanup
-  RaverieShaderIRType* uintType =
-      translator->MakeCoreType(shaderLibrary, ShaderIRTypeBaseType::Uint, 1, nullptr, RaverieTypeId(Raverie::UnsignedInt));
+  RaverieShaderIRType* uintType = translator->MakeCoreType(shaderLibrary, ShaderIRTypeBaseType::Uint, 1, nullptr, RaverieTypeId(Raverie::UnsignedInt));
 
   // Grabbed a bunch of raverie types
   Raverie::BoundType* raverieSamplerType = RaverieTypeId(Raverie::Sampler);
@@ -61,21 +60,14 @@ void ShaderIntrinsicsStaticRaverieLibrary::Parse(RaverieSpirVFrontEnd* translato
   Raverie::BoundType* raverieStorageImage2d = RaverieTypeId(Raverie::StorageImage2d);
 
   // Create the sampler type
-  RaverieShaderIRType* samplerType = translator->MakeTypeAndPointer(shaderLibrary,
-                                                                  ShaderIRTypeBaseType::Sampler,
-                                                                  raverieSamplerType->Name,
-                                                                  raverieSamplerType,
-                                                                  spv::StorageClassUniformConstant);
+  RaverieShaderIRType* samplerType = translator->MakeTypeAndPointer(shaderLibrary, ShaderIRTypeBaseType::Sampler, raverieSamplerType->Name, raverieSamplerType, spv::StorageClassUniformConstant);
   translator->MakeShaderTypeMeta(samplerType, nullptr);
 
   // Create images + sampledImaged types
   CreateImageAndSampler(translator, shaderLibrary, core.RealType, raverieImage2d, raverieSampledImage2d, spv::Dim2D, 0);
-  CreateImageAndSampler(
-      translator, shaderLibrary, core.RealType, raverieDepthImage2d, raverieSampledDepthImage2d, spv::Dim2D, 1);
-  CreateImageAndSampler(
-      translator, shaderLibrary, core.RealType, raverieImageCube, raverieSampledImageCube, spv::DimCube, 0);
-  CreateStorageImage(
-      translator, shaderLibrary, core.RealType, raverieStorageImage2d, spv::Dim2D, 0, spv::ImageFormatRgba32f);
+  CreateImageAndSampler(translator, shaderLibrary, core.RealType, raverieDepthImage2d, raverieSampledDepthImage2d, spv::Dim2D, 1);
+  CreateImageAndSampler(translator, shaderLibrary, core.RealType, raverieImageCube, raverieSampledImageCube, spv::DimCube, 0);
+  CreateStorageImage(translator, shaderLibrary, core.RealType, raverieStorageImage2d, spv::Dim2D, 0, spv::ImageFormatRgba32f);
 
   RegisterShaderIntrinsics(translator, shaderLibrary);
 
@@ -102,20 +94,16 @@ RaverieShaderIRLibraryRef ShaderIntrinsicsStaticRaverieLibrary::GetLibrary()
 }
 
 void ShaderIntrinsicsStaticRaverieLibrary::CreateImageAndSampler(RaverieSpirVFrontEnd* translator,
-                                                               RaverieShaderIRLibrary* shaderLibrary,
-                                                               Raverie::BoundType* raverieSampledType,
-                                                               Raverie::BoundType* raverieImageType,
-                                                               Raverie::BoundType* raverieSampledImageType,
-                                                               int dimension,
-                                                               int depthMode)
+                                                                 RaverieShaderIRLibrary* shaderLibrary,
+                                                                 Raverie::BoundType* raverieSampledType,
+                                                                 Raverie::BoundType* raverieImageType,
+                                                                 Raverie::BoundType* raverieSampledImageType,
+                                                                 int dimension,
+                                                                 int depthMode)
 {
   RaverieShaderIRType* sampledType = shaderLibrary->FindType(raverieSampledType);
   // Create the base image type for a sampled image
-  RaverieShaderIRType* imageType = translator->MakeTypeAndPointer(shaderLibrary,
-                                                                ShaderIRTypeBaseType::Image,
-                                                                raverieImageType->Name,
-                                                                raverieImageType,
-                                                                spv::StorageClassUniformConstant);
+  RaverieShaderIRType* imageType = translator->MakeTypeAndPointer(shaderLibrary, ShaderIRTypeBaseType::Image, raverieImageType->Name, raverieImageType, spv::StorageClassUniformConstant);
   imageType->mParameters.PushBack(sampledType);                                              // SampledType
   imageType->mParameters.PushBack(translator->GetOrCreateConstantIntegerLiteral(dimension)); // Dim
   imageType->mParameters.PushBack(translator->GetOrCreateConstantIntegerLiteral(depthMode)); // Depth
@@ -125,30 +113,23 @@ void ShaderIntrinsicsStaticRaverieLibrary::CreateImageAndSampler(RaverieSpirVFro
   imageType->mParameters.PushBack(translator->GetOrCreateConstantIntegerLiteral(spv::ImageFormatUnknown));
   translator->MakeShaderTypeMeta(imageType, nullptr);
 
-  RaverieShaderIRType* sampledImageType = translator->MakeTypeAndPointer(shaderLibrary,
-                                                                       ShaderIRTypeBaseType::SampledImage,
-                                                                       raverieSampledImageType->Name,
-                                                                       raverieSampledImageType,
-                                                                       spv::StorageClassUniformConstant);
+  RaverieShaderIRType* sampledImageType =
+      translator->MakeTypeAndPointer(shaderLibrary, ShaderIRTypeBaseType::SampledImage, raverieSampledImageType->Name, raverieSampledImageType, spv::StorageClassUniformConstant);
   sampledImageType->mParameters.PushBack(imageType);
   translator->MakeShaderTypeMeta(sampledImageType, nullptr);
 }
 
 void ShaderIntrinsicsStaticRaverieLibrary::CreateStorageImage(RaverieSpirVFrontEnd* translator,
-                                                            RaverieShaderIRLibrary* shaderLibrary,
-                                                            Raverie::BoundType* raverieSampledType,
-                                                            Raverie::BoundType* raverieImageType,
-                                                            int dimension,
-                                                            int depthMode,
-                                                            int imageFormat)
+                                                              RaverieShaderIRLibrary* shaderLibrary,
+                                                              Raverie::BoundType* raverieSampledType,
+                                                              Raverie::BoundType* raverieImageType,
+                                                              int dimension,
+                                                              int depthMode,
+                                                              int imageFormat)
 {
   RaverieShaderIRType* sampledType = shaderLibrary->FindType(raverieSampledType);
   // Create the base image type for a sampled image
-  RaverieShaderIRType* imageType = translator->MakeTypeAndPointer(shaderLibrary,
-                                                                ShaderIRTypeBaseType::Image,
-                                                                raverieImageType->Name,
-                                                                raverieImageType,
-                                                                spv::StorageClassUniformConstant);
+  RaverieShaderIRType* imageType = translator->MakeTypeAndPointer(shaderLibrary, ShaderIRTypeBaseType::Image, raverieImageType->Name, raverieImageType, spv::StorageClassUniformConstant);
   imageType->mParameters.PushBack(sampledType);                                              // SampledType
   imageType->mParameters.PushBack(translator->GetOrCreateConstantIntegerLiteral(dimension)); // Dim
   imageType->mParameters.PushBack(translator->GetOrCreateConstantIntegerLiteral(depthMode)); // Depth
@@ -169,8 +150,7 @@ void ShaderIntrinsicsStaticRaverieLibrary::PopulateStageRequirementsData(Raverie
   {
     Raverie::Function* raverieFunction = raverieLibrary->OwnedFunctions[i];
     if (raverieFunction->HasAttribute(SpirVNameSettings::mRequiresPixelAttribute))
-      shaderLibrary->mStageRequirementsData[raverieFunction].Combine(
-          nullptr, raverieFunction->Location, ShaderStage::Pixel);
+      shaderLibrary->mStageRequirementsData[raverieFunction].Combine(nullptr, raverieFunction->Location, ShaderStage::Pixel);
   }
 }
 

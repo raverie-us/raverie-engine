@@ -265,8 +265,7 @@ void GizmoDrag::OnMouseDragEnd(Event*)
 Vec3 GizmoDrag::CastRayAgainstDragPlane(const Ray& worldRay)
 {
   Intersection::IntersectionPoint intersection;
-  Intersection::RayPlane(
-      worldRay.Start, worldRay.Direction, mDragPlane.GetNormal(), mDragPlane.GetDistance(), &intersection);
+  Intersection::RayPlane(worldRay.Start, worldRay.Direction, mDragPlane.GetNormal(), mDragPlane.GetDistance(), &intersection);
 
   return intersection.Points[0];
 }

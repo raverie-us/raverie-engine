@@ -43,10 +43,7 @@ struct PairSortPolicy
 /// Contains a sorted set of unique key-data pairs in a contiguous dynamic array
 /// Search, insertion, and removal operations have O(log n) complexity
 /// Functionality is similar to std::map but with better performance
-template <typename KeyType,
-          typename DataType,
-          typename Sorter = PairSortPolicy<KeyType, DataType>,
-          typename Allocator = DefaultAllocator>
+template <typename KeyType, typename DataType, typename Sorter = PairSortPolicy<KeyType, DataType>, typename Allocator = DefaultAllocator>
 class ArrayMap : public ArraySet<Pair<KeyType, DataType>, Sorter, Allocator>
 {
 public:

@@ -102,7 +102,8 @@ public:
   void Scale(Vec2Param rhs);
   Vector2 Transform(Vec2Param vector) const;
 
-  union {
+  union
+  {
     struct
     {
       real m00, m01, m10, m11;

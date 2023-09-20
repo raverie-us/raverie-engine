@@ -2,7 +2,7 @@
 #include "Precompiled.hpp"
 
 #ifndef RaverieExceptions
-#define SPIRV_CROSS_EXCEPTIONS_TO_ASSERTIONS
+#  define SPIRV_CROSS_EXCEPTIONS_TO_ASSERTIONS
 #endif
 #include "spirv_glsl.hpp"
 
@@ -20,8 +20,7 @@ String RaverieEngineShaderGlslBackend::GetExtension()
   return "glsl";
 }
 
-bool RaverieEngineShaderGlslBackend::RunTranslationPass(ShaderTranslationPassResult& inputData,
-                                                    ShaderTranslationPassResult& outputData)
+bool RaverieEngineShaderGlslBackend::RunTranslationPass(ShaderTranslationPassResult& inputData, ShaderTranslationPassResult& outputData)
 {
   ShaderByteStream& inputByteStream = inputData.mByteStream;
   uint32_t* data = (uint32_t*)inputByteStream.Data();
@@ -30,7 +29,7 @@ bool RaverieEngineShaderGlslBackend::RunTranslationPass(ShaderTranslationPassRes
   spirv_cross::CompilerGLSL compiler(data, wordCount);
   // Set options
   spirv_cross::CompilerGLSL::Options opts = compiler.get_common_options();
-  //opts.force_legacy = true; // raverie specific
+  // opts.force_legacy = true; // raverie specific
   opts.emit_uniform_buffer_as_plain_uniforms = true; // replaces raverie specific line above after spirv-cross update, raverie specific patch not needed anymore
   opts.version = mTargetVersion;
   opts.es = mTargetGlslEs;

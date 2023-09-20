@@ -129,8 +129,7 @@ public:
   virtual void Cleanup();
 
 private:
-  virtual void
-  CastIntoBroadphase(uint broadPhaseType, CastDataParam data, ProxyCastResults& results, CastFunction func);
+  virtual void CastIntoBroadphase(uint broadPhaseType, CastDataParam data, ProxyCastResults& results, CastFunction func);
 
   uint GetNewProxyIndex(uint type);
 

@@ -87,14 +87,14 @@ struct ContactBlock : public ConstraintConfigBlock
 };
 
 /// Use the define/include trick to create a named block for each joint type
-#define JointType(jointType)                                                                                           \
-  struct jointType##Block : public ConstraintConfigBlock                                                               \
-  {                                                                                                                    \
-    RaverieDeclareType(jointType##Block, TypeCopyMode::ReferenceType);                                                   \
-    jointType##Block()                                                                                                 \
-    {                                                                                                                  \
-      mJointId = Raverie::JointEnums::jointType##Type;                                                                    \
-    }                                                                                                                  \
+#define JointType(jointType)                                                                                                                                                                           \
+  struct jointType##Block : public ConstraintConfigBlock                                                                                                                                               \
+  {                                                                                                                                                                                                    \
+    RaverieDeclareType(jointType##Block, TypeCopyMode::ReferenceType);                                                                                                                                 \
+    jointType##Block()                                                                                                                                                                                 \
+    {                                                                                                                                                                                                  \
+      mJointId = Raverie::JointEnums::jointType##Type;                                                                                                                                                 \
+    }                                                                                                                                                                                                  \
   };
 #include "JointList.hpp"
 #undef JointType

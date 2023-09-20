@@ -26,8 +26,7 @@ public:
   void Frame(Aabb& worldAabb, float panTime);
 
   /// Creates a mouse manipulator to drag the given object
-  MouseManipulation*
-  StartObjectDrag(Mouse* mouse, Widget* object, bool snapping = false, float snapFidelity = Pixels(10));
+  MouseManipulation* StartObjectDrag(Mouse* mouse, Widget* object, bool snapping = false, float snapFidelity = Pixels(10));
 
   /// Returns whether or not the given point is visible in the graph.
   bool WithinView(Vec3Param graphPosition);

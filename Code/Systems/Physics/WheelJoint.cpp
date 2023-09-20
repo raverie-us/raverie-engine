@@ -168,8 +168,7 @@ void WheelJoint::ComputePositionMolecules(MoleculeWalker& molecules)
   MoleculeData moleculeData;
   ComputeMoleculeData(moleculeData);
 
-  ComputePositionMoleculesFragment(
-      this, molecules, sInfo.mAtomCount, moleculeData, DefaultAngularLimitPolicy<WheelJoint>());
+  ComputePositionMoleculesFragment(this, molecules, sInfo.mAtomCount, moleculeData, DefaultAngularLimitPolicy<WheelJoint>());
 }
 
 void WheelJoint::DebugDraw()

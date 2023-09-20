@@ -99,10 +99,7 @@ public:
 
   // Allocates writable memory that the user can work with
   // If the destructor passed in is null, then no destructor will be pushed
-  byte* Allocate(size_t size,
-                 DestructFn destructor = nullptr,
-                 CopyConstructFn copyConstructor = nullptr,
-                 size_t* positionOut = nullptr);
+  byte* Allocate(size_t size, DestructFn destructor = nullptr, CopyConstructFn copyConstructor = nullptr, size_t* positionOut = nullptr);
 
   // Writes memory directly to the buffer
   // If the destructor passed in is null, then no destructor will be pushed
@@ -174,4 +171,3 @@ private:
   UntypedBlockArray<BlockSize> Data;
 };
 } // namespace Raverie
-

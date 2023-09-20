@@ -11,14 +11,7 @@ class NodePrintInfo
 public:
   RaverieDeclareType(NodePrintInfo, TypeCopyMode::ReferenceType);
   NodePrintInfo(int level, const String& name, int ID, bool hasOutput, HandleOf<SoundNode> node) :
-      mLevel(level),
-      mName(name),
-      mHasOutput(hasOutput),
-      mMoved(false),
-      mPositionSet(false),
-      mPosition(Vec2(0.0f, 0.0f)),
-      mID(ID),
-      mNode(node)
+      mLevel(level), mName(name), mHasOutput(hasOutput), mMoved(false), mPositionSet(false), mPosition(Vec2(0.0f, 0.0f)), mID(ID), mNode(node)
   {
   }
 

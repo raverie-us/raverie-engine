@@ -28,20 +28,8 @@ RaverieDefineExternalBaseType(IpAddress, TypeCopyMode::ReferenceType, builder, t
   RaverieBindGetterProperty(String);
   RaverieBindCustomGetterProperty(Hash);
 
-  RaverieFullBindGetterSetter(builder,
-                            type,
-                            &Raverie::IpAddress::GetHost,
-                            (String(Raverie::IpAddress::*)() const),
-                            &Raverie::IpAddress::SetHost,
-                            (void (Raverie::IpAddress::*)(StringParam)),
-                            "Host");
-  RaverieFullBindGetterSetter(builder,
-                            type,
-                            &Raverie::IpAddress::GetPort,
-                            (uint(Raverie::IpAddress::*)() const),
-                            &Raverie::IpAddress::SetPort,
-                            (void (Raverie::IpAddress::*)(uint)),
-                            "Port");
+  RaverieFullBindGetterSetter(builder, type, &Raverie::IpAddress::GetHost, (String(Raverie::IpAddress::*)() const), &Raverie::IpAddress::SetHost, (void(Raverie::IpAddress::*)(StringParam)), "Host");
+  RaverieFullBindGetterSetter(builder, type, &Raverie::IpAddress::GetPort, (uint(Raverie::IpAddress::*)() const), &Raverie::IpAddress::SetPort, (void(Raverie::IpAddress::*)(uint)), "Port");
 
   RaverieBindGetterProperty(PortString);
 }

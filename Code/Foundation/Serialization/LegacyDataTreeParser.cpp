@@ -24,8 +24,7 @@ DataNode* LegacyDataTreeParser::BuildTree(DataTreeContext& context, StringRange 
 DataNode* RaiseParseError(DataTreeContext& c, Tokenizer& t, cstr parseError)
 {
   c.Error = true;
-  c.Message =
-      String::Format("Error parsing file '%s' on line %u. Error: %s", c.Filename.c_str(), t.CurrentLine(), parseError);
+  c.Message = String::Format("Error parsing file '%s' on line %u. Error: %s", c.Filename.c_str(), t.CurrentLine(), parseError);
   Error("%s", c.Message.c_str());
   return NULL;
 }

@@ -222,9 +222,7 @@ void BroadPhaseEditor::CreateGraphs(BroadPhase::Type type, BroadPhaseTracker* tr
   }
 }
 
-Widget* BroadPhaseEditor::CreateRecordGraphWidget(BroadPhase::Type type,
-                                                  BroadPhaseTracker* tracker,
-                                                  BPStats::Type recordType)
+Widget* BroadPhaseEditor::CreateRecordGraphWidget(BroadPhase::Type type, BroadPhaseTracker* tracker, BPStats::Type recordType)
 {
   // Create a graph
   GraphView* graph = new GraphView(mEditor);

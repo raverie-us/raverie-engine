@@ -16,21 +16,11 @@ public:
 
   typedef void (*StatusFn)(StringParam message, const T& context, void* userData);
 
-  StatusContext() :
-      State(StatusState::Success),
-      Context(T()),
-      IgnoreMessage(false),
-      CallbackOnFailure(nullptr),
-      UserDataOnFailure(nullptr)
+  StatusContext() : State(StatusState::Success), Context(T()), IgnoreMessage(false), CallbackOnFailure(nullptr), UserDataOnFailure(nullptr)
   {
   }
 
-  StatusContext(StatusState::Enum state, StringParam message) :
-      State(state),
-      Message(message),
-      IgnoreMessage(false),
-      CallbackOnFailure(nullptr),
-      UserDataOnFailure(nullptr)
+  StatusContext(StatusState::Enum state, StringParam message) : State(state), Message(message), IgnoreMessage(false), CallbackOnFailure(nullptr), UserDataOnFailure(nullptr)
   {
   }
 

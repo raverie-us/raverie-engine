@@ -209,8 +209,7 @@ void GenerateTextureCoordinate(Vec3Param normal, Vec2Ref uvCoords)
   uvCoords[1] = (real(1.0) - normal.y) / real(2.0);
 }
 
-void BuildIcosahedron(
-    Vec3Ptr& vertices, uint& vertexCount, uint*& indices, uint& indexCount, Vec3Ptr* normals, Vec2Ptr* textureCoords)
+void BuildIcosahedron(Vec3Ptr& vertices, uint& vertexCount, uint*& indices, uint& indexCount, Vec3Ptr* normals, Vec2Ptr* textureCoords)
 {
   vertexCount = 12;
   indexCount = 20;
@@ -253,13 +252,7 @@ void BuildIcosahedron(
   }
 }
 
-void BuildIcoSphere(uint subdivisionCount,
-                    Vec3Ptr& vertices,
-                    uint& vertexCount,
-                    uint*& indices,
-                    uint& indexCount,
-                    Vec3Ptr* normals,
-                    Vec2Ptr* textureCoords)
+void BuildIcoSphere(uint subdivisionCount, Vec3Ptr& vertices, uint& vertexCount, uint*& indices, uint& indexCount, Vec3Ptr* normals, Vec2Ptr* textureCoords)
 {
   if (subdivisionCount == 1)
   {

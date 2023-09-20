@@ -41,16 +41,13 @@ bool ShouldSolvePosition(Joint* joint)
   return config->mPositionCorrectionType == PhysicsSolverPositionCorrection::PostStabilization;
 }
 
-void CollectContactsToSolve(IConstraintSolver::ContactList& inputList,
-                            IConstraintSolver::ContactList& contactsToSolve,
-                            PhysicsSolverConfig* config)
+void CollectContactsToSolve(IConstraintSolver::ContactList& inputList, IConstraintSolver::ContactList& contactsToSolve, PhysicsSolverConfig* config)
 {
   // if the global + contact config say to use position correction then
   // solve all contacts with position correction
   PhysicsSolverPositionCorrection::Enum globalCorrection = config->mPositionCorrectionType;
   ConstraintPositionCorrection::Enum contactCorrection = config->mContactBlock.GetPositionCorrectionType();
-  if ((globalCorrection == PhysicsSolverPositionCorrection::PostStabilization &&
-       contactCorrection != ConstraintPositionCorrection::Baumgarte) ||
+  if ((globalCorrection == PhysicsSolverPositionCorrection::PostStabilization && contactCorrection != ConstraintPositionCorrection::Baumgarte) ||
       (contactCorrection == ConstraintPositionCorrection::PostStabilization))
     contactsToSolve.Swap(inputList);
 }
@@ -146,12 +143,7 @@ void ApplyPositionCorrection(RigidBody* body, Vec3Param linearOffset, Vec3Param 
   }
 }
 
-void ApplyPositionCorrection(RigidBody* b0,
-                             RigidBody* b1,
-                             Vec3Param linearOffset0,
-                             Vec3Param angularOffset0,
-                             Vec3Param linearOffset1,
-                             Vec3Param angularOffset1)
+void ApplyPositionCorrection(RigidBody* b0, RigidBody* b1, Vec3Param linearOffset0, Vec3Param angularOffset0, Vec3Param linearOffset1, Vec3Param angularOffset1)
 {
   ApplyPositionCorrection(b0, linearOffset0, angularOffset0);
   ApplyPositionCorrection(b1, linearOffset1, angularOffset1);

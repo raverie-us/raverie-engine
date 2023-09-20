@@ -40,15 +40,7 @@ typedef Array<uint> IndexArray;
 class MeshData
 {
 public:
-  MeshData() :
-      mHasPosition(false),
-      mHasNormal(false),
-      mHasTangentBitangent(false),
-      mHasUV0(false),
-      mHasUV1(false),
-      mHasColor0(false),
-      mHasColor1(false),
-      mHasBones(false){};
+  MeshData() : mHasPosition(false), mHasNormal(false), mHasTangentBitangent(false), mHasUV0(false), mHasUV1(false), mHasColor0(false), mHasColor1(false), mHasBones(false){};
 
   String mMeshName;
   String mPhysicsMeshName;

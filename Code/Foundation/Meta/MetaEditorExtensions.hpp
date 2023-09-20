@@ -90,11 +90,7 @@ public:
 
   typedef bool (*SearchFilter)(HandleParam object, Property* property, HandleParam result, Status& status);
 
-  MetaEditorResource(bool allowAdd = false,
-                     bool allowNone = false,
-                     StringParam filterTag = "",
-                     bool forceCompact = false,
-                     bool searchPreview = true);
+  MetaEditorResource(bool allowAdd = false, bool allowNone = false, StringParam filterTag = "", bool forceCompact = false, bool searchPreview = true);
   MetaEditorResource(SearchFilter filter);
 
   /// Custom filter for the Resource search for this property. Return false to
@@ -216,12 +212,9 @@ public:
 
 #define RaverieFilterBool(Member) Add(new MetaPropertyBasicFilter(new TemplateFilterBool<RaverieSelf, &RaverieSelf::Member>()))
 
-#define RaverieFilterNotBool(Member)                                                                                      \
-  Add(new MetaPropertyBasicFilter(new TemplateFilterNotBool<RaverieSelf, &RaverieSelf::Member>()))
+#define RaverieFilterNotBool(Member) Add(new MetaPropertyBasicFilter(new TemplateFilterNotBool<RaverieSelf, &RaverieSelf::Member>()))
 
-#define RaverieFilterEquality(Member, MemberType, ConstantValue)                                                          \
-  Add(new MetaPropertyBasicFilter(                                                                                     \
-      new TemplateFilterEquality<RaverieSelf, MemberType, &RaverieSelf::Member, ConstantValue>()))
+#define RaverieFilterEquality(Member, MemberType, ConstantValue) Add(new MetaPropertyBasicFilter(new TemplateFilterEquality<RaverieSelf, MemberType, &RaverieSelf::Member, ConstantValue>()))
 
 // Meta Group
 /// Used for grouping properties in the property grid.

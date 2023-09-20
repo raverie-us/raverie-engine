@@ -26,14 +26,7 @@ public:
 
 DeclareEnum3(MeshImport, NoMesh, SingleMesh, MultiMesh);
 DeclareEnum3(PhysicsImport, NoMesh, StaticMesh, ConvexMesh);
-DeclareEnum7(ScaleConversion,
-             Custom,
-             CentimeterToInches,
-             CentimeterToMeter,
-             InchesToCentimenters,
-             InchesToMeters,
-             MetersToCentimeters,
-             MetersToInches);
+DeclareEnum7(ScaleConversion, Custom, CentimeterToInches, CentimeterToMeter, InchesToCentimenters, InchesToMeters, MetersToCentimeters, MetersToInches);
 DeclareEnum6(BasisType, PositiveX, PositiveY, PositiveZ, NegativeX, NegativeY, NegativeZ);
 
 const float cCentimetersToInchesScaleFactor = 0.3937f;

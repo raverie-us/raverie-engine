@@ -286,14 +286,7 @@ void RigidConstraintFragment(ConstraintMolecule& mol, real baumgarte)
   RigidConstraintFragment(mol.mError, mol.mBias, mol.mGamma, baumgarte);
 }
 
-void SoftConstraintFragment(real& molMass,
-                            real& molError,
-                            real& molBias,
-                            real& molGamma,
-                            real springFrequencyHz,
-                            real springDampRatio,
-                            real baumgarte,
-                            real dt)
+void SoftConstraintFragment(real& molMass, real& molError, real& molBias, real& molGamma, real springFrequencyHz, real springDampRatio, real baumgarte, real dt)
 {
   // if the spring has a frequency of 0, that means it is rigid.
   // Also, if the mass is too small then we either have a mass of 0 or a bad
@@ -328,8 +321,7 @@ void SoftConstraintFragment(real& molMass,
 
 void SoftConstraintFragment(ConstraintMolecule& mol, SpringAtom& spring, real baumgarte, real dt)
 {
-  SoftConstraintFragment(
-      mol.mMass, mol.mError, mol.mBias, mol.mGamma, spring.mFrequencyHz, spring.mDampingRatio, baumgarte, dt);
+  SoftConstraintFragment(mol.mMass, mol.mError, mol.mBias, mol.mGamma, spring.mFrequencyHz, spring.mDampingRatio, baumgarte, dt);
 }
 
 void ContactNormalFragment(ConstraintMolecule& mol, real baumgarte, real restitutionBias)

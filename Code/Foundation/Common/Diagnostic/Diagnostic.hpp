@@ -83,73 +83,64 @@ private:
 
 static int gConditionalFalseConstant = 0;
 
-#define AlwaysErrorIf(Expression, ...)                                                                                 \
-  do                                                                                                                   \
-  {                                                                                                                    \
-    static bool __ignore = false;                                                                                      \
-    if ((Expression) && ::Raverie::ErrorSignaler::SignalError(                                                            \
-                            ::Raverie::ErrorSignaler::Error, #Expression, __FILE__, __LINE__, __ignore, ##__VA_ARGS__))   \
-      RaverieDebugBreak();                                                                                                \
+#define AlwaysErrorIf(Expression, ...)                                                                                                                                                                 \
+  do                                                                                                                                                                                                   \
+  {                                                                                                                                                                                                    \
+    static bool __ignore = false;                                                                                                                                                                      \
+    if ((Expression) && ::Raverie::ErrorSignaler::SignalError(::Raverie::ErrorSignaler::Error, #Expression, __FILE__, __LINE__, __ignore, ##__VA_ARGS__))                                              \
+      RaverieDebugBreak();                                                                                                                                                                             \
   } while (gConditionalFalseConstant)
 
 #if RaverieEnableError
 
 #  define UnusedParameter(param) (void)param
 
-#  define WarnIf(Expression, ...)                                                                                      \
-    do                                                                                                                 \
-    {                                                                                                                  \
-      static bool __ignore = false;                                                                                    \
-      if ((Expression) &&                                                                                              \
-          ::Raverie::ErrorSignaler::SignalError(                                                                          \
-              ::Raverie::ErrorSignaler::Warning, #Expression, __FILE__, __LINE__, __ignore, ##__VA_ARGS__))               \
-        RaverieDebugBreak();                                                                                              \
+#  define WarnIf(Expression, ...)                                                                                                                                                                      \
+    do                                                                                                                                                                                                 \
+    {                                                                                                                                                                                                  \
+      static bool __ignore = false;                                                                                                                                                                    \
+      if ((Expression) && ::Raverie::ErrorSignaler::SignalError(::Raverie::ErrorSignaler::Warning, #Expression, __FILE__, __LINE__, __ignore, ##__VA_ARGS__))                                          \
+        RaverieDebugBreak();                                                                                                                                                                           \
     } while (gConditionalFalseConstant)
 
-#  define ErrorIf(Expression, ...)                                                                                     \
-    do                                                                                                                 \
-    {                                                                                                                  \
-      static bool __ignore = false;                                                                                    \
-      if ((Expression) && ::Raverie::ErrorSignaler::SignalError(                                                          \
-                              ::Raverie::ErrorSignaler::Error, #Expression, __FILE__, __LINE__, __ignore, ##__VA_ARGS__)) \
-        RaverieDebugBreak();                                                                                              \
+#  define ErrorIf(Expression, ...)                                                                                                                                                                     \
+    do                                                                                                                                                                                                 \
+    {                                                                                                                                                                                                  \
+      static bool __ignore = false;                                                                                                                                                                    \
+      if ((Expression) && ::Raverie::ErrorSignaler::SignalError(::Raverie::ErrorSignaler::Error, #Expression, __FILE__, __LINE__, __ignore, ##__VA_ARGS__))                                            \
+        RaverieDebugBreak();                                                                                                                                                                           \
     } while (gConditionalFalseConstant)
 
-#  define Assert(Expression, ...)                                                                                      \
-    do                                                                                                                 \
-    {                                                                                                                  \
-      static bool __ignore = false;                                                                                    \
-      if (!(Expression) &&                                                                                             \
-          ::Raverie::ErrorSignaler::SignalError(                                                                          \
-              ::Raverie::ErrorSignaler::Error, #Expression, __FILE__, __LINE__, __ignore, ##__VA_ARGS__))                 \
-        RaverieDebugBreak();                                                                                              \
+#  define Assert(Expression, ...)                                                                                                                                                                      \
+    do                                                                                                                                                                                                 \
+    {                                                                                                                                                                                                  \
+      static bool __ignore = false;                                                                                                                                                                    \
+      if (!(Expression) && ::Raverie::ErrorSignaler::SignalError(::Raverie::ErrorSignaler::Error, #Expression, __FILE__, __LINE__, __ignore, ##__VA_ARGS__))                                           \
+        RaverieDebugBreak();                                                                                                                                                                           \
     } while (gConditionalFalseConstant)
 
-#  define Error(...)                                                                                                   \
-    do                                                                                                                 \
-    {                                                                                                                  \
-      static bool __ignore = false;                                                                                    \
-      if (::Raverie::ErrorSignaler::SignalError(                                                                          \
-              ::Raverie::ErrorSignaler::Error, "", __FILE__, __LINE__, __ignore, ##__VA_ARGS__))                          \
-        RaverieDebugBreak();                                                                                              \
+#  define Error(...)                                                                                                                                                                                   \
+    do                                                                                                                                                                                                 \
+    {                                                                                                                                                                                                  \
+      static bool __ignore = false;                                                                                                                                                                    \
+      if (::Raverie::ErrorSignaler::SignalError(::Raverie::ErrorSignaler::Error, "", __FILE__, __LINE__, __ignore, ##__VA_ARGS__))                                                                     \
+        RaverieDebugBreak();                                                                                                                                                                           \
     } while (gConditionalFalseConstant)
 
-#  define Warn(...)                                                                                                    \
-    do                                                                                                                 \
-    {                                                                                                                  \
-      static bool __ignore = false;                                                                                    \
-      if (::Raverie::ErrorSignaler::SignalError(                                                                          \
-              ::Raverie::ErrorSignaler::Warning, "", __FILE__, __LINE__, __ignore, ##__VA_ARGS__))                        \
-        RaverieDebugBreak();                                                                                              \
+#  define Warn(...)                                                                                                                                                                                    \
+    do                                                                                                                                                                                                 \
+    {                                                                                                                                                                                                  \
+      static bool __ignore = false;                                                                                                                                                                    \
+      if (::Raverie::ErrorSignaler::SignalError(::Raverie::ErrorSignaler::Warning, "", __FILE__, __LINE__, __ignore, ##__VA_ARGS__))                                                                   \
+        RaverieDebugBreak();                                                                                                                                                                           \
     } while (gConditionalFalseConstant)
 
-#  define FileErrorIf(Expression, file, Line, ...)                                                                     \
-    do                                                                                                                 \
-    {                                                                                                                  \
-      static bool __ignore = false;                                                                                    \
-      if ((Expression) && ::Raverie::ErrorSignaler::SignalError(                                                          \
-                              ::Raverie::ErrorSignaler::FileError, #Expression, file, Line, __ignore, ##__VA_ARGS__))     \
-        RaverieDebugBreak();                                                                                              \
+#  define FileErrorIf(Expression, file, Line, ...)                                                                                                                                                     \
+    do                                                                                                                                                                                                 \
+    {                                                                                                                                                                                                  \
+      static bool __ignore = false;                                                                                                                                                                    \
+      if ((Expression) && ::Raverie::ErrorSignaler::SignalError(::Raverie::ErrorSignaler::FileError, #Expression, file, Line, __ignore, ##__VA_ARGS__))                                                \
+        RaverieDebugBreak();                                                                                                                                                                           \
     } while (gConditionalConstant)
 
 #  define Verify(funccall) ErrorIf(funcall != 0);
@@ -167,46 +158,45 @@ static int gConditionalFalseConstant = 0;
 
 #endif
 
-#define ReturnIf(Expression, whatToReturn, ...)                                                                        \
-  do                                                                                                                   \
-  {                                                                                                                    \
-    if (Expression)                                                                                                    \
-    {                                                                                                                  \
-      WarnIf(Expression, __VA_ARGS__);                                                                                 \
-      return whatToReturn;                                                                                             \
-    }                                                                                                                  \
+#define ReturnIf(Expression, whatToReturn, ...)                                                                                                                                                        \
+  do                                                                                                                                                                                                   \
+  {                                                                                                                                                                                                    \
+    if (Expression)                                                                                                                                                                                    \
+    {                                                                                                                                                                                                  \
+      WarnIf(Expression, __VA_ARGS__);                                                                                                                                                                 \
+      return whatToReturn;                                                                                                                                                                             \
+    }                                                                                                                                                                                                  \
   } while (gConditionalFalseConstant)
 
-#define ContinueIf(Expression, ...)                                                                                    \
-  {                                                                                                                    \
-    if (Expression)                                                                                                    \
-    {                                                                                                                  \
-      WarnIf(Expression, __VA_ARGS__);                                                                                 \
-      continue;                                                                                                        \
-    }                                                                                                                  \
+#define ContinueIf(Expression, ...)                                                                                                                                                                    \
+  {                                                                                                                                                                                                    \
+    if (Expression)                                                                                                                                                                                    \
+    {                                                                                                                                                                                                  \
+      WarnIf(Expression, __VA_ARGS__);                                                                                                                                                                 \
+      continue;                                                                                                                                                                                        \
+    }                                                                                                                                                                                                  \
   }
 
-#define BreakIf(Expression, ...)                                                                                       \
-  {                                                                                                                    \
-    if (Expression)                                                                                                    \
-    {                                                                                                                  \
-      WarnIf(Expression, __VA_ARGS__);                                                                                 \
-      break;                                                                                                           \
-    }                                                                                                                  \
+#define BreakIf(Expression, ...)                                                                                                                                                                       \
+  {                                                                                                                                                                                                    \
+    if (Expression)                                                                                                                                                                                    \
+    {                                                                                                                                                                                                  \
+      WarnIf(Expression, __VA_ARGS__);                                                                                                                                                                 \
+      break;                                                                                                                                                                                           \
+    }                                                                                                                                                                                                  \
   }
 
-#define ReturnFileErrorIf(Expression, whatToReturn, file, Line, ...)                                                   \
-  do                                                                                                                   \
-  {                                                                                                                    \
-    if (Expression)                                                                                                    \
-    {                                                                                                                  \
-      FileErrorIf(Expression, file, Line, __VA_ARGS__);                                                                \
-      return whatToReturn;                                                                                             \
-    }                                                                                                                  \
+#define ReturnFileErrorIf(Expression, whatToReturn, file, Line, ...)                                                                                                                                   \
+  do                                                                                                                                                                                                   \
+  {                                                                                                                                                                                                    \
+    if (Expression)                                                                                                                                                                                    \
+    {                                                                                                                                                                                                  \
+      FileErrorIf(Expression, file, Line, __VA_ARGS__);                                                                                                                                                \
+      return whatToReturn;                                                                                                                                                                             \
+    }                                                                                                                                                                                                  \
   } while (gConditionalFalseConstant)
 
 /// Asserts value is within [min, max]
 #define AssertWithinRange(value, min, max) Assert((min) <= (value) && (value) <= (max))
 /// Statically asserts value is within [min, max]
-#define StaticAssertWithinRange(name, value, min, max)                                                                 \
-  static_assert((min) <= (value) && (value) <= (max), "Value outside range")
+#define StaticAssertWithinRange(name, value, min, max) static_assert((min) <= (value) && (value) <= (max), "Value outside range")

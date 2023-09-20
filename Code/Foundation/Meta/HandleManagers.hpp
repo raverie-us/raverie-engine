@@ -51,37 +51,36 @@ public:
 
 // The reason for adding this internals version was so that we could avoid two
 // HandleIdType typedefs. This should never be called outside this file.
-#define DeclareReferenceCountedHandleInternals()                                                                       \
-  ReferenceCountData mRaverieHandleReferenceCount;                                                                        \
-  void AddReference()                                                                                                  \
-  {                                                                                                                    \
-    ++mRaverieHandleReferenceCount.mCount;                                                                                \
-  }                                                                                                                    \
-  int Release()                                                                                                        \
-  {                                                                                                                    \
-    ErrorIf(mRaverieHandleReferenceCount.mCount == 0, "Invalid Release. ReferenceCount is zero.");                        \
-    int referenceCount = --mRaverieHandleReferenceCount.mCount;                                                           \
-    if (referenceCount == 0)                                                                                           \
-      delete this;                                                                                                     \
-    return referenceCount;                                                                                             \
+#define DeclareReferenceCountedHandleInternals()                                                                                                                                                       \
+  ReferenceCountData mRaverieHandleReferenceCount;                                                                                                                                                     \
+  void AddReference()                                                                                                                                                                                  \
+  {                                                                                                                                                                                                    \
+    ++mRaverieHandleReferenceCount.mCount;                                                                                                                                                             \
+  }                                                                                                                                                                                                    \
+  int Release()                                                                                                                                                                                        \
+  {                                                                                                                                                                                                    \
+    ErrorIf(mRaverieHandleReferenceCount.mCount == 0, "Invalid Release. ReferenceCount is zero.");                                                                                                     \
+    int referenceCount = --mRaverieHandleReferenceCount.mCount;                                                                                                                                        \
+    if (referenceCount == 0)                                                                                                                                                                           \
+      delete this;                                                                                                                                                                                     \
+    return referenceCount;                                                                                                                                                                             \
   }
 
-#define DeclareSafeIdHandle(idType)                                                                                    \
-  typedef idType HandleIdType;                                                                                         \
-  HandleIdData<HandleIdType> mRaverieHandleId;                                                                            \
-  static HandleIdType mRaverieHandleCurrentId;                                                                            \
+#define DeclareSafeIdHandle(idType)                                                                                                                                                                    \
+  typedef idType HandleIdType;                                                                                                                                                                         \
+  HandleIdData<HandleIdType> mRaverieHandleId;                                                                                                                                                         \
+  static HandleIdType mRaverieHandleCurrentId;                                                                                                                                                         \
   static HashMap<HandleIdType, RaverieSelf*> mRaverieHandleLiveObjects;
 
 #define DeclareThreadSafeIdHandle(idType) DeclareSafeIdHandle(idType) static ThreadLock mRaverieHandleLock;
 
 #define DeclareReferenceCountedSafeIdHandle(idType) DeclareReferenceCountedHandleInternals() DeclareSafeIdHandle(idType)
 
-#define DeclareReferenceCountedThreadSafeIdHandle(idType)                                                              \
-  DeclareReferenceCountedHandleInternals() DeclareThreadSafeIdHandle(idType)
+#define DeclareReferenceCountedThreadSafeIdHandle(idType) DeclareReferenceCountedHandleInternals() DeclareThreadSafeIdHandle(idType)
 
 // Define
-#define DefineSafeIdHandle(type)                                                                                       \
-  type::HandleIdType type::mRaverieHandleCurrentId = 1;                                                                   \
+#define DefineSafeIdHandle(type)                                                                                                                                                                       \
+  type::HandleIdType type::mRaverieHandleCurrentId = 1;                                                                                                                                                \
   HashMap<type::HandleIdType, type*> type::mRaverieHandleLiveObjects;
 
 #define DefineThreadSafeIdHandle(type) DefineSafeIdHandle(type) ThreadLock type::mRaverieHandleLock;
@@ -94,35 +93,34 @@ public:
 // Call in the constructor and copy constructor of the object
 #define ConstructReferenceCountedHandle() mRaverieHandleReferenceCount.mCount = 0;
 
-#define ConstructSafeIdHandle()                                                                                        \
-  mRaverieHandleId.mId = mRaverieHandleCurrentId++;                                                                          \
+#define ConstructSafeIdHandle()                                                                                                                                                                        \
+  mRaverieHandleId.mId = mRaverieHandleCurrentId++;                                                                                                                                                    \
   mRaverieHandleLiveObjects.Insert(mRaverieHandleId.mId, this);
 
-#define ConstructThreadSafeIdHandle()                                                                                  \
-  mRaverieHandleLock.Lock();                                                                                              \
-  ConstructSafeIdHandle();                                                                                             \
+#define ConstructThreadSafeIdHandle()                                                                                                                                                                  \
+  mRaverieHandleLock.Lock();                                                                                                                                                                           \
+  ConstructSafeIdHandle();                                                                                                                                                                             \
   mRaverieHandleLock.Unlock();
 
-#define ConstructReferenceCountedSafeIdHandle()                                                                        \
-  ConstructReferenceCountedHandle();                                                                                   \
+#define ConstructReferenceCountedSafeIdHandle()                                                                                                                                                        \
+  ConstructReferenceCountedHandle();                                                                                                                                                                   \
   ConstructSafeIdHandle();
 
-#define ConstructReferenceCountedThreadSafeIdHandle()                                                                  \
-  ConstructReferenceCountedHandle();                                                                                   \
+#define ConstructReferenceCountedThreadSafeIdHandle()                                                                                                                                                  \
+  ConstructReferenceCountedHandle();                                                                                                                                                                   \
   ConstructThreadSafeIdHandle();
 
 // Destructor
 // Call in the destructor of the object
-#define DestructReferenceCountedHandle()                                                                               \
-  ErrorIf(mRaverieHandleReferenceCount.mCount != 0, "Bad reference Count. Object is being deleted with references!");
+#define DestructReferenceCountedHandle() ErrorIf(mRaverieHandleReferenceCount.mCount != 0, "Bad reference Count. Object is being deleted with references!");
 
-#define DestructSafeIdHandle()                                                                                         \
-  bool isErased = mRaverieHandleLiveObjects.Erase(mRaverieHandleId.mId);                                                     \
+#define DestructSafeIdHandle()                                                                                                                                                                         \
+  bool isErased = mRaverieHandleLiveObjects.Erase(mRaverieHandleId.mId);                                                                                                                               \
   ErrorIf(!isErased, "The handle was not in the live objects map, but should have been");
 
-#define DestructThreadSafeIdHandle()                                                                                   \
-  mRaverieHandleLock.Lock();                                                                                              \
-  DestructSafeIdHandle();                                                                                              \
+#define DestructThreadSafeIdHandle()                                                                                                                                                                   \
+  mRaverieHandleLock.Lock();                                                                                                                                                                           \
+  DestructSafeIdHandle();                                                                                                                                                                              \
   mRaverieHandleLock.Unlock();
 
 // For the last two, we don't want to call 'DestructReferenceCountedHandle'
@@ -205,10 +203,7 @@ public:
   // ObjectToHandle
   // Only reference counted
   template <typename U = T>
-  void ObjectToHandleInternal(const byte* object,
-                              BoundType* type,
-                              Handle& handleToInitialize,
-                              P_ENABLE_IF(IsReferenceCounted<U>::value && !IsSafeId<U>::value))
+  void ObjectToHandleInternal(const byte* object, BoundType* type, Handle& handleToInitialize, P_ENABLE_IF(IsReferenceCounted<U>::value && !IsSafeId<U>::value))
   {
     T* instance = (T*)object;
 
@@ -220,10 +215,7 @@ public:
 
   // Only safe id
   template <typename U = T>
-  void ObjectToHandleInternal(const byte* object,
-                              BoundType* type,
-                              Handle& handleToInitialize,
-                              P_ENABLE_IF(!IsReferenceCounted<U>::value && IsSafeId<U>::value))
+  void ObjectToHandleInternal(const byte* object, BoundType* type, Handle& handleToInitialize, P_ENABLE_IF(!IsReferenceCounted<U>::value && IsSafeId<U>::value))
   {
     T* instance = (T*)object;
 
@@ -234,10 +226,7 @@ public:
 
   // Reference counted and safe id
   template <typename U = T>
-  void ObjectToHandleInternal(const byte* object,
-                              BoundType* type,
-                              Handle& handleToInitialize,
-                              P_ENABLE_IF(IsReferenceCounted<U>::value&& IsSafeId<U>::value))
+  void ObjectToHandleInternal(const byte* object, BoundType* type, Handle& handleToInitialize, P_ENABLE_IF(IsReferenceCounted<U>::value&& IsSafeId<U>::value))
   {
     T* instance = (T*)object;
 
@@ -388,8 +377,7 @@ public:
 template <typename idType, typename Base>
 typename SafeId<idType, Base>::HandleIdType SafeId<idType, Base>::mRaverieHandleCurrentId = 1;
 template <typename idType, typename Base>
-HashMap<typename SafeId<idType, Base>::HandleIdType, SafeId<idType, Base>*>
-    SafeId<idType, Base>::mRaverieHandleLiveObjects;
+HashMap<typename SafeId<idType, Base>::HandleIdType, SafeId<idType, Base>*> SafeId<idType, Base>::mRaverieHandleLiveObjects;
 
 template <typename idType, typename Base>
 void SafeId<idType, Base>::RaverieSetupType(::Raverie::LibraryBuilder& builder, ::Raverie::BoundType* type)
@@ -429,8 +417,7 @@ public:
 template <typename idType, typename Base>
 typename ThreadSafeId<idType, Base>::HandleIdType ThreadSafeId<idType, Base>::mRaverieHandleCurrentId = 1;
 template <typename idType, typename Base>
-HashMap<typename ThreadSafeId<idType, Base>::HandleIdType, ThreadSafeId<idType, Base>*>
-    ThreadSafeId<idType, Base>::mRaverieHandleLiveObjects;
+HashMap<typename ThreadSafeId<idType, Base>::HandleIdType, ThreadSafeId<idType, Base>*> ThreadSafeId<idType, Base>::mRaverieHandleLiveObjects;
 template <typename idType, typename Base>
 ThreadLock ThreadSafeId<idType, Base>::mRaverieHandleLock;
 
@@ -469,11 +456,9 @@ public:
 };
 
 template <typename idType, typename Base>
-typename ReferenceCountedSafeId<idType, Base>::HandleIdType ReferenceCountedSafeId<idType, Base>::mRaverieHandleCurrentId =
-    1;
+typename ReferenceCountedSafeId<idType, Base>::HandleIdType ReferenceCountedSafeId<idType, Base>::mRaverieHandleCurrentId = 1;
 template <typename idType, typename Base>
-HashMap<typename ReferenceCountedSafeId<idType, Base>::HandleIdType, ReferenceCountedSafeId<idType, Base>*>
-    ReferenceCountedSafeId<idType, Base>::mRaverieHandleLiveObjects;
+HashMap<typename ReferenceCountedSafeId<idType, Base>::HandleIdType, ReferenceCountedSafeId<idType, Base>*> ReferenceCountedSafeId<idType, Base>::mRaverieHandleLiveObjects;
 
 template <typename idType, typename Base>
 void ReferenceCountedSafeId<idType, Base>::RaverieSetupType(::Raverie::LibraryBuilder& builder, ::Raverie::BoundType* type)
@@ -510,11 +495,9 @@ public:
 };
 
 template <typename idType, typename Base>
-typename ReferenceCountedThreadSafeId<idType, Base>::HandleIdType
-    ReferenceCountedThreadSafeId<idType, Base>::mRaverieHandleCurrentId = 1;
+typename ReferenceCountedThreadSafeId<idType, Base>::HandleIdType ReferenceCountedThreadSafeId<idType, Base>::mRaverieHandleCurrentId = 1;
 template <typename idType, typename Base>
-HashMap<typename ReferenceCountedThreadSafeId<idType, Base>::HandleIdType, ReferenceCountedThreadSafeId<idType, Base>*>
-    ReferenceCountedThreadSafeId<idType, Base>::mRaverieHandleLiveObjects;
+HashMap<typename ReferenceCountedThreadSafeId<idType, Base>::HandleIdType, ReferenceCountedThreadSafeId<idType, Base>*> ReferenceCountedThreadSafeId<idType, Base>::mRaverieHandleLiveObjects;
 template <typename idType, typename Base>
 ThreadLock ReferenceCountedThreadSafeId<idType, Base>::mRaverieHandleLock;
 

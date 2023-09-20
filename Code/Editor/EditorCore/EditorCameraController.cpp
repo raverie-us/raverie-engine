@@ -117,16 +117,13 @@ void EditorCameraController::SetControlMode(ControlMode::Enum mode)
 
     float minVertical = Math::DegToRad(ResetVerticalAngle);
     if (Math::Abs(mVerticalAngle) < minVertical)
-      actionGroup->Add(AnimateMember(
-          &EditorCameraController::mVerticalAngle, Ease::Quad::InOut, this, ModeChangeAnimationTime, minVertical));
+      actionGroup->Add(AnimateMember(&EditorCameraController::mVerticalAngle, Ease::Quad::InOut, this, ModeChangeAnimationTime, minVertical));
   }
   else if (mode == ControlMode::ZPlane)
   {
     ActionGroup* actionGroup = new ActionGroup(this->GetOwner(), ActionExecuteMode::FrameUpdate);
-    actionGroup->Add(
-        AnimateMember(&EditorCameraController::mVerticalAngle, Ease::Quad::InOut, this, ModeChangeAnimationTime, 0.0f));
-    actionGroup->Add(AnimateMember(
-        &EditorCameraController::mHorizontalAngle, Ease::Quad::InOut, this, ModeChangeAnimationTime, 0.0f));
+    actionGroup->Add(AnimateMember(&EditorCameraController::mVerticalAngle, Ease::Quad::InOut, this, ModeChangeAnimationTime, 0.0f));
+    actionGroup->Add(AnimateMember(&EditorCameraController::mHorizontalAngle, Ease::Quad::InOut, this, ModeChangeAnimationTime, 0.0f));
   }
 
   mControlMode = mode;

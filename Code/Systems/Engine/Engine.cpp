@@ -20,8 +20,7 @@ namespace Z
 Engine* gEngine;
 }
 
-void ZeroDoNotify(
-    StringParam title, StringParam message, StringParam icon, NotifyType::Enum type, NotifyException::Enum expections)
+void ZeroDoNotify(StringParam title, StringParam message, StringParam icon, NotifyType::Enum type, NotifyException::Enum expections)
 {
   if (type == NotifyType::Error)
   {
@@ -172,8 +171,7 @@ void Engine::Terminate()
 
 GameSession* Engine::CreateGameSession()
 {
-  GameSession* game = (GameSession*)Z::gFactory->CreateCheckedType(
-      RaverieTypeId(GameSession), nullptr, CoreArchetypes::Game, CreationFlags::Default, nullptr);
+  GameSession* game = (GameSession*)Z::gFactory->CreateCheckedType(RaverieTypeId(GameSession), nullptr, CoreArchetypes::Game, CreationFlags::Default, nullptr);
 
   return game;
 }
@@ -289,11 +287,7 @@ void Engine::LoadingStart()
   }
 }
 
-void Engine::LoadingUpdate(StringParam operation,
-                           StringParam currentTask,
-                           StringParam progress,
-                           ProgressType::Enum progressType,
-                           float percentage)
+void Engine::LoadingUpdate(StringParam operation, StringParam currentTask, StringParam progress, ProgressType::Enum progressType, float percentage)
 {
   String progressText = BuildString(operation, " ", currentTask, " ", progress);
   Shell::sInstance->SetProgress(progressText.c_str(), percentage);

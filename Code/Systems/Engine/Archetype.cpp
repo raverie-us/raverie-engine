@@ -206,10 +206,7 @@ public:
   BoundType* StoredType;
   String FilterTag;
 
-  ArchetypeLoader(StringParam objectTypeName, StringParam filterTag) :
-      StoredTypeName(objectTypeName),
-      FilterTag(filterTag),
-      StoredType(nullptr)
+  ArchetypeLoader(StringParam objectTypeName, StringParam filterTag) : StoredTypeName(objectTypeName), FilterTag(filterTag), StoredType(nullptr)
   {
   }
 
@@ -278,10 +275,7 @@ ArchetypeManager::~ArchetypeManager()
 {
 }
 
-Archetype* ArchetypeManager::MakeNewArchetypeWith(Cog* cog,
-                                                  StringParam newName,
-                                                  ResourceId addResourceId,
-                                                  Archetype* inheritedArchetype)
+Archetype* ArchetypeManager::MakeNewArchetypeWith(Cog* cog, StringParam newName, ResourceId addResourceId, Archetype* inheritedArchetype)
 {
   // Empty name is null archetype
   if (newName.Empty())
@@ -393,10 +387,7 @@ bool ArchetypeManager::SaveToContent(Cog* object, Archetype* archetype, Resource
       archetype->BinaryCache(object);
       archetype->mLoadPath = archetype->mContentItem->GetFullPath();
 
-      ZPrintFilter(Filter::ResourceFilter,
-                   "Uploaded to new archetype %s.%s.\n",
-                   archetype->mContentItem->mLibrary->Name.c_str(),
-                   archetype->Name.c_str());
+      ZPrintFilter(Filter::ResourceFilter, "Uploaded to new archetype %s.%s.\n", archetype->mContentItem->mLibrary->Name.c_str(), archetype->Name.c_str());
 
       return true;
     }
@@ -413,10 +404,7 @@ bool ArchetypeManager::SaveToContent(Cog* object, Archetype* archetype, Resource
     archetype->mCachedObject = cInvalidCogId;
     archetype->BinaryCache(object);
 
-    ZPrintFilter(Filter::ResourceFilter,
-                 "Uploaded to archetype %s.%s.\n",
-                 archetype->mContentItem->mLibrary->Name.c_str(),
-                 archetype->Name.c_str());
+    ZPrintFilter(Filter::ResourceFilter, "Uploaded to archetype %s.%s.\n", archetype->mContentItem->mLibrary->Name.c_str(), archetype->Name.c_str());
 
     archetype->SendModified();
 

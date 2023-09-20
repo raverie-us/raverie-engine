@@ -184,8 +184,7 @@ void Sprite::ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBloc
   if (hasArea && mSpriteSource->Fill == SpriteFill::Tiled)
   {
     Vec2 tileSize = mSpriteSource->GetSize() / mSpriteSource->PixelsPerUnit;
-    frameBlock.mRenderQueues->AddStreamedQuadTiled(
-        viewNode, pos0, pos1, uv0, uv1, mVertexColor, tileSize, uvAux0, uvAux1);
+    frameBlock.mRenderQueues->AddStreamedQuadTiled(viewNode, pos0, pos1, uv0, uv1, mVertexColor, tileSize, uvAux0, uvAux1);
   }
   else if (hasArea && mSpriteSource->Fill == SpriteFill::NineSlice)
   {
@@ -194,8 +193,7 @@ void Sprite::ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBloc
     Vec4 uvSlices = mSpriteSource->Slices / Vec4(size.x, size.y, size.x, size.y);
     Vec2 uvSignedSize = uv1 - uv0;
     uvSlices *= Vec4(uvSignedSize.x, uvSignedSize.y, uvSignedSize.x, uvSignedSize.y);
-    frameBlock.mRenderQueues->AddStreamedQuadNineSliced(
-        viewNode, pos0, pos1, uv0, uv1, mVertexColor, posSlices, uvSlices, uvAux0, uvAux1);
+    frameBlock.mRenderQueues->AddStreamedQuadNineSliced(viewNode, pos0, pos1, uv0, uv1, mVertexColor, posSlices, uvSlices, uvAux0, uvAux1);
   }
   else
   {
@@ -395,8 +393,7 @@ void SpriteText::ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, Frame
   viewNode.mStreamedVertexStart = frameBlock.mRenderQueues->mStreamedVertices.Size();
   viewNode.mStreamedVertexCount = 0;
 
-  ProcessTextRange(
-      fontProcessor, font, mText, startLocation, mTextAlign, Vec2(1.0f, -1.0f) * pixelScale, widths * 2.0f);
+  ProcessTextRange(fontProcessor, font, mText, startLocation, mTextAlign, Vec2(1.0f, -1.0f) * pixelScale, widths * 2.0f);
 }
 
 String SpriteText::GetText()
@@ -472,8 +469,7 @@ Vec2 SpriteText::MeasureGivenText(StringParam text)
   {
     RenderFont* font = mFont->GetRenderFont(mFontSize);
     FontProcessorNoRender noRender;
-    return ProcessTextRange(
-        noRender, font, text, Vec2(0.0f), mTextAlign, Vec2(1.0f, -1.0f) / mPixelsPerUnit, area->GetSize());
+    return ProcessTextRange(noRender, font, text, Vec2(0.0f), mTextAlign, Vec2(1.0f, -1.0f) / mPixelsPerUnit, area->GetSize());
   }
   else
   {
@@ -688,14 +684,10 @@ void MultiSprite::MidPhaseQuery(Array<GraphicalEntry>& entries, Camera& camera, 
     mLocalAabb.GetCenterAndHalfExtents(localAabbCenter, localAabbHalfExtents);
 
     Vec3 worldQuadPoints[4];
-    worldQuadPoints[0] =
-        Math::TransformPoint(worldMatrix, localAabbCenter + (localAabbHalfExtents * Vec3(-1, 1, 0))); // "Top Left"
-    worldQuadPoints[1] =
-        Math::TransformPoint(worldMatrix, localAabbCenter + (localAabbHalfExtents * Vec3(1, 1, 0))); // "Top Right"
-    worldQuadPoints[2] =
-        Math::TransformPoint(worldMatrix, localAabbCenter + (localAabbHalfExtents * Vec3(1, -1, 0))); // "Bottom Right"
-    worldQuadPoints[3] =
-        Math::TransformPoint(worldMatrix, localAabbCenter + (localAabbHalfExtents * Vec3(-1, -1, 0))); // "Bottom Left"
+    worldQuadPoints[0] = Math::TransformPoint(worldMatrix, localAabbCenter + (localAabbHalfExtents * Vec3(-1, 1, 0)));  // "Top Left"
+    worldQuadPoints[1] = Math::TransformPoint(worldMatrix, localAabbCenter + (localAabbHalfExtents * Vec3(1, 1, 0)));   // "Top Right"
+    worldQuadPoints[2] = Math::TransformPoint(worldMatrix, localAabbCenter + (localAabbHalfExtents * Vec3(1, -1, 0)));  // "Bottom Right"
+    worldQuadPoints[3] = Math::TransformPoint(worldMatrix, localAabbCenter + (localAabbHalfExtents * Vec3(-1, -1, 0))); // "Bottom Left"
 
     // Negate the frustum planes because ClipPolygonWithPlanes expects outward
     // facing planes
@@ -723,10 +715,8 @@ void MultiSprite::MidPhaseQuery(Array<GraphicalEntry>& entries, Camera& camera, 
     Vec3 localClippedAabbMin = localClippedAabb.mMin;
     Vec3 localClippedAabbMax = localClippedAabb.mMax;
 
-    IntVec2 entryLocationMin =
-        IntVec2((int)Math::Floor(localClippedAabbMin.x), (int)Math::Floor(localClippedAabbMin.y));
-    IntVec2 entryLocationMax =
-        IntVec2((int)Math::Floor(localClippedAabbMax.x), (int)Math::Floor(localClippedAabbMax.y));
+    IntVec2 entryLocationMin = IntVec2((int)Math::Floor(localClippedAabbMin.x), (int)Math::Floor(localClippedAabbMin.y));
+    IntVec2 entryLocationMax = IntVec2((int)Math::Floor(localClippedAabbMax.x), (int)Math::Floor(localClippedAabbMax.y));
 
     IntVec2 cellIndexMin = LocationToCellIndex(entryLocationMin);
     IntVec2 cellIndexMax = LocationToCellIndex(entryLocationMax);

@@ -86,10 +86,7 @@ public:
     Size = Vec2::cZero;
   }
 
-  SizePolicies(SizePolicy::Enum xpolicy, SizePolicy::Enum ypolicy) :
-      XPolicy(xpolicy),
-      YPolicy(ypolicy),
-      Size(Vec2::cZero)
+  SizePolicies(SizePolicy::Enum xpolicy, SizePolicy::Enum ypolicy) : XPolicy(xpolicy), YPolicy(ypolicy), Size(Vec2::cZero)
   {
     XPolicy = xpolicy;
     YPolicy = ypolicy;
@@ -99,7 +96,8 @@ public:
   {
   }
 
-  union {
+  union
+  {
     struct
     {
       SizePolicy::Enum XPolicy;
@@ -349,14 +347,9 @@ public:
   virtual void Draw(DisplayRender* render, Mat4Param parentTx, ColorTransform& colorTx, DrawParams& params){};
   virtual void DispatchAt(DispatchAtParams& params);
 
-  virtual void RenderUpdate(
-      ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect);
+  virtual void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect);
   ViewNode& AddRenderNodes(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Texture* texture);
-  void CreateRenderData(ViewBlock& viewBlock,
-                        FrameBlock& frameBlock,
-                        WidgetRect clipRect,
-                        Array<StreamedVertex>& vertices,
-                        PrimitiveType::Enum primitiveType);
+  void CreateRenderData(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, Array<StreamedVertex>& vertices, PrimitiveType::Enum primitiveType);
 
   // Internals
   IntrusiveLink(Widget, mWidgetLink);

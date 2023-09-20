@@ -344,10 +344,7 @@ Type ClosestPointOnSphereToPoint(Vec3Param sphereCenter, real sphereRadius, Vec3
 }
 
 // Find the closest point on a triangle to the given point.
-Type ClosestPointOnTriangleToPoint(Vec3Param trianglePointA,
-                                   Vec3Param trianglePointB,
-                                   Vec3Param trianglePointC,
-                                   Vec3Ptr point)
+Type ClosestPointOnTriangleToPoint(Vec3Param trianglePointA, Vec3Param trianglePointB, Vec3Param trianglePointC, Vec3Ptr point)
 {
   ErrorIf(point == nullptr,
           "Intersection - Null pointer passed, this function"
@@ -449,13 +446,7 @@ Type ClosestPointOnTriangleToPoint(Vec3Param trianglePointA,
 
 // Find the closest points between two lines. Assumes that the line directions
 // provided are unit length.
-Type ClosestPointsOfTwoLines(Vec3Param lineStartA,
-                             Vec3Param lineDirectionA,
-                             Vec3Param lineStartB,
-                             Vec3Param lineDirectionB,
-                             Vec3Ptr closestPointA,
-                             Vec3Ptr closestPointB,
-                             Vec2Ptr interpolationValues)
+Type ClosestPointsOfTwoLines(Vec3Param lineStartA, Vec3Param lineDirectionA, Vec3Param lineStartB, Vec3Param lineDirectionB, Vec3Ptr closestPointA, Vec3Ptr closestPointB, Vec2Ptr interpolationValues)
 {
   ErrorIf(closestPointA == nullptr,
           "Intersection - Null pointer passed, this "
@@ -498,12 +489,7 @@ Type ClosestPointsOfTwoLines(Vec3Param lineStartA,
 }
 
 // Find the closest points between two line segments.
-Type ClosestPointsOfTwoSegments(Vec3Param segmentOnePointA,
-                                Vec3Param segmentOnePointB,
-                                Vec3Param segmentTwoPointA,
-                                Vec3Param segmentTwoPointB,
-                                Vec3Ptr closestPointA,
-                                Vec3Ptr closestPointB)
+Type ClosestPointsOfTwoSegments(Vec3Param segmentOnePointA, Vec3Param segmentOnePointB, Vec3Param segmentTwoPointA, Vec3Param segmentTwoPointB, Vec3Ptr closestPointA, Vec3Ptr closestPointB)
 {
   ErrorIf(closestPointA == nullptr,
           "Intersection - Null pointer passed, this "

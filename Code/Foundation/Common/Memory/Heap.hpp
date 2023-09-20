@@ -46,14 +46,14 @@ void HeapDeallocate(Heap* heap, type* instance)
 
 } // namespace Memory
 
-#define UseStaticHeap()                                                                                                \
-  static void* operator new(size_t size)                                                                               \
-  {                                                                                                                    \
-    return Memory::GetStaticHeap()->Allocate(size);                                                                    \
-  }                                                                                                                    \
-  static void operator delete(void* pMem, size_t size)                                                                 \
-  {                                                                                                                    \
-    return Memory::GetStaticHeap()->Deallocate(pMem, size);                                                            \
+#define UseStaticHeap()                                                                                                                                                                                \
+  static void* operator new(size_t size)                                                                                                                                                               \
+  {                                                                                                                                                                                                    \
+    return Memory::GetStaticHeap()->Allocate(size);                                                                                                                                                    \
+  }                                                                                                                                                                                                    \
+  static void operator delete(void* pMem, size_t size)                                                                                                                                                 \
+  {                                                                                                                                                                                                    \
+    return Memory::GetStaticHeap()->Deallocate(pMem, size);                                                                                                                                            \
   }
 
 template <typename NodeType>

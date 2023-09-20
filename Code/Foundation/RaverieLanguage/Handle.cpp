@@ -36,11 +36,7 @@ Handle::Handle(NullPointerType)
 #endif
 }
 
-Handle::Handle(const Handle& rhs) :
-    StoredType(rhs.StoredType),
-    Manager(rhs.Manager),
-    Offset(rhs.Offset),
-    Flags(rhs.Flags)
+Handle::Handle(const Handle& rhs) : StoredType(rhs.StoredType), Manager(rhs.Manager), Offset(rhs.Offset), Flags(rhs.Flags)
 {
   // The data of a handle type is always memory-copyable
   memcpy(this->Data, rhs.Data, sizeof(this->Data));
@@ -183,18 +179,15 @@ void Handle::ValidateAllHandles()
 void Handle::Validate() const
 {
   // Verify the next and prev values
-  ErrorIf(this->DebugNext == nullptr && this->DebugPrev == nullptr && DebugHead != this,
-          "A handle was possibly mem-cleared");
+  ErrorIf(this->DebugNext == nullptr && this->DebugPrev == nullptr && DebugHead != this, "A handle was possibly mem-cleared");
   ErrorIf(this->DebugNext != nullptr && this->DebugNext == this->DebugPrev, "Possibly corrupted handle");
-  ErrorIf(this->DebugNext == (Handle*)0xCDCDCDCD || this->DebugPrev == (Handle*)0xCDCDCDCD,
-          "Possibly corrupted handle");
+  ErrorIf(this->DebugNext == (Handle*)0xCDCDCDCD || this->DebugPrev == (Handle*)0xCDCDCDCD, "Possibly corrupted handle");
 
   // Make sure the offset size is ok
   ErrorIf(this->Offset > 0x7777, "Possibly corrupted handle based on the large offset size");
 
   // Clear all flags and see if any other bits were set
-  ErrorIf((this->Flags & ~(HandleFlags::NoReferenceCounting | HandleFlags::InitializedByConstructor)) != 0,
-          "Possibly corrupted handle (bits set even when we cleared all flags)");
+  ErrorIf((this->Flags & ~(HandleFlags::NoReferenceCounting | HandleFlags::InitializedByConstructor)) != 0, "Possibly corrupted handle (bits set even when we cleared all flags)");
 
   // See if we have a manager
   if (this->Manager)
@@ -323,7 +316,7 @@ bool Handle::operator==(const Handle& rhs) const
   bool nullRhs = (objectRhs == nullptr);
 
   RaverieTodo("There are two dereferences for comparing user handles, we should "
-           "refactor this code path to make it one");
+              "refactor this code path to make it one");
 
   // If both are non null, then we need to do more checking
   if (!nullLhs && !nullRhs)
@@ -435,7 +428,7 @@ byte* Handle::Dereference() const
     return nullptr;
 
   RaverieTodo("If a handle returns null but is not the 'null handle manager' then "
-           "it should be an optimization to Clear it");
+              "it should be an optimization to Clear it");
 
   // Dereference the handle and get a pointer to the object (or nullptr if it's
   // a null handle)

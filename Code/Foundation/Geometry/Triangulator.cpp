@@ -44,8 +44,7 @@ bool FillRule_All(s32 winding, s32 depth)
 
 typedef bool (*FillRuleFunc)(s32, s32);
 
-static const FillRuleFunc fillRuleFunctions[4] = {
-    FillRule_NonZeroWinding, FillRule_EvenOddWinding, FillRule_All, FillRule_PositiveWinding};
+static const FillRuleFunc fillRuleFunctions[4] = {FillRule_NonZeroWinding, FillRule_EvenOddWinding, FillRule_All, FillRule_PositiveWinding};
 
 bool EqualsExact(const Vec2& a, const Vec2& b)
 {
@@ -153,8 +152,7 @@ bool BuildSet(const TrapezoidMap& map, Array<uint>* indices, s32 seed, FillRule:
     {
       if (region->Depth > 0 && func(region->WindingOrder, region->Depth))
       {
-        if (map.mEndIndex[region->TopVertex] != region->BotVertex &&
-            map.mEndIndex[region->BotVertex] != region->TopVertex)
+        if (map.mEndIndex[region->TopVertex] != region->BotVertex && map.mEndIndex[region->BotVertex] != region->TopVertex)
         {
           if (!alreadyUsedLeft[i])
           {
@@ -389,10 +387,7 @@ bool BuildSet(const TrapezoidMap& map, Array<uint>* indices, s32 seed, FillRule:
   return true;
 }
 
-bool Triangulate(const Array<Vec2>& vertices,
-                 const Array<uint>& contourSizes,
-                 Array<uint>* indices,
-                 FillRule::Type rule)
+bool Triangulate(const Array<Vec2>& vertices, const Array<uint>& contourSizes, Array<uint>* indices, FillRule::Type rule)
 {
   TrapezoidMap map(vertices, contourSizes, -1, uint(0));
   return map.IsValid() && BuildSet(map, indices, -1, rule);

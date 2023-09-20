@@ -78,10 +78,7 @@ public:
   Regex();
 
   // Constructor
-  Regex(StringRange regex,
-        RegexFlavor::Enum flavor = RegexFlavor::EcmaScript,
-        bool caseSensitive = true,
-        bool optimizeForMatching = true);
+  Regex(StringRange regex, RegexFlavor::Enum flavor = RegexFlavor::EcmaScript, bool caseSensitive = true, bool optimizeForMatching = true);
 
   // Copy constructor
   Regex(const Regex& source);
@@ -104,9 +101,7 @@ public:
   static String Escape(StringRange input, EscapeMode::Enum mode, RegexFlavor::Enum flavor = RegexFlavor::EcmaScript);
 
   // Validate the regular expression
-  static bool Validate(StringRange regex,
-                       RegexFlavor::Enum flavor = RegexFlavor::EcmaScript,
-                       bool caseSensitive = true);
+  static bool Validate(StringRange regex, RegexFlavor::Enum flavor = RegexFlavor::EcmaScript, bool caseSensitive = true);
 
   // The original regular expression string that created this regex
   String mRegexString;

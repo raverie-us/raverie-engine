@@ -31,10 +31,7 @@ struct ContentTypeEntry
   ContentTypeEntry() : Meta(NULL), MakeItem(NULL), UpdateItem(NULL)
   {
   }
-  ContentTypeEntry(BoundType* meta, MakeContentItem make, UpdateContentItem update = nullptr) :
-      Meta(meta),
-      MakeItem(make),
-      UpdateItem(update)
+  ContentTypeEntry(BoundType* meta, MakeContentItem make, UpdateContentItem update = nullptr) : Meta(meta), MakeItem(make), UpdateItem(update)
   {
   }
   BoundType* Meta;
@@ -132,8 +129,7 @@ public:
   HandleOf<ResourcePackage> BuildLibrary(Status& status, ContentLibrary* library, bool sendEvent);
 
   /// Build ContentItems into Resource Package.
-  HandleOf<ResourcePackage>
-  BuildContentItems(Status& status, ContentItemArray& toBuild, ContentLibrary* library, bool useJobs);
+  HandleOf<ResourcePackage> BuildContentItems(Status& status, ContentItemArray& toBuild, ContentLibrary* library, bool useJobs);
 
   /// Build Individual ContentItems into Resource Package.
   HandleOf<ResourcePackage> BuildSingleContentItem(Status& status, ContentItem* contentItem);

@@ -109,11 +109,7 @@ public:
   void OnSetKeyPressed(ObjectEvent* event);
   void OnClose(ObjectEvent* event);
 
-  void RenderUpdate(ViewBlock& viewBlock,
-                    FrameBlock& frameBlock,
-                    Mat4Param parentTx,
-                    ColorTransform colorTx,
-                    WidgetRect clipRect) override;
+  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect) override;
 
 private:
   void OnMouseDown(MouseEvent* event);

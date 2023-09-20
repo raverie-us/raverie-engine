@@ -45,11 +45,7 @@ void SendHierarchyEvents(cstr op,
 
   if (op)
   {
-    ZPrint("%s %s -> %s , Lca %s\n",
-           op,
-           oldObject ? oldObject->GetName().c_str() : "None",
-           newObject ? newObject->GetName().c_str() : "None",
-           lca ? lca->GetName().c_str() : "None");
+    ZPrint("%s %s -> %s , Lca %s\n", op, oldObject ? oldObject->GetName().c_str() : "None", newObject ? newObject->GetName().c_str() : "None", lca ? lca->GetName().c_str() : "None");
   }
 
   // Send the out event on the old object

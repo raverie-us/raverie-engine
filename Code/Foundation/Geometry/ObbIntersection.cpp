@@ -468,18 +468,7 @@ Type ObbObbContactGeneration(Vec3Param obbOneCenter,
   // case. Now we find the closest points of the two edges.
   if (axisCase > 6)
   {
-    ObbObbEdgeCase(obbOneCenter,
-                   obbOneHalfExtents,
-                   obbOneAxes,
-                   obbOneBasis,
-                   obbTwoCenter,
-                   obbTwoHalfExtents,
-                   obbTwoAxes,
-                   obbTwoBasis,
-                   normal,
-                   axisCase,
-                   projection,
-                   manifold);
+    ObbObbEdgeCase(obbOneCenter, obbOneHalfExtents, obbOneAxes, obbOneBasis, obbTwoCenter, obbTwoHalfExtents, obbTwoAxes, obbTwoBasis, normal, axisCase, projection, manifold);
     return EdgeEdge;
   }
 
@@ -852,13 +841,7 @@ Type ObbObbContactGeneration(Vec3Param obbOneCenter,
 }
 
 /// Intersect an oriented bounding box with an oriented bounding box.
-Type ObbObb(Vec3Param obbOneCenter,
-            Vec3Param obbOneHalfExtents,
-            Mat3Param obbOneBasis,
-            Vec3Param obbTwoCenter,
-            Vec3Param obbTwoHalfExtents,
-            Mat3Param obbTwoBasis,
-            Manifold* manifold)
+Type ObbObb(Vec3Param obbOneCenter, Vec3Param obbOneHalfExtents, Mat3Param obbOneBasis, Vec3Param obbTwoCenter, Vec3Param obbTwoHalfExtents, Mat3Param obbTwoBasis, Manifold* manifold)
 {
   const Vec3 obbOneAxes[3] = {obbOneBasis.GetBasis(0), obbOneBasis.GetBasis(1), obbOneBasis.GetBasis(2)};
   const Vec3 obbTwoAxes[3] = {obbTwoBasis.GetBasis(0), obbTwoBasis.GetBasis(1), obbTwoBasis.GetBasis(2)};
@@ -882,11 +865,11 @@ Type ObbObb(Vec3Param obbOneCenter,
 
       Raverie::gDebugDraw->Add(Raverie::Debug::Line(lineStart, lineEnd).Color(axes[i]).HeadSize(headSize));
     }
-#  define MultiColoredLine(start, end, colorA, colorB)                                                                 \
-    {                                                                                                                  \
-      Vec3 halfway = ((start) + (end)) / real(2.0);                                                                    \
-      Raverie::gDebugDraw->Add(Raverie::Debug::Line((start), halfway).Color((colorA)));                                      \
-      Raverie::gDebugDraw->Add(Raverie::Debug::Line(halfway, (end)).Color((colorB)).HeadSize(headSize));                     \
+#  define MultiColoredLine(start, end, colorA, colorB)                                                                                                                                                 \
+    {                                                                                                                                                                                                  \
+      Vec3 halfway = ((start) + (end)) / real(2.0);                                                                                                                                                    \
+      Raverie::gDebugDraw->Add(Raverie::Debug::Line((start), halfway).Color((colorA)));                                                                                                                \
+      Raverie::gDebugDraw->Add(Raverie::Debug::Line(halfway, (end)).Color((colorB)).HeadSize(headSize));                                                                                               \
     }
 
     for (uint i = 0; i < 3; ++i)
@@ -994,26 +977,26 @@ Type ObbObb(Vec3Param obbOneCenter,
 
   if (existsParallel == false)
   {
-#define HandleObbOverlap(nX, nY, nZ, aCase)                                                                            \
-  {                                                                                                                    \
-    rOverlap = boxProjections - Math::Abs(test);                                                                       \
-    if (rOverlap < cObbObbZero)                                                                                        \
-    {                                                                                                                  \
-      return None;                                                                                                     \
-    }                                                                                                                  \
-    real length = Math::Sqrt((nX) * (nX) + (nY) * (nY) + (nZ) * (nZ));                                                 \
-    if (length > cSimdEpsilon)                                                                                         \
-    {                                                                                                                  \
-      rOverlap /= length;                                                                                              \
-      if ((rOverlap * cObbObbFudgeFactor) < min)                                                                       \
-      {                                                                                                                \
-        min = rOverlap;                                                                                                \
-        normal.x = (nX) / length;                                                                                      \
-        normal.y = (nY) / length;                                                                                      \
-        normal.z = (nZ) / length;                                                                                      \
-        axisCase = (aCase);                                                                                            \
-      }                                                                                                                \
-    }                                                                                                                  \
+#define HandleObbOverlap(nX, nY, nZ, aCase)                                                                                                                                                            \
+  {                                                                                                                                                                                                    \
+    rOverlap = boxProjections - Math::Abs(test);                                                                                                                                                       \
+    if (rOverlap < cObbObbZero)                                                                                                                                                                        \
+    {                                                                                                                                                                                                  \
+      return None;                                                                                                                                                                                     \
+    }                                                                                                                                                                                                  \
+    real length = Math::Sqrt((nX) * (nX) + (nY) * (nY) + (nZ) * (nZ));                                                                                                                                 \
+    if (length > cSimdEpsilon)                                                                                                                                                                         \
+    {                                                                                                                                                                                                  \
+      rOverlap /= length;                                                                                                                                                                              \
+      if ((rOverlap * cObbObbFudgeFactor) < min)                                                                                                                                                       \
+      {                                                                                                                                                                                                \
+        min = rOverlap;                                                                                                                                                                                \
+        normal.x = (nX) / length;                                                                                                                                                                      \
+        normal.y = (nY) / length;                                                                                                                                                                      \
+        normal.z = (nZ) / length;                                                                                                                                                                      \
+        axisCase = (aCase);                                                                                                                                                                            \
+      }                                                                                                                                                                                                \
+    }                                                                                                                                                                                                  \
   }
 
     // Test axis L = one0 x two0
@@ -1112,29 +1095,13 @@ Type ObbObb(Vec3Param obbOneCenter,
   if (manifold != nullptr)
   {
     // Since no separating axis is found, the OBBs must be intersecting
-    return ObbObbContactGeneration(obbOneCenter,
-                                   obbOneHalfExtents,
-                                   &obbOneAxes[0],
-                                   obbOneBasis,
-                                   obbTwoCenter,
-                                   obbTwoHalfExtents,
-                                   &obbTwoAxes[0],
-                                   obbTwoBasis,
-                                   normal,
-                                   axisCase,
-                                   min,
-                                   *manifold);
+    return ObbObbContactGeneration(obbOneCenter, obbOneHalfExtents, &obbOneAxes[0], obbOneBasis, obbTwoCenter, obbTwoHalfExtents, &obbTwoAxes[0], obbTwoBasis, normal, axisCase, min, *manifold);
   }
   return Other;
 }
 
 /// Intersect an oriented bounding box with a plane.
-Type ObbPlane(Vec3Param obbCenter,
-              Vec3Param obbHalfExtents,
-              Mat3Param obbBasis,
-              Vec3Param planeNormal,
-              real planeDistance,
-              Manifold* manifold)
+Type ObbPlane(Vec3Param obbCenter, Vec3Param obbHalfExtents, Mat3Param obbBasis, Vec3Param planeNormal, real planeDistance, Manifold* manifold)
 {
   // Early out with the simple test if no information was requested.
   if (manifold == nullptr)
@@ -1211,9 +1178,7 @@ Type ObbPlane(Vec3Param obbCenter,
     PointInfoArray points;
     points.Resize(4);
 
-    Vec3 obbAxes[3] = {obbBasis.GetBasis(0) * obbHalfExtents[0],
-                       obbBasis.GetBasis(1) * obbHalfExtents[1],
-                       obbBasis.GetBasis(2) * obbHalfExtents[2]};
+    Vec3 obbAxes[3] = {obbBasis.GetBasis(0) * obbHalfExtents[0], obbBasis.GetBasis(1) * obbHalfExtents[1], obbBasis.GetBasis(2) * obbHalfExtents[2]};
 
     // Generate the face points and their projections onto the plane's normal
     for (uint i = 0; i < 4; ++i)
@@ -1245,9 +1210,7 @@ Type ObbPlane(Vec3Param obbCenter,
     return Face;
   }
 
-  const Vec3 obbAxes[3] = {obbBasis.GetBasis(0) * obbHalfExtents[0],
-                           obbBasis.GetBasis(1) * obbHalfExtents[1],
-                           obbBasis.GetBasis(2) * obbHalfExtents[2]};
+  const Vec3 obbAxes[3] = {obbBasis.GetBasis(0) * obbHalfExtents[0], obbBasis.GetBasis(1) * obbHalfExtents[1], obbBasis.GetBasis(2) * obbHalfExtents[2]};
 
   // Use the pod array just in case sorting is needed.
   PointInfoArray points;
@@ -1293,12 +1256,7 @@ Type ObbPlane(Vec3Param obbCenter,
 }
 
 /// Intersect an oriented bounding box with a sphere.
-Type ObbSphere(Vec3Param obbCenter,
-               Vec3Param obbHalfExtents,
-               Mat3Param obbBasis,
-               Vec3Param sphereCenter,
-               real sphereRadius,
-               Manifold* manifold)
+Type ObbSphere(Vec3Param obbCenter, Vec3Param obbHalfExtents, Mat3Param obbBasis, Vec3Param sphereCenter, real sphereRadius, Manifold* manifold)
 {
   Vec3 newSphereCenter = sphereCenter - obbCenter;
   Math::TransposedTransform(obbBasis, &newSphereCenter);
@@ -1317,14 +1275,7 @@ Type ObbSphere(Vec3Param obbCenter,
   return result;
 }
 
-void ObbTriangleEdgeCase(Vec3Param obbCenter,
-                         Vec3Param obbHalfExtents,
-                         Mat3Param obbBasis,
-                         const Vec3 trianglePoints[3],
-                         Vec3Ref normal,
-                         uint axisCase,
-                         real projection,
-                         Manifold& manifold)
+void ObbTriangleEdgeCase(Vec3Param obbCenter, Vec3Param obbHalfExtents, Mat3Param obbBasis, const Vec3 trianglePoints[3], Vec3Ref normal, uint axisCase, real projection, Manifold& manifold)
 {
   Vec3 obbAxes[3] = {obbBasis.GetBasis(0), obbBasis.GetBasis(1), obbBasis.GetBasis(2)};
 
@@ -1395,13 +1346,7 @@ void ObbTriangleEdgeCase(Vec3Param obbCenter,
   manifold.PointCount = 1;
 }
 
-Type ClipTriangleAgainstBox(Vec3Param obbCenter,
-                            Vec3Param obbHalfExtents,
-                            Mat3Param obbBasis,
-                            const Vec3 trianglePoints[3],
-                            uint axisCase,
-                            Vec3Param normal,
-                            Manifold& manifold)
+Type ClipTriangleAgainstBox(Vec3Param obbCenter, Vec3Param obbHalfExtents, Mat3Param obbBasis, const Vec3 trianglePoints[3], uint axisCase, Vec3Param normal, Manifold& manifold)
 {
   Vec3 obbAxes[3] = {obbBasis.GetBasis(0), obbBasis.GetBasis(1), obbBasis.GetBasis(2)};
 
@@ -1568,13 +1513,7 @@ Type ClipTriangleAgainstBox(Vec3Param obbCenter,
   return FaceTri;
 }
 
-Type ClipBoxAgainstTriangle(Vec3Param obbCenter,
-                            Vec3Param obbHalfExtents,
-                            Mat3Param obbBasis,
-                            const Vec3 trianglePoints[3],
-                            uint axisCase,
-                            Vec3Param normal,
-                            Manifold& manifold)
+Type ClipBoxAgainstTriangle(Vec3Param obbCenter, Vec3Param obbHalfExtents, Mat3Param obbBasis, const Vec3 trianglePoints[3], uint axisCase, Vec3Param normal, Manifold& manifold)
 {
   Vec3 obbAxes[3] = {obbBasis.GetBasis(0), obbBasis.GetBasis(1), obbBasis.GetBasis(2)};
 
@@ -1735,14 +1674,7 @@ Type ClipBoxAgainstTriangle(Vec3Param obbCenter,
   return FaceTri;
 }
 
-Type ObbTriangleContactGeneration(Vec3Param obbCenter,
-                                  Vec3Param obbHalfExtents,
-                                  Mat3Param obbBasis,
-                                  const Vec3 triPoints[3],
-                                  Vec3Ref normal,
-                                  uint axisCase,
-                                  real projection,
-                                  Manifold& manifold)
+Type ObbTriangleContactGeneration(Vec3Param obbCenter, Vec3Param obbHalfExtents, Mat3Param obbBasis, const Vec3 triPoints[3], Vec3Ref normal, uint axisCase, real projection, Manifold& manifold)
 {
   // If any of the 9 latter box-triangle axes were used (those that are
   // generated from the cross products of the box's face normals and the
@@ -1796,21 +1728,14 @@ Type ObbTriangleContactGeneration(Vec3Param obbCenter,
 }
 
 /// Intersect an oriented bounding box with a triangle.
-Type ObbTriangle(Vec3Param obbCenter,
-                 Vec3Param obbHalfExtents,
-                 Mat3Param obbBasis,
-                 Vec3Param trianglePointA,
-                 Vec3Param trianglePointB,
-                 Vec3Param trianglePointC,
-                 Manifold* manifold)
+Type ObbTriangle(Vec3Param obbCenter, Vec3Param obbHalfExtents, Mat3Param obbBasis, Vec3Param trianglePointA, Vec3Param trianglePointB, Vec3Param trianglePointC, Manifold* manifold)
 {
   Vec3 trianglePoints[3] = {trianglePointA, trianglePointB, trianglePointC};
   return ObbTriangle(obbCenter, obbHalfExtents, obbBasis, trianglePoints, manifold);
 }
 
 /// Intersect an oriented bounding box with a triangle. Different parameters.
-Type ObbTriangle(
-    Vec3Param obbCenter, Vec3Param obbHalfExtents, Mat3Param obbBasis, const Vec3 trianglePoints[3], Manifold* manifold)
+Type ObbTriangle(Vec3Param obbCenter, Vec3Param obbHalfExtents, Mat3Param obbBasis, const Vec3 trianglePoints[3], Manifold* manifold)
 {
   // Take the triangle into the box's space
   Vec3 triPoint[3] = {trianglePoints[0] - obbCenter, trianglePoints[1] - obbCenter, trianglePoints[2] - obbCenter};
@@ -1828,31 +1753,31 @@ Type ObbTriangle(
   {
     real boxProj;
 // Category 3: Test cross product axes (9 axes, cases 5 - 13)
-#define HandleObbTriOverlap(nX, nY, nZ, aCase)                                                                         \
-  {                                                                                                                    \
-    MinMaxInPlace(triProj[0], triProj[1]);                                                                             \
-    triProj[0] = boxProj - triProj[0];                                                                                 \
-    triProj[1] += boxProj;                                                                                             \
-    if ((triProj[0] < cObbTriangleZero) || (triProj[1] < cObbTriangleZero))                                            \
-    {                                                                                                                  \
-      return None;                                                                                                     \
-    }                                                                                                                  \
-    real curOverlap = Math::Min(triProj[0], triProj[1]);                                                               \
-    {                                                                                                                  \
-      real length = Math::Sqrt((nX) * (nX) + (nY) * (nY) + (nZ) * (nZ));                                               \
-      if (length > cSimdEpsilon)                                                                                       \
-      {                                                                                                                \
-        curOverlap /= length;                                                                                          \
-        if (curOverlap < minOverlap)                                                                                   \
-        {                                                                                                              \
-          minOverlap = curOverlap;                                                                                     \
-          normal.x = (nX) / length;                                                                                    \
-          normal.y = (nY) / length;                                                                                    \
-          normal.z = (nZ) / length;                                                                                    \
-          axisCase = (aCase);                                                                                          \
-        }                                                                                                              \
-      }                                                                                                                \
-    }                                                                                                                  \
+#define HandleObbTriOverlap(nX, nY, nZ, aCase)                                                                                                                                                         \
+  {                                                                                                                                                                                                    \
+    MinMaxInPlace(triProj[0], triProj[1]);                                                                                                                                                             \
+    triProj[0] = boxProj - triProj[0];                                                                                                                                                                 \
+    triProj[1] += boxProj;                                                                                                                                                                             \
+    if ((triProj[0] < cObbTriangleZero) || (triProj[1] < cObbTriangleZero))                                                                                                                            \
+    {                                                                                                                                                                                                  \
+      return None;                                                                                                                                                                                     \
+    }                                                                                                                                                                                                  \
+    real curOverlap = Math::Min(triProj[0], triProj[1]);                                                                                                                                               \
+    {                                                                                                                                                                                                  \
+      real length = Math::Sqrt((nX) * (nX) + (nY) * (nY) + (nZ) * (nZ));                                                                                                                               \
+      if (length > cSimdEpsilon)                                                                                                                                                                       \
+      {                                                                                                                                                                                                \
+        curOverlap /= length;                                                                                                                                                                          \
+        if (curOverlap < minOverlap)                                                                                                                                                                   \
+        {                                                                                                                                                                                              \
+          minOverlap = curOverlap;                                                                                                                                                                     \
+          normal.x = (nX) / length;                                                                                                                                                                    \
+          normal.y = (nY) / length;                                                                                                                                                                    \
+          normal.z = (nZ) / length;                                                                                                                                                                    \
+          axisCase = (aCase);                                                                                                                                                                          \
+        }                                                                                                                                                                                              \
+      }                                                                                                                                                                                                \
+    }                                                                                                                                                                                                  \
   }
 
     // Test axis L = box0 x tri0 = (0, -edge[0].z, edge[0].y)
@@ -1964,8 +1889,7 @@ Type ObbTriangle(
     real planeDistance = Dot(planeNormal, triPoint[0]);
 
     // Compute the projection interval radius of box onto L(t) = b.c + t * p.n
-    real radius = obbHalfExtents.x * Math::Abs(planeNormal.x) + obbHalfExtents.y * Math::Abs(planeNormal.y) +
-                  obbHalfExtents.z * Math::Abs(planeNormal.z);
+    real radius = obbHalfExtents.x * Math::Abs(planeNormal.x) + obbHalfExtents.y * Math::Abs(planeNormal.y) + obbHalfExtents.z * Math::Abs(planeNormal.z);
 
     // Compute the signed distance of the box's center from the plane. Since the
     // box's center is at the origin, (n * p) - d will end up as just -d
@@ -1985,8 +1909,7 @@ Type ObbTriangle(
 
   if (manifold != nullptr)
   {
-    return ObbTriangleContactGeneration(
-        obbCenter, obbHalfExtents, obbBasis, trianglePoints, normal, axisCase, minOverlap, *manifold);
+    return ObbTriangleContactGeneration(obbCenter, obbHalfExtents, obbBasis, trianglePoints, normal, axisCase, minOverlap, *manifold);
   }
   return Other;
 }

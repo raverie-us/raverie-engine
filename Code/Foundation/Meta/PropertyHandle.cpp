@@ -265,9 +265,7 @@ size_t PropertyPath::Hash() const
   return hash;
 }
 
-PropertPathHandle::PropertPathHandle(HandleParam rootObject, PropertyPathParam path) :
-    mRootObject(rootObject),
-    mPath(path)
+PropertPathHandle::PropertPathHandle(HandleParam rootObject, PropertyPathParam path) : mRootObject(rootObject), mPath(path)
 {
 }
 

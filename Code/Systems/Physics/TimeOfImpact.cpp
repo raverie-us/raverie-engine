@@ -95,11 +95,9 @@ real FalsePosition(GeometryData* objA, GeometryData* objB, Vec3Param normal, rea
   return tMin + (tMax - tMin) * u;
 }
 
-real FindRoot(
-    GeometryData* objA, GeometryData* objB, Vec3Param normal, real tMin, real tMax, real lowerBound, real upperBound)
+real FindRoot(GeometryData* objA, GeometryData* objB, Vec3Param normal, real tMin, real tMax, real lowerBound, real upperBound)
 {
-  ErrorIf(Separation(objA, objB, normal, tMin) < upperBound || Separation(objA, objB, normal, tMax) > lowerBound,
-          "No valid root exists!");
+  ErrorIf(Separation(objA, objB, normal, tMin) < upperBound || Separation(objA, objB, normal, tMax) > lowerBound, "No valid root exists!");
 
   real t, separation;
 
@@ -130,8 +128,7 @@ void SetSupportShapeDeltas(GeometryData* objA, GeometryData* objB, real dt)
   objB->shape.SetDeltaRotation(ToQuaternion(objB->axs, objB->ang * dt));
 }
 
-bool BilateralAdvancement(
-    GeometryData* objA, GeometryData* objB, real dt, real* impact, Intersection::Manifold* manifold)
+bool BilateralAdvancement(GeometryData* objA, GeometryData* objB, real dt, real* impact, Intersection::Manifold* manifold)
 {
   Intersection::Gjk gjk;
   Intersection::Type intersection;
@@ -179,8 +176,7 @@ bool BilateralAdvancement(
       // Current separation within threshold, advance forward for contact data
       else
       {
-        real relativeVelocity = normal.Dot(objB->vel) + objB->rel.Cross(normal).Dot(objB->axs * objB->ang) -
-                                normal.Dot(objA->vel) - objA->rel.Cross(normal).Dot(objA->axs * objA->ang);
+        real relativeVelocity = normal.Dot(objB->vel) + objB->rel.Cross(normal).Dot(objB->axs * objB->ang) - normal.Dot(objA->vel) - objA->rel.Cross(normal).Dot(objA->axs * objA->ang);
 
         // No relative velocity, objects are not getting closer on this axis
         if (relativeVelocity >= 0)

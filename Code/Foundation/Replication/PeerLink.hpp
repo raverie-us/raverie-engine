@@ -122,20 +122,9 @@ public:
   /// Provide a message lifetime to indicate how long this message should be
   /// kept alive in the send queue before being discarded Returns the message's
   /// receipt ID if send queuing successful and receipt was enabled, else 0
-  MessageReceiptId Send(Status& status,
-                        const Message& message,
-                        bool reliable,
-                        MessageChannelId channelId = 0,
-                        bool receipt = false,
-                        MessagePriority priority = 0,
-                        TimeMs lifetime = cInfiniteTimeMs);
-  MessageReceiptId Send(Status& status,
-                        MoveReference<Message> message,
-                        bool reliable,
-                        MessageChannelId channelId = 0,
-                        bool receipt = false,
-                        MessagePriority priority = 0,
-                        TimeMs lifetime = cInfiniteTimeMs);
+  MessageReceiptId Send(Status& status, const Message& message, bool reliable, MessageChannelId channelId = 0, bool receipt = false, MessagePriority priority = 0, TimeMs lifetime = cInfiniteTimeMs);
+  MessageReceiptId
+  Send(Status& status, MoveReference<Message> message, bool reliable, MessageChannelId channelId = 0, bool receipt = false, MessagePriority priority = 0, TimeMs lifetime = cInfiniteTimeMs);
 
   /// Returns the current local update time
   TimeMs GetLocalTime() const;
@@ -503,8 +492,7 @@ public:
   /// Pushes a link connect responded user event message
   void LinkEventConnectResponded(TransmissionDirection::Enum direction, const ConnectResponseData& connectResponseData);
   /// Pushes a link disconnect noticed user event message
-  void LinkEventDisconnectNoticed(TransmissionDirection::Enum direction,
-                                  const DisconnectNoticeData& disconnectNoticeData);
+  void LinkEventDisconnectNoticed(TransmissionDirection::Enum direction, const DisconnectNoticeData& disconnectNoticeData);
   /// Pushes a link incoming channel opened user event message
   void LinkEventIncomingChannelOpened(MessageChannelId channelId, TransferMode::Enum transferMode);
   /// Pushes a link incoming channel closed user event message
@@ -643,20 +631,9 @@ public:
   /// Provide a message lifetime to indicate how long this message should be
   /// kept alive in the send queue before being discarded Returns the message's
   /// receipt ID if send queing successful and receipt was enabled, else 0
-  MessageReceiptId Send(Status& status,
-                        const Message& message,
-                        bool reliable,
-                        MessageChannelId channelId = 0,
-                        bool receipt = false,
-                        MessagePriority priority = 0,
-                        TimeMs lifetime = cInfiniteTimeMs);
-  MessageReceiptId Send(Status& status,
-                        MoveReference<Message> message,
-                        bool reliable,
-                        MessageChannelId channelId = 0,
-                        bool receipt = false,
-                        MessagePriority priority = 0,
-                        TimeMs lifetime = cInfiniteTimeMs);
+  MessageReceiptId Send(Status& status, const Message& message, bool reliable, MessageChannelId channelId = 0, bool receipt = false, MessagePriority priority = 0, TimeMs lifetime = cInfiniteTimeMs);
+  MessageReceiptId
+  Send(Status& status, MoveReference<Message> message, bool reliable, MessageChannelId channelId = 0, bool receipt = false, MessagePriority priority = 0, TimeMs lifetime = cInfiniteTimeMs);
 
 protected:
   /// Constructor

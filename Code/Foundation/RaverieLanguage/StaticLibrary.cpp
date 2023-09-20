@@ -4,9 +4,7 @@
 
 namespace Raverie
 {
-StaticLibrary::StaticLibrary(StringParam name) :
-    Name(name),
-    Build(BuildState::NotBuilt)
+StaticLibrary::StaticLibrary(StringParam name) : Name(name), Build(BuildState::NotBuilt)
 {
   // Create a library builder
   this->Builder = new LibraryBuilder(name);

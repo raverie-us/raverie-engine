@@ -36,8 +36,7 @@
 
 #undef __STDC__
 
-#define RaverieOffsetOfHelper(structure, op, member)                                                                      \
-  (((::size_t) & reinterpret_cast<char const volatile&>((((structure*)(::uintptr_t)1)op member))) - 1)
+#define RaverieOffsetOfHelper(structure, op, member) (((::size_t) & reinterpret_cast<char const volatile&>((((structure*)(::uintptr_t)1)op member))) - 1)
 #define RaverieOffsetOf(structure, member) RaverieOffsetOfHelper(structure, ->, member)
 
 #define RaverieThreadLocal __thread

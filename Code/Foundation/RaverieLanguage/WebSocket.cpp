@@ -35,10 +35,7 @@ BlockingWebSocketConnection::BlockingWebSocketConnection()
 {
 }
 
-void BlockingWebSocketConnection::SendFullPacket(Status& status,
-                                                 const byte* data,
-                                                 size_t length,
-                                                 WebSocketPacketType::Enum packetType)
+void BlockingWebSocketConnection::SendFullPacket(Status& status, const byte* data, size_t length, WebSocketPacketType::Enum packetType)
 {
   // The header has a maximum size without the mask, lets build that header
   byte header[10] = {0};
@@ -190,10 +187,8 @@ WebSocketPacketType::Enum BlockingWebSocketConnection::ReceiveFullPacket(Status&
         // header
         if (this->ReadData.Size() >= 14)
         {
-          payloadSize = (size_t)NetworkFlip(
-              (unsigned long long)(data[2] + (data[3] << 8) + (data[4] << 16) + (data[5] << 24) +
-                                   ((unsigned long long)data[6] << 32) + ((unsigned long long)data[7] << 40) +
-                                   ((unsigned long long)data[8] << 48) + ((unsigned long long)data[9] << 56)));
+          payloadSize = (size_t)NetworkFlip((unsigned long long)(data[2] + (data[3] << 8) + (data[4] << 16) + (data[5] << 24) + ((unsigned long long)data[6] << 32) +
+                                                                 ((unsigned long long)data[7] << 40) + ((unsigned long long)data[8] << 48) + ((unsigned long long)data[9] << 56)));
           position = 10;
         }
         else
@@ -637,8 +632,7 @@ OsInt ThreadedWebSocketConnection::ReceiveEntryPoint(void* context)
     receivedEvent.Connection = self;
 
     // Receive an entire packet of text, this text should be json data
-    receivedEvent.PacketType =
-        self->BlockingConnection.ReceiveFullPacket(receivedEvent.ErrorStatus, receivedEvent.Data);
+    receivedEvent.PacketType = self->BlockingConnection.ReceiveFullPacket(receivedEvent.ErrorStatus, receivedEvent.Data);
 
     // Lock the recieve buffer and push the message into it
     // The message may be an actual packet, or an error message
@@ -707,8 +701,7 @@ OsInt ThreadedWebSocketConnection::SendEntryPoint(void* context)
       errorEvent.Connection = self;
 
       // Send the full packet over
-      self->BlockingConnection.SendFullPacket(
-          errorEvent.ErrorStatus, (const byte*)message.Data.Data(), message.Data.SizeInBytes(), message.PacketType);
+      self->BlockingConnection.SendFullPacket(errorEvent.ErrorStatus, (const byte*)message.Data.Data(), message.Data.SizeInBytes(), message.PacketType);
 
       // If we encountered an error when sending...
       if (errorEvent.ErrorStatus.Failed())
@@ -929,8 +922,7 @@ ThreadedWebSocketServer::ThreadedWebSocketServer(size_t maxConnections) : Maximu
 {
   // We want to know when connections are accepted, and when errors occur with
   // the listener
-  EventConnect(
-      &this->Listener, Events::WebSocketAcceptedConnection, &ThreadedWebSocketServer::OnAcceptedConnection, this);
+  EventConnect(&this->Listener, Events::WebSocketAcceptedConnection, &ThreadedWebSocketServer::OnAcceptedConnection, this);
   EventForward(&this->Listener, Events::WebSocketError, this);
 }
 

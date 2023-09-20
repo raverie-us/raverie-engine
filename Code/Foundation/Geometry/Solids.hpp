@@ -44,26 +44,18 @@ namespace Box
 */
 
 /// Permutation of positives and negatives for box's points
-const Vec3 cPoint[8] = {Vec3(-one, -one, -one),
-                        Vec3(one, -one, -one),
-                        Vec3(one, -one, one),
-                        Vec3(-one, -one, one),
-                        Vec3(-one, one, -one),
-                        Vec3(one, one, -one),
-                        Vec3(one, one, one),
-                        Vec3(-one, one, one)};
+const Vec3 cPoint[8] = {
+    Vec3(-one, -one, -one), Vec3(one, -one, -one), Vec3(one, -one, one), Vec3(-one, -one, one), Vec3(-one, one, -one), Vec3(one, one, -one), Vec3(one, one, one), Vec3(-one, one, one)};
 
 /// For use in mapping the edge index of an oriented bounding box to the points
 /// on that edge.
-const uint cEdge[12][2] = {
-    {0, 1}, {1, 2}, {2, 3}, {3, 0}, {0, 4}, {1, 5}, {2, 6}, {3, 7}, {4, 5}, {5, 6}, {6, 7}, {7, 4}};
+const uint cEdge[12][2] = {{0, 1}, {1, 2}, {2, 3}, {3, 0}, {0, 4}, {1, 5}, {2, 6}, {3, 7}, {4, 5}, {5, 6}, {6, 7}, {7, 4}};
 
 /// For use in determining which points are connected ("on the same edge as") to
 /// the given point. Inputs are the index of the currently known point and the
 /// axis corresponding to the edge in the box's local space (x = 0, y = 1, z =
 /// 2)
-const uint cPointPointEdge[8][3] = {
-    {1, 4, 3}, {0, 5, 2}, {3, 6, 1}, {2, 7, 0}, {5, 0, 7}, {4, 1, 6}, {7, 2, 5}, {6, 3, 4}};
+const uint cPointPointEdge[8][3] = {{1, 4, 3}, {0, 5, 2}, {3, 6, 1}, {2, 7, 0}, {5, 0, 7}, {4, 1, 6}, {7, 2, 5}, {6, 3, 4}};
 
 /// For use in determining an edge from the two point indices that lie on it.
 #define n static_cast<uint>(-1)
@@ -92,8 +84,7 @@ const uint cAxisPointPoint[8][8] = {{n, 0, n, 2, 1, n, n, n},  // 0
 
 /// For use in determining an edge from the face and the permutation of points
 /// negative-negative, negative-positive, positive-negative, positive-positive
-const uint cEdgeFaceBase[6][4] = {
-    {5, 9, 6, 1}, {4, 11, 7, 3}, {8, 9, 10, 11}, {0, 1, 2, 3}, {2, 6, 10, 7}, {0, 5, 8, 4}};
+const uint cEdgeFaceBase[6][4] = {{5, 9, 6, 1}, {4, 11, 7, 3}, {8, 9, 10, 11}, {0, 1, 2, 3}, {2, 6, 10, 7}, {0, 5, 8, 4}};
 
 /// For use in determining the edges on a face.
 const uint cEdgeFace[6][4] = {{9, 6, 1, 5}, {4, 3, 7, 11}, {11, 10, 9, 8}, {0, 1, 2, 3}, {7, 2, 6, 10}, {5, 0, 4, 8}};
@@ -124,15 +115,9 @@ const uint cFaceAxisSign[3][2] = {{0, 1}, {2, 3}, {4, 5}};
 namespace PlatonicSolids
 {
 
-const Vec3 cOctahedronPoints[6] = {Vec3(one, zero, zero),
-                                   Vec3(-one, zero, zero),
-                                   Vec3(zero, one, zero),
-                                   Vec3(zero, -one, zero),
-                                   Vec3(zero, zero, one),
-                                   Vec3(zero, zero, -one)};
+const Vec3 cOctahedronPoints[6] = {Vec3(one, zero, zero), Vec3(-one, zero, zero), Vec3(zero, one, zero), Vec3(zero, -one, zero), Vec3(zero, zero, one), Vec3(zero, zero, -one)};
 
-const uint cOctahedronFaces[8][3] = {
-    {0, 2, 4}, {0, 4, 3}, {0, 5, 2}, {0, 3, 5}, {1, 4, 2}, {1, 3, 4}, {1, 2, 5}, {1, 5, 3}};
+const uint cOctahedronFaces[8][3] = {{0, 2, 4}, {0, 4, 3}, {0, 5, 2}, {0, 3, 5}, {1, 4, 2}, {1, 3, 4}, {1, 2, 5}, {1, 5, 3}};
 
 #define tau Math::cGoldenRatio
 #define oot (one / tau) // oot = One over Tau
@@ -185,10 +170,8 @@ const Vec3 cIcosahedronPoints[12] = {Vec3(one, tau, zero),    // 0
                                      Vec3(tau, zero, -one),   // 10
                                      Vec3(-tau, zero, -one)}; // 11
 
-const uint cIcosahedronFaces[20][3] = {{0, 1, 4},  {1, 0, 6},  {0, 4, 8},  {5, 2, 8},  {4, 5, 8},
-                                       {4, 1, 9},  {5, 4, 9},  {6, 0, 10}, {2, 7, 10}, {7, 6, 10},
-                                       {0, 8, 10}, {8, 2, 10}, {1, 6, 11}, {6, 7, 11}, {9, 1, 11},
-                                       {2, 5, 3},  {7, 2, 3},  {5, 9, 3},  {11, 7, 3}, {9, 11, 3}};
+const uint cIcosahedronFaces[20][3] = {{0, 1, 4},  {1, 0, 6},  {0, 4, 8},  {5, 2, 8},  {4, 5, 8},  {4, 1, 9}, {5, 4, 9}, {6, 0, 10}, {2, 7, 10}, {7, 6, 10},
+                                       {0, 8, 10}, {8, 2, 10}, {1, 6, 11}, {6, 7, 11}, {9, 1, 11}, {2, 5, 3}, {7, 2, 3}, {5, 9, 3},  {11, 7, 3}, {9, 11, 3}};
 #undef tau
 } // namespace PlatonicSolids
 
@@ -223,47 +206,34 @@ const Vec3 cCuboctahedron[12] = {Vec3(one, one, zero),
 
 // Constant used for the truncated cube.
 #define sto real(0.4142135623730950488016887242097) /* sqrt(2) - 1 */
-const Vec3 cTruncatedCube[24] = {
-    Vec3(sto, one, one),    Vec3(sto, one, -one),  Vec3(sto, -one, one),   Vec3(sto, -one, -one), Vec3(-sto, one, one),
-    Vec3(-sto, one, -one),  Vec3(-sto, -one, one), Vec3(-sto, -one, -one), Vec3(one, sto, one),   Vec3(one, sto, -one),
-    Vec3(one, -sto, one),   Vec3(one, -sto, -one), Vec3(-one, sto, one),   Vec3(-one, sto, -one), Vec3(-one, -sto, one),
-    Vec3(-one, -sto, -one), Vec3(one, one, sto),   Vec3(one, one, -sto),   Vec3(one, -one, sto),  Vec3(one, -one, -sto),
-    Vec3(-one, one, sto),   Vec3(-one, one, -sto), Vec3(-one, -one, sto),  Vec3(-one, -one, -sto)};
+const Vec3 cTruncatedCube[24] = {Vec3(sto, one, one),   Vec3(sto, one, -one),   Vec3(sto, -one, one),  Vec3(sto, -one, -one),  Vec3(-sto, one, one),  Vec3(-sto, one, -one),
+                                 Vec3(-sto, -one, one), Vec3(-sto, -one, -one), Vec3(one, sto, one),   Vec3(one, sto, -one),   Vec3(one, -sto, one),  Vec3(one, -sto, -one),
+                                 Vec3(-one, sto, one),  Vec3(-one, sto, -one),  Vec3(-one, -sto, one), Vec3(-one, -sto, -one), Vec3(one, one, sto),   Vec3(one, one, -sto),
+                                 Vec3(one, -one, sto),  Vec3(one, -one, -sto),  Vec3(-one, one, sto),  Vec3(-one, one, -sto),  Vec3(-one, -one, sto), Vec3(-one, -one, -sto)};
 #undef sto
 
-const Vec3 cTruncatedOctahedron[24] = {
-    Vec3(zero, one, two), Vec3(zero, one, -two), Vec3(zero, -one, two), Vec3(zero, -one, -two),
-    Vec3(zero, two, one), Vec3(zero, two, -one), Vec3(zero, -two, one), Vec3(zero, -two, -one),
-    Vec3(one, zero, two), Vec3(one, zero, -two), Vec3(-one, zero, two), Vec3(-one, zero, -two),
-    Vec3(one, two, zero), Vec3(one, -two, zero), Vec3(-one, two, zero), Vec3(-one, -two, zero),
-    Vec3(two, zero, one), Vec3(two, zero, -one), Vec3(-two, zero, one), Vec3(-two, zero, -one),
-    Vec3(two, one, zero), Vec3(two, -one, zero), Vec3(-two, one, zero), Vec3(-two, -one, zero)};
+const Vec3 cTruncatedOctahedron[24] = {Vec3(zero, one, two),  Vec3(zero, one, -two),  Vec3(zero, -one, two), Vec3(zero, -one, -two), Vec3(zero, two, one),  Vec3(zero, two, -one),
+                                       Vec3(zero, -two, one), Vec3(zero, -two, -one), Vec3(one, zero, two),  Vec3(one, zero, -two),  Vec3(-one, zero, two), Vec3(-one, zero, -two),
+                                       Vec3(one, two, zero),  Vec3(one, -two, zero),  Vec3(-one, two, zero), Vec3(-one, -two, zero), Vec3(two, zero, one),  Vec3(two, zero, -one),
+                                       Vec3(-two, zero, one), Vec3(-two, zero, -one), Vec3(two, one, zero),  Vec3(two, -one, zero),  Vec3(-two, one, zero), Vec3(-two, -one, zero)};
 
 // Constant used for the rhombicuboctahedron and the truncated cuboctahedron.
 #define ost real(2.4142135623730950488016887242097) /* 1 + sqrt(2) */
 const Vec3 cRhombicuboctahedron[24] = {
-    Vec3(one, one, ost),   Vec3(one, one, -ost),   Vec3(one, -one, ost),   Vec3(one, -one, -ost), Vec3(-one, one, ost),
-    Vec3(-one, one, -ost), Vec3(-one, -one, ost),  Vec3(-one, -one, -ost), Vec3(one, ost, one), //
-    Vec3(one, ost, -one),  Vec3(one, -ost, one),   Vec3(one, -ost, -one),  Vec3(-one, ost, one),  Vec3(-one, ost, -one),
-    Vec3(-one, -ost, one), Vec3(-one, -ost, -one), Vec3(ost, one, one), //
-    Vec3(ost, one, -one),  Vec3(ost, -one, one),   Vec3(ost, -one, -one),  Vec3(-ost, one, one),  Vec3(-ost, one, -one),
-    Vec3(-ost, -one, one), Vec3(-ost, -one, -one)};
+    Vec3(one, one, ost),  Vec3(one, one, -ost), Vec3(one, -one, ost),  Vec3(one, -one, -ost), Vec3(-one, one, ost),  Vec3(-one, one, -ost), Vec3(-one, -one, ost),  Vec3(-one, -one, -ost),
+    Vec3(one, ost, one),                                                                                                                                                                 //
+    Vec3(one, ost, -one), Vec3(one, -ost, one), Vec3(one, -ost, -one), Vec3(-one, ost, one),  Vec3(-one, ost, -one), Vec3(-one, -ost, one), Vec3(-one, -ost, -one), Vec3(ost, one, one), //
+    Vec3(ost, one, -one), Vec3(ost, -one, one), Vec3(ost, -one, -one), Vec3(-ost, one, one),  Vec3(-ost, one, -one), Vec3(-ost, -one, one), Vec3(-ost, -one, -one)};
 
 // Constant used for the truncated cuboctahedron.
 #define ott real(3.8284271247461900976033774484194) /* 1 + (2 * sqrt(2)) */
 const Vec3 cTruncatedCuboctahedron[48] = {
-    Vec3(one, ost, ott),  Vec3(one, ost, -ott),  Vec3(one, -ost, ott),  Vec3(one, -ost, -ott),
-    Vec3(-one, ost, ott), Vec3(-one, ost, -ott), Vec3(-one, -ost, ott), Vec3(-one, -ost, -ott),
-    Vec3(one, ott, ost),  Vec3(one, ott, -ost),  Vec3(one, -ott, ost),  Vec3(one, -ott, -ost),
-    Vec3(-one, ott, ost), Vec3(-one, ott, -ost), Vec3(-one, -ott, ost), Vec3(-one, -ott, -ost),
-    Vec3(ost, one, ott),  Vec3(ost, one, -ott),  Vec3(ost, -one, ott),  Vec3(ost, -one, -ott),
-    Vec3(-ost, one, ott), Vec3(-ost, one, -ott), Vec3(-ost, -one, ott), Vec3(-ost, -one, -ott),
-    Vec3(ost, ott, one),  Vec3(ost, ott, -one),  Vec3(ost, -ott, one),  Vec3(ost, -ott, -one),
-    Vec3(-ost, ott, one), Vec3(-ost, ott, -one), Vec3(-ost, -ott, one), Vec3(-ost, -ott, -one),
-    Vec3(ott, one, ost),  Vec3(ott, one, -ost),  Vec3(ott, -one, ost),  Vec3(ott, -one, -ost),
-    Vec3(-ott, one, ost), Vec3(-ott, one, -ost), Vec3(-ott, -one, ost), Vec3(-ott, -one, -ost),
-    Vec3(ott, ost, one),  Vec3(ott, ost, -one),  Vec3(ott, -ost, one),  Vec3(ott, -ost, -one),
-    Vec3(-ott, ost, one), Vec3(-ott, ost, -one), Vec3(-ott, -ost, one), Vec3(-ott, -ost, -one)};
+    Vec3(one, ost, ott), Vec3(one, ost, -ott), Vec3(one, -ost, ott), Vec3(one, -ost, -ott), Vec3(-one, ost, ott), Vec3(-one, ost, -ott), Vec3(-one, -ost, ott), Vec3(-one, -ost, -ott),
+    Vec3(one, ott, ost), Vec3(one, ott, -ost), Vec3(one, -ott, ost), Vec3(one, -ott, -ost), Vec3(-one, ott, ost), Vec3(-one, ott, -ost), Vec3(-one, -ott, ost), Vec3(-one, -ott, -ost),
+    Vec3(ost, one, ott), Vec3(ost, one, -ott), Vec3(ost, -one, ott), Vec3(ost, -one, -ott), Vec3(-ost, one, ott), Vec3(-ost, one, -ott), Vec3(-ost, -one, ott), Vec3(-ost, -one, -ott),
+    Vec3(ost, ott, one), Vec3(ost, ott, -one), Vec3(ost, -ott, one), Vec3(ost, -ott, -one), Vec3(-ost, ott, one), Vec3(-ost, ott, -one), Vec3(-ost, -ott, one), Vec3(-ost, -ott, -one),
+    Vec3(ott, one, ost), Vec3(ott, one, -ost), Vec3(ott, -one, ost), Vec3(ott, -one, -ost), Vec3(-ott, one, ost), Vec3(-ott, one, -ost), Vec3(-ott, -one, ost), Vec3(-ott, -one, -ost),
+    Vec3(ott, ost, one), Vec3(ott, ost, -one), Vec3(ott, -ost, one), Vec3(ott, -ost, -one), Vec3(-ott, ost, one), Vec3(-ott, ost, -one), Vec3(-ott, -ost, one), Vec3(-ott, -ost, -one)};
 #undef ott
 #undef ost
 
@@ -310,17 +280,13 @@ const Vec3 cSnubCube[24] = {                         // Even permutations
 #define tot tau / real(2.0)               /* Tau Over Two */
 #define hot (real(1.0) + tau) / real(2.0) /* Half of One plus Tau */
 const Vec3 cIcosidodecahedron[30] = {
-    Vec3(zero, zero, tau), Vec3(zero, zero, -tau), Vec3(zero, tau, zero), Vec3(zero, -tau, zero),
-    Vec3(tau, zero, zero), Vec3(-tau, zero, zero),
+    Vec3(zero, zero, tau), Vec3(zero, zero, -tau), Vec3(zero, tau, zero), Vec3(zero, -tau, zero), Vec3(tau, zero, zero), Vec3(-tau, zero, zero),
 
-    Vec3(hlf, tot, hot),   Vec3(hlf, tot, -hot),   Vec3(hlf, -tot, hot),  Vec3(hlf, -tot, -hot),
-    Vec3(-hlf, tot, hot),  Vec3(-hlf, tot, -hot),  Vec3(-hlf, -tot, hot), Vec3(-hlf, -tot, -hot),
+    Vec3(hlf, tot, hot),   Vec3(hlf, tot, -hot),   Vec3(hlf, -tot, hot),  Vec3(hlf, -tot, -hot),  Vec3(-hlf, tot, hot),  Vec3(-hlf, tot, -hot),  Vec3(-hlf, -tot, hot), Vec3(-hlf, -tot, -hot),
 
-    Vec3(tot, hot, hlf),   Vec3(tot, hot, -hlf),   Vec3(tot, -hot, hlf),  Vec3(tot, -hot, -hlf),
-    Vec3(-tot, hot, hlf),  Vec3(-tot, hot, -hlf),  Vec3(-tot, -hot, hlf), Vec3(-tot, -hot, -hlf),
+    Vec3(tot, hot, hlf),   Vec3(tot, hot, -hlf),   Vec3(tot, -hot, hlf),  Vec3(tot, -hot, -hlf),  Vec3(-tot, hot, hlf),  Vec3(-tot, hot, -hlf),  Vec3(-tot, -hot, hlf), Vec3(-tot, -hot, -hlf),
 
-    Vec3(hot, hlf, tot),   Vec3(hot, hlf, -tot),   Vec3(hot, -hlf, tot),  Vec3(hot, -hlf, -tot),
-    Vec3(-hot, hlf, tot),  Vec3(-hot, hlf, -tot),  Vec3(-hot, -hlf, tot), Vec3(-hot, -hlf, -tot)};
+    Vec3(hot, hlf, tot),   Vec3(hot, hlf, -tot),   Vec3(hot, -hlf, tot),  Vec3(hot, -hlf, -tot),  Vec3(-hot, hlf, tot),  Vec3(-hot, hlf, -tot),  Vec3(-hot, -hlf, tot), Vec3(-hot, -hlf, -tot)};
 #undef hot
 #undef tot
 #undef hlf
@@ -336,23 +302,17 @@ const Vec3 cTruncatedDodecahedron[60] = {
 
     Vec3(oot, TpT, zero), Vec3(oot, -TpT, zero), Vec3(-oot, TpT, zero), Vec3(-oot, -TpT, zero),
 
-    Vec3(oot, tau, ttt),  Vec3(oot, tau, -ttt),  Vec3(oot, -tau, ttt),  Vec3(oot, -tau, -ttt),
-    Vec3(-oot, tau, ttt), Vec3(-oot, tau, -ttt), Vec3(-oot, -tau, ttt), Vec3(-oot, -tau, -ttt),
+    Vec3(oot, tau, ttt),  Vec3(oot, tau, -ttt),  Vec3(oot, -tau, ttt),  Vec3(oot, -tau, -ttt),  Vec3(-oot, tau, ttt), Vec3(-oot, tau, -ttt), Vec3(-oot, -tau, ttt), Vec3(-oot, -tau, -ttt),
 
-    Vec3(ttt, oot, tau),  Vec3(ttt, oot, -tau),  Vec3(ttt, -oot, tau),  Vec3(ttt, -oot, -tau),
-    Vec3(-ttt, oot, tau), Vec3(-ttt, oot, -tau), Vec3(-ttt, -oot, tau), Vec3(-ttt, -oot, -tau),
+    Vec3(ttt, oot, tau),  Vec3(ttt, oot, -tau),  Vec3(ttt, -oot, tau),  Vec3(ttt, -oot, -tau),  Vec3(-ttt, oot, tau), Vec3(-ttt, oot, -tau), Vec3(-ttt, -oot, tau), Vec3(-ttt, -oot, -tau),
 
-    Vec3(tau, ttt, oot),  Vec3(tau, ttt, -oot),  Vec3(tau, -ttt, oot),  Vec3(tau, -ttt, -oot),
-    Vec3(-tau, ttt, oot), Vec3(-tau, ttt, -oot), Vec3(-tau, -ttt, oot), Vec3(-tau, -ttt, -oot),
+    Vec3(tau, ttt, oot),  Vec3(tau, ttt, -oot),  Vec3(tau, -ttt, oot),  Vec3(tau, -ttt, -oot),  Vec3(-tau, ttt, oot), Vec3(-tau, ttt, -oot), Vec3(-tau, -ttt, oot), Vec3(-tau, -ttt, -oot),
 
-    Vec3(tau, two, tsq),  Vec3(tau, two, -tsq),  Vec3(tau, -two, tsq),  Vec3(tau, -two, -tsq),
-    Vec3(-tau, two, tsq), Vec3(-tau, two, -tsq), Vec3(-tau, -two, tsq), Vec3(-tau, -two, -tsq),
+    Vec3(tau, two, tsq),  Vec3(tau, two, -tsq),  Vec3(tau, -two, tsq),  Vec3(tau, -two, -tsq),  Vec3(-tau, two, tsq), Vec3(-tau, two, -tsq), Vec3(-tau, -two, tsq), Vec3(-tau, -two, -tsq),
 
-    Vec3(tsq, tau, two),  Vec3(tsq, tau, -two),  Vec3(tsq, -tau, two),  Vec3(tsq, -tau, -two),
-    Vec3(-tsq, tau, two), Vec3(-tsq, tau, -two), Vec3(-tsq, -tau, two), Vec3(-tsq, -tau, -two),
+    Vec3(tsq, tau, two),  Vec3(tsq, tau, -two),  Vec3(tsq, -tau, two),  Vec3(tsq, -tau, -two),  Vec3(-tsq, tau, two), Vec3(-tsq, tau, -two), Vec3(-tsq, -tau, two), Vec3(-tsq, -tau, -two),
 
-    Vec3(two, tsq, tau),  Vec3(two, tsq, -tau),  Vec3(two, -tsq, tau),  Vec3(two, -tsq, -tau),
-    Vec3(-two, tsq, tau), Vec3(-two, tsq, -tau), Vec3(-two, -tsq, tau), Vec3(-two, -tsq, -tau)};
+    Vec3(two, tsq, tau),  Vec3(two, tsq, -tau),  Vec3(two, -tsq, tau),  Vec3(two, -tsq, -tau),  Vec3(-two, tsq, tau), Vec3(-two, tsq, -tau), Vec3(-two, -tsq, tau), Vec3(-two, -tsq, -tau)};
 #undef tsq
 #undef ttt
 #undef TpT
@@ -373,28 +333,22 @@ const Vec3 cTruncatedIcosahedron[60] = {
     Vec3(tht, zero, -one), Vec3(-tht, zero, one), Vec3(-tht, zero, -one),
 
     Vec3(two, ott, tau), // abc
-    Vec3(two, ott, -tau),  Vec3(two, -ott, tau),  Vec3(two, -ott, -tau),  Vec3(-two, ott, tau),
-    Vec3(-two, ott, -tau), Vec3(-two, -ott, tau), Vec3(-two, -ott, -tau),
+    Vec3(two, ott, -tau),  Vec3(two, -ott, tau),  Vec3(two, -ott, -tau),  Vec3(-two, ott, tau), Vec3(-two, ott, -tau), Vec3(-two, -ott, tau), Vec3(-two, -ott, -tau),
 
     Vec3(ott, tau, two), // bca
-    Vec3(ott, tau, -two),  Vec3(ott, -tau, two),  Vec3(ott, -tau, -two),  Vec3(-ott, tau, two),
-    Vec3(-ott, tau, -two), Vec3(-ott, -tau, two), Vec3(-ott, -tau, -two),
+    Vec3(ott, tau, -two),  Vec3(ott, -tau, two),  Vec3(ott, -tau, -two),  Vec3(-ott, tau, two), Vec3(-ott, tau, -two), Vec3(-ott, -tau, two), Vec3(-ott, -tau, -two),
 
     Vec3(tau, two, ott), // cab
-    Vec3(tau, two, -ott),  Vec3(tau, -two, ott),  Vec3(tau, -two, -ott),  Vec3(-tau, two, ott),
-    Vec3(-tau, two, -ott), Vec3(-tau, -two, ott), Vec3(-tau, -two, -ott),
+    Vec3(tau, two, -ott),  Vec3(tau, -two, ott),  Vec3(tau, -two, -ott),  Vec3(-tau, two, ott), Vec3(-tau, two, -ott), Vec3(-tau, -two, ott), Vec3(-tau, -two, -ott),
 
     Vec3(one, tpt, twt), // abc
-    Vec3(one, tpt, -twt),  Vec3(one, -tpt, twt),  Vec3(one, -tpt, -twt),  Vec3(-one, tpt, twt),
-    Vec3(-one, tpt, -twt), Vec3(-one, -tpt, twt), Vec3(-one, -tpt, -twt),
+    Vec3(one, tpt, -twt),  Vec3(one, -tpt, twt),  Vec3(one, -tpt, -twt),  Vec3(-one, tpt, twt), Vec3(-one, tpt, -twt), Vec3(-one, -tpt, twt), Vec3(-one, -tpt, -twt),
 
     Vec3(tpt, twt, one), // bca
-    Vec3(tpt, twt, -one),  Vec3(tpt, -twt, one),  Vec3(tpt, -twt, -one),  Vec3(-tpt, twt, one),
-    Vec3(-tpt, twt, -one), Vec3(-tpt, -twt, one), Vec3(-tpt, -twt, -one),
+    Vec3(tpt, twt, -one),  Vec3(tpt, -twt, one),  Vec3(tpt, -twt, -one),  Vec3(-tpt, twt, one), Vec3(-tpt, twt, -one), Vec3(-tpt, -twt, one), Vec3(-tpt, -twt, -one),
 
     Vec3(twt, one, tpt), // cab
-    Vec3(twt, one, -tpt),  Vec3(twt, -one, tpt),  Vec3(twt, -one, -tpt),  Vec3(-twt, one, tpt),
-    Vec3(-twt, one, -tpt), Vec3(-twt, -one, tpt), Vec3(-twt, -one, -tpt)};
+    Vec3(twt, one, -tpt),  Vec3(twt, -one, tpt),  Vec3(twt, -one, -tpt),  Vec3(-twt, one, tpt), Vec3(-twt, one, -tpt), Vec3(-twt, -one, tpt), Vec3(-twt, -one, -tpt)};
 #undef tpt
 #undef ott
 #undef twt
@@ -405,23 +359,17 @@ const Vec3 cTruncatedIcosahedron[60] = {
 #define ttt (real(2.0) * tau) /* Two Times Tau */
 #define tpt (real(2.0) + tau) /* Two Plus Tau */
 const Vec3 cRhombicosidodecahedron[60] = {
-    Vec3(one, one, tcu),  Vec3(one, one, -tcu),  Vec3(one, -one, tcu),  Vec3(one, -one, -tcu),
-    Vec3(-one, one, tcu), Vec3(-one, one, -tcu), Vec3(-one, -one, tcu), Vec3(-one, -one, -tcu),
+    Vec3(one, one, tcu),  Vec3(one, one, -tcu),  Vec3(one, -one, tcu),  Vec3(one, -one, -tcu),  Vec3(-one, one, tcu), Vec3(-one, one, -tcu), Vec3(-one, -one, tcu), Vec3(-one, -one, -tcu),
 
-    Vec3(tcu, one, one),  Vec3(tcu, one, -one),  Vec3(tcu, -one, one),  Vec3(tcu, -one, -one),
-    Vec3(-tcu, one, one), Vec3(-tcu, one, -one), Vec3(-tcu, -one, one), Vec3(-tcu, -one, -one),
+    Vec3(tcu, one, one),  Vec3(tcu, one, -one),  Vec3(tcu, -one, one),  Vec3(tcu, -one, -one),  Vec3(-tcu, one, one), Vec3(-tcu, one, -one), Vec3(-tcu, -one, one), Vec3(-tcu, -one, -one),
 
-    Vec3(one, tcu, one),  Vec3(one, tcu, -one),  Vec3(one, -tcu, one),  Vec3(one, -tcu, -one),
-    Vec3(-one, tcu, one), Vec3(-one, tcu, -one), Vec3(-one, -tcu, one), Vec3(-one, -tcu, -one),
+    Vec3(one, tcu, one),  Vec3(one, tcu, -one),  Vec3(one, -tcu, one),  Vec3(one, -tcu, -one),  Vec3(-one, tcu, one), Vec3(-one, tcu, -one), Vec3(-one, -tcu, one), Vec3(-one, -tcu, -one),
 
-    Vec3(tsq, tau, ttt),  Vec3(tsq, tau, -ttt),  Vec3(tsq, -tau, ttt),  Vec3(tsq, -tau, -ttt),
-    Vec3(-tsq, tau, ttt), Vec3(-tsq, tau, -ttt), Vec3(-tsq, -tau, ttt), Vec3(-tsq, -tau, -ttt),
+    Vec3(tsq, tau, ttt),  Vec3(tsq, tau, -ttt),  Vec3(tsq, -tau, ttt),  Vec3(tsq, -tau, -ttt),  Vec3(-tsq, tau, ttt), Vec3(-tsq, tau, -ttt), Vec3(-tsq, -tau, ttt), Vec3(-tsq, -tau, -ttt),
 
-    Vec3(ttt, tsq, tau),  Vec3(ttt, tsq, -tau),  Vec3(ttt, -tsq, tau),  Vec3(ttt, -tsq, -tau),
-    Vec3(-ttt, tsq, tau), Vec3(-ttt, tsq, -tau), Vec3(-ttt, -tsq, tau), Vec3(-ttt, -tsq, -tau),
+    Vec3(ttt, tsq, tau),  Vec3(ttt, tsq, -tau),  Vec3(ttt, -tsq, tau),  Vec3(ttt, -tsq, -tau),  Vec3(-ttt, tsq, tau), Vec3(-ttt, tsq, -tau), Vec3(-ttt, -tsq, tau), Vec3(-ttt, -tsq, -tau),
 
-    Vec3(tau, ttt, tsq),  Vec3(tau, ttt, -tsq),  Vec3(tau, -ttt, tsq),  Vec3(tau, -ttt, -tsq),
-    Vec3(-tau, ttt, tsq), Vec3(-tau, ttt, -tsq), Vec3(-tau, -ttt, tsq), Vec3(-tau, -ttt, -tsq),
+    Vec3(tau, ttt, tsq),  Vec3(tau, ttt, -tsq),  Vec3(tau, -ttt, tsq),  Vec3(tau, -ttt, -tsq),  Vec3(-tau, ttt, tsq), Vec3(-tau, ttt, -tsq), Vec3(-tau, -ttt, tsq), Vec3(-tau, -ttt, -tsq),
 
     Vec3(tpt, zero, tsq), Vec3(tpt, zero, -tsq), Vec3(-tpt, zero, tsq), Vec3(-tpt, zero, -tsq),
 

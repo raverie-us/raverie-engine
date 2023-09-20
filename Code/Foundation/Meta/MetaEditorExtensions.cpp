@@ -36,10 +36,7 @@ EditorRange::EditorRange() : Min(-Math::PositiveMax()), Max(Math::PositiveMax())
 {
 }
 
-EditorRange::EditorRange(float minValue, float maxValue, float increment) :
-    Min(minValue),
-    Max(maxValue),
-    Increment(increment)
+EditorRange::EditorRange(float minValue, float maxValue, float increment) : Min(minValue), Max(maxValue), Increment(increment)
 {
 }
 
@@ -78,17 +75,11 @@ EditorRotationBasis::EditorRotationBasis() : mIntData(0), mGizmoName("EditorGizm
 {
 }
 
-EditorRotationBasis::EditorRotationBasis(StringParam archetypeName) :
-    mIntData(0),
-    mGizmoName("EditorGizmo"),
-    mArchetypeName(archetypeName)
+EditorRotationBasis::EditorRotationBasis(StringParam archetypeName) : mIntData(0), mGizmoName("EditorGizmo"), mArchetypeName(archetypeName)
 {
 }
 
-EditorRotationBasis::EditorRotationBasis(StringParam archetypeName, StringParam gizmoName, int intData) :
-    mIntData(intData),
-    mGizmoName(gizmoName),
-    mArchetypeName(archetypeName)
+EditorRotationBasis::EditorRotationBasis(StringParam archetypeName, StringParam gizmoName, int intData) : mIntData(intData), mGizmoName(gizmoName), mArchetypeName(archetypeName)
 {
 }
 
@@ -101,31 +92,16 @@ RaverieDefineType(MetaEditorResource, builder, type)
   RaverieBindField(SearchPreview)->AddAttribute(PropertyAttributes::cOptional);
 }
 
-MetaEditorResource::MetaEditorResource(
-    bool allowAdd, bool allowNone, StringParam filterTag, bool forceCompact, bool searchPreview) :
-    FilterTag(filterTag),
-    AllowAdd(allowAdd),
-    AllowNone(allowNone),
-    ForceCompact(forceCompact),
-    SearchPreview(searchPreview),
-    Filter(nullptr)
+MetaEditorResource::MetaEditorResource(bool allowAdd, bool allowNone, StringParam filterTag, bool forceCompact, bool searchPreview) :
+    FilterTag(filterTag), AllowAdd(allowAdd), AllowNone(allowNone), ForceCompact(forceCompact), SearchPreview(searchPreview), Filter(nullptr)
 {
 }
 
-MetaEditorResource::MetaEditorResource(SearchFilter filter) :
-    AllowAdd(false),
-    AllowNone(false),
-    FilterTag(""),
-    ForceCompact(false),
-    SearchPreview(true),
-    Filter(filter)
+MetaEditorResource::MetaEditorResource(SearchFilter filter) : AllowAdd(false), AllowNone(false), FilterTag(""), ForceCompact(false), SearchPreview(true), Filter(filter)
 {
 }
 
-bool MetaEditorResource::FilterPropertySearchResult(HandleParam object,
-                                                    Property* property,
-                                                    HandleParam result,
-                                                    Status& status)
+bool MetaEditorResource::FilterPropertySearchResult(HandleParam object, Property* property, HandleParam result, Status& status)
 {
   if (Filter)
     return Filter(object, property, result, status);

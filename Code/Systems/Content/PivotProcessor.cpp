@@ -4,12 +4,8 @@
 namespace Raverie
 {
 
-PivotProcessor::PivotProcessor(HierarchyDataMap& hierarchyData,
-                               String& rootNodeName,
-                               AnimationNodeRedirectMap& animationRedirectMap) :
-    mHierarchyDataMap(hierarchyData),
-    mRootNodeName(rootNodeName),
-    mAnimationRedirectMap(animationRedirectMap)
+PivotProcessor::PivotProcessor(HierarchyDataMap& hierarchyData, String& rootNodeName, AnimationNodeRedirectMap& animationRedirectMap) :
+    mHierarchyDataMap(hierarchyData), mRootNodeName(rootNodeName), mAnimationRedirectMap(animationRedirectMap)
 {
 }
 

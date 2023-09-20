@@ -277,12 +277,16 @@ bool CopyFileInternal(StringParam dest, StringParam source)
     return false;
 
   SystemEntry* destEntry = FileSystem::GetInstance()->FindEntry(dest);
-  if (destEntry) {
+  if (destEntry)
+  {
     // We can't copy a file over the top of a directory
-    if (destEntry->mType == EntryType::Directory) {
+    if (destEntry->mType == EntryType::Directory)
+    {
       return false;
     }
-  } else {
+  }
+  else
+  {
     destEntry = FileSystem::GetInstance()->CreateEntry(dest, EntryType::File);
   }
 
@@ -298,12 +302,14 @@ bool MoveFileInternal(StringParam dest, StringParam source)
 
   SystemEntry* destEntry = FileSystem::GetInstance()->FindEntry(dest);
 
-  if (destEntry) {
+  if (destEntry)
+  {
     // We can't move a file over the top of a directory
-    if (destEntry->mType == EntryType::Directory) {
+    if (destEntry->mType == EntryType::Directory)
+    {
       return false;
     }
-    
+
     // It must be a file that exists there, so delete the file
     destEntry->Delete();
   }
@@ -513,11 +519,7 @@ long long File::CurrentFileSize()
   return Size();
 }
 
-bool File::Open(StringParam filePath,
-                FileMode::Enum mode,
-                FileAccessPattern::Enum accessPattern,
-                FileShare::Enum share,
-                Status* status)
+bool File::Open(StringParam filePath, FileMode::Enum mode, FileAccessPattern::Enum accessPattern, FileShare::Enum share, Status* status)
 {
   RaverieGetPrivateData(FilePrivateData);
 
@@ -685,7 +687,8 @@ void File::Duplicate(Status& status, File& destinationFile)
   self->mEntry->CopyTo(other->mEntry);
 }
 
-void RaverieExportNamed(ExportFileCreate)(const char* filePath, byte* dataSteal, size_t dataLength) {
+void RaverieExportNamed(ExportFileCreate)(const char* filePath, byte* dataSteal, size_t dataLength)
+{
   // The data will be "stolen" by AddVirtualFileSystemEntry (no need to de-allocate)
   DataBlock block;
   block.Data = dataSteal;
@@ -693,7 +696,8 @@ void RaverieExportNamed(ExportFileCreate)(const char* filePath, byte* dataSteal,
   AddVirtualFileSystemEntry(filePath, &block, time(0));
 }
 
-void RaverieExportNamed(ExportFileDelete)(const char* filePath) {
+void RaverieExportNamed(ExportFileDelete)(const char* filePath)
+{
   FileSystem::GetInstance()->DeleteEntry(filePath);
 }
 

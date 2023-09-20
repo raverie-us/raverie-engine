@@ -91,9 +91,7 @@ class LinkOutbox
   /// Records a fragmented receipt and adds the corresponding packet record
   void RecordFragmentReceipt(const OutPacket& packet, const OutMessage& message, const OutPacket* prevPacket);
   /// Updates and returns the receipt ID's overall ACK state
-  ACKState::Enum UpdateReceiptACKState(const OutPacket& packet,
-                                       ACKState::Enum packetACKState,
-                                       const OutMessage& message);
+  ACKState::Enum UpdateReceiptACKState(const OutPacket& packet, ACKState::Enum packetACKState, const OutMessage& message);
   /// Acknowledges the packet (generates receipt events for all receipted
   /// messages accordingly)
   void AcknowledgePacket(OutPacket& packet, ACKState::Enum packetACKState);
@@ -112,14 +110,7 @@ class LinkOutbox
   TimeMs GetLastSendDuration() const;
 
   /// Pushes an outgoing message to be sent later
-  MessageReceiptId PushMessage(Status& status,
-                               MoveReference<Message> message,
-                               bool reliable,
-                               MessageChannelId channelId,
-                               bool receipt,
-                               MessagePriority priority,
-                               TimeMs lifetime,
-                               bool isProtocol);
+  MessageReceiptId PushMessage(Status& status, MoveReference<Message> message, bool reliable, MessageChannelId channelId, bool receipt, MessagePriority priority, TimeMs lifetime, bool isProtocol);
   /// Writes a message to the packet
   /// Returns true if done with the message, else false
   bool WriteMessageToPacket(OutPacket& packet, Bits& remBits, OutMessage& message, OutPacket* prevPacket = nullptr);

@@ -52,14 +52,7 @@ void BiQuad::AddHistoryTo(BiQuad& otherFilter)
 
 // Delay Filter
 
-Delay::Delay(float maxDelayTime, int sampleRate) :
-    mBuffer(nullptr),
-    mDelayInSamples(0),
-    mOutputAttenuation(0),
-    mBufferSize(0),
-    mReadIndex(0),
-    mWriteIndex(0),
-    mSampleRate(sampleRate)
+Delay::Delay(float maxDelayTime, int sampleRate) : mBuffer(nullptr), mDelayInSamples(0), mOutputAttenuation(0), mBufferSize(0), mReadIndex(0), mWriteIndex(0), mSampleRate(sampleRate)
 {
   mBufferSize = (int)(maxDelayTime * sampleRate);
   mBuffer = new float[mBufferSize];
@@ -102,8 +95,7 @@ void Delay::SetOutputAttenuation(const float attenDB)
 
 float Delay::ReadDelay()
 {
-  return mBuffer[mPrevReadIndex] +
-         ((mBuffer[mReadIndex] - mBuffer[mPrevReadIndex]) * (mDelayInSamples - (int)mDelayInSamples));
+  return mBuffer[mPrevReadIndex] + ((mBuffer[mReadIndex] - mBuffer[mPrevReadIndex]) * (mDelayInSamples - (int)mDelayInSamples));
 }
 
 float Delay::ReadDelayAt(const float mSec)
@@ -200,11 +192,7 @@ void Comb::ProcessAudio(const float input, float* output)
 
 // Low Pass Comb Filter
 
-LPComb::LPComb(const float maxDelayTime, const int sampleRate) :
-    mCombG(0),
-    mLPFg(0),
-    mPrevSample(0),
-    Delay(maxDelayTime, sampleRate)
+LPComb::LPComb(const float maxDelayTime, const int sampleRate) : mCombG(0), mLPFg(0), mPrevSample(0), Delay(maxDelayTime, sampleRate)
 {
 }
 
@@ -315,10 +303,7 @@ void LowPassFilter::ProcessFrame(const float* input, float* output, const unsign
   }
 }
 
-void LowPassFilter::ProcessBuffer(const float* input,
-                                  float* output,
-                                  const unsigned numChannels,
-                                  const unsigned numSamples)
+void LowPassFilter::ProcessBuffer(const float* input, float* output, const unsigned numChannels, const unsigned numSamples)
 {
   if (CutoffFrequency > 20000.0f)
   {
@@ -427,8 +412,7 @@ void BandPassFilter::ProcessFrame(const float* input, float* output, const unsig
   for (unsigned i = 0; i < numChannels; ++i)
   {
     float inputSample = input[i];
-    output[i] = (AlphaHP * (1 - AlphaLP) * (inputSample - PreviousInput[i])) +
-                ((AlphaHP + AlphaLP) * PreviousOutput1[i]) - (AlphaLP * AlphaHP * PreviousOutput2[i]);
+    output[i] = (AlphaHP * (1 - AlphaLP) * (inputSample - PreviousInput[i])) + ((AlphaHP + AlphaLP) * PreviousOutput1[i]) - (AlphaLP * AlphaHP * PreviousOutput2[i]);
 
     PreviousInput[i] = inputSample;
     PreviousOutput2[i] = PreviousOutput1[i];
@@ -451,14 +435,7 @@ void BandPassFilter::ResetFrequencies()
 
 // Oscillator
 
-Oscillator::Oscillator() :
-    mReadIndex(0),
-    mIncrement(0),
-    mNoteOn(false),
-    mFrequency(1.0f),
-    mType(SynthWaveType::Noise),
-    mPolarity(Bipolar),
-    mSquareWavePositiveFraction(0.5f)
+Oscillator::Oscillator() : mReadIndex(0), mIncrement(0), mNoteOn(false), mFrequency(1.0f), mType(SynthWaveType::Noise), mPolarity(Bipolar), mSquareWavePositiveFraction(0.5f)
 {
   mIncrement = ArraySize * mFrequency / (float)cSystemSampleRate;
   SetType(SynthWaveType::SineWave);
@@ -494,8 +471,7 @@ float Oscillator::GetNextSample()
   if (readIndexNext > ArraySize - 1)
     readIndexNext = 0;
 
-  float returnValue = mWaveValues[readIndexInt] +
-                      (mReadIndex - readIndexInt) * (mWaveValues[readIndexNext] - mWaveValues[readIndexInt]);
+  float returnValue = mWaveValues[readIndexInt] + (mReadIndex - readIndexInt) * (mWaveValues[readIndexNext] - mWaveValues[readIndexInt]);
 
   mReadIndex += mIncrement;
   if (mReadIndex >= ArraySize)
@@ -597,14 +573,7 @@ void Oscillator::SetSquareWavePositiveFraction(const float positiveFraction)
 
 // Delay Line
 
-DelayLine::DelayLine() :
-    mDelaySamplesFractional(100.0f * cSystemSampleRate / 1000.0f),
-    mFeedback(0),
-    mWetLevel(0.5f),
-    mReadIndex(0),
-    mWriteIndex(0),
-    mBufferSize(0),
-    mInterpolatingWetLevel(false)
+DelayLine::DelayLine() : mDelaySamplesFractional(100.0f * cSystemSampleRate / 1000.0f), mFeedback(0), mWetLevel(0.5f), mReadIndex(0), mWriteIndex(0), mBufferSize(0), mInterpolatingWetLevel(false)
 {
   mDelaySamples = (int)mDelaySamplesFractional;
   memset(mBuffersPerChannel, 0, sizeof(float) * cMaxChannels);
@@ -615,10 +584,7 @@ DelayLine::~DelayLine()
   DestroyBuffers();
 }
 
-void DelayLine::ProcessBuffer(const float* input,
-                              float* output,
-                              const unsigned numberOfChannels,
-                              const unsigned bufferSize)
+void DelayLine::ProcessBuffer(const float* input, float* output, const unsigned numberOfChannels, const unsigned bufferSize)
 {
   // If there is no delay, simply copy input into output
   if (mDelaySamplesFractional == 0.0f)
@@ -808,9 +774,7 @@ void DelayLine::ReallocateBuffers(int newLength)
     memset(newBuffer, 0, sizeof(float) * newLength);
 
     memcpy(newBuffer + dataStart, mBuffersPerChannel[i] + mReadIndex, sizeof(float) * mBufferSize - mReadIndex);
-    memcpy(newBuffer + dataStart + mBufferSize - mReadIndex,
-           mBuffersPerChannel[i] + mWriteIndex,
-           sizeof(float) * mWriteIndex);
+    memcpy(newBuffer + dataStart + mBufferSize - mReadIndex, mBuffersPerChannel[i] + mWriteIndex, sizeof(float) * mWriteIndex);
 
     delete[] mBuffersPerChannel[i];
     mBuffersPerChannel[i] = newBuffer;
@@ -839,11 +803,7 @@ EnvelopeDetector::EnvelopeDetector() :
 {
 }
 
-void EnvelopeDetector::Initialize(const float attackMSec,
-                                  const float releaseMSec,
-                                  const bool analogTC,
-                                  const DetectModes mode,
-                                  const bool logDetector)
+void EnvelopeDetector::Initialize(const float attackMSec, const float releaseMSec, const bool analogTC, const DetectModes mode, const bool logDetector)
 {
   mEnvelope = 0.0f;
   mAnalogTC = analogTC;
@@ -943,16 +903,7 @@ float EnvelopeDetector::Detect(float input)
 // Dynamics Processor Filter
 
 DynamicsProcessor::DynamicsProcessor() :
-    mInputGainDB(0),
-    mThresholdDB(0),
-    mAttackMSec(20),
-    mReleaseMSec(1000),
-    mRatio(1),
-    mOutputGainDB(0),
-    mKneeWidth(0),
-    mHalfKnee(0),
-    mProcessorType(Compressor),
-    mAnalog(true)
+    mInputGainDB(0), mThresholdDB(0), mAttackMSec(20), mReleaseMSec(1000), mRatio(1), mOutputGainDB(0), mKneeWidth(0), mHalfKnee(0), mProcessorType(Compressor), mAnalog(true)
 {
   mHalfKnee = mKneeWidth * 0.5f;
 
@@ -964,14 +915,8 @@ DynamicsProcessor::DynamicsProcessor() :
     Detectors[i].Initialize(mAttackMSec, mReleaseMSec, mAnalog, EnvelopeDetector::RMS, true);
 }
 
-DynamicsProcessor::DynamicsProcessor(const float inputGain,
-                                     const float threshold,
-                                     const float attack,
-                                     const float release,
-                                     const float ratio,
-                                     const float outputGain,
-                                     const float knee,
-                                     const ProcessorTypes type) :
+DynamicsProcessor::DynamicsProcessor(
+    const float inputGain, const float threshold, const float attack, const float release, const float ratio, const float outputGain, const float knee, const ProcessorTypes type) :
     mInputGainDB(inputGain),
     mThresholdDB(threshold),
     mAttackMSec(attack),
@@ -991,11 +936,7 @@ DynamicsProcessor::DynamicsProcessor(const float inputGain,
     Detectors[i].Initialize(mAttackMSec, mReleaseMSec, mAnalog, EnvelopeDetector::RMS, true);
 }
 
-void DynamicsProcessor::ProcessBuffer(const float* input,
-                                      const float* envelopeInput,
-                                      float* output,
-                                      const unsigned numChannels,
-                                      const unsigned bufferSize)
+void DynamicsProcessor::ProcessBuffer(const float* input, const float* envelopeInput, float* output, const unsigned numChannels, const unsigned bufferSize)
 {
   float gain;
 
@@ -1157,8 +1098,7 @@ Equalizer::Equalizer()
   SetFilterData();
 }
 
-Equalizer::Equalizer(
-    const float below80Hz, const float at150Hz, const float at600Hz, const float at2500Hz, const float above5000Hz)
+Equalizer::Equalizer(const float below80Hz, const float at150Hz, const float at600Hz, const float at2500Hz, const float above5000Hz)
 {
   mBandGains[EqualizerBands::Below80] = below80Hz;
   mBandGains[EqualizerBands::At150] = at150Hz;
@@ -1178,25 +1118,15 @@ Equalizer::Equalizer(const Equalizer& copy)
   Equalizer& other = const_cast<Equalizer&>(copy);
   if (!other.LowPassInterpolator.Finished())
   {
-    LowPassInterpolator.SetValues(other.LowPassInterpolator.GetStartValue(),
-                                  other.LowPassInterpolator.GetEndValue(),
-                                  other.LowPassInterpolator.GetTotalFrames());
+    LowPassInterpolator.SetValues(other.LowPassInterpolator.GetStartValue(), other.LowPassInterpolator.GetEndValue(), other.LowPassInterpolator.GetTotalFrames());
     LowPassInterpolator.JumpForward(other.LowPassInterpolator.GetCurrentFrame());
-    HighPassInterpolator.SetValues(other.HighPassInterpolator.GetStartValue(),
-                                   other.HighPassInterpolator.GetEndValue(),
-                                   other.HighPassInterpolator.GetTotalFrames());
+    HighPassInterpolator.SetValues(other.HighPassInterpolator.GetStartValue(), other.HighPassInterpolator.GetEndValue(), other.HighPassInterpolator.GetTotalFrames());
     HighPassInterpolator.JumpForward(other.HighPassInterpolator.GetCurrentFrame());
-    Band1Interpolator.SetValues(other.Band1Interpolator.GetStartValue(),
-                                other.Band1Interpolator.GetEndValue(),
-                                other.Band1Interpolator.GetTotalFrames());
+    Band1Interpolator.SetValues(other.Band1Interpolator.GetStartValue(), other.Band1Interpolator.GetEndValue(), other.Band1Interpolator.GetTotalFrames());
     Band1Interpolator.JumpForward(other.Band1Interpolator.GetCurrentFrame());
-    Band2Interpolator.SetValues(other.Band2Interpolator.GetStartValue(),
-                                other.Band2Interpolator.GetEndValue(),
-                                other.Band2Interpolator.GetTotalFrames());
+    Band2Interpolator.SetValues(other.Band2Interpolator.GetStartValue(), other.Band2Interpolator.GetEndValue(), other.Band2Interpolator.GetTotalFrames());
     Band2Interpolator.JumpForward(other.Band2Interpolator.GetCurrentFrame());
-    Band3Interpolator.SetValues(other.Band3Interpolator.GetStartValue(),
-                                other.Band3Interpolator.GetEndValue(),
-                                other.Band3Interpolator.GetTotalFrames());
+    Band3Interpolator.SetValues(other.Band3Interpolator.GetStartValue(), other.Band3Interpolator.GetEndValue(), other.Band3Interpolator.GetTotalFrames());
     Band3Interpolator.JumpForward(other.Band3Interpolator.GetCurrentFrame());
   }
 }
@@ -1375,8 +1305,7 @@ bool Reverb::ProcessBuffer(const float* input, float* output, const unsigned num
     {
       for (unsigned channel = 0; channel < numChannels && channel < ChannelCount; ++channel)
       {
-        output[i + channel] =
-            ((1.0f - WetValue) * input[i + channel]) + (WetValue * Data[channel].ProcessSample(input[i + channel]));
+        output[i + channel] = ((1.0f - WetValue) * input[i + channel]) + (WetValue * Data[channel].ProcessSample(input[i + channel]));
 
         if (Math::Abs(output[i + channel]) > 0.001f)
           hasOutput = true;
@@ -1482,8 +1411,7 @@ ComplexNumber ComplexNumber::operator*(const float constant) const
 
 ComplexNumber ComplexNumber::operator*(const ComplexNumber& number) const
 {
-  return ComplexNumber(mReal * number.mReal - mImaginary * number.mImaginary,
-                       mReal * number.mImaginary + mImaginary * number.mReal);
+  return ComplexNumber(mReal * number.mReal - mImaginary * number.mImaginary, mReal * number.mImaginary + mImaginary * number.mReal);
 }
 
 ComplexNumber ComplexNumber::operator+(const ComplexNumber& number) const
@@ -1769,16 +1697,7 @@ void FFTConvolver::Reset()
 
 // ADSR envelope
 
-ADSR::ADSR() :
-    mDelayTime(0.0f),
-    mAttackTime(0.0f),
-    mDecayTime(0.0f),
-    mSustainTime(0.0f),
-    mSustainLevel(0.0f),
-    mReleaseTime(0.0f),
-    mCurrentTime(0.0f),
-    mCurrentState(DelayState),
-    mLastAmplitude(0.0f)
+ADSR::ADSR() : mDelayTime(0.0f), mAttackTime(0.0f), mDecayTime(0.0f), mSustainTime(0.0f), mSustainLevel(0.0f), mReleaseTime(0.0f), mCurrentTime(0.0f), mCurrentState(DelayState), mLastAmplitude(0.0f)
 {
 }
 

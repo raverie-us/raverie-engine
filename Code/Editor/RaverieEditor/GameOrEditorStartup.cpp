@@ -144,12 +144,10 @@ void GameOrEditorStartup::Initialize()
 
   Tweakables::Load();
 
-  Shortcuts::GetInstance()->Load(
-      FilePath::Combine(Z::gEngine->GetConfigCog()->has(MainConfig)->DataDirectory, "Shortcuts.data"));
+  Shortcuts::GetInstance()->Load(FilePath::Combine(Z::gEngine->GetConfigCog()->has(MainConfig)->DataDirectory, "Shortcuts.data"));
 
   // Load documentation for all native libraries
-  DocumentationLibrary::GetInstance()->LoadDocumentation(
-      FilePath::Combine(Z::gEngine->GetConfigCog()->has(MainConfig)->DataDirectory, "Documentation.data"));
+  DocumentationLibrary::GetInstance()->LoadDocumentation(FilePath::Combine(Z::gEngine->GetConfigCog()->has(MainConfig)->DataDirectory, "Documentation.data"));
 }
 
 void GameOrEditorStartup::InitializeConfigExternal(Cog* configCog, void* userData)
@@ -327,7 +325,8 @@ void GameOrEditorStartup::UserInitializeConfig(Cog* configCog)
   HasOrAdd<TextEditorConfig>(configCog);
 }
 
-void ExtractArchiveTo(ByteBufferBlock& buffer, StringParam basePath) {
+void ExtractArchiveTo(ByteBufferBlock& buffer, StringParam basePath)
+{
   Archive archive(ArchiveMode::Decompressing);
   archive.ReadBuffer(ArchiveReadFlags::All, buffer);
   forRange (ArchiveEntry& archiveEntry, archive.GetEntries())
@@ -349,14 +348,19 @@ void GameOrEditorStartup::UserInitialize()
 
   const String basePath = FilePath::Combine(GetUserDocumentsDirectory(), "Project");
   String projectFile;
-  if (mProjectArchive.GetBegin()) {
+  if (mProjectArchive.GetBegin())
+  {
     ExtractArchiveTo(mProjectArchive, basePath);
     projectFile = FilePath::Combine(basePath, "Project.raverieproj");
-  } else if (mBuiltContentArchive.GetBegin()) {
+  }
+  else if (mBuiltContentArchive.GetBegin())
+  {
     ExtractArchiveTo(mBuiltContentArchive, basePath);
     projectFile = FilePath::Combine(basePath, "Project.raverieproj");
     mPlayGame = true;
-  } else {
+  }
+  else
+  {
     projectFile = FilePath::Combine(mainConfig->DataDirectory, "Fallback", "Project.raverieproj");
   }
 

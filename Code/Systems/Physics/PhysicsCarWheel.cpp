@@ -120,8 +120,7 @@ void PhysicsCarWheel::Serialize(Serializer& stream)
 
   stream.SerializeFieldDefault("PhysicsCarPath", mPhysicsCarPath, CogPath());
 
-  u32 mask =
-      CarWheelFlags::IsInContact | CarWheelFlags::InEditor | CarWheelFlags::ChildedWheel | CarWheelFlags::IsSliding;
+  u32 mask = CarWheelFlags::IsInContact | CarWheelFlags::InEditor | CarWheelFlags::ChildedWheel | CarWheelFlags::IsSliding;
   SerializeBits(stream, mFlags, CarWheelFlags::Names, mask, ~CarWheelFlags::Is2DWheel);
 }
 
@@ -921,8 +920,7 @@ void PhysicsCarWheel::SetSpringMaxLength(real value)
 {
   if (value < mSpringMinLength)
   {
-    DoNotifyException("Invalid spring max length.",
-                      "The spring max length cannot be smaller than the spring min length.");
+    DoNotifyException("Invalid spring max length.", "The spring max length cannot be smaller than the spring min length.");
     mSpringMaxLength = mSpringMinLength;
   }
   else

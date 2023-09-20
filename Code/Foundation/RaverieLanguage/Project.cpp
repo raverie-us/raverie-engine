@@ -52,13 +52,7 @@ CompletionParameter::CompletionParameter()
 {
 }
 
-AutoCompleteInfo::AutoCompleteInfo() :
-    RemoveDuplicateNameEntries(true),
-    Success(false),
-    NearestType(nullptr),
-    IsLiteral(false),
-    BestCompletionOverload(-1),
-    CallArgumentIndex(-1)
+AutoCompleteInfo::AutoCompleteInfo() : RemoveDuplicateNameEntries(true), Success(false), NearestType(nullptr), IsLiteral(false), BestCompletionOverload(-1), CallArgumentIndex(-1)
 {
 }
 
@@ -425,9 +419,7 @@ void Project::AttachCommentsToNodes(SyntaxTree& syntaxTree, Array<UserToken>& co
   }
 }
 
-bool Project::CompileUncheckedSyntaxTree(SyntaxTree& syntaxTreeOut,
-                                         Array<UserToken>& tokensOut,
-                                         EvaluationMode::Enum evaluation)
+bool Project::CompileUncheckedSyntaxTree(SyntaxTree& syntaxTreeOut, Array<UserToken>& tokensOut, EvaluationMode::Enum evaluation)
 {
   // Reset the unique variable-id counter (ensures deterministic behavior)
   this->VariableUniqueIdCounter = 0;
@@ -456,11 +448,7 @@ bool Project::CompileUncheckedSyntaxTree(SyntaxTree& syntaxTreeOut,
   return !this->WasError;
 }
 
-bool Project::CompileCheckedSyntaxTree(SyntaxTree& syntaxTreeOut,
-                                       LibraryBuilder& builder,
-                                       Array<UserToken>& tokensOut,
-                                       const Module& dependencies,
-                                       EvaluationMode::Enum evaluation)
+bool Project::CompileCheckedSyntaxTree(SyntaxTree& syntaxTreeOut, LibraryBuilder& builder, Array<UserToken>& tokensOut, const Module& dependencies, EvaluationMode::Enum evaluation)
 {
   // The syntaxer holds information about all the internal and parsed types
   // It is also responsible for checking syntax for things like scope, etc
@@ -482,11 +470,7 @@ bool Project::CompileCheckedSyntaxTree(SyntaxTree& syntaxTreeOut,
   return !this->WasError;
 }
 
-LibraryRef Project::Compile(StringParam libraryName,
-                            Module& dependencies,
-                            EvaluationMode::Enum evaluation,
-                            SyntaxTree& treeOut,
-                            Array<UserToken>& tokensOut)
+LibraryRef Project::Compile(StringParam libraryName, Module& dependencies, EvaluationMode::Enum evaluation, SyntaxTree& treeOut, Array<UserToken>& tokensOut)
 {
   // We're about to generate a library so we need a builder
   LibraryBuilder builder(libraryName);
@@ -663,10 +647,7 @@ String Project::GetFriendlyTypeName(Type* type)
   return name;
 }
 
-void Project::GetDefinitionInfo(Module& dependencies,
-                                size_t cursorPosition,
-                                StringParam cursorOrigin,
-                                CodeDefinition& resultOut)
+void Project::GetDefinitionInfo(Module& dependencies, size_t cursorPosition, StringParam cursorOrigin, CodeDefinition& resultOut)
 {
   GetDefinitionInfoInternal(dependencies, cursorPosition, cursorOrigin, resultOut);
 
@@ -723,10 +704,7 @@ void Project::GetDefinitionInfo(Module& dependencies,
   }
 }
 
-void Project::GetDefinitionInfoInternal(Module& dependencies,
-                                        size_t cursorPosition,
-                                        StringParam cursorOrigin,
-                                        CodeDefinition& resultOut)
+void Project::GetDefinitionInfoInternal(Module& dependencies, size_t cursorPosition, StringParam cursorOrigin, CodeDefinition& resultOut)
 {
   // Temporary set tolerant mode to true (recall it on any exiting of this
   // function)
@@ -736,8 +714,7 @@ void Project::GetDefinitionInfoInternal(Module& dependencies,
   // We MUST store the library or all the resources will be released
   SyntaxTree syntaxTree;
   Array<UserToken> tokens;
-  resultOut.IncompleteLibrary =
-      this->Compile(DefaultLibraryName, dependencies, EvaluationMode::Project, syntaxTree, tokens);
+  resultOut.IncompleteLibrary = this->Compile(DefaultLibraryName, dependencies, EvaluationMode::Project, syntaxTree, tokens);
 
   // Get all the syntax nodes under the cursor
   Array<SyntaxNode*> nodes;
@@ -762,9 +739,8 @@ void Project::GetDefinitionInfoInternal(Module& dependencies,
     {
       Grammar::Enum id = token.TokenId;
 
-      isValidToken = id != Grammar::Invalid && id != Grammar::End && id != Grammar::Error &&
-                     id != Grammar::Whitespace && id != Grammar::CommentStart && id != Grammar::CommentLine &&
-                     id != Grammar::CommentEnd;
+      isValidToken =
+          id != Grammar::Invalid && id != Grammar::End && id != Grammar::Error && id != Grammar::Whitespace && id != Grammar::CommentStart && id != Grammar::CommentLine && id != Grammar::CommentEnd;
       break;
     }
   }
@@ -946,8 +922,7 @@ void Project::GetDefinitionInfoInternal(Module& dependencies,
           static const size_t NodeStringByteCount = Node.SizeInBytes();
 
           if (nodeType->Name.EndsWith(Node))
-            resultOut.ToolTip =
-                nodeType->Name.SubStringFromByteIndices(0, nodeType->Name.SizeInBytes() - NodeStringByteCount);
+            resultOut.ToolTip = nodeType->Name.SubStringFromByteIndices(0, nodeType->Name.SizeInBytes() - NodeStringByteCount);
           else
             resultOut.ToolTip = nodeType->Name;
         }
@@ -963,10 +938,7 @@ void Project::GetDefinitionInfoInternal(Module& dependencies,
   }
 }
 
-void Project::GetAutoCompleteInfo(Module& dependencies,
-                                  size_t cursorPosition,
-                                  StringParam cursorOrigin,
-                                  AutoCompleteInfo& resultOut)
+void Project::GetAutoCompleteInfo(Module& dependencies, size_t cursorPosition, StringParam cursorOrigin, AutoCompleteInfo& resultOut)
 {
   // First query auto complete type and function information
   this->GetAutoCompleteInfoInternal(dependencies, cursorPosition, cursorOrigin, resultOut);
@@ -1044,8 +1016,7 @@ void Project::GetAutoCompleteInfo(Module& dependencies,
           resultOut.FunctionName = function->Name;
       }
 
-      ErrorIf(function->Name != resultOut.FunctionName && function->Name != ConstructorName,
-              "All function names in the overload list should match");
+      ErrorIf(function->Name != resultOut.FunctionName && function->Name != ConstructorName, "All function names in the overload list should match");
     }
   }
 
@@ -1137,10 +1108,7 @@ void Project::GetAutoCompleteInfo(Module& dependencies,
   }
 }
 
-void Project::GetAutoCompleteInfoInternal(Module& dependencies,
-                                          size_t cursorPosition,
-                                          StringParam cursorOrigin,
-                                          AutoCompleteInfo& resultOut)
+void Project::GetAutoCompleteInfoInternal(Module& dependencies, size_t cursorPosition, StringParam cursorOrigin, AutoCompleteInfo& resultOut)
 {
   // Temporary set tolerant mode to true (recall it on any exiting of this
   // function)
@@ -1155,8 +1123,7 @@ void Project::GetAutoCompleteInfoInternal(Module& dependencies,
   // We MUST store the library or all the resources will be released
   SyntaxTree syntaxTree;
   Array<UserToken> tokens;
-  resultOut.IncompleteLibrary =
-      this->Compile(DefaultLibraryName, dependencies, EvaluationMode::Project, syntaxTree, tokens);
+  resultOut.IncompleteLibrary = this->Compile(DefaultLibraryName, dependencies, EvaluationMode::Project, syntaxTree, tokens);
 
   // Get all the syntax nodes under the cursor
   Array<SyntaxNode*> nodes;

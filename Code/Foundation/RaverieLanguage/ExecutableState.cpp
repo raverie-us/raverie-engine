@@ -9,8 +9,7 @@ RaverieDefineType(ExecutableState, builder, type)
   type->HandleManager = RaverieManagerId(PointerManager);
 
   RaverieFullBindField(builder, type, &ExecutableState::CallingState, "CallingState", PropertyBinding::Get);
-  RaverieFullBindMethod(
-      builder, type, &ExecutableState::ExecuteStatement, RaverieNoOverload, "ExecuteStatement", RaverieNoNames);
+  RaverieFullBindMethod(builder, type, &ExecutableState::ExecuteStatement, RaverieNoOverload, "ExecuteStatement", RaverieNoNames);
 }
 
 RaverieDefineType(MemoryLeakEvent, builder, type)
@@ -42,12 +41,7 @@ MemoryLeakEvent::MemoryLeakEvent() : State(nullptr), AllocatedLocation(nullptr)
 {
 }
 
-OpcodeEvent::OpcodeEvent() :
-    State(nullptr),
-    CurrentFunction(nullptr),
-    ProgramCounter(InvalidOpcodeLocation),
-    StackOffset(0),
-    Location(nullptr)
+OpcodeEvent::OpcodeEvent() : State(nullptr), CurrentFunction(nullptr), ProgramCounter(InvalidOpcodeLocation), StackOffset(0), Location(nullptr)
 {
 }
 
@@ -113,8 +107,7 @@ PerFrameData::PerFrameData(ExecutableState* state) :
 void PerFrameData::QueueAnyCleanup(Any* any)
 {
   // Error checking
-  ErrorIf(this->Scopes.Back()->AnysToBeCleaned.FindIndex(any) != Array<Any*>::InvalidIndex,
-          "We should not be queuing the same address twice for cleanup!");
+  ErrorIf(this->Scopes.Back()->AnysToBeCleaned.FindIndex(any) != Array<Any*>::InvalidIndex, "We should not be queuing the same address twice for cleanup!");
 
   this->Scopes.Back()->AnysToBeCleaned.PushBack(any);
 }
@@ -122,8 +115,7 @@ void PerFrameData::QueueAnyCleanup(Any* any)
 void PerFrameData::QueueHandleCleanup(Handle* handle)
 {
   // Error checking
-  ErrorIf(this->Scopes.Back()->HandlesToBeCleaned.FindIndex(handle) != Array<Handle*>::InvalidIndex,
-          "We should not be queuing the same address twice for cleanup!");
+  ErrorIf(this->Scopes.Back()->HandlesToBeCleaned.FindIndex(handle) != Array<Handle*>::InvalidIndex, "We should not be queuing the same address twice for cleanup!");
 
   this->Scopes.Back()->HandlesToBeCleaned.PushBack(handle);
 }
@@ -131,8 +123,7 @@ void PerFrameData::QueueHandleCleanup(Handle* handle)
 void PerFrameData::QueueDelegateCleanup(Delegate* delegate)
 {
   // Error checking
-  ErrorIf(this->Scopes.Back()->DelegatesToBeCleaned.FindIndex(delegate) != Array<Delegate*>::InvalidIndex,
-          "We should not be queuing the same address twice for cleanup!");
+  ErrorIf(this->Scopes.Back()->DelegatesToBeCleaned.FindIndex(delegate) != Array<Delegate*>::InvalidIndex, "We should not be queuing the same address twice for cleanup!");
 
   this->Scopes.Back()->DelegatesToBeCleaned.PushBack(delegate);
 }
@@ -913,8 +904,7 @@ void ExecutableState::UpdateCppVirtualTable(byte* objectWithBaseVTable, BoundTyp
 
   // The full virtual table stores extra data at the front, but we only
   // want a view that looks like the native virtual table
-  TypeBinding::VirtualTableFn* newVirtualTable =
-      (TypeBinding::VirtualTableFn*)(fullVirtualTable + sizeof(BoundType*) + sizeof(ExecutableState*));
+  TypeBinding::VirtualTableFn* newVirtualTable = (TypeBinding::VirtualTableFn*)(fullVirtualTable + sizeof(BoundType*) + sizeof(ExecutableState*));
 
   // Now copy the actual v-table from the object into the new virtual table
   memcpy(newVirtualTable, virtualTable, nativeVTableSizeBytes);
@@ -1066,7 +1056,7 @@ void ExecutableState::ForcePatchLibrary(LibraryParam newLibrary)
       this->PatchedBoundTypes.Insert(oldType, newTypeOrNull);
 
       RaverieTodo("We MUST respect the HeapManagerExtraPatchSize to make sure we don't "
-               "go outside! What do we do in that case though... fail patching?");
+                  "go outside! What do we do in that case though... fail patching?");
 
       // Loop through all heap objects and check if any of them are the old type
       RaverieForEach (const byte* object, this->HeapObjects->LiveObjects)
@@ -1112,12 +1102,10 @@ void ExecutableState::ForcePatchLibrary(LibraryParam newLibrary)
           byte* oldInstanceFieldMemory = memory + oldInstanceField->Offset;
 
           // If there's a new field AND it is of the same type...
-          if (newInstanceField != nullptr &&
-              Type::IsSame(oldInstanceField->PropertyType, newInstanceField->PropertyType))
+          if (newInstanceField != nullptr && Type::IsSame(oldInstanceField->PropertyType, newInstanceField->PropertyType))
           {
             byte* temporaryOldInstanceFieldMemory = temporaryBuffer + oldInstanceField->Offset;
-            newInstanceField->PropertyType->GenericCopyConstruct(temporaryOldInstanceFieldMemory,
-                                                                 oldInstanceFieldMemory);
+            newInstanceField->PropertyType->GenericCopyConstruct(temporaryOldInstanceFieldMemory, oldInstanceFieldMemory);
 
             handledNewFields.InsertOrError(newInstanceField);
 
@@ -1234,13 +1222,11 @@ void ExecutableState::ForcePatchLibrary(LibraryParam newLibrary)
         ErrorIf(oldFunction->Name != newFunctionOrNull->Name, "A function we were patching did not match its new name");
         // We found this function by type, therefore the types should be the
         // same (maybe not the same pointer, but type identity!)
-        ErrorIf(Type::IsSame(oldFunction->FunctionType, newFunctionOrNull->FunctionType) == false,
-                "A function we were patching did not match the new delegate type");
+        ErrorIf(Type::IsSame(oldFunction->FunctionType, newFunctionOrNull->FunctionType) == false, "A function we were patching did not match the new delegate type");
         // A function can't suddenly change from being a property delegate to
         // not being one...
         if (oldFunction->OwningProperty && newFunctionOrNull->OwningProperty)
-          ErrorIf(oldFunction->OwningProperty->Name != newFunctionOrNull->OwningProperty->Name,
-                  "A function we were patching did not match IsPropertyGetOrSet");
+          ErrorIf(oldFunction->OwningProperty->Name != newFunctionOrNull->OwningProperty->Name, "A function we were patching did not match IsPropertyGetOrSet");
         else // This check is making sure that if one is null the other is also
              // null
           ErrorIf((oldFunction->OwningProperty != nullptr) || (newFunctionOrNull->OwningProperty != nullptr),
@@ -1321,8 +1307,7 @@ bool ExecutableState::IsInCallStack()
   return (this->StackFrames.Size() != 1);
 }
 
-Handle
-ExecutableState::AllocateStackObject(byte* stackLocation, PerScopeData* scope, BoundType* type, ExceptionReport& report)
+Handle ExecutableState::AllocateStackObject(byte* stackLocation, PerScopeData* scope, BoundType* type, ExceptionReport& report)
 {
   // Verify that the given pointer is within our stack
   ErrorIf(stackLocation < this->Stack || stackLocation > this->Stack + this->StackSize,
@@ -1343,9 +1328,7 @@ ExecutableState::AllocateStackObject(byte* stackLocation, PerScopeData* scope, B
   return handle;
 }
 
-Handle ExecutableState::AllocateDefaultConstructedHeapObject(BoundType* type,
-                                                             ExceptionReport& report,
-                                                             HeapFlags::Enum flags)
+Handle ExecutableState::AllocateDefaultConstructedHeapObject(BoundType* type, ExceptionReport& report, HeapFlags::Enum flags)
 {
   // If we were given an invalid type to allocate, return early
   if (type == nullptr)
@@ -1427,10 +1410,7 @@ Handle ExecutableState::AllocateDefaultConstructedHeapObject(BoundType* type, He
   return resultHandle;
 }
 
-Handle ExecutableState::AllocateCopyConstructedHeapObject(BoundType* type,
-                                                          ExceptionReport& report,
-                                                          HeapFlags::Enum flags,
-                                                          const Handle& fromObject)
+Handle ExecutableState::AllocateCopyConstructedHeapObject(BoundType* type, ExceptionReport& report, HeapFlags::Enum flags, const Handle& fromObject)
 {
   type->IsInitializedAssert();
 
@@ -1508,7 +1488,7 @@ Handle ExecutableState::AllocateHeapObject(BoundType* type, ExceptionReport& rep
     // Even though the exception cannot be allocated, it will still be reported
     // to C++ callbacks and will still unroll
     RaverieTodo("We should make this throw an exception, but then it cannot be "
-             "allocated currently... InternalException?");
+                "allocated currently... InternalException?");
     return Handle();
   }
 
@@ -1586,8 +1566,7 @@ void ExecutableState::ThrowNullReferenceException(ExceptionReport& report)
 void ExecutableState::ThrowNullReferenceException(ExceptionReport& report, StringParam customMessage)
 {
   // Throw a null reference exception
-  this->ThrowException(report,
-                       String::Format("Attempted to access a member of a null object: %s", customMessage.c_str()));
+  this->ThrowException(report, String::Format("Attempted to access a member of a null object: %s", customMessage.c_str()));
 }
 
 void ExecutableState::ThrowNotImplementedException()
@@ -1645,7 +1624,7 @@ void ExecutableState::ThrowException(ExceptionReport& report, StringParam messag
 void ExecutableState::ThrowException(ExceptionReport& report, Handle& handle)
 {
   RaverieTodo("We need to verify that this handle is indeed a handle to an "
-           "Exception type");
+              "Exception type");
 
   // Dereference a handle and grab a pointer to the exception object
   Exception* exception = (Exception*)handle.Dereference();
@@ -1787,8 +1766,7 @@ DelegateType* CallGetFunctionType(Call& call)
   return call.GetFunction()->FunctionType;
 }
 
-void Call::PerformStandardChecks(
-    size_t size, Type* userType, Type* actualType, CheckPrimitive::Enum primitive, ScriptDirection::Enum io)
+void Call::PerformStandardChecks(size_t size, Type* userType, Type* actualType, CheckPrimitive::Enum primitive, ScriptDirection::Enum io)
 {
   // Check that the size is the same
   ErrorIf(AlignToBusWidth(size) < actualType->GetCopyableSize(), "The size of the types did not match");
@@ -1875,9 +1853,7 @@ void Call::PerformStandardChecks(
     ErrorIf(userType != nullptr && Type::IsDelegateType(userType) == false, "The user's type is not a delegate type");
 
     // Check that the delegate types are the same
-    ErrorIf(userType != nullptr &&
-                Shared::GetInstance().GetCastOperator(userType, actualType).Operation != CastOperation::Raw,
-            "Attempting to pass in a delegate of an incorrect type");
+    ErrorIf(userType != nullptr && Shared::GetInstance().GetCastOperator(userType, actualType).Operation != CastOperation::Raw, "Attempting to pass in a delegate of an incorrect type");
   }
   // It must be the 'any' type...
   else
@@ -1966,8 +1942,7 @@ byte* Call::GetReturnChecked(size_t size, Type* userType, CheckPrimitive::Enum p
   if (!(this->Data->Debug & CallDebug::NoReturnChecking))
   {
     // Verify that this is not a void type
-    ErrorIf(Core::GetInstance().VoidType == this->Data->CurrentFunction->FunctionType->Return,
-            "The return type is void and cannot be get/set");
+    ErrorIf(Core::GetInstance().VoidType == this->Data->CurrentFunction->FunctionType->Return, "The return type is void and cannot be get/set");
 
     // Run a series of checks that tries to verify anything we can about what
     // the user is doing
@@ -1978,8 +1953,7 @@ byte* Call::GetReturnChecked(size_t size, Type* userType, CheckPrimitive::Enum p
   return this->GetReturnUnchecked();
 }
 
-byte* Call::GetParameterChecked(
-    size_t parameterIndex, size_t size, Type* userType, CheckPrimitive::Enum primitive, ScriptDirection::Enum io)
+byte* Call::GetParameterChecked(size_t parameterIndex, size_t size, Type* userType, CheckPrimitive::Enum primitive, ScriptDirection::Enum io)
 {
   // Get a reference to the parameters
   ParameterArray& parameters = this->Data->CurrentFunction->FunctionType->Parameters;
@@ -2026,8 +2000,7 @@ void Call::SetDelegate(size_t index, const Delegate& value)
   Function* function = value.BoundFunction;
 
   // Get the stack location and perform checks
-  byte* stack =
-      this->GetChecked(index, sizeof(Delegate), function->FunctionType, CheckPrimitive::Delegate, ScriptDirection::Set);
+  byte* stack = this->GetChecked(index, sizeof(Delegate), function->FunctionType, CheckPrimitive::Delegate, ScriptDirection::Set);
 
   // Now copy the handle to the stack
   new (stack) Delegate(value);
@@ -2110,8 +2083,7 @@ byte* Call::GetParameterUnchecked(size_t parameterIndex)
 byte* Call::GetReturnUnchecked()
 {
   // General error checking for our own assumptions
-  ErrorIf(this->Data->CurrentFunction->FunctionType->ReturnStackOffset != 0,
-          "Unexpected stack return location (internal error)");
+  ErrorIf(this->Data->CurrentFunction->FunctionType->ReturnStackOffset != 0, "Unexpected stack return location (internal error)");
 
   // The returns always exist at the beginning
   return this->Data->Frame;
@@ -2245,16 +2217,14 @@ Call::Call(PerFrameData* data)
   // For calls being made by the VM, we don't care about parameters or 'this'
   // being checked We also don't want anything to be destructed Having said
   // that, we still want the return to be checked as it's set by the called
-  this->Data->Debug =
-      (CallDebug::Enum)(CallDebug::NoParameterChecking | CallDebug::NoThisChecking | CallDebug::NoParameterDestruction |
-                        CallDebug::NoThisDestruction | CallDebug::NoReturnDestruction);
+  this->Data->Debug = (CallDebug::Enum)(CallDebug::NoParameterChecking | CallDebug::NoThisChecking | CallDebug::NoParameterDestruction | CallDebug::NoThisDestruction | CallDebug::NoReturnDestruction);
 }
 
 Call::~Call()
 {
   // HACK WE CURRENTLY DONT HANDLE EXCEPTIONS
   RaverieTodo("Make sure we handle exceptions here (could have thrown before "
-           "returning)");
+              "returning)");
 
   // For convenience, get the current function
   Function* function = this->Data->CurrentFunction;
@@ -2372,17 +2342,14 @@ bool Call::Invoke(ExceptionReport& report)
   ErrorIf((topFrame->Debug & CallDebug::Invoked) != 0, "Attempting to invoke the function twice via the same call");
 
   // Make sure the 'this' handle was set
-  ErrorIf(!(topFrame->Debug & CallDebug::NoThisChecking) && topFrame->CurrentFunction->This != nullptr &&
-              (topFrame->Debug & CallDebug::SetThis) == 0,
+  ErrorIf(!(topFrame->Debug & CallDebug::NoThisChecking) && topFrame->CurrentFunction->This != nullptr && (topFrame->Debug & CallDebug::SetThis) == 0,
           "The 'this' handle was not set before invoking the function");
 
   // Make a bit mask that includes 1s for all parameters that we have
-  CallDebug::Enum allParameters =
-      (CallDebug::Enum)((1 << topFrame->CurrentFunction->FunctionType->Parameters.Size()) - 1);
+  CallDebug::Enum allParameters = (CallDebug::Enum)((1 << topFrame->CurrentFunction->FunctionType->Parameters.Size()) - 1);
 
   // Make sure all parameters have been set
-  ErrorIf(!(topFrame->Debug & CallDebug::NoParameterChecking) && allParameters != (topFrame->Debug & allParameters),
-          "Not all of the parameters were set");
+  ErrorIf(!(topFrame->Debug & CallDebug::NoParameterChecking) && allParameters != (topFrame->Debug & allParameters), "Not all of the parameters were set");
 
   // Set the exception reporter on the top frame
   topFrame->Report = &report;
@@ -2458,8 +2425,8 @@ bool Call::Invoke(ExceptionReport& report)
 
   // Make sure the return value was set (we can ignore this if an exception gets
   // thrown)
-  ErrorIf(!(this->Data->Debug & CallDebug::NoReturnChecking) && (this->Data->Debug & CallDebug::SetReturn) == 0 &&
-              !report.HasThrownExceptions() && Type::IsSame(function->FunctionType->Return, core.VoidType) == false,
+  ErrorIf(!(this->Data->Debug & CallDebug::NoReturnChecking) && (this->Data->Debug & CallDebug::SetReturn) == 0 && !report.HasThrownExceptions() &&
+              Type::IsSame(function->FunctionType->Return, core.VoidType) == false,
           "The return value was not set after a call (ignored when exceptions "
           "are thrown)");
   return report.HasThrownExceptions() == false;

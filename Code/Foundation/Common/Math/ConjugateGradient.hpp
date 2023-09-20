@@ -99,14 +99,7 @@ struct ConjugateGradientSolver
   }
 
   template <typename MatrixType, typename VectorType, typename PolicyType, typename ErrorCallbackType>
-  void SolveGeneric(MatrixType& A,
-                    VectorType& b,
-                    VectorType& x0,
-                    VectorType& residual,
-                    VectorType& update,
-                    VectorType& direction,
-                    PolicyType& policy,
-                    ErrorCallbackType& errCallback)
+  void SolveGeneric(MatrixType& A, VectorType& b, VectorType& x0, VectorType& residual, VectorType& update, VectorType& direction, PolicyType& policy, ErrorCallbackType& errCallback)
   {
     residual = b;
     // r = r Z- A * x0
@@ -143,13 +136,7 @@ struct ConjugateGradientSolver
   }
 
   template <typename MatrixType, typename VectorType, typename PolicyType>
-  void SolveGeneric(MatrixType& A,
-                    VectorType& b,
-                    VectorType& x0,
-                    VectorType& residual,
-                    VectorType& update,
-                    VectorType& direction,
-                    PolicyType& policy)
+  void SolveGeneric(MatrixType& A, VectorType& b, VectorType& x0, VectorType& residual, VectorType& update, VectorType& direction, PolicyType& policy)
   {
     EmptyErrorCallback emptyErr;
     SolveGeneric(A, b, x0, residual, update, direction, policy, emptyErr);

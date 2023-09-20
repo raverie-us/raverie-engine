@@ -4,9 +4,7 @@
 namespace Raverie
 {
 
-ArchetypeProcessor::ArchetypeProcessor(GeneratedArchetype* generatedArchetype, HierarchyDataMap& hierarchyData) :
-    mGeneratedArchetype(generatedArchetype),
-    mHierarchyDataMap(hierarchyData)
+ArchetypeProcessor::ArchetypeProcessor(GeneratedArchetype* generatedArchetype, HierarchyDataMap& hierarchyData) : mGeneratedArchetype(generatedArchetype), mHierarchyDataMap(hierarchyData)
 {
 }
 

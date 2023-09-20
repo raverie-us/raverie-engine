@@ -89,12 +89,7 @@ public:
   }
 };
 
-ContentExportTile::ContentExportTile(Composite* parent,
-                                     TileView* tileView,
-                                     PreviewWidget* tileWidget,
-                                     DataIndex dataIndex,
-                                     ContentPackageExporter* uploadView,
-                                     ContentItem* contentItem) :
+ContentExportTile::ContentExportTile(Composite* parent, TileView* tileView, PreviewWidget* tileWidget, DataIndex dataIndex, ContentPackageExporter* uploadView, ContentItem* contentItem) :
     TileViewWidget(parent, tileView, tileWidget, dataIndex)
 {
   mExporter = uploadView;
@@ -254,8 +249,7 @@ Resource* GetFirstResource(ContentItem* contentItem)
   return Z::gResources->GetResource(entry.mResourceId);
 }
 
-TileViewWidget* ContentExporterTileView::CreateTileViewWidget(
-    Composite* parent, StringParam name, HandleParam instance, DataIndex index, PreviewImportance::Enum minImportance)
+TileViewWidget* ContentExporterTileView::CreateTileViewWidget(Composite* parent, StringParam name, HandleParam instance, DataIndex index, PreviewImportance::Enum minImportance)
 {
   // We need to pull out a resource from the content item to display a preview
   ContentItem* contentItem = instance.Get<ContentItem*>();
@@ -388,7 +382,8 @@ void ContentPackageExporter::OnExportPressed(Event* e)
   ByteBuffer packageBuffer;
   ExportContentPackageListing(listing, packageBuffer);
   String packageName = mTempPackage.mName;
-  if (packageName.Empty()) {
+  if (packageName.Empty())
+  {
     packageName = "Package";
   }
   String packageFile = BuildString(packageName, ".raveriepack");
@@ -408,7 +403,7 @@ void ContentPackageExporter::OnExportPressed(Event* e)
     mTempPackage.Serialize(saver);
     saver.EndPolymorphic();
     Download(BuildString(packageFile, ".meta"), saver.GetString());
-  } 
+  }
 
   // Close the export window after exporting a content package
   CloseTabContaining(this);

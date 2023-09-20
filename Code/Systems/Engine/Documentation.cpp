@@ -116,9 +116,7 @@ bool TrimCompareFn(const MethodDoc* lhs, const MethodDoc* rhs)
 
 // creates the full template name but with the template type names instead of
 // the instance type names
-String BuildDocumentationFullTemplateName(StringParam baseName,
-                                          Array<Constant>& templateArgs,
-                                          TypeReplacementMap& replacements)
+String BuildDocumentationFullTemplateName(StringParam baseName, Array<Constant>& templateArgs, TypeReplacementMap& replacements)
 {
   String argument = templateArgs[0].ToString();
 
@@ -179,12 +177,8 @@ String ReplaceTypeIfOnList(String& type, TypeReplacementMap* replacements)
 
 // inserts new replacements into the the replacement map from template and
 // returns full doc name
-String InsertIntoReplacementsMap(String& baseName,
-                                 String& fullInstanceName,
-                                 InstantiateTemplateInfo& templateHandler,
-                                 Array<Constant>& dummyTypes,
-                                 ArrayMap<String, String>& replacements,
-                                 String* fullDocName = nullptr)
+String InsertIntoReplacementsMap(
+    String& baseName, String& fullInstanceName, InstantiateTemplateInfo& templateHandler, Array<Constant>& dummyTypes, ArrayMap<String, String>& replacements, String* fullDocName = nullptr)
 {
   Array<TemplateParameter>& params = templateHandler.TemplateParameters;
 
@@ -1090,8 +1084,7 @@ ClassDoc* DocumentationLibrary::CreateClassDocFromBoundType(BoundType* type, Typ
 
   // This is to tell the doc tool to only import doxygen descriptions if we had
   // either of these
-  classDoc->mImportDocumentation =
-      type->HasAttribute(ObjectAttributes::cDocumented) || type->HasAttribute(ImportDocumentation);
+  classDoc->mImportDocumentation = type->HasAttribute(ObjectAttributes::cDocumented) || type->HasAttribute(ImportDocumentation);
 
   if (exportDoc)
     classDoc->mDescription = type->Description;
@@ -1135,10 +1128,7 @@ ClassDoc* DocumentationLibrary::CreateClassDocFromBoundType(BoundType* type, Typ
   return classDoc;
 }
 
-void DocumentationLibrary::GetDocumentationFromTemplateHandler(StringParam libName,
-                                                               InstantiateTemplateInfo& templateHandler,
-                                                               LibraryBuilder& builder,
-                                                               ArrayMap<String, String>& replacements)
+void DocumentationLibrary::GetDocumentationFromTemplateHandler(StringParam libName, InstantiateTemplateInfo& templateHandler, LibraryBuilder& builder, ArrayMap<String, String>& replacements)
 {
   // base name for the template
   String baseName;
@@ -1166,8 +1156,7 @@ void DocumentationLibrary::GetDocumentationFromTemplateHandler(StringParam libNa
 
   // save our type replacements so we can remove the dummy types after
   // instantiation
-  fullDocTemplateName =
-      InsertIntoReplacementsMap(baseName, instanceFullName, templateHandler, dummyTypes, replacements);
+  fullDocTemplateName = InsertIntoReplacementsMap(baseName, instanceFullName, templateHandler, dummyTypes, replacements);
 
   // create the template instance, possibly instantiating more then one template
   // type
@@ -1184,18 +1173,12 @@ void DocumentationLibrary::GetDocumentationFromTemplateHandler(StringParam libNa
     // if the bound type also has template arguments, add them to the name
     if (!boundTemplateType->TemplateArguments.Empty())
     {
-      newInstanceFullName =
-          BuildDocumentationFullTemplateName(newInstanceBaseName, boundTemplateType->TemplateArguments, replacements);
+      newInstanceFullName = BuildDocumentationFullTemplateName(newInstanceBaseName, boundTemplateType->TemplateArguments, replacements);
     }
 
     if (replacements.FindPairPointer(newInstanceBaseName) == nullptr)
     {
-      InsertIntoReplacementsMap(newInstanceBaseName,
-                                boundTemplateType->Name,
-                                templateHandler,
-                                dummyTypes,
-                                replacements,
-                                &newInstanceFullName);
+      InsertIntoReplacementsMap(newInstanceBaseName, boundTemplateType->Name, templateHandler, dummyTypes, replacements, &newInstanceFullName);
     }
   }
 

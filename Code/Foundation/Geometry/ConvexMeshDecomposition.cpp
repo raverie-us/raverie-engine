@@ -51,8 +51,7 @@ struct EdgeHashingPolicy
   {
     // the edges are equal if they are between the same two points (even if the
     // order is flipped)
-    return (left->mPoint0Index == right->mPoint0Index && left->mPoint1Index == right->mPoint1Index) ||
-           (left->mPoint0Index == right->mPoint1Index && left->mPoint1Index == right->mPoint0Index);
+    return (left->mPoint0Index == right->mPoint0Index && left->mPoint1Index == right->mPoint1Index) || (left->mPoint0Index == right->mPoint1Index && left->mPoint1Index == right->mPoint0Index);
   }
 
   static const uint LargePrime = 75372313;
@@ -289,9 +288,7 @@ bool Create2dMeshesWithTriangulator(const Array<Vec2>& vertices, SubShapeArray& 
   return true;
 }
 
-bool Create2dMeshes(const Array<Vec2>& vertices,
-                    ConvexMeshDecompositionMode::Enum decompositionMode,
-                    SubShapeArray& meshes)
+bool Create2dMeshes(const Array<Vec2>& vertices, ConvexMeshDecompositionMode::Enum decompositionMode, SubShapeArray& meshes)
 {
   if (decompositionMode == ConvexMeshDecompositionMode::Triangulator)
     return Create2dMeshesWithTriangulator(vertices, meshes);

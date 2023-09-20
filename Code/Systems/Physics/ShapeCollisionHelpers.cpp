@@ -82,10 +82,7 @@ void BaseManifoldToProxyResult(Intersection::Manifold* manifold, ProxyResult* re
   result->mPoints[1] = manifold->PointAt(0).Points[1];
 }
 
-void ManifoldToProxyResult(const Aabb& castShape,
-                           Collider* collider,
-                           Intersection::Manifold* manifold,
-                           ProxyResult* result)
+void ManifoldToProxyResult(const Aabb& castShape, Collider* collider, Intersection::Manifold* manifold, ProxyResult* result)
 {
   // set distance as distance from center
   Vec3 objectCenter = collider->GetWorldTranslation();
@@ -94,20 +91,14 @@ void ManifoldToProxyResult(const Aabb& castShape,
   BaseManifoldToProxyResult(manifold, result);
 }
 
-void ManifoldToProxyResult(const Frustum& castShape,
-                           Collider* collider,
-                           Intersection::Manifold* manifold,
-                           ProxyResult* result)
+void ManifoldToProxyResult(const Frustum& castShape, Collider* collider, Intersection::Manifold* manifold, ProxyResult* result)
 {
   // just set the distance to some valid value
   result->mDistance = real(.1);
   BaseManifoldToProxyResult(manifold, result);
 }
 
-void ManifoldToProxyResult(const Sphere& castShape,
-                           Collider* collider,
-                           Intersection::Manifold* manifold,
-                           ProxyResult* result)
+void ManifoldToProxyResult(const Sphere& castShape, Collider* collider, Intersection::Manifold* manifold, ProxyResult* result)
 {
   // set distance as distance from center
   Vec3 objectCenter = collider->GetWorldTranslation();

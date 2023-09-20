@@ -30,11 +30,8 @@ RaverieDefineType(PropertyWidgetObject, builder, type)
 {
 }
 
-PropertyWidgetObject::PropertyWidgetObject(PropertyWidgetInitializer& initializer,
-                                           PropertyWidgetObject* parentWidgetObject,
-                                           StringParam removedTypeName) :
-    PropertyWidget(initializer,
-                   (initializer.ObjectNode && initializer.ObjectNode->mProperty) ? StyleMode::Regular : StyleMode::Node)
+PropertyWidgetObject::PropertyWidgetObject(PropertyWidgetInitializer& initializer, PropertyWidgetObject* parentWidgetObject, StringParam removedTypeName) :
+    PropertyWidget(initializer, (initializer.ObjectNode && initializer.ObjectNode->mProperty) ? StyleMode::Regular : StyleMode::Node)
 {
   mMouseOverTitle = false;
   mDragging = false;
@@ -842,8 +839,7 @@ void PropertyWidgetObject::AnimateRemoveSelf()
   // Animate the title bar to red
   ActionSequence* colorSequence = new ActionSequence(this);
   Vec4 color = ToFloatColor(ByteColorRGBA(111, 47, 47, 255));
-  colorSequence->Add(
-      AnimatePropertyGetSet(Element, Color, Ease::Quad::InOut, mTitleBackground, ComponentUi::OpenTime, color));
+  colorSequence->Add(AnimatePropertyGetSet(Element, Color, Ease::Quad::InOut, mTitleBackground, ComponentUi::OpenTime, color));
 }
 
 void PropertyWidgetObject::OnViewDoc(ObjectEvent* event)
@@ -963,8 +959,7 @@ public:
 
   static const uint cInvalidIndex = uint(-1);
 
-  ComponentDrag(Mouse* mouse, PropertyWidgetObject* objectNode) :
-      MouseManipulation(mouse, objectNode->mParentWidgetObject)
+  ComponentDrag(Mouse* mouse, PropertyWidgetObject* objectNode) : MouseManipulation(mouse, objectNode->mParentWidgetObject)
   {
     mBlocking = nullptr;
     mDragObject = objectNode;
@@ -1178,8 +1173,7 @@ public:
     // Check to see if we can move this component
     Handle parent = mParent->mNode->mObject;
     Handle blocking;
-    bool canMove =
-        mParent->mComposition->CanMoveComponent(parent, mDragObject->mNode->mObject, swapIndex, blocking, message);
+    bool canMove = mParent->mComposition->CanMoveComponent(parent, mDragObject->mNode->mObject, swapIndex, blocking, message);
 
     // If the component can be moved, there's no blocking index
     if (canMove)

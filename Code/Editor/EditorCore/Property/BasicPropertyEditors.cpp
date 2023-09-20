@@ -682,9 +682,7 @@ Any ConvertValue(BoundType* boundType, double newValue)
 class NumberManipulation : public MouseManipulation
 {
 public:
-  NumberManipulation(
-      Mouse* mouse, Composite* owner, AnyParam startingValue, Vec3 screenPosition, uint userData, EditorRange* range) :
-      MouseManipulation(mouse, owner)
+  NumberManipulation(Mouse* mouse, Composite* owner, AnyParam startingValue, Vec3 screenPosition, uint userData, EditorRange* range) : MouseManipulation(mouse, owner)
   {
     mSpinOverlay = owner->GetRootWidget()->GetPopUp()->CreateAttached<Element>("Spinner");
     mSpinOverlay->SetTranslation(screenPosition);
@@ -886,8 +884,7 @@ public:
     SnapToPixels(screenPosition);
 
     PropertyState state = GetValue();
-    NumberManipulation* manip =
-        new NumberManipulation(event->GetMouse(), GetParent(), state.Value, screenPosition, 0, mEditRange);
+    NumberManipulation* manip = new NumberManipulation(event->GetMouse(), GetParent(), state.Value, screenPosition, 0, mEditRange);
 
     ConnectThisTo(manip, Events::NumberValueChanged, OnNumberValueChange);
     ConnectThisTo(manip, Events::NumberValueCommited, OnNumberValueCommited);

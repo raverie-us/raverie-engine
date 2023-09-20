@@ -9,10 +9,7 @@ using namespace AudioConstants;
 
 // Emitter Data Per Listener
 
-EmitterDataPerListener::EmitterDataPerListener() :
-    mPreviousRelativePosition(Math::Vec3(FLT_MAX, FLT_MAX, FLT_MAX)),
-    mDirectionalVolume(1.0f),
-    mUseLowPass(false)
+EmitterDataPerListener::EmitterDataPerListener() : mPreviousRelativePosition(Math::Vec3(FLT_MAX, FLT_MAX, FLT_MAX)), mDirectionalVolume(1.0f), mUseLowPass(false)
 {
   memset(mPreviousGains, 0, sizeof(float) * cMaxChannels);
 }
@@ -24,13 +21,7 @@ RaverieDefineType(EmitterNode, builder, type)
 }
 
 EmitterNode::EmitterNode(StringParam name, const unsigned ID, Math::Vec3Param position, Math::Vec3Param velocity) :
-    SoundNode(name, ID, true, false),
-    mPosition(position),
-    mVelocity(velocity),
-    mFacingDirection(1.0f, 0.0f, 0.0f),
-    mPausing(false),
-    mPaused(false),
-    mDirectionalAngleRadians(0.0f)
+    SoundNode(name, ID, true, false), mPosition(position), mVelocity(velocity), mFacingDirection(1.0f, 0.0f, 0.0f), mPausing(false), mPaused(false), mDirectionalAngleRadians(0.0f)
 {
   PanningObject.Initialize(Z::gSound->Mixer.mSystemChannels.Get(AudioThreads::MainThread));
 }
@@ -71,10 +62,7 @@ void EmitterNode::SetDirectionalAngleThreaded(const float angleInDegrees, const 
   DirectionalInterpolator.SetValues(1.0f, reducedVolume, Math::cPi - mDirectionalAngleRadians);
 }
 
-bool EmitterNode::GetOutputSamples(BufferType* outputBuffer,
-                                   const unsigned numberOfChannels,
-                                   ListenerNode* listener,
-                                   const bool firstRequest)
+bool EmitterNode::GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest)
 {
   // If paused, do nothing
   if (mPaused)
@@ -120,8 +108,7 @@ bool EmitterNode::GetOutputSamples(BufferType* outputBuffer,
 
   // Apply low pass filter to output (if turned on)
   if (listenerData.mUseLowPass)
-    listenerData.LowPass.ProcessBuffer(
-        mInputSamplesThreaded.Data(), outputBuffer->Data(), numberOfChannels, bufferSize);
+    listenerData.LowPass.ProcessBuffer(mInputSamplesThreaded.Data(), outputBuffer->Data(), numberOfChannels, bufferSize);
   // Otherwise move the input into the output buffer
   else
     outputBuffer->Swap(mInputSamplesThreaded);
@@ -188,10 +175,7 @@ void EmitterNode::RemoveListenerThreaded(SoundEvent* event)
   }
 }
 
-void EmitterNode::CalculateData(EmitterDataPerListener* data,
-                                const Math::Vec3& relativePosition,
-                                ListenerNode* listener,
-                                const unsigned numberOfChannels)
+void EmitterNode::CalculateData(EmitterDataPerListener* data, const Math::Vec3& relativePosition, ListenerNode* listener, const unsigned numberOfChannels)
 {
   // Save reference for ease of use
   EmitterDataPerListener& listenerData = *data;

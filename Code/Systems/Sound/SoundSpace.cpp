@@ -37,12 +37,7 @@ RaverieDefineType(SoundSpace, builder, type)
   RaverieBindMethod(PlayCuePaused);
 }
 
-SoundSpace::SoundSpace() :
-    mPauseWithTimeSpace(true),
-    mPitchWithTimeSpace(true),
-    mPitchNode(nullptr),
-    mLevelPaused(false),
-    mEditorMode(false)
+SoundSpace::SoundSpace() : mPauseWithTimeSpace(true), mPitchWithTimeSpace(true), mPitchNode(nullptr), mLevelPaused(false), mEditorMode(false)
 {
 }
 

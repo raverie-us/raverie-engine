@@ -42,9 +42,7 @@ Cog* FindNextInOrderSkipChildren(Cog* cog)
   return nullptr;
 }
 
-void ArchetypeRebuilder::RebuildArchetypes(Archetype* modifiedArchetype,
-                                           Cog* ignore,
-                                           Array<CogRestoreState*>* restoreStates)
+void ArchetypeRebuilder::RebuildArchetypes(Archetype* modifiedArchetype, Cog* ignore, Array<CogRestoreState*>* restoreStates)
 {
   if (modifiedArchetype == nullptr)
     return;

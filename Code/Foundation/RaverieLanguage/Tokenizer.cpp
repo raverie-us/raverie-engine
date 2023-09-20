@@ -8,20 +8,12 @@ UserToken::UserToken() : TokenId(Grammar::Invalid), Start(0), Length(0)
 {
 }
 
-UserToken::UserToken(Grammar::Enum tokenId, CodeLocation* location) :
-    Token(Grammar::GetKeywordOrSymbol(tokenId)),
-    TokenId(tokenId),
-    Start(0),
-    Length(0)
+UserToken::UserToken(Grammar::Enum tokenId, CodeLocation* location) : Token(Grammar::GetKeywordOrSymbol(tokenId)), TokenId(tokenId), Start(0), Length(0)
 {
   this->SetLocationAndStartLength(location);
 }
 
-UserToken::UserToken(StringParam token, Grammar::Enum tokenId, CodeLocation* location) :
-    Token(token),
-    TokenId(tokenId),
-    Start(0),
-    Length(0)
+UserToken::UserToken(StringParam token, Grammar::Enum tokenId, CodeLocation* location) : Token(token), TokenId(tokenId), Start(0), Length(0)
 {
   this->SetLocationAndStartLength(location);
 }
@@ -42,10 +34,7 @@ cstr UserToken::c_str() const
   return this->Token.c_str();
 }
 
-ScriptTokenizer::ScriptTokenizer(CompilationErrors& errors) :
-    EnableStringInterpolation(true),
-    Errors(errors),
-    WasCarriageReturn(false)
+ScriptTokenizer::ScriptTokenizer(CompilationErrors& errors) : EnableStringInterpolation(true), Errors(errors), WasCarriageReturn(false)
 {
   RaverieErrorIfNotStarted(ScriptTokenizer);
 
@@ -323,10 +312,7 @@ bool ScriptTokenizer::DiffString(const char* string)
   return match;
 }
 
-bool ScriptTokenizer::ReadKeywordOrSymbol(UserToken* outToken,
-                                    size_t& lastAcceptedPos,
-                                    char& character,
-                                    TokenCategory::Enum& tokenType)
+bool ScriptTokenizer::ReadKeywordOrSymbol(UserToken* outToken, size_t& lastAcceptedPos, char& character, TokenCategory::Enum& tokenType)
 {
   // Was a token ever accepted?
   bool acceptedToken = false;
@@ -742,8 +728,7 @@ bool ScriptTokenizer::ReadToken(UserToken* outToken)
           continue;
         }
         // Attempt to read it as an identifier
-        else if (ReadIdentifier(outToken, false, lastAcceptedPos, character) ||
-                 ReadNumber(outToken, lastAcceptedPos, character) || ReadString(outToken, lastAcceptedPos, character))
+        else if (ReadIdentifier(outToken, false, lastAcceptedPos, character) || ReadNumber(outToken, lastAcceptedPos, character) || ReadString(outToken, lastAcceptedPos, character))
         {
           // Break out since we've found the full token
           break;
@@ -900,8 +885,7 @@ bool CharacterUtilities::IsNumeric(Rune r)
 
 bool CharacterUtilities::IsAlphaNumeric(Rune r)
 {
-  return (r.value >= 'a' && r.value <= 'z') || (r.value >= 'A' && r.value <= 'Z') ||
-         (r.value >= '0' && r.value <= '9');
+  return (r.value >= 'a' && r.value <= 'z') || (r.value >= 'A' && r.value <= 'Z') || (r.value >= '0' && r.value <= '9');
 }
 
 bool CharacterUtilities::IsUpper(Rune r)

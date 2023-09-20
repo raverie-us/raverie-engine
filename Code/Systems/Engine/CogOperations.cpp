@@ -115,12 +115,7 @@ void ObjectCreated(OperationQueue* queue, Cog* object)
   queue->Queue(op);
 }
 
-Cog* CreateFromArchetype(OperationQueue* queue,
-                         Space* space,
-                         Archetype* archetype,
-                         Vec3Param translation,
-                         QuatParam rotation,
-                         Vec3Param scale)
+Cog* CreateFromArchetype(OperationQueue* queue, Space* space, Archetype* archetype, Vec3Param translation, QuatParam rotation, Vec3Param scale)
 {
   // Only cog archetypes work with undo
   if (archetype->mStoredType != RaverieTypeId(Cog))
@@ -129,8 +124,7 @@ Cog* CreateFromArchetype(OperationQueue* queue,
     return NULL;
   }
 
-  CreateFromArchetypeOperation* create =
-      new CreateFromArchetypeOperation(space, archetype, translation, rotation, scale);
+  CreateFromArchetypeOperation* create = new CreateFromArchetypeOperation(space, archetype, translation, rotation, scale);
 
   Cog* newObject = create->DoCreation();
 
@@ -139,8 +133,7 @@ Cog* CreateFromArchetype(OperationQueue* queue,
   return newObject;
 }
 
-Cog* CreateFromArchetype(
-    OperationQueue* queue, Space* space, StringParam source, Vec3Param translation, QuatParam rotation, Vec3Param scale)
+Cog* CreateFromArchetype(OperationQueue* queue, Space* space, StringParam source, Vec3Param translation, QuatParam rotation, Vec3Param scale)
 {
   Archetype* archetype = ArchetypeManager::FindOrNull(source);
   if (archetype == NULL)
@@ -262,8 +255,7 @@ void ClearArchetype(OperationQueue* queue, Cog* cog)
   queue->Queue(op);
 }
 
-CreateFromArchetypeOperation::CreateFromArchetypeOperation(
-    Space* space, Archetype* archetype, Vec3Param location, QuatParam rotation, Vec3Param scale)
+CreateFromArchetypeOperation::CreateFromArchetypeOperation(Space* space, Archetype* archetype, Vec3Param location, QuatParam rotation, Vec3Param scale)
 {
   mSpace = space;
   mSpaceWasModified = space->GetModified();
@@ -337,10 +329,7 @@ Cog* CreateFromArchetypeOperation::DoCreation()
 
 // Attach Operation
 AttachOperation::AttachOperation(Cog* object, Cog* newParent, bool relativeAttach) :
-    mNewChildId(PolymorphicNode::cInvalidUniqueNodeId),
-    mRelativeAttach(relativeAttach),
-    mObject(object),
-    mParent(newParent)
+    mNewChildId(PolymorphicNode::cInvalidUniqueNodeId), mRelativeAttach(relativeAttach), mObject(object), mParent(newParent)
 {
   ErrorIf(object == nullptr || newParent == nullptr, "Invalid objects given to AttachOperation");
 
@@ -415,9 +404,7 @@ void AttachOperation::Redo()
 }
 
 // Detach Operation
-DetachOperation::DetachOperation(Cog* object, bool relativeDetach) :
-    mRelativeDetach(relativeDetach),
-    mObjectUndoHandle(object)
+DetachOperation::DetachOperation(Cog* object, bool relativeDetach) : mRelativeDetach(relativeDetach), mObjectUndoHandle(object)
 {
   Cog* parent = object->GetParent();
   ErrorIf(object == nullptr || parent == nullptr, "Invalid object given to DetachOperation");
@@ -563,9 +550,7 @@ void DetachOperation::Redo()
     space->MarkModified();
 }
 
-ReorderOperation::ReorderOperation(Cog* movingObject, uint movingToIndex) :
-    mWasParentChildOrderLocallyModified(false),
-    mMovingObjectHandle(movingObject)
+ReorderOperation::ReorderOperation(Cog* movingObject, uint movingToIndex) : mWasParentChildOrderLocallyModified(false), mMovingObjectHandle(movingObject)
 {
   ErrorIf(movingObject == nullptr, "Invalid object given to ReorderOperation");
 
@@ -762,9 +747,7 @@ void UploadToArchetypeOperation::RebuildArchetypes(Cog* cog)
     space->ChangedObjects();
 }
 
-UploadToNewArchetypeOperation::UploadToNewArchetypeOperation(Cog* object) :
-    UploadToArchetypeOperation(object),
-    mUploadedToNewArchetype(false)
+UploadToNewArchetypeOperation::UploadToNewArchetypeOperation(Cog* object) : UploadToArchetypeOperation(object), mUploadedToNewArchetype(false)
 {
   mNewChildId = GenerateUniqueId64();
 

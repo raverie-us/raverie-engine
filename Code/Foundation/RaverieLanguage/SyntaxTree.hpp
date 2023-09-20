@@ -40,10 +40,7 @@ public:
 private:
   // Recursively walks child nodes looking for any node whose range encompasses
   // the cursor
-  void GetNodesAtCursorRecursive(SyntaxNode* node,
-                                 size_t cursorPosition,
-                                 StringParam cursorOrigin,
-                                 Array<SyntaxNode*>& nodesOut);
+  void GetNodesAtCursorRecursive(SyntaxNode* node, size_t cursorPosition, StringParam cursorOrigin, Array<SyntaxNode*>& nodesOut);
 
 public:
   // The root of the tree
@@ -64,28 +61,28 @@ public:
   RaverieNoCopy(SyntaxTree);
 };
 
-#  define RaverieClonableNode(Type)                                                                                      \
-    ~Type()                                                                                                            \
-    {                                                                                                                  \
-      this->DestroyChildren();                                                                                         \
-    }                                                                                                                  \
-    Type* Clone() const override                                                                                       \
-    {                                                                                                                  \
-      Type* clone = new Type(*this);                                                                                   \
-                                                                                                                       \
-      NodeChildren children;                                                                                           \
-      clone->PopulateChildren(children);                                                                               \
-      clone->PopulateNonTraversedChildren(children);                                                                   \
-      for (size_t i = 0; i < children.Size(); ++i)                                                                     \
-      {                                                                                                                \
-        SyntaxNode*& child = *children[i];                                                                             \
-        child = child->Clone();                                                                                        \
-      }                                                                                                                \
-                                                                                                                       \
-      SyntaxNode::FixParentPointers(clone, nullptr);                                                                   \
-                                                                                                                       \
-      return clone;                                                                                                    \
-    }
+#define RaverieClonableNode(Type)                                                                                                                                                                      \
+  ~Type()                                                                                                                                                                                              \
+  {                                                                                                                                                                                                    \
+    this->DestroyChildren();                                                                                                                                                                           \
+  }                                                                                                                                                                                                    \
+  Type* Clone() const override                                                                                                                                                                         \
+  {                                                                                                                                                                                                    \
+    Type* clone = new Type(*this);                                                                                                                                                                     \
+                                                                                                                                                                                                       \
+    NodeChildren children;                                                                                                                                                                             \
+    clone->PopulateChildren(children);                                                                                                                                                                 \
+    clone->PopulateNonTraversedChildren(children);                                                                                                                                                     \
+    for (size_t i = 0; i < children.Size(); ++i)                                                                                                                                                       \
+    {                                                                                                                                                                                                  \
+      SyntaxNode*& child = *children[i];                                                                                                                                                               \
+      child = child->Clone();                                                                                                                                                                          \
+    }                                                                                                                                                                                                  \
+                                                                                                                                                                                                       \
+    SyntaxNode::FixParentPointers(clone, nullptr);                                                                                                                                                     \
+                                                                                                                                                                                                       \
+    return clone;                                                                                                                                                                                      \
+  }
 
 // A syntax node represents any syntactical entity in the syntax tree
 class SyntaxNode : public IRaverieObject

@@ -35,9 +35,7 @@ VectorType GenericReflectAcrossVector(const VectorType& input, const VectorType&
 /// Calculates the refraction vector through a plane given a certain index of
 /// refraction.
 template <typename VectorType>
-VectorType GenericRefract(const VectorType& incidentVector,
-                                             const VectorType& planeNormal,
-                                             real refractionIndex)
+VectorType GenericRefract(const VectorType& incidentVector, const VectorType& planeNormal, real refractionIndex)
 {
   real iDotN = Math::Dot(incidentVector, planeNormal);
   real r = real(1.0) - refractionIndex * refractionIndex * (real(1.0) - iDotN * iDotN);

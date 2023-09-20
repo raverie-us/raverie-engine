@@ -11,13 +11,7 @@ RaverieDefineType(SoundAsset, builder, Type)
 {
 }
 
-SoundAsset::SoundAsset(const String& assetName, bool streaming) :
-    mStreaming(streaming),
-    mFileLength(0.0f),
-    mChannels(0),
-    mFrameCount(0),
-    mName(assetName),
-    mInstanceReferenceCount(0)
+SoundAsset::SoundAsset(const String& assetName, bool streaming) : mStreaming(streaming), mFileLength(0.0f), mChannels(0), mFrameCount(0), mName(assetName), mInstanceReferenceCount(0)
 {
 }
 
@@ -51,9 +45,7 @@ static void DecompressedDecodingCallback(DecodedPacket* packet, void* data)
 }
 
 DecompressedSoundAsset::DecompressedSoundAsset(Status& status, const String& fileName, const String& assetName) :
-    SoundAsset(assetName, false),
-    mDecoder(status, fileName, DecompressedDecodingCallback, (void*)this),
-    mSamplesAvailableShared(0)
+    SoundAsset(assetName, false), mDecoder(status, fileName, DecompressedDecodingCallback, (void*)this), mSamplesAvailableShared(0)
 {
   // Check if the decoder was created successfully
   if (status.Succeeded())
@@ -71,10 +63,7 @@ DecompressedSoundAsset::DecompressedSoundAsset(Status& status, const String& fil
   }
 }
 
-void DecompressedSoundAsset::AppendSamplesThreaded(BufferType* buffer,
-                                                   const unsigned frameIndex,
-                                                   unsigned samplesRequested,
-                                                   unsigned instanceID)
+void DecompressedSoundAsset::AppendSamplesThreaded(BufferType* buffer, const unsigned frameIndex, unsigned samplesRequested, unsigned instanceID)
 {
   // Translate from frames to sample location
   unsigned sampleIndex = frameIndex * mChannels;
@@ -118,8 +107,7 @@ void DecompressedSoundAsset::DecodingCallback(DecodedPacket* packet)
   // At the end of a file the actual decoded samples could be smaller than the
   // size of the array on the DecodedPacket object, so make sure we don't go
   // past the size of mSamples
-  unsigned samplesCopied =
-      Math::Min((unsigned)packet->mSamples.Size(), (unsigned)(mSamples.Size() - mSamplesAvailableShared));
+  unsigned samplesCopied = Math::Min((unsigned)packet->mSamples.Size(), (unsigned)(mSamples.Size() - mSamplesAvailableShared));
   // Copy the decoded samples into the array
   memcpy(mSamples.Data() + mSamplesAvailableShared, packet->mSamples.Data(), sizeof(float) * samplesCopied);
   // Change the samples available value
@@ -133,19 +121,13 @@ static void StreamingDecodingCallback(DecodedPacket* packet, void* data)
   ((StreamingDataPerInstance*)data)->DecodingCallback(packet);
 }
 
-StreamingDataPerInstance::StreamingDataPerInstance(
-    Status& status, File* inputFile, ThreadLock* lock, unsigned channels, unsigned frames, unsigned instanceID) :
-    mDecoder(status, inputFile, lock, channels, frames, StreamingDecodingCallback, this),
-    mPreviousSamples(0),
-    mInstanceID(instanceID)
+StreamingDataPerInstance::StreamingDataPerInstance(Status& status, File* inputFile, ThreadLock* lock, unsigned channels, unsigned frames, unsigned instanceID) :
+    mDecoder(status, inputFile, lock, channels, frames, StreamingDecodingCallback, this), mPreviousSamples(0), mInstanceID(instanceID)
 {
 }
 
-StreamingDataPerInstance::StreamingDataPerInstance(
-    Status& status, byte* inputData, unsigned dataSize, unsigned channels, unsigned frames, unsigned instanceID) :
-    mDecoder(status, inputData, dataSize, channels, frames, StreamingDecodingCallback, this),
-    mPreviousSamples(0),
-    mInstanceID(instanceID)
+StreamingDataPerInstance::StreamingDataPerInstance(Status& status, byte* inputData, unsigned dataSize, unsigned channels, unsigned frames, unsigned instanceID) :
+    mDecoder(status, inputData, dataSize, channels, frames, StreamingDecodingCallback, this), mPreviousSamples(0), mInstanceID(instanceID)
 {
 }
 
@@ -172,12 +154,7 @@ RaverieDefineType(StreamingSoundAsset, builder, Type)
 {
 }
 
-StreamingSoundAsset::StreamingSoundAsset(Status& status,
-                                         const String& fileName,
-                                         AudioFileLoadType::Enum loadType,
-                                         const String& assetName) :
-    SoundAsset(assetName, true),
-    mFileName(fileName)
+StreamingSoundAsset::StreamingSoundAsset(Status& status, const String& fileName, AudioFileLoadType::Enum loadType, const String& assetName) : SoundAsset(assetName, true), mFileName(fileName)
 {
   FileHeader header;
   unsigned fileSize = PacketDecoder::OpenAndReadHeader(status, fileName, &mInputFile, &header);
@@ -219,10 +196,7 @@ StreamingSoundAsset::~StreamingSoundAsset()
   }
 }
 
-void StreamingSoundAsset::AppendSamplesThreaded(BufferType* buffer,
-                                                const unsigned frameIndex,
-                                                unsigned samplesRequested,
-                                                unsigned instanceID)
+void StreamingSoundAsset::AppendSamplesThreaded(BufferType* buffer, const unsigned frameIndex, unsigned samplesRequested, unsigned instanceID)
 {
   // Keep the original size of the buffer
   unsigned originalBufferSize = buffer->Size();
@@ -266,8 +240,7 @@ void StreamingSoundAsset::OnAddInstanceThreaded(unsigned instanceID)
   // If there is data in the buffer, create the instance data for streaming from
   // memory
   if (!mInputFileData.Empty())
-    data = new StreamingDataPerInstance(
-        status, mInputFileData.Data(), mInputFileData.Size(), mChannels, mFrameCount, instanceID);
+    data = new StreamingDataPerInstance(status, mInputFileData.Data(), mInputFileData.Size(), mChannels, mFrameCount, instanceID);
   // Otherwise, check if the file name is set
   else if (!mFileName.Empty())
   {
@@ -322,10 +295,7 @@ Raverie::StreamingDataPerInstance* StreamingSoundAsset::GetInstanceData(unsigned
   return nullptr;
 }
 
-void StreamingSoundAsset::CopySamplesIntoBuffer(float* outputBuffer,
-                                                unsigned sampleIndex,
-                                                unsigned samplesRequested,
-                                                StreamingDataPerInstance* data)
+void StreamingSoundAsset::CopySamplesIntoBuffer(float* outputBuffer, unsigned sampleIndex, unsigned samplesRequested, StreamingDataPerInstance* data)
 {
   // Check if the requested index is past the end of the Samples buffer
   while (sampleIndex >= data->mSamples.Size())
@@ -362,8 +332,7 @@ void StreamingSoundAsset::CopySamplesIntoBuffer(float* outputBuffer,
   // If we did not copy enough samples, keep trying (in case there is another
   // decoded buffer available)
   if (samplesCopied < samplesRequested)
-    CopySamplesIntoBuffer(
-        outputBuffer + samplesCopied, sampleIndex + samplesCopied, samplesRequested - samplesCopied, data);
+    CopySamplesIntoBuffer(outputBuffer + samplesCopied, sampleIndex + samplesCopied, samplesRequested - samplesCopied, data);
 }
 
 } // namespace Raverie

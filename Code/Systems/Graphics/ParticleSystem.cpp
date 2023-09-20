@@ -4,12 +4,7 @@
 namespace Raverie
 {
 
-int EmitParticles(ParticleSystem* main,
-                  ParticleEmitter* emitter,
-                  ParticleList* particleList,
-                  float dt,
-                  Mat4Ref parentTransform,
-                  float timeAlive)
+int EmitParticles(ParticleSystem* main, ParticleEmitter* emitter, ParticleList* particleList, float dt, Mat4Ref parentTransform, float timeAlive)
 {
   int particlesEmitted = 0;
 
@@ -35,8 +30,7 @@ int EmitParticles(ParticleSystem* main,
   return particlesEmitted;
 }
 
-void RunAnimator(
-    ParticleSystem* main, ParticleAnimator* animator, ParticleList* particleList, float dt, Mat4Ref parentTransform)
+void RunAnimator(ParticleSystem* main, ParticleAnimator* animator, ParticleList* particleList, float dt, Mat4Ref parentTransform)
 {
   // Could not find anywhere that ParticleAnimator::mTransform was being
   // initialized, so I removed it

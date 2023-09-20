@@ -165,10 +165,7 @@ BasicAnimation::BasicAnimation(AnimationGraph* animGraph)
   mAnimGraph = animGraph;
 }
 
-BasicAnimation::BasicAnimation(AnimationGraph* animGraph,
-                               Animation* animation,
-                               float t,
-                               AnimationPlayMode::Enum playMode)
+BasicAnimation::BasicAnimation(AnimationGraph* animGraph, Animation* animation, float t, AnimationPlayMode::Enum playMode)
 {
   mDirection = 1.0f;
   mTime = t;

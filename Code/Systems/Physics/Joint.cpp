@@ -47,11 +47,7 @@ Joint::~Joint()
 void Joint::Serialize(Serializer& stream)
 {
   uint mask = JointFlags::OnIsland | JointFlags::Ghost | JointFlags::Valid | JointFlags::Initialized;
-  SerializeBits(stream,
-                mFlags,
-                JointFlags::Names,
-                mask,
-                JointFlags::CollideConnected | JointFlags::Active | JointFlags::SendsEvents);
+  SerializeBits(stream, mFlags, JointFlags::Names, mask, JointFlags::CollideConnected | JointFlags::Active | JointFlags::SendsEvents);
   real MaxImpulse;
   if (stream.GetMode() == SerializerMode::Loading)
   {

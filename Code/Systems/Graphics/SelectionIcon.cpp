@@ -124,8 +124,7 @@ bool SelectionIcon::TestRay(GraphicsRayCast& rayCast, CastInfo& castInfo)
 {
   float radius = GetRadius(castInfo.mCameraCog->has(Camera));
   Intersection::IntersectionPoint point;
-  Intersection::Type result =
-      Intersection::RaySphere(rayCast.mRay.Start, rayCast.mRay.Direction, GetWorldTranslation(), radius, &point);
+  Intersection::Type result = Intersection::RaySphere(rayCast.mRay.Start, rayCast.mRay.Direction, GetWorldTranslation(), radius, &point);
   if (result == Intersection::None)
     return false;
 
@@ -178,8 +177,7 @@ void SelectionIcon::SetOverrideSelections(bool overrideSelections)
 
 float SelectionIcon::GetRadius(Camera* camera)
 {
-  float viewDistance =
-      Debug::GetViewDistance(GetWorldTranslation(), camera->GetWorldTranslation(), camera->GetWorldDirection());
+  float viewDistance = Debug::GetViewDistance(GetWorldTranslation(), camera->GetWorldTranslation(), camera->GetWorldDirection());
   bool orthographic = camera->mPerspectiveMode == PerspectiveMode::Orthographic;
   float viewScale = Debug::GetViewScale(viewDistance, camera->mFieldOfView, camera->mSize, orthographic);
   return viewScale * mViewScale * cBaseScale * 0.5f;
@@ -188,8 +186,7 @@ float SelectionIcon::GetRadius(Camera* camera)
 float SelectionIcon::GetRadius(ViewBlock& viewBlock)
 {
   float viewDistance = Debug::GetViewDistance(GetWorldTranslation(), viewBlock.mEyePosition, viewBlock.mEyeDirection);
-  float viewScale =
-      Debug::GetViewScale(viewDistance, viewBlock.mFieldOfView, viewBlock.mOrthographicSize, viewBlock.mOrthographic);
+  float viewScale = Debug::GetViewScale(viewDistance, viewBlock.mFieldOfView, viewBlock.mOrthographicSize, viewBlock.mOrthographic);
   return viewScale * mViewScale * cBaseScale * 0.5f;
 }
 

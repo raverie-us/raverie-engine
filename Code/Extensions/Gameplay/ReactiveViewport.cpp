@@ -23,23 +23,12 @@ RaverieDefineType(ViewportMouseEvent, builder, type)
   RaverieBindMethod(ToWorldPlane);
 }
 
-ViewportMouseEvent::ViewportMouseEvent() :
-    mRayStart(Vec3::cZero),
-    mRayDirection(Vec3::cZero),
-    mHitPosition(Vec3::cZero),
-    mHitNormal(Vec3::cZero),
-    mHitUv(Vec2::cZero),
-    mHitDistance(0.0f)
+ViewportMouseEvent::ViewportMouseEvent() : mRayStart(Vec3::cZero), mRayDirection(Vec3::cZero), mHitPosition(Vec3::cZero), mHitNormal(Vec3::cZero), mHitUv(Vec2::cZero), mHitDistance(0.0f)
 {
 }
 
 ViewportMouseEvent::ViewportMouseEvent(MouseEvent* event) :
-    mRayStart(Vec3::cZero),
-    mRayDirection(Vec3::cZero),
-    mHitPosition(Vec3::cZero),
-    mHitNormal(Vec3::cZero),
-    mHitUv(Vec2::cZero),
-    mHitDistance(0.0f)
+    mRayStart(Vec3::cZero), mRayDirection(Vec3::cZero), mHitPosition(Vec3::cZero), mHitNormal(Vec3::cZero), mHitUv(Vec2::cZero), mHitDistance(0.0f)
 {
   // Copy the event into ourselves
   *(MouseEvent*)this = *event;
@@ -86,8 +75,7 @@ RaverieDefineType(ReactiveViewport, builder, type)
 {
 }
 
-ReactiveViewport::ReactiveViewport(Composite* parent, Space* space, Camera* camera, CameraViewport* cameraViewport) :
-    Viewport(parent, space, camera)
+ReactiveViewport::ReactiveViewport(Composite* parent, Space* space, Camera* camera, CameraViewport* cameraViewport) : Viewport(parent, space, camera)
 {
   mReactiveRay = Ray(Vec3::cZero, Vec3::cZAxis);
   mReactiveHitPosition = Vec3::cZero;
@@ -529,8 +517,7 @@ void GameWidget::OnKeyDown(KeyboardEvent* event)
   // the game In general, pressing number keys in the game should NOT change
   // tools, or Ctrl+S should not save
   Keys::Enum key = event->Key;
-  if (!editorMode && key != Keys::Escape && !(key >= Keys::F5 && key <= Keys::F12) &&
-      !(event->CtrlPressed && event->ShiftPressed))
+  if (!editorMode && key != Keys::Escape && !(key >= Keys::F5 && key <= Keys::F12) && !(event->CtrlPressed && event->ShiftPressed))
     event->Handled = true;
   if (event->HandledEventScript)
     event->Handled = true;

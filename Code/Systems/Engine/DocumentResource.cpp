@@ -20,11 +20,7 @@ Completion::Completion(StringParam name) : Name(name), AssociatedResourceId(0), 
 {
 }
 
-Completion::Completion(StringParam name, StringParam description) :
-    Name(name),
-    Description(description),
-    AssociatedResourceId(0),
-    Hidden(false)
+Completion::Completion(StringParam name, StringParam description) : Name(name), Description(description), AssociatedResourceId(0), Hidden(false)
 {
 }
 
@@ -296,9 +292,7 @@ void ICodeInspector::AddCompletionsFromMetaType(Array<Completion>& completions, 
   }
 }
 
-void ICodeInspector::AddCallTipParametersFromArgumentString(CallTip& tip,
-                                                            StringRange arguments,
-                                                            ArgumentOptions::Type options)
+void ICodeInspector::AddCallTipParametersFromArgumentString(CallTip& tip, StringRange arguments, ArgumentOptions::Type options)
 {
   String paramType;
   String paramName;

@@ -225,12 +225,7 @@ void AddRaverieActionProperty(LibraryBuilder& library)
 
   EaserType::AddParam(library, params);
 
-  library.AddExtensionFunction(RaverieTypeId(Action),
-                               "Property",
-                               CreateRaveriePropertyAction<PropertyType, EaserType>,
-                               params,
-                               RaverieTypeId(Action),
-                               FunctionOptions::Static);
+  library.AddExtensionFunction(RaverieTypeId(Action), "Property", CreateRaveriePropertyAction<PropertyType, EaserType>, params, RaverieTypeId(Action), FunctionOptions::Static);
 }
 
 class RaverieCallAction : public Action
@@ -276,8 +271,7 @@ void CreateCallAction(Call& call, ExceptionReport& report)
 
   for (size_t i = anyStartParameter; i < createCallFunctionType->Parameters.Size(); ++i)
   {
-    ErrorIf(createCallFunctionType->Parameters[i].ParameterType != RaverieTypeId(Any),
-            "All parameters afterward must be of type Any");
+    ErrorIf(createCallFunctionType->Parameters[i].ParameterType != RaverieTypeId(Any), "All parameters afterward must be of type Any");
 
     Any& arg = call.Get<Any&>(i);
     callAction->mArguments.PushBack(arg);
@@ -297,8 +291,7 @@ void AddCall(LibraryBuilder& library)
   DelegateParameter& p1 = params.PushBack();
   p1.ParameterType = RaverieTypeId(Delegate);
 
-  library.AddExtensionFunction(
-      RaverieTypeId(Action), "Call", CreateCallAction, params, RaverieTypeId(Action), FunctionOptions::Static);
+  library.AddExtensionFunction(RaverieTypeId(Action), "Call", CreateCallAction, params, RaverieTypeId(Action), FunctionOptions::Static);
 
   // Now make up to a certain number of parameters overloads
   // (a better way to do this would be to support variadic params...)
@@ -309,8 +302,7 @@ void AddCall(LibraryBuilder& library)
     DelegateParameter& nextParam = params.PushBack();
     nextParam.ParameterType = RaverieTypeId(Any);
 
-    library.AddExtensionFunction(
-        RaverieTypeId(Action), "Call", CreateCallAction, params, RaverieTypeId(Action), FunctionOptions::Static);
+    library.AddExtensionFunction(RaverieTypeId(Action), "Call", CreateCallAction, params, RaverieTypeId(Action), FunctionOptions::Static);
   }
 }
 
@@ -335,8 +327,7 @@ void AddDelay(LibraryBuilder& library)
   p0.ParameterType = RaverieTypeId(ActionSet);
   DelegateParameter& p1 = params.PushBack();
   p1.ParameterType = RaverieTypeId(float);
-  library.AddExtensionFunction(
-      RaverieTypeId(Action), "Delay", CreateDelayAction, params, RaverieTypeId(ActionDelay), FunctionOptions::Static);
+  library.AddExtensionFunction(RaverieTypeId(Action), "Delay", CreateDelayAction, params, RaverieTypeId(ActionDelay), FunctionOptions::Static);
 }
 
 void CreateEventAction(Call& call, ExceptionReport& report)
@@ -387,8 +378,7 @@ void AddEvent(LibraryBuilder& library)
   p2.ParameterType = RaverieTypeId(String);
   DelegateParameter& p3 = params.PushBack();
   p3.ParameterType = RaverieTypeId(Event);
-  library.AddExtensionFunction(
-      RaverieTypeId(Action), "Event", CreateEventAction, params, RaverieTypeId(Action), FunctionOptions::Static);
+  library.AddExtensionFunction(RaverieTypeId(Action), "Event", CreateEventAction, params, RaverieTypeId(Action), FunctionOptions::Static);
 }
 
 template <typename ActionType>
@@ -412,12 +402,7 @@ void AddActionSet(cstr name, LibraryBuilder& library)
   ParameterArray params;
   DelegateParameter& p0 = params.PushBack();
   p0.ParameterType = RaverieTypeId(ActionSet);
-  library.AddExtensionFunction(RaverieTypeId(Action),
-                               name,
-                               CreateActionType<ActionType>,
-                               params,
-                               RaverieTypeId(ActionType),
-                               FunctionOptions::Static);
+  library.AddExtensionFunction(RaverieTypeId(Action), name, CreateActionType<ActionType>, params, RaverieTypeId(ActionType), FunctionOptions::Static);
 }
 
 void BindActionFunctions(LibraryBuilder& library)

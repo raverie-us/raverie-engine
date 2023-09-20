@@ -90,9 +90,7 @@ public:
 /// Serializes an IP address
 /// Returns the number of bits serialized if successful, else 0
 template <>
-inline Bits Serialize<IpAddress>(SerializeDirection::Enum direction,
-                                            BitStream& bitStream,
-                                            IpAddress& ipAddress)
+inline Bits Serialize<IpAddress>(SerializeDirection::Enum direction, BitStream& bitStream, IpAddress& ipAddress)
 {
   // Serialize socket address
   Bits result = Serialize(direction, bitStream, static_cast<SocketAddress&>(ipAddress));

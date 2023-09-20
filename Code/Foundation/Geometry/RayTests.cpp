@@ -30,8 +30,7 @@ real PermutedInnerProduct(Vec3Param uA, Vec3Param vA, Vec3Param uB, Vec3Param vB
 } // namespace
 
 // Intersect a ray with an axis aligned bounding box.
-Type RayAabb(
-    Vec3Param rayStart, Vec3Param rayDirection, Vec3Param aabbMinPoint, Vec3Param aabbMaxPoint, Interval* interval)
+Type RayAabb(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param aabbMinPoint, Vec3Param aabbMaxPoint, Interval* interval)
 {
   ErrorIf(interval == nullptr,
           "Intersection - Invalid interval passed to "
@@ -93,12 +92,7 @@ Type RayAabb(
   return Other;
 }
 
-Type RayInfiniteCylinder(Vec3Param rayStart,
-                         Vec3Param rayDirection,
-                         Vec3Param cylinderPointA,
-                         Vec3Param cylinderPointB,
-                         real cylinderRadius,
-                         Interval* interval)
+Type RayInfiniteCylinder(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param cylinderPointA, Vec3Param cylinderPointB, real cylinderRadius, Interval* interval)
 {
   Vec3 n = Math::AttemptNormalized(cylinderPointB - cylinderPointA);
   Vec3 m = rayStart - cylinderPointA;
@@ -146,13 +140,7 @@ Type RayInfiniteCylinder(Vec3Param rayStart,
 
 // Intersect a ray with a capsule defined by its center, local axes, radius, and
 // half of the distance between the centers of the spherical endcaps.
-Type RayCapsule(Vec3Param rayStart,
-                Vec3Param rayDirection,
-                Vec3Param capsuleCenter,
-                Mat3Param capsuleBasis,
-                real capsuleRadius,
-                real capsuleSegmentHalfLength,
-                Interval* interval)
+Type RayCapsule(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param capsuleCenter, Mat3Param capsuleBasis, real capsuleRadius, real capsuleSegmentHalfLength, Interval* interval)
 {
   const real halfHeight = capsuleSegmentHalfLength;
   Vec3 halfHeightOffset = halfHeight * capsuleBasis.BasisY();
@@ -162,17 +150,11 @@ Type RayCapsule(Vec3Param rayStart,
 }
 
 // Intersect a ray with a capsule.
-Type RayCapsule(Vec3Param rayStart,
-                Vec3Param rayDirection,
-                Vec3Param capsulePointA,
-                Vec3Param capsulePointB,
-                real capsuleRadius,
-                Interval* interval)
+Type RayCapsule(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param capsulePointA, Vec3Param capsulePointB, real capsuleRadius, Interval* interval)
 {
   // Test against the finite cylinder defined by the capsule
   Interval cylinderInterval;
-  Type cylinderResult =
-      RayCylinder(rayStart, rayDirection, capsulePointA, capsulePointB, capsuleRadius, &cylinderInterval);
+  Type cylinderResult = RayCylinder(rayStart, rayDirection, capsulePointA, capsulePointB, capsuleRadius, &cylinderInterval);
   if (cylinderResult == None)
     return None;
   // If the finite cylinder wasn't intersected, then there's still a chance the
@@ -213,13 +195,7 @@ Type RayCapsule(Vec3Param rayStart,
 
 // Intersect a ray with a cylinder defined by its center, local axes, radius,
 // and half height.
-Type RayCylinder(Vec3Param rayStart,
-                 Vec3Param rayDirection,
-                 Vec3Param cylinderCenter,
-                 Mat3Param cylinderBasis,
-                 real cylinderRadius,
-                 real cylinderHalfHeight,
-                 Interval* interval)
+Type RayCylinder(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param cylinderCenter, Mat3Param cylinderBasis, real cylinderRadius, real cylinderHalfHeight, Interval* interval)
 {
 
   Vec3 halfHeight = cylinderBasis.BasisY() * cylinderHalfHeight;
@@ -230,17 +206,11 @@ Type RayCylinder(Vec3Param rayStart,
 
 // Intersect a ray with a cylinder defined by the points at the planar endcaps
 // and the radius.
-Type RayCylinder(Vec3Param rayStart,
-                 Vec3Param rayDirection,
-                 Vec3Param cylinderPointA,
-                 Vec3Param cylinderPointB,
-                 real cylinderRadius,
-                 Interval* interval)
+Type RayCylinder(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param cylinderPointA, Vec3Param cylinderPointB, real cylinderRadius, Interval* interval)
 {
   // ----------------------- Infinite cylinder
   Interval cylinderInterval = Interval::cInfinite;
-  Type cylinderResult =
-      RayInfiniteCylinder(rayStart, rayDirection, cylinderPointA, cylinderPointB, cylinderRadius, &cylinderInterval);
+  Type cylinderResult = RayInfiniteCylinder(rayStart, rayDirection, cylinderPointA, cylinderPointB, cylinderRadius, &cylinderInterval);
   // If the ray doesn't intersect the infinite cylinder then it can't intersect
   // the finite cylinder. Make sure to return the same result state though as
   // this contains extra information that other tests (RayCapsule) can use.
@@ -307,11 +277,7 @@ Type RayCylinder(Vec3Param rayStart,
 
 // Intersect a ray with an ellipsoid, the inverse scaled basis is the
 // combination of the ellipsoid's basis with its radii and then inverted.
-Type RayEllipsoid(Vec3Param rayStart,
-                  Vec3Param rayDirection,
-                  Vec3Param ellipsoidCenter,
-                  Mat3Param ellipsoidInvScaledBasis,
-                  Interval* interval)
+Type RayEllipsoid(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param ellipsoidCenter, Mat3Param ellipsoidInvScaledBasis, Interval* interval)
 {
   ErrorIf(interval == nullptr,
           "Intersection - Invalid interval passed to "
@@ -349,12 +315,7 @@ Type RayEllipsoid(Vec3Param rayStart,
 }
 
 // Intersect a ray with an ellipsoid.
-Type RayEllipsoid(Vec3Param rayStart,
-                  Vec3Param rayDirection,
-                  Vec3Param ellipsoidCenter,
-                  Vec3Param ellipsoidRadii,
-                  Mat3Param ellipsoidBasis,
-                  Interval* interval)
+Type RayEllipsoid(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param ellipsoidCenter, Vec3Param ellipsoidRadii, Mat3Param ellipsoidBasis, Interval* interval)
 {
   // Object->World = T * R * S * v
   // World->Object = S^-1 * R^-1 * T^-1 * v
@@ -406,12 +367,7 @@ Type RayPlane(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param planeNormal,
 }
 
 // Intersect a ray with an oriented bounding box.
-Type RayObb(Vec3Param rayStart,
-            Vec3Param rayDirection,
-            Vec3Param obbCenter,
-            Vec3Param obbHalfExtents,
-            Mat3Param obbBasis,
-            Interval* interval)
+Type RayObb(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param obbCenter, Vec3Param obbHalfExtents, Mat3Param obbBasis, Interval* interval)
 {
   // Take everything into the box's body space and use the ray-aabb function
   Vec3 newRayStart = rayStart - obbCenter;
@@ -421,8 +377,7 @@ Type RayObb(Vec3Param rayStart,
 }
 
 // Intersect a ray with a sphere.
-Type RaySphere(
-    Vec3Param rayStart, Vec3Param rayDirection, Vec3Param sphereCenter, real sphereRadius, Interval* interval)
+Type RaySphere(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param sphereCenter, real sphereRadius, Interval* interval)
 {
   Vec3 m = rayStart - sphereCenter;
   real c = Dot(m, m) - sphereRadius * sphereRadius;
@@ -451,8 +406,7 @@ Type RaySphere(
   return Other;
 }
 
-Type RaySphereAllowBehind(
-    Vec3Param rayStart, Vec3Param rayDirection, Vec3Param sphereCenter, real sphereRadius, Interval* interval)
+Type RaySphereAllowBehind(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param sphereCenter, real sphereRadius, Interval* interval)
 {
   Vec3 m = rayStart - sphereCenter;
   real c = Dot(m, m) - sphereRadius * sphereRadius;
@@ -480,13 +434,7 @@ Type RaySphereAllowBehind(
 }
 
 // Intersect a ray with a tetrahedron.
-Type RayTetrahedron(Vec3Param rayStart,
-                    Vec3Param rayDirection,
-                    Vec3Param tetrahedronPointA,
-                    Vec3Param tetrahedronPointB,
-                    Vec3Param tetrahedronPointC,
-                    Vec3Param tetrahedronPointD,
-                    Interval* interval)
+Type RayTetrahedron(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param tetrahedronPointA, Vec3Param tetrahedronPointB, Vec3Param tetrahedronPointC, Vec3Param tetrahedronPointD, Interval* interval)
 {
   ErrorIf(interval == nullptr,
           "Intersection - Invalid interval passed to "
@@ -581,13 +529,7 @@ Type RayTetrahedron(Vec3Param rayStart,
 }
 
 // Intersect a ray with a torus.
-Type RayTorus(Vec3Param rayStart,
-              Vec3Param rayDirection,
-              Vec3Param torusCenter,
-              Mat3Param torusBasis,
-              real torusRingRadius,
-              real torusTubeRadius,
-              Interval* interval)
+Type RayTorus(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param torusCenter, Mat3Param torusBasis, real torusRingRadius, real torusTubeRadius, Interval* interval)
 {
   ErrorIf(interval == nullptr,
           "Intersection - Invalid interval passed to "
@@ -610,9 +552,7 @@ Type RayTorus(Vec3Param rayStart,
 
   // Compute the coefficients to the parametric equation
   real a[5] = {// x^0 term
-               Math::Sq(pSq[0]) + Math::Sq(pSq[1]) + Math::Sq(pSq[2]) + Math::Sq(rDiff[0]) +
-                   real(2.0) * (pSq[0] * pSq[1] + pSq[2] * rDiff[0]) +
-                   real(2.0) * (pSq[0] + pSq[1]) * (pSq[2] - rDiff[1]),
+               Math::Sq(pSq[0]) + Math::Sq(pSq[1]) + Math::Sq(pSq[2]) + Math::Sq(rDiff[0]) + real(2.0) * (pSq[0] * pSq[1] + pSq[2] * rDiff[0]) + real(2.0) * (pSq[0] + pSq[1]) * (pSq[2] - rDiff[1]),
 
                // x^1 term
                real(8.0) * R * p.z * dir.z + real(4.0) * pd * (pp - rDiff[1]),
@@ -650,13 +590,7 @@ Type RayTorus(Vec3Param rayStart,
 }
 
 // Intersect a ray with a triangle.
-Type RayTriangle(Vec3Param rayStart,
-                 Vec3Param rayDirection,
-                 Vec3Param trianglePointA,
-                 Vec3Param trianglePointB,
-                 Vec3Param trianglePointC,
-                 Interval* interval,
-                 real epsilon)
+Type RayTriangle(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param trianglePointA, Vec3Param trianglePointB, Vec3Param trianglePointC, Interval* interval, real epsilon)
 {
   Vec3 aToB = trianglePointB - trianglePointA;
   Vec3 aToC = trianglePointC - trianglePointA;
@@ -713,11 +647,7 @@ Type RayTriangle(Vec3Param rayStart,
 }
 
 // Intersect a ray with an axis aligned bounding box.
-Type RayAabb(Vec3Param rayStart,
-             Vec3Param rayDirection,
-             Vec3Param aabbMinPoint,
-             Vec3Param aabbMaxPoint,
-             IntersectionPoint* intersectionPoint)
+Type RayAabb(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param aabbMinPoint, Vec3Param aabbMaxPoint, IntersectionPoint* intersectionPoint)
 {
   Interval interval;
   Type result = RayAabb(rayStart, rayDirection, aabbMinPoint, aabbMaxPoint, &interval);
@@ -749,12 +679,7 @@ Type RayAabb(Vec3Param rayStart,
 
 // Intersect a ray with a capsule. If the result is "Segment", the second point
 // isn't guaranteed to be on the surface of the capsule (for now).
-Type RayCapsule(Vec3Param rayStart,
-                Vec3Param rayDirection,
-                Vec3Param capsulePointA,
-                Vec3Param capsulePointB,
-                real capsuleRadius,
-                IntersectionPoint* intersectionPoint)
+Type RayCapsule(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param capsulePointA, Vec3Param capsulePointB, real capsuleRadius, IntersectionPoint* intersectionPoint)
 {
   Interval interval;
   Type result = RayCapsule(rayStart, rayDirection, capsulePointA, capsulePointB, capsuleRadius, &interval);
@@ -790,17 +715,10 @@ Type RayCapsule(Vec3Param rayStart,
 
 // Intersect a ray with a cylinder defined by its center, local axes, radius,
 // and half height.
-Type RayCylinder(Vec3Param rayStart,
-                 Vec3Param rayDirection,
-                 Vec3Param cylinderCenter,
-                 Mat3Param cylinderBasis,
-                 real cylinderRadius,
-                 real cylinderHalfHeight,
-                 IntersectionPoint* intersectionPoint)
+Type RayCylinder(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param cylinderCenter, Mat3Param cylinderBasis, real cylinderRadius, real cylinderHalfHeight, IntersectionPoint* intersectionPoint)
 {
   Interval interval;
-  Type result =
-      RayCylinder(rayStart, rayDirection, cylinderCenter, cylinderBasis, cylinderRadius, cylinderHalfHeight, &interval);
+  Type result = RayCylinder(rayStart, rayDirection, cylinderCenter, cylinderBasis, cylinderRadius, cylinderHalfHeight, &interval);
   if (result >= 0)
   {
     // Minimum point of intersection is positive. Two intersection points.
@@ -832,12 +750,7 @@ Type RayCylinder(Vec3Param rayStart,
 
 // Intersect a ray with a cylinder defined by the points at the planar endcaps
 // and the radius.
-Type RayCylinder(Vec3Param rayStart,
-                 Vec3Param rayDirection,
-                 Vec3Param cylinderPointA,
-                 Vec3Param cylinderPointB,
-                 real cylinderRadius,
-                 IntersectionPoint* intersectionPoint)
+Type RayCylinder(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param cylinderPointA, Vec3Param cylinderPointB, real cylinderRadius, IntersectionPoint* intersectionPoint)
 {
   Interval interval;
   Type result = RayCylinder(rayStart, rayDirection, cylinderPointA, cylinderPointB, cylinderRadius, &interval);
@@ -871,12 +784,7 @@ Type RayCylinder(Vec3Param rayStart,
 }
 
 // Intersect a ray with an ellipsoid.
-Type RayEllipsoid(Vec3Param rayStart,
-                  Vec3Param rayDirection,
-                  Vec3Param ellipsoidCenter,
-                  Vec3Param ellipsoidRadii,
-                  Mat3Param ellipsoidBasis,
-                  IntersectionPoint* intersectionPoint)
+Type RayEllipsoid(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param ellipsoidCenter, Vec3Param ellipsoidRadii, Mat3Param ellipsoidBasis, IntersectionPoint* intersectionPoint)
 {
   Interval interval;
   Type result = RayEllipsoid(rayStart, rayDirection, ellipsoidCenter, ellipsoidRadii, ellipsoidBasis, &interval);
@@ -1037,42 +945,18 @@ Type RayMeshBuffer(Vec3Param rayStart,
 {
   if (sizeOfIndex == 2)
   {
-    return RayMeshBuffer<u16>(rayStart,
-                              rayDirection,
-                              vertexData,
-                              vertexStride,
-                              baseOffset,
-                              indices,
-                              triCount,
-                              backfaceCulling,
-                              anyIntersection,
-                              hitTriIndex,
-                              intersectionPoint);
+    return RayMeshBuffer<u16>(rayStart, rayDirection, vertexData, vertexStride, baseOffset, indices, triCount, backfaceCulling, anyIntersection, hitTriIndex, intersectionPoint);
   }
   else if (sizeOfIndex == 4)
   {
-    return RayMeshBuffer<u32>(rayStart,
-                              rayDirection,
-                              vertexData,
-                              vertexStride,
-                              baseOffset,
-                              indices,
-                              triCount,
-                              backfaceCulling,
-                              anyIntersection,
-                              hitTriIndex,
-                              intersectionPoint);
+    return RayMeshBuffer<u32>(rayStart, rayDirection, vertexData, vertexStride, baseOffset, indices, triCount, backfaceCulling, anyIntersection, hitTriIndex, intersectionPoint);
   }
   Error("Unsupported size of index passed to the ray vs mesh buffer function.");
   return None;
 }
 
 // Intersect a ray with a plane.
-Type RayPlane(Vec3Param rayStart,
-              Vec3Param rayDirection,
-              Vec3Param planeNormal,
-              real planeDistance,
-              IntersectionPoint* intersectionPoint)
+Type RayPlane(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param planeNormal, real planeDistance, IntersectionPoint* intersectionPoint)
 {
   Interval interval;
   Type result = RayPlane(rayStart, rayDirection, planeNormal, planeDistance, &interval);
@@ -1091,12 +975,7 @@ Type RayPlane(Vec3Param rayStart,
 }
 
 // Intersect a ray with an oriented bounding box.
-Type RayObb(Vec3Param rayStart,
-            Vec3Param rayDirection,
-            Vec3Param obbCenter,
-            Vec3Param obbHalfExtents,
-            Mat3Param obbBasis,
-            IntersectionPoint* intersectionPoint)
+Type RayObb(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param obbCenter, Vec3Param obbHalfExtents, Mat3Param obbBasis, IntersectionPoint* intersectionPoint)
 {
   // Take everything into the box's body space and use the ray-aabb function
   Vec3 newRayStart = rayStart - obbCenter;
@@ -1127,11 +1006,7 @@ Type RayObb(Vec3Param rayStart,
 }
 
 // Intersect a ray with a sphere.
-Type RaySphere(Vec3Param rayStart,
-               Vec3Param rayDirection,
-               Vec3Param sphereCenter,
-               real sphereRadius,
-               IntersectionPoint* intersectionPoint)
+Type RaySphere(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param sphereCenter, real sphereRadius, IntersectionPoint* intersectionPoint)
 {
   // There is a faster way to test if no intersection information is required,
   // only do this check once.
@@ -1200,8 +1075,7 @@ Type RayTetrahedron(Vec3Param rayStart,
                     IntersectionPoint* intersectionPoint)
 {
   Interval interval;
-  Type result = RayTetrahedron(
-      rayStart, rayDirection, tetrahedronPointA, tetrahedronPointB, tetrahedronPointC, tetrahedronPointD, &interval);
+  Type result = RayTetrahedron(rayStart, rayDirection, tetrahedronPointA, tetrahedronPointB, tetrahedronPointC, tetrahedronPointD, &interval);
   if (result != None)
   {
     if (intersectionPoint != nullptr)
@@ -1216,13 +1090,7 @@ Type RayTetrahedron(Vec3Param rayStart,
 }
 
 // Intersect a ray with a torus.
-Type RayTorus(Vec3Param rayStart,
-              Vec3Param rayDirection,
-              Vec3Param torusCenter,
-              Mat3Param torusBasis,
-              real torusRingRadius,
-              real torusTubeRadius,
-              IntersectionPoint* intersectionPoint)
+Type RayTorus(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param torusCenter, Mat3Param torusBasis, real torusRingRadius, real torusTubeRadius, IntersectionPoint* intersectionPoint)
 {
   Interval interval;
   Type result = RayTorus(rayStart, rayDirection, torusCenter, torusBasis, torusRingRadius, torusTubeRadius, &interval);
@@ -1240,13 +1108,7 @@ Type RayTorus(Vec3Param rayStart,
 }
 
 // Intersect a ray with a triangle.
-Type RayTriangle(Vec3Param rayStart,
-                 Vec3Param rayDirection,
-                 Vec3Param trianglePointA,
-                 Vec3Param trianglePointB,
-                 Vec3Param trianglePointC,
-                 IntersectionPoint* intersectionPoint,
-                 real epsilon)
+Type RayTriangle(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param trianglePointA, Vec3Param trianglePointB, Vec3Param trianglePointC, IntersectionPoint* intersectionPoint, real epsilon)
 {
   Interval interval;
   Type result = RayTriangle(rayStart, rayDirection, trianglePointA, trianglePointB, trianglePointC, &interval, epsilon);

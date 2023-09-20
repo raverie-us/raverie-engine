@@ -163,8 +163,7 @@ Resource* AddNewResource(ResourceManager* resourceManager, ResourceAdd& resource
     resourceAdd.mSuccess = true;
 
     // Load the new resource
-    resourceAdd.SourceResource =
-        LoadResourceFromNewContentItem(resourceManager, newContentItem, resourceAdd.SourceResource);
+    resourceAdd.SourceResource = LoadResourceFromNewContentItem(resourceManager, newContentItem, resourceAdd.SourceResource);
 
     // Notify the resource system and the relevant resource manage that a new
     // resource was created
@@ -327,8 +326,7 @@ bool RenameResource(Resource* resource, StringParam newName)
   resourceManager->DispatchEvent(Events::ResourceModified, &event);
   Z::gResources->DispatchEvent(Events::ResourceModified, &event);
 
-  ZPrintFilter(
-      Filter::ResourceFilter, "Renamed %s %s to %s\n", resourceTypeName.c_str(), oldName.c_str(), newName.c_str());
+  ZPrintFilter(Filter::ResourceFilter, "Renamed %s %s to %s\n", resourceTypeName.c_str(), oldName.c_str(), newName.c_str());
 
   return true;
 }
@@ -492,11 +490,7 @@ void RemoveResource(Resource* resource)
   // Delete the resources from the resource manager
   forRange (Resource* deletingResource, toDelete.All())
   {
-    ZPrintFilter(Filter::ResourceFilter,
-                 "Removed Resource %s %s.%s.\n",
-                 RaverieVirtualTypeId(deletingResource)->Name.c_str(),
-                 library->Name.c_str(),
-                 deletingResource->Name.c_str());
+    ZPrintFilter(Filter::ResourceFilter, "Removed Resource %s %s.%s.\n", RaverieVirtualTypeId(deletingResource)->Name.c_str(), library->Name.c_str(), deletingResource->Name.c_str());
 
     deletingResource->GetManager()->Remove(deletingResource, RemoveMode::Deleted);
 
@@ -504,9 +498,7 @@ void RemoveResource(Resource* resource)
   }
 }
 
-Resource* LoadResourceFromNewContentItem(ResourceManager* resourceManager,
-                                         ContentItem* newContentItem,
-                                         Resource* resource)
+Resource* LoadResourceFromNewContentItem(ResourceManager* resourceManager, ContentItem* newContentItem, Resource* resource)
 {
   if (Z::gEngine->IsReadOnly())
   {
@@ -530,8 +522,7 @@ Resource* LoadResourceFromNewContentItem(ResourceManager* resourceManager,
   ContentLibrary* contentLibrary = newContentItem->mLibrary;
 
   // Resource that are added this way only have one resource per content item
-  ErrorIf(package->Resources.Size() != 1 && !newContentItem->mIgnoreMultipleResourcesWarning,
-          "Multiple resources in content item.");
+  ErrorIf(package->Resources.Size() != 1 && !newContentItem->mIgnoreMultipleResourcesWarning, "Multiple resources in content item.");
 
   if (package->Resources.Size() > 0)
   {
@@ -566,11 +557,7 @@ Resource* LoadResourceFromNewContentItem(ResourceManager* resourceManager,
       return NULL;
 
     // Print that a new resource was added.
-    ZPrintFilter(Filter::ResourceFilter,
-                 "Added new %s %s.%s.\n",
-                 resourceTypeName.c_str(),
-                 contentLibrary->Name.c_str(),
-                 resource->Name.c_str());
+    ZPrintFilter(Filter::ResourceFilter, "Added new %s %s.%s.\n", resourceTypeName.c_str(), contentLibrary->Name.c_str(), resource->Name.c_str());
 
     return resource;
   }
@@ -634,13 +621,7 @@ String GetEditorTrash()
 // 5. Create one or more copies of an object, upload a modification of one of
 // them to an archetype
 // 6. Upload to an archetype, use archetype to upload to a different archetype
-Resource* NewResourceOnWrite(ResourceManager* resourceManager,
-                             BoundType* resourceType,
-                             StringParam property,
-                             Space* space,
-                             Resource* resource,
-                             Archetype* archetype,
-                             bool modified)
+Resource* NewResourceOnWrite(ResourceManager* resourceManager, BoundType* resourceType, StringParam property, Space* space, Resource* resource, Archetype* archetype, bool modified)
 {
   if (Z::gEngine->IsReadOnly())
   {

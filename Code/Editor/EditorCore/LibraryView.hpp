@@ -31,11 +31,7 @@ public:
   LibraryTileView(LibraryView* parent);
 
   /// TileView interface.
-  TileViewWidget* CreateTileViewWidget(Composite* parent,
-                                       StringParam name,
-                                       HandleParam instance,
-                                       DataIndex index,
-                                       PreviewImportance::Enum minImportance) override;
+  TileViewWidget* CreateTileViewWidget(Composite* parent, StringParam name, HandleParam instance, DataIndex index, PreviewImportance::Enum minImportance) override;
 
   LibraryView* mLibraryView;
 };

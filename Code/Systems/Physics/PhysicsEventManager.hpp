@@ -34,15 +34,9 @@ struct PhysicsEventManager
 private:
   CollisionFilter* GetFilter(Manifold* manifold, PhysicsSpace* space);
 
-  void CreateEvent(Physics::Manifold* manifold,
-                   PhysicsSpace* space,
-                   uint collisionType,
-                   uint filterFlag,
-                   bool immediateSend = false);
-  void CreateCollisionEvent(
-      Manifold* manifold, uint contactId, uint eventType, StringParam collisionType, bool immediateSend = false);
-  CollisionEvent*
-  CreateCollisionEventInternal(Manifold* manifold, ManifoldPoint& point, uint eventType, StringParam collisionType);
+  void CreateEvent(Physics::Manifold* manifold, PhysicsSpace* space, uint collisionType, uint filterFlag, bool immediateSend = false);
+  void CreateCollisionEvent(Manifold* manifold, uint contactId, uint eventType, StringParam collisionType, bool immediateSend = false);
+  CollisionEvent* CreateCollisionEventInternal(Manifold* manifold, ManifoldPoint& point, uint eventType, StringParam collisionType);
 
   void AddEvent(CollisionEvent* event);
   void AddEvent(CollisionGroupEvent* event);

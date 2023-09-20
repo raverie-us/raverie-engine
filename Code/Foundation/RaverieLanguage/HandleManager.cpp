@@ -132,10 +132,7 @@ HandleManager::HandleManager(ExecutableState* state) : State(state)
 {
 }
 
-bool HandleManager::IsEqual(const Handle& handleLhs,
-                            const Handle& handleRhs,
-                            const byte* objectLhs,
-                            const byte* objectRhs)
+bool HandleManager::IsEqual(const Handle& handleLhs, const Handle& handleRhs, const byte* objectLhs, const byte* objectRhs)
 {
   // Compare the dereferenced handles
   return objectLhs == objectRhs;
@@ -292,8 +289,7 @@ void HeapManager::ObjectToHandle(const byte* object, BoundType* type, Handle& ha
 
     // Copy construct the object into an allocated version (with reference
     // counting and safe handles that we now manage)
-    handleToInitialize =
-        this->State->AllocateCopyConstructedHeapObject(type, report, HeapFlags::ReferenceCounted, fromHandle);
+    handleToInitialize = this->State->AllocateCopyConstructedHeapObject(type, report, HeapFlags::ReferenceCounted, fromHandle);
     return;
   }
 
@@ -522,10 +518,7 @@ void StringManager::ObjectToHandle(const byte* object, BoundType* type, Handle& 
   new (handleToInitialize.Data) String(str);
 }
 
-bool StringManager::IsEqual(const Handle& handleLhs,
-                            const Handle& handleRhs,
-                            const byte* objectLhs,
-                            const byte* objectRhs)
+bool StringManager::IsEqual(const Handle& handleLhs, const Handle& handleRhs, const byte* objectLhs, const byte* objectRhs)
 {
   // Get the two string nodes so we can compare them
   String& stringLhs = *(String*)objectLhs;

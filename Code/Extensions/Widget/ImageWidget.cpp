@@ -50,8 +50,7 @@ void ImageWidget::SetDisplayOrigin(DisplayOrigin::Type displayOrigin)
   mOrigin = displayOrigin;
 }
 
-void ImageWidget::RenderUpdate(
-    ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
+void ImageWidget::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 

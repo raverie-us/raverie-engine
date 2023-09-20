@@ -30,22 +30,18 @@ String JsonValue::ToString()
 
 JsonValue* JsonValue::GetMember(StringParam name, JsonErrorMode::Enum errorMode)
 {
-  ErrorIf(this->Type != JsonValueType::Object && errorMode == JsonErrorMode::ReportError,
-          "This value was not an object type, and therefore cannot have members");
+  ErrorIf(this->Type != JsonValueType::Object && errorMode == JsonErrorMode::ReportError, "This value was not an object type, and therefore cannot have members");
 
   JsonValue* value = this->Members.FindValue(name, nullptr);
 
-  ErrorIf(value == nullptr && errorMode == JsonErrorMode::ReportError,
-          "Unable to find json member by the name of '%s'",
-          name.c_str());
+  ErrorIf(value == nullptr && errorMode == JsonErrorMode::ReportError, "Unable to find json member by the name of '%s'", name.c_str());
 
   return value;
 }
 
 JsonValue* JsonValue::IndexValue(size_t index, JsonErrorMode::Enum errorMode)
 {
-  ErrorIf(this->Type != JsonValueType::Array && errorMode == JsonErrorMode::ReportError,
-          "This value was not an array type, and therefore cannot be indexed");
+  ErrorIf(this->Type != JsonValueType::Array && errorMode == JsonErrorMode::ReportError, "This value was not an array type, and therefore cannot be indexed");
 
   ReturnIf(index >= this->ArrayElements.Size(), nullptr, "The index given was outside the range provided by the array");
 
@@ -217,8 +213,7 @@ JsonValue* JsonReader::ReadIntoTreeFromFile(CompilationErrors& errors, StringPar
   return ReadIntoTreeFromString(errors, json, fileName, userData);
 }
 
-JsonValue*
-JsonReader::ReadIntoTreeFromString(CompilationErrors& errors, StringParam json, StringParam origin, void* userData)
+JsonValue* JsonReader::ReadIntoTreeFromString(CompilationErrors& errors, StringParam json, StringParam origin, void* userData)
 {
   Array<UserToken> tokens;
   Array<UserToken> comments;
@@ -253,8 +248,7 @@ JsonReader::ReadIntoTreeFromString(CompilationErrors& errors, StringParam json, 
 
     if (isNegative && token.TokenId != Grammar::IntegerLiteral && token.TokenId != Grammar::RealLiteral)
     {
-      errors.Raise(
-          token.Location, ErrorCode::GenericError, "The negative sign must be followed by an Integer or Real literal");
+      errors.Raise(token.Location, ErrorCode::GenericError, "The negative sign must be followed by an Integer or Real literal");
       return nullptr;
     }
 
@@ -320,8 +314,7 @@ JsonReader::ReadIntoTreeFromString(CompilationErrors& errors, StringParam json, 
       String strValue = ReplaceStringEscapesAndStripQuotes(token.Token);
 
       // If we're inside an object and not a member...
-      if (objectArrayStack.Empty() == false && objectArrayStack.Back()->Type == JsonValueType::Object &&
-          member == nullptr)
+      if (objectArrayStack.Empty() == false && objectArrayStack.Back()->Type == JsonValueType::Object && member == nullptr)
       {
         // We're starting a member!
         member = new JsonMember();
@@ -793,7 +786,6 @@ void JsonBuilder::VerifyCanWriteValue()
   JsonType::Enum last = this->Stack.Back();
 
   // Verify that, if we're in the middle of an object, it must be as a member
-  ErrorIf(last == JsonType::Object && this->IsMember == false,
-          "You must make a member in order to add values inside of an object");
+  ErrorIf(last == JsonType::Object && this->IsMember == false, "You must make a member in order to add values inside of an object");
 }
 } // namespace Raverie

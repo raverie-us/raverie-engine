@@ -18,10 +18,7 @@ public:
   /// Clear the code from this library
   void Clear();
 
-  bool CompileTree(Raverie::Module& raverieDependencies,
-                   Raverie::LibraryRef& raverieLibrary,
-                   Raverie::SyntaxTree& syntaxTree,
-                   Raverie::Array<Raverie::UserToken>& tokensOut);
+  bool CompileTree(Raverie::Module& raverieDependencies, Raverie::LibraryRef& raverieLibrary, Raverie::SyntaxTree& syntaxTree, Raverie::Array<Raverie::UserToken>& tokensOut);
   /// Compiles and translates this project into a library.
   RaverieShaderIRLibraryRef CompileAndTranslate(RaverieShaderIRModuleRef& dependencies, BaseShaderIRTranslator* translator);
 

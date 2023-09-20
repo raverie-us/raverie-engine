@@ -204,10 +204,8 @@ public:
 
   bool ClearCommandShortcut(Command* command, bool sendEvents = false);
 
-  bool UpdateCommandShortcut(
-      StringParam commandName, bool ctrl, bool alt, bool shift, StringParam key, bool sendEvents = false);
-  bool
-  UpdateCommandShortcut(Command* command, bool ctrl, bool alt, bool shift, StringParam key, bool sendEvents = false);
+  bool UpdateCommandShortcut(StringParam commandName, bool ctrl, bool alt, bool shift, StringParam key, bool sendEvents = false);
+  bool UpdateCommandShortcut(Command* command, bool ctrl, bool alt, bool shift, StringParam key, bool sendEvents = false);
 
   bool UpdateCommandTags(StringParam commandName, StringParam tags, bool sendEvents = false);
   bool UpdateCommandTags(Command* command, StringParam tags, bool sendEvents = false);

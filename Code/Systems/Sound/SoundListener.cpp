@@ -50,10 +50,7 @@ void SoundListener::Initialize(CogInitializer& initializer)
   else
     name = "EditorListener";
 
-  mListenerNode =
-      new ListenerNode(name,
-                       Z::gSound->mCounter++,
-                       ListenerWorldPositionInfo(mPrevPosition, Math::Vec3(0, 0, 0), Math::ToMatrix3(matrix)));
+  mListenerNode = new ListenerNode(name, Z::gSound->mCounter++, ListenerWorldPositionInfo(mPrevPosition, Math::Vec3(0, 0, 0), Math::ToMatrix3(matrix)));
 
   // If not currently active, tell the audio engine
   if (!mActive)
@@ -84,10 +81,8 @@ void SoundListener::DebugDraw()
 
   gDebugDraw->Add(Debug::Cone(pos, axis, 2.0f, scale.x * 0.4f).Color(Color::Red));
   gDebugDraw->Add(Debug::Cone(pos, -axis, 2.0f, scale.x * 0.4f).Color(Color::Blue));
-  gDebugDraw->Add(
-      Debug::Text(pos + (axis * 2.0f), scale.x * 0.2f, "R").Color(Color::Red).Centered(true).ViewAligned(true));
-  gDebugDraw->Add(
-      Debug::Text(pos - (axis * 2.0f), scale.x * 0.2f, "L").Color(Color::Blue).Centered(true).ViewAligned(true));
+  gDebugDraw->Add(Debug::Text(pos + (axis * 2.0f), scale.x * 0.2f, "R").Color(Color::Red).Centered(true).ViewAligned(true));
+  gDebugDraw->Add(Debug::Text(pos - (axis * 2.0f), scale.x * 0.2f, "L").Color(Color::Blue).Centered(true).ViewAligned(true));
 }
 
 bool SoundListener::GetActive()

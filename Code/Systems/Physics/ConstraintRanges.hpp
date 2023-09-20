@@ -329,9 +329,7 @@ private:
 
 /// A base constraint range. Works for Joints and Contacts. Used
 /// to make cleaner and easier looping over constraints on a collider.
-template <typename BaseConstraintType,
-          typename FilterConstraintType,
-          typename PolicyType = ConstraintGraphEdgePolicy<FilterConstraintType>>
+template <typename BaseConstraintType, typename FilterConstraintType, typename PolicyType = ConstraintGraphEdgePolicy<FilterConstraintType>>
 struct BaseConstraintRange
 {
   typedef BaseConstraintRange<BaseConstraintType, FilterConstraintType, PolicyType> self_type;
@@ -409,9 +407,9 @@ typedef BaseConstraintRange<Joint, Joint, BodyFilterPolicy<Joint>> JointBodyRang
 /// Define a range for iterating over specific range types (filters out the
 /// other types). This macro automatically declares the range for all joint
 /// types. This does however, assume that you include what joints are needed.
-#define JointType(type)                                                                                                \
-  typedef BaseConstraintRange<Joint, type> type##Range;                                                                \
-  typedef BaseConstraintRange<Joint, type, BodyFilterPolicy<type>> type##BodyRange;                                    \
+#define JointType(type)                                                                                                                                                                                \
+  typedef BaseConstraintRange<Joint, type> type##Range;                                                                                                                                                \
+  typedef BaseConstraintRange<Joint, type, BodyFilterPolicy<type>> type##BodyRange;                                                                                                                    \
   typedef BaseJointGraphEdge<type> type##GraphEdge;
 
 #include "JointList.hpp"

@@ -50,11 +50,7 @@ public:
   /// Open the file
   /// We take an optional status (this should eventually be refactored, but we
   /// wanted to keep current asserting functionality)
-  bool Open(StringParam filePath,
-            FileMode::Enum mode,
-            FileAccessPattern::Enum accessPattern,
-            FileShare::Enum share = FileShare::Unspecified,
-            Status* status = nullptr);
+  bool Open(StringParam filePath, FileMode::Enum mode, FileAccessPattern::Enum accessPattern, FileShare::Enum share = FileShare::Unspecified, Status* status = nullptr);
 
   /// Creates a file from an OsHandle (cannot fail, assumes the OS handle is
   /// valid)

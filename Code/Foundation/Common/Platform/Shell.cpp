@@ -123,9 +123,7 @@ FileDialogFilter::FileDialogFilter(StringParam filter) : mDescription(filter), m
 {
 }
 
-FileDialogFilter::FileDialogFilter(StringParam description, StringParam filter) :
-    mDescription(description),
-    mFilter(filter)
+FileDialogFilter::FileDialogFilter(StringParam description, StringParam filter) : mDescription(description), mFilter(filter)
 {
 }
 

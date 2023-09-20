@@ -44,10 +44,7 @@ void ToolTipPlacement::SetScreenRect(const WidgetRect& rect)
   mHotSpot = rect.Center();
 }
 
-void ToolTipPlacement::SetPriority(IndicatorSide::Type pri0,
-                                   IndicatorSide::Type pri1,
-                                   IndicatorSide::Type pri2,
-                                   IndicatorSide::Type pri3)
+void ToolTipPlacement::SetPriority(IndicatorSide::Type pri0, IndicatorSide::Type pri1, IndicatorSide::Type pri2, IndicatorSide::Type pri3)
 {
   mPriority[0] = pri0;
   mPriority[1] = pri1;
@@ -422,9 +419,8 @@ bool ToolTip::SetArrowTipTranslation(Vec3Param screenPos)
   return true;
 }
 
-void ToolTip::SetArrowTipTranslation(
-    ToolTipPlacement& placement) // const Rect& rect, Vec2Param hotSpot,
-                                 // const Thickness& margins, IndicatorSide::Type priority[4])
+void ToolTip::SetArrowTipTranslation(ToolTipPlacement& placement) // const Rect& rect, Vec2Param hotSpot,
+                                                                  // const Thickness& margins, IndicatorSide::Type priority[4])
 {
   WidgetRect& rect = placement.mScreenRect;
 

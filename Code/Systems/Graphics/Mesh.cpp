@@ -10,9 +10,7 @@ const float cMinMeshThickness = 0.025f;
 namespace Raverie
 {
 
-VertexSemanticRange::VertexSemanticRange(const FixedVertexDescription& fixedDesc) :
-    mFixedDesc(fixedDesc),
-    mCurrentIndex(0)
+VertexSemanticRange::VertexSemanticRange(const FixedVertexDescription& fixedDesc) : mFixedDesc(fixedDesc), mCurrentIndex(0)
 {
 }
 
@@ -54,8 +52,7 @@ RaverieDefineType(VertexBuffer, builder, type)
   RaverieBindOverloadedMethod(AddReal, RaverieInstanceOverload(void, Vec3));
   RaverieBindOverloadedMethod(AddReal, RaverieInstanceOverload(void, Vec4));
   RaverieBindOverloadedMethod(GetVertexData, RaverieInstanceOverload(Vec4, uint, VertexSemantic::Enum));
-  RaverieBindOverloadedMethod(GetVertexData,
-                            RaverieInstanceOverload(Vec4, uint, VertexSemantic::Enum, VertexElementType::Enum, uint));
+  RaverieBindOverloadedMethod(GetVertexData, RaverieInstanceOverload(Vec4, uint, VertexSemantic::Enum, VertexElementType::Enum, uint));
   RaverieBindMethod(IsValidVertexData);
 
   RaverieBindMethod(ClearAttributes);
@@ -230,10 +227,7 @@ Vec4 VertexBuffer::GetVertexData(uint vertexIndex, VertexSemantic::Enum semantic
   return value;
 }
 
-Vec4 VertexBuffer::GetVertexData(uint vertexIndex,
-                                 VertexSemantic::Enum semantic,
-                                 VertexElementType::Enum type,
-                                 uint count)
+Vec4 VertexBuffer::GetVertexData(uint vertexIndex, VertexSemantic::Enum semantic, VertexElementType::Enum type, uint count)
 {
   Vec4 value = Vec4::cZero;
 
@@ -270,10 +264,7 @@ Vec4 VertexBuffer::GetVertexData(uint vertexIndex,
   return value;
 }
 
-bool VertexBuffer::IsValidVertexData(uint vertexIndex,
-                                     VertexSemantic::Enum semantic,
-                                     VertexElementType::Enum type,
-                                     uint count)
+bool VertexBuffer::IsValidVertexData(uint vertexIndex, VertexSemantic::Enum semantic, VertexElementType::Enum type, uint count)
 {
   VertexAttribute attribute = GetAttribute(semantic);
   if (attribute.mSemantic == VertexSemantic::None)
@@ -663,8 +654,7 @@ bool Mesh::TestRay(GraphicsRayCast& raycast, Mat4 worldTransform)
       result = Intersection::RayTriangle(localRay.Start, localRay.Direction, points[0], points[1], points[2], &point);
       break;
     case Raverie::PrimitiveType::Lines:
-      result =
-          Intersection::RayCapsule(localRay.Start, localRay.Direction, points[0], points[1], cMinMeshThickness, &point);
+      result = Intersection::RayCapsule(localRay.Start, localRay.Direction, points[0], points[1], cMinMeshThickness, &point);
       break;
     case Raverie::PrimitiveType::Points:
       result = Intersection::RaySphere(localRay.Start, localRay.Direction, points[0], cMinMeshThickness, &point);

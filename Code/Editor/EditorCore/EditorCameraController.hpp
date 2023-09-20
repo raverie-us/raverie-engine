@@ -4,20 +4,7 @@
 namespace Raverie
 {
 
-DeclareEnum13(ControllerButton,
-              MoveForward,
-              MoveBack,
-              MoveLeft,
-              MoveRight,
-              RotateRight,
-              RotateLeft,
-              PitchUp,
-              PitchDown,
-              MoveUp,
-              MoveDown,
-              OrbitMove,
-              ZoomMove,
-              NumButtons);
+DeclareEnum13(ControllerButton, MoveForward, MoveBack, MoveLeft, MoveRight, RotateRight, RotateLeft, PitchUp, PitchDown, MoveUp, MoveDown, OrbitMove, ZoomMove, NumButtons);
 
 class KeyboardEvent;
 class UpdateEvent;

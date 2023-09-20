@@ -23,18 +23,7 @@ public:
 String EscapeString(StringRange input);
 String EscapeCharacter(int unicodeCharacter);
 
-DeclareEnum11(GrammarNodeType,
-              Epsilon,
-              Rule,
-              Or,
-              Concatenate,
-              ZeroOrMore,
-              OneOrMore,
-              Optional,
-              RangeSet,
-              NotRangeSet,
-              Terminate,
-              Capture);
+DeclareEnum11(GrammarNodeType, Epsilon, Rule, Or, Concatenate, ZeroOrMore, OneOrMore, Optional, RangeSet, NotRangeSet, Terminate, Capture);
 template <typename TokenType>
 class GrammarNode
 {

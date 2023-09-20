@@ -86,7 +86,8 @@ struct GearJoint : public Joint
 
   struct JointUnion
   {
-    union {
+    union
+    {
       Joint* mJoint;
       RevoluteJoint* mRevolute;
       RevoluteJoint2d* mRevolute2d;

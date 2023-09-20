@@ -177,41 +177,20 @@ DeclareEnum11(Cursor, Arrow, Wait, Cross, SizeNWSE, SizeNESW, SizeWE, SizeNS, Si
 
 DeclareEnum3(ProgressType, Normal, Indeterminate, None);
 
-DeclareEnum17(GamepadRawButton,
-  A,
-  B,
-  X,
-  Y,
-  LeftShoulder,
-  RightShoulder,
-  LeftTrigger,
-  RightTrigger,
-  Back,
-  Start,
-  LeftThumb,
-  RightThumb,
-  DpadUp,
-  DpadDown,
-  DpadLeft,
-  DpadRight,
-  Center
-);
+DeclareEnum17(GamepadRawButton, A, B, X, Y, LeftShoulder, RightShoulder, LeftTrigger, RightTrigger, Back, Start, LeftThumb, RightThumb, DpadUp, DpadDown, DpadLeft, DpadRight, Center);
 
-DeclareEnum4(GamepadRawAxis,
-  LeftThumbX,
-  LeftThumbY,
-  RightThumbX,
-  RightThumbY
-);
+DeclareEnum4(GamepadRawAxis, LeftThumbX, LeftThumbY, RightThumbX, RightThumbY);
 
-class GamepadRawButtonState {
+class GamepadRawButtonState
+{
 public:
   bool mPressed = false;
   bool mTouched = false;
   float mValue = 0.0f;
 };
 
-class GamepadRawAxisState {
+class GamepadRawAxisState
+{
 public:
   float mValue = 0.0f;
 };
@@ -251,7 +230,7 @@ public:
 
   /// Show the file open dialog. Results are returned via mCallback or mFiles.
   void OpenFile(FileDialogInfo& config);
-  
+
   /// The size of the window's client area.
   IntVec2 GetClientSize();
 
@@ -292,7 +271,6 @@ public:
   bool mInitialLoadingComplete = false;
 
   static Shell* sInstance;
-  
 };
 
 } // namespace Raverie

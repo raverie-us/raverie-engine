@@ -6,14 +6,14 @@
 namespace Raverie
 {
 
-#define DefineHalfEdgeArrayType(arrayType)                                                                             \
-  RaverieDefineType(arrayType, builder, type)                                                                            \
-  {                                                                                                                    \
-    RaverieBindDocumented();                                                                                              \
-                                                                                                                       \
-    RaverieBindMethod(Get);                                                                                              \
-    RaverieBindGetter(All);                                                                                              \
-    RaverieBindGetterProperty(Count);                                                                                    \
+#define DefineHalfEdgeArrayType(arrayType)                                                                                                                                                             \
+  RaverieDefineType(arrayType, builder, type)                                                                                                                                                          \
+  {                                                                                                                                                                                                    \
+    RaverieBindDocumented();                                                                                                                                                                           \
+                                                                                                                                                                                                       \
+    RaverieBindMethod(Get);                                                                                                                                                                            \
+    RaverieBindGetter(All);                                                                                                                                                                            \
+    RaverieBindGetterProperty(Count);                                                                                                                                                                  \
   }
 
 DefineHalfEdgeArrayType(IndexedHalfEdgeMeshVertexArray);

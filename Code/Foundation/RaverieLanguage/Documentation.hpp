@@ -202,4 +202,3 @@ public:
   void WriteLineHeading(StringRange heading, RstHeadingType::Enum type);
 };
 } // namespace Raverie
-

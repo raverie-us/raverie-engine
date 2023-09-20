@@ -159,10 +159,7 @@ void MarchingSquares::Sample(Vec2Param startCoords, Vec2Param endCoords, Vec2Par
   }
 }
 
-void MarchingSquares::SamplePixels(Vec2Param startCoords,
-                                   Vec2Param endCoords,
-                                   Vec2Param sampleFrequency,
-                                   void* userData)
+void MarchingSquares::SamplePixels(Vec2Param startCoords, Vec2Param endCoords, Vec2Param sampleFrequency, void* userData)
 {
   ReturnIf(mDensitySampler == NULL, , "Density sampler callback must be set");
   ReturnIf(mPositionSampler == NULL, , "Position sampler callback must be set");
@@ -334,8 +331,7 @@ void MarchingSquares::RemoveRedundantSegments()
     uint j = i + 1;
     while (j < mSegments.Size())
     {
-      if ((mSegments[j].first == start && mSegments[j].second == end) ||
-          (mSegments[j].second == start && mSegments[j].first == end))
+      if ((mSegments[j].first == start && mSegments[j].second == end) || (mSegments[j].second == start && mSegments[j].first == end))
       {
         mSegments.EraseAt(j);
         continue;
@@ -488,23 +484,15 @@ Vec2 MarchingSquares::GetPositionOfZero(real val0, real val1, Vec2Param pos0, Ve
   return Math::Lerp(pos0, pos1, t);
 }
 
-void MarchingSquares::SolveSingleEdge(
-    real valC, real valX, real valY, Vec2Param posC, Vec2Param posX, Vec2Param posY, Array<Segment2d>& segments)
+void MarchingSquares::SolveSingleEdge(real valC, real valX, real valY, Vec2Param posC, Vec2Param posX, Vec2Param posY, Array<Segment2d>& segments)
 {
   Vec2 p0 = GetPositionOfZero(valC, valX, posC, posX);
   Vec2 p1 = GetPositionOfZero(valC, valY, posC, posY);
   segments.PushBack(Segment2d(p0, p1));
 }
 
-void MarchingSquares::SolveDoubleEdge(real val0Edge0,
-                                      real val1Edge0,
-                                      real val0Edge1,
-                                      real val1Edge1,
-                                      Vec2Param pos0Edge0,
-                                      Vec2Param pos1Edge0,
-                                      Vec2Param pos0Edge1,
-                                      Vec2Param pos1Edge1,
-                                      Array<Segment2d>& segments)
+void MarchingSquares::SolveDoubleEdge(
+    real val0Edge0, real val1Edge0, real val0Edge1, real val1Edge1, Vec2Param pos0Edge0, Vec2Param pos1Edge0, Vec2Param pos0Edge1, Vec2Param pos1Edge1, Array<Segment2d>& segments)
 {
   Vec2 p0 = GetPositionOfZero(val0Edge0, val1Edge0, pos0Edge0, pos1Edge0);
   Vec2 p1 = GetPositionOfZero(val0Edge1, val1Edge1, pos0Edge1, pos1Edge1);

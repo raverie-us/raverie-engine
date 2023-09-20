@@ -36,8 +36,7 @@ private:
   bool DiffString(const char* string);
 
   // Attempts to read a keyword or a symbol (any non-varying token)
-  inline bool
-  ReadKeywordOrSymbol(UserToken* outToken, size_t& lastAcceptedPos, char& character, TokenCategory::Enum& tokenType);
+  inline bool ReadKeywordOrSymbol(UserToken* outToken, size_t& lastAcceptedPos, char& character, TokenCategory::Enum& tokenType);
 
   // Attempt to read an identifier
   bool ReadIdentifier(UserToken* outToken, bool startedFromKeyword, size_t& lastAcceptedPos, char& character);

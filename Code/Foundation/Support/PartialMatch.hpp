@@ -137,13 +137,7 @@ int PartialMatch(RangeType part, RangeType full, Compare compare)
 }
 
 // These are organized in order of lowest to highest priority
-DeclareEnum6(FilterMatch,
-             None,
-             PartialCaseInsensitive,
-             PartialCaseSensitive,
-             Acronym,
-             StartsWithCaseInsensitive,
-             StartsWithCaseSensitive);
+DeclareEnum6(FilterMatch, None, PartialCaseInsensitive, PartialCaseSensitive, Acronym, StartsWithCaseInsensitive, StartsWithCaseSensitive);
 
 template <typename ValueType>
 struct StringFilterResult
@@ -170,17 +164,11 @@ struct PrioritizedEntry
   size_t mOriginalIndex;
   size_t mFilteredIndex;
 
-  PrioritizedEntry() :
-      mMatch(FilterMatch::None),
-      mPriority(INT_MIN),
-      mValue(nullptr),
-      mOriginalIndex((size_t)-1),
-      mFilteredIndex((size_t)-1)
+  PrioritizedEntry() : mMatch(FilterMatch::None), mPriority(INT_MIN), mValue(nullptr), mOriginalIndex((size_t)-1), mFilteredIndex((size_t)-1)
   {
   }
 
-  void ChooseHigherPriority(
-      FilterMatch::Enum match, int priority, ValueType* value, size_t originalIndex, size_t filteredIndex)
+  void ChooseHigherPriority(FilterMatch::Enum match, int priority, ValueType* value, size_t originalIndex, size_t filteredIndex)
   {
     // If we got a better major match, or the match is the same and we got a
     // better minor match, choose that
@@ -207,9 +195,7 @@ bool MatchesPartial(StringParam text, StringParam partial, RuneComparer compare 
 /// Usage: auto filtered = FilterStrings(stringArray.All(), "Hello",
 /// YourContainerAdapter);
 template <typename RangeType, typename Adapter>
-StringFilterResult<typename RangeType::value_type> FilterStrings(RangeType range,
-                                                                 StringParam searchText,
-                                                                 Adapter adapter)
+StringFilterResult<typename RangeType::value_type> FilterStrings(RangeType range, StringParam searchText, Adapter adapter)
 {
   typedef typename RangeType::value_type ValueType;
 
@@ -241,8 +227,7 @@ StringFilterResult<typename RangeType::value_type> FilterStrings(RangeType range
     }
     else if (text.StartsWith(searchText, CaseInsensitiveCompare))
     {
-      primary.ChooseHigherPriority(
-          FilterMatch::StartsWithCaseInsensitive, priority, &front, indexCounter, filteredIndex);
+      primary.ChooseHigherPriority(FilterMatch::StartsWithCaseInsensitive, priority, &front, indexCounter, filteredIndex);
       matchedAny = true;
     }
     else if (MatchesAcronym(text, searchText))

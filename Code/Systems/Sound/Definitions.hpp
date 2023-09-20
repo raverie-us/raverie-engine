@@ -48,10 +48,7 @@ const int cFalse = 0;
 
 bool IsWithinLimit(float valueToCheck, float centralValue, float limit);
 
-void AppendToBuffer(BufferType* destinationBuffer,
-                    const BufferType& sourceBuffer,
-                    unsigned sourceStartIndex,
-                    unsigned numberOfSamples);
+void AppendToBuffer(BufferType* destinationBuffer, const BufferType& sourceBuffer, unsigned sourceStartIndex, unsigned numberOfSamples);
 
 float PitchToSemitones(float pitch);
 

@@ -35,10 +35,7 @@ void RaverieShaderIRProject::Clear()
   ComplexUserData.Clear();
 }
 
-bool RaverieShaderIRProject::CompileTree(Raverie::Module& raverieDependencies,
-                                       Raverie::LibraryRef& raverieLibrary,
-                                       Raverie::SyntaxTree& syntaxTree,
-                                       Raverie::Array<Raverie::UserToken>& tokensOut)
+bool RaverieShaderIRProject::CompileTree(Raverie::Module& raverieDependencies, Raverie::LibraryRef& raverieLibrary, Raverie::SyntaxTree& syntaxTree, Raverie::Array<Raverie::UserToken>& tokensOut)
 {
   // Add all of the source code to the raverie project
   Raverie::Project raverieProject;
@@ -50,8 +47,7 @@ bool RaverieShaderIRProject::CompileTree(Raverie::Module& raverieDependencies,
 
   // Compile the source code into a syntax tree
   Raverie::LibraryBuilder libraryBuilder(mProjectName);
-  bool compiledSuccessfully = raverieProject.CompileCheckedSyntaxTree(
-      syntaxTree, libraryBuilder, tokensOut, raverieDependencies, Raverie::EvaluationMode::Project);
+  bool compiledSuccessfully = raverieProject.CompileCheckedSyntaxTree(syntaxTree, libraryBuilder, tokensOut, raverieDependencies, Raverie::EvaluationMode::Project);
 
   // If it failed to compile then don't build the library
   if (!compiledSuccessfully)
@@ -64,8 +60,7 @@ bool RaverieShaderIRProject::CompileTree(Raverie::Module& raverieDependencies,
   return compiledSuccessfully;
 }
 
-RaverieShaderIRLibraryRef RaverieShaderIRProject::CompileAndTranslate(RaverieShaderIRModuleRef& dependencies,
-                                                                  BaseShaderIRTranslator* translator)
+RaverieShaderIRLibraryRef RaverieShaderIRProject::CompileAndTranslate(RaverieShaderIRModuleRef& dependencies, BaseShaderIRTranslator* translator)
 {
   // Reset the error state
   mErrorTriggered = false;
@@ -88,8 +83,7 @@ RaverieShaderIRLibraryRef RaverieShaderIRProject::CompileAndTranslate(RaverieSha
   Raverie::Array<Raverie::UserToken> tokensOut;
   Raverie::SyntaxTree syntaxTree;
   Raverie::LibraryBuilder libraryBuilder(mProjectName);
-  mCompiledSuccessfully = raverieProject.CompileCheckedSyntaxTree(
-      syntaxTree, libraryBuilder, tokensOut, raverieDependencies, Raverie::EvaluationMode::Project);
+  mCompiledSuccessfully = raverieProject.CompileCheckedSyntaxTree(syntaxTree, libraryBuilder, tokensOut, raverieDependencies, Raverie::EvaluationMode::Project);
 
   // If it failed to compile then don't build the library
   if (!mCompiledSuccessfully)
@@ -214,8 +208,7 @@ void RaverieShaderIRProject::CollectLibraryDefaultValues(RaverieShaderIRLibraryR
 
     // Default construct this type
     Raverie::ExceptionReport report;
-    Raverie::Handle preconstructedObject =
-        state->AllocateDefaultConstructedHeapObject(raverieType, report, Raverie::HeapFlags::NonReferenceCounted);
+    Raverie::Handle preconstructedObject = state->AllocateDefaultConstructedHeapObject(raverieType, report, Raverie::HeapFlags::NonReferenceCounted);
 
     for (size_t i = 0; i < typeMeta->mFields.Size(); ++i)
     {

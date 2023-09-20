@@ -31,7 +31,8 @@ struct AvlDynamicTreeNode
 
   AvlDynamicTreeNode* mParent;
 
-  union {
+  union
+  {
     struct
     {
       AvlDynamicTreeNode* mChild1;

@@ -48,15 +48,9 @@ private:
   // Note: all functions and data below should be accessed only on the mix
   // thread
 
-  bool GetOutputSamples(BufferType* outputBuffer,
-                        const unsigned numberOfChannels,
-                        ListenerNode* listener,
-                        const bool firstRequest) override;
+  bool GetOutputSamples(BufferType* outputBuffer, const unsigned numberOfChannels, ListenerNode* listener, const bool firstRequest) override;
   void RemoveListenerThreaded(SoundEvent* event) override;
-  void CalculateData(EmitterDataPerListener* data,
-                     const Vec3& relativePosition,
-                     ListenerNode* listener,
-                     const unsigned numberOfChannels);
+  void CalculateData(EmitterDataPerListener* data, const Vec3& relativePosition, ListenerNode* listener, const unsigned numberOfChannels);
 
   // Current emitter position
   Vec3 mPosition;

@@ -11,11 +11,7 @@ public:
   {
   }
 
-  TrackedFile(FileEntry& entry) :
-      mFilename(entry.mFileName),
-      mFileSize(GetFileSize(entry.GetFullPath())),
-      mLastWrite(GetFileModifiedTime(entry.GetFullPath())),
-      mVisited(false)
+  TrackedFile(FileEntry& entry) : mFilename(entry.mFileName), mFileSize(GetFileSize(entry.GetFullPath())), mLastWrite(GetFileModifiedTime(entry.GetFullPath())), mVisited(false)
   {
   }
 

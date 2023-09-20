@@ -5,14 +5,10 @@
 namespace Raverie
 {
 
-static_assert(sizeof(s8) == sizeof(std::atomic<s8>),
-              "For STL atomics to work as implemented these sizes must be the same");
-static_assert(sizeof(s16) == sizeof(std::atomic<s16>),
-              "For STL atomics to work as implemented these sizes must be the same");
-static_assert(sizeof(s32) == sizeof(std::atomic<s32>),
-              "For STL atomics to work as implemented these sizes must be the same");
-static_assert(sizeof(s64) == sizeof(std::atomic<s64>),
-              "For STL atomics to work as implemented these sizes must be the same");
+static_assert(sizeof(s8) == sizeof(std::atomic<s8>), "For STL atomics to work as implemented these sizes must be the same");
+static_assert(sizeof(s16) == sizeof(std::atomic<s16>), "For STL atomics to work as implemented these sizes must be the same");
+static_assert(sizeof(s32) == sizeof(std::atomic<s32>), "For STL atomics to work as implemented these sizes must be the same");
+static_assert(sizeof(s64) == sizeof(std::atomic<s64>), "For STL atomics to work as implemented these sizes must be the same");
 
 // AtomicStore
 void AtomicStore(volatile s8* target, s8 value)

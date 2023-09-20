@@ -124,13 +124,7 @@ Vec2 ProjectPolygonOntoAxis(const Vec2* polygonPoints, uint polygonPointCount, V
 }
 
 /// Intersect a rotated box with a rotated box.
-Type BoxBox(Vec2Param boxCenterA,
-            Vec2Param boxHalfExtentsA,
-            const Vec2* boxAxesA,
-            Vec2Param boxCenterB,
-            Vec2Param boxHalfExtentsB,
-            const Vec2* boxAxesB,
-            Manifold2D* manifold)
+Type BoxBox(Vec2Param boxCenterA, Vec2Param boxHalfExtentsA, const Vec2* boxAxesA, Vec2Param boxCenterB, Vec2Param boxHalfExtentsB, const Vec2* boxAxesB, Manifold2D* manifold)
 {
   real minOverlap = Math::PositiveMax();
   Vec2 minAxis;
@@ -204,8 +198,7 @@ Type BoxBox(Vec2Param boxCenterA,
        |           |
        3-----------2
   */
-  const real pointSigns[4][2] = {
-      {real(1.0), real(1.0)}, {real(1.0), real(-1.0)}, {real(-1.0), real(-1.0)}, {real(-1.0), real(1.0)}};
+  const real pointSigns[4][2] = {{real(1.0), real(1.0)}, {real(1.0), real(-1.0)}, {real(-1.0), real(-1.0)}, {real(-1.0), real(1.0)}};
 
   Vec2 pointOnA, pointOnB;
 
@@ -217,8 +210,7 @@ Type BoxBox(Vec2Param boxCenterA,
     real testValue = -Math::PositiveMax();
     for (uint i = 0; i < 4; ++i)
     {
-      Vec2 tempPoint =
-          boxAxesB[0] * pointSigns[i][0] * boxHalfExtentsB[0] + boxAxesB[1] * pointSigns[i][1] * boxHalfExtentsB[1];
+      Vec2 tempPoint = boxAxesB[0] * pointSigns[i][0] * boxHalfExtentsB[0] + boxAxesB[1] * pointSigns[i][1] * boxHalfExtentsB[1];
       real tempValue = Dot(-minAxis, tempPoint);
       if (tempValue > testValue)
       {
@@ -242,11 +234,9 @@ Type BoxBox(Vec2Param boxCenterA,
     uint altIndex = (axisIndex + 1) % 2;
 
     // All this is just to get points on the edge on box A closest to box B
-    boxPointsA[0] +=
-        (sign * boxAxesA[axisIndex] * boxHalfExtentsA[axisIndex]) + boxAxesA[altIndex] * boxHalfExtentsA[altIndex];
+    boxPointsA[0] += (sign * boxAxesA[axisIndex] * boxHalfExtentsA[axisIndex]) + boxAxesA[altIndex] * boxHalfExtentsA[altIndex];
 
-    boxPointsA[1] +=
-        (sign * boxAxesA[axisIndex] * boxHalfExtentsA[axisIndex]) - boxAxesA[altIndex] * boxHalfExtentsA[altIndex];
+    boxPointsA[1] += (sign * boxAxesA[axisIndex] * boxHalfExtentsA[axisIndex]) - boxAxesA[altIndex] * boxHalfExtentsA[altIndex];
 
     // Find the closest intersectionPoint on A's edge to B's intersectionPoint
     pointOnA = pointOnB;
@@ -260,8 +250,7 @@ Type BoxBox(Vec2Param boxCenterA,
     real testValue = -Math::PositiveMax();
     for (uint i = 0; i < 4; ++i)
     {
-      Vec2 tempPoint =
-          boxAxesA[0] * pointSigns[i][0] * boxHalfExtentsA[0] + boxAxesA[1] * pointSigns[i][1] * boxHalfExtentsA[1];
+      Vec2 tempPoint = boxAxesA[0] * pointSigns[i][0] * boxHalfExtentsA[0] + boxAxesA[1] * pointSigns[i][1] * boxHalfExtentsA[1];
       real tempValue = Dot(minAxis, tempPoint);
       if (tempValue > testValue)
       {
@@ -286,11 +275,9 @@ Type BoxBox(Vec2Param boxCenterA,
     uint altIndex = (axisIndex + 1) % 2;
 
     // All this is just to get points on the edge on box A closest to box B
-    boxPointsB[0] +=
-        (sign * boxAxesB[axisIndex] * boxHalfExtentsB[axisIndex]) + boxAxesB[altIndex] * boxHalfExtentsB[altIndex];
+    boxPointsB[0] += (sign * boxAxesB[axisIndex] * boxHalfExtentsB[axisIndex]) + boxAxesB[altIndex] * boxHalfExtentsB[altIndex];
 
-    boxPointsB[1] +=
-        (sign * boxAxesB[axisIndex] * boxHalfExtentsB[axisIndex]) - boxAxesB[altIndex] * boxHalfExtentsB[altIndex];
+    boxPointsB[1] += (sign * boxAxesB[axisIndex] * boxHalfExtentsB[axisIndex]) - boxAxesB[altIndex] * boxHalfExtentsB[altIndex];
 
     // Find the closest intersectionPoint on B's edge to A's intersectionPoint
     pointOnB = pointOnA;
@@ -307,12 +294,7 @@ Type BoxBox(Vec2Param boxCenterA,
 }
 
 /// Intersect a rotated box with a circle.
-Type BoxCircle(Vec2Param boxCenter,
-               Vec2Param boxHalfExtents,
-               const Vec2* boxAxes,
-               Vec2Param circleCenter,
-               real circleRadius,
-               Manifold2D* manifold)
+Type BoxCircle(Vec2Param boxCenter, Vec2Param boxHalfExtents, const Vec2* boxAxes, Vec2Param circleCenter, real circleRadius, Manifold2D* manifold)
 {
   const Vec2 boxPoints[4] = {boxCenter + boxAxes[0] * boxHalfExtents[0] + boxAxes[1] * boxHalfExtents[1],
                              boxCenter + boxAxes[0] * boxHalfExtents[0] - boxAxes[1] * boxHalfExtents[1],
@@ -362,8 +344,7 @@ Type BoxCircle(Vec2Param boxCenter,
 }
 
 /// Intersect a circle with a circle
-Type CircleCircle(
-    Vec2Param circleCenterA, real circleRadiusA, Vec2Param circleCenterB, real circleRadiusB, Manifold2D* manifold)
+Type CircleCircle(Vec2Param circleCenterA, real circleRadiusA, Vec2Param circleCenterB, real circleRadiusB, Manifold2D* manifold)
 {
   // Represents the distance that the centers of the circles can be before the
   // circles begin to overlap
@@ -408,11 +389,7 @@ Type CircleCircle(
 
 /// Intersect a circle with an n-sided convex polygon. Does not handle the case
 /// where the circle is inside the polygon.
-Type CircleConvexPolygon(Vec2Param circleCenter,
-                         real circleRadius,
-                         const Vec2* convexPolygonPoints,
-                         uint convexPolygonPointCount,
-                         Manifold2D* manifold)
+Type CircleConvexPolygon(Vec2Param circleCenter, real circleRadius, const Vec2* convexPolygonPoints, uint convexPolygonPointCount, Manifold2D* manifold)
 {
   real minCircleToPolyLength = Math::PositiveMax();
   Vec2 closestPoint;
@@ -467,11 +444,7 @@ Type CircleConvexPolygon(Vec2Param circleCenter,
 }
 
 /// Intersect an n-sided convex polygon with an n-sided convex polygon.
-Type ConvexPolygonConvexPolygon(const Vec2* convexPolygonPointsA,
-                                uint convexPolygonPointCountA,
-                                const Vec2* convexPolygonPointsB,
-                                uint convexPolygonPointCountB,
-                                Manifold2D* manifold)
+Type ConvexPolygonConvexPolygon(const Vec2* convexPolygonPointsA, uint convexPolygonPointCountA, const Vec2* convexPolygonPointsB, uint convexPolygonPointCountB, Manifold2D* manifold)
 {
   // Train Of Thought:
   //   Assume that the two polygons are intersecting unless proved otherwise. If
@@ -582,8 +555,7 @@ Type PointSegment(Vec2Param point, Vec2Param segmentStart, Vec2Param segmentEnd)
   return Outside;
 }
 
-Type RayAabb(
-    Vec2Param rayStart, Vec2Param rayDirection, Vec2Param aabbMinPoint, Vec2Param aabbMaxPoint, Interval* interval)
+Type RayAabb(Vec2Param rayStart, Vec2Param rayDirection, Vec2Param aabbMinPoint, Vec2Param aabbMaxPoint, Interval* interval)
 {
   ErrorIf(interval == nullptr,
           "Intersection - Invalid interval passed to "
@@ -640,11 +612,7 @@ Type RayAabb(
 }
 
 /// Intersect two 2D segments.
-Type SegmentSegment(Vec2Param segmentStartA,
-                    Vec2Param segmentEndA,
-                    Vec2Param segmentStartB,
-                    Vec2Param segmentEndB,
-                    IntersectionPoint2D* intersectionPoint)
+Type SegmentSegment(Vec2Param segmentStartA, Vec2Param segmentEndA, Vec2Param segmentStartB, Vec2Param segmentEndB, IntersectionPoint2D* intersectionPoint)
 {
   const Vec2& a = segmentStartA;
   const Vec2& b = segmentEndA;

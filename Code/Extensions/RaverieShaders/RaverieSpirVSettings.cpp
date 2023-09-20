@@ -123,8 +123,7 @@ SpirVNameSettings::SpirVNameSettings()
 }
 
 ShaderStage::Enum UniformBufferDescription::mAllStagesMask =
-    (ShaderStage::Vertex | ShaderStage::PreTesselation | ShaderStage::PostTesselation | ShaderStage::Geometry |
-     ShaderStage::Pixel | ShaderStage::Compute);
+    (ShaderStage::Vertex | ShaderStage::PreTesselation | ShaderStage::PostTesselation | ShaderStage::Geometry | ShaderStage::Pixel | ShaderStage::Compute);
 
 UniformBufferDescription::UniformBufferDescription()
 {
@@ -169,10 +168,7 @@ void UniformBufferDescription::CopyFrom(const UniformBufferDescription& source)
   }
 }
 
-void UniformBufferDescription::Set(u32 bindingId,
-                                   u32 descriptorSetId,
-                                   ShaderStage::Enum allowedStages,
-                                   StringParam debugName)
+void UniformBufferDescription::Set(u32 bindingId, u32 descriptorSetId, ShaderStage::Enum allowedStages, StringParam debugName)
 {
   mBindingId = bindingId;
   mDescriptorSetId = descriptorSetId;
@@ -222,10 +218,7 @@ void BuiltInBlockDescription::BuiltInFieldMeta::CopyFrom(const BuiltInFieldMeta&
   mId = source.mId;
 }
 
-void BuiltInBlockDescription::AddField(Raverie::BoundType* type,
-                                       StringParam fieldName,
-                                       spv::BuiltIn builtInId,
-                                       StringParam attribute)
+void BuiltInBlockDescription::AddField(Raverie::BoundType* type, StringParam fieldName, spv::BuiltIn builtInId, StringParam attribute)
 {
   BuiltInFieldMeta builtInMeta;
   builtInMeta.mMeta = new ShaderIRFieldMeta();
@@ -398,9 +391,7 @@ void RaverieShaderSpirVSettings::AutoSetDefaultUniformBufferDescription(int desc
   SetDefaultUniformBufferDescription(mUniformBufferDescriptions.Size(), descriptorSetId, debugName);
 }
 
-void RaverieShaderSpirVSettings::SetDefaultUniformBufferDescription(int bindingId,
-                                                                  int descriptorSetId,
-                                                                  StringParam debugName)
+void RaverieShaderSpirVSettings::SetDefaultUniformBufferDescription(int bindingId, int descriptorSetId, StringParam debugName)
 {
   ReturnIf(mFinalized, , "Cannot set built-in names once finalized");
 
@@ -410,9 +401,7 @@ void RaverieShaderSpirVSettings::SetDefaultUniformBufferDescription(int bindingI
   mDefaultUniformBufferDescription.mDebugName = debugName;
 }
 
-bool RaverieShaderSpirVSettings::IsValidUniform(FragmentType::Enum fragmentType,
-                                              StringParam fieldType,
-                                              StringParam fieldName)
+bool RaverieShaderSpirVSettings::IsValidUniform(FragmentType::Enum fragmentType, StringParam fieldType, StringParam fieldName)
 {
   ShaderStage::Enum shaderStage = FragmentTypeToShaderStage(fragmentType);
   ShaderFieldKey fieldKey(fieldName, fieldType);
@@ -446,10 +435,7 @@ void RaverieShaderSpirVSettings::SetHardwareBuiltInName(spv::BuiltIn builtInId, 
   }
 }
 
-bool RaverieShaderSpirVSettings::IsValidHardwareBuiltIn(FragmentType::Enum fragmentType,
-                                                      StringParam fieldType,
-                                                      StringParam fieldName,
-                                                      bool isInput)
+bool RaverieShaderSpirVSettings::IsValidHardwareBuiltIn(FragmentType::Enum fragmentType, StringParam fieldType, StringParam fieldName, bool isInput)
 {
   ShaderFieldKey fieldKey(fieldName, fieldType);
 
@@ -560,8 +546,7 @@ void RaverieShaderSpirVSettings::Validate()
 
 void RaverieShaderSpirVSettings::ValidateUniformsDescriptions()
 {
-  ErrorIf(mDefaultUniformBufferDescription.mFields.Size() != 0,
-          "No fields can be set in the default uniform buffer description");
+  ErrorIf(mDefaultUniformBufferDescription.mFields.Size() != 0, "No fields can be set in the default uniform buffer description");
 
   typedef BitField<ShaderStage::Enum> ShaderStageFlags;
   typedef Pair<int, int> DescriptorSetBindingPair;
@@ -573,8 +558,7 @@ void RaverieShaderSpirVSettings::ValidateUniformsDescriptions()
     UniformBufferDescription& description = mUniformBufferDescriptions[i];
 
     // Validate that the descriptor set and binding id are only used once
-    DescriptorSetBindingPair descriptorPair =
-        DescriptorSetBindingPair(description.mDescriptorSetId, description.mBindingId);
+    DescriptorSetBindingPair descriptorPair = DescriptorSetBindingPair(description.mDescriptorSetId, description.mBindingId);
     if (descriptorMap.ContainsKey(descriptorPair))
     {
       UniformBufferDescription* oldDescription = descriptorMap[descriptorPair];
@@ -621,8 +605,7 @@ void RaverieShaderSpirVSettings::ValidateBuiltInNames()
   }
 }
 
-void RaverieShaderSpirVSettings::ValidateBuiltInNames(BuiltInBlockDescription& blockDescription,
-                                                    HashMap<String, spv::BuiltIn>& keyMappings)
+void RaverieShaderSpirVSettings::ValidateBuiltInNames(BuiltInBlockDescription& blockDescription, HashMap<String, spv::BuiltIn>& keyMappings)
 {
   for (size_t i = 0; i < blockDescription.mFields.Size(); ++i)
   {
@@ -676,8 +659,7 @@ void RaverieShaderSpirVSettings::InitializeBuiltIns()
 
   BuiltInStageDescription& vertexDescriptions = mBuiltIns[FragmentType::Vertex];
   vertexDescriptions.mOutputInterfaceBlock.AddField(real4Type, "Position", spv::BuiltInPosition, hardwareBuiltInOutput);
-  vertexDescriptions.mOutputInterfaceBlock.AddField(
-      realType, "PointSize", spv::BuiltInPointSize, hardwareBuiltInOutput);
+  vertexDescriptions.mOutputInterfaceBlock.AddField(realType, "PointSize", spv::BuiltInPointSize, hardwareBuiltInOutput);
   // Can't add clip distance now because of array types
   // @JoshD: Fix with FixedArray later?
   // vertexDescriptions.mOutputInterfaceBlock.AddField(real4Type,
@@ -687,8 +669,7 @@ void RaverieShaderSpirVSettings::InitializeBuiltIns()
   vertexDescriptions.mInputGlobals.AddField(intType, "InstanceId", spv::BuiltInInstanceId, hardwareBuiltInInput);
 
   BuiltInStageDescription& geometryDescriptions = mBuiltIns[FragmentType::Geometry];
-  geometryDescriptions.mOutputInterfaceBlock.AddField(
-      real4Type, "Position", spv::BuiltInPosition, hardwareBuiltInOutput);
+  geometryDescriptions.mOutputInterfaceBlock.AddField(real4Type, "Position", spv::BuiltInPosition, hardwareBuiltInOutput);
   geometryDescriptions.mInputInterfaceBlock.AddField(real4Type, "Position", spv::BuiltInPosition, hardwareBuiltInInput);
   geometryDescriptions.mInputGlobals.AddField(intType, "PrimitiveId", spv::BuiltInPrimitiveId, hardwareBuiltInInput);
   geometryDescriptions.mOutputGlobals.AddField(intType, "PrimitiveId", spv::BuiltInPrimitiveId, hardwareBuiltInOutput);
@@ -707,17 +688,12 @@ void RaverieShaderSpirVSettings::InitializeBuiltIns()
   pixelDescriptions.mInputGlobals.AddField(intType, "PrimitiveId", spv::BuiltInPrimitiveId, hardwareBuiltInInput);
 
   BuiltInStageDescription& computeDescriptions = mBuiltIns[FragmentType::Compute];
-  computeDescriptions.mInputGlobals.AddField(
-      int3Type, "GlobalInvocationId", spv::BuiltInGlobalInvocationId, hardwareBuiltInInput);
-  computeDescriptions.mInputGlobals.AddField(
-      int3Type, "LocalInvocationId", spv::BuiltInLocalInvocationId, hardwareBuiltInInput);
-  computeDescriptions.mInputGlobals.AddField(
-      intType, "LocalInvocationIndex", spv::BuiltInLocalInvocationIndex, hardwareBuiltInInput);
-  computeDescriptions.mInputGlobals.AddField(
-      int3Type, "NumWorkgroups", spv::BuiltInNumWorkgroups, hardwareBuiltInInput);
+  computeDescriptions.mInputGlobals.AddField(int3Type, "GlobalInvocationId", spv::BuiltInGlobalInvocationId, hardwareBuiltInInput);
+  computeDescriptions.mInputGlobals.AddField(int3Type, "LocalInvocationId", spv::BuiltInLocalInvocationId, hardwareBuiltInInput);
+  computeDescriptions.mInputGlobals.AddField(intType, "LocalInvocationIndex", spv::BuiltInLocalInvocationIndex, hardwareBuiltInInput);
+  computeDescriptions.mInputGlobals.AddField(int3Type, "NumWorkgroups", spv::BuiltInNumWorkgroups, hardwareBuiltInInput);
   computeDescriptions.mInputGlobals.AddField(int3Type, "WorkgroupId", spv::BuiltInWorkgroupId, hardwareBuiltInInput);
-  computeDescriptions.mInputGlobals.AddField(
-      int3Type, "WorkgroupSize", spv::BuiltInWorkgroupSize, hardwareBuiltInInput);
+  computeDescriptions.mInputGlobals.AddField(int3Type, "WorkgroupSize", spv::BuiltInWorkgroupSize, hardwareBuiltInInput);
 }
 
 bool RaverieShaderSpirVSettings::IsValidHardwareBuiltInAnyStage(ShaderFieldKey& fieldKey, bool isInput)

@@ -26,20 +26,10 @@ RaverieDefineType(NetHost, builder, type)
 NetHost::NetHost() : mNetwork(Network::LAN), mIpAddress(), mRoundTripTime(0), mBasicHostInfo(), mExtraHostInfo()
 {
 }
-NetHost::NetHost(const IpAddress& ipAddress) :
-    mNetwork(Network::LAN),
-    mIpAddress(ipAddress),
-    mRoundTripTime(0),
-    mBasicHostInfo(),
-    mExtraHostInfo()
+NetHost::NetHost(const IpAddress& ipAddress) : mNetwork(Network::LAN), mIpAddress(ipAddress), mRoundTripTime(0), mBasicHostInfo(), mExtraHostInfo()
 {
 }
-NetHost::NetHost(const NetHost& rhs) :
-    mNetwork(rhs.mNetwork),
-    mIpAddress(rhs.mIpAddress),
-    mRoundTripTime(rhs.mRoundTripTime),
-    mBasicHostInfo(rhs.mBasicHostInfo),
-    mExtraHostInfo(rhs.mExtraHostInfo)
+NetHost::NetHost(const NetHost& rhs) : mNetwork(rhs.mNetwork), mIpAddress(rhs.mIpAddress), mRoundTripTime(rhs.mRoundTripTime), mBasicHostInfo(rhs.mBasicHostInfo), mExtraHostInfo(rhs.mExtraHostInfo)
 {
 }
 

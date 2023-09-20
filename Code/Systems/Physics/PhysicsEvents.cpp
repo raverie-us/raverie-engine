@@ -175,10 +175,7 @@ CollisionGroupEvent::CollisionGroupEvent()
 {
 }
 
-void CollisionGroupEvent::Set(Physics::Manifold* manifold,
-                              const CollisionFilter& pair,
-                              CollisionFilterBlock* block,
-                              StringParam eventType)
+void CollisionGroupEvent::Set(Physics::Manifold* manifold, const CollisionFilter& pair, CollisionFilterBlock* block, StringParam eventType)
 {
   BaseCollisionEvent::Set(manifold, eventType);
   mBlock = block;

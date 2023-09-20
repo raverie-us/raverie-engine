@@ -4,10 +4,7 @@
 namespace Raverie
 {
 
-void ResolveOpBitcast(RaverieSpirVFrontEnd* translator,
-                      Raverie::FunctionCallNode* functionCallNode,
-                      Raverie::MemberAccessNode* memberAccessNode,
-                      RaverieSpirVFrontEndContext* context)
+void ResolveOpBitcast(RaverieSpirVFrontEnd* translator, Raverie::FunctionCallNode* functionCallNode, Raverie::MemberAccessNode* memberAccessNode, RaverieSpirVFrontEndContext* context)
 {
   RaverieShaderIRType* resultType = translator->FindType(functionCallNode->ResultType, functionCallNode);
 
@@ -22,11 +19,7 @@ void ResolveOpCast(RaverieSpirVFrontEnd* translator, Raverie::TypeCastNode* node
   translator->PerformTypeCast(node, opType, context);
 }
 
-void ResolveFromBoolCast(RaverieSpirVFrontEnd* translator,
-                         Raverie::TypeCastNode* node,
-                         IRaverieShaderIR* zero,
-                         IRaverieShaderIR* one,
-                         RaverieSpirVFrontEndContext* context)
+void ResolveFromBoolCast(RaverieSpirVFrontEnd* translator, Raverie::TypeCastNode* node, IRaverieShaderIR* zero, IRaverieShaderIR* one, RaverieSpirVFrontEndContext* context)
 {
   RaverieShaderIROp* condition = translator->WalkAndGetValueTypeResult(node->Operand, context);
   RaverieShaderIRType* destType = translator->FindType(node->ResultType, node);
@@ -42,9 +35,7 @@ void ResolveBoolToIntCast(RaverieSpirVFrontEnd* translator, Raverie::TypeCastNod
   ResolveFromBoolCast(translator, node, zero, one, context);
 }
 
-void ResolveBoolToRealCast(RaverieSpirVFrontEnd* translator,
-                           Raverie::TypeCastNode* node,
-                           RaverieSpirVFrontEndContext* context)
+void ResolveBoolToRealCast(RaverieSpirVFrontEnd* translator, Raverie::TypeCastNode* node, RaverieSpirVFrontEndContext* context)
 {
   RaverieShaderIRType* realType = translator->FindType(RaverieTypeId(float), node, context);
   IRaverieShaderIR* one = translator->GetConstant(realType, 1.0f, context);
@@ -52,11 +43,7 @@ void ResolveBoolToRealCast(RaverieSpirVFrontEnd* translator,
   ResolveFromBoolCast(translator, node, zero, one, context);
 }
 
-void ResolveToBoolCast(RaverieSpirVFrontEnd* translator,
-                       Raverie::TypeCastNode* node,
-                       OpType op,
-                       IRaverieShaderIR* zero,
-                       RaverieSpirVFrontEndContext* context)
+void ResolveToBoolCast(RaverieSpirVFrontEnd* translator, Raverie::TypeCastNode* node, OpType op, IRaverieShaderIR* zero, RaverieSpirVFrontEndContext* context)
 {
   BasicBlock* currentBlock = context->GetCurrentBlock();
   RaverieShaderIROp* condition = translator->WalkAndGetValueTypeResult(node->Operand, context);
@@ -71,9 +58,7 @@ void ResolveIntToBoolCast(RaverieSpirVFrontEnd* translator, Raverie::TypeCastNod
   ResolveToBoolCast(translator, node, OpType::OpINotEqual, zero, context);
 }
 
-void ResolveRealToBoolCast(RaverieSpirVFrontEnd* translator,
-                           Raverie::TypeCastNode* node,
-                           RaverieSpirVFrontEndContext* context)
+void ResolveRealToBoolCast(RaverieSpirVFrontEnd* translator, Raverie::TypeCastNode* node, RaverieSpirVFrontEndContext* context)
 {
   RaverieShaderIRType* realType = translator->FindType(RaverieTypeId(float), node, context);
   IRaverieShaderIR* zero = translator->GetConstant(realType, 0.0f, context);
@@ -113,11 +98,9 @@ void RegisterConversionOps(RaverieSpirVFrontEnd* translator, RaverieShaderIRLibr
   Raverie::BoundType* intType = core.IntegerType;
   // Register the re-interpret cast functions
   TypeResolvers& realTypeResolver = shaderLibrary->mTypeResolvers[realType];
-  realTypeResolver.RegisterFunctionResolver(GetStaticFunction(realType, "Reinterpret", intType->ToString()),
-                                            ResolveOpBitcast);
+  realTypeResolver.RegisterFunctionResolver(GetStaticFunction(realType, "Reinterpret", intType->ToString()), ResolveOpBitcast);
   TypeResolvers& intTypeResolver = shaderLibrary->mTypeResolvers[intType];
-  intTypeResolver.RegisterFunctionResolver(GetStaticFunction(intType, "Reinterpret", realType->ToString()),
-                                           ResolveOpBitcast);
+  intTypeResolver.RegisterFunctionResolver(GetStaticFunction(intType, "Reinterpret", realType->ToString()), ResolveOpBitcast);
 }
 
 } // namespace Raverie

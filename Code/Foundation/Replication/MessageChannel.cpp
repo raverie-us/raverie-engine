@@ -9,9 +9,7 @@ namespace Raverie
 MessageChannel::MessageChannel() : mChannelId(0), mTransferMode(TransferMode::Immediate)
 {
 }
-MessageChannel::MessageChannel(MessageChannelId channelId, TransferMode::Enum transferMode) :
-    mChannelId(channelId),
-    mTransferMode(transferMode)
+MessageChannel::MessageChannel(MessageChannelId channelId, TransferMode::Enum transferMode) : mChannelId(channelId), mTransferMode(transferMode)
 {
 }
 
@@ -59,8 +57,7 @@ TransferMode::Enum MessageChannel::GetTransferMode() const
 OutMessageChannel::OutMessageChannel() : MessageChannel()
 {
 }
-OutMessageChannel::OutMessageChannel(MessageChannelId channelId, TransferMode::Enum transferMode) :
-    MessageChannel(channelId, transferMode)
+OutMessageChannel::OutMessageChannel(MessageChannelId channelId, TransferMode::Enum transferMode) : MessageChannel(channelId, transferMode)
 {
 }
 
@@ -75,24 +72,11 @@ MessageSequenceId OutMessageChannel::AcquireNextSequenceId()
 
 //                                InMessageChannel //
 
-InMessageChannel::InMessageChannel() :
-    MessageChannel(),
-    mLastSequenceId(0),
-    mFragmentedMessages(),
-    mMessages(),
-    mMessageSequence(),
-    mClosed(false),
-    mFinalSequenceId(0)
+InMessageChannel::InMessageChannel() : MessageChannel(), mLastSequenceId(0), mFragmentedMessages(), mMessages(), mMessageSequence(), mClosed(false), mFinalSequenceId(0)
 {
 }
 InMessageChannel::InMessageChannel(MessageChannelId channelId, TransferMode::Enum transferMode) :
-    MessageChannel(channelId, transferMode),
-    mLastSequenceId(0),
-    mFragmentedMessages(),
-    mMessages(),
-    mMessageSequence(),
-    mClosed(false),
-    mFinalSequenceId(0)
+    MessageChannel(channelId, transferMode), mLastSequenceId(0), mFragmentedMessages(), mMessages(), mMessageSequence(), mClosed(false), mFinalSequenceId(0)
 {
 }
 
@@ -229,8 +213,7 @@ bool InMessageChannel::Push(MoveReference<Message> message)
     {
       // Keep message fragment
       FragmentedMessage fragmentedMessage(RaverieMove(message));
-      ArraySet<FragmentedMessage>::pointer_bool_pair insertResult =
-          mFragmentedMessages.Insert(RaverieMove(fragmentedMessage));
+      ArraySet<FragmentedMessage>::pointer_bool_pair insertResult = mFragmentedMessages.Insert(RaverieMove(fragmentedMessage));
       Assert(insertResult.second); // (Insertion should have succeeded)
     }
     // Whole?
@@ -301,9 +284,7 @@ bool InMessageChannel::IsClosed()
 
 bool InMessageChannel::ReadyToDelete() const
 {
-  return mClosed &&
-         (GetTransferMode() == TransferMode::Ordered ? mMessageSequence.IsVerified(mFinalSequenceId) : true) &&
-         mMessages.Empty() && mFragmentedMessages.Empty();
+  return mClosed && (GetTransferMode() == TransferMode::Ordered ? mMessageSequence.IsVerified(mFinalSequenceId) : true) && mMessages.Empty() && mFragmentedMessages.Empty();
 }
 
 } // namespace Raverie

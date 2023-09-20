@@ -629,8 +629,7 @@ struct has_valid_compare_policy_helper
   typedef struct ComparePolicy<T> ComparePolicyT;
 
   template <typename T2>
-  static inline yes
-  Test(static_verify_function_signature<bool (ComparePolicyT::*)(const T2&, const T2&) const, &ComparePolicyT::Equal>*);
+  static inline yes Test(static_verify_function_signature<bool (ComparePolicyT::*)(const T2&, const T2&) const, &ComparePolicyT::Equal>*);
   template <typename T2>
   static inline no Test(...);
 
@@ -641,8 +640,7 @@ struct has_valid_compare_policy_helper
 /// defined as false A compare policy is valid if it has a function callable as:
 /// bool Equal(const T& left, const T& right) const;
 template <typename T>
-struct has_valid_compare_policy
-    : public integral_constant<bool, has_valid_compare_policy_helper<T>::value>
+struct has_valid_compare_policy : public integral_constant<bool, has_valid_compare_policy_helper<T>::value>
 {
 };
 

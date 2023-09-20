@@ -31,8 +31,7 @@ Easer GetEaser(uint easeType);
 // MetaAnimatePropertyAction
 
 // Action to animate a property over time
-Action* CreateMetaAnimatePropertyAction(
-    HandleParam object, Property* property, float duration, AnyParam ending, EaseType::Enum easeType);
+Action* CreateMetaAnimatePropertyAction(HandleParam object, Property* property, float duration, AnyParam ending, EaseType::Enum easeType);
 
 /// Action to call method use Meta
 class MetaCallAction : public Action

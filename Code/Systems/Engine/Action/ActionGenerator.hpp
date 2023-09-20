@@ -20,11 +20,7 @@ struct PropertyAccessorMem
   }
 };
 
-template <typename objectType,
-          typename elementType,
-          typename elementTypeSet,
-          elementType (objectType::*MemGetter)(),
-          void (objectType::*MemSetter)(elementTypeSet)>
+template <typename objectType, typename elementType, typename elementTypeSet, elementType (objectType::*MemGetter)(), void (objectType::*MemSetter)(elementTypeSet)>
 struct PropertyAccessorMemFunc
 {
   static inline elementType Get(objectType* mObject)
@@ -82,43 +78,22 @@ public:
 };
 
 // Bind normal getter and setters member functions.
-template <typename GetterType,
-          typename SetterType,
-          GetterType MemGetter,
-          SetterType MemSetter,
-          EaseFunc,
-          typename objectType,
-          typename elementType,
-          typename elementSetType>
-inline Action* GenerateAction(elementType (objectType::*getDummy)(),
-                              void (objectType::*setDummy)(elementSetType),
-                              objectType* instance,
-                              float duration,
-                              const elementType& destination)
+template <typename GetterType, typename SetterType, GetterType MemGetter, SetterType MemSetter, EaseFunc, typename objectType, typename elementType, typename elementSetType>
+inline Action* GenerateAction(elementType (objectType::*getDummy)(), void (objectType::*setDummy)(elementSetType), objectType* instance, float duration, const elementType& destination)
 {
-  return new ActionGenerator<elementType,
-                             objectType,
-                             EaseType,
-                             PropertyAccessorMemFunc<objectType, elementType, elementSetType, MemGetter, MemSetter>>(
-      instance, duration, destination);
+  return new ActionGenerator<elementType, objectType, EaseType, PropertyAccessorMemFunc<objectType, elementType, elementSetType, MemGetter, MemSetter>>(instance, duration, destination);
 }
 
 template <typename MemberType, MemberType Member, EaseFunc, typename objectType, typename elementType>
 inline Action* GenerateAction(objectType* instance, float duration, const elementType& destination)
 {
-  return new ActionGenerator<elementType, objectType, EaseType, PropertyAccessorMem<objectType, elementType, Member>>(
-      instance, duration, destination);
+  return new ActionGenerator<elementType, objectType, EaseType, PropertyAccessorMem<objectType, elementType, Member>>(instance, duration, destination);
 }
 
-#define AnimateMember(memberPointer, easeType, instance, duration, dest)                                               \
-  GenerateAction<decltype(memberPointer), memberPointer, easeType>(instance, duration, dest)
+#define AnimateMember(memberPointer, easeType, instance, duration, dest) GenerateAction<decltype(memberPointer), memberPointer, easeType>(instance, duration, dest)
 
-#define AnimatePropertyGetSet(objectType, propName, easeType, instance, duration, dest)                                \
-  GenerateAction<decltype(&objectType::Get##propName),                                                                 \
-                 decltype(&objectType::Set##propName),                                                                 \
-                 &objectType::Get##propName,                                                                           \
-                 &objectType::Set##propName,                                                                           \
-                 easeType>(                                                                                            \
+#define AnimatePropertyGetSet(objectType, propName, easeType, instance, duration, dest)                                                                                                                \
+  GenerateAction<decltype(&objectType::Get##propName), decltype(&objectType::Set##propName), &objectType::Get##propName, &objectType::Set##propName, easeType>(                                        \
       &objectType::Get##propName, &objectType::Set##propName, static_cast<objectType*>(instance), duration, dest)
 
 template <typename objectType, void (objectType::*FunctionToCall)()>

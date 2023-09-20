@@ -30,11 +30,7 @@ struct ChannelEvent : public Event
 
 struct UserEvent : public Event
 {
-  UserEvent(ChannelInfo::Enum info, StringParam channel, StringParam name, bool showMessage) :
-      Info(info),
-      Channel(channel),
-      Name(name),
-      ShowMessage(showMessage)
+  UserEvent(ChannelInfo::Enum info, StringParam channel, StringParam name, bool showMessage) : Info(info), Channel(channel), Name(name), ShowMessage(showMessage)
   {
   }
   ChannelInfo::Enum Info;

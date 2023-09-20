@@ -43,8 +43,7 @@ class RenderTargetManager
 public:
   void Shutdown();
 
-  HandleOf<RenderTarget>
-  GetRenderTarget(uint width, uint height, TextureFormat::Enum format, SamplerSettings samplerSettings);
+  HandleOf<RenderTarget> GetRenderTarget(uint width, uint height, TextureFormat::Enum format, SamplerSettings samplerSettings);
   HandleOf<RenderTarget> GetRenderTarget(HandleOf<Texture> texture);
 
   // Deletes RenderTarget and makes its texture available for reuse

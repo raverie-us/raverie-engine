@@ -15,10 +15,7 @@ namespace
 
 // Intersect an axis aligned bounding box with a frustum. The 6 planes of the
 // frustum are assumed to be pointing inwards.
-Type AabbFrustumApproximation(Vec3Param aabbMinPoint,
-                              Vec3Param aabbMaxPoint,
-                              const Vec4 frustumPlanes[6],
-                              Manifold* manifold)
+Type AabbFrustumApproximation(Vec3Param aabbMinPoint, Vec3Param aabbMaxPoint, const Vec4 frustumPlanes[6], Manifold* manifold)
 {
   ErrorIf((aabbMinPoint.x > aabbMaxPoint.x) || (aabbMinPoint.y > aabbMaxPoint.y) || (aabbMinPoint.z > aabbMaxPoint.z),
           "Intersection - Axis-aligned bounding box's minimum point is greater"
@@ -35,9 +32,7 @@ Type AabbFrustumApproximation(Vec3Param aabbMinPoint,
     planeNormal = reinterpret_cast<const Vec3*>(&(frustumPlanes[i].x));
     real planeDistance = frustumPlanes[i][3];
 
-    Vec3 signs = Vec3(Math::GetSign(planeNormal->x) * halfExtents.x,
-                      Math::GetSign(planeNormal->y) * halfExtents.y,
-                      Math::GetSign(planeNormal->z) * halfExtents.z);
+    Vec3 signs = Vec3(Math::GetSign(planeNormal->x) * halfExtents.x, Math::GetSign(planeNormal->y) * halfExtents.y, Math::GetSign(planeNormal->z) * halfExtents.z);
 
     // First check the box's point that's furthest in the direction of the
     // plane's normal
@@ -53,8 +48,7 @@ Type AabbFrustumApproximation(Vec3Param aabbMinPoint,
 
 /// Intersect a frustum with an oriented bounding box. The 6 planes of the
 /// frustum are assumed to be pointing inwards.
-Type FrustumObbApproximation(
-    const Vec4 frustumPlanes[6], Vec3Param obbCenter, Vec3Param obbHalfExtents, Mat3Param obbBasis, Manifold* manifold)
+Type FrustumObbApproximation(const Vec4 frustumPlanes[6], Vec3Param obbCenter, Vec3Param obbHalfExtents, Mat3Param obbBasis, Manifold* manifold)
 {
   Vec3 obbBasisVectors[3] = {obbBasis.GetBasis(0), obbBasis.GetBasis(1), obbBasis.GetBasis(2)};
   real intersectionIndex = real(-1.0);
@@ -119,10 +113,7 @@ Type FrustumPlane(const Vec4 frustumPlanes[6], Vec3Param planeNormal, real plane
 
 /// Intersect a frustum with a sphere. The 6 planes of the frustum are assumed
 /// to be pointing inwards.
-Type FrustumSphereApproximation(const Vec4 frustumPlanes[6],
-                                Vec3Param sphereCenter,
-                                real sphereRadius,
-                                Manifold* manifold)
+Type FrustumSphereApproximation(const Vec4 frustumPlanes[6], Vec3Param sphereCenter, real sphereRadius, Manifold* manifold)
 {
   real intersectionIndex = real(-1.0);
   const Vec3* planeNormal = nullptr;
@@ -178,11 +169,7 @@ Type FrustumSphereApproximation(const Vec4 frustumPlanes[6],
 
 /// Intersect a frustum with a triangle. The 6 planes of the frustum are assumed
 /// to be pointing inwards.
-Type FrustumTriangle(const Vec4 frustumPlanes[6],
-                     Vec3Param trianglePointA,
-                     Vec3Param trianglePointB,
-                     Vec3Param trianglePointC,
-                     Manifold* manifold)
+Type FrustumTriangle(const Vec4 frustumPlanes[6], Vec3Param trianglePointA, Vec3Param trianglePointB, Vec3Param trianglePointC, Manifold* manifold)
 {
   uint intersectionIndex = uint(-1);
   const Vec3* planeNormal = nullptr;

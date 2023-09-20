@@ -100,19 +100,13 @@ public:
   static Bits MeasureDoubleIntegerQuantized(s64 minValue, s64 maxValue, s64 quantum);
 
   static Bits MeasureInteger2Quantized(const Math::IntVector2& minValue, const Math::IntVector2& maxValue);
-  static Bits MeasureInteger2Quantized(const Math::IntVector2& minValue,
-                                       const Math::IntVector2& maxValue,
-                                       const Math::IntVector2& quantum);
+  static Bits MeasureInteger2Quantized(const Math::IntVector2& minValue, const Math::IntVector2& maxValue, const Math::IntVector2& quantum);
 
   static Bits MeasureInteger3Quantized(const Math::IntVector3& minValue, const Math::IntVector3& maxValue);
-  static Bits MeasureInteger3Quantized(const Math::IntVector3& minValue,
-                                       const Math::IntVector3& maxValue,
-                                       const Math::IntVector3& quantum);
+  static Bits MeasureInteger3Quantized(const Math::IntVector3& minValue, const Math::IntVector3& maxValue, const Math::IntVector3& quantum);
 
   static Bits MeasureInteger4Quantized(const Math::IntVector4& minValue, const Math::IntVector4& maxValue);
-  static Bits MeasureInteger4Quantized(const Math::IntVector4& minValue,
-                                       const Math::IntVector4& maxValue,
-                                       const Math::IntVector4& quantum);
+  static Bits MeasureInteger4Quantized(const Math::IntVector4& minValue, const Math::IntVector4& maxValue, const Math::IntVector4& quantum);
 
   static Bits MeasureRealQuantized(float minValue, float maxValue);
   static Bits MeasureRealQuantized(float minValue, float maxValue, float quantum);
@@ -121,19 +115,13 @@ public:
   static Bits MeasureDoubleRealQuantized(double minValue, double maxValue, double quantum);
 
   static Bits MeasureReal2Quantized(const Math::Vector2& minValue, const Math::Vector2& maxValue);
-  static Bits MeasureReal2Quantized(const Math::Vector2& minValue,
-                                    const Math::Vector2& maxValue,
-                                    const Math::Vector2& quantum);
+  static Bits MeasureReal2Quantized(const Math::Vector2& minValue, const Math::Vector2& maxValue, const Math::Vector2& quantum);
 
   static Bits MeasureReal3Quantized(const Math::Vector3& minValue, const Math::Vector3& maxValue);
-  static Bits MeasureReal3Quantized(const Math::Vector3& minValue,
-                                    const Math::Vector3& maxValue,
-                                    const Math::Vector3& quantum);
+  static Bits MeasureReal3Quantized(const Math::Vector3& minValue, const Math::Vector3& maxValue, const Math::Vector3& quantum);
 
   static Bits MeasureReal4Quantized(const Math::Vector4& minValue, const Math::Vector4& maxValue);
-  static Bits MeasureReal4Quantized(const Math::Vector4& minValue,
-                                    const Math::Vector4& maxValue,
-                                    const Math::Vector4& quantum);
+  static Bits MeasureReal4Quantized(const Math::Vector4& minValue, const Math::Vector4& maxValue, const Math::Vector4& quantum);
 
   //
   // Write Operations
@@ -175,29 +163,14 @@ public:
   void WriteDoubleIntegerQuantized(s64 value, s64 minValue, s64 maxValue);
   void WriteDoubleIntegerQuantized(s64 value, s64 minValue, s64 maxValue, s64 quantum);
 
-  void WriteInteger2Quantized(const Math::IntVector2& value,
-                              const Math::IntVector2& minValue,
-                              const Math::IntVector2& maxValue);
-  void WriteInteger2Quantized(const Math::IntVector2& value,
-                              const Math::IntVector2& minValue,
-                              const Math::IntVector2& maxValue,
-                              const Math::IntVector2& quantum);
+  void WriteInteger2Quantized(const Math::IntVector2& value, const Math::IntVector2& minValue, const Math::IntVector2& maxValue);
+  void WriteInteger2Quantized(const Math::IntVector2& value, const Math::IntVector2& minValue, const Math::IntVector2& maxValue, const Math::IntVector2& quantum);
 
-  void WriteInteger3Quantized(const Math::IntVector3& value,
-                              const Math::IntVector3& minValue,
-                              const Math::IntVector3& maxValue);
-  void WriteInteger3Quantized(const Math::IntVector3& value,
-                              const Math::IntVector3& minValue,
-                              const Math::IntVector3& maxValue,
-                              const Math::IntVector3& quantum);
+  void WriteInteger3Quantized(const Math::IntVector3& value, const Math::IntVector3& minValue, const Math::IntVector3& maxValue);
+  void WriteInteger3Quantized(const Math::IntVector3& value, const Math::IntVector3& minValue, const Math::IntVector3& maxValue, const Math::IntVector3& quantum);
 
-  void WriteInteger4Quantized(const Math::IntVector4& value,
-                              const Math::IntVector4& minValue,
-                              const Math::IntVector4& maxValue);
-  void WriteInteger4Quantized(const Math::IntVector4& value,
-                              const Math::IntVector4& minValue,
-                              const Math::IntVector4& maxValue,
-                              const Math::IntVector4& quantum);
+  void WriteInteger4Quantized(const Math::IntVector4& value, const Math::IntVector4& minValue, const Math::IntVector4& maxValue);
+  void WriteInteger4Quantized(const Math::IntVector4& value, const Math::IntVector4& minValue, const Math::IntVector4& maxValue, const Math::IntVector4& quantum);
 
   void WriteRealQuantized(float value, float minValue, float maxValue);
   void WriteRealQuantized(float value, float minValue, float maxValue, float quantum);
@@ -206,22 +179,13 @@ public:
   void WriteDoubleRealQuantized(double value, double minValue, double maxValue, double quantum);
 
   void WriteReal2Quantized(const Math::Vector2& value, const Math::Vector2& minValue, const Math::Vector2& maxValue);
-  void WriteReal2Quantized(const Math::Vector2& value,
-                           const Math::Vector2& minValue,
-                           const Math::Vector2& maxValue,
-                           const Math::Vector2& quantum);
+  void WriteReal2Quantized(const Math::Vector2& value, const Math::Vector2& minValue, const Math::Vector2& maxValue, const Math::Vector2& quantum);
 
   void WriteReal3Quantized(const Math::Vector3& value, const Math::Vector3& minValue, const Math::Vector3& maxValue);
-  void WriteReal3Quantized(const Math::Vector3& value,
-                           const Math::Vector3& minValue,
-                           const Math::Vector3& maxValue,
-                           const Math::Vector3& quantum);
+  void WriteReal3Quantized(const Math::Vector3& value, const Math::Vector3& minValue, const Math::Vector3& maxValue, const Math::Vector3& quantum);
 
   void WriteReal4Quantized(const Math::Vector4& value, const Math::Vector4& minValue, const Math::Vector4& maxValue);
-  void WriteReal4Quantized(const Math::Vector4& value,
-                           const Math::Vector4& minValue,
-                           const Math::Vector4& maxValue,
-                           const Math::Vector4& quantum);
+  void WriteReal4Quantized(const Math::Vector4& value, const Math::Vector4& minValue, const Math::Vector4& maxValue, const Math::Vector4& quantum);
 
   //
   // Can-Read Operations
@@ -264,19 +228,13 @@ public:
   bool CanReadDoubleIntegerQuantized(s64 minValue, s64 maxValue, s64 quantum) const;
 
   bool CanReadInteger2Quantized(const Math::IntVector2& minValue, const Math::IntVector2& maxValue) const;
-  bool CanReadInteger2Quantized(const Math::IntVector2& minValue,
-                                const Math::IntVector2& maxValue,
-                                const Math::IntVector2& quantum) const;
+  bool CanReadInteger2Quantized(const Math::IntVector2& minValue, const Math::IntVector2& maxValue, const Math::IntVector2& quantum) const;
 
   bool CanReadInteger3Quantized(const Math::IntVector3& minValue, const Math::IntVector3& maxValue) const;
-  bool CanReadInteger3Quantized(const Math::IntVector3& minValue,
-                                const Math::IntVector3& maxValue,
-                                const Math::IntVector3& quantum) const;
+  bool CanReadInteger3Quantized(const Math::IntVector3& minValue, const Math::IntVector3& maxValue, const Math::IntVector3& quantum) const;
 
   bool CanReadInteger4Quantized(const Math::IntVector4& minValue, const Math::IntVector4& maxValue) const;
-  bool CanReadInteger4Quantized(const Math::IntVector4& minValue,
-                                const Math::IntVector4& maxValue,
-                                const Math::IntVector4& quantum) const;
+  bool CanReadInteger4Quantized(const Math::IntVector4& minValue, const Math::IntVector4& maxValue, const Math::IntVector4& quantum) const;
 
   bool CanReadRealQuantized(float minValue, float maxValue) const;
   bool CanReadRealQuantized(float minValue, float maxValue, float quantum) const;
@@ -285,19 +243,13 @@ public:
   bool CanReadDoubleRealQuantized(double minValue, double maxValue, double quantum) const;
 
   bool CanReadReal2Quantized(const Math::Vector2& minValue, const Math::Vector2& maxValue) const;
-  bool CanReadReal2Quantized(const Math::Vector2& minValue,
-                             const Math::Vector2& maxValue,
-                             const Math::Vector2& quantum) const;
+  bool CanReadReal2Quantized(const Math::Vector2& minValue, const Math::Vector2& maxValue, const Math::Vector2& quantum) const;
 
   bool CanReadReal3Quantized(const Math::Vector3& minValue, const Math::Vector3& maxValue) const;
-  bool CanReadReal3Quantized(const Math::Vector3& minValue,
-                             const Math::Vector3& maxValue,
-                             const Math::Vector3& quantum) const;
+  bool CanReadReal3Quantized(const Math::Vector3& minValue, const Math::Vector3& maxValue, const Math::Vector3& quantum) const;
 
   bool CanReadReal4Quantized(const Math::Vector4& minValue, const Math::Vector4& maxValue) const;
-  bool CanReadReal4Quantized(const Math::Vector4& minValue,
-                             const Math::Vector4& maxValue,
-                             const Math::Vector4& quantum) const;
+  bool CanReadReal4Quantized(const Math::Vector4& minValue, const Math::Vector4& maxValue, const Math::Vector4& quantum) const;
 
   //
   // Read Operations
@@ -340,19 +292,13 @@ public:
   s64 ReadDoubleIntegerQuantized(s64 minValue, s64 maxValue, s64 quantum) const;
 
   Math::IntVector2 ReadInteger2Quantized(const Math::IntVector2& minValue, const Math::IntVector2& maxValue) const;
-  Math::IntVector2 ReadInteger2Quantized(const Math::IntVector2& minValue,
-                                         const Math::IntVector2& maxValue,
-                                         const Math::IntVector2& quantum) const;
+  Math::IntVector2 ReadInteger2Quantized(const Math::IntVector2& minValue, const Math::IntVector2& maxValue, const Math::IntVector2& quantum) const;
 
   Math::IntVector3 ReadInteger3Quantized(const Math::IntVector3& minValue, const Math::IntVector3& maxValue) const;
-  Math::IntVector3 ReadInteger3Quantized(const Math::IntVector3& minValue,
-                                         const Math::IntVector3& maxValue,
-                                         const Math::IntVector3& quantum) const;
+  Math::IntVector3 ReadInteger3Quantized(const Math::IntVector3& minValue, const Math::IntVector3& maxValue, const Math::IntVector3& quantum) const;
 
   Math::IntVector4 ReadInteger4Quantized(const Math::IntVector4& minValue, const Math::IntVector4& maxValue) const;
-  Math::IntVector4 ReadInteger4Quantized(const Math::IntVector4& minValue,
-                                         const Math::IntVector4& maxValue,
-                                         const Math::IntVector4& quantum) const;
+  Math::IntVector4 ReadInteger4Quantized(const Math::IntVector4& minValue, const Math::IntVector4& maxValue, const Math::IntVector4& quantum) const;
 
   float ReadRealQuantized(float minValue, float maxValue) const;
   float ReadRealQuantized(float minValue, float maxValue, float quantum) const;
@@ -361,19 +307,13 @@ public:
   double ReadDoubleRealQuantized(double minValue, double maxValue, double quantum) const;
 
   Math::Vector2 ReadReal2Quantized(const Math::Vector2& minValue, const Math::Vector2& maxValue) const;
-  Math::Vector2 ReadReal2Quantized(const Math::Vector2& minValue,
-                                   const Math::Vector2& maxValue,
-                                   const Math::Vector2& quantum) const;
+  Math::Vector2 ReadReal2Quantized(const Math::Vector2& minValue, const Math::Vector2& maxValue, const Math::Vector2& quantum) const;
 
   Math::Vector3 ReadReal3Quantized(const Math::Vector3& minValue, const Math::Vector3& maxValue) const;
-  Math::Vector3 ReadReal3Quantized(const Math::Vector3& minValue,
-                                   const Math::Vector3& maxValue,
-                                   const Math::Vector3& quantum) const;
+  Math::Vector3 ReadReal3Quantized(const Math::Vector3& minValue, const Math::Vector3& maxValue, const Math::Vector3& quantum) const;
 
   Math::Vector4 ReadReal4Quantized(const Math::Vector4& minValue, const Math::Vector4& maxValue) const;
-  Math::Vector4 ReadReal4Quantized(const Math::Vector4& minValue,
-                                   const Math::Vector4& maxValue,
-                                   const Math::Vector4& quantum) const;
+  Math::Vector4 ReadReal4Quantized(const Math::Vector4& minValue, const Math::Vector4& maxValue, const Math::Vector4& quantum) const;
 
   //
   // Event Operations
@@ -538,8 +478,7 @@ inline bool BitStreamCanSerializeType(Type* raverieType)
   // OR Is an enum?
   // OR Is a resource?
   // OR Is a bitstream extended?
-  return (basicNativeType != nullptr) || (raverieType->IsEnum()) || (raverieType->IsA(RaverieTypeId(Resource))) ||
-         (raverieType == RaverieTypeId(BitStreamExtended));
+  return (basicNativeType != nullptr) || (raverieType->IsEnum()) || (raverieType->IsA(RaverieTypeId(Resource))) || (raverieType == RaverieTypeId(BitStreamExtended));
 }
 
 /// Serializes a Variant.

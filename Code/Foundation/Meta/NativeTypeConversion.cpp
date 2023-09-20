@@ -116,7 +116,7 @@ Raverie::Type* BasicNativeTypeToRaverieType(NativeTypeId nativeTypeId)
     return RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::Int32>::Type); // Integer type
   case BasicNativeType::Int64:
     return RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::Int64>::Type); // DoubleInteger
-                                                                               // type
+                                                                                 // type
 
   // Fixed-Width Unsigned Integral Types
   case BasicNativeType::Uint8:
@@ -133,27 +133,27 @@ Raverie::Type* BasicNativeTypeToRaverieType(NativeTypeId nativeTypeId)
     return RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::Float>::Type); // Real type
   case BasicNativeType::Double:
     return RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::Double>::Type); // DoubleReal
-                                                                                // type
+                                                                                  // type
 
   // Multi-Primitive Math Types
   case BasicNativeType::BoolVector2:
     return RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::BoolVector2>::Type); // Boolean2
-                                                                                     // type
+                                                                                       // type
   case BasicNativeType::BoolVector3:
     return RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::BoolVector3>::Type); // Boolean3
-                                                                                     // type
+                                                                                       // type
   case BasicNativeType::BoolVector4:
     return RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::BoolVector4>::Type); // Boolean4
-                                                                                     // type
+                                                                                       // type
   case BasicNativeType::IntVector2:
     return RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::IntVector2>::Type); // Integer2
-                                                                                    // type
+                                                                                      // type
   case BasicNativeType::IntVector3:
     return RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::IntVector3>::Type); // Integer3
-                                                                                    // type
+                                                                                      // type
   case BasicNativeType::IntVector4:
     return RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::IntVector4>::Type); // Integer4
-                                                                                    // type
+                                                                                      // type
   case BasicNativeType::Vector2:
     return RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::Vector2>::Type); // Real2 type
   case BasicNativeType::Vector3:
@@ -162,13 +162,13 @@ Raverie::Type* BasicNativeTypeToRaverieType(NativeTypeId nativeTypeId)
     return RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::Vector4>::Type); // Real4 type
   case BasicNativeType::Quaternion:
     return RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::Quaternion>::Type); // Quaternion
-                                                                                    // type
+                                                                                      // type
   case BasicNativeType::Matrix3:
     return RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::Matrix3>::Type); // Real3x3
-                                                                                 // type
+                                                                                   // type
   case BasicNativeType::Matrix4:
     return RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::Matrix4>::Type); // Real4x4
-                                                                                 // type
+                                                                                   // type
 
   // String Type
   case BasicNativeType::String:
@@ -206,7 +206,7 @@ Any ConvertBasicVariantToAny(const Variant& variantValue)
   // Get raverie type from the variant's stored type
   Type* raverieType = BasicNativeTypeToRaverieType(variantValue.GetNativeType());
   if (!raverieType) // Unable? (The variant's stored type is not a basic native
-                  // type?)
+                    // type?)
     return Any();
 
   // Get variant's stored value data

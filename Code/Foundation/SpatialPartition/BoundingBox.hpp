@@ -9,23 +9,18 @@ namespace Raverie
 /// QueryType using the provided policy. This range becomes invalidated when the
 /// BroadPhase is changed.
 template <typename ClientDataType, typename QueryType, typename PolicyType = BroadPhasePolicy<QueryType, Aabb>>
-struct BoundingBoxRange : public BroadPhaseArrayRange<ClientDataType,
-                                                      QueryType,
-                                                      PolicyType,
-                                                      BoxQueryCheck<ClientDataType, QueryType, PolicyType>>
+struct BoundingBoxRange : public BroadPhaseArrayRange<ClientDataType, QueryType, PolicyType, BoxQueryCheck<ClientDataType, QueryType, PolicyType>>
 {
   typedef BoxQueryCheck<ClientDataType, QueryType, PolicyType> QueryCheck;
   typedef BroadPhaseArrayRange<ClientDataType, QueryType, PolicyType, QueryCheck> BaseType;
 
   /// Constructs a range using the default Policy.
-  BoundingBoxRange(typename BaseType::ObjectArray* data, const QueryType& queryObj) :
-      BaseType(data, queryObj, PolicyType())
+  BoundingBoxRange(typename BaseType::ObjectArray* data, const QueryType& queryObj) : BaseType(data, queryObj, PolicyType())
   {
   }
 
   /// Constructs a range using the policy type passed in.
-  BoundingBoxRange(typename BaseType::ObjectArray* data, const QueryType& queryObj, PolicyType policy) :
-      BaseType(data, queryObj, policy)
+  BoundingBoxRange(typename BaseType::ObjectArray* data, const QueryType& queryObj, PolicyType policy) : BaseType(data, queryObj, policy)
   {
   }
 };

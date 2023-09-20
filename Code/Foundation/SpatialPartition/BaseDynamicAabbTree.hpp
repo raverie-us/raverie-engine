@@ -48,22 +48,18 @@ public:
   /// perform queries without having to provide a callback function.
   /// Note: this range will become completely invalidated if any operations are
   /// performed on the tree.
-  template <typename QueryType,
-            typename ArrayType = Array<NodeType*>,
-            typename QueryPolicyType = BroadPhasePolicy<QueryType, Aabb>>
+  template <typename QueryType, typename ArrayType = Array<NodeType*>, typename QueryPolicyType = BroadPhasePolicy<QueryType, Aabb>>
   struct BaseTreeRange : public BroadPhaseTreeRange<ClientDataType, NodeType, QueryType, QueryPolicyType, ArrayType>
   {
     typedef BroadPhaseTreeRange<ClientDataType, NodeType, QueryType, QueryPolicyType, ArrayType> BaseType;
 
     /// Constructs a range using the default Policy.
-    BaseTreeRange(ArrayType* scratchBuffer, NodeType* root, const QueryType& queryObj) :
-        BaseType(scratchBuffer, root, queryObj, QueryPolicyType())
+    BaseTreeRange(ArrayType* scratchBuffer, NodeType* root, const QueryType& queryObj) : BaseType(scratchBuffer, root, queryObj, QueryPolicyType())
     {
     }
 
     /// Constructs a range using the policy type passed in.
-    BaseTreeRange(ArrayType* scratchBuffer, NodeType* root, const QueryType& queryObj, QueryPolicyType policy) :
-        BaseType(scratchBuffer, root, queryObj, policy)
+    BaseTreeRange(ArrayType* scratchBuffer, NodeType* root, const QueryType& queryObj, QueryPolicyType policy) : BaseType(scratchBuffer, root, queryObj, policy)
     {
     }
   };
@@ -115,9 +111,7 @@ public:
   /// should use the forRangeBroadphaseTreePolicy macro instead of calling this
   /// directly.
   template <typename QueryType, typename ArrayType, typename Policy>
-  BaseTreeRange<QueryType, ArrayType, Policy> QueryWithPolicy(const QueryType& queryObj,
-                                                              ArrayType& scratchBuffer,
-                                                              Policy policy)
+  BaseTreeRange<QueryType, ArrayType, Policy> QueryWithPolicy(const QueryType& queryObj, ArrayType& scratchBuffer, Policy policy)
   {
     typedef BaseTreeRange<QueryType, ArrayType> RangeType;
 

@@ -43,15 +43,7 @@ SimInline real SimVecToReal(SimVecParam v)
   return vals[0];
 }
 
-SimInline SimVec ComputeLambdaSse(SimVecParam v0,
-                                  SimVecParam w0,
-                                  SimVecParam v1,
-                                  SimVecParam w1,
-                                  SimVecParam L0,
-                                  SimVecParam A0,
-                                  SimVecParam L1,
-                                  SimVecParam A1,
-                                  ConstraintMolecule& mol)
+SimInline SimVec ComputeLambdaSse(SimVecParam v0, SimVecParam w0, SimVecParam v1, SimVecParam w1, SimVecParam L0, SimVecParam A0, SimVecParam L1, SimVecParam A1, ConstraintMolecule& mol)
 {
   SimVec cDot = Simd::Multiply(v0, L0);
   cDot = Simd::MultiplyAdd(v1, L1, cDot);
@@ -81,15 +73,7 @@ SimInline SimVec ComputeLambdaSse(SimVecParam v0,
   return lambda;
 }
 
-SimInline void SolveConstraintSse(SimVecRef v0,
-                                  SimVecRef w0,
-                                  SimVecRef v1,
-                                  SimVecRef w1,
-                                  SimVecParam m0,
-                                  SimMat3Param i0,
-                                  SimVecParam m1,
-                                  SimMat3Param i1,
-                                  ConstraintMolecule& mol)
+SimInline void SolveConstraintSse(SimVecRef v0, SimVecRef w0, SimVecRef v1, SimVecRef w1, SimVecParam m0, SimMat3Param i0, SimVecParam m1, SimMat3Param i1, ConstraintMolecule& mol)
 {
   SimVec L0 = Simd::UnAlignedLoad(mol.mJacobian.Linear[0].array);
   SimVec L1 = Simd::UnAlignedLoad(mol.mJacobian.Linear[1].array);

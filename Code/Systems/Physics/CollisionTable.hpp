@@ -49,9 +49,7 @@ public:
   void UnRegisterGroup(CollisionGroup* group);
   /// Finds the instance of a collision group. The user can specify what they
   /// want to have happen when the instance is not found via the access mode.
-  CollisionGroupInstance*
-  GetGroupInstance(ResourceId groupId,
-                   RegisteredGroupInstanceAccessMode::Enum accessMode = RegisteredGroupInstanceAccessMode::UseDefault);
+  CollisionGroupInstance* GetGroupInstance(ResourceId groupId, RegisteredGroupInstanceAccessMode::Enum accessMode = RegisteredGroupInstanceAccessMode::UseDefault);
   /// Finds the filter between the pair of collision groups.
   CollisionFilter* FindFilter(CollisionFilter& pair);
   /// Finds the filter between the pair of collision groups.

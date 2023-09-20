@@ -23,13 +23,7 @@ bool IsPngSaveFormat(TextureFormat::Enum format);
 
 // Both Load/Save will leave the stream at the end, or wherever they failed.
 // Supported texture formats: RGBA8, RGBA16
-void LoadPng(Status& status,
-             Stream* stream,
-             byte** output,
-             uint* width,
-             uint* height,
-             TextureFormat::Enum* format,
-             TextureFormat::Enum requireFormat = TextureFormat::None);
+void LoadPng(Status& status, Stream* stream, byte** output, uint* width, uint* height, TextureFormat::Enum* format, TextureFormat::Enum requireFormat = TextureFormat::None);
 void SavePng(Status& status, Stream* stream, const byte* image, uint width, uint height, TextureFormat::Enum format);
 
 } // namespace Raverie

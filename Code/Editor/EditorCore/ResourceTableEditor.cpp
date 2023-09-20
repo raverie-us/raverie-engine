@@ -4,9 +4,7 @@
 namespace Raverie
 {
 
-ResourceTableEntryChangeOp::ResourceTableEntryChangeOp(ResourceTableEditor* editor,
-                                                       ResourceTableEntry* oldEntry,
-                                                       const ResourceTable::ValueType& newValue)
+ResourceTableEntryChangeOp::ResourceTableEntryChangeOp(ResourceTableEditor* editor, ResourceTableEntry* oldEntry, const ResourceTable::ValueType& newValue)
 {
   mName = "ResourceTableEntryChange";
 
@@ -109,9 +107,7 @@ void ResourceTableResourceTypeChangeOp::PerformOp(StringParam resourceType)
   mEditor->Rebuild();
 }
 
-ResourceTableAddRemoveRowOp::ResourceTableAddRemoveRowOp(ResourceTableEditor* editor,
-                                                         ResourceTableEntry* entry,
-                                                         bool add)
+ResourceTableAddRemoveRowOp::ResourceTableAddRemoveRowOp(ResourceTableEditor* editor, ResourceTableEntry* entry, bool add)
 {
   String opType;
   if (add)
@@ -183,9 +179,7 @@ void ResourceTableRowReorderOp::PerformOp(uint currentIndex, uint newIndex)
   mEditor->Rebuild();
 }
 
-ResourceTableBatchRowReorderOp::ResourceTableBatchRowReorderOp(ResourceTableEditor* editor,
-                                                               Array<int>& oldIndices,
-                                                               Array<int>& newIndices)
+ResourceTableBatchRowReorderOp::ResourceTableBatchRowReorderOp(ResourceTableEditor* editor, Array<int>& oldIndices, Array<int>& newIndices)
 {
   mName = "ResourceTableBatchRowReorder";
 
@@ -236,10 +230,7 @@ void ResourceTableBatchRowReorderOp::PerformOp(Array<int>& currentIndices, Array
   mEditor->Rebuild();
 }
 
-SearchableResourceTextBox::SearchableResourceTextBox(Composite* parent,
-                                                     StringParam resourceType,
-                                                     StringParam resourceIdName) :
-    Composite(parent)
+SearchableResourceTextBox::SearchableResourceTextBox(Composite* parent, StringParam resourceType, StringParam resourceIdName) : Composite(parent)
 {
   mResourceType = resourceType;
 
@@ -484,11 +475,7 @@ void WeightedTableBar::OnRemove(Event*)
   mWeightedTableView->RemoveItem(mIndex);
 }
 
-WeightedTableBarDragManipulation::WeightedTableBarDragManipulation(MouseEvent* e,
-                                                                   Composite* parent,
-                                                                   WeightedTableBar* bar,
-                                                                   ResourceTableEditor* editor) :
-    MouseManipulation(e->GetMouse(), parent)
+WeightedTableBarDragManipulation::WeightedTableBarDragManipulation(MouseEvent* e, Composite* parent, WeightedTableBar* bar, ResourceTableEditor* editor) : MouseManipulation(e->GetMouse(), parent)
 {
   mEditor = editor;
   mBar = bar;

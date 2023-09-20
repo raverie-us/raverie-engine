@@ -39,9 +39,8 @@ class ColorsClass
 public:
   RaverieDeclareType(ColorsClass, TypeCopyMode::ReferenceType);
 
-#  define DefineColor(name, r, g, b, a) static const Real4 name;
-#  include "Math/ColorDefinitions.hpp"
-#  undef DefineColor
+#define DefineColor(name, r, g, b, a) static const Real4 name;
+#include "Math/ColorDefinitions.hpp"
+#undef DefineColor
 };
 } // namespace Raverie
-

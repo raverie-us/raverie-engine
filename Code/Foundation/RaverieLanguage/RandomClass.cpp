@@ -13,10 +13,8 @@ RaverieDefineType(Random, builder, type)
   RaverieFullBindConstructor(builder, type, Random, nullptr);
 
   // Change to a property later
-  RaverieFullBindGetterSetter(
-      builder, type, &Random::GetSeed, RaverieNoOverload, &Random::SetSeed, RaverieNoOverload, "Seed");
-  RaverieFullBindGetterSetter(
-      builder, type, &Random::GetMaxInteger, RaverieNoOverload, RaverieNoSetter, RaverieNoOverload, "MaxInteger");
+  RaverieFullBindGetterSetter(builder, type, &Random::GetSeed, RaverieNoOverload, &Random::SetSeed, RaverieNoOverload, "Seed");
+  RaverieFullBindGetterSetter(builder, type, &Random::GetMaxInteger, RaverieNoOverload, RaverieNoSetter, RaverieNoOverload, "MaxInteger");
 
   // Basic type randoms
   RaverieFullBindMethod(builder, type, &Random::Boolean, RaverieNoOverload, "Boolean", nullptr);
@@ -34,11 +32,9 @@ RaverieDefineType(Random, builder, type)
   RaverieFullBindMethod(builder, type, &Random::RangeExclusiveMax, RaverieNoOverload, "RangeExclusiveMax", "min, max");
   RaverieFullBindMethod(builder, type, &Random::Range, RaverieNoOverload, "Range", "min, max");
   RaverieFullBindMethod(builder, type, &Random::DoubleRange, RaverieNoOverload, "DoubleRange", "min, max");
-  RaverieFullBindMethod(builder, type, &Random::Variance, (int (Random::*)(int, int)), "Variance", "baseValue, variance");
-  RaverieFullBindMethod(
-      builder, type, &Random::Variance, (float (Random::*)(float, float)), "Variance", "baseValue, variance");
-  RaverieFullBindMethod(
-      builder, type, &Random::Variance, (double (Random::*)(double, double)), "Variance", "baseValue, variance");
+  RaverieFullBindMethod(builder, type, &Random::Variance, (int(Random::*)(int, int)), "Variance", "baseValue, variance");
+  RaverieFullBindMethod(builder, type, &Random::Variance, (float(Random::*)(float, float)), "Variance", "baseValue, variance");
+  RaverieFullBindMethod(builder, type, &Random::Variance, (double(Random::*)(double, double)), "Variance", "baseValue, variance");
 
   // Some more "user friendly" functions for designers
   RaverieFullBindMethod(builder, type, &Random::DieRoll, RaverieNoOverload, "DieRoll", nullptr);
@@ -47,15 +43,9 @@ RaverieDefineType(Random, builder, type)
   RaverieFullBindMethod(builder, type, &Random::Rotation, RaverieNoOverload, "Rotation", nullptr);
 
   // Bell curve (Gaussian) distribution
-  RaverieFullBindMethod(builder, type, &Random::BellCurve, (float (Random::*)()), "BellCurve", nullptr);
-  RaverieFullBindMethod(
-      builder, type, &Random::BellCurve, (float (Random::*)(float, float)), "BellCurve", "center, range");
-  RaverieFullBindMethod(builder,
-                      type,
-                      &Random::BellCurve,
-                      (float (Random::*)(float, float, float)),
-                      "BellCurve",
-                      "center, range, standardDeviation");
+  RaverieFullBindMethod(builder, type, &Random::BellCurve, (float(Random::*)()), "BellCurve", nullptr);
+  RaverieFullBindMethod(builder, type, &Random::BellCurve, (float(Random::*)(float, float)), "BellCurve", "center, range");
+  RaverieFullBindMethod(builder, type, &Random::BellCurve, (float(Random::*)(float, float, float)), "BellCurve", "center, range, standardDeviation");
 }
 
 Random::Random()

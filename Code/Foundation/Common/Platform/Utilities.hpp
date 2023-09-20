@@ -31,13 +31,13 @@ u64 GenerateUniqueId64();
 
 // Waits for expression to evaluate to true, checking approximately every
 // pollPeriod (in milliseconds)
-#define WaitUntil(expression, pollPeriod)                                                                              \
-  do                                                                                                                   \
-  {                                                                                                                    \
-    while (!(expression))                                                                                              \
-    {                                                                                                                  \
-      Os::Sleep(pollPeriod);                                                                                           \
-    }                                                                                                                  \
+#define WaitUntil(expression, pollPeriod)                                                                                                                                                              \
+  do                                                                                                                                                                                                   \
+  {                                                                                                                                                                                                    \
+    while (!(expression))                                                                                                                                                                              \
+    {                                                                                                                                                                                                  \
+      Os::Sleep(pollPeriod);                                                                                                                                                                           \
+    }                                                                                                                                                                                                  \
   } while (gConditionalFalseConstant)
 
 } // namespace Raverie

@@ -267,8 +267,7 @@ uint GetPositionMoleculeCount(JointType* joint)
 }
 
 template <typename JointType, typename PolicyType>
-void ComputeMoleculesFragment(
-    JointType* joint, MoleculeWalker& mols, uint atomCount, MoleculeData& data, PolicyType policy)
+void ComputeMoleculesFragment(JointType* joint, MoleculeWalker& mols, uint atomCount, MoleculeData& data, PolicyType policy)
 {
   // cache off the mass terms
   JointMass masses;
@@ -341,8 +340,7 @@ void ComputeMoleculesFragment(JointType* joint, MoleculeWalker& mols, uint atomC
 }
 
 template <typename JointType, typename PolicyType>
-void ComputePositionMoleculesFragment(
-    JointType* joint, MoleculeWalker& mols, uint atomCount, MoleculeData& data, PolicyType policy)
+void ComputePositionMoleculesFragment(JointType* joint, MoleculeWalker& mols, uint atomCount, MoleculeData& data, PolicyType policy)
 {
   // cache off the mass terms
   JointMass masses;
@@ -554,8 +552,7 @@ inline void DrawAnchorAtomFragment(const AnchorAtom& localAnchors, Collider* obj
 }
 
 // Debug draw an axis fragment at the passed in anchor (Colors fixed)
-inline void
-DrawAxisAtomFragment(const AxisAtom& localAxes, const AnchorAtom& localAnchors, Collider* obj0, Collider* obj1)
+inline void DrawAxisAtomFragment(const AxisAtom& localAxes, const AnchorAtom& localAnchors, Collider* obj0, Collider* obj1)
 {
   // get the world anchor and axis values
   WorldAxisAtom axes(localAxes, obj0, obj1);

@@ -38,13 +38,7 @@ float GetValueExponentialCurve(const float current, const float total, const flo
 
 // Interpolating Object
 
-InterpolatingObject::InterpolatingObject() :
-    mStartValue(0),
-    mEndValue(0),
-    mTotalFrames(0),
-    mCurrentFrame(0),
-    mTotalDistance(0),
-    mCurrentCurveType(FalloffCurveType::Linear)
+InterpolatingObject::InterpolatingObject() : mStartValue(0), mEndValue(0), mTotalFrames(0), mCurrentFrame(0), mTotalDistance(0), mCurrentCurveType(FalloffCurveType::Linear)
 {
   GetValue = GetValueLinearCurve;
 }
@@ -149,9 +143,7 @@ bool InterpolatingObject::Finished(HandleOf<SoundNode> nodeForEvent)
     if (nodeForEvent)
     {
       // Notify the external object that the interpolation is done
-      Z::gSound->Mixer.AddTaskThreaded(
-          CreateFunctor(&SoundNode::DispatchEventFromMixThread, *nodeForEvent, Events::AudioInterpolationDone),
-          nodeForEvent);
+      Z::gSound->Mixer.AddTaskThreaded(CreateFunctor(&SoundNode::DispatchEventFromMixThread, *nodeForEvent, Events::AudioInterpolationDone), nodeForEvent);
     }
 
     return true;

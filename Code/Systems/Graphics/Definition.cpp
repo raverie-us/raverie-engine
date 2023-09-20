@@ -95,8 +95,7 @@ void DefinitionSet::Serialize(Serializer& stream)
   PolymorphicNode definitionNode;
   while (stream.GetPolymorphic(definitionNode))
   {
-    DefinitionSetManager::CreatorMapType::range r =
-        DefinitionSetManager::GetInstance()->CreatorMap.Find(definitionNode.TypeName);
+    DefinitionSetManager::CreatorMapType::range r = DefinitionSetManager::GetInstance()->CreatorMap.Find(definitionNode.TypeName);
     DefinitionCreator* c = r.Front().second;
     BaseDefinition* def = c->Create();
     def->Serialize(stream);

@@ -264,9 +264,7 @@ void EventForward(EventHandler* sender, StringParam eventName, EventHandler* rec
   EventConnect(sender, eventName, eventDelegate, receiver);
 }
 
-RaverieEventDelegate::RaverieEventDelegate(const Delegate& delegate, ExecutableState* state) :
-    FunctionWithThis(delegate),
-    State(state)
+RaverieEventDelegate::RaverieEventDelegate(const Delegate& delegate, ExecutableState* state) : FunctionWithThis(delegate), State(state)
 {
   // We assume that the passed in delegate should be validated by this point, so
   // this should not crash or be invalid

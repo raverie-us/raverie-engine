@@ -30,8 +30,7 @@ SphericalParticleEmitter::~SphericalParticleEmitter()
 {
 }
 
-int SphericalParticleEmitter::EmitParticles(
-    ParticleList* particleList, float dt, Mat4Ref transform, Vec3Param emitterVelocity, float timeAlive)
+int SphericalParticleEmitter::EmitParticles(ParticleList* particleList, float dt, Mat4Ref transform, Vec3Param emitterVelocity, float timeAlive)
 {
   int particlesToEmit = GetParticleEmissionCount(particleList, dt, timeAlive);
 
@@ -132,8 +131,7 @@ BoxParticleEmitter::~BoxParticleEmitter()
 {
 }
 
-int BoxParticleEmitter::EmitParticles(
-    ParticleList* particleList, float dt, Mat4Ref transform, Vec3Param emitterVelocity, float timeAlive)
+int BoxParticleEmitter::EmitParticles(ParticleList* particleList, float dt, Mat4Ref transform, Vec3Param emitterVelocity, float timeAlive)
 {
   int particlesToEmit = GetParticleEmissionCount(particleList, dt, timeAlive);
   if (particlesToEmit == 0)
@@ -310,8 +308,7 @@ MeshParticleEmitter::~MeshParticleEmitter()
 {
 }
 
-int MeshParticleEmitter::EmitParticles(
-    ParticleList* particleList, float dt, Mat4Ref transform, Vec3Param emitterVelocity, float timeAlive)
+int MeshParticleEmitter::EmitParticles(ParticleList* particleList, float dt, Mat4Ref transform, Vec3Param emitterVelocity, float timeAlive)
 {
   if (!mActive)
     return 0;

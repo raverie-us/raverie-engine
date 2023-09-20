@@ -12,22 +12,22 @@ class AppendCallbackData;
 class CompositorCallbackData;
 
 // Helper macro to add bitwise operators to enums
-#define DeclareBitFieldBitwiseOperators(bitFieldEnum)                                                                  \
-  inline bitFieldEnum operator|(bitFieldEnum a, bitFieldEnum b)                                                        \
-  {                                                                                                                    \
-    return bitFieldEnum(int(a) | int(b));                                                                              \
-  }                                                                                                                    \
-  inline void operator|=(bitFieldEnum& a, bitFieldEnum b)                                                              \
-  {                                                                                                                    \
-    a = a | b;                                                                                                         \
-  }                                                                                                                    \
-  inline bitFieldEnum operator&(bitFieldEnum a, bitFieldEnum b)                                                        \
-  {                                                                                                                    \
-    return bitFieldEnum(int(a) & int(b));                                                                              \
-  }                                                                                                                    \
-  inline void operator&=(bitFieldEnum& a, bitFieldEnum b)                                                              \
-  {                                                                                                                    \
-    a = a & b;                                                                                                         \
+#define DeclareBitFieldBitwiseOperators(bitFieldEnum)                                                                                                                                                  \
+  inline bitFieldEnum operator|(bitFieldEnum a, bitFieldEnum b)                                                                                                                                        \
+  {                                                                                                                                                                                                    \
+    return bitFieldEnum(int(a) | int(b));                                                                                                                                                              \
+  }                                                                                                                                                                                                    \
+  inline void operator|=(bitFieldEnum& a, bitFieldEnum b)                                                                                                                                              \
+  {                                                                                                                                                                                                    \
+    a = a | b;                                                                                                                                                                                         \
+  }                                                                                                                                                                                                    \
+  inline bitFieldEnum operator&(bitFieldEnum a, bitFieldEnum b)                                                                                                                                        \
+  {                                                                                                                                                                                                    \
+    return bitFieldEnum(int(a) & int(b));                                                                                                                                                              \
+  }                                                                                                                                                                                                    \
+  inline void operator&=(bitFieldEnum& a, bitFieldEnum b)                                                                                                                                              \
+  {                                                                                                                                                                                                    \
+    a = a & b;                                                                                                                                                                                         \
   }
 
 /// @JoshD: Unify later with the FragmentType enum. This needs to be a bitfield
@@ -343,8 +343,7 @@ public:
   /// Overrides the raverie name that is used to map to a spirv built-in variable
   /// for all shader stages.
   void SetHardwareBuiltInName(spv::BuiltIn builtInId, StringParam name);
-  bool
-  IsValidHardwareBuiltIn(FragmentType::Enum fragmentType, StringParam fieldType, StringParam fieldName, bool isInput);
+  bool IsValidHardwareBuiltIn(FragmentType::Enum fragmentType, StringParam fieldType, StringParam fieldName, bool isInput);
 
   // Set what's the max number of render targets that can be used
   void SetMaxSimultaneousRenderTargets(size_t maxNumber);

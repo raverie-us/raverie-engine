@@ -194,11 +194,7 @@ ByteBufferBlock::ByteBufferBlock()
   mOwnsData = false;
 }
 
-ByteBufferBlock::ByteBufferBlock(ByteBufferBlock&& rhs) :
-    mData(rhs.mData),
-    mSize(rhs.mSize),
-    mCurrent(rhs.mCurrent),
-    mOwnsData(rhs.mOwnsData)
+ByteBufferBlock::ByteBufferBlock(ByteBufferBlock&& rhs) : mData(rhs.mData), mSize(rhs.mSize), mCurrent(rhs.mCurrent), mOwnsData(rhs.mOwnsData)
 {
   rhs.mData = nullptr;
   rhs.mSize = 0;
@@ -206,11 +202,7 @@ ByteBufferBlock::ByteBufferBlock(ByteBufferBlock&& rhs) :
   rhs.mOwnsData = false;
 }
 
-ByteBufferBlock::ByteBufferBlock(MoveReference<ByteBufferBlock> rhs) :
-    mData(rhs->mData),
-    mSize(rhs->mSize),
-    mCurrent(rhs->mCurrent),
-    mOwnsData(rhs->mOwnsData)
+ByteBufferBlock::ByteBufferBlock(MoveReference<ByteBufferBlock> rhs) : mData(rhs->mData), mSize(rhs->mSize), mCurrent(rhs->mCurrent), mOwnsData(rhs->mOwnsData)
 {
   rhs->mData = nullptr;
   rhs->mSize = 0;

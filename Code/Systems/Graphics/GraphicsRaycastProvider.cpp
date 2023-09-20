@@ -43,15 +43,13 @@ void GraphicsRaycastProvider::RayCast(Ray& ray, CastInfo& castInfo, RaycastResul
   forRangeBroadphaseTree(GraphicsBroadPhase, graphicsSpace->mBroadPhase, Ray, ray)
   {
     if (RayTest(range.Front(), rayCast, castInfo))
-      results.AddItem(
-          rayCast.mObject, rayCast.mT, ray.Start + ray.Direction * rayCast.mT, rayCast.mNormal, rayCast.mUv, true);
+      results.AddItem(rayCast.mObject, rayCast.mT, ray.Start + ray.Direction * rayCast.mT, rayCast.mNormal, rayCast.mUv, true);
   }
 
   forRange (Graphical& graphical, graphicsSpace->mGraphicalsNeverCulled.All())
   {
     if (RayTest(&graphical, rayCast, castInfo))
-      results.AddItem(
-          rayCast.mObject, rayCast.mT, ray.Start + ray.Direction * rayCast.mT, rayCast.mNormal, rayCast.mUv, true);
+      results.AddItem(rayCast.mObject, rayCast.mT, ray.Start + ray.Direction * rayCast.mT, rayCast.mNormal, rayCast.mUv, true);
   }
 
   if (mVisibleOnly == false)
@@ -59,8 +57,7 @@ void GraphicsRaycastProvider::RayCast(Ray& ray, CastInfo& castInfo, RaycastResul
     forRange (Graphical& graphical, graphicsSpace->mGraphicalsAlwaysCulled.All())
     {
       if (RayTest(&graphical, rayCast, castInfo))
-        results.AddItem(
-            rayCast.mObject, rayCast.mT, ray.Start + ray.Direction * rayCast.mT, rayCast.mNormal, rayCast.mUv, true);
+        results.AddItem(rayCast.mObject, rayCast.mT, ray.Start + ray.Direction * rayCast.mT, rayCast.mNormal, rayCast.mUv, true);
     }
   }
 }

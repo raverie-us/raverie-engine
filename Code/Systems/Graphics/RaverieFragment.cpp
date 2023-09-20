@@ -70,9 +70,7 @@ void RaverieFragment::GetKeywords(Array<Completion>& keywordsOut)
   AddKeywords(keywordsOut, nameSettings.mAllowedFieldAttributes);
 }
 
-void RaverieFragment::AddKeywords(Array<Completion>& keywordsOut,
-                                const Array<String>& keyswords,
-                                HashSet<String>& keywordsToSkip)
+void RaverieFragment::AddKeywords(Array<Completion>& keywordsOut, const Array<String>& keyswords, HashSet<String>& keywordsToSkip)
 {
   forRange (String& keyword, keyswords.All())
   {
@@ -111,8 +109,7 @@ void RaverieFragment::GetLibrariesRecursive(Array<LibraryRef>& libraries, Resour
   {
     GraphicsEngine* graphicsEngine = Z::gEngine->has(GraphicsEngine);
     Raverie::LibraryRef wrapperLibrary = library->mSwapFragment.mCurrentLibrary;
-    RaverieShaderIRLibrary* internalFragmentLibrary =
-        graphicsEngine->mShaderGenerator->GetInternalLibrary(wrapperLibrary);
+    RaverieShaderIRLibrary* internalFragmentLibrary = graphicsEngine->mShaderGenerator->GetInternalLibrary(wrapperLibrary);
     ErrorIf(internalFragmentLibrary == nullptr, "Didn't find an internal library for a wrapper library");
     libraries.PushBack(internalFragmentLibrary->mRaverieLibrary);
   }
@@ -150,9 +147,7 @@ void RaverieFragmentLoader::ReloadFromFile(Resource* resource, ResourceEntry& en
 
 ImplementResourceManager(RaverieFragmentManager, RaverieFragment);
 
-RaverieFragmentManager::RaverieFragmentManager(BoundType* resourceType) :
-    ResourceManager(resourceType),
-    mLastExceptionVersion(-1)
+RaverieFragmentManager::RaverieFragmentManager(BoundType* resourceType) : ResourceManager(resourceType), mLastExceptionVersion(-1)
 {
   mCategory = "Code";
   mCanAddFile = true;
@@ -227,10 +222,7 @@ String RaverieFragmentManager::GetTemplateSourceFile(ResourceAdd& resourceAdd)
   return sourceFile;
 }
 
-void RaverieFragmentManager::DispatchScriptError(StringParam eventId,
-                                               StringParam shortMessage,
-                                               StringParam fullMessage,
-                                               const Raverie::CodeLocation& location)
+void RaverieFragmentManager::DispatchScriptError(StringParam eventId, StringParam shortMessage, StringParam fullMessage, const Raverie::CodeLocation& location)
 {
   // This should only happen when a composite has a raverie error. Figure out how
   // to report later?

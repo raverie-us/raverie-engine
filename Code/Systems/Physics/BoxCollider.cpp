@@ -37,8 +37,7 @@ void BoxCollider::Serialize(Serializer& stream)
 void BoxCollider::DebugDraw()
 {
   Collider::DebugDraw();
-  gDebugDraw->Add(
-      Debug::Obb(GetWorldTranslation(), mWorldHalfSize, GetWorldRotation()).Color(Color::Plum).BackShade(true));
+  gDebugDraw->Add(Debug::Obb(GetWorldTranslation(), mWorldHalfSize, GetWorldRotation()).Color(Color::Plum).BackShade(true));
 }
 
 void BoxCollider::CacheWorldValues()

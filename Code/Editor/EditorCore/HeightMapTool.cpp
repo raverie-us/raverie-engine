@@ -73,8 +73,7 @@ void HeightManipulationTool::PerformQuery(HeightMap* map, ViewportMouseEvent* e)
       mOperation = new HeightMapUndoRedo(map);
       mOperation->SetAABB(range);
 
-      HashMap<HeightMap*, HeightMapStateManager>::InsertResult result =
-          mAlteredMaps.InsertNoOverwrite(map, HeightMapStateManager(map));
+      HashMap<HeightMap*, HeightMapStateManager>::InsertResult result = mAlteredMaps.InsertNoOverwrite(map, HeightMapStateManager(map));
 
       state = &result.mValue->second;
       state->StartBrushStroke(mRadius, mFeatherRadius);
@@ -179,11 +178,8 @@ void HeightManipulationTool::Draw(HeightMap* map)
   Vec3 upAxis = tx->TransformNormal(Vec3::cYAxis);
 
   // Draw the radius and feather for the brush
-  gDebugDraw->Add(
-      Debug::Circle(map->GetWorldPosition(mLocalToolPosition), upAxis, mRadius).OnTop(true).Color(Color::Red));
-  gDebugDraw->Add(Debug::Circle(map->GetWorldPosition(mLocalToolPosition), upAxis, mRadius + mFeatherRadius)
-                      .OnTop(true)
-                      .Color(Color::Green));
+  gDebugDraw->Add(Debug::Circle(map->GetWorldPosition(mLocalToolPosition), upAxis, mRadius).OnTop(true).Color(Color::Red));
+  gDebugDraw->Add(Debug::Circle(map->GetWorldPosition(mLocalToolPosition), upAxis, mRadius + mFeatherRadius).OnTop(true).Color(Color::Green));
 }
 
 RaverieDefineType(RaiseLowerTool, builder, type)
@@ -249,14 +245,7 @@ SmoothSharpenTool::SmoothSharpenTool() : mRandom(1234)
   mAutoDetermineSamples = true;
 }
 
-inline void SampleAverage(HeightMap* map,
-                          int dx,
-                          int dy,
-                          float influence,
-                          HeightMapCell& cell,
-                          const AbsoluteIndex& index,
-                          float& totalHeight,
-                          float& totalWeight)
+inline void SampleAverage(HeightMap* map, int dx, int dy, float influence, HeightMapCell& cell, const AbsoluteIndex& index, float& totalHeight, float& totalWeight)
 {
   // Determine an index inside the current patch
   CellIndex inPatchIndex = cell.Index + CellIndex(dx, dy);
@@ -265,8 +254,7 @@ inline void SampleAverage(HeightMap* map,
   float sample;
 
   // If the cell index is still within our patch
-  if (inPatchIndex.x >= 0 && inPatchIndex.y >= 0 && inPatchIndex.x < HeightPatch::Size &&
-      inPatchIndex.y < HeightPatch::Size)
+  if (inPatchIndex.x >= 0 && inPatchIndex.y >= 0 && inPatchIndex.x < HeightPatch::Size && inPatchIndex.y < HeightPatch::Size)
   {
     // Get the current sample (in our own patch)
     sample = cell.Patch->GetHeight(inPatchIndex);
@@ -353,8 +341,7 @@ void SmoothSharpenTool::Smooth(HeightMapCellRange& range)
     float& height = cell.Patch->GetHeight(cell.Index);
 
     // Get the absolute index of the cell
-    AbsoluteIndex index = cell.Patch->Index * HeightPatch::Size +
-                          CellIndex(cell.Index.x - HeightPatch::Size / 2, cell.Index.y - HeightPatch::Size / 2);
+    AbsoluteIndex index = cell.Patch->Index * HeightPatch::Size + CellIndex(cell.Index.x - HeightPatch::Size / 2, cell.Index.y - HeightPatch::Size / 2);
 
     // Store totals for averaging
     float totalHeight = 0.0f;
@@ -686,11 +673,8 @@ void WeightPainterTool::Draw(HeightMap* map)
   Vec3 upAxis = tx->TransformNormal(Vec3::cYAxis);
 
   // Draw the radius and feather for the brush
-  gDebugDraw->Add(
-      Debug::Circle(map->GetWorldPosition(mLocalToolPosition), upAxis, mRadius).OnTop(true).Color(Color::Red));
-  gDebugDraw->Add(Debug::Circle(map->GetWorldPosition(mLocalToolPosition), upAxis, mRadius + mFeatherRadius)
-                      .OnTop(true)
-                      .Color(Color::Green));
+  gDebugDraw->Add(Debug::Circle(map->GetWorldPosition(mLocalToolPosition), upAxis, mRadius).OnTop(true).Color(Color::Red));
+  gDebugDraw->Add(Debug::Circle(map->GetWorldPosition(mLocalToolPosition), upAxis, mRadius + mFeatherRadius).OnTop(true).Color(Color::Green));
 }
 
 void ClampWeights(Vec4& a)
@@ -1157,9 +1141,7 @@ void HeightMapTool::DrawDebugIndexes()
       sprintf(buffer, "(%d,%d)", patch->Index.x, patch->Index.y);
 
       Vec3 p0(map->GetWorldPosition(patch->Index));
-      gDebugDraw->Add(
-          sID,
-          Debug::Text(p0, 0.3f, buffer).Color(Color::MediumSpringGreen).OnTop(true).ViewAligned(true).ViewScaled(true));
+      gDebugDraw->Add(sID, Debug::Text(p0, 0.3f, buffer).Color(Color::MediumSpringGreen).OnTop(true).ViewAligned(true).ViewScaled(true));
     }
 
     if (!mShowCellIndex)
@@ -1174,8 +1156,7 @@ void HeightMapTool::DrawDebugIndexes()
       char buffer[16] = {0};
       sprintf(buffer, "(%d,%d)", index.x, index.y);
 
-      gDebugDraw->Add(sID,
-                      Debug::Text(p0, 0.3f, buffer).Color(Color::Black).OnTop(true).ViewAligned(true).ViewScaled(true));
+      gDebugDraw->Add(sID, Debug::Text(p0, 0.3f, buffer).Color(Color::Black).OnTop(true).ViewAligned(true).ViewScaled(true));
     }
   }
 }
@@ -1205,8 +1186,7 @@ void HeightMapTool::CreateHeightMap()
 HeightMap* HeightMapTool::GetHeightMap()
 {
   // Disabled creation
-  HeightMap* heightMap = static_cast<HeightMap*>(
-      Tool::GetOrCreateEditComponent(RaverieTypeId(HeightMap), cHeightMapName, cHeightMapArchetype, mLastEdited, false));
+  HeightMap* heightMap = static_cast<HeightMap*>(Tool::GetOrCreateEditComponent(RaverieTypeId(HeightMap), cHeightMapName, cHeightMapArchetype, mLastEdited, false));
   if (heightMap == NULL && mAddHeightMapWidget.IsNull())
   {
     mAddHeightMapWidget = Tool::CreateViewportTextWidget("No HeightMap Object, Add New +");
@@ -1229,8 +1209,7 @@ void HeightMapTool::SetCurrentTool(HeightTool::Enum tool)
   mSubTool = mSubTools[(uint)tool];
 }
 
-HeightMapMouseCapture::HeightMapMouseCapture(Mouse* mouse, Viewport* viewport, HeightMapTool* tool) :
-    MouseManipulation(mouse, viewport)
+HeightMapMouseCapture::HeightMapMouseCapture(Mouse* mouse, Viewport* viewport, HeightMapTool* tool) : MouseManipulation(mouse, viewport)
 {
   mViewport = (ReactiveViewport*)viewport;
   mHeightMapTool = tool;

@@ -237,8 +237,7 @@ bool RenderGroupSource::Move(DataEntry* destinationEntry, DataEntry* movingEntry
       mOperationQueue->BeginBatch("RenderGroup_Move");
 
       RemoveFromParent(moving);
-      Operation* operation =
-          new ResourceListOperation<RenderGroupList>(dest->mChildRenderGroups, moving->ResourceIdName);
+      Operation* operation = new ResourceListOperation<RenderGroupList>(dest->mChildRenderGroups, moving->ResourceIdName);
       mOperationQueue->Queue(operation);
       operation->Redo();
 
@@ -266,8 +265,7 @@ void RenderGroupSource::RemoveFromParent(RenderGroup* renderGroup)
 {
   if (InParentsChildList(renderGroup))
   {
-    Operation* operation = new ResourceListOperation<RenderGroupList>(
-        renderGroup->mParentInternal->mChildRenderGroups, renderGroup->ResourceIdName, -1, false);
+    Operation* operation = new ResourceListOperation<RenderGroupList>(renderGroup->mParentInternal->mChildRenderGroups, renderGroup->ResourceIdName, -1, false);
     mOperationQueue->Queue(operation);
     operation->Redo();
   }

@@ -17,11 +17,7 @@ public:
   uint mIndex;
   bool mAddOp;
 
-  ResourceListOperation(HandleParam object, StringParam resourceIdName, uint index = -1, bool addOp = true) :
-      mResourceIdName(resourceIdName),
-      mIndex(index),
-      mAddOp(addOp),
-      mObjectHandle(object)
+  ResourceListOperation(HandleParam object, StringParam resourceIdName, uint index = -1, bool addOp = true) : mResourceIdName(resourceIdName), mIndex(index), mAddOp(addOp), mObjectHandle(object)
   {
     mName = "Removed resource";
     if (mAddOp)

@@ -27,8 +27,7 @@ MultiConvexMeshDrawer::MultiConvexMeshDrawer(Composite* parent, MultiConvexMeshE
   mEditor = editor;
 }
 
-void MultiConvexMeshDrawer::RenderUpdate(
-    ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
+void MultiConvexMeshDrawer::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 
@@ -100,8 +99,7 @@ void MultiConvexMeshDrawer::DrawOuterContour(ViewBlock& viewBlock, FrameBlock& f
     MultiConvexMeshPoint* nextPoint = mEditor->mPoints[(i + 1) % size];
 
     Vec3 pos = (currPoint->mViewportPoint + nextPoint->mViewportPoint) * 0.5f;
-    ProcessTextRange(
-        fontProcessor, font, String::Format("%d", i), ToVector2(pos), TextAlign::Left, Vec2(1, 1), Vec2(1, 1));
+    ProcessTextRange(fontProcessor, font, String::Format("%d", i), ToVector2(pos), TextAlign::Left, Vec2(1, 1), Vec2(1, 1));
   }
 }
 
@@ -224,11 +222,7 @@ public:
     Vec3 mOffset;
   };
 
-  MultiConvexMeshDragManipulator(Mouse* mouse,
-                                 Composite* parent,
-                                 MultiConvexMeshEditor* editor,
-                                 MultiConvexMeshPoint* point) :
-      MouseManipulation(mouse, parent)
+  MultiConvexMeshDragManipulator(Mouse* mouse, Composite* parent, MultiConvexMeshEditor* editor, MultiConvexMeshPoint* point) : MouseManipulation(mouse, parent)
   {
     mEditor = editor;
     mStartPosition = point->mWorldPoint;
@@ -310,8 +304,7 @@ MultiConvexMeshPoint::MultiConvexMeshPoint(Composite* parent, MultiConvexMeshEdi
   Setup(editor, Vec3::cZero);
 }
 
-MultiConvexMeshPoint::MultiConvexMeshPoint(Composite* parent, MultiConvexMeshEditor* editor, Vec3Param worldPoint) :
-    Widget(parent)
+MultiConvexMeshPoint::MultiConvexMeshPoint(Composite* parent, MultiConvexMeshEditor* editor, Vec3Param worldPoint) : Widget(parent)
 {
   Setup(editor, worldPoint);
 }
@@ -509,8 +502,7 @@ void PointAddRemoveOp::PerformOp(bool add)
 class MultiSelectionManipulator : public MouseManipulation
 {
 public:
-  MultiSelectionManipulator(MouseDragEvent* dragEvent, Composite* parent, MultiConvexMeshEditor* editor) :
-      MouseManipulation(dragEvent->GetMouse(), parent)
+  MultiSelectionManipulator(MouseDragEvent* dragEvent, Composite* parent, MultiConvexMeshEditor* editor) : MouseManipulation(dragEvent->GetMouse(), parent)
   {
     mEditor = editor;
 
@@ -757,8 +749,7 @@ void MultiConvexMeshEditor::OnDestroy()
 void MultiConvexMeshEditor::SetupPreviewSpace()
 {
   // create the preview space
-  mPreviewSpace =
-      Z::gFactory->CreateSpace(CoreArchetypes::DefaultSpace, CreationFlags::Editing, Z::gEditor->GetEditGameSession());
+  mPreviewSpace = Z::gFactory->CreateSpace(CoreArchetypes::DefaultSpace, CreationFlags::Editing, Z::gEditor->GetEditGameSession());
   mPreviewSpace->mGameWidgetOverride = mGameWidget;
   mPreviewSpace->SetName("MultiConvexMeshEditorPreview");
   // pause the time space (so that physics doesn't run, etc...)
@@ -955,8 +946,7 @@ void MultiConvexMeshEditor::AddPointAtScreenPosition(Vec2Param screenPosition)
   TestConvexMeshes();
 }
 
-MultiConvexMeshPoint*
-MultiConvexMeshEditor::AddPointAt(uint index, Vec3Param worldPosition, bool queueUndo, bool testMesh)
+MultiConvexMeshPoint* MultiConvexMeshEditor::AddPointAt(uint index, Vec3Param worldPosition, bool queueUndo, bool testMesh)
 {
   MultiConvexMeshPoint* point = new MultiConvexMeshPoint(mViewport, this, worldPosition);
   mPoints.InsertAt(index, point);

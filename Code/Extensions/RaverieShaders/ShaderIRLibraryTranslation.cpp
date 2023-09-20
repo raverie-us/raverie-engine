@@ -24,11 +24,8 @@ void DummyBoundFunction(Raverie::Call& call, Raverie::ExceptionReport& report)
   call.MarkReturnAsSet();
 }
 
-void ResolveSimpleFunctionFromOpType(RaverieSpirVFrontEnd* translator,
-                                     Raverie::FunctionCallNode* functionCallNode,
-                                     Raverie::MemberAccessNode* memberAccessNode,
-                                     OpType opType,
-                                     RaverieSpirVFrontEndContext* context)
+void ResolveSimpleFunctionFromOpType(
+    RaverieSpirVFrontEnd* translator, Raverie::FunctionCallNode* functionCallNode, Raverie::MemberAccessNode* memberAccessNode, OpType opType, RaverieSpirVFrontEndContext* context)
 {
   RaverieShaderIRType* resultType = translator->FindType(functionCallNode->ResultType, functionCallNode);
 
@@ -42,10 +39,7 @@ void ResolveSimpleFunctionFromOpType(RaverieSpirVFrontEnd* translator,
   context->PushIRStack(result);
 }
 
-void ResolveVectorTypeCount(RaverieSpirVFrontEnd* translator,
-                            Raverie::FunctionCallNode* functionCallNode,
-                            Raverie::MemberAccessNode* memberAccessNode,
-                            RaverieSpirVFrontEndContext* context)
+void ResolveVectorTypeCount(RaverieSpirVFrontEnd* translator, Raverie::FunctionCallNode* functionCallNode, Raverie::MemberAccessNode* memberAccessNode, RaverieSpirVFrontEndContext* context)
 {
   Raverie::Type* selfType = memberAccessNode->LeftOperand->ResultType;
   RaverieShaderIRType* shaderType = translator->FindType(selfType, memberAccessNode);
@@ -53,10 +47,7 @@ void ResolveVectorTypeCount(RaverieSpirVFrontEnd* translator,
   context->PushIRStack(intConst);
 }
 
-void ResolvePrimitiveGet(RaverieSpirVFrontEnd* translator,
-                         Raverie::FunctionCallNode* functionCallNode,
-                         Raverie::MemberAccessNode* memberAccessNode,
-                         RaverieSpirVFrontEndContext* context)
+void ResolvePrimitiveGet(RaverieSpirVFrontEnd* translator, Raverie::FunctionCallNode* functionCallNode, Raverie::MemberAccessNode* memberAccessNode, RaverieSpirVFrontEndContext* context)
 {
   BasicBlock* currentBlock = context->GetCurrentBlock();
 
@@ -67,10 +58,7 @@ void ResolvePrimitiveGet(RaverieSpirVFrontEnd* translator,
   context->PushIRStack(selfInstance);
 }
 
-void ResolvePrimitiveSet(RaverieSpirVFrontEnd* translator,
-                         Raverie::FunctionCallNode* functionCallNode,
-                         Raverie::MemberAccessNode* memberAccessNode,
-                         RaverieSpirVFrontEndContext* context)
+void ResolvePrimitiveSet(RaverieSpirVFrontEnd* translator, Raverie::FunctionCallNode* functionCallNode, Raverie::MemberAccessNode* memberAccessNode, RaverieSpirVFrontEndContext* context)
 {
   BasicBlock* currentBlock = context->GetCurrentBlock();
 
@@ -84,10 +72,7 @@ void ResolvePrimitiveSet(RaverieSpirVFrontEnd* translator,
   translator->BuildStoreOp(currentBlock, selfInstance, sourceIR, context);
 }
 
-void ResolveVectorGet(RaverieSpirVFrontEnd* translator,
-                      Raverie::FunctionCallNode* functionCallNode,
-                      Raverie::MemberAccessNode* memberAccessNode,
-                      RaverieSpirVFrontEndContext* context)
+void ResolveVectorGet(RaverieSpirVFrontEnd* translator, Raverie::FunctionCallNode* functionCallNode, Raverie::MemberAccessNode* memberAccessNode, RaverieSpirVFrontEndContext* context)
 {
   // Get the 'this' vector type and component type
   Raverie::Type* raverieVectorType = memberAccessNode->LeftOperand->ResultType;
@@ -101,16 +86,12 @@ void ResolveVectorGet(RaverieSpirVFrontEnd* translator,
   // Generate the access chain to get the element within the vector
   IRaverieShaderIR* leftOperand = translator->WalkAndGetResult(memberAccessNode->LeftOperand, context);
   RaverieShaderIROp* selfInstance = translator->GetOrGeneratePointerTypeFromIR(leftOperand, context);
-  IRaverieShaderIR* accessChainOp = translator->BuildCurrentBlockIROp(
-      OpType::OpAccessChain, componentType->mPointerType, selfInstance, indexOperand, context);
+  IRaverieShaderIR* accessChainOp = translator->BuildCurrentBlockIROp(OpType::OpAccessChain, componentType->mPointerType, selfInstance, indexOperand, context);
 
   context->PushIRStack(accessChainOp);
 }
 
-void ResolveVectorSet(RaverieSpirVFrontEnd* translator,
-                      Raverie::FunctionCallNode* functionCallNode,
-                      Raverie::MemberAccessNode* memberAccessNode,
-                      RaverieSpirVFrontEndContext* context)
+void ResolveVectorSet(RaverieSpirVFrontEnd* translator, Raverie::FunctionCallNode* functionCallNode, Raverie::MemberAccessNode* memberAccessNode, RaverieSpirVFrontEndContext* context)
 {
   // Get the 'this' vector type and component type
   Raverie::Type* raverieVectorType = memberAccessNode->LeftOperand->ResultType;
@@ -124,8 +105,7 @@ void ResolveVectorSet(RaverieSpirVFrontEnd* translator,
   // Generate the access chain to get the element within the vector
   IRaverieShaderIR* leftOperand = translator->WalkAndGetResult(memberAccessNode->LeftOperand, context);
   RaverieShaderIROp* selfInstance = translator->GetOrGeneratePointerTypeFromIR(leftOperand, context);
-  IRaverieShaderIR* accessChainOp = translator->BuildCurrentBlockIROp(
-      OpType::OpAccessChain, componentType->mPointerType, selfInstance, indexOperand, context);
+  IRaverieShaderIR* accessChainOp = translator->BuildCurrentBlockIROp(OpType::OpAccessChain, componentType->mPointerType, selfInstance, indexOperand, context);
 
   // Get the source value
   IRaverieShaderIR* sourceIR = translator->WalkAndGetResult(functionCallNode->Arguments[1], context);
@@ -135,26 +115,17 @@ void ResolveVectorSet(RaverieSpirVFrontEnd* translator,
   translator->BuildStoreOp(currentBlock, accessChainOp, sourceIR, context);
 }
 
-void ResolveMatrixGet(RaverieSpirVFrontEnd* translator,
-                      Raverie::FunctionCallNode* functionCallNode,
-                      Raverie::MemberAccessNode* memberAccessNode,
-                      RaverieSpirVFrontEndContext* context)
+void ResolveMatrixGet(RaverieSpirVFrontEnd* translator, Raverie::FunctionCallNode* functionCallNode, Raverie::MemberAccessNode* memberAccessNode, RaverieSpirVFrontEndContext* context)
 {
   ResolveVectorGet(translator, functionCallNode, memberAccessNode, context);
 }
 
-void ResolveMatrixSet(RaverieSpirVFrontEnd* translator,
-                      Raverie::FunctionCallNode* functionCallNode,
-                      Raverie::MemberAccessNode* memberAccessNode,
-                      RaverieSpirVFrontEndContext* context)
+void ResolveMatrixSet(RaverieSpirVFrontEnd* translator, Raverie::FunctionCallNode* functionCallNode, Raverie::MemberAccessNode* memberAccessNode, RaverieSpirVFrontEndContext* context)
 {
   ResolveVectorSet(translator, functionCallNode, memberAccessNode, context);
 }
 
-void ResolveStaticBinaryFunctionOp(RaverieSpirVFrontEnd* translator,
-                                   Raverie::FunctionCallNode* functionCallNode,
-                                   OpType opType,
-                                   RaverieSpirVFrontEndContext* context)
+void ResolveStaticBinaryFunctionOp(RaverieSpirVFrontEnd* translator, Raverie::FunctionCallNode* functionCallNode, OpType opType, RaverieSpirVFrontEndContext* context)
 {
   // Get the result type
   RaverieShaderIRType* resultType = translator->FindType(functionCallNode->ResultType, functionCallNode);
@@ -168,9 +139,7 @@ void ResolveStaticBinaryFunctionOp(RaverieSpirVFrontEnd* translator,
   context->PushIRStack(operationOp);
 }
 
-void TranslatePrimitiveDefaultConstructor(RaverieSpirVFrontEnd* translator,
-                                          Raverie::Type* raverieResultType,
-                                          RaverieSpirVFrontEndContext* context)
+void TranslatePrimitiveDefaultConstructor(RaverieSpirVFrontEnd* translator, Raverie::Type* raverieResultType, RaverieSpirVFrontEndContext* context)
 {
   BasicBlock* currentBlock = context->GetCurrentBlock();
   RaverieShaderIRType* resultType = translator->FindType(raverieResultType, nullptr);
@@ -181,18 +150,12 @@ void TranslatePrimitiveDefaultConstructor(RaverieSpirVFrontEnd* translator,
   context->PushIRStack(constantZero);
 }
 
-void TranslatePrimitiveDefaultConstructor(RaverieSpirVFrontEnd* translator,
-                                          Raverie::FunctionCallNode* fnCallNode,
-                                          Raverie::StaticTypeNode* staticTypeNode,
-                                          RaverieSpirVFrontEndContext* context)
+void TranslatePrimitiveDefaultConstructor(RaverieSpirVFrontEnd* translator, Raverie::FunctionCallNode* fnCallNode, Raverie::StaticTypeNode* staticTypeNode, RaverieSpirVFrontEndContext* context)
 {
   TranslatePrimitiveDefaultConstructor(translator, fnCallNode->ResultType, context);
 }
 
-void TranslateBackupPrimitiveConstructor(RaverieSpirVFrontEnd* translator,
-                                         Raverie::FunctionCallNode* fnCallNode,
-                                         Raverie::StaticTypeNode* staticTypeNode,
-                                         RaverieSpirVFrontEndContext* context)
+void TranslateBackupPrimitiveConstructor(RaverieSpirVFrontEnd* translator, Raverie::FunctionCallNode* fnCallNode, Raverie::StaticTypeNode* staticTypeNode, RaverieSpirVFrontEndContext* context)
 {
   if (fnCallNode->Arguments.Size() == 0)
     TranslatePrimitiveDefaultConstructor(translator, fnCallNode, staticTypeNode, context);
@@ -209,9 +172,7 @@ void TranslateBackupPrimitiveConstructor(RaverieSpirVFrontEnd* translator,
   }
 }
 
-void TranslateCompositeDefaultConstructor(RaverieSpirVFrontEnd* translator,
-                                          Raverie::Type* raverieResultType,
-                                          RaverieSpirVFrontEndContext* context)
+void TranslateCompositeDefaultConstructor(RaverieSpirVFrontEnd* translator, Raverie::Type* raverieResultType, RaverieSpirVFrontEndContext* context)
 {
   BasicBlock* currentBlock = context->GetCurrentBlock();
   RaverieShaderIRType* resultType = translator->FindType(raverieResultType, nullptr);
@@ -231,18 +192,12 @@ void TranslateCompositeDefaultConstructor(RaverieSpirVFrontEnd* translator,
   context->PushIRStack(constructOp);
 }
 
-void TranslateCompositeDefaultConstructor(RaverieSpirVFrontEnd* translator,
-                                          Raverie::FunctionCallNode* fnCallNode,
-                                          Raverie::StaticTypeNode* staticTypeNode,
-                                          RaverieSpirVFrontEndContext* context)
+void TranslateCompositeDefaultConstructor(RaverieSpirVFrontEnd* translator, Raverie::FunctionCallNode* fnCallNode, Raverie::StaticTypeNode* staticTypeNode, RaverieSpirVFrontEndContext* context)
 {
   TranslateCompositeDefaultConstructor(translator, fnCallNode->ResultType, context);
 }
 
-void TranslateBackupCompositeConstructor(RaverieSpirVFrontEnd* translator,
-                                         Raverie::FunctionCallNode* fnCallNode,
-                                         Raverie::StaticTypeNode* staticTypeNode,
-                                         RaverieSpirVFrontEndContext* context)
+void TranslateBackupCompositeConstructor(RaverieSpirVFrontEnd* translator, Raverie::FunctionCallNode* fnCallNode, Raverie::StaticTypeNode* staticTypeNode, RaverieSpirVFrontEndContext* context)
 {
   BasicBlock* currentBlock = context->GetCurrentBlock();
   RaverieShaderIRType* resultType = translator->FindType(fnCallNode->ResultType, fnCallNode);
@@ -266,9 +221,7 @@ void TranslateBackupCompositeConstructor(RaverieSpirVFrontEnd* translator,
   context->PushIRStack(constructOp);
 }
 
-void TranslateMatrixDefaultConstructor(RaverieSpirVFrontEnd* translator,
-                                       Raverie::Type* raverieResultType,
-                                       RaverieSpirVFrontEndContext* context)
+void TranslateMatrixDefaultConstructor(RaverieSpirVFrontEnd* translator, Raverie::Type* raverieResultType, RaverieSpirVFrontEndContext* context)
 {
   BasicBlock* currentBlock = context->GetCurrentBlock();
   RaverieShaderIRType* resultType = translator->FindType(raverieResultType, nullptr);
@@ -295,18 +248,12 @@ void TranslateMatrixDefaultConstructor(RaverieSpirVFrontEnd* translator,
   context->PushIRStack(constructOp);
 }
 
-void TranslateMatrixDefaultConstructor(RaverieSpirVFrontEnd* translator,
-                                       Raverie::FunctionCallNode* fnCallNode,
-                                       Raverie::StaticTypeNode* staticTypeNode,
-                                       RaverieSpirVFrontEndContext* context)
+void TranslateMatrixDefaultConstructor(RaverieSpirVFrontEnd* translator, Raverie::FunctionCallNode* fnCallNode, Raverie::StaticTypeNode* staticTypeNode, RaverieSpirVFrontEndContext* context)
 {
   TranslateMatrixDefaultConstructor(translator, fnCallNode->ResultType, context);
 }
 
-void TranslateMatrixFullConstructor(RaverieSpirVFrontEnd* translator,
-                                    Raverie::FunctionCallNode* fnCallNode,
-                                    Raverie::StaticTypeNode* staticTypeNode,
-                                    RaverieSpirVFrontEndContext* context)
+void TranslateMatrixFullConstructor(RaverieSpirVFrontEnd* translator, Raverie::FunctionCallNode* fnCallNode, Raverie::StaticTypeNode* staticTypeNode, RaverieSpirVFrontEndContext* context)
 {
   BasicBlock* currentBlock = context->GetCurrentBlock();
 
@@ -315,14 +262,12 @@ void TranslateMatrixFullConstructor(RaverieSpirVFrontEnd* translator,
 
   // Construct the matrix type but delay adding it as an instruction until all
   // of the arguments have been created
-  RaverieShaderIROp* matrixConstructOp =
-      translator->BuildIROpNoBlockAdd(OpType::OpCompositeConstruct, matrixType, context);
+  RaverieShaderIROp* matrixConstructOp = translator->BuildIROpNoBlockAdd(OpType::OpCompositeConstruct, matrixType, context);
   for (size_t i = 0; i < matrixType->mComponents; ++i)
   {
     // Create each vector type but delay add it for the same reason as the
     // matrix
-    RaverieShaderIROp* componentConstructOp =
-        translator->BuildIROpNoBlockAdd(spv::OpCompositeConstruct, componentType, context);
+    RaverieShaderIROp* componentConstructOp = translator->BuildIROpNoBlockAdd(spv::OpCompositeConstruct, componentType, context);
     for (size_t j = 0; j < componentType->mComponents; ++j)
     {
       // Walk the given parameter and add it the the vector
@@ -343,16 +288,15 @@ void TranslateMatrixFullConstructor(RaverieSpirVFrontEnd* translator,
 }
 
 RaverieShaderIROp* RecursivelyTranslateCompositeSplatConstructor(RaverieSpirVFrontEnd* translator,
-                                                               Raverie::FunctionCallNode* fnCallNode,
-                                                               Raverie::StaticTypeNode* staticTypeNode,
-                                                               RaverieShaderIRType* type,
-                                                               RaverieShaderIROp* splatValueOp,
-                                                               RaverieSpirVFrontEndContext* context)
+                                                                 Raverie::FunctionCallNode* fnCallNode,
+                                                                 Raverie::StaticTypeNode* staticTypeNode,
+                                                                 RaverieShaderIRType* type,
+                                                                 RaverieShaderIROp* splatValueOp,
+                                                                 RaverieSpirVFrontEndContext* context)
 {
   // Terminate on the base case. Potentially need to handle translating the
   // splat value op to the correct scalar type.
-  if (type->mBaseType == ShaderIRTypeBaseType::Float || type->mBaseType == ShaderIRTypeBaseType::Int ||
-      type->mBaseType == ShaderIRTypeBaseType::Bool)
+  if (type->mBaseType == ShaderIRTypeBaseType::Float || type->mBaseType == ShaderIRTypeBaseType::Int || type->mBaseType == ShaderIRTypeBaseType::Bool)
     return splatValueOp;
 
   BasicBlock* currentBlock = context->GetCurrentBlock();
@@ -364,8 +308,7 @@ RaverieShaderIROp* RecursivelyTranslateCompositeSplatConstructor(RaverieSpirVFro
   for (size_t i = 0; i < type->mComponents; ++i)
   {
     // Construct each constituent
-    RaverieShaderIROp* constituentOp = RecursivelyTranslateCompositeSplatConstructor(
-        translator, fnCallNode, staticTypeNode, componentType, splatValueOp, context);
+    RaverieShaderIROp* constituentOp = RecursivelyTranslateCompositeSplatConstructor(translator, fnCallNode, staticTypeNode, componentType, splatValueOp, context);
     // @JoshD: Leave this out for now since this produces a glsl translation
     // error
     // constituentOp->mDebugResultName = "constituent";
@@ -377,10 +320,7 @@ RaverieShaderIROp* RecursivelyTranslateCompositeSplatConstructor(RaverieSpirVFro
   return constructOp;
 }
 
-void TranslateCompositeSplatConstructor(RaverieSpirVFrontEnd* translator,
-                                        Raverie::FunctionCallNode* fnCallNode,
-                                        Raverie::StaticTypeNode* staticTypeNode,
-                                        RaverieSpirVFrontEndContext* context)
+void TranslateCompositeSplatConstructor(RaverieSpirVFrontEnd* translator, Raverie::FunctionCallNode* fnCallNode, Raverie::StaticTypeNode* staticTypeNode, RaverieSpirVFrontEndContext* context)
 {
   BasicBlock* currentBlock = context->GetCurrentBlock();
   RaverieShaderIRType* resultType = translator->FindType(fnCallNode->ResultType, fnCallNode);
@@ -390,8 +330,7 @@ void TranslateCompositeSplatConstructor(RaverieSpirVFrontEnd* translator,
   RaverieShaderIROp* splatValueOp = translator->GetOrGenerateValueTypeFromIR(splatValue, context);
 
   // Recursively construct all composite types with this final scalar type
-  RaverieShaderIROp* constructOp = RecursivelyTranslateCompositeSplatConstructor(
-      translator, fnCallNode, staticTypeNode, resultType, splatValueOp, context);
+  RaverieShaderIROp* constructOp = RecursivelyTranslateCompositeSplatConstructor(translator, fnCallNode, staticTypeNode, resultType, splatValueOp, context);
 
   context->PushIRStack(constructOp);
 }
@@ -409,10 +348,7 @@ bool IsVectorSwizzle(StringParam memberName)
   return true;
 }
 
-void ResolveScalarComponentAccess(RaverieSpirVFrontEnd* translator,
-                                  Raverie::MemberAccessNode* memberAccessNode,
-                                  byte componentName,
-                                  RaverieSpirVFrontEndContext* context)
+void ResolveScalarComponentAccess(RaverieSpirVFrontEnd* translator, Raverie::MemberAccessNode* memberAccessNode, byte componentName, RaverieSpirVFrontEndContext* context)
 {
   // A scalar component access on a scalar type is just the scalar itself (e.g.
   // a.X => a)
@@ -420,10 +356,7 @@ void ResolveScalarComponentAccess(RaverieSpirVFrontEnd* translator,
   context->PushIRStack(operandResult);
 }
 
-void ResolveScalarSwizzle(RaverieSpirVFrontEnd* translator,
-                          Raverie::MemberAccessNode* memberAccessNode,
-                          StringParam memberName,
-                          RaverieSpirVFrontEndContext* context)
+void ResolveScalarSwizzle(RaverieSpirVFrontEnd* translator, Raverie::MemberAccessNode* memberAccessNode, StringParam memberName, RaverieSpirVFrontEndContext* context)
 {
   // Figure out what the result type of this swizzle is
   RaverieShaderIRType* resultType = translator->FindType(memberAccessNode->ResultType, memberAccessNode);
@@ -440,9 +373,7 @@ void ResolveScalarSwizzle(RaverieSpirVFrontEnd* translator,
   context->PushIRStack(constructOp);
 }
 
-void ScalarBackupFieldResolver(RaverieSpirVFrontEnd* translator,
-                               Raverie::MemberAccessNode* memberAccessNode,
-                               RaverieSpirVFrontEndContext* context)
+void ScalarBackupFieldResolver(RaverieSpirVFrontEnd* translator, Raverie::MemberAccessNode* memberAccessNode, RaverieSpirVFrontEndContext* context)
 {
   BasicBlock* currentBlock = context->GetCurrentBlock();
 
@@ -464,10 +395,7 @@ void ScalarBackupFieldResolver(RaverieSpirVFrontEnd* translator,
   }
 }
 
-void ResolveVectorCopyConstructor(RaverieSpirVFrontEnd* translator,
-                                  Raverie::FunctionCallNode* fnCallNode,
-                                  Raverie::StaticTypeNode* staticTypeNode,
-                                  RaverieSpirVFrontEndContext* context)
+void ResolveVectorCopyConstructor(RaverieSpirVFrontEnd* translator, Raverie::FunctionCallNode* fnCallNode, Raverie::StaticTypeNode* staticTypeNode, RaverieSpirVFrontEndContext* context)
 {
   if (fnCallNode->Arguments.Size() != 1)
   {
@@ -484,8 +412,7 @@ void ResolveVectorCopyConstructor(RaverieSpirVFrontEnd* translator,
   if (argIR == argValueOp)
   {
     RaverieShaderIRType* resultType = translator->FindType(fnCallNode->ResultType, fnCallNode);
-    argValueOp = translator->BuildIROp(
-        context->GetCurrentBlock(), OpType::OpVectorShuffle, resultType, argValueOp, argValueOp, context);
+    argValueOp = translator->BuildIROp(context->GetCurrentBlock(), OpType::OpVectorShuffle, resultType, argValueOp, argValueOp, context);
     for (u32 i = 0; i < resultType->mComponents; ++i)
       argValueOp->mArguments.PushBack(translator->GetOrCreateConstantIntegerLiteral(i));
   }
@@ -494,11 +421,7 @@ void ResolveVectorCopyConstructor(RaverieSpirVFrontEnd* translator,
   context->PushIRStack(argValueOp);
 }
 
-void ResolveVectorComponentAccess(RaverieSpirVFrontEnd* translator,
-                                  RaverieShaderIROp* selfInstance,
-                                  RaverieShaderIRType* componentType,
-                                  byte componentName,
-                                  RaverieSpirVFrontEndContext* context)
+void ResolveVectorComponentAccess(RaverieSpirVFrontEnd* translator, RaverieShaderIROp* selfInstance, RaverieShaderIRType* componentType, byte componentName, RaverieSpirVFrontEndContext* context)
 {
   // Convert the index to [0, 3] using a nice modulus trick
   int index = componentName - 'X';
@@ -509,8 +432,7 @@ void ResolveVectorComponentAccess(RaverieSpirVFrontEnd* translator,
   if (selfInstance->IsResultPointerType())
   {
     RaverieShaderIROp* indexOp = translator->GetIntegerConstant(index, context);
-    RaverieShaderIROp* accessChainOp = translator->BuildCurrentBlockIROp(
-        OpType::OpAccessChain, componentType->mPointerType, selfInstance, indexOp, context);
+    RaverieShaderIROp* accessChainOp = translator->BuildCurrentBlockIROp(OpType::OpAccessChain, componentType->mPointerType, selfInstance, indexOp, context);
     context->PushIRStack(accessChainOp);
   }
   // Otherwise this was a value (temporary, e.g. (Real3() + Real3()).X) so
@@ -518,41 +440,31 @@ void ResolveVectorComponentAccess(RaverieSpirVFrontEnd* translator,
   else
   {
     RaverieShaderIRConstantLiteral* indexLiteral = translator->GetOrCreateConstantLiteral(index);
-    RaverieShaderIROp* accessChainOp = translator->BuildCurrentBlockIROp(
-        OpType::OpCompositeExtract, componentType, selfInstance, indexLiteral, context);
+    RaverieShaderIROp* accessChainOp = translator->BuildCurrentBlockIROp(OpType::OpCompositeExtract, componentType, selfInstance, indexLiteral, context);
     context->PushIRStack(accessChainOp);
   }
 }
 
-void ResolveVectorComponentAccess(RaverieSpirVFrontEnd* translator,
-                                  Raverie::MemberAccessNode* memberAccessNode,
-                                  byte componentName,
-                                  RaverieSpirVFrontEndContext* context)
+void ResolveVectorComponentAccess(RaverieSpirVFrontEnd* translator, Raverie::MemberAccessNode* memberAccessNode, byte componentName, RaverieSpirVFrontEndContext* context)
 {
   // Walk the left hand side of the member access node
   IRaverieShaderIR* operandResult = translator->WalkAndGetResult(memberAccessNode->LeftOperand, context);
   RaverieShaderIROp* operandResultOp = operandResult->As<RaverieShaderIROp>();
 
   // Get what the result type should be (e.g. Real3.X -> Real)
-  RaverieShaderIRType* operandType =
-      translator->FindType(memberAccessNode->LeftOperand->ResultType, memberAccessNode->LeftOperand);
+  RaverieShaderIRType* operandType = translator->FindType(memberAccessNode->LeftOperand->ResultType, memberAccessNode->LeftOperand);
   RaverieShaderIRType* componentType = GetComponentType(operandType);
 
   ResolveVectorComponentAccess(translator, operandResultOp, componentType, componentName, context);
 }
 
-void ResolveVectorSwizzle(RaverieSpirVFrontEnd* translator,
-                          IRaverieShaderIR* selfInstance,
-                          RaverieShaderIRType* resultType,
-                          StringParam memberName,
-                          RaverieSpirVFrontEndContext* context)
+void ResolveVectorSwizzle(RaverieSpirVFrontEnd* translator, IRaverieShaderIR* selfInstance, RaverieShaderIRType* resultType, StringParam memberName, RaverieSpirVFrontEndContext* context)
 {
   // The swizzle instruction (vector shuffle) requires value types
   RaverieShaderIROp* operandValueOp = translator->GetOrGenerateValueTypeFromIR(selfInstance, context);
 
   // Build the base instruction
-  RaverieShaderIROp* swizzleOp =
-      translator->BuildCurrentBlockIROp(OpType::OpVectorShuffle, resultType, operandValueOp, operandValueOp, context);
+  RaverieShaderIROp* swizzleOp = translator->BuildCurrentBlockIROp(OpType::OpVectorShuffle, resultType, operandValueOp, operandValueOp, context);
 
   // For every swizzle element, figure out what index the sub-item is and add
   // that as an argument
@@ -566,10 +478,7 @@ void ResolveVectorSwizzle(RaverieSpirVFrontEnd* translator,
   context->PushIRStack(swizzleOp);
 }
 
-void ResolveVectorSwizzle(RaverieSpirVFrontEnd* translator,
-                          Raverie::MemberAccessNode* memberAccessNode,
-                          StringParam memberName,
-                          RaverieSpirVFrontEndContext* context)
+void ResolveVectorSwizzle(RaverieSpirVFrontEnd* translator, Raverie::MemberAccessNode* memberAccessNode, StringParam memberName, RaverieSpirVFrontEndContext* context)
 {
   // Figure out what the result type of this swizzle is
   RaverieShaderIRType* resultType = translator->FindType(memberAccessNode->ResultType, memberAccessNode);
@@ -579,9 +488,7 @@ void ResolveVectorSwizzle(RaverieSpirVFrontEnd* translator,
   ResolveVectorSwizzle(translator, operandResult, resultType, memberName, context);
 }
 
-void VectorBackupFieldResolver(RaverieSpirVFrontEnd* translator,
-                               Raverie::MemberAccessNode* memberAccessNode,
-                               RaverieSpirVFrontEndContext* context)
+void VectorBackupFieldResolver(RaverieSpirVFrontEnd* translator, Raverie::MemberAccessNode* memberAccessNode, RaverieSpirVFrontEndContext* context)
 {
   BasicBlock* currentBlock = context->GetCurrentBlock();
 
@@ -607,12 +514,8 @@ void VectorBackupFieldResolver(RaverieSpirVFrontEnd* translator,
   context->PushIRStack(translator->GenerateDummyIR(memberAccessNode, context));
 }
 
-void ResolverVectorSwizzleSetter(RaverieSpirVFrontEnd* translator,
-                                 IRaverieShaderIR* selfInstance,
-                                 RaverieShaderIROp* resultValue,
-                                 RaverieShaderIRType* resultType,
-                                 StringParam memberName,
-                                 RaverieSpirVFrontEndContext* context)
+void ResolverVectorSwizzleSetter(
+    RaverieSpirVFrontEnd* translator, IRaverieShaderIR* selfInstance, RaverieShaderIROp* resultValue, RaverieShaderIRType* resultType, StringParam memberName, RaverieSpirVFrontEndContext* context)
 {
   // To generate the new vector we need to perform vector shuffle which requires
   // a value type.
@@ -621,8 +524,7 @@ void ResolverVectorSwizzleSetter(RaverieSpirVFrontEnd* translator,
   // The easiest way to set via a swizzle is by constructing a brand new vector
   // from elements of the old and new vector using the shuffle instruction
   // (parameters set below)
-  RaverieShaderIROp* shuffleOp =
-      translator->BuildCurrentBlockIROp(OpType::OpVectorShuffle, resultType, instanceValue, resultValue, context);
+  RaverieShaderIROp* shuffleOp = translator->BuildCurrentBlockIROp(OpType::OpVectorShuffle, resultType, instanceValue, resultValue, context);
 
   // The shuffle operator picks components from the two vectors by index as if
   // they were laid out in one contiguous block of memory. By default assume
@@ -654,24 +556,17 @@ void ResolverVectorSwizzleSetter(RaverieSpirVFrontEnd* translator,
   translator->BuildStoreOp(selfInstance, shuffleOp, context);
 }
 
-void ResolverVectorSwizzleSetter(RaverieSpirVFrontEnd* translator,
-                                 Raverie::MemberAccessNode* memberAccessNode,
-                                 RaverieShaderIROp* resultValue,
-                                 RaverieSpirVFrontEndContext* context)
+void ResolverVectorSwizzleSetter(RaverieSpirVFrontEnd* translator, Raverie::MemberAccessNode* memberAccessNode, RaverieShaderIROp* resultValue, RaverieSpirVFrontEndContext* context)
 {
   String memberName = memberAccessNode->Name;
-  RaverieShaderIRType* resultType =
-      translator->FindType(memberAccessNode->LeftOperand->ResultType, memberAccessNode->LeftOperand);
+  RaverieShaderIRType* resultType = translator->FindType(memberAccessNode->LeftOperand->ResultType, memberAccessNode->LeftOperand);
 
   // Get the instance we will be setting to
   IRaverieShaderIR* instance = translator->WalkAndGetResult(memberAccessNode->LeftOperand, context);
   ResolverVectorSwizzleSetter(translator, instance, resultValue, resultType, memberName, context);
 }
 
-void VectorBackupPropertySetter(RaverieSpirVFrontEnd* translator,
-                                Raverie::MemberAccessNode* memberAccessNode,
-                                RaverieShaderIROp* resultValue,
-                                RaverieSpirVFrontEndContext* context)
+void VectorBackupPropertySetter(RaverieSpirVFrontEnd* translator, Raverie::MemberAccessNode* memberAccessNode, RaverieShaderIROp* resultValue, RaverieSpirVFrontEndContext* context)
 {
   String memberName = memberAccessNode->Name;
 
@@ -695,10 +590,7 @@ void VectorBackupPropertySetter(RaverieSpirVFrontEnd* translator,
   context->PushIRStack(translator->GenerateDummyIR(memberAccessNode, context));
 }
 
-bool MatrixElementAccessResolver(RaverieSpirVFrontEnd* translator,
-                                 Raverie::MemberAccessNode* memberAccessNode,
-                                 RaverieSpirVFrontEndContext* context,
-                                 Raverie::MatrixUserData& matrixUserData)
+bool MatrixElementAccessResolver(RaverieSpirVFrontEnd* translator, Raverie::MemberAccessNode* memberAccessNode, RaverieSpirVFrontEndContext* context, Raverie::MatrixUserData& matrixUserData)
 {
   // We only translate Myx here.
   String data = memberAccessNode->Name;
@@ -731,15 +623,12 @@ bool MatrixElementAccessResolver(RaverieSpirVFrontEnd* translator,
   RaverieShaderIROp* operandResult = translator->GetOrGeneratePointerTypeFromIR(leftOperand, context);
   // Construct the op to access the matrix element
   // @JoshD: Revisit when looking over matrix column/row order
-  RaverieShaderIROp* accessOp = translator->BuildCurrentBlockIROp(
-      OpType::OpAccessChain, resultType->mPointerType, operandResult, indexYConstant, indexXConstant, context);
+  RaverieShaderIROp* accessOp = translator->BuildCurrentBlockIROp(OpType::OpAccessChain, resultType->mPointerType, operandResult, indexYConstant, indexXConstant, context);
   context->PushIRStack(accessOp);
   return true;
 }
 
-void MatrixBackupFieldResolver(RaverieSpirVFrontEnd* translator,
-                               Raverie::MemberAccessNode* memberAccessNode,
-                               RaverieSpirVFrontEndContext* context)
+void MatrixBackupFieldResolver(RaverieSpirVFrontEnd* translator, Raverie::MemberAccessNode* memberAccessNode, RaverieSpirVFrontEndContext* context)
 {
   BasicBlock* currentBlock = context->GetCurrentBlock();
 
@@ -754,9 +643,7 @@ void MatrixBackupFieldResolver(RaverieSpirVFrontEnd* translator,
   context->PushIRStack(translator->GenerateDummyIR(memberAccessNode, context));
 }
 
-void TranslateQuaternionDefaultConstructor(RaverieSpirVFrontEnd* translator,
-                                           Raverie::Type* raverieResultType,
-                                           RaverieSpirVFrontEndContext* context)
+void TranslateQuaternionDefaultConstructor(RaverieSpirVFrontEnd* translator, Raverie::Type* raverieResultType, RaverieSpirVFrontEndContext* context)
 {
   BasicBlock* currentBlock = context->GetCurrentBlock();
 
@@ -775,22 +662,16 @@ void TranslateQuaternionDefaultConstructor(RaverieSpirVFrontEnd* translator,
   vec4ConstructOp->mArguments.PushBack(constantOne);
 
   // Construct the quaternion from the vec4
-  RaverieShaderIROp* constructOp = translator->BuildIROp(
-      context->GetCurrentBlock(), OpType::OpCompositeConstruct, quaternionType, vec4ConstructOp, context);
+  RaverieShaderIROp* constructOp = translator->BuildIROp(context->GetCurrentBlock(), OpType::OpCompositeConstruct, quaternionType, vec4ConstructOp, context);
   context->PushIRStack(constructOp);
 }
 
-void TranslateQuaternionDefaultConstructor(RaverieSpirVFrontEnd* translator,
-                                           Raverie::FunctionCallNode* fnCallNode,
-                                           Raverie::StaticTypeNode* staticTypeNode,
-                                           RaverieSpirVFrontEndContext* context)
+void TranslateQuaternionDefaultConstructor(RaverieSpirVFrontEnd* translator, Raverie::FunctionCallNode* fnCallNode, Raverie::StaticTypeNode* staticTypeNode, RaverieSpirVFrontEndContext* context)
 {
   TranslateQuaternionDefaultConstructor(translator, fnCallNode->ResultType, context);
 }
 
-void QuaternionBackupFieldResolver(RaverieSpirVFrontEnd* translator,
-                                   Raverie::MemberAccessNode* memberAccessNode,
-                                   RaverieSpirVFrontEndContext* context)
+void QuaternionBackupFieldResolver(RaverieSpirVFrontEnd* translator, Raverie::MemberAccessNode* memberAccessNode, RaverieSpirVFrontEndContext* context)
 {
   BasicBlock* currentBlock = context->GetCurrentBlock();
 
@@ -803,8 +684,7 @@ void QuaternionBackupFieldResolver(RaverieSpirVFrontEnd* translator,
 
   // Get the vec4 of the quaternion
   IRaverieShaderIR* vec4OffsetConstant = translator->GetIntegerConstant(0, context);
-  RaverieShaderIROp* vec4Instance = translator->BuildCurrentBlockIROp(
-      OpType::OpAccessChain, vec4Type->mPointerType, selfInstance, vec4OffsetConstant, context);
+  RaverieShaderIROp* vec4Instance = translator->BuildCurrentBlockIROp(OpType::OpAccessChain, vec4Type->mPointerType, selfInstance, vec4OffsetConstant, context);
 
   // Deal with single component access
   if (memberName.SizeInBytes() == 1)
@@ -827,10 +707,7 @@ void QuaternionBackupFieldResolver(RaverieSpirVFrontEnd* translator,
   context->PushIRStack(translator->GenerateDummyIR(memberAccessNode, context));
 }
 
-void QuaternionBackupPropertySetter(RaverieSpirVFrontEnd* translator,
-                                    Raverie::MemberAccessNode* memberAccessNode,
-                                    RaverieShaderIROp* resultValue,
-                                    RaverieSpirVFrontEndContext* context)
+void QuaternionBackupPropertySetter(RaverieSpirVFrontEnd* translator, Raverie::MemberAccessNode* memberAccessNode, RaverieShaderIROp* resultValue, RaverieSpirVFrontEndContext* context)
 {
   String memberName = memberAccessNode->Name;
 
@@ -841,8 +718,7 @@ void QuaternionBackupPropertySetter(RaverieSpirVFrontEnd* translator,
 
   // Get the vec4 of the quaternion
   IRaverieShaderIR* vec4OffsetConstant = translator->GetIntegerConstant(0, context);
-  RaverieShaderIROp* vec4Instance = translator->BuildCurrentBlockIROp(
-      OpType::OpAccessChain, vec4Type->mPointerType, selfInstance, vec4OffsetConstant, context);
+  RaverieShaderIROp* vec4Instance = translator->BuildCurrentBlockIROp(OpType::OpAccessChain, vec4Type->mPointerType, selfInstance, vec4OffsetConstant, context);
 
   // Deal with single component access
   if (memberName.SizeInBytes() == 1)
@@ -866,20 +742,14 @@ void QuaternionBackupPropertySetter(RaverieSpirVFrontEnd* translator,
   context->PushIRStack(translator->GenerateDummyIR(memberAccessNode, context));
 }
 
-void ResolveQuaternionTypeCount(RaverieSpirVFrontEnd* translator,
-                                Raverie::FunctionCallNode* functionCallNode,
-                                Raverie::MemberAccessNode* memberAccessNode,
-                                RaverieSpirVFrontEndContext* context)
+void ResolveQuaternionTypeCount(RaverieSpirVFrontEnd* translator, Raverie::FunctionCallNode* functionCallNode, Raverie::MemberAccessNode* memberAccessNode, RaverieSpirVFrontEndContext* context)
 {
   // Quaternion count is always 4
   RaverieShaderIROp* intConst = translator->GetIntegerConstant(4, context);
   context->PushIRStack(intConst);
 }
 
-void ResolveQuaternionGet(RaverieSpirVFrontEnd* translator,
-                          Raverie::FunctionCallNode* functionCallNode,
-                          Raverie::MemberAccessNode* memberAccessNode,
-                          RaverieSpirVFrontEndContext* context)
+void ResolveQuaternionGet(RaverieSpirVFrontEnd* translator, Raverie::FunctionCallNode* functionCallNode, Raverie::MemberAccessNode* memberAccessNode, RaverieSpirVFrontEndContext* context)
 {
   IRaverieShaderIR* leftOperand = translator->WalkAndGetResult(memberAccessNode->LeftOperand, context);
   RaverieShaderIROp* selfInstance = translator->GetOrGeneratePointerTypeFromIR(leftOperand, context);
@@ -888,24 +758,19 @@ void ResolveQuaternionGet(RaverieSpirVFrontEnd* translator,
 
   // Get the vec4 of the quaternion
   IRaverieShaderIR* vec4OffsetConstant = translator->GetIntegerConstant(0, context);
-  RaverieShaderIROp* vec4Instance = translator->BuildCurrentBlockIROp(
-      OpType::OpAccessChain, vec4Type->mPointerType, selfInstance, vec4OffsetConstant, context);
+  RaverieShaderIROp* vec4Instance = translator->BuildCurrentBlockIROp(OpType::OpAccessChain, vec4Type->mPointerType, selfInstance, vec4OffsetConstant, context);
 
   // Get the index operator from get (must be a value type)
   IRaverieShaderIR* indexArgument = translator->WalkAndGetResult(functionCallNode->Arguments[0], context);
   IRaverieShaderIR* indexOperand = translator->GetOrGenerateValueTypeFromIR(indexArgument, context);
 
   // Generate the access chain to get the element within the vector
-  IRaverieShaderIR* accessChainOp = translator->BuildCurrentBlockIROp(
-      OpType::OpAccessChain, realType->mPointerType, vec4Instance, indexOperand, context);
+  IRaverieShaderIR* accessChainOp = translator->BuildCurrentBlockIROp(OpType::OpAccessChain, realType->mPointerType, vec4Instance, indexOperand, context);
 
   context->PushIRStack(accessChainOp);
 }
 
-void ResolveQuaternionSet(RaverieSpirVFrontEnd* translator,
-                          Raverie::FunctionCallNode* functionCallNode,
-                          Raverie::MemberAccessNode* memberAccessNode,
-                          RaverieSpirVFrontEndContext* context)
+void ResolveQuaternionSet(RaverieSpirVFrontEnd* translator, Raverie::FunctionCallNode* functionCallNode, Raverie::MemberAccessNode* memberAccessNode, RaverieSpirVFrontEndContext* context)
 {
   IRaverieShaderIR* leftOperand = translator->WalkAndGetResult(memberAccessNode->LeftOperand, context);
   RaverieShaderIROp* selfInstance = translator->GetOrGeneratePointerTypeFromIR(leftOperand, context);
@@ -914,16 +779,14 @@ void ResolveQuaternionSet(RaverieSpirVFrontEnd* translator,
 
   // Get the vec4 of the quaternion
   IRaverieShaderIR* offsetConstant = translator->GetIntegerConstant(0, context);
-  RaverieShaderIROp* vec4Instance = translator->BuildCurrentBlockIROp(
-      OpType::OpAccessChain, vec4Type->mPointerType, selfInstance, offsetConstant, context);
+  RaverieShaderIROp* vec4Instance = translator->BuildCurrentBlockIROp(OpType::OpAccessChain, vec4Type->mPointerType, selfInstance, offsetConstant, context);
 
   // Get the index operator from get (must be a value type)
   IRaverieShaderIR* indexArgument = translator->WalkAndGetResult(functionCallNode->Arguments[0], context);
   IRaverieShaderIR* indexOperand = translator->GetOrGenerateValueTypeFromIR(indexArgument, context);
 
   // Generate the access chain to get the element within the vector
-  IRaverieShaderIR* accessChainOp = translator->BuildCurrentBlockIROp(
-      OpType::OpAccessChain, realType->mPointerType, vec4Instance, indexOperand, context);
+  IRaverieShaderIR* accessChainOp = translator->BuildCurrentBlockIROp(OpType::OpAccessChain, realType->mPointerType, vec4Instance, indexOperand, context);
 
   // Get the source value
   IRaverieShaderIR* sourceIR = translator->WalkAndGetResult(functionCallNode->Arguments[1], context);
@@ -933,10 +796,7 @@ void ResolveQuaternionSet(RaverieSpirVFrontEnd* translator,
   translator->BuildStoreOp(currentBlock, accessChainOp, sourceIR, context);
 }
 
-void TranslateQuaternionSplatConstructor(RaverieSpirVFrontEnd* translator,
-                                         Raverie::FunctionCallNode* fnCallNode,
-                                         Raverie::StaticTypeNode* staticTypeNode,
-                                         RaverieSpirVFrontEndContext* context)
+void TranslateQuaternionSplatConstructor(RaverieSpirVFrontEnd* translator, Raverie::FunctionCallNode* fnCallNode, Raverie::StaticTypeNode* staticTypeNode, RaverieSpirVFrontEndContext* context)
 {
   BasicBlock* currentBlock = context->GetCurrentBlock();
   RaverieShaderIRType* quaternionType = translator->FindType(fnCallNode->ResultType, fnCallNode);
@@ -947,21 +807,16 @@ void TranslateQuaternionSplatConstructor(RaverieSpirVFrontEnd* translator,
   RaverieShaderIROp* splatValueOp = translator->GetOrGenerateValueTypeFromIR(splatValue, context);
 
   // Construct the vec4 type from the splat value
-  RaverieShaderIROp* subConstructOp = RecursivelyTranslateCompositeSplatConstructor(
-      translator, fnCallNode, staticTypeNode, vec4Type, splatValueOp, context);
+  RaverieShaderIROp* subConstructOp = RecursivelyTranslateCompositeSplatConstructor(translator, fnCallNode, staticTypeNode, vec4Type, splatValueOp, context);
 
   // Construct the quaternion from the vec4
   RaverieShaderIROp* vec4Value = translator->GetOrGenerateValueTypeFromIR(subConstructOp, context);
-  RaverieShaderIROp* quaternionConstructOp =
-      translator->BuildCurrentBlockIROp(OpType::OpCompositeConstruct, quaternionType, vec4Value, context);
+  RaverieShaderIROp* quaternionConstructOp = translator->BuildCurrentBlockIROp(OpType::OpCompositeConstruct, quaternionType, vec4Value, context);
 
   context->PushIRStack(quaternionConstructOp);
 }
 
-void TranslateBackupQuaternionConstructor(RaverieSpirVFrontEnd* translator,
-                                          Raverie::FunctionCallNode* fnCallNode,
-                                          Raverie::StaticTypeNode* staticTypeNode,
-                                          RaverieSpirVFrontEndContext* context)
+void TranslateBackupQuaternionConstructor(RaverieSpirVFrontEnd* translator, Raverie::FunctionCallNode* fnCallNode, Raverie::StaticTypeNode* staticTypeNode, RaverieSpirVFrontEndContext* context)
 {
   BasicBlock* currentBlock = context->GetCurrentBlock();
   RaverieShaderIRType* quaternionType = translator->FindType(fnCallNode->ResultType, fnCallNode);
@@ -983,16 +838,12 @@ void TranslateBackupQuaternionConstructor(RaverieSpirVFrontEnd* translator,
   // Now add the constructor op to the block
   currentBlock->mLines.PushBack(vec4ConstructOp);
 
-  RaverieShaderIROp* quaternionConstructOp =
-      translator->BuildCurrentBlockIROp(OpType::OpCompositeConstruct, quaternionType, vec4ConstructOp, context);
+  RaverieShaderIROp* quaternionConstructOp = translator->BuildCurrentBlockIROp(OpType::OpCompositeConstruct, quaternionType, vec4ConstructOp, context);
   // Also mark this as the return of this tree
   context->PushIRStack(quaternionConstructOp);
 }
 
-void ResolveColor(RaverieSpirVFrontEnd* translator,
-                  Raverie::FunctionCallNode* /*functionCallNode*/,
-                  Raverie::MemberAccessNode* memberAccessNode,
-                  RaverieSpirVFrontEndContext* context)
+void ResolveColor(RaverieSpirVFrontEnd* translator, Raverie::FunctionCallNode* /*functionCallNode*/, Raverie::MemberAccessNode* memberAccessNode, RaverieSpirVFrontEndContext* context)
 {
   Raverie::Property* property = memberAccessNode->AccessedProperty;
   RaverieShaderIRType* resultType = translator->FindType(property->PropertyType, memberAccessNode);
@@ -1019,8 +870,7 @@ void RegisterColorsOps(RaverieSpirVFrontEnd* translator, RaverieShaderIRLibrary*
   Raverie::Library* coreLibrary = core.GetLibrary();
   // Create the colors type
   Raverie::BoundType* colors = RaverieTypeId(Raverie::ColorsClass);
-  RaverieShaderIRType* colorsShaderType =
-      translator->MakeStructType(shaderLibrary, colors->Name, colors, spv::StorageClass::StorageClassGeneric);
+  RaverieShaderIRType* colorsShaderType = translator->MakeStructType(shaderLibrary, colors->Name, colors, spv::StorageClass::StorageClassGeneric);
   TypeResolvers& typeResolver = shaderLibrary->mTypeResolvers[colors];
 
   // the only way to get the value for each color during translation is to

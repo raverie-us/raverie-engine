@@ -36,14 +36,14 @@ public:
 
   cstr GetJointName();
 
-#define DeclareInternalProperty(name, type)                                                                            \
-  type Get##name() const                                                                                               \
-  {                                                                                                                    \
-    return mJointCreator.m##name;                                                                                      \
-  };                                                                                                                   \
-  void Set##name(type val)                                                                                             \
-  {                                                                                                                    \
-    mJointCreator.m##name = val;                                                                                       \
+#define DeclareInternalProperty(name, type)                                                                                                                                                            \
+  type Get##name() const                                                                                                                                                                               \
+  {                                                                                                                                                                                                    \
+    return mJointCreator.m##name;                                                                                                                                                                      \
+  };                                                                                                                                                                                                   \
+  void Set##name(type val)                                                                                                                                                                             \
+  {                                                                                                                                                                                                    \
+    mJointCreator.m##name = val;                                                                                                                                                                       \
   };
 
   DeclareInternalProperty(Length, float);
@@ -51,14 +51,14 @@ public:
 
 #undef DeclareInternalProperty
 
-#define DeclareInternalBitfield(name)                                                                                  \
-  bool Get##name() const                                                                                               \
-  {                                                                                                                    \
-    return mJointCreator.mFlags.IsSet(JointCreatorFlags::name);                                                        \
-  };                                                                                                                   \
-  void Set##name(bool val)                                                                                             \
-  {                                                                                                                    \
-    mJointCreator.mFlags.SetState(JointCreatorFlags::name, val);                                                       \
+#define DeclareInternalBitfield(name)                                                                                                                                                                  \
+  bool Get##name() const                                                                                                                                                                               \
+  {                                                                                                                                                                                                    \
+    return mJointCreator.mFlags.IsSet(JointCreatorFlags::name);                                                                                                                                        \
+  };                                                                                                                                                                                                   \
+  void Set##name(bool val)                                                                                                                                                                             \
+  {                                                                                                                                                                                                    \
+    mJointCreator.mFlags.SetState(JointCreatorFlags::name, val);                                                                                                                                       \
   };
 
   DeclareInternalBitfield(OverrideLength);

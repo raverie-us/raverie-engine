@@ -45,9 +45,7 @@ void RaverieShaderSpirVBinaryBackend::TranslateType(RaverieShaderIRType* type, S
   TranslateType(type, writer, reflectionData);
 }
 
-void RaverieShaderSpirVBinaryBackend::TranslateType(RaverieShaderIRType* type,
-                                                  ShaderStreamWriter& writer,
-                                                  ShaderStageInterfaceReflection& reflectionData)
+void RaverieShaderSpirVBinaryBackend::TranslateType(RaverieShaderIRType* type, ShaderStreamWriter& writer, ShaderStageInterfaceReflection& reflectionData)
 {
   if (type->mMeta == nullptr)
     return;
@@ -87,9 +85,7 @@ void RaverieShaderSpirVBinaryBackend::TranslateType(RaverieShaderIRType* type,
   EmitSpirvBinary(collector, &context);
 }
 
-void RaverieShaderSpirVBinaryBackend::TranslateLibrary(RaverieShaderIRLibrary* library,
-                                                     ShaderStreamWriter& writer,
-                                                     ShaderStageInterfaceReflection& reflectionData)
+void RaverieShaderSpirVBinaryBackend::TranslateLibrary(RaverieShaderIRLibrary* library, ShaderStreamWriter& writer, ShaderStageInterfaceReflection& reflectionData)
 {
   Clear();
   mLastLibrary = library;
@@ -137,8 +133,7 @@ void RaverieShaderSpirVBinaryBackend::ValidateIdMap(RaverieShaderToSpirVContext*
   }
 }
 
-void RaverieShaderSpirVBinaryBackend::EmitSpirvBinary(TypeDependencyCollector& collector,
-                                                    RaverieShaderToSpirVContext* context)
+void RaverieShaderSpirVBinaryBackend::EmitSpirvBinary(TypeDependencyCollector& collector, RaverieShaderToSpirVContext* context)
 {
   // Shouldn't need to go over these since the copy inputs/outputs functions
   // should contain these, but leave these in in case generation changes
@@ -183,10 +178,7 @@ void RaverieShaderSpirVBinaryBackend::EmitSpirvBinary(TypeDependencyCollector& c
   WriteFunctions(collector.mReferencedFunctions, context);
 }
 
-void RaverieShaderSpirVBinaryBackend::GenerateDummyMain(RaverieShaderIRType* type,
-                                                      RaverieShaderIRLibrary* library,
-                                                      TypeDependencyCollector& collector,
-                                                      RaverieShaderToSpirVContext* context)
+void RaverieShaderSpirVBinaryBackend::GenerateDummyMain(RaverieShaderIRType* type, RaverieShaderIRLibrary* library, TypeDependencyCollector& collector, RaverieShaderToSpirVContext* context)
 {
   if (type->mEntryPoint != nullptr)
   {
@@ -226,8 +218,7 @@ void RaverieShaderSpirVBinaryBackend::GenerateDummyMain(RaverieShaderIRType* typ
 
   // Force add the execution mode for the dummy entry point
   RaverieShaderIROp* executionModeOp = new RaverieShaderIROp(OpType::OpExecutionMode);
-  RaverieShaderIRConstantLiteral* executionModeLiteral =
-      new RaverieShaderIRConstantLiteral((int)spv::ExecutionModeOriginUpperLeft);
+  RaverieShaderIRConstantLiteral* executionModeLiteral = new RaverieShaderIRConstantLiteral((int)spv::ExecutionModeOriginUpperLeft);
   executionModeOp->mResultType = nullptr;
   executionModeOp->mArguments.PushBack(main);
   executionModeOp->mArguments.PushBack(executionModeLiteral);
@@ -243,8 +234,7 @@ void RaverieShaderSpirVBinaryBackend::GenerateDummyMain(RaverieShaderIRType* typ
   mOwnedEntryPoints.PushBack(entryPointInfo);
 }
 
-void RaverieShaderSpirVBinaryBackend::GenerateGlobalsInitializerFunction(TypeDependencyCollector& collector,
-                                                                       RaverieShaderToSpirVContext* context)
+void RaverieShaderSpirVBinaryBackend::GenerateGlobalsInitializerFunction(TypeDependencyCollector& collector, RaverieShaderToSpirVContext* context)
 {
   for (size_t i = 0; i < context->mEntryPoints.Size(); ++i)
   {
@@ -289,9 +279,7 @@ void RaverieShaderSpirVBinaryBackend::GenerateGlobalsInitializerFunction(TypeDep
   }
 }
 
-void RaverieShaderSpirVBinaryBackend::RegisterLateBoundFunctions(LateBoundFunctionMap& lateBoundFunctionMap,
-                                                               TypeDependencyCollector& collector,
-                                                               RaverieShaderToSpirVContext* context)
+void RaverieShaderSpirVBinaryBackend::RegisterLateBoundFunctions(LateBoundFunctionMap& lateBoundFunctionMap, TypeDependencyCollector& collector, RaverieShaderToSpirVContext* context)
 {
   AutoDeclare(range, lateBoundFunctionMap.All());
   for (; !range.Empty(); range.PopFront())
@@ -327,8 +315,7 @@ void RaverieShaderSpirVBinaryBackend::Clear()
   mExtraLateBoundFunctions.Clear();
 }
 
-void RaverieShaderSpirVBinaryBackend::AddDecorationCapabilities(TypeDependencyCollector& collector,
-                                                              RaverieShaderToSpirVContext* context)
+void RaverieShaderSpirVBinaryBackend::AddDecorationCapabilities(TypeDependencyCollector& collector, RaverieShaderToSpirVContext* context)
 {
   for (size_t i = 0; i < context->mEntryPoints.Size(); ++i)
   {
@@ -337,9 +324,7 @@ void RaverieShaderSpirVBinaryBackend::AddDecorationCapabilities(TypeDependencyCo
   }
 }
 
-void RaverieShaderSpirVBinaryBackend::AddDecorationCapabilities(EntryPointInfo* entryPoint,
-                                                              TypeDependencyCollector& collector,
-                                                              RaverieShaderToSpirVContext* context)
+void RaverieShaderSpirVBinaryBackend::AddDecorationCapabilities(EntryPointInfo* entryPoint, TypeDependencyCollector& collector, RaverieShaderToSpirVContext* context)
 {
   for (size_t j = 0; j < entryPoint->mDecorations.mLines.Size(); ++j)
   {
@@ -352,9 +337,7 @@ void RaverieShaderSpirVBinaryBackend::AddDecorationCapabilities(EntryPointInfo* 
   }
 }
 
-void RaverieShaderSpirVBinaryBackend::AddDecorationCapabilities(RaverieShaderIROp* decorationOp,
-                                                              TypeDependencyCollector& collector,
-                                                              RaverieShaderToSpirVContext* context)
+void RaverieShaderSpirVBinaryBackend::AddDecorationCapabilities(RaverieShaderIROp* decorationOp, TypeDependencyCollector& collector, RaverieShaderToSpirVContext* context)
 {
   RaverieShaderIRConstantLiteral* literal = decorationOp->mArguments[1]->As<RaverieShaderIRConstantLiteral>();
   int decorationType = literal->mValue.Get<int>();
@@ -374,9 +357,7 @@ void RaverieShaderSpirVBinaryBackend::AddDecorationCapabilities(RaverieShaderIRO
   }
 }
 
-void RaverieShaderSpirVBinaryBackend::AddMemberDecorationCapabilities(RaverieShaderIROp* memberDecorationOp,
-                                                                    TypeDependencyCollector& collector,
-                                                                    RaverieShaderToSpirVContext* context)
+void RaverieShaderSpirVBinaryBackend::AddMemberDecorationCapabilities(RaverieShaderIROp* memberDecorationOp, TypeDependencyCollector& collector, RaverieShaderToSpirVContext* context)
 {
   // @JoshD: Figure out what to do here later
 }
@@ -402,8 +383,7 @@ void RaverieShaderSpirVBinaryBackend::GenerateFunctionIds(FunctionList& function
   }
 }
 
-void RaverieShaderSpirVBinaryBackend::GenerateFunctionBlockIds(RaverieShaderIRFunction* function,
-                                                             RaverieShaderToSpirVContext* context)
+void RaverieShaderSpirVBinaryBackend::GenerateFunctionBlockIds(RaverieShaderIRFunction* function, RaverieShaderToSpirVContext* context)
 {
   context->GenerateId(function);
 
@@ -448,8 +428,7 @@ void RaverieShaderSpirVBinaryBackend::GenerateBlockLineIds(BasicBlock* block, Ra
   }
 }
 
-void RaverieShaderSpirVBinaryBackend::WriteHeader(RaverieShaderToSpirVContext* context,
-                                                TypeDependencyCollector& typeCollector)
+void RaverieShaderSpirVBinaryBackend::WriteHeader(RaverieShaderToSpirVContext* context, TypeDependencyCollector& typeCollector)
 {
   ShaderStreamWriter& streamWriter = *context->mStreamWriter;
 
@@ -643,9 +622,7 @@ void RaverieShaderSpirVBinaryBackend::WriteDebug(OpList& ops, RaverieShaderToSpi
   }
 }
 
-void RaverieShaderSpirVBinaryBackend::WriteDebugName(IRaverieShaderIR* resultIR,
-                                                   StringParam debugName,
-                                                   RaverieShaderToSpirVContext* context)
+void RaverieShaderSpirVBinaryBackend::WriteDebugName(IRaverieShaderIR* resultIR, StringParam debugName, RaverieShaderToSpirVContext* context)
 {
   if (debugName.Empty())
     return;
@@ -670,8 +647,7 @@ void RaverieShaderSpirVBinaryBackend::WriteDecorations(RaverieShaderToSpirVConte
     WriteBlockInstructions(&entryPoint->mDecorations, entryPoint->mDecorations.mLines, context);
   }
 }
-void RaverieShaderSpirVBinaryBackend::WriteSpecializationConstantBindingDecorations(
-    TypeDependencyCollector& typeCollector, RaverieShaderToSpirVContext* context)
+void RaverieShaderSpirVBinaryBackend::WriteSpecializationConstantBindingDecorations(TypeDependencyCollector& typeCollector, RaverieShaderToSpirVContext* context)
 {
   int specId = 1;
   ShaderStageInterfaceReflection& reflectionData = *context->mReflectionData;
@@ -716,8 +692,7 @@ RaverieShaderIROp* RaverieShaderSpirVBinaryBackend::FindSpecialiationConstantCom
   return FindSpecialiationConstantCompositeId(firstConstituent);
 }
 
-void RaverieShaderSpirVBinaryBackend::WriteTypesGlobalsAndConstants(IRList& typesGlobalsAndConstants,
-                                                                  RaverieShaderToSpirVContext* context)
+void RaverieShaderSpirVBinaryBackend::WriteTypesGlobalsAndConstants(IRList& typesGlobalsAndConstants, RaverieShaderToSpirVContext* context)
 {
   // Now spirv requires we write all types then all constants then all functions
   AutoDeclare(range, typesGlobalsAndConstants.All());
@@ -812,8 +787,7 @@ void RaverieShaderSpirVBinaryBackend::WriteType(RaverieShaderIRType* type, Raver
   else if (type->mBaseType == ShaderIRTypeBaseType::Pointer)
   {
     int dereferenceTypeId = context->FindId(type->mDereferenceType);
-    streamWriter.WriteInstruction(
-        4, OpType::OpTypePointer, context->FindId(type), type->mStorageClass, dereferenceTypeId);
+    streamWriter.WriteInstruction(4, OpType::OpTypePointer, context->FindId(type), type->mStorageClass, dereferenceTypeId);
   }
   else if (type->mBaseType == ShaderIRTypeBaseType::Image)
   {
@@ -841,11 +815,9 @@ void RaverieShaderSpirVBinaryBackend::WriteConstant(RaverieShaderIROp* constantO
   {
     bool value = argConstant->mValue.Get<bool>();
     if (value)
-      streamWriter.WriteInstruction(
-          3, OpType::OpConstantTrue, context->FindId(constantOp->mResultType), context->FindId(constantOp));
+      streamWriter.WriteInstruction(3, OpType::OpConstantTrue, context->FindId(constantOp->mResultType), context->FindId(constantOp));
     else
-      streamWriter.WriteInstruction(
-          3, OpType::OpConstantFalse, context->FindId(constantOp->mResultType), context->FindId(constantOp));
+      streamWriter.WriteInstruction(3, OpType::OpConstantFalse, context->FindId(constantOp->mResultType), context->FindId(constantOp));
   }
   else if (constantOp->mResultType->mBaseType == ShaderIRTypeBaseType::Int)
   {
@@ -969,9 +941,7 @@ void RaverieShaderSpirVBinaryBackend::WriteBlock(BasicBlock* block, RaverieShade
   WriteBlockInstructions(block, block->mLines, context);
 }
 
-void RaverieShaderSpirVBinaryBackend::WriteBlockInstructions(BasicBlock* block,
-                                                           Array<IRaverieShaderIR*>& instructions,
-                                                           RaverieShaderToSpirVContext* context)
+void RaverieShaderSpirVBinaryBackend::WriteBlockInstructions(BasicBlock* block, Array<IRaverieShaderIR*>& instructions, RaverieShaderToSpirVContext* context)
 {
   for (size_t i = 0; i < instructions.Size(); ++i)
   {
@@ -982,9 +952,7 @@ void RaverieShaderSpirVBinaryBackend::WriteBlockInstructions(BasicBlock* block,
   }
 }
 
-void RaverieShaderSpirVBinaryBackend::WriteIROp(BasicBlock* block,
-                                              RaverieShaderIROp* op,
-                                              RaverieShaderToSpirVContext* context)
+void RaverieShaderSpirVBinaryBackend::WriteIROp(BasicBlock* block, RaverieShaderIROp* op, RaverieShaderToSpirVContext* context)
 {
   ShaderStreamWriter& streamWriter = *context->mStreamWriter;
 
@@ -1127,8 +1095,7 @@ void RaverieShaderSpirVBinaryBackend::WriteIROpGeneric(RaverieShaderIROp* op, Ra
   WriteIROpArguments(op, context);
 }
 
-void RaverieShaderSpirVBinaryBackend::WriteIROpGenericNoReturnType(RaverieShaderIROp* op,
-                                                                 RaverieShaderToSpirVContext* context)
+void RaverieShaderSpirVBinaryBackend::WriteIROpGenericNoReturnType(RaverieShaderIROp* op, RaverieShaderToSpirVContext* context)
 {
   // Base size of an instruction is 1 (Size+Instruction).
   int16 baseSize = 1;
@@ -1145,8 +1112,7 @@ void RaverieShaderSpirVBinaryBackend::WriteIROpArguments(RaverieShaderIROp* op, 
   WriteIRArguments(op->mArguments, context);
 }
 
-void RaverieShaderSpirVBinaryBackend::WriteIRArguments(Array<IRaverieShaderIR*>& arguments,
-                                                     RaverieShaderToSpirVContext* context)
+void RaverieShaderSpirVBinaryBackend::WriteIRArguments(Array<IRaverieShaderIR*>& arguments, RaverieShaderToSpirVContext* context)
 {
   for (size_t i = 0; i < arguments.Size(); ++i)
   {
@@ -1172,8 +1138,7 @@ void RaverieShaderSpirVBinaryBackend::WriteIRId(IRaverieShaderIR* ir, RaverieSha
   streamWriter.Write(id);
 }
 
-void RaverieShaderSpirVBinaryBackend::WriteImport(RaverieShaderExtensionImport* importLibrary,
-                                                RaverieShaderToSpirVContext* context)
+void RaverieShaderSpirVBinaryBackend::WriteImport(RaverieShaderExtensionImport* importLibrary, RaverieShaderToSpirVContext* context)
 {
   ShaderStreamWriter& streamWriter = *context->mStreamWriter;
 

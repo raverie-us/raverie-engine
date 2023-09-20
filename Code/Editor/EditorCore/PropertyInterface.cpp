@@ -4,17 +4,11 @@
 namespace Raverie
 {
 
-ObjectPropertyNode::ObjectPropertyNode(ObjectPropertyNode* parent, HandleParam object, Property* objectProperty) :
-    mParent(parent),
-    mObject(object),
-    mProperty(objectProperty)
+ObjectPropertyNode::ObjectPropertyNode(ObjectPropertyNode* parent, HandleParam object, Property* objectProperty) : mParent(parent), mObject(object), mProperty(objectProperty)
 {
 }
 
-ObjectPropertyNode::ObjectPropertyNode(ObjectPropertyNode* parent, Property* property) :
-    mParent(parent),
-    mObject(nullptr),
-    mProperty(property)
+ObjectPropertyNode::ObjectPropertyNode(ObjectPropertyNode* parent, Property* property) : mParent(parent), mObject(nullptr), mProperty(property)
 {
 }
 
@@ -98,10 +92,7 @@ PropertyInterface::PropertyInterface()
   mPropertyGrid = nullptr;
 }
 
-void PropertyInterface::ChangeProperty(HandleParam object,
-                                       PropertyPathParam propertyPath,
-                                       PropertyState& state,
-                                       PropertyAction::Enum action)
+void PropertyInterface::ChangeProperty(HandleParam object, PropertyPathParam propertyPath, PropertyState& state, PropertyAction::Enum action)
 {
   Any oldValue = propertyPath.GetValue(object);
 
@@ -160,10 +151,7 @@ HandleOf<MetaArray> PropertyInterface::GetMetaArray(BoundType* objectType)
   return nullptr;
 }
 
-void AddProperty(Property* property,
-                 ObjectPropertyNode* parent,
-                 HandleParam object,
-                 PropertyInterface* propertyInterface)
+void AddProperty(Property* property, ObjectPropertyNode* parent, HandleParam object, PropertyInterface* propertyInterface)
 {
   if (EditorPropertyExtension* extension = property->HasInherited<EditorPropertyExtension>())
   {
@@ -181,12 +169,7 @@ void AddProperty(Property* property,
   }
 }
 
-void AddGroup(ObjectPropertyNode* parentNode,
-              StringRange groupPath,
-              Property* property,
-              HandleParam object,
-              Property* objectProperty,
-              PropertyInterface* propertyInterface)
+void AddGroup(ObjectPropertyNode* parentNode, StringRange groupPath, Property* property, HandleParam object, Property* objectProperty, PropertyInterface* propertyInterface)
 {
   StringTokenRange r = StringTokenRange(groupPath, '/');
   String groupName = r.Front();
@@ -205,9 +188,7 @@ void AddGroup(ObjectPropertyNode* parentNode,
     AddProperty(property, groupNode, object, propertyInterface);
 }
 
-ObjectPropertyNode* PropertyInterface::BuildObjectTree(ObjectPropertyNode* parent,
-                                                       HandleParam object,
-                                                       Property* objectProperty)
+ObjectPropertyNode* PropertyInterface::BuildObjectTree(ObjectPropertyNode* parent, HandleParam object, Property* objectProperty)
 {
   ReturnIf(object.IsNull(), nullptr, "Invalid object.");
 
@@ -228,8 +209,7 @@ ObjectPropertyNode* PropertyInterface::BuildObjectTree(ObjectPropertyNode* paren
 
     // Check for Editable attribute as well as Property attribute (Property
     // implies Editable)
-    if (property->HasAttribute(PropertyAttributes::cProperty) || property->HasAttribute(PropertyAttributes::cDisplay) ||
-        property->HasAttribute(PropertyAttributes::cDeprecatedEditable))
+    if (property->HasAttribute(PropertyAttributes::cProperty) || property->HasAttribute(PropertyAttributes::cDisplay) || property->HasAttribute(PropertyAttributes::cDeprecatedEditable))
     {
       if (MetaGroup* group = property->Has<MetaGroup>())
       {
@@ -318,8 +298,7 @@ void PropertyInterface::RestoreState(PropertyStateCapture& capture)
   }
 }
 
-void PropertyInterface::SendPropertyModifiedOnGrid(
-    HandleParam object, PropertyPathParam property, AnyParam oldValue, AnyParam newValue, PropertyAction::Enum action)
+void PropertyInterface::SendPropertyModifiedOnGrid(HandleParam object, PropertyPathParam property, AnyParam oldValue, AnyParam newValue, PropertyAction::Enum action)
 {
   // Dispatch an event on the property grid
   PropertyEvent eventToSend(object, property, oldValue, newValue);
@@ -343,14 +322,11 @@ void PropertyInterface::SendComponentsModifiedOnGrid(HandleParam object)
 }
 
 // Event Meta Composition
-EventMetaComposition::EventMetaComposition(PropertyInterface* propertyInterface, BoundType* typeToWrap) :
-    MetaCompositionWrapper(typeToWrap),
-    mPropertyInterface(propertyInterface)
+EventMetaComposition::EventMetaComposition(PropertyInterface* propertyInterface, BoundType* typeToWrap) : MetaCompositionWrapper(typeToWrap), mPropertyInterface(propertyInterface)
 {
 }
 
-void EventMetaComposition::AddComponent(
-    HandleParam owner, BoundType* typeToAdd, int index, bool ignoreDependencies, MetaCreationContext* creationContext)
+void EventMetaComposition::AddComponent(HandleParam owner, BoundType* typeToAdd, int index, bool ignoreDependencies, MetaCreationContext* creationContext)
 {
   MetaComposition* composition = owner.StoredType->HasInherited<MetaComposition>();
   composition->AddComponent(owner, typeToAdd, index, ignoreDependencies, creationContext);
@@ -381,9 +357,7 @@ void EventMetaComposition::MoveComponent(HandleParam owner, HandleParam componen
 }
 
 // Event Meta Array
-EventMetaArray::EventMetaArray(BoundType* containedType, PropertyInterface* propertyInterface) :
-    MetaArrayWrapper(containedType),
-    mPropertyInterface(propertyInterface)
+EventMetaArray::EventMetaArray(BoundType* containedType, PropertyInterface* propertyInterface) : MetaArrayWrapper(containedType), mPropertyInterface(propertyInterface)
 {
 }
 

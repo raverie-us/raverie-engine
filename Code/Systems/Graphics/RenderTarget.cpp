@@ -55,10 +55,7 @@ void RenderTargetManager::Shutdown()
   mUnusedTextures.Clear();
 }
 
-HandleOf<RenderTarget> RenderTargetManager::GetRenderTarget(uint width,
-                                                            uint height,
-                                                            TextureFormat::Enum format,
-                                                            SamplerSettings samplerSettings)
+HandleOf<RenderTarget> RenderTargetManager::GetRenderTarget(uint width, uint height, TextureFormat::Enum format, SamplerSettings samplerSettings)
 {
   RenderTarget* renderTarget = new RenderTarget(this);
   mRenderTargets.PushBack(renderTarget);
@@ -154,10 +151,7 @@ void RenderTargetManager::ClearUnusedTextures()
   mAvailableTextures.Clear();
 }
 
-u64 RenderTargetManager::MakeLookupId(uint width,
-                                      uint height,
-                                      TextureFormat::Enum format,
-                                      SamplerSettings samplerSettings)
+u64 RenderTargetManager::MakeLookupId(uint width, uint height, TextureFormat::Enum format, SamplerSettings samplerSettings)
 {
   u64 lookupId = 0;
   // width and height cannot exceed 65535

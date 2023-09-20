@@ -109,8 +109,7 @@ real ContactPoint::GetRelativeVelocity()
   Vec3 worldPointA = mManifoldPoint->WorldPoints[mObjectIndex];
   Collider* objA = mManifold->Objects[mObjectIndex];
   Collider* objB = mManifold->Objects[(mObjectIndex + 1) % 2];
-  Vec3 pointVelocity =
-      objA->ComputePointVelocityInternal(worldPointA) - objB->ComputePointVelocityInternal(worldPointA);
+  Vec3 pointVelocity = objA->ComputePointVelocityInternal(worldPointA) - objB->ComputePointVelocityInternal(worldPointA);
   return Math::Dot(GetWorldNormalTowardsOther(), pointVelocity);
 }
 

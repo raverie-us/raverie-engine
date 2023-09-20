@@ -63,8 +63,7 @@ class MarchingCubes
 {
 public:
   typedef float (*DensitySamplerFn)(Vec3Param position, void* userData);
-  typedef void (*VertexWriterFn)(
-      Vec3 positions[], Vec3 normals[], u32 firstIndicesOut[], u32 numTriangles, void* userData);
+  typedef void (*VertexWriterFn)(Vec3 positions[], Vec3 normals[], u32 firstIndicesOut[], u32 numTriangles, void* userData);
   typedef void (*InvalidatorFn)(u32 firstIndices[], u32 numTriangles, void* userData);
 
   float SurfaceLevel;

@@ -42,8 +42,7 @@ Raverie::Function* GetFunction(Array<String>& params, const Raverie::FunctionArr
   return nullptr;
 }
 
-Raverie::Function*
-GetFunction(Raverie::Type* type, StringParam fnName, Array<String>& params, const Raverie::FunctionArray* functions)
+Raverie::Function* GetFunction(Raverie::Type* type, StringParam fnName, Array<String>& params, const Raverie::FunctionArray* functions)
 {
   return GetFunction(params, functions);
 }
@@ -112,8 +111,7 @@ Raverie::Function* GetMemberOverloadedFunction(Raverie::Type* type, StringParam 
   return GetMemberOverloadedFunction(type, fnName, params);
 }
 
-Raverie::Function*
-GetMemberOverloadedFunction(Raverie::Type* type, StringParam fnName, StringParam p0, StringParam p1, StringParam p2)
+Raverie::Function* GetMemberOverloadedFunction(Raverie::Type* type, StringParam fnName, StringParam p0, StringParam p1, StringParam p2)
 {
   Array<String> params;
   params.PushBack(p0);
@@ -122,8 +120,7 @@ GetMemberOverloadedFunction(Raverie::Type* type, StringParam fnName, StringParam
   return GetMemberOverloadedFunction(type, fnName, params);
 }
 
-Raverie::Function* GetMemberOverloadedFunction(
-    Raverie::Type* type, StringParam fnName, StringParam p0, StringParam p1, StringParam p2, StringParam p3)
+Raverie::Function* GetMemberOverloadedFunction(Raverie::Type* type, StringParam fnName, StringParam p0, StringParam p1, StringParam p2, StringParam p3)
 {
   Array<String> params;
   params.PushBack(p0);
@@ -157,8 +154,7 @@ Raverie::Function* GetStaticFunction(Raverie::Type* type, StringParam fnName, St
   return GetStaticFunction(type, fnName, params);
 }
 
-Raverie::Function*
-GetStaticFunction(Raverie::Type* type, StringParam fnName, StringParam p0, StringParam p1, StringParam p2)
+Raverie::Function* GetStaticFunction(Raverie::Type* type, StringParam fnName, StringParam p0, StringParam p1, StringParam p2)
 {
   Array<String> params;
   params.PushBack(p0);
@@ -167,8 +163,7 @@ GetStaticFunction(Raverie::Type* type, StringParam fnName, StringParam p0, Strin
   return GetStaticFunction(type, fnName, params);
 }
 
-Raverie::Function*
-GetStaticFunction(Raverie::Type* type, StringParam fnName, StringParam p0, StringParam p1, StringParam p2, StringParam p3)
+Raverie::Function* GetStaticFunction(Raverie::Type* type, StringParam fnName, StringParam p0, StringParam p1, StringParam p2, StringParam p3)
 {
   Array<String> params;
   params.PushBack(p0);
@@ -178,13 +173,7 @@ GetStaticFunction(Raverie::Type* type, StringParam fnName, StringParam p0, Strin
   return GetStaticFunction(type, fnName, params);
 }
 
-Raverie::Function* GetStaticFunction(Raverie::Type* type,
-                                   StringParam fnName,
-                                   StringParam p0,
-                                   StringParam p1,
-                                   StringParam p2,
-                                   StringParam p3,
-                                   StringParam p4)
+Raverie::Function* GetStaticFunction(Raverie::Type* type, StringParam fnName, StringParam p0, StringParam p1, StringParam p2, StringParam p3, StringParam p4)
 {
   Array<String> params;
   params.PushBack(p0);

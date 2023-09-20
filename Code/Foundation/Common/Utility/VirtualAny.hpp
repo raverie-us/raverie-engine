@@ -79,7 +79,8 @@ protected:
   BaseType* mBasePointer;
   CopyConstructorFn mCopyConstructor;
 
-  union {
+  union
+  {
     byte mObjectData[MaxDerivedSize];
     MaxAlignmentType mObjectDataAligned[RaverieAlignCount(MaxDerivedSize)];
   };

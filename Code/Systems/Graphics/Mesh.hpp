@@ -248,8 +248,7 @@ public:
   bool TestFrustum(const Frustum& frustum);
 
   template <typename T>
-  bool GetPrimitiveData(
-      uint primitiveIndex, VertexSemantic::Enum semantic, VertexElementType::Enum type, uint count, T* data);
+  bool GetPrimitiveData(uint primitiveIndex, VertexSemantic::Enum semantic, VertexElementType::Enum type, uint count, T* data);
 
   MeshRenderData* mRenderData;
 
@@ -260,8 +259,7 @@ public:
 };
 
 template <typename T>
-bool Mesh::GetPrimitiveData(
-    uint primitiveIndex, VertexSemantic::Enum semantic, VertexElementType::Enum type, uint count, T* data)
+bool Mesh::GetPrimitiveData(uint primitiveIndex, VertexSemantic::Enum semantic, VertexElementType::Enum type, uint count, T* data)
 {
   bool result = true;
   uint i0 = 0, i1 = 0, i2 = 0;

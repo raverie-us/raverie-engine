@@ -4,10 +4,7 @@
 namespace Raverie
 {
 
-EditorCameraMouseDrag::EditorCameraMouseDrag(Mouse* mouse,
-                                             EditorViewport* editorViewport,
-                                             EditorCameraController* controller) :
-    MouseManipulation(mouse, editorViewport)
+EditorCameraMouseDrag::EditorCameraMouseDrag(Mouse* mouse, EditorViewport* editorViewport, EditorCameraController* controller) : MouseManipulation(mouse, editorViewport)
 {
   mController = controller;
   mViewport = editorViewport->GetReactiveViewport();
@@ -17,8 +14,7 @@ EditorCameraMouseDrag::EditorCameraMouseDrag(Mouse* mouse,
   ConnectThisTo(this, Events::MiddleMouseDown, OnMouseDown);
 }
 
-EditorCameraMouseDrag::EditorCameraMouseDrag(Mouse* mouse, Viewport* viewport, EditorCameraController* controller) :
-    MouseManipulation(mouse, viewport)
+EditorCameraMouseDrag::EditorCameraMouseDrag(Mouse* mouse, Viewport* viewport, EditorCameraController* controller) : MouseManipulation(mouse, viewport)
 {
   mController = controller;
   mViewport = viewport;

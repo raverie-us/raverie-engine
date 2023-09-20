@@ -81,8 +81,7 @@ public:
   virtual void GetCurve(Vec3Array& curve);
 
   /// Creates a control point and adds it to the curve.
-  ControlPoint*
-  CreateControlPoint(Vec2Param pos, Vec2Param tanIn, Vec2Param tanOut, CurveEditing::CurveEditorFlags::Type flags);
+  ControlPoint* CreateControlPoint(Vec2Param pos, Vec2Param tanIn, Vec2Param tanOut, CurveEditing::CurveEditorFlags::Type flags);
 
   /// Returns whether or not the mouse is over the curve.
   bool IsMouseOver(Vec2Param pixelPos);
@@ -487,20 +486,11 @@ public:
   CurveDrawer(CurveEditor* curveEditor);
 
   /// Draw the widget.
-  void RenderUpdate(ViewBlock& viewBlock,
-                    FrameBlock& frameBlock,
-                    Mat4Param parentTx,
-                    ColorTransform colorTx,
-                    WidgetRect clipRect) override;
+  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect) override;
 
   void AddCurve(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, CurveObject* curveObject);
   void AddControlPoints(ViewBlock& viewBlock, FrameBlock& frameBlock, WidgetRect clipRect, CurveObject* curveObject);
-  void AddPoint(Array<StreamedVertex>& lines,
-                Array<StreamedVertex>& triangles,
-                Vec3Param pos,
-                float size,
-                Vec4 color,
-                bool empty = false);
+  void AddPoint(Array<StreamedVertex>& lines, Array<StreamedVertex>& triangles, Vec3Param pos, float size, Vec4 color, bool empty = false);
 
   CurveEditor* mCurveEditor;
 };

@@ -11,21 +11,12 @@ BitStream::BitStream()
   Initialize();
 }
 BitStream::BitStream(const BitStream& rhs) :
-    mData(rhs.mByteCapacity ? new byte[rhs.mByteCapacity] : nullptr),
-    mByteCapacity(rhs.mByteCapacity),
-    mBitsWritten(rhs.mBitsWritten),
-    mBitsRead(rhs.mBitsRead),
-    mAlignment(rhs.mAlignment)
+    mData(rhs.mByteCapacity ? new byte[rhs.mByteCapacity] : nullptr), mByteCapacity(rhs.mByteCapacity), mBitsWritten(rhs.mBitsWritten), mBitsRead(rhs.mBitsRead), mAlignment(rhs.mAlignment)
 {
   if (mData)
     memcpy(mData, rhs.mData, rhs.mByteCapacity);
 }
-BitStream::BitStream(MoveReference<BitStream> rhs) :
-    mData(rhs->mData),
-    mByteCapacity(rhs->mByteCapacity),
-    mBitsWritten(rhs->mBitsWritten),
-    mBitsRead(rhs->mBitsRead),
-    mAlignment(rhs->mAlignment)
+BitStream::BitStream(MoveReference<BitStream> rhs) : mData(rhs->mData), mByteCapacity(rhs->mByteCapacity), mBitsWritten(rhs->mBitsWritten), mBitsRead(rhs->mBitsRead), mAlignment(rhs->mAlignment)
 {
   rhs->Initialize();
 }
@@ -174,8 +165,7 @@ Bits BitStream::WriteBits(const byte* data, Bits dataBits)
   byte* dataCursor = (byte*)data;
   bool writeCursorByteAligned = !remBitsWritten;
 
-  Assert(BYTES_TO_BITS(fullBytesWritten) + remBitsWritten == mBitsWritten &&
-         BYTES_TO_BITS(fullDataBytes) + remDataBits == dataBits);
+  Assert(BYTES_TO_BITS(fullBytesWritten) + remBitsWritten == mBitsWritten && BYTES_TO_BITS(fullDataBytes) + remDataBits == dataBits);
 
   // Write full data bytes first (if any)
   if (writeCursorByteAligned && fullDataBytes)
@@ -409,8 +399,7 @@ Bits BitStream::ReadBits(byte* data, Bits dataBits) const
   byte* dataCursor = data;
   bool readCursorByteAligned = !remBitsRead;
 
-  Assert(BYTES_TO_BITS(fullBytesRead) + remBitsRead == mBitsRead &&
-         BYTES_TO_BITS(fullDataBytes) + remDataBits == dataBits);
+  Assert(BYTES_TO_BITS(fullBytesRead) + remBitsRead == mBitsRead && BYTES_TO_BITS(fullDataBytes) + remDataBits == dataBits);
 
   // Read full data bytes first (if any)
   if (readCursorByteAligned && fullDataBytes)

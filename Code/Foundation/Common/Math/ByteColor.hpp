@@ -43,12 +43,10 @@ const uint RedMask = MaxByte << RedOffset;
 const float InvFactor = 1.0f / 255.0f;
 } // namespace CS
 
-#define ByteColorRGBA(r, g, b, a)                                                                                      \
-  ((ByteColor)((((a)&CS::MaxByte) << CS::AlphaOffset) | (((r)&CS::MaxByte) << CS::RedOffset) |                         \
-               (((g)&CS::MaxByte) << CS::GreenOffset) | ((b)&CS::MaxByte) << CS::BlueOffset))
+#define ByteColorRGBA(r, g, b, a)                                                                                                                                                                      \
+  ((ByteColor)((((a)&CS::MaxByte) << CS::AlphaOffset) | (((r)&CS::MaxByte) << CS::RedOffset) | (((g)&CS::MaxByte) << CS::GreenOffset) | ((b)&CS::MaxByte) << CS::BlueOffset))
 
-#define FloatColorRGBA(r, g, b, a)                                                                                     \
-  Math::Vec4(float(r) * CS::InvFactor, float(g) * CS::InvFactor, float(b) * CS::InvFactor, float(a) * CS::InvFactor)
+#define FloatColorRGBA(r, g, b, a) Math::Vec4(float(r) * CS::InvFactor, float(g) * CS::InvFactor, float(b) * CS::InvFactor, float(a) * CS::InvFactor)
 
 inline Math::Vec4 ToFloatColor(ByteColor color)
 {
@@ -60,10 +58,7 @@ inline Math::Vec4 ToFloatColor(ByteColor color)
 
 inline ByteColor ToByteColor(Math::Vec4 color)
 {
-  return ByteColorRGBA(byte(Math::Round(color.x * 255.f)),
-                       byte(Math::Round(color.y * 255.f)),
-                       byte(Math::Round(color.z * 255.f)),
-                       byte(Math::Round(color.w * 255.f)));
+  return ByteColorRGBA(byte(Math::Round(color.x * 255.f)), byte(Math::Round(color.y * 255.f)), byte(Math::Round(color.z * 255.f)), byte(Math::Round(color.w * 255.f)));
 }
 
 inline float GetHdrFromColor(Math::Vec4 color)

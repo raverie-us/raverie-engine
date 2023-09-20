@@ -807,8 +807,7 @@ bool RigidBody::UpdateSleepTimer(real dt)
   real velLenSq = mVelocity.LengthSq();
   real angVelLenSq = mAngularVelocity.LengthSq();
   // If we are able to sleep, increment our sleep timer
-  if (GetAllowSleep() && velLenSq <= cLinearSleepEpsilon * cLinearSleepEpsilon &&
-      angVelLenSq <= cAngularSleepEpsilon * cAngularSleepEpsilon)
+  if (GetAllowSleep() && velLenSq <= cLinearSleepEpsilon * cLinearSleepEpsilon && angVelLenSq <= cAngularSleepEpsilon * cAngularSleepEpsilon)
   {
     mSleepTimer += dt;
     return true;

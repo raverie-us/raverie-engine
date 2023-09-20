@@ -5,12 +5,8 @@ namespace Raverie
 {
 
 void FlipManifoldInfo(Intersection::Manifold* manifold);
-void FlipSupportShapeManifoldInfo(const Intersection::SupportShape& a,
-                                  const Intersection::SupportShape& b,
-                                  Intersection::Manifold* manifold);
-bool SupportShapeCollide(const Intersection::SupportShape& a,
-                         const Intersection::SupportShape& b,
-                         Intersection::Manifold* manifold);
+void FlipSupportShapeManifoldInfo(const Intersection::SupportShape& a, const Intersection::SupportShape& b, Intersection::Manifold* manifold);
+bool SupportShapeCollide(const Intersection::SupportShape& a, const Intersection::SupportShape& b, Intersection::Manifold* manifold);
 
 bool Collide(const Ray& ray, const Aabb& aabb, Intersection::Manifold* manifold);
 bool Collide(const Ray& ray, const Capsule& capsule, Intersection::Manifold* manifold);
@@ -200,9 +196,7 @@ bool Collide(const ConvexMeshShape& supportShape, const Plane& plane, Intersecti
 bool Collide(const ConvexMeshShape& supportShape, const Sphere& sphere, Intersection::Manifold* manifold);
 bool Collide(const ConvexMeshShape& supportShape, const Triangle& triangle, Intersection::Manifold* manifold);
 bool Collide(const ConvexMeshShape& supportShape, const Tetrahedron& tetrahedron, Intersection::Manifold* manifold);
-bool Collide(const ConvexMeshShape& supportShape1,
-             const ConvexMeshShape& supportShape2,
-             Intersection::Manifold* manifold);
+bool Collide(const ConvexMeshShape& supportShape1, const ConvexMeshShape& supportShape2, Intersection::Manifold* manifold);
 bool Collide(const ConvexMeshShape& supportShape, const SweptTriangle& sweptTri, Intersection::Manifold* manifold);
 
 bool Collide(const SweptTriangle& sweptTri, const Ray& ray, Intersection::Manifold* manifold);

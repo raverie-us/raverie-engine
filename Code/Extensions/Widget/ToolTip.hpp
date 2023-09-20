@@ -16,8 +16,7 @@ struct ToolTipPlacement
   /// Sets the screen rect and sets the hotspot to the center of the rect.
   void SetScreenRect(const WidgetRect& rect);
 
-  void
-  SetPriority(IndicatorSide::Type pri0, IndicatorSide::Type pri1, IndicatorSide::Type pri2, IndicatorSide::Type pri3);
+  void SetPriority(IndicatorSide::Type pri0, IndicatorSide::Type pri1, IndicatorSide::Type pri2, IndicatorSide::Type pri3);
 
   /// The tooltip will be placed pointing at the edges of this rect.
   WidgetRect mScreenRect;

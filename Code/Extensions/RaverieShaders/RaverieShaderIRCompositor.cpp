@@ -49,15 +49,12 @@ RaverieShaderIRCompositor::ShaderDefinition::ShaderDefinition()
     mResults[i].mFragmentType = (FragmentType::Enum)i;
 }
 
-//-------------------------------------------------------------------ComputeShaderProperties
 RaverieShaderIRCompositor::ComputeShaderProperties::ComputeShaderProperties()
 {
   mLocalSizeX = mLocalSizeY = mLocalSizeZ = 1;
 }
 
-RaverieShaderIRCompositor::ComputeShaderProperties::ComputeShaderProperties(int localSizeX,
-                                                                          int localSizeY,
-                                                                          int localSizeZ)
+RaverieShaderIRCompositor::ComputeShaderProperties::ComputeShaderProperties(int localSizeX, int localSizeY, int localSizeZ)
 {
   mLocalSizeX = localSizeX;
   mLocalSizeY = localSizeY;
@@ -69,9 +66,7 @@ RaverieShaderIRCompositor::RaverieShaderIRCompositor()
   mComputeShaderProperties = nullptr;
 }
 
-bool RaverieShaderIRCompositor::Composite(ShaderDefinition& shaderDef,
-                                        const ShaderCapabilities& capabilities,
-                                        RaverieShaderSpirVSettingsRef& settings)
+bool RaverieShaderIRCompositor::Composite(ShaderDefinition& shaderDef, const ShaderCapabilities& capabilities, RaverieShaderSpirVSettingsRef& settings)
 {
   mSettings = settings;
   mCapabilities = capabilities;
@@ -123,9 +118,9 @@ bool RaverieShaderIRCompositor::Composite(ShaderDefinition& shaderDef,
 }
 
 bool RaverieShaderIRCompositor::CompositeCompute(ShaderDefinition& shaderDef,
-                                               ComputeShaderProperties* computeProperties,
-                                               const ShaderCapabilities& capabilities,
-                                               RaverieShaderSpirVSettingsRef& settings)
+                                                 ComputeShaderProperties* computeProperties,
+                                                 const ShaderCapabilities& capabilities,
+                                                 RaverieShaderSpirVSettingsRef& settings)
 {
   mSettings = settings;
   mCapabilities = capabilities;
@@ -185,8 +180,7 @@ bool RaverieShaderIRCompositor::CompositeCompute(ShaderDefinition& shaderDef,
   return true;
 }
 
-void RaverieShaderIRCompositor::CollectFragmentsPerStage(Array<RaverieShaderIRType*>& inputFragments,
-                                                       CompositedShaderInfo& compositeInfo)
+void RaverieShaderIRCompositor::CollectFragmentsPerStage(Array<RaverieShaderIRType*>& inputFragments, CompositedShaderInfo& compositeInfo)
 {
   // Reset all stages
   for (size_t i = 0; i < CompositorShaderStage::Size; ++i)
@@ -238,8 +232,7 @@ void RaverieShaderIRCompositor::CollectFragmentsPerStage(Array<RaverieShaderIRTy
   if (!geometryStageInfo.mPrimitiveTypes.Empty())
   {
     RaverieShaderIRType* geometryFragmentType = geometryStageInfo.mPrimitiveTypes[0];
-    Raverie::GeometryFragmentUserData* geometryUserData =
-        geometryFragmentType->mRaverieType->Has<Raverie::GeometryFragmentUserData>();
+    Raverie::GeometryFragmentUserData* geometryUserData = geometryFragmentType->mRaverieType->Has<Raverie::GeometryFragmentUserData>();
     ErrorIf(geometryUserData == nullptr, "Geometry Fragment is missing user data");
 
     // The vertex in/outs come from the in/out stream types in the main of the
@@ -257,8 +250,7 @@ void RaverieShaderIRCompositor::CollectFragmentsPerStage(Array<RaverieShaderIRTy
   for (size_t i = 0; i < CompositorShaderStage::Size; ++i)
   {
     StageLinkingInfo* stageInfo = &compositeInfo.mStages[i];
-    if (i == CompositorShaderStage::Cpu || i == CompositorShaderStage::Gpu || i == CompositorShaderStage::Vertex ||
-        i == CompositorShaderStage::Pixel || !stageInfo->mFragmentTypes.Empty())
+    if (i == CompositorShaderStage::Cpu || i == CompositorShaderStage::Gpu || i == CompositorShaderStage::Vertex || i == CompositorShaderStage::Pixel || !stageInfo->mFragmentTypes.Empty())
       compositeInfo.mActiveStages.PushBack(stageInfo);
   }
 
@@ -291,9 +283,7 @@ bool RaverieShaderIRCompositor::ValidateStages(CompositedShaderInfo& compositeIn
 
     bool stageSupported = mCapabilities.mSupportedStages.IsSet(stageInfo->mShaderStage);
     bool stageFragmentsExist = !stageInfo->mFragmentTypes.Empty();
-    ReturnIf(!stageSupported && stageFragmentsExist,
-             false,
-             "ShaderStage isn't supported according to the given capabilities.");
+    ReturnIf(!stageSupported && stageFragmentsExist, false, "ShaderStage isn't supported according to the given capabilities.");
 
     for (size_t i = 0; i < stageInfo->mFragmentTypes.Size(); ++i)
     {
@@ -361,8 +351,7 @@ void RaverieShaderIRCompositor::CollectExpectedOutputs(CompositedShaderInfo& com
   }
 }
 
-void RaverieShaderIRCompositor::CollectExpectedOutputs(Array<RaverieShaderIRType*>& fragmentTypes,
-                                                     StageAttachmentLinkingInfo& linkingInfo)
+void RaverieShaderIRCompositor::CollectExpectedOutputs(Array<RaverieShaderIRType*>& fragmentTypes, StageAttachmentLinkingInfo& linkingInfo)
 {
   SpirVNameSettings& nameSettings = mSettings->mNameSettings;
   FragmentType::Enum currentFragmentType = linkingInfo.mOwningStage->mFragmentType;
@@ -412,20 +401,11 @@ void RaverieShaderIRCompositor::ResolveInputs(StageLinkingInfo* previousStage, S
   // Link together the two stages. This requires linking the vertex to vertex
   // and primitive to primitive. Primitive stages are mostly for
   // geometry/tessellation.
-  Link(previousStage->mVertexLinkingInfo,
-       currentStage,
-       currentStage->mInputVertexTypes,
-       currentStage->mVertexLinkingInfo);
-  Link(previousStage->mPrimitiveLinkingInfo,
-       currentStage,
-       currentStage->mPrimitiveTypes,
-       currentStage->mPrimitiveLinkingInfo);
+  Link(previousStage->mVertexLinkingInfo, currentStage, currentStage->mInputVertexTypes, currentStage->mVertexLinkingInfo);
+  Link(previousStage->mPrimitiveLinkingInfo, currentStage, currentStage->mPrimitiveTypes, currentStage->mPrimitiveLinkingInfo);
 }
 
-void RaverieShaderIRCompositor::Link(StageAttachmentLinkingInfo& prevStageInfo,
-                                   StageLinkingInfo* currentStage,
-                                   Array<RaverieShaderIRType*>& fragmentTypes,
-                                   StageAttachmentLinkingInfo& currStageInfo)
+void RaverieShaderIRCompositor::Link(StageAttachmentLinkingInfo& prevStageInfo, StageLinkingInfo* currentStage, Array<RaverieShaderIRType*>& fragmentTypes, StageAttachmentLinkingInfo& currStageInfo)
 {
   SpirVNameSettings& nameSettings = mSettings->mNameSettings;
 
@@ -461,8 +441,7 @@ void RaverieShaderIRCompositor::Link(StageAttachmentLinkingInfo& prevStageInfo,
         for (size_t attributeIndex = 0; attributeIndex < fieldMeta->mAttributes.Size(); ++attributeIndex)
         {
           ShaderIRAttribute* attribute = fieldMeta->mAttributes.GetAtIndex(attributeIndex);
-          if (attribute->mAttributeName == nameSettings.mPropertyInputAttribute ||
-              attribute->mAttributeName == nameSettings.mStageOutputAttribute)
+          if (attribute->mAttributeName == nameSettings.mPropertyInputAttribute || attribute->mAttributeName == nameSettings.mStageOutputAttribute)
           {
             String fieldName = GetFieldInOutName(fieldMeta, attribute);
             // @JoshD: Temporarily use the original field name. Currently
@@ -568,8 +547,7 @@ void RaverieShaderIRCompositor::Link(StageAttachmentLinkingInfo& prevStageInfo,
           fieldLinkInfo.mLinkedType = LinkedFieldType::Property;
           fieldLinkInfo.mOutputFieldDependencyName = GetFieldInOutName(fieldMeta, attribute);
           // Make the property name (mangled to prevent conflicts)
-          fieldLinkInfo.mFieldPropertyName =
-              MakePropertyName(fieldLinkInfo.mOutputFieldDependencyName, fieldMeta->mOwner->mRaverieName);
+          fieldLinkInfo.mFieldPropertyName = MakePropertyName(fieldLinkInfo.mOutputFieldDependencyName, fieldMeta->mOwner->mRaverieName);
           break;
         }
         // Check if this is a specialization constant input.
@@ -580,8 +558,7 @@ void RaverieShaderIRCompositor::Link(StageAttachmentLinkingInfo& prevStageInfo,
           fieldLinkInfo.mLinkedType = LinkedFieldType::SpecConstant;
           fieldLinkInfo.mOutputFieldDependencyName = GetFieldInOutName(fieldMeta, attribute);
           // Make the property name (mangled to prevent conflicts)
-          fieldLinkInfo.mFieldPropertyName =
-              MakePropertyName(fieldLinkInfo.mOutputFieldDependencyName, fieldMeta->mOwner->mRaverieName);
+          fieldLinkInfo.mFieldPropertyName = MakePropertyName(fieldLinkInfo.mOutputFieldDependencyName, fieldMeta->mOwner->mRaverieName);
 
           String fieldType = fieldMeta->mRaverieType->ToString();
           ResolvedFieldInfo* fieldInfo = currStageInfo.CreateResolvedField(fieldLinkInfo.mFieldPropertyName, fieldType);
@@ -631,10 +608,7 @@ void RaverieShaderIRCompositor::Link(StageAttachmentLinkingInfo& prevStageInfo,
   }
 }
 
-void RaverieShaderIRCompositor::AddStageInput(ExpectedOutputData* previousStageOutputData,
-                                            StageAttachmentLinkingInfo* currStageAttachment,
-                                            StringParam fieldVarName,
-                                            StringParam fieldAttributeName)
+void RaverieShaderIRCompositor::AddStageInput(ExpectedOutputData* previousStageOutputData, StageAttachmentLinkingInfo* currStageAttachment, StringParam fieldVarName, StringParam fieldAttributeName)
 {
   SpirVNameSettings& nameSettings = mSettings->mNameSettings;
   ShaderIRFieldMeta* previousStageOutputMeta = previousStageOutputData->mOutputFieldDependency;
@@ -649,11 +623,9 @@ void RaverieShaderIRCompositor::AddStageInput(ExpectedOutputData* previousStageO
   StageAttachmentLinkingInfo* prevStageAttachment = currStageAttachment->mPreviousStage;
   while (currStageAttachment->mPreviousStage != nullptr)
   {
-    prevStageAttachment->AddResolvedStageField(
-        nameSettings, previousStageOutputMeta, fieldVarName, nameSettings.mStageOutputAttribute, fieldAttributeName);
+    prevStageAttachment->AddResolvedStageField(nameSettings, previousStageOutputMeta, fieldVarName, nameSettings.mStageOutputAttribute, fieldAttributeName);
     // Mark the current stage as actually having an input field
-    currStageAttachment->AddResolvedStageField(
-        nameSettings, previousStageOutputMeta, fieldVarName, nameSettings.mStageInputAttribute, fieldAttributeName);
+    currStageAttachment->AddResolvedStageField(nameSettings, previousStageOutputMeta, fieldVarName, nameSettings.mStageInputAttribute, fieldAttributeName);
 
     // If we've reached the stage that output the property then stop
     if (prevStageAttachment->mOwningStage->mFragmentType == stageOutputFragmentType)
@@ -696,28 +668,24 @@ ShaderIRFieldMeta* RaverieShaderIRCompositor::FindUniform(ShaderFieldKey& fieldK
   return nullptr;
 }
 
-ShaderIRFieldMeta* RaverieShaderIRCompositor::FindHardwareBuiltInInput(ShaderFieldKey& fieldKey,
-                                                                     FragmentType::Enum fragmentType)
+ShaderIRFieldMeta* RaverieShaderIRCompositor::FindHardwareBuiltInInput(ShaderFieldKey& fieldKey, FragmentType::Enum fragmentType)
 {
   RaverieShaderSpirVSettings* settings = mSettings;
   BuiltInStageDescription& builtInStageDescription = settings->mBuiltIns[fragmentType];
 
-  BuiltInBlockDescription* blockDescription =
-      builtInStageDescription.mInternalInputMappings.FindValue(fieldKey, nullptr);
+  BuiltInBlockDescription* blockDescription = builtInStageDescription.mInternalInputMappings.FindValue(fieldKey, nullptr);
   if (blockDescription == nullptr)
     return nullptr;
 
   return blockDescription->FindField(fieldKey)->mMeta;
 }
 
-ShaderIRFieldMeta* RaverieShaderIRCompositor::FindHardwareBuiltInOutput(ShaderFieldKey& fieldKey,
-                                                                      FragmentType::Enum fragmentType)
+ShaderIRFieldMeta* RaverieShaderIRCompositor::FindHardwareBuiltInOutput(ShaderFieldKey& fieldKey, FragmentType::Enum fragmentType)
 {
   RaverieShaderSpirVSettings* settings = mSettings;
   BuiltInStageDescription& builtInStageDescription = settings->mBuiltIns[fragmentType];
 
-  BuiltInBlockDescription* blockDescription =
-      builtInStageDescription.mInternalOutputMappings.FindValue(fieldKey, nullptr);
+  BuiltInBlockDescription* blockDescription = builtInStageDescription.mInternalOutputMappings.FindValue(fieldKey, nullptr);
   if (blockDescription == nullptr)
     return nullptr;
 
@@ -740,10 +708,7 @@ String RaverieShaderIRCompositor::GetFieldInOutName(ShaderIRFieldMeta* fieldMeta
   return fieldMeta->GetFieldAttributeName(attribute);
 }
 
-void RaverieShaderIRCompositor::GetStageFieldName(ShaderIRFieldMeta* fieldMeta,
-                                                ShaderIRAttribute* attribute,
-                                                String& fieldVarNameOut,
-                                                String& fieldAttributeNameOut)
+void RaverieShaderIRCompositor::GetStageFieldName(ShaderIRFieldMeta* fieldMeta, ShaderIRAttribute* attribute, String& fieldVarNameOut, String& fieldAttributeNameOut)
 {
   // Get the target field name given the current attribute. This will be the
   // target name for translation (aka the attribute parameter 'name' value)
@@ -783,8 +748,7 @@ void RaverieShaderIRCompositor::ResolveGpuStage(CompositedShaderInfo& compositeI
       // Get the render target field's name and attribute name (the attribute
       // name is always renderTargetName)
       String fieldVarName, fieldAttributeName;
-      GetStageFieldName(
-          previousStageExpectedOutput->mOutputFieldDependency, &stageInAttribute, fieldVarName, fieldAttributeName);
+      GetStageFieldName(previousStageExpectedOutput->mOutputFieldDependency, &stageInAttribute, fieldVarName, fieldAttributeName);
       // Add all necessary stage in/out variables up the the previous stage.
       AddStageInput(previousStageExpectedOutput, &gpuStage.mVertexLinkingInfo, fieldVarName, fieldAttributeName);
     }
@@ -820,9 +784,7 @@ void RaverieShaderIRCompositor::ResolveStageLinkOrder(CompositedShaderInfo& comp
   }
 }
 
-void RaverieShaderIRCompositor::GenerateRaverieComposite(StageLinkingInfo* currentStage,
-                                                     ShaderStageDescription& stageResults,
-                                                     ShaderIRAttributeList& extraAttributes)
+void RaverieShaderIRCompositor::GenerateRaverieComposite(StageLinkingInfo* currentStage, ShaderStageDescription& stageResults, ShaderIRAttributeList& extraAttributes)
 {
   // Invoke the custom compositor callback if it exists. This allows forcing
   // certain in/outs.
@@ -857,9 +819,7 @@ void RaverieShaderIRCompositor::GenerateRaverieComposite(StageLinkingInfo* curre
   }
 }
 
-void RaverieShaderIRCompositor::GenerateBasicRaverieComposite(StageLinkingInfo* currentStage,
-                                                          ShaderStageDescription& stageResults,
-                                                          ShaderIRAttributeList& extraAttributes)
+void RaverieShaderIRCompositor::GenerateBasicRaverieComposite(StageLinkingInfo* currentStage, ShaderStageDescription& stageResults, ShaderIRAttributeList& extraAttributes)
 {
   SpirVNameSettings& nameSettings = mSettings->mNameSettings;
   StageAttachmentLinkingInfo& vertexLinkingInfo = currentStage->mVertexLinkingInfo;
@@ -926,8 +886,7 @@ void RaverieShaderIRCompositor::GenerateBasicRaverieComposite(StageLinkingInfo* 
       continue;
 
     builder << builder.EmitIndent() << "this." << fieldOutput.mFieldName << " = ";
-    builder << MakeFragmentVarName(fieldMeta->mOwner) << "." << fieldMeta->mRaverieName << ";"
-            << builder.EmitLineReturn();
+    builder << MakeFragmentVarName(fieldMeta->mOwner) << "." << fieldMeta->mRaverieName << ";" << builder.EmitLineReturn();
   }
 
   builder.EndScope();
@@ -937,17 +896,14 @@ void RaverieShaderIRCompositor::GenerateBasicRaverieComposite(StageLinkingInfo* 
   stageResults.mShaderCode = builder.ToString();
 }
 
-void RaverieShaderIRCompositor::GenerateGeometryRaverieComposite(StageLinkingInfo* currentStage,
-                                                             ShaderStageDescription& stageResults,
-                                                             ShaderIRAttributeList& extraAttributes)
+void RaverieShaderIRCompositor::GenerateGeometryRaverieComposite(StageLinkingInfo* currentStage, ShaderStageDescription& stageResults, ShaderIRAttributeList& extraAttributes)
 {
   SpirVNameSettings& nameSettings = mSettings->mNameSettings;
   ShaderCodeBuilder builder;
 
   // Grab all of the various fragment and stream types
   RaverieShaderIRType* geometryFragmentType = currentStage->mPrimitiveTypes[0];
-  Raverie::GeometryFragmentUserData* geometryUserData =
-      geometryFragmentType->mRaverieType->Has<Raverie::GeometryFragmentUserData>();
+  Raverie::GeometryFragmentUserData* geometryUserData = geometryFragmentType->mRaverieType->Has<Raverie::GeometryFragmentUserData>();
   Raverie::BoundType* raverieInputStreamType = geometryUserData->mInputStreamType->mRaverieType;
   Raverie::BoundType* raverieOutputStreamType = geometryUserData->mOutputStreamType->mRaverieType;
   Raverie::GeometryStreamUserData* inputStreamUserData = raverieInputStreamType->Has<Raverie::GeometryStreamUserData>();
@@ -972,17 +928,14 @@ void RaverieShaderIRCompositor::GenerateGeometryRaverieComposite(StageLinkingInf
   builder << "struct " << inputTypeName << builder.EmitLineReturn();
   builder.BeginScope();
   DeclareFieldsWithAttribute(builder, vertexLinkingInfo, vertexLinkingInfo.mInputs, nameSettings.mStageInputAttribute);
-  DeclareFieldsWithAttribute(
-      builder, vertexLinkingInfo, vertexLinkingInfo.mHardwareInputs, nameSettings.mHardwareBuiltInInputAttribute);
+  DeclareFieldsWithAttribute(builder, vertexLinkingInfo, vertexLinkingInfo.mHardwareInputs, nameSettings.mHardwareBuiltInInputAttribute);
   builder.EndScope();
 
   // Declare the input vertex type only from the resolved output fields.
   builder << "struct " << outputTypeName << builder.EmitLineReturn();
   builder.BeginScope();
-  DeclareFieldsWithAttribute(
-      builder, vertexLinkingInfo, vertexLinkingInfo.mOutputs, nameSettings.mStageOutputAttribute);
-  DeclareFieldsWithAttribute(
-      builder, vertexLinkingInfo, vertexLinkingInfo.mHardwareOutputs, nameSettings.mHardwareBuiltInOutputAttribute);
+  DeclareFieldsWithAttribute(builder, vertexLinkingInfo, vertexLinkingInfo.mOutputs, nameSettings.mStageOutputAttribute);
+  DeclareFieldsWithAttribute(builder, vertexLinkingInfo, vertexLinkingInfo.mHardwareOutputs, nameSettings.mHardwareBuiltInOutputAttribute);
   builder.EndScope();
 
   // Emit the struct declaration (attributes followed by name)
@@ -1014,8 +967,7 @@ void RaverieShaderIRCompositor::GenerateGeometryRaverieComposite(StageLinkingInf
   // Declare the fragment input data (this is a sub-set of the composite's data)
   builder.WriteLocalVariableDefaultConstruction("fragmentInput", raverieInputStreamType->Name);
   // Copy all inputs from the composite input vertex type to the fragment's
-  builder << builder.EmitIndent() << "for(var i = 0; i < " << ToString(inputStreamUserData->mSize) << "; ++i)"
-          << builder.EmitLineReturn();
+  builder << builder.EmitIndent() << "for(var i = 0; i < " << ToString(inputStreamUserData->mSize) << "; ++i)" << builder.EmitLineReturn();
   builder.BeginScope();
   // Walk the linking info of the input vertex type
   FragmentLinkingInfo& inputVertexLinkInfo = currentStage->mFragmentLinkInfoMap[inputVertexType];
@@ -1040,8 +992,7 @@ void RaverieShaderIRCompositor::GenerateGeometryRaverieComposite(StageLinkingInf
   String fragmentVarName = MakeFragmentVarName(geometryFragmentType->mMeta);
   CreateFragmentAndCopyInputs(currentStage, builder, stageResults.mClassName, geometryFragmentType, fragmentVarName);
   // Invoke the fragment's main function
-  builder << builder.EmitIndent() << fragmentVarName << "." << nameSettings.mMainFunctionName
-          << "(fragmentInput, fragmentOutput);" << builder.EmitLineReturn();
+  builder << builder.EmitIndent() << fragmentVarName << "." << nameSettings.mMainFunctionName << "(fragmentInput, fragmentOutput);" << builder.EmitLineReturn();
 
   builder.EndScope();
 
@@ -1050,9 +1001,7 @@ void RaverieShaderIRCompositor::GenerateGeometryRaverieComposite(StageLinkingInf
   stageResults.mShaderCode = builder.ToString();
 }
 
-void RaverieShaderIRCompositor::GenerateComputeRaverieComposite(StageLinkingInfo* currentStage,
-                                                            ShaderStageDescription& stageResults,
-                                                            ShaderIRAttributeList& extraAttributes)
+void RaverieShaderIRCompositor::GenerateComputeRaverieComposite(StageLinkingInfo* currentStage, ShaderStageDescription& stageResults, ShaderIRAttributeList& extraAttributes)
 {
   RaverieShaderIRType* computeFragmentType = currentStage->mFragmentTypes[0];
   SpirVNameSettings& nameSettings = mSettings->mNameSettings;
@@ -1060,8 +1009,7 @@ void RaverieShaderIRCompositor::GenerateComputeRaverieComposite(StageLinkingInfo
   ShaderCodeBuilder builder;
   StageAttachmentLinkingInfo& linkingInfo = currentStage->mVertexLinkingInfo;
 
-  Raverie::ComputeFragmentUserData* computeUserData =
-      computeFragmentType->mRaverieType->Has<Raverie::ComputeFragmentUserData>();
+  Raverie::ComputeFragmentUserData* computeUserData = computeFragmentType->mRaverieType->Has<Raverie::ComputeFragmentUserData>();
   int localSizeX = computeUserData->mLocalSizeX;
   int localSizeY = computeUserData->mLocalSizeY;
   int localSizeZ = computeUserData->mLocalSizeZ;
@@ -1131,8 +1079,7 @@ void RaverieShaderIRCompositor::GenerateComputeRaverieComposite(StageLinkingInfo
       continue;
 
     builder << builder.EmitIndent() << "this." << fieldOutput.mFieldName << " = ";
-    builder << MakeFragmentVarName(fieldMeta->mOwner) << "." << fieldMeta->mRaverieName << ";"
-            << builder.EmitLineReturn();
+    builder << MakeFragmentVarName(fieldMeta->mOwner) << "." << fieldMeta->mRaverieName << ";" << builder.EmitLineReturn();
   }
 
   builder.EndScope();
@@ -1142,11 +1089,8 @@ void RaverieShaderIRCompositor::GenerateComputeRaverieComposite(StageLinkingInfo
   stageResults.mShaderCode = builder.ToString();
 }
 
-void RaverieShaderIRCompositor::CreateFragmentAndCopyInputs(StageLinkingInfo* currentStage,
-                                                          ShaderCodeBuilder& builder,
-                                                          StringParam currentClassName,
-                                                          RaverieShaderIRType* fragmentType,
-                                                          StringParam fragmentVarName)
+void RaverieShaderIRCompositor::CreateFragmentAndCopyInputs(
+    StageLinkingInfo* currentStage, ShaderCodeBuilder& builder, StringParam currentClassName, RaverieShaderIRType* fragmentType, StringParam fragmentVarName)
 {
   FragmentLinkingInfo& linkInfo = currentStage->mFragmentLinkInfoMap[fragmentType];
 
@@ -1213,9 +1157,7 @@ void RaverieShaderIRCompositor::CreateFragmentAndCopyInputs(StageLinkingInfo* cu
   }
 }
 
-void RaverieShaderIRCompositor::DeclareFieldsInOrder(ShaderCodeBuilder& builder,
-                                                   StageAttachmentLinkingInfo& linkingInfo,
-                                                   OrderedHashSet<ShaderFieldKey>& orderMap)
+void RaverieShaderIRCompositor::DeclareFieldsInOrder(ShaderCodeBuilder& builder, StageAttachmentLinkingInfo& linkingInfo, OrderedHashSet<ShaderFieldKey>& orderMap)
 {
   SpirVNameSettings& nameSettings = mSettings->mNameSettings;
 
@@ -1242,10 +1184,7 @@ void RaverieShaderIRCompositor::DeclareFieldsInOrder(ShaderCodeBuilder& builder,
   }
 }
 
-void RaverieShaderIRCompositor::DeclareFieldsWithAttribute(ShaderCodeBuilder& builder,
-                                                         StageAttachmentLinkingInfo& linkingInfo,
-                                                         OrderedHashSet<ShaderFieldKey>& fieldSet,
-                                                         StringParam attributeName)
+void RaverieShaderIRCompositor::DeclareFieldsWithAttribute(ShaderCodeBuilder& builder, StageAttachmentLinkingInfo& linkingInfo, OrderedHashSet<ShaderFieldKey>& fieldSet, StringParam attributeName)
 {
   SpirVNameSettings& nameSettings = mSettings->mNameSettings;
 
@@ -1269,8 +1208,7 @@ String RaverieShaderIRCompositor::MakeFragmentVarName(ShaderIRTypeMeta* typeMeta
   return BuildString(first.ToLower(), second);
 }
 
-void RaverieShaderIRCompositor::GenerateStageDescriptions(CompositedShaderInfo& compositeInfo,
-                                                        ShaderDefinition& shaderDef)
+void RaverieShaderIRCompositor::GenerateStageDescriptions(CompositedShaderInfo& compositeInfo, ShaderDefinition& shaderDef)
 {
   // Walk all active stages (skipping cpu & gpu)
   for (size_t i = 1; i < compositeInfo.mActiveStages.Size() - 1; ++i)
@@ -1326,8 +1264,7 @@ void RaverieShaderIRCompositor::FragmentLinkingInfo::CopyTo(ShaderFragmentDescri
   }
 }
 
-void RaverieShaderIRCompositor::FragmentLinkingInfo::CopyFieldTo(FieldLinkingInfo& fieldInfo,
-                                                               ShaderFragmentDescription& fragDesc)
+void RaverieShaderIRCompositor::FragmentLinkingInfo::CopyFieldTo(FieldLinkingInfo& fieldInfo, ShaderFragmentDescription& fragDesc)
 {
   ShaderFieldDescription& fieldDesc = fragDesc.mFieldDescriptions[fieldInfo.mFieldMeta];
 
@@ -1342,8 +1279,7 @@ RaverieShaderIRCompositor::ResolvedFieldOutputInfo::ResolvedFieldOutputInfo()
   mOutputFieldDependency = nullptr;
 }
 
-RaverieShaderIRCompositor::ResolvedFieldOutputInfo::ResolvedFieldOutputInfo(StringParam fieldName,
-                                                                          ShaderIRFieldMeta* outputDependency)
+RaverieShaderIRCompositor::ResolvedFieldOutputInfo::ResolvedFieldOutputInfo(StringParam fieldName, ShaderIRFieldMeta* outputDependency)
 {
   mFieldName = fieldName;
   mOutputFieldDependency = outputDependency;
@@ -1356,25 +1292,20 @@ RaverieShaderIRCompositor::StageAttachmentLinkingInfo::StageAttachmentLinkingInf
   mOwningStage = nullptr;
 }
 
-void RaverieShaderIRCompositor::StageAttachmentLinkingInfo::AddResolvedField(ShaderIRFieldMeta* fieldMeta,
-                                                                           StringParam attributeName)
+void RaverieShaderIRCompositor::StageAttachmentLinkingInfo::AddResolvedField(ShaderIRFieldMeta* fieldMeta, StringParam attributeName)
 {
   AddResolvedField(fieldMeta->mRaverieName, fieldMeta->mRaverieType->ToString(), attributeName);
 }
 
-void RaverieShaderIRCompositor::StageAttachmentLinkingInfo::AddResolvedFieldProperty(ShaderIRFieldMeta* fieldMeta,
-                                                                                   ShaderIRAttribute* attribute)
+void RaverieShaderIRCompositor::StageAttachmentLinkingInfo::AddResolvedFieldProperty(ShaderIRFieldMeta* fieldMeta, ShaderIRAttribute* attribute)
 {
   String baseFieldName = RaverieShaderIRCompositor::GetFieldInOutName(fieldMeta, attribute);
   String fieldName = RaverieShaderIRCompositor::MakePropertyName(baseFieldName, fieldMeta->mOwner->mRaverieName);
   AddResolvedField(fieldName, fieldMeta->mRaverieType->ToString(), attribute->mAttributeName);
 }
 
-void RaverieShaderIRCompositor::StageAttachmentLinkingInfo::AddResolvedStageField(SpirVNameSettings& nameSettings,
-                                                                                ShaderIRFieldMeta* fieldMeta,
-                                                                                StringParam fieldName,
-                                                                                StringParam attributeName,
-                                                                                StringParam attributeParameter)
+void RaverieShaderIRCompositor::StageAttachmentLinkingInfo::AddResolvedStageField(
+    SpirVNameSettings& nameSettings, ShaderIRFieldMeta* fieldMeta, StringParam fieldName, StringParam attributeName, StringParam attributeParameter)
 {
   // Add the field with the given attribute
   ShaderIRAttribute* fieldAttribute = AddResolvedField(fieldName, fieldMeta->mRaverieType->ToString(), attributeName);
@@ -1402,9 +1333,7 @@ void RaverieShaderIRCompositor::StageAttachmentLinkingInfo::AddResolvedStageFiel
     mOutputs.InsertOrIgnore(fieldKey);
 }
 
-ShaderIRAttribute* RaverieShaderIRCompositor::StageAttachmentLinkingInfo::AddResolvedField(StringParam fieldName,
-                                                                                         StringParam fieldType,
-                                                                                         StringParam attributeName)
+ShaderIRAttribute* RaverieShaderIRCompositor::StageAttachmentLinkingInfo::AddResolvedField(StringParam fieldName, StringParam fieldType, StringParam attributeName)
 {
   ResolvedFieldInfo* fieldInfo = CreateResolvedField(fieldName, fieldType);
 
@@ -1415,8 +1344,7 @@ ShaderIRAttribute* RaverieShaderIRCompositor::StageAttachmentLinkingInfo::AddRes
   return attribute;
 }
 
-RaverieShaderIRCompositor::ResolvedFieldInfo*
-RaverieShaderIRCompositor::StageAttachmentLinkingInfo::CreateResolvedField(StringParam fieldName, StringParam fieldType)
+RaverieShaderIRCompositor::ResolvedFieldInfo* RaverieShaderIRCompositor::StageAttachmentLinkingInfo::CreateResolvedField(StringParam fieldName, StringParam fieldType)
 {
   ShaderFieldKey fieldKey(fieldName, fieldType);
   ResolvedFieldInfo* fieldInfo = &mResolvedFields[fieldKey];
@@ -1458,18 +1386,13 @@ void RaverieShaderIRCompositor::ApiPerspectivePositionCallback(CompositorCallbac
   String real4x4TypeName = RaverieTypeId(Raverie::Real4x4)->Name;
   StageAttachmentLinkingInfo& vertexLinkingInfo = stageLinkingInfo->mVertexLinkingInfo;
   // Force ApiPerspectivePosition to be a hardware input and output
-  vertexLinkingInfo.AddResolvedField(
-      nameSettings.mApiPerspectivePositionName, real4TypeName, nameSettings.mHardwareBuiltInInputAttribute);
-  vertexLinkingInfo.mHardwareInputs.InsertOrIgnore(
-      ShaderFieldKey(nameSettings.mApiPerspectivePositionName, real4TypeName));
-  vertexLinkingInfo.AddResolvedField(
-      nameSettings.mApiPerspectivePositionName, real4TypeName, nameSettings.mHardwareBuiltInOutputAttribute);
-  vertexLinkingInfo.mHardwareOutputs.InsertOrIgnore(
-      ShaderFieldKey(nameSettings.mApiPerspectivePositionName, real4TypeName));
+  vertexLinkingInfo.AddResolvedField(nameSettings.mApiPerspectivePositionName, real4TypeName, nameSettings.mHardwareBuiltInInputAttribute);
+  vertexLinkingInfo.mHardwareInputs.InsertOrIgnore(ShaderFieldKey(nameSettings.mApiPerspectivePositionName, real4TypeName));
+  vertexLinkingInfo.AddResolvedField(nameSettings.mApiPerspectivePositionName, real4TypeName, nameSettings.mHardwareBuiltInOutputAttribute);
+  vertexLinkingInfo.mHardwareOutputs.InsertOrIgnore(ShaderFieldKey(nameSettings.mApiPerspectivePositionName, real4TypeName));
 
   // Force the api perspective matrix transform to exist
-  stageLinkingInfo->mPrimitiveLinkingInfo.AddResolvedField(
-      nameSettings.mPerspectiveToApiPerspectiveName, real4x4TypeName, nameSettings.mAppBuiltInInputAttribute);
+  stageLinkingInfo->mPrimitiveLinkingInfo.AddResolvedField(nameSettings.mPerspectiveToApiPerspectiveName, real4x4TypeName, nameSettings.mAppBuiltInInputAttribute);
 }
 
 } // namespace Raverie

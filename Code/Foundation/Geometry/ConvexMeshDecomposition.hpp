@@ -27,9 +27,7 @@ bool Create2dMeshesWithTriangulator(const Array<Vec2>& vertices, SubShapeArray& 
 /// This will create a convex mesh decomposition from vertices.
 /// This function will most likely need to be modified to return a new set
 /// of points (since other convex mesh algorithms can add points)
-bool Create2dMeshes(const Array<Vec2>& vertices,
-                    ConvexMeshDecompositionMode::Enum decompositionMode,
-                    SubShapeArray& meshes);
+bool Create2dMeshes(const Array<Vec2>& vertices, ConvexMeshDecompositionMode::Enum decompositionMode, SubShapeArray& meshes);
 
 } // namespace ConvexDecomposition
 

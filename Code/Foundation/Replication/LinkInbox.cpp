@@ -340,12 +340,10 @@ void LinkInbox::Update(ACKArray& remoteACKs, NAKArray& remoteNAKs)
 
   // Time to send a packet sequence history update?
   TimeMs now = mLink->GetLocalTime();
-  if ((now - mLastOutPacketSequenceHistorySendTime) >
-      (mLink->GetSendRate() * mLink->GetPacketSequenceHistoryRateFactor()))
+  if ((now - mLastOutPacketSequenceHistorySendTime) > (mLink->GetSendRate() * mLink->GetPacketSequenceHistoryRateFactor()))
   {
     // Get packet sequence history data
-    PacketSequenceHistoryData packetSequenceHistoryData = mIncomingPacketSequence.GetSequenceHistory(
-        uint(mLink->GetSendRate() * mLink->GetPacketSequenceHistoryRangeFactor()));
+    PacketSequenceHistoryData packetSequenceHistoryData = mIncomingPacketSequence.GetSequenceHistory(uint(mLink->GetSendRate() * mLink->GetPacketSequenceHistoryRangeFactor()));
 
     // Record contains newer data?
     if (packetSequenceHistoryData.mNext > mLastOutPacketSequenceHistoryNESQ)

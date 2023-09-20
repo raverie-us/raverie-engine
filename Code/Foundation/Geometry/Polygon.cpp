@@ -454,8 +454,7 @@ bool Polygon::Validate(Array<String>& errors) const
 
       uint edgeJ[2] = {j, NextIndex(j)};
       Vec2 points[2];
-      ShapeSegResult::Enum result =
-          ShapeSegmentSegment(mData[edgeI[0]], mData[edgeI[1]], mData[edgeJ[0]], mData[edgeJ[1]], points);
+      ShapeSegResult::Enum result = ShapeSegmentSegment(mData[edgeI[0]], mData[edgeI[1]], mData[edgeJ[0]], mData[edgeJ[1]], points);
       if (result == ShapeSegResult::Point)
         errors.PushBack("Polygons cannot be self-intersecting.");
     }
@@ -468,8 +467,7 @@ bool Polygon::Validate(Array<String>& errors) const
     uint thisEdge[2] = {i, i + 1};
     uint nextEdge[2] = {i + 1, (i + 2) % pointCount};
     Vec2 points[2];
-    ShapeSegResult::Enum result =
-        ShapeSegmentSegment(mData[thisEdge[0]], mData[thisEdge[1]], mData[nextEdge[0]], mData[nextEdge[1]], points);
+    ShapeSegResult::Enum result = ShapeSegmentSegment(mData[thisEdge[0]], mData[thisEdge[1]], mData[nextEdge[0]], mData[nextEdge[1]], points);
     if (result == ShapeSegResult::Segment)
       errors.PushBack("Polygons cannot be self-intersecting.");
   }
@@ -576,11 +574,7 @@ bool Polygon::range::Empty()
   return mCurrIndex >= mPolygon.Size();
 }
 
-ShapeSegResult::Enum ShapeSegmentSegment(Vec2Param segmentStartA,
-                                         Vec2Param segmentEndA,
-                                         Vec2Param segmentStartB,
-                                         Vec2Param segmentEndB,
-                                         Vec2 intersectionPoints[2])
+ShapeSegResult::Enum ShapeSegmentSegment(Vec2Param segmentStartA, Vec2Param segmentEndA, Vec2Param segmentStartB, Vec2Param segmentEndB, Vec2 intersectionPoints[2])
 {
   const real cAreaEpsilon = real(0.00000);
   const Vec2& a = segmentStartA;
@@ -633,9 +627,7 @@ ShapeSegResult::Enum ShapeSegmentSegment(Vec2Param segmentStartA,
         }
 
         // Check to see if the neighboring points are on the same line segment.
-        if ((points[indices[0]] == a && points[indices[1]] == b) ||
-            (points[indices[0]] == b && points[indices[1]] == a) ||
-            (points[indices[0]] == c && points[indices[1]] == d) ||
+        if ((points[indices[0]] == a && points[indices[1]] == b) || (points[indices[0]] == b && points[indices[1]] == a) || (points[indices[0]] == c && points[indices[1]] == d) ||
             (points[indices[0]] == d && points[indices[1]] == c))
         {
           // If so, the two lines cannot be overlapping collinearly.

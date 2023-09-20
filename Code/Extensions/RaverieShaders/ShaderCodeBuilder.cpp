@@ -75,16 +75,13 @@ String ShaderCodeBuilder::EmitIndent()
   return builder.ToString();
 }
 
-ShaderCodeBuilder& ShaderCodeBuilder::WriteMemberVariableDeclaration(StringParam variableName,
-                                                                     StringParam variableTypeName)
+ShaderCodeBuilder& ShaderCodeBuilder::WriteMemberVariableDeclaration(StringParam variableName, StringParam variableTypeName)
 {
   (*this) << "var " << variableName << " : " << variableTypeName << ";" << this->EmitLineReturn();
   return *this;
 }
 
-ShaderCodeBuilder& ShaderCodeBuilder::WriteVariableDeclaration(ShaderIRAttributeList& attributes,
-                                                               StringParam variableName,
-                                                               StringParam variableTypeName)
+ShaderCodeBuilder& ShaderCodeBuilder::WriteVariableDeclaration(ShaderIRAttributeList& attributes, StringParam variableName, StringParam variableTypeName)
 {
   ShaderCodeBuilder& builder = *this;
   builder << builder.EmitIndent();
@@ -102,9 +99,7 @@ ShaderCodeBuilder& ShaderCodeBuilder::WriteVariableDeclaration(ShaderIRAttribute
   return builder;
 }
 
-ShaderCodeBuilder& ShaderCodeBuilder::WriteVariableDeclaration(ShaderIRAttribute& attribute,
-                                                               StringParam variableName,
-                                                               StringParam variableTypeName)
+ShaderCodeBuilder& ShaderCodeBuilder::WriteVariableDeclaration(ShaderIRAttribute& attribute, StringParam variableName, StringParam variableTypeName)
 {
   ShaderCodeBuilder& builder = *this;
   builder << builder.EmitIndent();
@@ -115,11 +110,9 @@ ShaderCodeBuilder& ShaderCodeBuilder::WriteVariableDeclaration(ShaderIRAttribute
   return builder;
 }
 
-ShaderCodeBuilder& ShaderCodeBuilder::WriteLocalVariableDefaultConstruction(StringParam variableName,
-                                                                            StringParam variableTypeName)
+ShaderCodeBuilder& ShaderCodeBuilder::WriteLocalVariableDefaultConstruction(StringParam variableName, StringParam variableTypeName)
 {
-  (*this) << this->EmitIndent() << "var " << variableName << " = " << variableTypeName << "();"
-          << this->EmitLineReturn();
+  (*this) << this->EmitIndent() << "var " << variableName << " = " << variableTypeName << "();" << this->EmitLineReturn();
   return *this;
 }
 

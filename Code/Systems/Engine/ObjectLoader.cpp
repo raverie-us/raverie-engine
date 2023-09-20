@@ -47,8 +47,7 @@ PatchResolveMethod::Enum ObjectLoader::ResolveInheritedData(StringRange inheritI
   return PatchResolveMethod::PatchNode;
 }
 
-DependencyAction::Enum
-ObjectLoader::ResolveDependencies(DataNode* parent, DataNode* newChild, DataNode** toReplace, Status& status)
+DependencyAction::Enum ObjectLoader::ResolveDependencies(DataNode* parent, DataNode* newChild, DataNode** toReplace, Status& status)
 {
   // We need to get the meta type of the parent to check dependencies
   String parentTypeName = parent->mTypeName.All();
@@ -403,8 +402,7 @@ void CachedModifications::ApplyModificationsToObjectInternal(Object* object, Obj
   }
 }
 
-CachedModifications::ObjectNode* CachedModifications::StoreOverlappingModificationsInternal(Object* object,
-                                                                                            ObjectNode* node)
+CachedModifications::ObjectNode* CachedModifications::StoreOverlappingModificationsInternal(Object* object, ObjectNode* node)
 {
   LocalModifications* modifications = LocalModifications::GetInstance();
 

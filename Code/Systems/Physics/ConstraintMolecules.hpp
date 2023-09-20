@@ -43,7 +43,8 @@ struct MoleculeWalker
 
   ConstraintMolecule& operator[](uint i);
 
-  union {
+  union
+  {
     byte* mRawBuffer;
     ConstraintMolecule* mMolecules;
   };

@@ -93,11 +93,8 @@ void RaverieSpirVFrontEnd::Setup()
   mRaverieCommentParser.Setup();
 }
 
-RaverieShaderIRType* RaverieSpirVFrontEnd::MakeTypeInternal(RaverieShaderIRLibrary* shaderLibrary,
-                                                        ShaderIRTypeBaseType::Enum baseType,
-                                                        StringParam typeName,
-                                                        Raverie::BoundType* raverieType,
-                                                        spv::StorageClass storageClass)
+RaverieShaderIRType* RaverieSpirVFrontEnd::MakeTypeInternal(
+    RaverieShaderIRLibrary* shaderLibrary, ShaderIRTypeBaseType::Enum baseType, StringParam typeName, Raverie::BoundType* raverieType, spv::StorageClass storageClass)
 {
   RaverieShaderIRType* shaderType = shaderLibrary->FindType(typeName);
   ErrorIf(shaderType != nullptr, "Type '%s' already exists.", typeName.c_str());
@@ -114,51 +111,35 @@ RaverieShaderIRType* RaverieSpirVFrontEnd::MakeTypeInternal(RaverieShaderIRLibra
   return shaderType;
 }
 
-RaverieShaderIRType* RaverieSpirVFrontEnd::MakeTypeAndPointer(RaverieShaderIRLibrary* shaderLibrary,
-                                                          ShaderIRTypeBaseType::Enum baseType,
-                                                          StringParam typeName,
-                                                          Raverie::BoundType* raverieType,
-                                                          spv::StorageClass pointerStorageClass)
+RaverieShaderIRType* RaverieSpirVFrontEnd::MakeTypeAndPointer(
+    RaverieShaderIRLibrary* shaderLibrary, ShaderIRTypeBaseType::Enum baseType, StringParam typeName, Raverie::BoundType* raverieType, spv::StorageClass pointerStorageClass)
 {
   ErrorIf(baseType == ShaderIRTypeBaseType::Pointer, "BaseType cannot be a pointer type");
   // Make both the regular shader type and the pointer type
-  RaverieShaderIRType* shaderType =
-      MakeTypeInternal(shaderLibrary, baseType, typeName, raverieType, spv::StorageClassGeneric);
-  RaverieShaderIRType* pointerType = MakeTypeInternal(
-      shaderLibrary, ShaderIRTypeBaseType::Pointer, BuildString(typeName, "_ptr"), raverieType, pointerStorageClass);
+  RaverieShaderIRType* shaderType = MakeTypeInternal(shaderLibrary, baseType, typeName, raverieType, spv::StorageClassGeneric);
+  RaverieShaderIRType* pointerType = MakeTypeInternal(shaderLibrary, ShaderIRTypeBaseType::Pointer, BuildString(typeName, "_ptr"), raverieType, pointerStorageClass);
   // Link both types up to each other
   pointerType->mDereferenceType = shaderType;
   shaderType->mPointerType = pointerType;
   return shaderType;
 }
 
-RaverieShaderIRType* RaverieSpirVFrontEnd::MakeCoreType(RaverieShaderIRLibrary* shaderLibrary,
-                                                    ShaderIRTypeBaseType::Enum baseType,
-                                                    size_t components,
-                                                    RaverieShaderIRType* componentType,
-                                                    Raverie::BoundType* raverieType,
-                                                    bool makePointerType)
+RaverieShaderIRType* RaverieSpirVFrontEnd::MakeCoreType(
+    RaverieShaderIRLibrary* shaderLibrary, ShaderIRTypeBaseType::Enum baseType, size_t components, RaverieShaderIRType* componentType, Raverie::BoundType* raverieType, bool makePointerType)
 {
-  RaverieShaderIRType* shaderType =
-      MakeTypeAndPointer(shaderLibrary, baseType, raverieType->Name, raverieType, spv::StorageClassFunction);
+  RaverieShaderIRType* shaderType = MakeTypeAndPointer(shaderLibrary, baseType, raverieType->Name, raverieType, spv::StorageClassFunction);
   shaderType->mComponentType = componentType;
   shaderType->mComponents = components;
   return shaderType;
 }
 
-RaverieShaderIRType* RaverieSpirVFrontEnd::MakeStructType(RaverieShaderIRLibrary* shaderLibrary,
-                                                      StringParam typeName,
-                                                      Raverie::BoundType* raverieType,
-                                                      spv::StorageClass pointerStorageClass)
+RaverieShaderIRType* RaverieSpirVFrontEnd::MakeStructType(RaverieShaderIRLibrary* shaderLibrary, StringParam typeName, Raverie::BoundType* raverieType, spv::StorageClass pointerStorageClass)
 {
   return MakeTypeAndPointer(shaderLibrary, ShaderIRTypeBaseType::Struct, typeName, raverieType, pointerStorageClass);
 }
 
-RaverieShaderIRType* RaverieSpirVFrontEnd::FindOrCreateInterfaceType(RaverieShaderIRLibrary* shaderLibrary,
-                                                                 StringParam baseTypeName,
-                                                                 Raverie::BoundType* raverieType,
-                                                                 ShaderIRTypeBaseType::Enum baseType,
-                                                                 spv::StorageClass storageClass)
+RaverieShaderIRType* RaverieSpirVFrontEnd::FindOrCreateInterfaceType(
+    RaverieShaderIRLibrary* shaderLibrary, StringParam baseTypeName, Raverie::BoundType* raverieType, ShaderIRTypeBaseType::Enum baseType, spv::StorageClass storageClass)
 {
   // Build the fully qualified type name which is need for interface types
   StringBuilder builder;
@@ -198,28 +179,22 @@ RaverieShaderIRType* RaverieSpirVFrontEnd::FindOrCreateInterfaceType(RaverieShad
   return shaderType;
 }
 
-RaverieShaderIRType* RaverieSpirVFrontEnd::FindOrCreateInterfaceType(RaverieShaderIRLibrary* shaderLibrary,
-                                                                 Raverie::BoundType* raverieType,
-                                                                 ShaderIRTypeBaseType::Enum baseType,
-                                                                 spv::StorageClass storageClass)
+RaverieShaderIRType*
+RaverieSpirVFrontEnd::FindOrCreateInterfaceType(RaverieShaderIRLibrary* shaderLibrary, Raverie::BoundType* raverieType, ShaderIRTypeBaseType::Enum baseType, spv::StorageClass storageClass)
 {
   return FindOrCreateInterfaceType(shaderLibrary, raverieType->Name, raverieType, baseType, storageClass);
 }
 
-RaverieShaderIRType* RaverieSpirVFrontEnd::FindOrCreatePointerInterfaceType(RaverieShaderIRLibrary* shaderLibrary,
-                                                                        RaverieShaderIRType* valueType,
-                                                                        spv::StorageClass storageClass)
+RaverieShaderIRType* RaverieSpirVFrontEnd::FindOrCreatePointerInterfaceType(RaverieShaderIRLibrary* shaderLibrary, RaverieShaderIRType* valueType, spv::StorageClass storageClass)
 {
   ErrorIf(valueType->IsPointerType(), "Type must be a value type");
-  RaverieShaderIRType* pointerType = FindOrCreateInterfaceType(
-      shaderLibrary, valueType->mName, valueType->mRaverieType, ShaderIRTypeBaseType::Pointer, storageClass);
+  RaverieShaderIRType* pointerType = FindOrCreateInterfaceType(shaderLibrary, valueType->mName, valueType->mRaverieType, ShaderIRTypeBaseType::Pointer, storageClass);
 
   pointerType->mDereferenceType = valueType;
   return pointerType;
 }
 
-ShaderIRTypeMeta* RaverieSpirVFrontEnd::MakeShaderTypeMeta(RaverieShaderIRType* shaderType,
-                                                         Raverie::NodeList<Raverie::AttributeNode>* nodeAttributeList)
+ShaderIRTypeMeta* RaverieSpirVFrontEnd::MakeShaderTypeMeta(RaverieShaderIRType* shaderType, Raverie::NodeList<Raverie::AttributeNode>* nodeAttributeList)
 {
   Raverie::BoundType* raverieType = shaderType->mRaverieType;
   ShaderIRTypeMeta* typeMeta = new ShaderIRTypeMeta();
@@ -234,9 +209,7 @@ ShaderIRTypeMeta* RaverieSpirVFrontEnd::MakeShaderTypeMeta(RaverieShaderIRType* 
   return typeMeta;
 }
 
-bool RaverieSpirVFrontEnd::Translate(Raverie::SyntaxTree& syntaxTree,
-                                   RaverieShaderIRProject* project,
-                                   RaverieShaderIRLibrary* library)
+bool RaverieSpirVFrontEnd::Translate(Raverie::SyntaxTree& syntaxTree, RaverieShaderIRProject* project, RaverieShaderIRLibrary* library)
 {
   mErrorTriggered = false;
   RaverieSpirVFrontEndContext context;
@@ -302,16 +275,13 @@ void RaverieSpirVFrontEnd::ExtractRaverieAsComments(Raverie::SyntaxNode*& node, 
 
   // As long as the statement isn't a scoped based node (if, for, while, etc)
   // then we know it requires delimiting
-  if (Raverie::Type::DynamicCast<Raverie::ScopeNode*>(node) != nullptr ||
-      Raverie::Type::DynamicCast<Raverie::IfRootNode*>(node) != nullptr)
+  if (Raverie::Type::DynamicCast<Raverie::ScopeNode*>(node) != nullptr || Raverie::Type::DynamicCast<Raverie::IfRootNode*>(node) != nullptr)
     return;
 
   ExtractDebugInfo(node, context->mDebugInfo);
 }
 
-void RaverieSpirVFrontEnd::ParseAttributes(Raverie::Array<Raverie::Attribute>& raverieAttributes,
-                                         Raverie::NodeList<Raverie::AttributeNode>* attributeNodes,
-                                         ShaderIRTypeMeta* typeMeta)
+void RaverieSpirVFrontEnd::ParseAttributes(Raverie::Array<Raverie::Attribute>& raverieAttributes, Raverie::NodeList<Raverie::AttributeNode>* attributeNodes, ShaderIRTypeMeta* typeMeta)
 {
   SpirVNameSettings& nameSettings = mSettings->mNameSettings;
   ShaderIRAttributeList& shaderAttributes = typeMeta->mAttributes;
@@ -333,8 +303,7 @@ void RaverieSpirVFrontEnd::ParseAttributes(Raverie::Array<Raverie::Attribute>& r
     else if (attributeName == nameSettings.mGeometryAttribute)
     {
       fragmentTypeAttributeIndices.PushBack(i);
-      ValidateSingleParamAttribute(
-          shaderAttribute, nameSettings.mMaxVerticesParam, Raverie::ConstantType::Integer, false);
+      ValidateSingleParamAttribute(shaderAttribute, nameSettings.mMaxVerticesParam, Raverie::ConstantType::Integer, false);
     }
     else if (attributeName == nameSettings.mPixelAttribute)
     {
@@ -358,16 +327,12 @@ void RaverieSpirVFrontEnd::ParseAttributes(Raverie::Array<Raverie::Attribute>& r
   {
     ShaderIRAttribute* shaderAttribute0 = shaderAttributes[fragmentTypeAttributeIndices[0]];
     ShaderIRAttribute* shaderAttribute1 = shaderAttributes[fragmentTypeAttributeIndices[1]];
-    String msg = String::Format("Attribute '%s' cannot be combined with attribute '%s'",
-                                shaderAttribute1->mAttributeName.c_str(),
-                                shaderAttribute0->mAttributeName.c_str());
+    String msg = String::Format("Attribute '%s' cannot be combined with attribute '%s'", shaderAttribute1->mAttributeName.c_str(), shaderAttribute0->mAttributeName.c_str());
     SendTranslationError(shaderAttribute1->GetLocation(), msg);
   }
 }
 
-void RaverieSpirVFrontEnd::ParseAttributes(Raverie::Array<Raverie::Attribute>& raverieAttributes,
-                                         Raverie::NodeList<Raverie::AttributeNode>* attributeNodes,
-                                         ShaderIRFunctionMeta* functionMeta)
+void RaverieSpirVFrontEnd::ParseAttributes(Raverie::Array<Raverie::Attribute>& raverieAttributes, Raverie::NodeList<Raverie::AttributeNode>* attributeNodes, ShaderIRFunctionMeta* functionMeta)
 {
   SpirVNameSettings& nameSettings = mSettings->mNameSettings;
   ShaderIRAttributeList& shaderAttributes = functionMeta->mAttributes;
@@ -388,9 +353,7 @@ void RaverieSpirVFrontEnd::ParseAttributes(Raverie::Array<Raverie::Attribute>& r
   }
 }
 
-void RaverieSpirVFrontEnd::ParseAttributes(Raverie::Array<Raverie::Attribute>& raverieAttributes,
-                                         Raverie::NodeList<Raverie::AttributeNode>* attributeNodes,
-                                         ShaderIRFieldMeta* fieldMeta)
+void RaverieSpirVFrontEnd::ParseAttributes(Raverie::Array<Raverie::Attribute>& raverieAttributes, Raverie::NodeList<Raverie::AttributeNode>* attributeNodes, ShaderIRFieldMeta* fieldMeta)
 {
   SpirVNameSettings& nameSettings = mSettings->mNameSettings;
   ShaderIRAttributeList& shaderAttributes = fieldMeta->mAttributes;
@@ -469,8 +432,7 @@ void RaverieSpirVFrontEnd::ParseAttributes(Raverie::Array<Raverie::Attribute>& r
     else if (attributeName == nameSettings.mFragmentSharedAttribute)
     {
       RaverieShaderIRType* fieldShaderType = FindType(fieldMeta->mRaverieType, nullptr);
-      ShaderIRAttribute* storageClassAttribute =
-          fieldShaderType->FindFirstAttribute(SpirVNameSettings::mStorageClassAttribute);
+      ShaderIRAttribute* storageClassAttribute = fieldShaderType->FindFirstAttribute(SpirVNameSettings::mStorageClassAttribute);
 
       // Currently, fragment shared is only allowed on types that are stored
       // globally (aka, types with non function storage class)
@@ -521,8 +483,8 @@ void RaverieSpirVFrontEnd::ParseAttributes(Raverie::Array<Raverie::Attribute>& r
 }
 
 void RaverieSpirVFrontEnd::ParseRaverieAttributes(Raverie::Array<Raverie::Attribute>& raverieAttributes,
-                                              Raverie::NodeList<Raverie::AttributeNode>* attributeNodes,
-                                              ShaderIRAttributeList& shaderAttributes)
+                                                  Raverie::NodeList<Raverie::AttributeNode>* attributeNodes,
+                                                  ShaderIRAttributeList& shaderAttributes)
 {
   SpirVNameSettings& nameSettings = mSettings->mNameSettings;
 
@@ -538,9 +500,7 @@ void RaverieSpirVFrontEnd::ParseRaverieAttributes(Raverie::Array<Raverie::Attrib
   }
 }
 
-void RaverieSpirVFrontEnd::ParseRaverieAttribute(Raverie::Attribute& raverieAttribute,
-                                             Raverie::AttributeNode* attributeNode,
-                                             ShaderIRAttributeList& shaderAttributes)
+void RaverieSpirVFrontEnd::ParseRaverieAttribute(Raverie::Attribute& raverieAttribute, Raverie::AttributeNode* attributeNode, ShaderIRAttributeList& shaderAttributes)
 {
   SpirVNameSettings& nameSettings = mSettings->mNameSettings;
 
@@ -590,9 +550,7 @@ void RaverieSpirVFrontEnd::ParseRaverieAttribute(Raverie::Attribute& raverieAttr
   }
 }
 
-void RaverieSpirVFrontEnd::ValidateAllowedAttributes(ShaderIRAttributeList& shaderAttributes,
-                                                   HashMap<String, AttributeInfo>& allowedAttributes,
-                                                   StringParam errorTypeName)
+void RaverieSpirVFrontEnd::ValidateAllowedAttributes(ShaderIRAttributeList& shaderAttributes, HashMap<String, AttributeInfo>& allowedAttributes, StringParam errorTypeName)
 {
   for (size_t i = 0; i < shaderAttributes.Size(); ++i)
   {
@@ -601,8 +559,7 @@ void RaverieSpirVFrontEnd::ValidateAllowedAttributes(ShaderIRAttributeList& shad
     if (allowedAttributes.ContainsKey(attribute->mAttributeName))
       continue;
 
-    String msg =
-        String::Format("Attribute '%s' is not allowed on %s", attribute->mAttributeName.c_str(), errorTypeName.c_str());
+    String msg = String::Format("Attribute '%s' is not allowed on %s", attribute->mAttributeName.c_str(), errorTypeName.c_str());
     SendTranslationError(attribute->GetLocation(), msg);
   }
 }
@@ -659,18 +616,14 @@ void RaverieSpirVFrontEnd::ValidateNameOverrideAttribute(ShaderIRAttribute* shad
     String paramValue = param.GetStringValue();
     if (Raverie::LibraryBuilder::CheckUpperIdentifier(paramValue) == false)
     {
-      String msg = String::Format("Parameter '%s' must be a valid raverie uppercase identifier.",
-                                  SpirVNameSettings::mNameOverrideParam.c_str());
+      String msg = String::Format("Parameter '%s' must be a valid raverie uppercase identifier.", SpirVNameSettings::mNameOverrideParam.c_str());
       SendTranslationError(shaderAttribute->GetLocation(), msg);
       return;
     }
   }
 }
 
-void RaverieSpirVFrontEnd::ValidateSingleParamAttribute(ShaderIRAttribute* shaderAttribute,
-                                                      StringParam expectedParamName,
-                                                      Raverie::ConstantType::Enum expectedParamType,
-                                                      bool allowEmptyName)
+void RaverieSpirVFrontEnd::ValidateSingleParamAttribute(ShaderIRAttribute* shaderAttribute, StringParam expectedParamName, Raverie::ConstantType::Enum expectedParamType, bool allowEmptyName)
 {
   SpirVNameSettings& nameSettings = mSettings->mNameSettings;
 
@@ -678,10 +631,8 @@ void RaverieSpirVFrontEnd::ValidateSingleParamAttribute(ShaderIRAttribute* shade
   size_t paramCount = shaderAttribute->mParameters.Size();
   if (paramCount == 0)
   {
-    String msg = String::Format("Not enough parameters to attribute '%s'. Signature must be '%s : %s'",
-                                shaderAttribute->mAttributeName.c_str(),
-                                expectedParamName.c_str(),
-                                Raverie::ConstantType::Names[expectedParamType]);
+    String msg = String::Format(
+        "Not enough parameters to attribute '%s'. Signature must be '%s : %s'", shaderAttribute->mAttributeName.c_str(), expectedParamName.c_str(), Raverie::ConstantType::Names[expectedParamType]);
     SendTranslationError(shaderAttribute->GetLocation(), msg);
     return;
   }
@@ -689,10 +640,8 @@ void RaverieSpirVFrontEnd::ValidateSingleParamAttribute(ShaderIRAttribute* shade
   // More than one parameter is an error
   if (paramCount > 1)
   {
-    String msg = String::Format("Too many parameters to attribute '%s'. Signature must be '%s : %s'",
-                                shaderAttribute->mAttributeName.c_str(),
-                                expectedParamName.c_str(),
-                                Raverie::ConstantType::Names[expectedParamType]);
+    String msg = String::Format(
+        "Too many parameters to attribute '%s'. Signature must be '%s : %s'", shaderAttribute->mAttributeName.c_str(), expectedParamName.c_str(), Raverie::ConstantType::Names[expectedParamType]);
     SendTranslationError(shaderAttribute->GetLocation(), msg);
     return;
   }
@@ -735,23 +684,19 @@ void RaverieSpirVFrontEnd::ValidateAttributeNoParameters(ShaderIRAttribute* shad
   size_t paramCount = shaderAttribute->mParameters.Size();
   if (paramCount != 0)
   {
-    String msg = String::Format("Invalid parameter count. Attribute '%s' doesn't allow any parameters",
-                                shaderAttribute->mAttributeName.c_str());
+    String msg = String::Format("Invalid parameter count. Attribute '%s' doesn't allow any parameters", shaderAttribute->mAttributeName.c_str());
     SendTranslationError(shaderAttribute->GetLocation(), msg);
   }
 }
 
-void RaverieSpirVFrontEnd::ValidateAttributeParameters(ShaderIRAttribute* shaderAttribute,
-                                                     HashMap<String, AttributeInfo>& allowedAttributes,
-                                                     StringParam errorTypeName)
+void RaverieSpirVFrontEnd::ValidateAttributeParameters(ShaderIRAttribute* shaderAttribute, HashMap<String, AttributeInfo>& allowedAttributes, StringParam errorTypeName)
 {
   // First find the attribute's info so we know what it allows
   AttributeInfo* attributeInfo = allowedAttributes.FindPointer(shaderAttribute->mAttributeName);
   if (attributeInfo == nullptr)
   {
     // This is often a redundant error check, but whatever
-    String msg = String::Format(
-        "Attribute '%s' is not allowed on %s", shaderAttribute->mAttributeName.c_str(), errorTypeName.c_str());
+    String msg = String::Format("Attribute '%s' is not allowed on %s", shaderAttribute->mAttributeName.c_str(), errorTypeName.c_str());
     SendTranslationError(shaderAttribute->GetLocation(), msg);
     return;
   }
@@ -808,8 +753,7 @@ void RaverieSpirVFrontEnd::ValidateAttributeParameters(ShaderIRAttribute* shader
   SendTranslationError(shaderAttribute->GetLocation(), builder.ToString());
 }
 
-bool RaverieSpirVFrontEnd::ValidateAttributeParameterSignature(ShaderIRAttribute* shaderAttribute,
-                                                             const AttributeInfo::ParameterSignature& signature) const
+bool RaverieSpirVFrontEnd::ValidateAttributeParameterSignature(ShaderIRAttribute* shaderAttribute, const AttributeInfo::ParameterSignature& signature) const
 {
   if (shaderAttribute->mParameters.Size() != signature.mTypes.Size())
     return false;
@@ -823,8 +767,7 @@ bool RaverieSpirVFrontEnd::ValidateAttributeParameterSignature(ShaderIRAttribute
   return true;
 }
 
-bool RaverieSpirVFrontEnd::DoTypesMatch(const AttributeInfo::ParamType& actualType,
-                                      const AttributeInfo::ParamType& expectedType) const
+bool RaverieSpirVFrontEnd::DoTypesMatch(const AttributeInfo::ParamType& actualType, const AttributeInfo::ParamType& expectedType) const
 {
   if (actualType == expectedType)
     return true;
@@ -833,9 +776,7 @@ bool RaverieSpirVFrontEnd::DoTypesMatch(const AttributeInfo::ParamType& actualTy
   return false;
 }
 
-void RaverieSpirVFrontEnd::ValidateAttributeDependencies(ShaderIRAttribute* shaderAttribute,
-                                                       ShaderIRAttributeList& shaderAttributeList,
-                                                       Array<String>& dependencies)
+void RaverieSpirVFrontEnd::ValidateAttributeDependencies(ShaderIRAttribute* shaderAttribute, ShaderIRAttributeList& shaderAttributeList, Array<String>& dependencies)
 {
   // Walk all dependencies, keeping track of what we're missing
   Array<String> missingDependencies;
@@ -861,9 +802,7 @@ void RaverieSpirVFrontEnd::ValidateAttributeDependencies(ShaderIRAttribute* shad
   }
 }
 
-void RaverieSpirVFrontEnd::ValidateAttributeExclusions(ShaderIRAttribute* shaderAttribute,
-                                                     ShaderIRAttributeList& shaderAttributeList,
-                                                     Array<String>& exclusions)
+void RaverieSpirVFrontEnd::ValidateAttributeExclusions(ShaderIRAttribute* shaderAttribute, ShaderIRAttributeList& shaderAttributeList, Array<String>& exclusions)
 {
   // Walk all dependencies, keeping track of any that are found
   Array<String> foundExclusions;
@@ -878,8 +817,7 @@ void RaverieSpirVFrontEnd::ValidateAttributeExclusions(ShaderIRAttribute* shader
   if (!foundExclusions.Empty())
   {
     StringBuilder errBuilder;
-    errBuilder.AppendFormat("Attribute '%s' cannot be combined with attribute(s): ",
-                            shaderAttribute->mAttributeName.c_str());
+    errBuilder.AppendFormat("Attribute '%s' cannot be combined with attribute(s): ", shaderAttribute->mAttributeName.c_str());
     for (size_t i = 0; i < foundExclusions.Size(); ++i)
     {
       errBuilder.Append(foundExclusions[i]);
@@ -890,9 +828,7 @@ void RaverieSpirVFrontEnd::ValidateAttributeExclusions(ShaderIRAttribute* shader
   }
 }
 
-void RaverieSpirVFrontEnd::ValidateHardwareBuiltIn(ShaderIRFieldMeta* fieldMeta,
-                                                 ShaderIRAttribute* shaderAttribute,
-                                                 bool isInput)
+void RaverieSpirVFrontEnd::ValidateHardwareBuiltIn(ShaderIRFieldMeta* fieldMeta, ShaderIRAttribute* shaderAttribute, bool isInput)
 {
   // If this is an explicit attribute then check to see if it matches something
   // in the uniform buffers
@@ -917,8 +853,7 @@ void RaverieSpirVFrontEnd::ValidateHardwareBuiltIn(ShaderIRFieldMeta* fieldMeta,
   }
 }
 
-void RaverieSpirVFrontEnd::ValidateAndParseComputeAttributeParameters(ShaderIRAttribute* shaderAttribute,
-                                                                    ShaderIRTypeMeta* typeMeta)
+void RaverieSpirVFrontEnd::ValidateAndParseComputeAttributeParameters(ShaderIRAttribute* shaderAttribute, ShaderIRTypeMeta* typeMeta)
 {
   SpirVNameSettings& nameSettings = mSettings->mNameSettings;
   // Create the user data for the compute fragment to store the parameters we
@@ -1001,9 +936,7 @@ String RaverieSpirVFrontEnd::BuildFunctionTypeString(Raverie::Function* raverieF
   return functionTypeBuilder.ToString();
 }
 
-String RaverieSpirVFrontEnd::BuildFunctionTypeString(Raverie::BoundType* raverieReturnType,
-                                                   Array<Raverie::Type*>& signature,
-                                                   RaverieSpirVFrontEndContext* context)
+String RaverieSpirVFrontEnd::BuildFunctionTypeString(Raverie::BoundType* raverieReturnType, Array<Raverie::Type*>& signature, RaverieSpirVFrontEndContext* context)
 {
   ErrorIf(raverieReturnType == nullptr, "Signature must have at least one argument (return type)");
 
@@ -1025,10 +958,7 @@ String RaverieSpirVFrontEnd::BuildFunctionTypeString(Raverie::BoundType* raverie
   return functionTypeBuilder.ToString();
 }
 
-void RaverieSpirVFrontEnd::GenerateFunctionType(Raverie::SyntaxNode* locationNode,
-                                              RaverieShaderIRFunction* function,
-                                              Raverie::Function* raverieFunction,
-                                              RaverieSpirVFrontEndContext* context)
+void RaverieSpirVFrontEnd::GenerateFunctionType(Raverie::SyntaxNode* locationNode, RaverieShaderIRFunction* function, Raverie::Function* raverieFunction, RaverieSpirVFrontEndContext* context)
 {
   ErrorIf(raverieFunction == nullptr, "");
   String functionTypeStr = BuildFunctionTypeString(raverieFunction, context);
@@ -1061,8 +991,7 @@ void RaverieSpirVFrontEnd::GenerateFunctionType(Raverie::SyntaxNode* locationNod
   // If the return is a value type that can't be copied then display an error.
   if (ContainsAttribute(returnType, SpirVNameSettings::mNonCopyableAttributeName))
   {
-    String msg =
-        String::Format("Type '%s' is an invalid return type as it cannot be copied.", returnType->mName.c_str());
+    String msg = String::Format("Type '%s' is an invalid return type as it cannot be copied.", returnType->mName.c_str());
     SendTranslationError(locationNode->Location, msg);
   }
   functionType->mParameters.PushBack(returnType);
@@ -1110,11 +1039,8 @@ void RaverieSpirVFrontEnd::GenerateFunctionType(Raverie::SyntaxNode* locationNod
   }
 }
 
-void RaverieSpirVFrontEnd::GenerateFunctionType(Raverie::SyntaxNode* locationNode,
-                                              RaverieShaderIRFunction* function,
-                                              Raverie::BoundType* raverieReturnType,
-                                              Array<Raverie::Type*>& signature,
-                                              RaverieSpirVFrontEndContext* context)
+void RaverieSpirVFrontEnd::GenerateFunctionType(
+    Raverie::SyntaxNode* locationNode, RaverieShaderIRFunction* function, Raverie::BoundType* raverieReturnType, Array<Raverie::Type*>& signature, RaverieSpirVFrontEndContext* context)
 {
   ErrorIf(raverieReturnType == nullptr, "Signature must have a return type");
 
@@ -1153,11 +1079,11 @@ void RaverieSpirVFrontEnd::GenerateFunctionType(Raverie::SyntaxNode* locationNod
 }
 
 RaverieShaderIRFunction* RaverieSpirVFrontEnd::GenerateIRFunction(Raverie::SyntaxNode* node,
-                                                              Raverie::NodeList<Raverie::AttributeNode>* nodeAttributeList,
-                                                              RaverieShaderIRType* owningType,
-                                                              Raverie::Function* raverieFunction,
-                                                              StringParam functionName,
-                                                              RaverieSpirVFrontEndContext* context)
+                                                                  Raverie::NodeList<Raverie::AttributeNode>* nodeAttributeList,
+                                                                  RaverieShaderIRType* owningType,
+                                                                  Raverie::Function* raverieFunction,
+                                                                  StringParam functionName,
+                                                                  RaverieSpirVFrontEndContext* context)
 {
   RaverieShaderIRType* currentType = owningType;
 
@@ -1195,11 +1121,8 @@ RaverieShaderIRFunction* RaverieSpirVFrontEnd::GenerateIRFunction(Raverie::Synta
   return function;
 }
 
-void RaverieSpirVFrontEnd::AddImplements(Raverie::SyntaxNode* node,
-                                       Raverie::Function* raverieFunction,
-                                       RaverieShaderIRFunction* shaderFunction,
-                                       StringParam functionName,
-                                       RaverieSpirVFrontEndContext* context)
+void RaverieSpirVFrontEnd::AddImplements(
+    Raverie::SyntaxNode* node, Raverie::Function* raverieFunction, RaverieShaderIRFunction* shaderFunction, StringParam functionName, RaverieSpirVFrontEndContext* context)
 {
   if (raverieFunction == nullptr)
     return;
@@ -1259,8 +1182,7 @@ void RaverieSpirVFrontEnd::AddImplements(Raverie::SyntaxNode* node,
 
   // By default, set the error message as we can't find a function to match to
   StringBuilder msgBuilder;
-  msgBuilder << "The signature of a function with the [" << nameSettings.mImplementsAttribute
-             << "] attribute must match an existing function.\n";
+  msgBuilder << "The signature of a function with the [" << nameSettings.mImplementsAttribute << "] attribute must match an existing function.\n";
 
   // For added error reporting, try to find all possible overloads of this
   // function (check static or instance as appropriate)
@@ -1307,9 +1229,7 @@ void RaverieSpirVFrontEnd::CollectClassTypes(Raverie::ClassNode*& node, RaverieS
   {
     Raverie::SyntaxType* inheritanceNode = node->Inheritance[0];
     String shortMsg = "Inheritance is not supported in raverie fragments.";
-    String longMsg = String::Format("Type '%s' inherits from type '%s' which is not supported.",
-                                    node->Name.c_str(),
-                                    inheritanceNode->ToString().c_str());
+    String longMsg = String::Format("Type '%s' inherits from type '%s' which is not supported.", node->Name.c_str(), inheritanceNode->ToString().c_str());
     SendTranslationError(inheritanceNode->Location, shortMsg, longMsg);
     return;
   }
@@ -1413,11 +1333,9 @@ void RaverieSpirVFrontEnd::PreWalkClassVariables(Raverie::MemberVariableNode*& n
   if (node->CreatedGetterSetter != nullptr)
   {
     if (node->Get != nullptr)
-      GenerateIRFunction(
-          node, &node->Attributes, context->mCurrentType, node->Get->DefinedFunction, node->Name.Token, context);
+      GenerateIRFunction(node, &node->Attributes, context->mCurrentType, node->Get->DefinedFunction, node->Name.Token, context);
     if (node->Set != nullptr)
-      GenerateIRFunction(
-          node, &node->Attributes, context->mCurrentType, node->Set->DefinedFunction, node->Name.Token, context);
+      GenerateIRFunction(node, &node->Attributes, context->mCurrentType, node->Set->DefinedFunction, node->Name.Token, context);
     return;
   }
 
@@ -1468,10 +1386,7 @@ void RaverieSpirVFrontEnd::PreWalkClassVariables(Raverie::MemberVariableNode*& n
   currentType->AddMember(memberType, node->Name.Token);
 }
 
-void RaverieSpirVFrontEnd::AddRuntimeArray(Raverie::MemberVariableNode* node,
-                                         RaverieShaderIRType* varType,
-                                         ShaderIRFieldMeta* fieldMeta,
-                                         RaverieSpirVFrontEndContext* context)
+void RaverieSpirVFrontEnd::AddRuntimeArray(Raverie::MemberVariableNode* node, RaverieShaderIRType* varType, ShaderIRFieldMeta* fieldMeta, RaverieSpirVFrontEndContext* context)
 {
   // Make sure no constructor call exists (illegal as this type
   // must be constructed by the client api not by the shader)
@@ -1509,11 +1424,8 @@ void RaverieSpirVFrontEnd::AddRuntimeArray(Raverie::MemberVariableNode* node,
   AddGlobalVariable(node, varType, fieldMeta, spv::StorageClassStorageBuffer, context);
 }
 
-void RaverieSpirVFrontEnd::AddGlobalVariable(Raverie::MemberVariableNode* node,
-                                           RaverieShaderIRType* varType,
-                                           ShaderIRFieldMeta* fieldMeta,
-                                           spv::StorageClass storageClass,
-                                           RaverieSpirVFrontEndContext* context)
+void RaverieSpirVFrontEnd::AddGlobalVariable(
+    Raverie::MemberVariableNode* node, RaverieShaderIRType* varType, ShaderIRFieldMeta* fieldMeta, spv::StorageClass storageClass, RaverieSpirVFrontEndContext* context)
 {
   String varName = node->Name.Token;
   SpirVNameSettings& nameSettings = mSettings->mNameSettings;
@@ -1549,10 +1461,7 @@ void RaverieSpirVFrontEnd::AddGlobalVariable(Raverie::MemberVariableNode* node,
   mLibrary->mRaverieFieldToGlobalVariable[node->CreatedField] = globalData;
 }
 
-GlobalVariableData* RaverieSpirVFrontEnd::CreateGlobalVariable(spv::StorageClass storageClass,
-                                                             RaverieShaderIRType* varType,
-                                                             StringParam varName,
-                                                             RaverieSpirVFrontEndContext* context)
+GlobalVariableData* RaverieSpirVFrontEnd::CreateGlobalVariable(spv::StorageClass storageClass, RaverieShaderIRType* varType, StringParam varName, RaverieSpirVFrontEndContext* context)
 {
   // Get the pointer type of this variable. We need to make sure the pointer types is
   // of the correct storage class (e.g. globals have to be Private, uniforms, etc...)
@@ -1629,8 +1538,7 @@ void RaverieSpirVFrontEnd::PreWalkMainFunction(Raverie::FunctionNode*& node, Rav
       currentType->mHasMainFunction = true;
     }
   }
-  else if (fragmentType == FragmentType::Vertex || fragmentType == FragmentType::Pixel ||
-           fragmentType == FragmentType::Compute)
+  else if (fragmentType == FragmentType::Vertex || fragmentType == FragmentType::Pixel || fragmentType == FragmentType::Compute)
   {
     if (node->Parameters.Size() != 0)
       return;
@@ -1698,15 +1606,13 @@ void RaverieSpirVFrontEnd::GeneratePreConstructor(Raverie::ClassNode*& node, Rav
 {
   RaverieShaderIRType* currentType = context->mCurrentType;
   Raverie::Function* raverieFunction = node->PreConstructor;
-  RaverieShaderIRFunction* function =
-      GenerateIRFunction(node, nullptr, context->mCurrentType, raverieFunction, raverieFunction->Name, context);
+  RaverieShaderIRFunction* function = GenerateIRFunction(node, nullptr, context->mCurrentType, raverieFunction, raverieFunction->Name, context);
 
   BasicBlock* currentBlock = BuildBlock(String(), context);
   context->mCurrentBlock = currentBlock;
 
   // Declare the self param
-  RaverieShaderIROp* selfOp =
-      BuildIROp(&function->mParameterBlock, OpType::OpFunctionParameter, currentType->mPointerType, context);
+  RaverieShaderIROp* selfOp = BuildIROp(&function->mParameterBlock, OpType::OpFunctionParameter, currentType->mPointerType, context);
   selfOp->mDebugResultName = "self";
 
   // Generate the default initializer values for all member variables
@@ -1724,8 +1630,7 @@ void RaverieSpirVFrontEnd::GeneratePreConstructor(Raverie::ClassNode*& node, Rav
     int memberIndex = currentType->mMemberNamesToIndex[varName];
     RaverieShaderIRType* memberType = currentType->GetSubType(memberIndex);
     RaverieShaderIROp* offsetConstant = GetIntegerConstant(memberIndex, context);
-    RaverieShaderIROp* memberPtrOp =
-        BuildIROp(currentBlock, OpType::OpAccessChain, memberType->mPointerType, selfOp, offsetConstant, context);
+    RaverieShaderIROp* memberPtrOp = BuildIROp(currentBlock, OpType::OpAccessChain, memberType->mPointerType, selfOp, offsetConstant, context);
 
     // If the variable has an initializer then walk it and set the variable
     if (varNode->InitialValue != nullptr)
@@ -1774,8 +1679,7 @@ void RaverieSpirVFrontEnd::GenerateDefaultConstructor(Raverie::ClassNode*& node,
   function->mMeta = functionMeta;
 
   // Make sure to add the self parameter
-  RaverieShaderIROp* selfOp =
-      BuildIROp(&function->mParameterBlock, OpType::OpFunctionParameter, currentType->mPointerType, context);
+  RaverieShaderIROp* selfOp = BuildIROp(&function->mParameterBlock, OpType::OpFunctionParameter, currentType->mPointerType, context);
   selfOp->mDebugResultName = "self";
 
   // Begin the block of instructions for the function
@@ -1814,8 +1718,7 @@ void RaverieSpirVFrontEnd::GenerateDummyMemberVariable(Raverie::ClassNode*& node
   currentType->AddMember(memberType, dummyName);
 }
 
-void RaverieSpirVFrontEnd::GenerateStaticVariableInitializer(Raverie::MemberVariableNode*& node,
-                                                           RaverieSpirVFrontEndContext* context)
+void RaverieSpirVFrontEnd::GenerateStaticVariableInitializer(Raverie::MemberVariableNode*& node, RaverieSpirVFrontEndContext* context)
 {
   // Ignore specialization constants. They're global but they can't have an
   // initializer function.
@@ -1889,10 +1792,7 @@ void RaverieSpirVFrontEnd::WalkClassFunction(Raverie::FunctionNode*& node, Raver
   GenerateFunctionBody(node, context);
 }
 
-void RaverieSpirVFrontEnd::DefaultConstructType(Raverie::SyntaxNode* locationNode,
-                                              RaverieShaderIRType* type,
-                                              RaverieShaderIROp* selfVar,
-                                              RaverieSpirVFrontEndContext* context)
+void RaverieSpirVFrontEnd::DefaultConstructType(Raverie::SyntaxNode* locationNode, RaverieShaderIRType* type, RaverieShaderIROp* selfVar, RaverieSpirVFrontEndContext* context)
 {
   BasicBlock* currentBlock = context->GetCurrentBlock();
   // If this type has an auto-generated default constructor then call it
@@ -1926,8 +1826,7 @@ void RaverieSpirVFrontEnd::DefaultConstructType(Raverie::SyntaxNode* locationNod
   SendTranslationError(locationNode->Location, "Couldn't default construct type '%s'", type->mName.c_str());
 }
 
-void RaverieSpirVFrontEnd::GenerateFunctionParameters(Raverie::GenericFunctionNode* node,
-                                                    RaverieSpirVFrontEndContext* context)
+void RaverieSpirVFrontEnd::GenerateFunctionParameters(Raverie::GenericFunctionNode* node, RaverieSpirVFrontEndContext* context)
 {
   RaverieShaderIRType* currentType = context->mCurrentType;
   // Debug sanity
@@ -1975,8 +1874,7 @@ void RaverieSpirVFrontEnd::GenerateFunctionParameters(Raverie::GenericFunctionNo
 
     // We take all parameters by pointer type. This makes it significantly
     // easier to generate code in case the user ever assigns the the input
-    RaverieShaderIROp* op =
-        BuildIROp(&function->mParameterBlock, OpType::OpFunctionParameter, shaderParameterType, context);
+    RaverieShaderIROp* op = BuildIROp(&function->mParameterBlock, OpType::OpFunctionParameter, shaderParameterType, context);
 
     if (!shaderParameterType->IsPointerType())
     {
@@ -2026,9 +1924,7 @@ void RaverieSpirVFrontEnd::GenerateFunctionBody(Raverie::GenericFunctionNode* no
   }
 }
 
-void RaverieSpirVFrontEnd::GenerateEntryPoint(Raverie::GenericFunctionNode* node,
-                                            RaverieShaderIRFunction* function,
-                                            RaverieSpirVFrontEndContext* context)
+void RaverieSpirVFrontEnd::GenerateEntryPoint(Raverie::GenericFunctionNode* node, RaverieShaderIRFunction* function, RaverieSpirVFrontEndContext* context)
 {
   // Run some error checking on the entry point function.
   ValidateEntryPoint(this, node, context);
@@ -2073,15 +1969,12 @@ void RaverieSpirVFrontEnd::WalkFunctionCallNode(Raverie::FunctionCallNode*& node
   }
 }
 
-void RaverieSpirVFrontEnd::WalkConstructorCallNode(Raverie::FunctionCallNode*& node,
-                                                 Raverie::StaticTypeNode* constructorNode,
-                                                 RaverieSpirVFrontEndContext* context)
+void RaverieSpirVFrontEnd::WalkConstructorCallNode(Raverie::FunctionCallNode*& node, Raverie::StaticTypeNode* constructorNode, RaverieSpirVFrontEndContext* context)
 {
   BasicBlock* currentBlock = context->GetCurrentBlock();
 
   // Check for library constructor translation (e.g. Real3())
-  ConstructorCallResolverIRFn resolver =
-      mLibrary->FindConstructorResolver(node->LeftOperand->ResultType, constructorNode->ConstructorFunction);
+  ConstructorCallResolverIRFn resolver = mLibrary->FindConstructorResolver(node->LeftOperand->ResultType, constructorNode->ConstructorFunction);
   if (resolver != nullptr)
   {
     resolver(this, node, constructorNode, context);
@@ -2118,9 +2011,7 @@ void RaverieSpirVFrontEnd::WalkConstructorCallNode(Raverie::FunctionCallNode*& n
   context->PushIRStack(GenerateDummyIR(node, context));
 }
 
-void RaverieSpirVFrontEnd::WalkMemberAccessCallNode(Raverie::FunctionCallNode*& node,
-                                                  Raverie::MemberAccessNode* memberAccessNode,
-                                                  RaverieSpirVFrontEndContext* context)
+void RaverieSpirVFrontEnd::WalkMemberAccessCallNode(Raverie::FunctionCallNode*& node, Raverie::MemberAccessNode* memberAccessNode, RaverieSpirVFrontEndContext* context)
 {
   BasicBlock* currentBlock = context->GetCurrentBlock();
 
@@ -2159,9 +2050,9 @@ void RaverieSpirVFrontEnd::WalkMemberAccessCallNode(Raverie::FunctionCallNode*& 
 }
 
 void RaverieSpirVFrontEnd::WalkMemberAccessFunctionCallNode(Raverie::FunctionCallNode*& node,
-                                                          Raverie::MemberAccessNode* memberAccessNode,
-                                                          RaverieShaderIRFunction* shaderFunction,
-                                                          RaverieSpirVFrontEndContext* context)
+                                                            Raverie::MemberAccessNode* memberAccessNode,
+                                                            RaverieShaderIRFunction* shaderFunction,
+                                                            RaverieSpirVFrontEndContext* context)
 {
   // Fill out an array with all of the arguments this function takes
   Array<IRaverieShaderIR*> arguments;
@@ -2172,9 +2063,9 @@ void RaverieSpirVFrontEnd::WalkMemberAccessFunctionCallNode(Raverie::FunctionCal
 }
 
 void RaverieSpirVFrontEnd::WalkMemberAccessExtensionInstructionCallNode(Raverie::FunctionCallNode*& node,
-                                                                      Raverie::MemberAccessNode* memberAccessNode,
-                                                                      SpirVExtensionInstruction* extensionInstruction,
-                                                                      RaverieSpirVFrontEndContext* context)
+                                                                        Raverie::MemberAccessNode* memberAccessNode,
+                                                                        SpirVExtensionInstruction* extensionInstruction,
+                                                                        RaverieSpirVFrontEndContext* context)
 {
   RaverieShaderExtensionImport* importLibraryIR = nullptr;
   importLibraryIR = mLibrary->FindExtensionLibraryImport(extensionInstruction->mLibrary);
@@ -2191,8 +2082,7 @@ void RaverieSpirVFrontEnd::WalkMemberAccessExtensionInstructionCallNode(Raverie:
   }
 
   // This should never happen unless we registered a resolver that was null.
-  String errorMsg =
-      String::Format("Failed to translation extension function call: '%s'", memberAccessNode->Name.c_str());
+  String errorMsg = String::Format("Failed to translation extension function call: '%s'", memberAccessNode->Name.c_str());
   SendTranslationError(node->Location, errorMsg);
   context->PushIRStack(GenerateDummyIR(node, context));
 }
@@ -2252,15 +2142,13 @@ void RaverieSpirVFrontEnd::WalkLocalVariable(Raverie::LocalVariableNode*& node, 
   BuildStoreOp(currentBlock, variableIR, intialValueIR, context);
 }
 
-void RaverieSpirVFrontEnd::WalkStaticTypeOrCreationCallNode(Raverie::StaticTypeNode*& node,
-                                                          RaverieSpirVFrontEndContext* context)
+void RaverieSpirVFrontEnd::WalkStaticTypeOrCreationCallNode(Raverie::StaticTypeNode*& node, RaverieSpirVFrontEndContext* context)
 {
   SendTranslationError(node->Location, "StaticTypeOrCreationCallNode not translatable.");
   context->PushIRStack(GenerateDummyIR(node, context));
 }
 
-void RaverieSpirVFrontEnd::WalkExpressionInitializerNode(Raverie::ExpressionInitializerNode*& node,
-                                                       RaverieSpirVFrontEndContext* context)
+void RaverieSpirVFrontEnd::WalkExpressionInitializerNode(Raverie::ExpressionInitializerNode*& node, RaverieSpirVFrontEndContext* context)
 {
   // Check if we have an expression initializer list resolver (e.g. FixedArray)
   TypeResolvers* typeResolver = mLibrary->FindTypeResolver(node->ResultType);
@@ -2290,8 +2178,7 @@ void RaverieSpirVFrontEnd::WalkUnaryOperationNode(Raverie::UnaryOperatorNode*& n
       context->PushIRStack(GenerateDummyIR(node, context));
       return;
     }
-    RaverieShaderIROp* dereferenceOp =
-        BuildCurrentBlockIROp(OpType::OpLoad, operand->mResultType->mDereferenceType, operand, context);
+    RaverieShaderIROp* dereferenceOp = BuildCurrentBlockIROp(OpType::OpLoad, operand->mResultType->mDereferenceType, operand, context);
     context->PushIRStack(dereferenceOp);
     return;
   }
@@ -2533,8 +2420,7 @@ void RaverieSpirVFrontEnd::WalkMemberAccessNode(Raverie::MemberAccessNode*& node
     // find a field resolver. We have to do this last because some types (like
     // vectors) can have backup field resolvers. If we did this first then
     // getters would fail to get called.
-    MemberAccessResolverIRFn fieldResolver =
-        mLibrary->FindFieldResolver(leftOperandType->mRaverieType, node->AccessedField);
+    MemberAccessResolverIRFn fieldResolver = mLibrary->FindFieldResolver(leftOperandType->mRaverieType, node->AccessedField);
     if (fieldResolver != nullptr)
     {
       fieldResolver(this, node, context);
@@ -2578,8 +2464,7 @@ void RaverieSpirVFrontEnd::WalkMemberAccessNode(Raverie::MemberAccessNode*& node
       RaverieShaderIROp* memberIndexConstant = GetIntegerConstant(memberIndex, context);
       // Generate a member access to reference this member.
       // Note: This must have the same storage class as the left operand.
-      RaverieShaderIROp* memberAccessOp =
-          BuildCurrentBlockAccessChain(memberType, operandResultOp, memberIndexConstant, context);
+      RaverieShaderIROp* memberAccessOp = BuildCurrentBlockAccessChain(memberType, operandResultOp, memberIndexConstant, context);
       context->PushIRStack(memberAccessOp);
     }
     // @JoshD: Validate (have to find op-code to generate this)
@@ -2590,8 +2475,7 @@ void RaverieSpirVFrontEnd::WalkMemberAccessNode(Raverie::MemberAccessNode*& node
       RaverieShaderIRConstantLiteral* memberIndexLiteral = GetOrCreateConstantLiteral(memberIndex);
 
       // Build the member access operation
-      RaverieShaderIROp* memberAccessOp =
-          BuildCurrentBlockIROp(OpType::OpCompositeExtract, memberType, operandResultOp, memberIndexLiteral, context);
+      RaverieShaderIROp* memberAccessOp = BuildCurrentBlockIROp(OpType::OpCompositeExtract, memberType, operandResultOp, memberIndexLiteral, context);
       context->PushIRStack(memberAccessOp);
     }
   }
@@ -2683,8 +2567,7 @@ void RaverieSpirVFrontEnd::WalkIfRootNode(Raverie::IfRootNode*& node, RaverieSpi
       headerBlock->mBlockType = BlockType::Selection;
       headerBlock->mMergePoint = ifMerge;
 
-      headerBlock->mTerminatorOp = BuildIROp(
-          headerBlock, OpType::OpBranchConditional, nullptr, conditionalIR, ifTrueBlock, ifFalseBlock, context);
+      headerBlock->mTerminatorOp = BuildIROp(headerBlock, OpType::OpBranchConditional, nullptr, conditionalIR, ifTrueBlock, ifFalseBlock, context);
 
       // Start emitting the true block. First mark this as the current active
       // block
@@ -2731,8 +2614,7 @@ void RaverieSpirVFrontEnd::WalkIfRootNode(Raverie::IfRootNode*& node, RaverieSpi
       if (context->mCurrentBlock != currentBlock)
       {
         BasicBlock* nestedBlock = context->mCurrentBlock;
-        currentBlock->mTerminatorOp =
-            BuildIROp(nestedBlock, OpType::OpBranch, nullptr, prevBlock->mMergePoint, context);
+        currentBlock->mTerminatorOp = BuildIROp(nestedBlock, OpType::OpBranch, nullptr, prevBlock->mMergePoint, context);
       }
     }
   }
@@ -2748,8 +2630,7 @@ void RaverieSpirVFrontEnd::WalkIfRootNode(Raverie::IfRootNode*& node, RaverieSpi
     // If this is not the first block then add a branch on the merge point to
     // the previous block's merge point
     if (blockIndex != 0)
-      block->mTerminatorOp =
-          BuildIROp(block, OpType::OpBranch, nullptr, blockPairs[blockIndex - 1].mMergePoint, context);
+      block->mTerminatorOp = BuildIROp(block, OpType::OpBranch, nullptr, blockPairs[blockIndex - 1].mMergePoint, context);
     context->mCurrentFunction->mBlocks.PushBack(block);
   }
 
@@ -2864,11 +2745,8 @@ void RaverieSpirVFrontEnd::WalkLoopNode(Raverie::LoopNode*& node, RaverieSpirVFr
   WalkGenericLoop(nullptr, nullptr, nullptr, node, context);
 }
 
-void RaverieSpirVFrontEnd::WalkGenericLoop(Raverie::SyntaxNode* initializerNode,
-                                         Raverie::SyntaxNode* iterator,
-                                         Raverie::ConditionalLoopNode* conditionalNode,
-                                         Raverie::LoopScopeNode* loopScopeNode,
-                                         RaverieSpirVFrontEndContext* context)
+void RaverieSpirVFrontEnd::WalkGenericLoop(
+    Raverie::SyntaxNode* initializerNode, Raverie::SyntaxNode* iterator, Raverie::ConditionalLoopNode* conditionalNode, Raverie::LoopScopeNode* loopScopeNode, RaverieSpirVFrontEndContext* context)
 {
   // Always walk the initializer node first if it exists. The contents of this
   // go before any loop block.
@@ -2912,11 +2790,7 @@ void RaverieSpirVFrontEnd::WalkGenericLoop(Raverie::SyntaxNode* initializerNode,
   context->mCurrentBlock = mergeBlock;
 }
 
-void RaverieSpirVFrontEnd::GenerateLoopHeaderBlock(BasicBlock* headerBlock,
-                                                 BasicBlock* branchTarget,
-                                                 BasicBlock* mergeBlock,
-                                                 BasicBlock* continueBlock,
-                                                 RaverieSpirVFrontEndContext* context)
+void RaverieSpirVFrontEnd::GenerateLoopHeaderBlock(BasicBlock* headerBlock, BasicBlock* branchTarget, BasicBlock* mergeBlock, BasicBlock* continueBlock, RaverieSpirVFrontEndContext* context)
 {
   // Mark the header block as a loop block (so we emit the LoopMerge
   // instruction)
@@ -2929,11 +2803,8 @@ void RaverieSpirVFrontEnd::GenerateLoopHeaderBlock(BasicBlock* headerBlock,
   BuildIROp(headerBlock, OpType::OpBranch, nullptr, branchTarget, context);
 }
 
-void RaverieSpirVFrontEnd::GenerateLoopConditionBlock(Raverie::ConditionalLoopNode* conditionalNode,
-                                                    BasicBlock* conditionBlock,
-                                                    BasicBlock* branchTrueBlock,
-                                                    BasicBlock* branchFalseBlock,
-                                                    RaverieSpirVFrontEndContext* context)
+void RaverieSpirVFrontEnd::GenerateLoopConditionBlock(
+    Raverie::ConditionalLoopNode* conditionalNode, BasicBlock* conditionBlock, BasicBlock* branchTrueBlock, BasicBlock* branchFalseBlock, RaverieSpirVFrontEndContext* context)
 {
   // The condition builds the conditional and then jumps either to the body of
   // the loop or to the end
@@ -2945,8 +2816,7 @@ void RaverieSpirVFrontEnd::GenerateLoopConditionBlock(Raverie::ConditionalLoopNo
     // Get the conditional value (must be a bool via how raverie works)
     IRaverieShaderIR* conditional = WalkAndGetValueTypeResult(conditionalNode->Condition, context);
     // Branch to either the true or false branch
-    BuildCurrentBlockIROp(
-        OpType::OpBranchConditional, nullptr, conditional, branchTrueBlock, branchFalseBlock, context);
+    BuildCurrentBlockIROp(OpType::OpBranchConditional, nullptr, conditional, branchTrueBlock, branchFalseBlock, context);
   }
   // Otherwise there is no conditional (e.g. loop) so unconditionally branch to
   // the true block
@@ -2954,11 +2824,7 @@ void RaverieSpirVFrontEnd::GenerateLoopConditionBlock(Raverie::ConditionalLoopNo
     BuildCurrentBlockIROp(OpType::OpBranch, nullptr, branchTrueBlock, context);
 }
 
-void RaverieSpirVFrontEnd::GenerateLoopStatements(Raverie::LoopScopeNode* loopScopeNode,
-                                                BasicBlock* loopBlock,
-                                                BasicBlock* mergeBlock,
-                                                BasicBlock* continueBlock,
-                                                RaverieSpirVFrontEndContext* context)
+void RaverieSpirVFrontEnd::GenerateLoopStatements(Raverie::LoopScopeNode* loopScopeNode, BasicBlock* loopBlock, BasicBlock* mergeBlock, BasicBlock* continueBlock, RaverieSpirVFrontEndContext* context)
 {
   context->mCurrentBlock = loopBlock;
   // Set the continue and merge points for this block (mainly needed for nested
@@ -2981,10 +2847,7 @@ void RaverieSpirVFrontEnd::GenerateLoopStatements(Raverie::LoopScopeNode* loopSc
   context->PopMergeTargets();
 }
 
-void RaverieSpirVFrontEnd::GenerateLoopContinueBlock(Raverie::SyntaxNode* iterator,
-                                                   BasicBlock* continueBlock,
-                                                   BasicBlock* headerBlock,
-                                                   RaverieSpirVFrontEndContext* context)
+void RaverieSpirVFrontEnd::GenerateLoopContinueBlock(Raverie::SyntaxNode* iterator, BasicBlock* continueBlock, BasicBlock* headerBlock, RaverieSpirVFrontEndContext* context)
 {
   // Mark the continue block as the active block
   context->mCurrentBlock = continueBlock;
@@ -3004,8 +2867,8 @@ void RaverieSpirVFrontEnd::FixBlockTerminators(BasicBlock* block, RaverieSpirVFr
     IRaverieShaderIR* ir = block->mLines[i];
     RaverieShaderIROp* op = ir->As<RaverieShaderIROp>();
     // If this op is a terminator then mark its id and break
-    if (op->mOpType == OpType::OpReturn || op->mOpType == OpType::OpReturnValue || op->mOpType == OpType::OpBranch ||
-        op->mOpType == OpType::OpBranchConditional || op->mOpType == OpType::OpSwitch || op->mOpType == OpType::OpKill)
+    if (op->mOpType == OpType::OpReturn || op->mOpType == OpType::OpReturnValue || op->mOpType == OpType::OpBranch || op->mOpType == OpType::OpBranchConditional || op->mOpType == OpType::OpSwitch ||
+        op->mOpType == OpType::OpKill)
     {
       firstTerminatorIndex = i;
       break;
@@ -3060,10 +2923,7 @@ Raverie::Function* RaverieSpirVFrontEnd::GetSetter(Raverie::MemberAccessNode* me
   return set;
 }
 
-bool RaverieSpirVFrontEnd::ResolveSetter(Raverie::BinaryOperatorNode* node,
-                                       RaverieShaderIROp* resultValue,
-                                       Raverie::SyntaxNode* resultNode,
-                                       RaverieSpirVFrontEndContext* context)
+bool RaverieSpirVFrontEnd::ResolveSetter(Raverie::BinaryOperatorNode* node, RaverieShaderIROp* resultValue, Raverie::SyntaxNode* resultNode, RaverieSpirVFrontEndContext* context)
 {
   Raverie::MemberAccessNode* memberAccessNode = Raverie::Type::DynamicCast<Raverie::MemberAccessNode*>(node->LeftOperand);
   if (memberAccessNode == nullptr)
@@ -3095,8 +2955,7 @@ bool RaverieSpirVFrontEnd::ResolveSetter(Raverie::BinaryOperatorNode* node,
   }
 
   // Try to find a resolver for this setter
-  MemberPropertySetterResolverIRFn resolver =
-      mLibrary->FindSetterResolver(memberAccessNode->LeftOperand->ResultType, set);
+  MemberPropertySetterResolverIRFn resolver = mLibrary->FindSetterResolver(memberAccessNode->LeftOperand->ResultType, set);
   if (resolver != nullptr)
   {
     // If there was no result value then walk the result node to compute it
@@ -3110,9 +2969,7 @@ bool RaverieSpirVFrontEnd::ResolveSetter(Raverie::BinaryOperatorNode* node,
   return false;
 }
 
-IRaverieShaderIR* RaverieSpirVFrontEnd::PerformBinaryOp(Raverie::BinaryOperatorNode*& node,
-                                                    OpType opType,
-                                                    RaverieSpirVFrontEndContext* context)
+IRaverieShaderIR* RaverieSpirVFrontEnd::PerformBinaryOp(Raverie::BinaryOperatorNode*& node, OpType opType, RaverieSpirVFrontEndContext* context)
 {
   BasicBlock* currentBlock = context->GetCurrentBlock();
 
@@ -3123,11 +2980,7 @@ IRaverieShaderIR* RaverieSpirVFrontEnd::PerformBinaryOp(Raverie::BinaryOperatorN
   return PerformBinaryOp(node, opType, leftInstruction, rightInstruction, context);
 }
 
-IRaverieShaderIR* RaverieSpirVFrontEnd::PerformBinaryOp(Raverie::BinaryOperatorNode*& node,
-                                                    OpType opType,
-                                                    IRaverieShaderIR* lhs,
-                                                    IRaverieShaderIR* rhs,
-                                                    RaverieSpirVFrontEndContext* context)
+IRaverieShaderIR* RaverieSpirVFrontEnd::PerformBinaryOp(Raverie::BinaryOperatorNode*& node, OpType opType, IRaverieShaderIR* lhs, IRaverieShaderIR* rhs, RaverieSpirVFrontEndContext* context)
 {
   // All binary operators require value types
   RaverieShaderIROp* leftValueOp = GetOrGenerateValueTypeFromIR(lhs, context);
@@ -3142,9 +2995,7 @@ IRaverieShaderIR* RaverieSpirVFrontEnd::PerformBinaryOp(Raverie::BinaryOperatorN
   return binaryOp;
 }
 
-void RaverieSpirVFrontEnd::PerformBinaryAssignmentOp(Raverie::BinaryOperatorNode*& node,
-                                                   OpType opType,
-                                                   RaverieSpirVFrontEndContext* context)
+void RaverieSpirVFrontEnd::PerformBinaryAssignmentOp(Raverie::BinaryOperatorNode*& node, OpType opType, RaverieSpirVFrontEndContext* context)
 {
   // Walk both sides of the op
   IRaverieShaderIR* leftInstruction = WalkAndGetResult(node->LeftOperand, context);
@@ -3152,11 +3003,7 @@ void RaverieSpirVFrontEnd::PerformBinaryAssignmentOp(Raverie::BinaryOperatorNode
   PerformBinaryAssignmentOp(node, opType, leftInstruction, rightInstruction, context);
 }
 
-void RaverieSpirVFrontEnd::PerformBinaryAssignmentOp(Raverie::BinaryOperatorNode*& node,
-                                                   OpType opType,
-                                                   IRaverieShaderIR* lhs,
-                                                   IRaverieShaderIR* rhs,
-                                                   RaverieSpirVFrontEndContext* context)
+void RaverieSpirVFrontEnd::PerformBinaryAssignmentOp(Raverie::BinaryOperatorNode*& node, OpType opType, IRaverieShaderIR* lhs, IRaverieShaderIR* rhs, RaverieSpirVFrontEndContext* context)
 {
   // All binary operators require value types so load from pointers if we had
   // them
@@ -3189,9 +3036,7 @@ void RaverieSpirVFrontEnd::PerformBinaryAssignmentOp(Raverie::BinaryOperatorNode
   BuildStoreOp(currentBlock, lhs, binaryOpInstruction, context);
 }
 
-IRaverieShaderIR* RaverieSpirVFrontEnd::PerformUnaryOp(Raverie::UnaryOperatorNode*& node,
-                                                   OpType opType,
-                                                   RaverieSpirVFrontEndContext* context)
+IRaverieShaderIR* RaverieSpirVFrontEnd::PerformUnaryOp(Raverie::UnaryOperatorNode*& node, OpType opType, RaverieSpirVFrontEndContext* context)
 {
   RaverieShaderIRType* resultType = FindType(node->ResultType, node);
 
@@ -3203,10 +3048,7 @@ IRaverieShaderIR* RaverieSpirVFrontEnd::PerformUnaryOp(Raverie::UnaryOperatorNod
   return unaryOp;
 }
 
-IRaverieShaderIR* RaverieSpirVFrontEnd::PerformUnaryIncDecOp(Raverie::UnaryOperatorNode*& node,
-                                                         IRaverieShaderIR* constantOne,
-                                                         OpType opType,
-                                                         RaverieSpirVFrontEndContext* context)
+IRaverieShaderIR* RaverieSpirVFrontEnd::PerformUnaryIncDecOp(Raverie::UnaryOperatorNode*& node, IRaverieShaderIR* constantOne, OpType opType, RaverieSpirVFrontEndContext* context)
 {
   // Get the operand to work on (must be a value type)
   IRaverieShaderIR* operand = WalkAndGetResult(node->Operand, context);
@@ -3228,9 +3070,7 @@ IRaverieShaderIR* RaverieSpirVFrontEnd::PerformUnaryIncDecOp(Raverie::UnaryOpera
   return tempOp;
 }
 
-IRaverieShaderIR* RaverieSpirVFrontEnd::PerformTypeCast(Raverie::TypeCastNode*& node,
-                                                    OpType opType,
-                                                    RaverieSpirVFrontEndContext* context)
+IRaverieShaderIR* RaverieSpirVFrontEnd::PerformTypeCast(Raverie::TypeCastNode*& node, OpType opType, RaverieSpirVFrontEndContext* context)
 {
   RaverieShaderIRType* resultType = FindType(node->ResultType, node);
 
@@ -3252,18 +3092,14 @@ RaverieShaderIROp* RaverieSpirVFrontEnd::GetIntegerConstant(int value, RaverieSp
   return constantIntOp;
 }
 
-RaverieShaderIROp* RaverieSpirVFrontEnd::GetConstant(RaverieShaderIRType* type,
-                                                 StringParam value,
-                                                 RaverieSpirVFrontEndContext* context)
+RaverieShaderIROp* RaverieSpirVFrontEnd::GetConstant(RaverieShaderIRType* type, StringParam value, RaverieSpirVFrontEndContext* context)
 {
   Raverie::Any constantValue;
   ToAny(type, value, constantValue);
   return GetConstant(type, constantValue, context);
 }
 
-RaverieShaderIROp* RaverieSpirVFrontEnd::GetConstant(RaverieShaderIRType* type,
-                                                 Raverie::Any value,
-                                                 RaverieSpirVFrontEndContext* context)
+RaverieShaderIROp* RaverieSpirVFrontEnd::GetConstant(RaverieShaderIRType* type, Raverie::Any value, RaverieSpirVFrontEndContext* context)
 {
   // Each constant should only be declared once. Find if it already exists
   ConstantOpKeyType constantKey = ConstantOpKeyType(type, value);
@@ -3282,10 +3118,7 @@ RaverieShaderIROp* RaverieSpirVFrontEnd::GetConstant(RaverieShaderIRType* type,
   return opConstant;
 }
 
-RaverieShaderIROp* RaverieSpirVFrontEnd::ConstructCompositeFromScalar(BasicBlock* block,
-                                                                  RaverieShaderIRType* compositeType,
-                                                                  IRaverieShaderIR* scalar,
-                                                                  RaverieSpirVFrontEndContext* context)
+RaverieShaderIROp* RaverieSpirVFrontEnd::ConstructCompositeFromScalar(BasicBlock* block, RaverieShaderIRType* compositeType, IRaverieShaderIR* scalar, RaverieSpirVFrontEndContext* context)
 {
   // If this is already a scalar type then return the value as-is
   if (compositeType->mComponents == 1)
@@ -3298,9 +3131,7 @@ RaverieShaderIROp* RaverieSpirVFrontEnd::ConstructCompositeFromScalar(BasicBlock
   return composite;
 }
 
-RaverieShaderIROp* RaverieSpirVFrontEnd::AddSpecializationConstant(Raverie::MemberVariableNode* node,
-                                                               RaverieShaderIRType* varType,
-                                                               RaverieSpirVFrontEndContext* context)
+RaverieShaderIROp* RaverieSpirVFrontEnd::AddSpecializationConstant(Raverie::MemberVariableNode* node, RaverieShaderIRType* varType, RaverieSpirVFrontEndContext* context)
 {
   RaverieShaderIRConstantLiteral* defaultLiteral = nullptr;
   // If the initial value of the node is a value node then we can initialize
@@ -3316,23 +3147,17 @@ RaverieShaderIROp* RaverieSpirVFrontEnd::AddSpecializationConstant(Raverie::Memb
     defaultLiteral = GetOrCreateConstantLiteral(defaultValue);
   }
 
-  return AddSpecializationConstantRecursively(
-      node->CreatedField, varType, node->Name.Token, defaultLiteral, node->Location, context);
+  return AddSpecializationConstantRecursively(node->CreatedField, varType, node->Name.Token, defaultLiteral, node->Location, context);
 }
 
-RaverieShaderIROp* RaverieSpirVFrontEnd::AddSpecializationConstantRecursively(void* key,
-                                                                          RaverieShaderIRType* varType,
-                                                                          StringParam varName,
-                                                                          RaverieShaderIRConstantLiteral* literalValue,
-                                                                          Raverie::CodeLocation& codeLocation,
-                                                                          RaverieSpirVFrontEndContext* context)
+RaverieShaderIROp* RaverieSpirVFrontEnd::AddSpecializationConstantRecursively(
+    void* key, RaverieShaderIRType* varType, StringParam varName, RaverieShaderIRConstantLiteral* literalValue, Raverie::CodeLocation& codeLocation, RaverieSpirVFrontEndContext* context)
 {
   // The var name is generated the same as any other global
   String propertyName = GenerateSpirVPropertyName(varName, context->mCurrentType);
 
   // Deal with scalar types.
-  if (varType->mBaseType == ShaderIRTypeBaseType::Bool || varType->mBaseType == ShaderIRTypeBaseType::Int ||
-      varType->mBaseType == ShaderIRTypeBaseType::Float)
+  if (varType->mBaseType == ShaderIRTypeBaseType::Bool || varType->mBaseType == ShaderIRTypeBaseType::Int || varType->mBaseType == ShaderIRTypeBaseType::Float)
   {
     // Either use the given literal value or construct a default
     RaverieShaderIRConstantLiteral* defaultLiteral = literalValue;
@@ -3352,8 +3177,7 @@ RaverieShaderIROp* RaverieSpirVFrontEnd::AddSpecializationConstantRecursively(vo
   // Deal with vectors/matrices
   if (varType->mBaseType == ShaderIRTypeBaseType::Vector || varType->mBaseType == ShaderIRTypeBaseType::Matrix)
   {
-    RaverieShaderIROp* specConstantCompositeOp =
-        CreateSpecializationConstant(key, OpType::OpSpecConstantComposite, varType, context);
+    RaverieShaderIROp* specConstantCompositeOp = CreateSpecializationConstant(key, OpType::OpSpecConstantComposite, varType, context);
     specConstantCompositeOp->mDebugResultName = propertyName;
     // Create a sub-constant for each constituent. For vectors these are scalar,
     // for matrices these are vectors.
@@ -3365,8 +3189,7 @@ RaverieShaderIROp* RaverieSpirVFrontEnd::AddSpecializationConstantRecursively(vo
       String fullSubVarName = BuildString(varName, ".", ToString(subNames[i]));
       // Create the sub-constant. This sub-constant is not given a unique key as
       // there's never a case where we need to lookup vector.x.
-      RaverieShaderIROp* constituent =
-          AddSpecializationConstantRecursively(nullptr, componentType, fullSubVarName, nullptr, codeLocation, context);
+      RaverieShaderIROp* constituent = AddSpecializationConstantRecursively(nullptr, componentType, fullSubVarName, nullptr, codeLocation, context);
       specConstantCompositeOp->mArguments.PushBack(constituent);
     }
     return specConstantCompositeOp;
@@ -3377,8 +3200,7 @@ RaverieShaderIROp* RaverieSpirVFrontEnd::AddSpecializationConstantRecursively(vo
   // names.
   if (varType->mBaseType == ShaderIRTypeBaseType::Struct)
   {
-    RaverieShaderIROp* specConstantCompositeOp =
-        CreateSpecializationConstant(key, OpType::OpSpecConstantComposite, varType, context);
+    RaverieShaderIROp* specConstantCompositeOp = CreateSpecializationConstant(key, OpType::OpSpecConstantComposite, varType, context);
     specConstantCompositeOp->mDebugResultName = propertyName;
 
     for (size_t i = 0; i < varType->mParameters.Size(); ++i)
@@ -3386,8 +3208,7 @@ RaverieShaderIROp* RaverieSpirVFrontEnd::AddSpecializationConstantRecursively(vo
       String memberName = varType->GetMemberName(i);
       String fullSubVarName = BuildString(varName, ".", memberName);
       RaverieShaderIRType* subType = varType->GetSubType(i);
-      RaverieShaderIROp* constituent =
-          AddSpecializationConstantRecursively(nullptr, subType, fullSubVarName, nullptr, codeLocation, context);
+      RaverieShaderIROp* constituent = AddSpecializationConstantRecursively(nullptr, subType, fullSubVarName, nullptr, codeLocation, context);
       specConstantCompositeOp->mArguments.PushBack(constituent);
     }
     return specConstantCompositeOp;
@@ -3400,10 +3221,7 @@ RaverieShaderIROp* RaverieSpirVFrontEnd::AddSpecializationConstantRecursively(vo
   return CreateSpecializationConstant(key, OpType::OpSpecConstantComposite, varType, context);
 }
 
-RaverieShaderIROp* RaverieSpirVFrontEnd::CreateSpecializationConstant(void* key,
-                                                                  OpType opType,
-                                                                  RaverieShaderIRType* varType,
-                                                                  RaverieSpirVFrontEndContext* context)
+RaverieShaderIROp* RaverieSpirVFrontEnd::CreateSpecializationConstant(void* key, OpType opType, RaverieShaderIRType* varType, RaverieSpirVFrontEndContext* context)
 {
   RaverieShaderIROp* specConstantOp = BuildIROpNoBlockAdd(opType, varType, context);
   // Always add this constant to the library for memory management
@@ -3476,9 +3294,7 @@ BasicBlock* RaverieSpirVFrontEnd::BuildBlockNoStack(StringParam labelDebugName, 
   return block;
 }
 
-RaverieShaderIROp* RaverieSpirVFrontEnd::BuildIROpNoBlockAdd(OpType opType,
-                                                         RaverieShaderIRType* resultType,
-                                                         RaverieSpirVFrontEndContext* context)
+RaverieShaderIROp* RaverieSpirVFrontEnd::BuildIROpNoBlockAdd(OpType opType, RaverieShaderIRType* resultType, RaverieSpirVFrontEndContext* context)
 {
   RaverieShaderIROp* result = new RaverieShaderIROp(opType);
 
@@ -3494,10 +3310,7 @@ RaverieShaderIROp* RaverieSpirVFrontEnd::BuildIROpNoBlockAdd(OpType opType,
   return result;
 }
 
-RaverieShaderIROp* RaverieSpirVFrontEnd::BuildIROp(BasicBlock* block,
-                                               OpType opType,
-                                               RaverieShaderIRType* resultType,
-                                               RaverieSpirVFrontEndContext* context)
+RaverieShaderIROp* RaverieSpirVFrontEnd::BuildIROp(BasicBlock* block, OpType opType, RaverieShaderIRType* resultType, RaverieSpirVFrontEndContext* context)
 {
   RaverieShaderIROp* result = BuildIROpNoBlockAdd(opType, resultType, context);
 
@@ -3505,23 +3318,15 @@ RaverieShaderIROp* RaverieSpirVFrontEnd::BuildIROp(BasicBlock* block,
   return result;
 }
 
-RaverieShaderIROp* RaverieSpirVFrontEnd::BuildIROp(BasicBlock* block,
-                                               OpType opType,
-                                               RaverieShaderIRType* resultType,
-                                               IRaverieShaderIR* arg0,
-                                               RaverieSpirVFrontEndContext* context)
+RaverieShaderIROp* RaverieSpirVFrontEnd::BuildIROp(BasicBlock* block, OpType opType, RaverieShaderIRType* resultType, IRaverieShaderIR* arg0, RaverieSpirVFrontEndContext* context)
 {
   RaverieShaderIROp* result = BuildIROp(block, opType, resultType, context);
   result->mArguments.PushBack(arg0);
   return result;
 }
 
-RaverieShaderIROp* RaverieSpirVFrontEnd::BuildIROp(BasicBlock* block,
-                                               OpType opType,
-                                               RaverieShaderIRType* resultType,
-                                               IRaverieShaderIR* arg0,
-                                               IRaverieShaderIR* arg1,
-                                               RaverieSpirVFrontEndContext* context)
+RaverieShaderIROp*
+RaverieSpirVFrontEnd::BuildIROp(BasicBlock* block, OpType opType, RaverieShaderIRType* resultType, IRaverieShaderIR* arg0, IRaverieShaderIR* arg1, RaverieSpirVFrontEndContext* context)
 {
   RaverieShaderIROp* result = BuildIROp(block, opType, resultType, context);
   result->mArguments.PushBack(arg0);
@@ -3529,13 +3334,8 @@ RaverieShaderIROp* RaverieSpirVFrontEnd::BuildIROp(BasicBlock* block,
   return result;
 }
 
-RaverieShaderIROp* RaverieSpirVFrontEnd::BuildIROp(BasicBlock* block,
-                                               OpType opType,
-                                               RaverieShaderIRType* resultType,
-                                               IRaverieShaderIR* arg0,
-                                               IRaverieShaderIR* arg1,
-                                               IRaverieShaderIR* arg2,
-                                               RaverieSpirVFrontEndContext* context)
+RaverieShaderIROp* RaverieSpirVFrontEnd::BuildIROp(
+    BasicBlock* block, OpType opType, RaverieShaderIRType* resultType, IRaverieShaderIR* arg0, IRaverieShaderIR* arg1, IRaverieShaderIR* arg2, RaverieSpirVFrontEndContext* context)
 {
   RaverieShaderIROp* result = BuildIROp(block, opType, resultType, context);
   result->mArguments.PushBack(arg0);
@@ -3544,44 +3344,29 @@ RaverieShaderIROp* RaverieSpirVFrontEnd::BuildIROp(BasicBlock* block,
   return result;
 }
 
-RaverieShaderIROp* RaverieSpirVFrontEnd::BuildCurrentBlockIROp(OpType opType,
-                                                           RaverieShaderIRType* resultType,
-                                                           RaverieSpirVFrontEndContext* context)
+RaverieShaderIROp* RaverieSpirVFrontEnd::BuildCurrentBlockIROp(OpType opType, RaverieShaderIRType* resultType, RaverieSpirVFrontEndContext* context)
 {
   return BuildIROp(context->GetCurrentBlock(), opType, resultType, context);
 }
 
-RaverieShaderIROp* RaverieSpirVFrontEnd::BuildCurrentBlockIROp(OpType opType,
-                                                           RaverieShaderIRType* resultType,
-                                                           IRaverieShaderIR* arg0,
-                                                           RaverieSpirVFrontEndContext* context)
+RaverieShaderIROp* RaverieSpirVFrontEnd::BuildCurrentBlockIROp(OpType opType, RaverieShaderIRType* resultType, IRaverieShaderIR* arg0, RaverieSpirVFrontEndContext* context)
 {
   return BuildIROp(context->GetCurrentBlock(), opType, resultType, arg0, context);
 }
 
-RaverieShaderIROp* RaverieSpirVFrontEnd::BuildCurrentBlockIROp(OpType opType,
-                                                           RaverieShaderIRType* resultType,
-                                                           IRaverieShaderIR* arg0,
-                                                           IRaverieShaderIR* arg1,
-                                                           RaverieSpirVFrontEndContext* context)
+RaverieShaderIROp* RaverieSpirVFrontEnd::BuildCurrentBlockIROp(OpType opType, RaverieShaderIRType* resultType, IRaverieShaderIR* arg0, IRaverieShaderIR* arg1, RaverieSpirVFrontEndContext* context)
 {
   return BuildIROp(context->GetCurrentBlock(), opType, resultType, arg0, arg1, context);
 }
 
-RaverieShaderIROp* RaverieSpirVFrontEnd::BuildCurrentBlockIROp(OpType opType,
-                                                           RaverieShaderIRType* resultType,
-                                                           IRaverieShaderIR* arg0,
-                                                           IRaverieShaderIR* arg1,
-                                                           IRaverieShaderIR* arg2,
-                                                           RaverieSpirVFrontEndContext* context)
+RaverieShaderIROp* RaverieSpirVFrontEnd::BuildCurrentBlockIROp(
+    OpType opType, RaverieShaderIRType* resultType, IRaverieShaderIR* arg0, IRaverieShaderIR* arg1, IRaverieShaderIR* arg2, RaverieSpirVFrontEndContext* context)
 {
   return BuildIROp(context->GetCurrentBlock(), opType, resultType, arg0, arg1, arg2, context);
 }
 
-RaverieShaderIROp* RaverieSpirVFrontEnd::BuildCurrentBlockAccessChain(RaverieShaderIRType* baseResultType,
-                                                                  RaverieShaderIROp* selfInstance,
-                                                                  IRaverieShaderIR* arg0,
-                                                                  RaverieSpirVFrontEndContext* context)
+RaverieShaderIROp*
+RaverieSpirVFrontEnd::BuildCurrentBlockAccessChain(RaverieShaderIRType* baseResultType, RaverieShaderIROp* selfInstance, IRaverieShaderIR* arg0, RaverieSpirVFrontEndContext* context)
 {
   RaverieShaderIRType* resultPointerType = baseResultType->GetPointerType();
 
@@ -3594,49 +3379,35 @@ RaverieShaderIROp* RaverieSpirVFrontEnd::BuildCurrentBlockAccessChain(RaverieSha
   if (resultStorageClass != spv::StorageClassFunction)
     resultPointerType = FindOrCreatePointerInterfaceType(mLibrary, baseResultType, resultStorageClass);
 
-  RaverieShaderIROp* accessChainOp =
-      BuildCurrentBlockIROp(OpType::OpAccessChain, resultPointerType, selfInstance, context);
+  RaverieShaderIROp* accessChainOp = BuildCurrentBlockIROp(OpType::OpAccessChain, resultPointerType, selfInstance, context);
   accessChainOp->mArguments.PushBack(arg0);
   return accessChainOp;
 }
 
-RaverieShaderIROp* RaverieSpirVFrontEnd::BuildCurrentBlockAccessChain(RaverieShaderIRType* baseResultType,
-                                                                  RaverieShaderIROp* selfInstance,
-                                                                  IRaverieShaderIR* arg0,
-                                                                  IRaverieShaderIR* arg1,
-                                                                  RaverieSpirVFrontEndContext* context)
+RaverieShaderIROp* RaverieSpirVFrontEnd::BuildCurrentBlockAccessChain(
+    RaverieShaderIRType* baseResultType, RaverieShaderIROp* selfInstance, IRaverieShaderIR* arg0, IRaverieShaderIR* arg1, RaverieSpirVFrontEndContext* context)
 {
   RaverieShaderIROp* accessChainOp = BuildCurrentBlockAccessChain(baseResultType, selfInstance, arg0, context);
   accessChainOp->mArguments.PushBack(arg1);
   return accessChainOp;
 }
 
-RaverieShaderIROp* RaverieSpirVFrontEnd::BuildDecorationOp(BasicBlock* block,
-                                                       IRaverieShaderIR* decorationTarget,
-                                                       spv::Decoration decorationType,
-                                                       RaverieSpirVFrontEndContext* context)
+RaverieShaderIROp* RaverieSpirVFrontEnd::BuildDecorationOp(BasicBlock* block, IRaverieShaderIR* decorationTarget, spv::Decoration decorationType, RaverieSpirVFrontEndContext* context)
 {
   RaverieShaderIRConstantLiteral* decorationTypeLiteral = GetOrCreateConstantIntegerLiteral(decorationType);
   return BuildIROp(block, OpType::OpDecorate, nullptr, decorationTarget, decorationTypeLiteral, context);
 }
 
-RaverieShaderIROp* RaverieSpirVFrontEnd::BuildDecorationOp(BasicBlock* block,
-                                                       IRaverieShaderIR* decorationTarget,
-                                                       spv::Decoration decorationType,
-                                                       int decorationValue,
-                                                       RaverieSpirVFrontEndContext* context)
+RaverieShaderIROp*
+RaverieSpirVFrontEnd::BuildDecorationOp(BasicBlock* block, IRaverieShaderIR* decorationTarget, spv::Decoration decorationType, int decorationValue, RaverieSpirVFrontEndContext* context)
 {
   RaverieShaderIRConstantLiteral* decorationTypeLiteral = GetOrCreateConstantIntegerLiteral(decorationType);
   RaverieShaderIRConstantLiteral* decorationValueLiteral = GetOrCreateConstantIntegerLiteral(decorationValue);
-  return BuildIROp(
-      block, OpType::OpDecorate, nullptr, decorationTarget, decorationTypeLiteral, decorationValueLiteral, context);
+  return BuildIROp(block, OpType::OpDecorate, nullptr, decorationTarget, decorationTypeLiteral, decorationValueLiteral, context);
 }
 
-RaverieShaderIROp* RaverieSpirVFrontEnd::BuildMemberDecorationOp(BasicBlock* block,
-                                                             IRaverieShaderIR* decorationTarget,
-                                                             int memberOffset,
-                                                             spv::Decoration decorationType,
-                                                             RaverieSpirVFrontEndContext* context)
+RaverieShaderIROp*
+RaverieSpirVFrontEnd::BuildMemberDecorationOp(BasicBlock* block, IRaverieShaderIR* decorationTarget, int memberOffset, spv::Decoration decorationType, RaverieSpirVFrontEndContext* context)
 {
   RaverieShaderIROp* resultOp = BuildIROp(block, OpType::OpMemberDecorate, nullptr, decorationTarget, context);
   resultOp->mArguments.PushBack(GetOrCreateConstantIntegerLiteral(memberOffset));
@@ -3644,12 +3415,8 @@ RaverieShaderIROp* RaverieSpirVFrontEnd::BuildMemberDecorationOp(BasicBlock* blo
   return resultOp;
 }
 
-RaverieShaderIROp* RaverieSpirVFrontEnd::BuildMemberDecorationOp(BasicBlock* block,
-                                                             IRaverieShaderIR* decorationTarget,
-                                                             int memberOffset,
-                                                             spv::Decoration decorationType,
-                                                             int decorationValue,
-                                                             RaverieSpirVFrontEndContext* context)
+RaverieShaderIROp* RaverieSpirVFrontEnd::BuildMemberDecorationOp(
+    BasicBlock* block, IRaverieShaderIR* decorationTarget, int memberOffset, spv::Decoration decorationType, int decorationValue, RaverieSpirVFrontEndContext* context)
 {
   RaverieShaderIROp* resultOp = BuildIROp(block, OpType::OpMemberDecorate, nullptr, decorationTarget, context);
   resultOp->mArguments.PushBack(GetOrCreateConstantIntegerLiteral(memberOffset));
@@ -3692,10 +3459,7 @@ RaverieShaderIROp* RaverieSpirVFrontEnd::BuildOpVariable(RaverieShaderIRType* re
   return variableOp;
 }
 
-RaverieShaderIROp* RaverieSpirVFrontEnd::BuildOpVariable(BasicBlock* block,
-                                                     RaverieShaderIRType* resultType,
-                                                     int storageConstant,
-                                                     RaverieSpirVFrontEndContext* context)
+RaverieShaderIROp* RaverieSpirVFrontEnd::BuildOpVariable(BasicBlock* block, RaverieShaderIRType* resultType, int storageConstant, RaverieSpirVFrontEndContext* context)
 {
   // Declare the constant for function storage variables
   RaverieShaderIRConstantLiteral* functionStorageConstant = GetOrCreateConstantLiteral(storageConstant);
@@ -3714,17 +3478,14 @@ IRaverieShaderIR* RaverieSpirVFrontEnd::WalkAndGetResult(Raverie::SyntaxNode* no
   return context->PopIRStack();
 }
 
-RaverieShaderIROp* RaverieSpirVFrontEnd::WalkAndGetValueTypeResult(BasicBlock* block,
-                                                               Raverie::SyntaxNode* node,
-                                                               RaverieSpirVFrontEndContext* context)
+RaverieShaderIROp* RaverieSpirVFrontEnd::WalkAndGetValueTypeResult(BasicBlock* block, Raverie::SyntaxNode* node, RaverieSpirVFrontEndContext* context)
 {
   IRaverieShaderIR* nodeResult = WalkAndGetResult(node, context);
   RaverieShaderIROp* valueResult = GetOrGenerateValueTypeFromIR(block, nodeResult, context);
   return valueResult;
 }
 
-RaverieShaderIROp* RaverieSpirVFrontEnd::WalkAndGetValueTypeResult(Raverie::SyntaxNode* node,
-                                                               RaverieSpirVFrontEndContext* context)
+RaverieShaderIROp* RaverieSpirVFrontEnd::WalkAndGetValueTypeResult(Raverie::SyntaxNode* node, RaverieSpirVFrontEndContext* context)
 {
   IRaverieShaderIR* nodeResult = WalkAndGetResult(node, context);
   // The block must be fetched here as walking the node can change the current
@@ -3733,9 +3494,7 @@ RaverieShaderIROp* RaverieSpirVFrontEnd::WalkAndGetValueTypeResult(Raverie::Synt
   return valueResult;
 }
 
-RaverieShaderIROp* RaverieSpirVFrontEnd::GetOrGenerateValueTypeFromIR(BasicBlock* block,
-                                                                  IRaverieShaderIR* instruction,
-                                                                  RaverieSpirVFrontEndContext* context)
+RaverieShaderIROp* RaverieSpirVFrontEnd::GetOrGenerateValueTypeFromIR(BasicBlock* block, IRaverieShaderIR* instruction, RaverieSpirVFrontEndContext* context)
 {
   RaverieShaderIROp* op = instruction->As<RaverieShaderIROp>();
   if (!op->IsResultPointerType())
@@ -3744,15 +3503,12 @@ RaverieShaderIROp* RaverieSpirVFrontEnd::GetOrGenerateValueTypeFromIR(BasicBlock
   return BuildIROp(block, OpType::OpLoad, op->mResultType->mDereferenceType, instruction, context);
 }
 
-RaverieShaderIROp* RaverieSpirVFrontEnd::GetOrGenerateValueTypeFromIR(IRaverieShaderIR* instruction,
-                                                                  RaverieSpirVFrontEndContext* context)
+RaverieShaderIROp* RaverieSpirVFrontEnd::GetOrGenerateValueTypeFromIR(IRaverieShaderIR* instruction, RaverieSpirVFrontEndContext* context)
 {
   return GetOrGenerateValueTypeFromIR(context->GetCurrentBlock(), instruction, context);
 }
 
-RaverieShaderIROp* RaverieSpirVFrontEnd::GetOrGeneratePointerTypeFromIR(BasicBlock* block,
-                                                                    IRaverieShaderIR* instruction,
-                                                                    RaverieSpirVFrontEndContext* context)
+RaverieShaderIROp* RaverieSpirVFrontEnd::GetOrGeneratePointerTypeFromIR(BasicBlock* block, IRaverieShaderIR* instruction, RaverieSpirVFrontEndContext* context)
 {
   RaverieShaderIROp* op = instruction->As<RaverieShaderIROp>();
   if (op->IsResultPointerType())
@@ -3763,25 +3519,17 @@ RaverieShaderIROp* RaverieSpirVFrontEnd::GetOrGeneratePointerTypeFromIR(BasicBlo
   return variableOp;
 }
 
-RaverieShaderIROp* RaverieSpirVFrontEnd::GetOrGeneratePointerTypeFromIR(IRaverieShaderIR* instruction,
-                                                                    RaverieSpirVFrontEndContext* context)
+RaverieShaderIROp* RaverieSpirVFrontEnd::GetOrGeneratePointerTypeFromIR(IRaverieShaderIR* instruction, RaverieSpirVFrontEndContext* context)
 {
   return GetOrGeneratePointerTypeFromIR(context->GetCurrentBlock(), instruction, context);
 }
 
-RaverieShaderIROp* RaverieSpirVFrontEnd::BuildStoreOp(IRaverieShaderIR* target,
-                                                  IRaverieShaderIR* source,
-                                                  RaverieSpirVFrontEndContext* context,
-                                                  bool forceLoadStore)
+RaverieShaderIROp* RaverieSpirVFrontEnd::BuildStoreOp(IRaverieShaderIR* target, IRaverieShaderIR* source, RaverieSpirVFrontEndContext* context, bool forceLoadStore)
 {
   return BuildStoreOp(context->GetCurrentBlock(), target, source, context);
 }
 
-RaverieShaderIROp* RaverieSpirVFrontEnd::BuildStoreOp(BasicBlock* block,
-                                                  IRaverieShaderIR* target,
-                                                  IRaverieShaderIR* source,
-                                                  RaverieSpirVFrontEndContext* context,
-                                                  bool forceLoadStore)
+RaverieShaderIROp* RaverieSpirVFrontEnd::BuildStoreOp(BasicBlock* block, IRaverieShaderIR* target, IRaverieShaderIR* source, RaverieSpirVFrontEndContext* context, bool forceLoadStore)
 {
   RaverieShaderIROp* sourceOp = source->As<RaverieShaderIROp>();
   // Change what op we use to store depending on if the source is a value or
@@ -3794,8 +3542,7 @@ RaverieShaderIROp* RaverieSpirVFrontEnd::BuildStoreOp(BasicBlock* block,
     // instead.
     if (forceLoadStore)
     {
-      RaverieShaderIROp* loadOp =
-          BuildIROp(block, OpType::OpLoad, sourceOp->mResultType->mDereferenceType, sourceOp, context);
+      RaverieShaderIROp* loadOp = BuildIROp(block, OpType::OpLoad, sourceOp->mResultType->mDereferenceType, sourceOp, context);
       return BuildIROp(block, OpType::OpStore, nullptr, target, loadOp, context);
     }
     else
@@ -3806,9 +3553,9 @@ RaverieShaderIROp* RaverieSpirVFrontEnd::BuildStoreOp(BasicBlock* block,
 }
 
 void RaverieSpirVFrontEnd::GetFunctionCallArguments(Raverie::FunctionCallNode* node,
-                                                  Raverie::MemberAccessNode* memberAccessNode,
-                                                  Array<IRaverieShaderIR*>& arguments,
-                                                  RaverieSpirVFrontEndContext* context)
+                                                    Raverie::MemberAccessNode* memberAccessNode,
+                                                    Array<IRaverieShaderIR*>& arguments,
+                                                    RaverieSpirVFrontEndContext* context)
 {
   IRaverieShaderIR* thisOp = nullptr;
   // Get the this operand if the function isn't static
@@ -3822,10 +3569,7 @@ void RaverieSpirVFrontEnd::GetFunctionCallArguments(Raverie::FunctionCallNode* n
   GetFunctionCallArguments(node, thisOp, arguments, context);
 }
 
-void RaverieSpirVFrontEnd::GetFunctionCallArguments(Raverie::FunctionCallNode* node,
-                                                  IRaverieShaderIR* thisOp,
-                                                  Array<IRaverieShaderIR*>& arguments,
-                                                  RaverieSpirVFrontEndContext* context)
+void RaverieSpirVFrontEnd::GetFunctionCallArguments(Raverie::FunctionCallNode* node, IRaverieShaderIR* thisOp, Array<IRaverieShaderIR*>& arguments, RaverieSpirVFrontEndContext* context)
 {
   // Always add the this operand as the first argument if it exists
   if (thisOp != nullptr)
@@ -3842,10 +3586,7 @@ void RaverieSpirVFrontEnd::GetFunctionCallArguments(Raverie::FunctionCallNode* n
   }
 }
 
-void RaverieSpirVFrontEnd::WriteFunctionCallArguments(Array<IRaverieShaderIR*> arguments,
-                                                    RaverieShaderIRType* functionType,
-                                                    RaverieShaderIROp* functionCallOp,
-                                                    RaverieSpirVFrontEndContext* context)
+void RaverieSpirVFrontEnd::WriteFunctionCallArguments(Array<IRaverieShaderIR*> arguments, RaverieShaderIRType* functionType, RaverieShaderIROp* functionCallOp, RaverieSpirVFrontEndContext* context)
 {
   // Add all arguments, making sure to convert types if necessary
 
@@ -3857,10 +3598,7 @@ void RaverieSpirVFrontEnd::WriteFunctionCallArguments(Array<IRaverieShaderIR*> a
   }
 }
 
-void RaverieSpirVFrontEnd::WriteFunctionCallArgument(IRaverieShaderIR* argument,
-                                                   RaverieShaderIROp* functionCallOp,
-                                                   RaverieShaderIRType* paramType,
-                                                   RaverieSpirVFrontEndContext* context)
+void RaverieSpirVFrontEnd::WriteFunctionCallArgument(IRaverieShaderIR* argument, RaverieShaderIROp* functionCallOp, RaverieShaderIRType* paramType, RaverieSpirVFrontEndContext* context)
 {
   RaverieShaderIROp* paramOp = argument->As<RaverieShaderIROp>();
 
@@ -3886,16 +3624,14 @@ void RaverieSpirVFrontEnd::WriteFunctionCallArgument(IRaverieShaderIR* argument,
     else if (paramOp->mOpType != OpType::OpVariable && paramOp->mOpType != OpType::OpFunctionParameter)
     {
       RaverieShaderIRType* dereferencedType = paramOp->mResultType->mDereferenceType;
-      if (dereferencedType->mBaseType != ShaderIRTypeBaseType::Image &&
-          dereferencedType->mBaseType != ShaderIRTypeBaseType::Sampler)
+      if (dereferencedType->mBaseType != ShaderIRTypeBaseType::Image && dereferencedType->mBaseType != ShaderIRTypeBaseType::Sampler)
         requiresCopyArgument = true;
     }
 
     if (requiresCopyArgument)
     {
       // Create a local variable and copy the parameter into it (this will now have the correct storage class)
-      RaverieShaderIRType* localVarPointerType =
-          FindOrCreatePointerInterfaceType(mLibrary, paramType->mDereferenceType, paramType->mStorageClass);
+      RaverieShaderIRType* localVarPointerType = FindOrCreatePointerInterfaceType(mLibrary, paramType->mDereferenceType, paramType->mStorageClass);
       RaverieShaderIROp* localVarOp = BuildOpVariable(localVarPointerType, context);
       BuildStoreOp(localVarOp, paramOp, context);
       // Additionally, we'll need to copy the result back out of the function call to set the original paramter.
@@ -3910,8 +3646,7 @@ void RaverieSpirVFrontEnd::WriteFunctionCallArgument(IRaverieShaderIR* argument,
   functionCallOp->mArguments.PushBack(paramOp);
 }
 
-RaverieShaderIROp* RaverieSpirVFrontEnd::GenerateFunctionCall(RaverieShaderIRFunction* shaderFunction,
-                                                          RaverieSpirVFrontEndContext* context)
+RaverieShaderIROp* RaverieSpirVFrontEnd::GenerateFunctionCall(RaverieShaderIRFunction* shaderFunction, RaverieSpirVFrontEndContext* context)
 {
   BasicBlock* currentBlock = context->GetCurrentBlock();
 
@@ -3938,9 +3673,7 @@ void RaverieSpirVFrontEnd::WriteFunctionCallPostamble(RaverieSpirVFrontEndContex
   context->mFunctionPostambleCopies.Clear();
 }
 
-void RaverieSpirVFrontEnd::WriteFunctionCall(Array<IRaverieShaderIR*> arguments,
-                                           RaverieShaderIRFunction* shaderFunction,
-                                           RaverieSpirVFrontEndContext* context)
+void RaverieSpirVFrontEnd::WriteFunctionCall(Array<IRaverieShaderIR*> arguments, RaverieShaderIRFunction* shaderFunction, RaverieSpirVFrontEndContext* context)
 {
   // Generate the function call but don't add it to the block yet (so we can collect all arguments first)
   RaverieShaderIROp* functionCallOp = GenerateFunctionCall(shaderFunction, context);
@@ -3963,22 +3696,15 @@ void RaverieSpirVFrontEnd::WriteFunctionCall(Array<IRaverieShaderIR*> arguments,
   }
 }
 
-RaverieShaderIROp* RaverieSpirVFrontEnd::GenerateBoolToIntegerCast(BasicBlock* block,
-                                                               RaverieShaderIROp* source,
-                                                               RaverieShaderIRType* destType,
-                                                               RaverieSpirVFrontEndContext* context)
+RaverieShaderIROp* RaverieSpirVFrontEnd::GenerateBoolToIntegerCast(BasicBlock* block, RaverieShaderIROp* source, RaverieShaderIRType* destType, RaverieSpirVFrontEndContext* context)
 {
   RaverieShaderIROp* zero = GetIntegerConstant(0, context);
   RaverieShaderIROp* one = GetIntegerConstant(1, context);
   return GenerateFromBoolCast(block, source, destType, zero, one, context);
 }
 
-RaverieShaderIROp* RaverieSpirVFrontEnd::GenerateFromBoolCast(BasicBlock* block,
-                                                          RaverieShaderIROp* source,
-                                                          RaverieShaderIRType* destType,
-                                                          IRaverieShaderIR* zero,
-                                                          IRaverieShaderIR* one,
-                                                          RaverieSpirVFrontEndContext* context)
+RaverieShaderIROp* RaverieSpirVFrontEnd::GenerateFromBoolCast(
+    BasicBlock* block, RaverieShaderIROp* source, RaverieShaderIRType* destType, IRaverieShaderIR* zero, IRaverieShaderIR* one, RaverieSpirVFrontEndContext* context)
 {
   // SpirV doesn't support a bool to type cast. Instead a select op must be
   // generated to choose between two values. This is effectively: bool ?
@@ -4009,21 +3735,14 @@ RaverieShaderIROp* RaverieSpirVFrontEnd::GenerateFromBoolCast(BasicBlock* block,
   return operation;
 }
 
-RaverieShaderIROp* RaverieSpirVFrontEnd::GenerateIntegerToBoolCast(BasicBlock* block,
-                                                               RaverieShaderIROp* source,
-                                                               RaverieShaderIRType* destType,
-                                                               RaverieSpirVFrontEndContext* context)
+RaverieShaderIROp* RaverieSpirVFrontEnd::GenerateIntegerToBoolCast(BasicBlock* block, RaverieShaderIROp* source, RaverieShaderIRType* destType, RaverieSpirVFrontEndContext* context)
 {
   IRaverieShaderIR* zero = GetIntegerConstant(0, context);
   return GenerateToBoolCast(block, OpType::OpINotEqual, source, destType, zero, context);
 }
 
-RaverieShaderIROp* RaverieSpirVFrontEnd::GenerateToBoolCast(BasicBlock* block,
-                                                        OpType op,
-                                                        RaverieShaderIROp* source,
-                                                        RaverieShaderIRType* destType,
-                                                        IRaverieShaderIR* zero,
-                                                        RaverieSpirVFrontEndContext* context)
+RaverieShaderIROp*
+RaverieSpirVFrontEnd::GenerateToBoolCast(BasicBlock* block, OpType op, RaverieShaderIROp* source, RaverieShaderIRType* destType, IRaverieShaderIR* zero, RaverieSpirVFrontEndContext* context)
 {
   // SpirV doesn't support a cast to a bool. Instead this must be generated from
   // a comparison operator with the corrsponding zero vector. E.g.
@@ -4074,10 +3793,7 @@ bool RaverieSpirVFrontEnd::ContainsAttribute(RaverieShaderIRType* shaderType, St
   return meta->ContainsAttribute(attributeName);
 }
 
-bool RaverieSpirVFrontEnd::CheckForNonCopyableType(RaverieShaderIRType* shaderType,
-                                                 Raverie::ExpressionNode* node,
-                                                 RaverieSpirVFrontEndContext* context,
-                                                 bool generateDummyResult)
+bool RaverieSpirVFrontEnd::CheckForNonCopyableType(RaverieShaderIRType* shaderType, Raverie::ExpressionNode* node, RaverieSpirVFrontEndContext* context, bool generateDummyResult)
 {
   RaverieShaderIRType* shaderValueType = shaderType;
   if (shaderValueType->IsPointerType())
@@ -4116,10 +3832,7 @@ RaverieShaderIRType* RaverieSpirVFrontEnd::FindType(Raverie::ExpressionNode* syn
   return FindType(syntaxNode->ResultType, syntaxNode, reportErrors);
 }
 
-bool RaverieSpirVFrontEnd::ValidateResultType(IRaverieShaderIR* instruction,
-                                            ShaderIRTypeBaseType::Enum expectedType,
-                                            Raverie::CodeLocation& codeLocation,
-                                            bool throwException)
+bool RaverieSpirVFrontEnd::ValidateResultType(IRaverieShaderIR* instruction, ShaderIRTypeBaseType::Enum expectedType, Raverie::CodeLocation& codeLocation, bool throwException)
 {
   RaverieShaderIROp* op = instruction->As<RaverieShaderIROp>();
   if (op->mResultType != nullptr)
@@ -4157,9 +3870,7 @@ void RaverieSpirVFrontEnd::SendTranslationError(Raverie::CodeLocation& codeLocat
   SendTranslationError(codeLocation, message, message);
 }
 
-void RaverieSpirVFrontEnd::SendTranslationError(Raverie::CodeLocation& codeLocation,
-                                              StringParam shortMsg,
-                                              StringParam fullMsg)
+void RaverieSpirVFrontEnd::SendTranslationError(Raverie::CodeLocation& codeLocation, StringParam shortMsg, StringParam fullMsg)
 {
   mErrorTriggered = true;
   if (mProject != nullptr)

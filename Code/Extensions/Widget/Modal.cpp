@@ -162,8 +162,7 @@ void ModalStrip::SetStripHeight(ModalSizeMode::Type mode, float height)
   MarkAsNeedsUpdate();
 }
 
-ModalConfirmAction::ModalConfirmAction(Composite* parent, StringParam title, float fadeInTime) :
-    ModalStrip(parent, fadeInTime)
+ModalConfirmAction::ModalConfirmAction(Composite* parent, StringParam title, float fadeInTime) : ModalStrip(parent, fadeInTime)
 {
   mCloseOnSelection = true;
 
@@ -256,16 +255,12 @@ bool ModalConfirmAction::TakeFocusOverride()
 }
 
 // ModalButtonsAction Action
-ModalButtonsAction::ModalButtonsAction(
-    Composite* parent, StringParam title, Array<String>& buttonNames, StringParam extraText, float fadeInTime) :
-    ModalStrip(parent, fadeInTime)
+ModalButtonsAction::ModalButtonsAction(Composite* parent, StringParam title, Array<String>& buttonNames, StringParam extraText, float fadeInTime) : ModalStrip(parent, fadeInTime)
 {
   CreateButtons(title, buttonNames, extraText);
 }
 
-ModalButtonsAction::ModalButtonsAction(
-    Composite* parent, StringParam title, StringParam buttonName, StringParam extraText, float fadeInTime) :
-    ModalStrip(parent, fadeInTime)
+ModalButtonsAction::ModalButtonsAction(Composite* parent, StringParam title, StringParam buttonName, StringParam extraText, float fadeInTime) : ModalStrip(parent, fadeInTime)
 {
   Array<String> buttonNames;
   buttonNames.PushBack(buttonName);

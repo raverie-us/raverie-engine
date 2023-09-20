@@ -22,9 +22,7 @@ RaverieDefineType(UiFocusEvent, builder, type)
   RaverieBindFieldGetter(mLostFocus);
 }
 
-UiFocusEvent::UiFocusEvent(UiWidget* focusGained, UiWidget* focusLost) :
-    mReceivedFocus(focusGained),
-    mLostFocus(focusLost)
+UiFocusEvent::UiFocusEvent(UiWidget* focusGained, UiWidget* focusLost) : mReceivedFocus(focusGained), mLostFocus(focusLost)
 {
 }
 

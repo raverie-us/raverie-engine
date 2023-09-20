@@ -335,8 +335,7 @@ void EditorMain::ShowOperationHistroy(CommandEvent* event)
     return;
 
   GameSession* editorGameSession = mEditGame;
-  Space* newSpace =
-      editorGameSession->CreateNamedSpace("HistoryWindow", ArchetypeManager::FindOrNull(CoreArchetypes::Space));
+  Space* newSpace = editorGameSession->CreateNamedSpace("HistoryWindow", ArchetypeManager::FindOrNull(CoreArchetypes::Space));
 
   Level* level = LevelManager::FindOrNull("HistoryWindowLevel");
   if (level != nullptr)
@@ -461,8 +460,7 @@ void EditorMain::ShowVolumeMeter(CommandEvent* event)
     return;
 
   GameSession* editorGameSession = mEditGame;
-  Space* newSpace =
-      editorGameSession->CreateNamedSpace("VolumeMeterWindow", ArchetypeManager::FindOrNull(CoreArchetypes::Space));
+  Space* newSpace = editorGameSession->CreateNamedSpace("VolumeMeterWindow", ArchetypeManager::FindOrNull(CoreArchetypes::Space));
 
   Level* level = LevelManager::FindOrNull("VolumeMeterLevel");
   if (level != nullptr)
@@ -482,8 +480,7 @@ void EditorMain::ShowSoundNodeGraph(CommandEvent* event)
     return;
 
   GameSession* editorGameSession = mEditGame;
-  Space* newSpace =
-      editorGameSession->CreateNamedSpace("SoundNodeGraphWindow", ArchetypeManager::FindOrNull(CoreArchetypes::Space));
+  Space* newSpace = editorGameSession->CreateNamedSpace("SoundNodeGraphWindow", ArchetypeManager::FindOrNull(CoreArchetypes::Space));
 
   Level* level = LevelManager::FindOrNull("SoundNodeGraphLevel");
   if (level != nullptr)
@@ -592,8 +589,7 @@ DocumentEditor* EditorMain::OpenDocumentResource(DocumentResource* docResource)
   else
   {
     DocumentManager* docManager = DocumentManager::GetInstance();
-    ResourceDocument* document =
-        (ResourceDocument*)docManager->Documents.FindValue((u64)docResource->mResourceId, nullptr);
+    ResourceDocument* document = (ResourceDocument*)docManager->Documents.FindValue((u64)docResource->mResourceId, nullptr);
     if (document == nullptr)
       document = new ResourceDocument(docResource);
 
@@ -875,8 +871,7 @@ void OnTweakablesModified()
 void AutoVersionCheck();
 void SetupTools(Editor* editor);
 
-#define BindCommand(commandName, memberFunction)                                                                       \
-  Connect(commands->GetCommand(commandName), Events::CommandExecute, editorMain, &EditorMain::memberFunction);
+#define BindCommand(commandName, memberFunction) Connect(commands->GetCommand(commandName), Events::CommandExecute, editorMain, &EditorMain::memberFunction);
 
 void CreateEditor(StringParam projectFile)
 {

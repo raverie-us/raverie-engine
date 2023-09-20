@@ -68,12 +68,7 @@ public:
     Insert(p2);
     Insert(p3);
   }
-  HashSet(ContainerInitializerDummy*,
-          const_reference p0,
-          const_reference p1,
-          const_reference p2,
-          const_reference p3,
-          const_reference p4)
+  HashSet(ContainerInitializerDummy*, const_reference p0, const_reference p1, const_reference p2, const_reference p3, const_reference p4)
   {
     Insert(p0);
     Insert(p1);
@@ -81,13 +76,7 @@ public:
     Insert(p3);
     Insert(p4);
   }
-  HashSet(ContainerInitializerDummy*,
-          const_reference p0,
-          const_reference p1,
-          const_reference p2,
-          const_reference p3,
-          const_reference p4,
-          const_reference p5)
+  HashSet(ContainerInitializerDummy*, const_reference p0, const_reference p1, const_reference p2, const_reference p3, const_reference p4, const_reference p5)
   {
     Insert(p0);
     Insert(p1);

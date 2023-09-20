@@ -72,8 +72,7 @@ void Collider::Serialize(Serializer& stream)
 {
   /// There's quite a few flags that only store run-time state that we need to
   /// ignore when serializing.
-  u32 mask = ColliderFlags::OnIsland | ColliderFlags::Uninitialized | ColliderFlags::HasPairFilter |
-             ColliderFlags::MasslessBody | ColliderFlags::MasslessCollider | ColliderFlags::Seamless;
+  u32 mask = ColliderFlags::OnIsland | ColliderFlags::Uninitialized | ColliderFlags::HasPairFilter | ColliderFlags::MasslessBody | ColliderFlags::MasslessCollider | ColliderFlags::Seamless;
   // The default state is to be not ghost
   SerializeBits(stream, mState, ColliderFlags::Names, mask, ~ColliderFlags::Ghost);
 

@@ -71,7 +71,8 @@ struct IntersectionPoint
   /// corresponds to the point on the second shape.
   Vec3 Points[2];
 
-  union {
+  union
+  {
     /// Amount of overlap occurring in the direction of the normal.
     real Depth;
 
@@ -316,22 +317,14 @@ Type PointPlane(Vec3Param point, Vec3Param planeNormal, real planeDistance);
 Type PointSphere(Vec3Param point, Vec3Param sphereCenter, real sphereRadius);
 
 /// Test to see if the given point lies on or inside the given tetrahedron.
-Type PointTetrahedron(Vec3Param point,
-                      Vec3Param tetrahedronPointA,
-                      Vec3Param tetrahedronPointB,
-                      Vec3Param tetrahedronPointC,
-                      Vec3Param tetrahedronPointD);
+Type PointTetrahedron(Vec3Param point, Vec3Param tetrahedronPointA, Vec3Param tetrahedronPointB, Vec3Param tetrahedronPointC, Vec3Param tetrahedronPointD);
 
 /// Test to see if the given point lies on or inside the given counterclockwise
 /// triangle. Treats the point as if it was lying on the plane of the triangle,
 /// so this can be more accurately described as "point vs triangular prism".
 /// The epsilon is used to effectively fatten/shrink the triangle,
 /// primarily for numerical robustness with raycasting.
-Type PointTriangle(Vec3Param point,
-                   Vec3Param trianglePointA,
-                   Vec3Param trianglePointB,
-                   Vec3Param trianglePointC,
-                   real epsilon = real(0));
+Type PointTriangle(Vec3Param point, Vec3Param trianglePointA, Vec3Param trianglePointB, Vec3Param trianglePointC, real epsilon = real(0));
 
 /// Find the closest point on a ray to the given point. Will return "Inside" if
 /// the closest point found is in the interval of t = [0, inf], otherwise
@@ -373,380 +366,176 @@ Type ClosestPointOnPlaneToPoint(Vec3Param planeNormal, real planeDistance, Vec3P
 Type ClosestPointOnSphereToPoint(Vec3Param sphereCenter, real sphereRadius, Vec3Ptr point);
 
 /// Find the closest point on a triangle to the given point.
-Type ClosestPointOnTriangleToPoint(Vec3Param trianglePointA,
-                                   Vec3Param trianglePointB,
-                                   Vec3Param trianglePointC,
-                                   Vec3Ptr point);
+Type ClosestPointOnTriangleToPoint(Vec3Param trianglePointA, Vec3Param trianglePointB, Vec3Param trianglePointC, Vec3Ptr point);
 
 /// Find the closest points between two lines. Assumes that the line directions
 /// provided are unit length.
-Type ClosestPointsOfTwoLines(Vec3Param lineStartA,
-                             Vec3Param lineDirectionA,
-                             Vec3Param lineStartB,
-                             Vec3Param lineDirectionB,
-                             Vec3Ptr closestPointA,
-                             Vec3Ptr closestPointB,
-                             Vec2Ptr interpolationValues = nullptr);
+Type ClosestPointsOfTwoLines(
+    Vec3Param lineStartA, Vec3Param lineDirectionA, Vec3Param lineStartB, Vec3Param lineDirectionB, Vec3Ptr closestPointA, Vec3Ptr closestPointB, Vec2Ptr interpolationValues = nullptr);
 
 /// Find the closest points between two line segments.
-Type ClosestPointsOfTwoSegments(Vec3Param segmentOnePointA,
-                                Vec3Param segmentOnePointB,
-                                Vec3Param segmentTwoPointA,
-                                Vec3Param segmentTwoPointB,
-                                Vec3Ptr closestPointOne,
-                                Vec3Ptr closestPointTwo);
+Type ClosestPointsOfTwoSegments(Vec3Param segmentOnePointA, Vec3Param segmentOnePointB, Vec3Param segmentTwoPointA, Vec3Param segmentTwoPointB, Vec3Ptr closestPointOne, Vec3Ptr closestPointTwo);
 
 /// Intersect a line with an axis-aligned bounding box.
-Type LineAabb(
-    Vec3Param linePoint, Vec3Param lineDirection, Vec3Param aabbMinPoint, Vec3Param aabbMaxPoint, Interval* interval);
+Type LineAabb(Vec3Param linePoint, Vec3Param lineDirection, Vec3Param aabbMinPoint, Vec3Param aabbMaxPoint, Interval* interval);
 
 /// Intersect a line with a capsule defined by its center, local axes, radius,
 /// and half of the distance between the centers of the spherical endcaps.
-Type LineCapsule(Vec3Param linePoint,
-                 Vec3Param lineDirection,
-                 Vec3Param capsuleCenter,
-                 Mat3Param capsuleBasis,
-                 real capsuleRadius,
-                 real capsuleSegmentHalfLength,
-                 Interval* interval);
+Type LineCapsule(Vec3Param linePoint, Vec3Param lineDirection, Vec3Param capsuleCenter, Mat3Param capsuleBasis, real capsuleRadius, real capsuleSegmentHalfLength, Interval* interval);
 
 /// Intersect a line with a capsule defined by the centers of the spherical
 /// endcaps and the radius.
-Type LineCapsule(Vec3Param linePoint,
-                 Vec3Param lineDirection,
-                 Vec3Param capsulePointA,
-                 Vec3Param capsulePointB,
-                 real capsuleRadius,
-                 Interval* interval);
+Type LineCapsule(Vec3Param linePoint, Vec3Param lineDirection, Vec3Param capsulePointA, Vec3Param capsulePointB, real capsuleRadius, Interval* interval);
 
 /// Intersect a line with a cylinder defined by its center, local axes, radius,
 /// and half height.
-Type LineCylinder(Vec3Param linePoint,
-                  Vec3Param lineDirection,
-                  Vec3Param cylinderCenter,
-                  Mat3Param cylinderBasis,
-                  real cylinderRadius,
-                  real cylinderHalfHeight,
-                  Interval* interval);
+Type LineCylinder(Vec3Param linePoint, Vec3Param lineDirection, Vec3Param cylinderCenter, Mat3Param cylinderBasis, real cylinderRadius, real cylinderHalfHeight, Interval* interval);
 
 /// Intersect a line with a cylinder defined by the points at the planar endcaps
 /// and the radius.
-Type LineCylinder(Vec3Param linePoint,
-                  Vec3Param lineDirection,
-                  Vec3Param cylinderPointA,
-                  Vec3Param cylinderPointB,
-                  real cylinderRadius,
-                  Interval* interval);
+Type LineCylinder(Vec3Param linePoint, Vec3Param lineDirection, Vec3Param cylinderPointA, Vec3Param cylinderPointB, real cylinderRadius, Interval* interval);
 
 /// Intersect a line with an elliptical cylinder defined by its center, local
 /// axes, major radius (x-axis), minor radius (z-axis), and half height
 /// (y-axis).
-Type LineCylinder(Vec3Param linePoint,
-                  Vec3Param lineDirection,
-                  Vec3Param cylinderCenter,
-                  Mat3Param cylinderBasis,
-                  real cylinderMajorRadius,
-                  real cylinderMinorRadius,
-                  real cylinderHalfHeight,
-                  Interval* interval);
+Type LineCylinder(
+    Vec3Param linePoint, Vec3Param lineDirection, Vec3Param cylinderCenter, Mat3Param cylinderBasis, real cylinderMajorRadius, real cylinderMinorRadius, real cylinderHalfHeight, Interval* interval);
 
 /// Intersect a line with an ellipsoid.
-Type LineEllipsoid(Vec3Param linePoint,
-                   Vec3Param lineDirection,
-                   Vec3Param ellipsoidCenter,
-                   Vec3Param ellipsoidRadii,
-                   Mat3Param ellipsoidBasis,
-                   Interval* interval);
+Type LineEllipsoid(Vec3Param linePoint, Vec3Param lineDirection, Vec3Param ellipsoidCenter, Vec3Param ellipsoidRadii, Mat3Param ellipsoidBasis, Interval* interval);
 
 /// Intersect a line with a plane.
-Type LinePlane(
-    Vec3Param linePoint, Vec3Param lineDirection, Vec3Param planeNormal, real planeDistance, Interval* interval);
+Type LinePlane(Vec3Param linePoint, Vec3Param lineDirection, Vec3Param planeNormal, real planeDistance, Interval* interval);
 
 /// Intersect a line with an oriented bounding box.
-Type LineObb(Vec3Param linePoint,
-             Vec3Param lineDirection,
-             Vec3Param obbCenter,
-             Vec3Param obbHalfExtents,
-             Mat3Param obbBasis,
-             Interval* interval);
+Type LineObb(Vec3Param linePoint, Vec3Param lineDirection, Vec3Param obbCenter, Vec3Param obbHalfExtents, Mat3Param obbBasis, Interval* interval);
 
 /// Intersect a line with a sphere.
-Type LineSphere(
-    Vec3Param linePoint, Vec3Param lineDirection, Vec3Param sphereCenter, real sphereRadius, Interval* interval);
+Type LineSphere(Vec3Param linePoint, Vec3Param lineDirection, Vec3Param sphereCenter, real sphereRadius, Interval* interval);
 
 /// Intersect a line with a torus.
-Type LineTorus(Vec3Param linePoint,
-               Vec3Param lineDirection,
-               Vec3Param torusCenter,
-               Mat3Param torusBasis,
-               real torusRingRadius,
-               real torusTubeRadius,
-               Interval* interval);
+Type LineTorus(Vec3Param linePoint, Vec3Param lineDirection, Vec3Param torusCenter, Mat3Param torusBasis, real torusRingRadius, real torusTubeRadius, Interval* interval);
 
 /// Intersect a line with a triangle.
-Type LineTriangle(Vec3Param linePoint,
-                  Vec3Param lineDirection,
-                  Vec3Param trianglePointA,
-                  Vec3Param trianglePointB,
-                  Vec3Param trianglePointC,
-                  Interval* interval);
+Type LineTriangle(Vec3Param linePoint, Vec3Param lineDirection, Vec3Param trianglePointA, Vec3Param trianglePointB, Vec3Param trianglePointC, Interval* interval);
 
 /// Intersect a ray with an axis aligned bounding box.
-Type RayAabb(
-    Vec3Param rayStart, Vec3Param rayDirection, Vec3Param aabbMinPoint, Vec3Param aabbMaxPoint, Interval* interval);
+Type RayAabb(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param aabbMinPoint, Vec3Param aabbMaxPoint, Interval* interval);
 
 /// Intersect a ray with a cylinder. Returns None if the ray doesn't intersect
 /// the infinite cylinder anywhere. Returns Outside if the intersection with the
 /// infinite cylinder is invalid.
-Type RayInfiniteCylinder(Vec3Param rayStart,
-                         Vec3Param rayDirection,
-                         Vec3Param cylinderPointA,
-                         Vec3Param cylinderPointB,
-                         real cylinderRadius,
-                         Interval* interval);
+Type RayInfiniteCylinder(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param cylinderPointA, Vec3Param cylinderPointB, real cylinderRadius, Interval* interval);
 
 /// Intersect a ray with a capsule defined by its center, local axes, radius,
 /// and half of the distance between the centers of the spherical endcaps.
-Type RayCapsule(Vec3Param rayStart,
-                Vec3Param rayDirection,
-                Vec3Param capsuleCenter,
-                Mat3Param capsuleBasis,
-                real capsuleRadius,
-                real capsuleSegmentHalfLength,
-                Interval* interval);
+Type RayCapsule(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param capsuleCenter, Mat3Param capsuleBasis, real capsuleRadius, real capsuleSegmentHalfLength, Interval* interval);
 
 /// Intersect a ray with a capsule defined by the centers of the spherical
 /// endcaps and the radius.
-Type RayCapsule(Vec3Param rayStart,
-                Vec3Param lineDirection,
-                Vec3Param capsulePointA,
-                Vec3Param capsulePointB,
-                real capsuleRadius,
-                Interval* interval);
+Type RayCapsule(Vec3Param rayStart, Vec3Param lineDirection, Vec3Param capsulePointA, Vec3Param capsulePointB, real capsuleRadius, Interval* interval);
 
 /// Intersect a ray with a cylinder defined by its center, local axes, radius,
 /// and half height.
-Type RayCylinder(Vec3Param rayStart,
-                 Vec3Param rayDirection,
-                 Vec3Param cylinderCenter,
-                 Mat3Param cylinderBasis,
-                 real cylinderRadius,
-                 real cylinderHalfHeight,
-                 Interval* interval);
+Type RayCylinder(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param cylinderCenter, Mat3Param cylinderBasis, real cylinderRadius, real cylinderHalfHeight, Interval* interval);
 
 /// Intersect a ray with a cylinder defined by the points at the planar endcaps
 /// and the radius. Returns None if the ray doesn't hit the infinite cylinder.
 /// Returns Outside if the intersection with the cylinder is invalid.
-Type RayCylinder(Vec3Param rayStart,
-                 Vec3Param rayDirection,
-                 Vec3Param cylinderPointA,
-                 Vec3Param cylinderPointB,
-                 real cylinderRadius,
-                 Interval* interval);
+Type RayCylinder(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param cylinderPointA, Vec3Param cylinderPointB, real cylinderRadius, Interval* interval);
 
 /// Intersect a ray with an ellipsoid, the inverse scaled basis is the
 /// combination of the ellipsoid's basis with its radii and then inverted.
-Type RayEllipsoid(Vec3Param rayStart,
-                  Vec3Param rayDirection,
-                  Vec3Param ellipsoidCenter,
-                  Mat3Param ellipsoidInvScaledBasis,
-                  Interval* interval);
+Type RayEllipsoid(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param ellipsoidCenter, Mat3Param ellipsoidInvScaledBasis, Interval* interval);
 
 /// Intersect a ray with an ellipsoid.
-Type RayEllipsoid(Vec3Param rayStart,
-                  Vec3Param rayDirection,
-                  Vec3Param ellipsoidCenter,
-                  Vec3Param ellipsoidRadii,
-                  Mat3Param ellipsoidBasis,
-                  Interval* interval);
+Type RayEllipsoid(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param ellipsoidCenter, Vec3Param ellipsoidRadii, Mat3Param ellipsoidBasis, Interval* interval);
 
 /// Intersect a ray with a plane.
-Type RayPlane(
-    Vec3Param rayStart, Vec3Param rayDirection, Vec3Param planeNormal, real planeDistance, Interval* interval);
+Type RayPlane(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param planeNormal, real planeDistance, Interval* interval);
 
 /// Intersect a ray with an oriented bounding box.
-Type RayObb(Vec3Param rayStart,
-            Vec3Param rayDirection,
-            Vec3Param obbCenter,
-            Vec3Param obbHalfExtents,
-            Mat3Param obbBasis,
-            Interval* interval);
+Type RayObb(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param obbCenter, Vec3Param obbHalfExtents, Mat3Param obbBasis, Interval* interval);
 
 /// Intersect a ray with a sphere.
-Type RaySphere(
-    Vec3Param rayStart, Vec3Param rayDirection, Vec3Param sphereCenter, real sphereRadius, Interval* interval);
+Type RaySphere(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param sphereCenter, real sphereRadius, Interval* interval);
 /// Intersect a ray with a sphere. This function will not early out when the
 /// sphere is behind the ray so that the interval can be filled out. This is
 /// currently used in RayCapsule to get accurate t-values.
-Type RaySphereAllowBehind(
-    Vec3Param rayStart, Vec3Param rayDirection, Vec3Param sphereCenter, real sphereRadius, Interval* interval);
+Type RaySphereAllowBehind(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param sphereCenter, real sphereRadius, Interval* interval);
 
 // Intersect a ray with a tetrahedron.
-Type RayTetrahedron(Vec3Param rayStart,
-                    Vec3Param rayDirection,
-                    Vec3Param tetrahedronPointA,
-                    Vec3Param tetrahedronPointB,
-                    Vec3Param tetrahedronPointC,
-                    Vec3Param tetrahedronPointD,
-                    Interval* interval);
+Type RayTetrahedron(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param tetrahedronPointA, Vec3Param tetrahedronPointB, Vec3Param tetrahedronPointC, Vec3Param tetrahedronPointD, Interval* interval);
 
 /// Intersect a ray with a torus.
-Type RayTorus(Vec3Param rayStart,
-              Vec3Param rayDirection,
-              Vec3Param torusCenter,
-              Mat3Param torusBasis,
-              real torusRingRadius,
-              real torusTubeRadius,
-              Interval* interval);
+Type RayTorus(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param torusCenter, Mat3Param torusBasis, real torusRingRadius, real torusTubeRadius, Interval* interval);
 
 /// Intersect a ray with a triangle. The epsilon is used to fatten/shrink the
 /// triangle.
-Type RayTriangle(Vec3Param rayStart,
-                 Vec3Param rayDirection,
-                 Vec3Param trianglePointA,
-                 Vec3Param trianglePointB,
-                 Vec3Param trianglePointC,
-                 Interval* interval,
-                 real epsilon = real(0));
+Type RayTriangle(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param trianglePointA, Vec3Param trianglePointB, Vec3Param trianglePointC, Interval* interval, real epsilon = real(0));
 
 /// Intersect a segment with an axis aligned bounding box.
-Type SegmentAabb(
-    Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param aabbMinPoint, Vec3Param aabbMaxPoint, Interval* interval);
+Type SegmentAabb(Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param aabbMinPoint, Vec3Param aabbMaxPoint, Interval* interval);
 
 /// Intersect a segment with a capsule defined by its center, local axes,
 /// radius, and half of the distance between the centers of the spherical
 /// endcaps.
-Type SegmentCapsule(Vec3Param segmentStart,
-                    Vec3Param segmentEnd,
-                    Vec3Param capsuleCenter,
-                    Mat3Param capsuleBasis,
-                    real capsuleRadius,
-                    real capsuleSegmentHalfLength,
-                    Interval* interval);
+Type SegmentCapsule(Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param capsuleCenter, Mat3Param capsuleBasis, real capsuleRadius, real capsuleSegmentHalfLength, Interval* interval);
 
 /// Intersect a segment with a capsule defined by the centers of the spherical
 /// endcaps and the radius.
-Type SegmentCapsule(Vec3Param segmentStart,
-                    Vec3Param segmentEnd,
-                    Vec3Param capsulePointA,
-                    Vec3Param capsulePointB,
-                    real capsuleRadius,
-                    Interval* interval);
+Type SegmentCapsule(Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param capsulePointA, Vec3Param capsulePointB, real capsuleRadius, Interval* interval);
 
 /// Intersect a segment with a cylinder defined by its center, local axes,
 /// radius, and half height.
-Type SegmentCylinder(Vec3Param segmentStart,
-                     Vec3Param segmentEnd,
-                     Vec3Param cylinderCenter,
-                     Mat3Param cylinderBasis,
-                     real cylinderRadius,
-                     real cylinderHalfHeight,
-                     Interval* interval);
+Type SegmentCylinder(Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param cylinderCenter, Mat3Param cylinderBasis, real cylinderRadius, real cylinderHalfHeight, Interval* interval);
 
 /// Intersect a segment with a cylinder defined by the points at the planar
 /// endcap and the radius.
-Type SegmentCylinder(Vec3Param segmentStart,
-                     Vec3Param segmentEnd,
-                     Vec3Param cylinderPointA,
-                     Vec3Param cylinderPointB,
-                     real cylinderRadius,
-                     Interval* interval);
+Type SegmentCylinder(Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param cylinderPointA, Vec3Param cylinderPointB, real cylinderRadius, Interval* interval);
 
 /// Intersect a segment with an elliptical cylinder defined by its center, local
 /// axes, major radius (x-axis), minor radius (z-axis), and half height
 /// (y-axis).
-Type SegmentCylinder(Vec3Param segmentStart,
-                     Vec3Param segmentEnd,
-                     Vec3Param cylinderCenter,
-                     Mat3Param cylinderBasis,
-                     real cylinderMajorRadius,
-                     real cylinderMinorRadius,
-                     real cylinderHalfHeight,
-                     Interval* interval);
+Type SegmentCylinder(
+    Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param cylinderCenter, Mat3Param cylinderBasis, real cylinderMajorRadius, real cylinderMinorRadius, real cylinderHalfHeight, Interval* interval);
 
 /// Intersect a segment with an ellipsoid.
-Type SegmentEllipsoid(Vec3Param segmentStart,
-                      Vec3Param segmentEnd,
-                      Vec3Param ellipsoidCenter,
-                      Vec3Param ellipsoidRadii,
-                      Mat3Param ellipsoidBasis,
-                      Interval* interval);
+Type SegmentEllipsoid(Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param ellipsoidCenter, Vec3Param ellipsoidRadii, Mat3Param ellipsoidBasis, Interval* interval);
 
 /// Intersect a segment with a plane.
-Type SegmentPlane(
-    Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param planeNormal, real planeDistance, Interval* interval);
+Type SegmentPlane(Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param planeNormal, real planeDistance, Interval* interval);
 
 /// Intersect a segment with an oriented bounding box.
-Type SegmentObb(Vec3Param segmentStart,
-                Vec3Param segmentEnd,
-                Vec3Param obbCenter,
-                Vec3Param obbHalfExtents,
-                Mat3Param obbBasis,
-                Interval* interval);
+Type SegmentObb(Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param obbCenter, Vec3Param obbHalfExtents, Mat3Param obbBasis, Interval* interval);
 
 /// Intersect a segment with a sphere.
-Type SegmentSphere(
-    Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param sphereCenter, real sphereRadius, Interval* interval);
+Type SegmentSphere(Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param sphereCenter, real sphereRadius, Interval* interval);
 
 /// Intersect a segment with a torus.
-Type SegmentTorus(Vec3Param segmentStart,
-                  Vec3Param segmentEnd,
-                  Vec3Param torusCenter,
-                  Mat3Param torusBasis,
-                  real torusRingRadius,
-                  real torusTubeRadius,
-                  Interval* interval);
+Type SegmentTorus(Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param torusCenter, Mat3Param torusBasis, real torusRingRadius, real torusTubeRadius, Interval* interval);
 
 /// Intersect a segment with a triangle.
-Type SegmentTriangle(Vec3Param segmentStart,
-                     Vec3Param segmentEnd,
-                     Vec3Param trianglePointA,
-                     Vec3Param trianglePointB,
-                     Vec3Param trianglePointC,
-                     Interval* interval);
+Type SegmentTriangle(Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param trianglePointA, Vec3Param trianglePointB, Vec3Param trianglePointC, Interval* interval);
 
 /// Intersect a ray with an axis aligned bounding box.
-Type RayAabb(Vec3Param rayStart,
-             Vec3Param rayDirection,
-             Vec3Param aabbMinPoint,
-             Vec3Param aabbMaxPoint,
-             IntersectionPoint* intersectionPoint = nullptr);
+Type RayAabb(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param aabbMinPoint, Vec3Param aabbMaxPoint, IntersectionPoint* intersectionPoint = nullptr);
 
 /// Intersect a ray with a capsule. If the result is "Segment", the second point
 /// isn't guaranteed to be on the surface of the capsule (for now).
-Type RayCapsule(Vec3Param rayStart,
-                Vec3Param rayDirection,
-                Vec3Param capsulePointA,
-                Vec3Param capsulePointB,
-                real capsuleRadius,
-                IntersectionPoint* intersectionPoint = nullptr);
+Type RayCapsule(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param capsulePointA, Vec3Param capsulePointB, real capsuleRadius, IntersectionPoint* intersectionPoint = nullptr);
 
 /// Intersect a ray with a cylinder defined by its center, local axes, radius,
 /// and half height.
-Type RayCylinder(Vec3Param rayStart,
-                 Vec3Param rayDirection,
-                 Vec3Param cylinderCenter,
-                 Mat3Param cylinderBasis,
-                 real cylinderRadius,
-                 real cylinderHalfHeight,
-                 IntersectionPoint* intersectionPoint = nullptr);
+Type RayCylinder(
+    Vec3Param rayStart, Vec3Param rayDirection, Vec3Param cylinderCenter, Mat3Param cylinderBasis, real cylinderRadius, real cylinderHalfHeight, IntersectionPoint* intersectionPoint = nullptr);
 
 // Intersect a ray with a cylinder defined by the points at the planar endcaps
 // and the radius.
-Type RayCylinder(Vec3Param rayStart,
-                 Vec3Param rayDirection,
-                 Vec3Param cylinderPointA,
-                 Vec3Param cylinderPointB,
-                 real cylinderRadius,
-                 IntersectionPoint* intersectionPoint = nullptr);
+Type RayCylinder(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param cylinderPointA, Vec3Param cylinderPointB, real cylinderRadius, IntersectionPoint* intersectionPoint = nullptr);
 
 /// Intersect a ray with an ellipsoid.
-Type RayEllipsoid(Vec3Param rayStart,
-                  Vec3Param rayDirection,
-                  Vec3Param ellipsoidCenter,
-                  Vec3Param ellipsoidRadii,
-                  Mat3Param ellipsoidBasis,
-                  IntersectionPoint* intersectionPoint = nullptr);
+Type RayEllipsoid(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param ellipsoidCenter, Vec3Param ellipsoidRadii, Mat3Param ellipsoidBasis, IntersectionPoint* intersectionPoint = nullptr);
 
 /// Intersect a ray with an arbitrary collection of triangles. Base offset is
 /// the number of bytes from the beginning to the first value, vertex stride is
@@ -766,26 +555,13 @@ Type RayMeshBuffer(Vec3Param rayStart,
                    IntersectionPoint* intersectionPoint = nullptr);
 
 /// Intersect a ray with a plane.
-Type RayPlane(Vec3Param rayStart,
-              Vec3Param rayDirection,
-              Vec3Param planeNormal,
-              real planeDistance,
-              IntersectionPoint* intersectionPoint = nullptr);
+Type RayPlane(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param planeNormal, real planeDistance, IntersectionPoint* intersectionPoint = nullptr);
 
 /// Intersect a ray with an oriented bounding box.
-Type RayObb(Vec3Param rayStart,
-            Vec3Param rayDirection,
-            Vec3Param obbCenter,
-            Vec3Param obbHalfExtents,
-            Mat3Param obbBasis,
-            IntersectionPoint* intersectionPoint = nullptr);
+Type RayObb(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param obbCenter, Vec3Param obbHalfExtents, Mat3Param obbBasis, IntersectionPoint* intersectionPoint = nullptr);
 
 /// Intersect a ray with a sphere.
-Type RaySphere(Vec3Param rayStart,
-               Vec3Param rayDirection,
-               Vec3Param sphereCenter,
-               real sphereRadius,
-               IntersectionPoint* intersectionPoint = nullptr);
+Type RaySphere(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param sphereCenter, real sphereRadius, IntersectionPoint* intersectionPoint = nullptr);
 
 /// Intersect a ray with a tetrahedron.
 Type RayTetrahedron(Vec3Param rayStart,
@@ -798,296 +574,131 @@ Type RayTetrahedron(Vec3Param rayStart,
 
 /// Intersect a ray with a triangle. The epsilon is used to fatten/shrink the
 /// triangle.
-Type RayTriangle(Vec3Param rayStart,
-                 Vec3Param rayDirection,
-                 Vec3Param trianglePointA,
-                 Vec3Param trianglePointB,
-                 Vec3Param trianglePointC,
-                 IntersectionPoint* intersectionPoint = nullptr,
-                 real epsilon = real(0));
+Type RayTriangle(
+    Vec3Param rayStart, Vec3Param rayDirection, Vec3Param trianglePointA, Vec3Param trianglePointB, Vec3Param trianglePointC, IntersectionPoint* intersectionPoint = nullptr, real epsilon = real(0));
 
 /// Intersect a ray with a torus.
-Type RayTorus(Vec3Param rayStart,
-              Vec3Param rayDirection,
-              Vec3Param torusCenter,
-              Mat3Param torusBasis,
-              real torusRingRadius,
-              real torusTubeRadius,
-              IntersectionPoint* intersectionpoint = nullptr);
+Type RayTorus(Vec3Param rayStart, Vec3Param rayDirection, Vec3Param torusCenter, Mat3Param torusBasis, real torusRingRadius, real torusTubeRadius, IntersectionPoint* intersectionpoint = nullptr);
 
 /// Intersect a segment with an axis aligned bounding box.
-Type SegmentAabb(Vec3Param segmentStart,
-                 Vec3Param segmentEnd,
-                 Vec3Param aabbMinPoint,
-                 Vec3Param aabbMaxPoint,
-                 IntersectionPoint* intersectionPoint = nullptr);
+Type SegmentAabb(Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param aabbMinPoint, Vec3Param aabbMaxPoint, IntersectionPoint* intersectionPoint = nullptr);
 
 /// Intersect a segment with a capsule.
-Type SegmentCapsule(Vec3Param segmentStart,
-                    Vec3Param segmentEnd,
-                    Vec3Param capsulePointA,
-                    Vec3Param capsulePointB,
-                    real capsuleRadius,
-                    IntersectionPoint* intersectionPoint = nullptr);
+Type SegmentCapsule(Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param capsulePointA, Vec3Param capsulePointB, real capsuleRadius, IntersectionPoint* intersectionPoint = nullptr);
 
 /// Intersect a segment with a cylinder.
-Type SegmentCylinder(Vec3Param segmentStart,
-                     Vec3Param segmentEnd,
-                     Vec3Param cylinderPointA,
-                     Vec3Param cylinderPointB,
-                     real cylinderRadius,
-                     IntersectionPoint* intersectionPoint = nullptr);
+Type SegmentCylinder(Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param cylinderPointA, Vec3Param cylinderPointB, real cylinderRadius, IntersectionPoint* intersectionPoint = nullptr);
 
 /// Intersect a segment with an ellipsoid.
-Type SegmentEllipsoid(Vec3Param segmentStart,
-                      Vec3Param segmentEnd,
-                      Vec3Param ellipsoidCenter,
-                      Vec3Param ellipsoidRadii,
-                      Mat3Param ellipsoidBasis,
-                      IntersectionPoint* intersectionPoint = nullptr);
+Type SegmentEllipsoid(Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param ellipsoidCenter, Vec3Param ellipsoidRadii, Mat3Param ellipsoidBasis, IntersectionPoint* intersectionPoint = nullptr);
 
 /// Intersect a segment with a plane.
-Type SegmentPlane(Vec3Param segmentStart,
-                  Vec3Param segmentEnd,
-                  Vec3Param planeNormal,
-                  real planeDistance,
-                  IntersectionPoint* intersectionPoint = nullptr);
+Type SegmentPlane(Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param planeNormal, real planeDistance, IntersectionPoint* intersectionPoint = nullptr);
 
 /// Intersect a segment with an oriented bounding box.
-Type SegmentObb(Vec3Param segmentStart,
-                Vec3Param segmentEnd,
-                Vec3Param obbCenter,
-                Vec3Param obbHalfExtents,
-                Mat3Param obbBasis,
-                IntersectionPoint* intersectionPoint = nullptr);
+Type SegmentObb(Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param obbCenter, Vec3Param obbHalfExtents, Mat3Param obbBasis, IntersectionPoint* intersectionPoint = nullptr);
 
 /// Intersect a segment with a sphere.
-Type SegmentSphere(Vec3Param segmentStart,
-                   Vec3Param segmentEnd,
-                   Vec3Param sphereCenter,
-                   real sphereRadius,
-                   IntersectionPoint* intersectionPoint = nullptr);
+Type SegmentSphere(Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param sphereCenter, real sphereRadius, IntersectionPoint* intersectionPoint = nullptr);
 
 /// Intersect a segment with a triangle.
-Type SegmentTriangle(Vec3Param segmentStart,
-                     Vec3Param segmentEnd,
-                     Vec3Param trianglePointA,
-                     Vec3Param trianglePointB,
-                     Vec3Param trianglePointC,
-                     IntersectionPoint* intersectionPoint = nullptr);
+Type SegmentTriangle(Vec3Param segmentStart, Vec3Param segmentEnd, Vec3Param trianglePointA, Vec3Param trianglePointB, Vec3Param trianglePointC, IntersectionPoint* intersectionPoint = nullptr);
 
 /// Intersect an axis aligned bounding box with an axis aligned bounding box.
-Type AabbAabb(Vec3Param aabbOneMinPoint,
-              Vec3Param aabbOneMaxPoint,
-              Vec3Param aabbTwoMinPoint,
-              Vec3Param aabbTwoMaxPoint,
-              Manifold* manifold = nullptr);
+Type AabbAabb(Vec3Param aabbOneMinPoint, Vec3Param aabbOneMaxPoint, Vec3Param aabbTwoMinPoint, Vec3Param aabbTwoMaxPoint, Manifold* manifold = nullptr);
 
 /// Intersect an axis aligned bounding box with a capsule.
-Type AabbCapsule(Vec3Param aabbMinPoint,
-                 Vec3Param aabbMaxPoint,
-                 Vec3Param capsulePointA,
-                 Vec3Param capsulePointB,
-                 real capsuleRadius,
-                 Manifold* manifold = nullptr);
+Type AabbCapsule(Vec3Param aabbMinPoint, Vec3Param aabbMaxPoint, Vec3Param capsulePointA, Vec3Param capsulePointB, real capsuleRadius, Manifold* manifold = nullptr);
 
 /// Intersect an axis aligned bounding box with a frustum. The 6 planes of the
 /// frustum are assumed to be pointing inwards.
 /// This test is an approximation because it only checks the aabb points against
 /// the frustum's planes. This doesn't cover all axes necessary for a SAT test
 /// so it can return false positives.
-Type AabbFrustumApproximation(Vec3Param aabbMinPoint,
-                              Vec3Param aabbMaxPoint,
-                              const Vec4 frustumPlanes[6],
-                              Manifold* manifold = nullptr);
+Type AabbFrustumApproximation(Vec3Param aabbMinPoint, Vec3Param aabbMaxPoint, const Vec4 frustumPlanes[6], Manifold* manifold = nullptr);
 
 /// Intersect an axis aligned bounding box with an oriented bounding box.
-Type AabbObb(Vec3Param aabbMinPoint,
-             Vec3Param aabbMaxPoint,
-             Vec3Param obbCenter,
-             Vec3Param obbHalfExtents,
-             Mat3Param obbBasis,
-             Manifold* manifold = nullptr);
+Type AabbObb(Vec3Param aabbMinPoint, Vec3Param aabbMaxPoint, Vec3Param obbCenter, Vec3Param obbHalfExtents, Mat3Param obbBasis, Manifold* manifold = nullptr);
 
 /// Intersect an axis aligned bounding box with a plane.
-Type AabbPlane(Vec3Param aabbMinPoint,
-               Vec3Param aabbMaxPoint,
-               Vec3Param planeNormal,
-               real planeDistance,
-               Manifold* manifold = nullptr);
+Type AabbPlane(Vec3Param aabbMinPoint, Vec3Param aabbMaxPoint, Vec3Param planeNormal, real planeDistance, Manifold* manifold = nullptr);
 
 /// Intersect an axis aligned bounding box with a sphere.
-Type AabbSphere(Vec3Param aabbMinPoint,
-                Vec3Param aabbMaxPoint,
-                Vec3Param sphereCenter,
-                real sphereRadius,
-                Manifold* manifold = nullptr);
+Type AabbSphere(Vec3Param aabbMinPoint, Vec3Param aabbMaxPoint, Vec3Param sphereCenter, real sphereRadius, Manifold* manifold = nullptr);
 
 /// Intersect an axis aligned bounding box with a triangle.
-Type AabbTriangle(Vec3Param aabbMinPoint,
-                  Vec3Param aabbMaxPoint,
-                  Vec3Param trianglePointA,
-                  Vec3Param trianglePointB,
-                  Vec3Param trianglePointC,
-                  Manifold* manifold = nullptr);
+Type AabbTriangle(Vec3Param aabbMinPoint, Vec3Param aabbMaxPoint, Vec3Param trianglePointA, Vec3Param trianglePointB, Vec3Param trianglePointC, Manifold* manifold = nullptr);
 
 /// Intersect a capsule with a capsule.
-Type CapsuleCapsule(Vec3Param capsuleOnePointA,
-                    Vec3Param capsuleOnePointB,
-                    real capsuleOneRadius,
-                    Vec3Param capsuleTwoPointA,
-                    Vec3Param capsuleTwoPointB,
-                    real capsuleTwoRadius,
-                    Manifold* manifold = nullptr);
+Type CapsuleCapsule(
+    Vec3Param capsuleOnePointA, Vec3Param capsuleOnePointB, real capsuleOneRadius, Vec3Param capsuleTwoPointA, Vec3Param capsuleTwoPointB, real capsuleTwoRadius, Manifold* manifold = nullptr);
 
 /// Intersect a capsule with a frustum. The 6 planes of the frustum are assumed
 /// to be pointing inwards.
-Type CapsuleFrustum(Vec3Param capsulePointA,
-                    Vec3Param capsulePointB,
-                    real capsuleRadius,
-                    const Vec4 frustumPlanes[6],
-                    Manifold* manifold = nullptr);
+Type CapsuleFrustum(Vec3Param capsulePointA, Vec3Param capsulePointB, real capsuleRadius, const Vec4 frustumPlanes[6], Manifold* manifold = nullptr);
 
 /// Intersect a capsule with an oriented bounding box.
-Type CapsuleObb(Vec3Param capsulePointA,
-                Vec3Param capsulePointB,
-                real capsuleRadius,
-                Vec3Param obbCenter,
-                Vec3Param obbHalfExtents,
-                Vec3Param obbBasis,
-                Manifold* manifold = nullptr);
+Type CapsuleObb(Vec3Param capsulePointA, Vec3Param capsulePointB, real capsuleRadius, Vec3Param obbCenter, Vec3Param obbHalfExtents, Vec3Param obbBasis, Manifold* manifold = nullptr);
 
 /// Intersect a capsule with a plane.
-Type CapsulePlane(Vec3Param capsulePointA,
-                  Vec3Param capsulePointB,
-                  real capsuleRadius,
-                  Vec3Param planeNormal,
-                  real planeDistance,
-                  Manifold* manifold = nullptr);
+Type CapsulePlane(Vec3Param capsulePointA, Vec3Param capsulePointB, real capsuleRadius, Vec3Param planeNormal, real planeDistance, Manifold* manifold = nullptr);
 
 /// Intersect a capsule with a sphere.
-Type CapsuleSphere(Vec3Param capsulePointA,
-                   Vec3Param capsulePointB,
-                   real capsuleRadius,
-                   Vec3Param sphereCenter,
-                   real sphereRadius,
-                   Manifold* manifold = nullptr);
+Type CapsuleSphere(Vec3Param capsulePointA, Vec3Param capsulePointB, real capsuleRadius, Vec3Param sphereCenter, real sphereRadius, Manifold* manifold = nullptr);
 
 /// Intersect a capsule with a triangle.
-Type CapsuleTriangle(Vec3Param capsulePointA,
-                     Vec3Param capsulePointB,
-                     real capsuleRadius,
-                     Vec3Param trianglePointA,
-                     Vec3Param trianglePointB,
-                     Vec3Param trianglePointC,
-                     Manifold* manifold = nullptr);
+Type CapsuleTriangle(Vec3Param capsulePointA, Vec3Param capsulePointB, real capsuleRadius, Vec3Param trianglePointA, Vec3Param trianglePointB, Vec3Param trianglePointC, Manifold* manifold = nullptr);
 
 /// Intersect a frustum with a sphere. The 6 planes of the frustum are assumed
 /// to be pointing inwards.
-Type FrustumSphereApproximation(const Vec4 frustumPlanes[6],
-                                Vec3Param sphereCenter,
-                                real sphereRadius,
-                                Manifold* manifold = nullptr);
+Type FrustumSphereApproximation(const Vec4 frustumPlanes[6], Vec3Param sphereCenter, real sphereRadius, Manifold* manifold = nullptr);
 
 /// Intersect a frustum with a triangle. The 6 planes of the frustum are assumed
 /// to be pointing inwards.
-Type FrustumTriangle(const Vec4 frustumPlanes[6],
-                     Vec3Param trianglePointA,
-                     Vec3Param trianglePointB,
-                     Vec3Param trianglePointC,
-                     Manifold* manifold = nullptr);
+Type FrustumTriangle(const Vec4 frustumPlanes[6], Vec3Param trianglePointA, Vec3Param trianglePointB, Vec3Param trianglePointC, Manifold* manifold = nullptr);
 
 /// Intersect a frustum with an oriented bounding box. The 6 planes of the
 /// frustum are assumed to be pointing inwards.
-Type FrustumObbApproximation(const Vec4 frustumPlanes[6],
-                             Vec3Param obbCenter,
-                             Vec3Param obbHalfExtents,
-                             Mat3Param obbBasis,
-                             Manifold* manifold = nullptr);
+Type FrustumObbApproximation(const Vec4 frustumPlanes[6], Vec3Param obbCenter, Vec3Param obbHalfExtents, Mat3Param obbBasis, Manifold* manifold = nullptr);
 
 /// Intersect a frustum with a plane. The 6 planes of the frustum are assumed to
 /// be pointing inwards.
 Type FrustumPlane(const Vec4 frustumPlanes[6], Vec3Param planeNormal, real planeDistance, Manifold* manifold = nullptr);
 
 /// Intersect an oriented bounding box with an oriented bounding box.
-Type ObbObb(Vec3Param obbOneCenter,
-            Vec3Param obbOneHalfExtents,
-            Mat3Param obbOneBasis,
-            Vec3Param obbTwoCenter,
-            Vec3Param obbTwoHalfExtents,
-            Mat3Param obbTwoBasis,
-            Manifold* manifold = nullptr);
+Type ObbObb(Vec3Param obbOneCenter, Vec3Param obbOneHalfExtents, Mat3Param obbOneBasis, Vec3Param obbTwoCenter, Vec3Param obbTwoHalfExtents, Mat3Param obbTwoBasis, Manifold* manifold = nullptr);
 
 /// Intersect an oriented bounding box with a plane.
-Type ObbPlane(Vec3Param obbCenter,
-              Vec3Param obbHalfExtents,
-              Mat3Param obbBasis,
-              Vec3Param planeNormal,
-              real planeDistance,
-              Manifold* manifold = nullptr);
+Type ObbPlane(Vec3Param obbCenter, Vec3Param obbHalfExtents, Mat3Param obbBasis, Vec3Param planeNormal, real planeDistance, Manifold* manifold = nullptr);
 
 /// Intersect an oriented bounding box with a sphere.
-Type ObbSphere(Vec3Param obbCenter,
-               Vec3Param obbHalfExtents,
-               Mat3Param obbBasis,
-               Vec3Param sphereCenter,
-               real sphereRadius,
-               Manifold* manifold = nullptr);
+Type ObbSphere(Vec3Param obbCenter, Vec3Param obbHalfExtents, Mat3Param obbBasis, Vec3Param sphereCenter, real sphereRadius, Manifold* manifold = nullptr);
 
 /// Intersect an oriented bounding box with a triangle.
-Type ObbTriangle(Vec3Param obbCenter,
-                 Vec3Param obbHalfExtents,
-                 Mat3Param obbBasis,
-                 Vec3Param trianglePointA,
-                 Vec3Param trianglePointB,
-                 Vec3Param trianglePointC,
-                 Manifold* manifold = nullptr);
+Type ObbTriangle(Vec3Param obbCenter, Vec3Param obbHalfExtents, Mat3Param obbBasis, Vec3Param trianglePointA, Vec3Param trianglePointB, Vec3Param trianglePointC, Manifold* manifold = nullptr);
 
 /// Intersect an oriented bounding box with a triangle. Different parameters.
-Type ObbTriangle(Vec3Param obbCenter,
-                 Vec3Param obbHalfExtents,
-                 Mat3Param obbBasis,
-                 const Vec3 trianglePoints[3],
-                 Manifold* manifold = nullptr);
+Type ObbTriangle(Vec3Param obbCenter, Vec3Param obbHalfExtents, Mat3Param obbBasis, const Vec3 trianglePoints[3], Manifold* manifold = nullptr);
 
 /// Intersect a plane with a plane. If intersection data is desired, the points
 /// returned are two points on the line of intersection.
-Type PlanePlane(Vec3Param planeOneNormal,
-                real planeOneDistance,
-                Vec3Param planeTwoNormal,
-                real planeTwoDistance,
-                Manifold* manifold = nullptr);
+Type PlanePlane(Vec3Param planeOneNormal, real planeOneDistance, Vec3Param planeTwoNormal, real planeTwoDistance, Manifold* manifold = nullptr);
 
 /// Intersect a plane with a plane with plane. If intersection
 /// data is desired, the point of collision is returned (if there is one).
 Type PlanePlanePlane(Vec4Param planeA, Vec4Param planeB, Vec4Param planeC, Manifold* manifold = nullptr);
 
 /// Intersect a plane with a sphere.
-Type PlaneSphere(
-    Vec3Param planeNormal, real planeDistance, Vec3Param sphereCenter, real sphereRadius, Manifold* manifold = nullptr);
+Type PlaneSphere(Vec3Param planeNormal, real planeDistance, Vec3Param sphereCenter, real sphereRadius, Manifold* manifold = nullptr);
 
 /// Intersect a plane with a triangle.
-Type PlaneTriangle(Vec3Param planeNormal,
-                   real planeDistance,
-                   Vec3Param trianglePointA,
-                   Vec3Param trianglePointB,
-                   Vec3Param trianglePointC,
-                   Manifold* manifold = nullptr);
+Type PlaneTriangle(Vec3Param planeNormal, real planeDistance, Vec3Param trianglePointA, Vec3Param trianglePointB, Vec3Param trianglePointC, Manifold* manifold = nullptr);
 
 /// Intersect a sphere with a sphere.
-Type SphereSphere(Vec3Param sphereOneCenter,
-                  real sphereOneRadius,
-                  Vec3Param sphereTwoCenter,
-                  real sphereTwoRadius,
-                  Manifold* manifold = nullptr);
+Type SphereSphere(Vec3Param sphereOneCenter, real sphereOneRadius, Vec3Param sphereTwoCenter, real sphereTwoRadius, Manifold* manifold = nullptr);
 
 /// Intersect a sphere with a triangle.
-Type SphereTriangle(Vec3Param sphereCenter,
-                    real sphereRadius,
-                    Vec3Param trianglePointA,
-                    Vec3Param trianglePointB,
-                    Vec3Param trianglePointC,
-                    Manifold* manifold = nullptr);
+Type SphereTriangle(Vec3Param sphereCenter, real sphereRadius, Vec3Param trianglePointA, Vec3Param trianglePointB, Vec3Param trianglePointC, Manifold* manifold = nullptr);
 
 /// Intersect a triangle with a triangle. This may be slow, and the manifold
 /// doesn't do anything.
@@ -1106,7 +717,8 @@ struct IntersectionPoint2D
   /// corresponds to the point on the second shape.
   Vec2 Points[2];
 
-  union {
+  union
+  {
     /// Amount of overlap occurring in the direction of the normal.
     real Depth;
 
@@ -1140,58 +752,27 @@ struct Manifold2D
 Type ClosestPointOnSegmentToPoint(Vec2Param segmentPointA, Vec2Param segmentPointB, Vec2Ptr point);
 
 /// Intersect a rotated box with a rotated box.
-Type BoxBox(Vec2Param boxCenterA,
-            Vec2Param boxHalfExtentsA,
-            const Vec2* boxAxesA,
-            Vec2Param boxCenterB,
-            Vec2Param boxHalfExtentsB,
-            const Vec2* boxAxesB,
-            Manifold2D* manifold = nullptr);
+Type BoxBox(Vec2Param boxCenterA, Vec2Param boxHalfExtentsA, const Vec2* boxAxesA, Vec2Param boxCenterB, Vec2Param boxHalfExtentsB, const Vec2* boxAxesB, Manifold2D* manifold = nullptr);
 
 /// Intersect a rotated box with a circle.
-Type BoxCircle(Vec2Param boxCenter,
-               Vec2Param boxHalfExtents,
-               const Vec2* boxAxes,
-               Vec2Param circleCenter,
-               real circleRadius,
-               Manifold2D* manifold = nullptr);
+Type BoxCircle(Vec2Param boxCenter, Vec2Param boxHalfExtents, const Vec2* boxAxes, Vec2Param circleCenter, real circleRadius, Manifold2D* manifold = nullptr);
 
 /// Intersect a circle with a circle.
-Type CircleCircle(Vec2Param circleCenterA,
-                  real circleRadiusA,
-                  Vec2Param circleCenterB,
-                  real circleRadiusB,
-                  Manifold2D* manifold = nullptr);
+Type CircleCircle(Vec2Param circleCenterA, real circleRadiusA, Vec2Param circleCenterB, real circleRadiusB, Manifold2D* manifold = nullptr);
 
 /// Intersect a circle with an n-sided convex polygon.
-Type CircleConvexPolygon(Vec2Param circleCenter,
-                         real circleRadius,
-                         const Vec2* convexPolygonPoints,
-                         uint convexPolygonPointCount,
-                         Manifold2D* manifold = nullptr);
+Type CircleConvexPolygon(Vec2Param circleCenter, real circleRadius, const Vec2* convexPolygonPoints, uint convexPolygonPointCount, Manifold2D* manifold = nullptr);
 
 /// Intersect an n-sided convex polygon with an n-sided convex polygon.
-Type ConvexPolygonConvexPolygon(const Vec2* convexPolygonPointsA,
-                                uint convexPolygonPointCountA,
-                                const Vec2* convexPolygonPointsB,
-                                uint convexPolygonPointCountB,
-                                Manifold2D* manifold = nullptr);
+Type ConvexPolygonConvexPolygon(const Vec2* convexPolygonPointsA, uint convexPolygonPointCountA, const Vec2* convexPolygonPointsB, uint convexPolygonPointCountB, Manifold2D* manifold = nullptr);
 
 /// Test if a point lies on a line segment.
 Type PointSegment(Vec2Param point, Vec2Param segmentStart, Vec2Param segmentEnd);
 
 /// Intersect a ray with an axis aligned bounding box (2D).
-Type RayAabb(Vec2Param rayStart,
-             Vec2Param rayDirection,
-             Vec2Param aabbMinPoint,
-             Vec2Param aabbMaxPoint,
-             Interval* interval = nullptr);
+Type RayAabb(Vec2Param rayStart, Vec2Param rayDirection, Vec2Param aabbMinPoint, Vec2Param aabbMaxPoint, Interval* interval = nullptr);
 
 /// Intersect two 2D segments.
-Type SegmentSegment(Vec2Param segmentStartA,
-                    Vec2Param segmentEndA,
-                    Vec2Param segmentStartB,
-                    Vec2Param segmentEndB,
-                    IntersectionPoint2D* intersectionPoint = nullptr);
+Type SegmentSegment(Vec2Param segmentStartA, Vec2Param segmentEndA, Vec2Param segmentStartB, Vec2Param segmentEndB, IntersectionPoint2D* intersectionPoint = nullptr);
 
 } // namespace Intersection

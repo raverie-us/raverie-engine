@@ -279,8 +279,7 @@ void CollisionTable::UnRegisterGroup(CollisionGroup* group)
   RemoveGroupInstancesAndFilters(group->mResourceId);
 }
 
-CollisionGroupInstance* CollisionTable::GetGroupInstance(ResourceId groupId,
-                                                         RegisteredGroupInstanceAccessMode::Enum accessMode)
+CollisionGroupInstance* CollisionTable::GetGroupInstance(ResourceId groupId, RegisteredGroupInstanceAccessMode::Enum accessMode)
 {
   RegisteredGroups::range range = mRegisteredGroups.Find(groupId);
   // If we find the item then return it

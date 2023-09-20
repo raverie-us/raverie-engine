@@ -19,9 +19,7 @@ void FragmentSearchProvider::Search(SearchData& search)
   Search(search, shaderLibrary, visitedLibraries);
 }
 
-void FragmentSearchProvider::Search(SearchData& search,
-                                    RaverieShaderIRLibrary* shaderLibrary,
-                                    HashSet<RaverieShaderIRLibrary*>& visitedLibraries)
+void FragmentSearchProvider::Search(SearchData& search, RaverieShaderIRLibrary* shaderLibrary, HashSet<RaverieShaderIRLibrary*>& visitedLibraries)
 {
   forRange (RaverieShaderIRType* shaderType, shaderLibrary->mTypes.Values())
   {
@@ -83,11 +81,7 @@ String ShaderTranslationEntry::ToString(bool shortFormat) const
 }
 
 ShaderTranslationDebugHelper::ShaderTranslationDebugHelper(Composite* parent) :
-    Composite(parent),
-    mShaderGenerator(nullptr),
-    mShaderProject("ShaderProject"),
-    mLanguagesDataSource(&mLanguages),
-    mTranslationEntriesDataSource(&mTranslationEntries)
+    Composite(parent), mShaderGenerator(nullptr), mShaderProject("ShaderProject"), mLanguagesDataSource(&mLanguages), mTranslationEntriesDataSource(&mTranslationEntries)
 {
   SetName("Shader Translation Debug Helper");
 
@@ -428,16 +422,13 @@ void ShaderTranslationDebugHelper::OnRunTranslation(Event* e)
 
     String stageName = FragmentType::Names[i];
     // Generate the raverie entry.
-    raverieResultEntries.PushBack(
-        ShaderTranslationEntry(Lexer::Raverie, BuildString("Raverie", stageName), stageDesc.mShaderCode));
+    raverieResultEntries.PushBack(ShaderTranslationEntry(Lexer::Raverie, BuildString("Raverie", stageName), stageDesc.mShaderCode));
     // Generate the translated shader entry.
     TranslationPassResultRef passResult = pipelineResults.Back();
-    shaderResultEntries.PushBack(
-        ShaderTranslationEntry(Lexer::Shader, BuildString("Shader", stageName), passResult->ToString()));
+    shaderResultEntries.PushBack(ShaderTranslationEntry(Lexer::Shader, BuildString("Shader", stageName), passResult->ToString()));
     // Generate the spir-v disassembler entry
     TranslationPassResultRef disassemblyPassResult = debugPipelineResults[0];
-    disassemblyResultEntries.PushBack(
-        ShaderTranslationEntry(Lexer::SpirV, BuildString("SpirV", stageName), disassemblyPassResult->ToString()));
+    disassemblyResultEntries.PushBack(ShaderTranslationEntry(Lexer::SpirV, BuildString("SpirV", stageName), disassemblyPassResult->ToString()));
   }
 
   // Re-order the entries so it's all raverie, then all shader, then all
@@ -465,8 +456,7 @@ void ShaderTranslationDebugHelper::OnScriptDisplayChanged(Event* e)
   mScriptEditor->SetScrolledPercentage(scrollPercentage);
 }
 
-RaverieShaderIRLibraryRef ShaderTranslationDebugHelper::BuildShaderLibrary(
-    RaverieShaderGenerator& generator, RaverieShaderIRCompositor::ShaderDefinition& shaderDef)
+RaverieShaderIRLibraryRef ShaderTranslationDebugHelper::BuildShaderLibrary(RaverieShaderGenerator& generator, RaverieShaderIRCompositor::ShaderDefinition& shaderDef)
 {
   mShaderProject.Clear();
 
@@ -512,8 +502,7 @@ RaverieShaderIRLibraryRef ShaderTranslationDebugHelper::BuildShaderLibrary(
   // Compile the shader project to get a library
   RaverieShaderIRModuleRef shaderDependencies = new RaverieShaderIRModule();
   shaderDependencies->PushBack(fragmentLibrary);
-  RaverieShaderIRLibraryRef shaderLibrary =
-      mShaderProject.CompileAndTranslate(shaderDependencies, generator.mFrontEndTranslator);
+  RaverieShaderIRLibraryRef shaderLibrary = mShaderProject.CompileAndTranslate(shaderDependencies, generator.mFrontEndTranslator);
   return shaderLibrary;
 }
 

@@ -38,10 +38,7 @@ public:
   typedef HashMap<String, AttributeExtension*> ExtensionMap;
 
   /// Validates all attributes on the given object.
-  void ProcessObject(AttributeStatus& status,
-                     ReflectionObject* object,
-                     ExtensionMap& extensionMap,
-                     bool ignoreUnkownAttributes);
+  void ProcessObject(AttributeStatus& status, ReflectionObject* object, ExtensionMap& extensionMap, bool ignoreUnkownAttributes);
 
   AttributeExtension* RegisterClassExtension(AttributeExtension* extension);
   AttributeExtension* RegisterPropertyExtension(AttributeExtension* extension);
@@ -109,18 +106,12 @@ public:
   }
 };
 
-#define RegisterClassAttribute(name)                                                                                   \
-  AttributeExtensions::GetInstance()->RegisterClassExtension(new AttributeExtension(name))
-#define RegisterClassAttributeType(name, type)                                                                         \
-  AttributeExtensions::GetInstance()->RegisterClassExtension(new AttributeExtensionType<type>(name))
-#define RegisterPropertyAttribute(name)                                                                                \
-  AttributeExtensions::GetInstance()->RegisterPropertyExtension(new AttributeExtension(name))
-#define RegisterPropertyAttributeType(name, type)                                                                      \
-  AttributeExtensions::GetInstance()->RegisterPropertyExtension(new AttributeExtensionType<type>(name))
-#define RegisterFunctionAttribute(name)                                                                                \
-  AttributeExtensions::GetInstance()->RegisterFunctionExtension(new AttributeExtension(name))
-#define RegisterFunctionAttributeType(name, type)                                                                      \
-  AttributeExtensions::GetInstance()->RegisterFunctionExtension(new AttributeExtensionType<type>(name))
+#define RegisterClassAttribute(name) AttributeExtensions::GetInstance()->RegisterClassExtension(new AttributeExtension(name))
+#define RegisterClassAttributeType(name, type) AttributeExtensions::GetInstance()->RegisterClassExtension(new AttributeExtensionType<type>(name))
+#define RegisterPropertyAttribute(name) AttributeExtensions::GetInstance()->RegisterPropertyExtension(new AttributeExtension(name))
+#define RegisterPropertyAttributeType(name, type) AttributeExtensions::GetInstance()->RegisterPropertyExtension(new AttributeExtensionType<type>(name))
+#define RegisterFunctionAttribute(name) AttributeExtensions::GetInstance()->RegisterFunctionExtension(new AttributeExtension(name))
+#define RegisterFunctionAttributeType(name, type) AttributeExtensions::GetInstance()->RegisterFunctionExtension(new AttributeExtensionType<type>(name))
 #define TypeMustBe(type) MustBeType(RaverieTypeId(type))
 
 } // namespace Raverie

@@ -59,8 +59,7 @@ bool EulerOrder::OddParity(void) const
   return ((uint(Order) >> 2) & 1) == EulerOrders::Odd;
 }
 
-void EulerOrder::GetOrder(
-    EulerOrder order, uint& i, uint& j, uint& k, uint& h, uint& parity, uint& repeated, uint& frame)
+void EulerOrder::GetOrder(EulerOrder order, uint& i, uint& j, uint& k, uint& h, uint& parity, uint& repeated, uint& frame)
 {
   uint orderValue = uint(order.Order);
 

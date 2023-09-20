@@ -121,10 +121,7 @@ SupportShape::SupportShape()
   mDeltaRotation = Quat::cIdentity;
 }
 
-SupportShape::SupportShape(Vec3Param center, SupportFunction support, void* data) :
-    mCenter(center),
-    mSupportFunction(support),
-    mData(data)
+SupportShape::SupportShape(Vec3Param center, SupportFunction support, void* data) : mCenter(center), mSupportFunction(support), mData(data)
 {
   mDeltaPosition = Vec3::cZero;
   mDeltaRotation = Quat::cIdentity;
@@ -236,18 +233,12 @@ Type ObbFaceNormalFromPoint(Vec3Param obbCenter, Vec3Param obbHalfExtents, Mat3P
 }
 
 // Intersect an axis aligned bounding box with an axis aligned bounding box.
-Type AabbAabb(Vec3Param aabbOneMinPoint,
-              Vec3Param aabbOneMaxPoint,
-              Vec3Param aabbTwoMinPoint,
-              Vec3Param aabbTwoMaxPoint,
-              Manifold* manifold)
+Type AabbAabb(Vec3Param aabbOneMinPoint, Vec3Param aabbOneMaxPoint, Vec3Param aabbTwoMinPoint, Vec3Param aabbTwoMaxPoint, Manifold* manifold)
 {
-  ErrorIf((aabbOneMinPoint.x > aabbOneMaxPoint.x) || (aabbOneMinPoint.y > aabbOneMaxPoint.y) ||
-              (aabbOneMinPoint.z > aabbOneMaxPoint.z),
+  ErrorIf((aabbOneMinPoint.x > aabbOneMaxPoint.x) || (aabbOneMinPoint.y > aabbOneMaxPoint.y) || (aabbOneMinPoint.z > aabbOneMaxPoint.z),
           "Intersection - Axis-aligned bounding box's minimum point is greater"
           " than it's maximum point.");
-  ErrorIf((aabbTwoMinPoint.x > aabbTwoMaxPoint.x) || (aabbTwoMinPoint.y > aabbTwoMaxPoint.y) ||
-              (aabbTwoMinPoint.z > aabbTwoMaxPoint.z),
+  ErrorIf((aabbTwoMinPoint.x > aabbTwoMaxPoint.x) || (aabbTwoMinPoint.y > aabbTwoMaxPoint.y) || (aabbTwoMinPoint.z > aabbTwoMaxPoint.z),
           "Intersection - Axis-aligned bounding box's minimum point is greater"
           " than it's maximum point.");
 
@@ -333,12 +324,7 @@ Type AabbAabb(Vec3Param aabbOneMinPoint,
 }
 
 // Intersect an axis aligned bounding box with a capsule.
-Type AabbCapsule(Vec3Param aabbMinPoint,
-                 Vec3Param aabbMaxPoint,
-                 Vec3Param capsulePointA,
-                 Vec3Param capsulePointB,
-                 real capsuleRadius,
-                 Manifold* manifold)
+Type AabbCapsule(Vec3Param aabbMinPoint, Vec3Param aabbMaxPoint, Vec3Param capsulePointA, Vec3Param capsulePointB, real capsuleRadius, Manifold* manifold)
 {
   Error("Intersection - This function hasn't been implemented yet, you "
         "probably shouldn't be calling this function.");
@@ -353,12 +339,7 @@ Type AabbCapsule(Vec3Param aabbMinPoint,
 }
 
 // Intersect an axis aligned bounding box with an oriented bounding box.
-Type AabbObb(Vec3Param aabbMinPoint,
-             Vec3Param aabbMaxPoint,
-             Vec3Param obbCenter,
-             Vec3Param obbHalfExtents,
-             Mat3Param obbBasis,
-             Manifold* manifold)
+Type AabbObb(Vec3Param aabbMinPoint, Vec3Param aabbMaxPoint, Vec3Param obbCenter, Vec3Param obbHalfExtents, Mat3Param obbBasis, Manifold* manifold)
 {
   ErrorIf((aabbMinPoint.x > aabbMaxPoint.x) || (aabbMinPoint.y > aabbMaxPoint.y) || (aabbMinPoint.z > aabbMaxPoint.z),
           "Intersection - Axis-aligned bounding box's minimum point is greater"
@@ -374,8 +355,7 @@ Type AabbObb(Vec3Param aabbMinPoint,
 }
 
 // Intersect an axis aligned bounding box with a plane.
-Type AabbPlane(
-    Vec3Param aabbMinPoint, Vec3Param aabbMaxPoint, Vec3Param planeNormal, real planeDistance, Manifold* manifold)
+Type AabbPlane(Vec3Param aabbMinPoint, Vec3Param aabbMaxPoint, Vec3Param planeNormal, real planeDistance, Manifold* manifold)
 {
   ErrorIf((aabbMinPoint.x > aabbMaxPoint.x) || (aabbMinPoint.y > aabbMaxPoint.y) || (aabbMinPoint.z > aabbMaxPoint.z),
           "Intersection - Axis-aligned bounding box's minimum point is greater"
@@ -388,8 +368,7 @@ Type AabbPlane(
   if (manifold == nullptr)
   {
     // Compute the projection interval radius of box onto L(t) = b.c + t * p.n
-    real radius = halfExtents.x * Math::Abs(planeNormal.x) + halfExtents.y * Math::Abs(planeNormal.y) +
-                  halfExtents.z * Math::Abs(planeNormal.z);
+    real radius = halfExtents.x * Math::Abs(planeNormal.x) + halfExtents.y * Math::Abs(planeNormal.y) + halfExtents.z * Math::Abs(planeNormal.z);
 
     // Compute the signed distance of the box's center from the plane
     real signedDistance = Geometry::SignedDistanceToPlane(center, planeNormal, planeDistance);
@@ -411,8 +390,7 @@ Type AabbPlane(
 }
 
 // Intersect an axis aligned bounding box with a sphere.
-Type AabbSphere(
-    Vec3Param aabbMinPoint, Vec3Param aabbMaxPoint, Vec3Param sphereCenter, real sphereRadius, Manifold* manifold)
+Type AabbSphere(Vec3Param aabbMinPoint, Vec3Param aabbMaxPoint, Vec3Param sphereCenter, real sphereRadius, Manifold* manifold)
 {
   ErrorIf((aabbMinPoint.x > aabbMaxPoint.x) || (aabbMinPoint.y > aabbMaxPoint.y) || (aabbMinPoint.z > aabbMaxPoint.z),
           "Intersection - Axis-aligned bounding box's minimum point is greater"
@@ -506,12 +484,7 @@ Type AabbSphere(
 }
 
 // Intersect an axis aligned bounding box with a triangle.
-Type AabbTriangle(Vec3Param aabbMinPoint,
-                  Vec3Param aabbMaxPoint,
-                  Vec3Param trianglePointA,
-                  Vec3Param trianglePointB,
-                  Vec3Param trianglePointC,
-                  Manifold* manifold)
+Type AabbTriangle(Vec3Param aabbMinPoint, Vec3Param aabbMaxPoint, Vec3Param trianglePointA, Vec3Param trianglePointB, Vec3Param trianglePointC, Manifold* manifold)
 {
   ErrorIf((aabbMinPoint.x > aabbMaxPoint.x) || (aabbMinPoint.y > aabbMaxPoint.y) || (aabbMinPoint.z > aabbMaxPoint.z),
           "Intersection - Axis-aligned bounding box's minimum point is greater"
@@ -519,24 +492,16 @@ Type AabbTriangle(Vec3Param aabbMinPoint,
 
   Vec3 aabbHalfExtents = (aabbMaxPoint - aabbMinPoint) * real(0.5);
   Vec3 aabbCenter = aabbMinPoint + aabbHalfExtents;
-  Type result = ObbTriangle(
-      aabbCenter, aabbHalfExtents, Mat3::cIdentity, trianglePointA, trianglePointB, trianglePointC, manifold);
+  Type result = ObbTriangle(aabbCenter, aabbHalfExtents, Mat3::cIdentity, trianglePointA, trianglePointB, trianglePointC, manifold);
   return result;
 }
 
 // Intersect a capsule with a capsule.
-Type CapsuleCapsule(Vec3Param capsuleOnePointA,
-                    Vec3Param capsuleOnePointB,
-                    real capsuleOneRadius,
-                    Vec3Param capsuleTwoPointA,
-                    Vec3Param capsuleTwoPointB,
-                    real capsuleTwoRadius,
-                    Manifold* manifold)
+Type CapsuleCapsule(Vec3Param capsuleOnePointA, Vec3Param capsuleOnePointB, real capsuleOneRadius, Vec3Param capsuleTwoPointA, Vec3Param capsuleTwoPointB, real capsuleTwoRadius, Manifold* manifold)
 {
   Vec3 capsuleOnePoint;
   Vec3 capsuleTwoPoint;
-  ClosestPointsOfTwoSegments(
-      capsuleOnePointA, capsuleOnePointB, capsuleTwoPointA, capsuleTwoPointB, &capsuleOnePoint, &capsuleTwoPoint);
+  ClosestPointsOfTwoSegments(capsuleOnePointA, capsuleOnePointB, capsuleTwoPointA, capsuleTwoPointB, &capsuleOnePoint, &capsuleTwoPoint);
   Vec3 oneToTwo = capsuleTwoPoint - capsuleOnePoint;
   real radiiSum = capsuleOneRadius + capsuleTwoRadius;
 
@@ -584,11 +549,7 @@ Type CapsuleCapsule(Vec3Param capsuleOnePointA,
 
 // Intersect a capsule with a frustum. The 6 planes of the frustum are assumed
 // to be pointing inwards.
-Type CapsuleFrustum(Vec3Param capsulePointA,
-                    Vec3Param capsulePointB,
-                    real capsuleRadius,
-                    const Vec4 frustumPlanes[6],
-                    Manifold* manifold)
+Type CapsuleFrustum(Vec3Param capsulePointA, Vec3Param capsulePointB, real capsuleRadius, const Vec4 frustumPlanes[6], Manifold* manifold)
 {
   Error("Intersection - This function hasn't been implemented yet, you "
         "probably shouldn't be calling this function.");
@@ -600,13 +561,7 @@ Type CapsuleFrustum(Vec3Param capsulePointA,
 }
 
 // Intersect a capsule with an oriented bounding box.
-Type CapsuleObb(Vec3Param capsulePointA,
-                Vec3Param capsulePointB,
-                real capsuleRadius,
-                Vec3Param obbCenter,
-                Vec3Param obbHalfExtents,
-                Vec3Param obbBasis,
-                Manifold* manifold)
+Type CapsuleObb(Vec3Param capsulePointA, Vec3Param capsulePointB, real capsuleRadius, Vec3Param obbCenter, Vec3Param obbHalfExtents, Vec3Param obbBasis, Manifold* manifold)
 {
   Error("Intersection - This function hasn't been implemented yet, you "
         "probably shouldn't be calling this function.");
@@ -618,12 +573,7 @@ Type CapsuleObb(Vec3Param capsulePointA,
 }
 
 /// Intersect a capsule with a plane.
-Type CapsulePlane(Vec3Param capsulePointA,
-                  Vec3Param capsulePointB,
-                  real capsuleRadius,
-                  Vec3Param planeNormal,
-                  real planeDistance,
-                  Manifold* manifold)
+Type CapsulePlane(Vec3Param capsulePointA, Vec3Param capsulePointB, real capsuleRadius, Vec3Param planeNormal, real planeDistance, Manifold* manifold)
 {
   Error("Intersection - This function hasn't been implemented yet, you "
         "probably shouldn't be calling this function.");
@@ -635,12 +585,7 @@ Type CapsulePlane(Vec3Param capsulePointA,
 }
 
 // Intersect a capsule with a sphere.
-Type CapsuleSphere(Vec3Param capsulePointA,
-                   Vec3Param capsulePointB,
-                   real capsuleRadius,
-                   Vec3Param sphereCenter,
-                   real sphereRadius,
-                   Manifold* manifold)
+Type CapsuleSphere(Vec3Param capsulePointA, Vec3Param capsulePointB, real capsuleRadius, Vec3Param sphereCenter, real sphereRadius, Manifold* manifold)
 {
   Vec3 closestPoint = sphereCenter;
   Type result = ClosestPointOnCapsuleToPoint(capsulePointA, capsulePointB, capsuleRadius, &closestPoint);
@@ -714,13 +659,7 @@ Type CapsuleSphere(Vec3Param capsulePointA,
 }
 
 // Intersect a capsule with a triangle.
-Type CapsuleTriangle(Vec3Param capsulePointA,
-                     Vec3Param capsulePointB,
-                     real capsuleRadius,
-                     Vec3Param trianglePointA,
-                     Vec3Param trianglePointB,
-                     Vec3Param trianglePointC,
-                     Manifold* manifold)
+Type CapsuleTriangle(Vec3Param capsulePointA, Vec3Param capsulePointB, real capsuleRadius, Vec3Param trianglePointA, Vec3Param trianglePointB, Vec3Param trianglePointC, Manifold* manifold)
 {
   Error("Intersection - This function hasn't been implemented yet, you "
         "probably shouldn't be calling this function.");
@@ -733,11 +672,7 @@ Type CapsuleTriangle(Vec3Param capsulePointA,
 
 // Intersect a plane with a plane. Points returned, if intersection data is
 // desired, are two points on the line of intersection.
-Type PlanePlane(Vec3Param planeOneNormal,
-                real planeOneDistance,
-                Vec3Param planeTwoNormal,
-                real planeTwoDistance,
-                Manifold* manifold)
+Type PlanePlane(Vec3Param planeOneNormal, real planeOneDistance, Vec3Param planeTwoNormal, real planeTwoDistance, Manifold* manifold)
 {
   Vec3 direction = Cross(planeOneNormal, planeTwoNormal);
 
@@ -775,9 +710,7 @@ Type PlanePlane(Vec3Param planeOneNormal,
 // the point of collision is returned (if there is one).
 Type PlanePlanePlane(Vec4Param planeA, Vec4Param planeB, Vec4Param planeC, Manifold* manifold)
 {
-  const Vec3* planeNormals[3] = {reinterpret_cast<const Vec3*>(&(planeA.x)),
-                                 reinterpret_cast<const Vec3*>(&(planeB.x)),
-                                 reinterpret_cast<const Vec3*>(&(planeC.x))};
+  const Vec3* planeNormals[3] = {reinterpret_cast<const Vec3*>(&(planeA.x)), reinterpret_cast<const Vec3*>(&(planeB.x)), reinterpret_cast<const Vec3*>(&(planeC.x))};
   Vec3 u = Cross(*(planeNormals[1]), *(planeNormals[2]));
   real denom = Dot(*(planeNormals[0]), u);
 
@@ -797,8 +730,7 @@ Type PlanePlanePlane(Vec4Param planeA, Vec4Param planeB, Vec4Param planeC, Manif
 }
 
 // Intersect a plane with a sphere.
-Type PlaneSphere(
-    Vec3Param planeNormal, real planeDistance, Vec3Param sphereCenter, real sphereRadius, Manifold* manifold)
+Type PlaneSphere(Vec3Param planeNormal, real planeDistance, Vec3Param sphereCenter, real sphereRadius, Manifold* manifold)
 {
   // Get the closest point on the plane to the sphere's center.
   Vec3 closestPoint = sphereCenter;
@@ -845,12 +777,7 @@ Type PlaneSphere(
 }
 
 // Intersect a plane with a triangle.
-Type PlaneTriangle(Vec3Param planeNormal,
-                   real planeDistance,
-                   Vec3Param trianglePointA,
-                   Vec3Param trianglePointB,
-                   Vec3Param trianglePointC,
-                   Manifold* manifold)
+Type PlaneTriangle(Vec3Param planeNormal, real planeDistance, Vec3Param trianglePointA, Vec3Param trianglePointB, Vec3Param trianglePointC, Manifold* manifold)
 {
   Error("Intersection - This function hasn't been implemented yet, you "
         "probably shouldn't be calling this function.");
@@ -862,11 +789,7 @@ Type PlaneTriangle(Vec3Param planeNormal,
 }
 
 // Intersect a sphere with a sphere.
-Type SphereSphere(Vec3Param sphereOneCenter,
-                  real sphereOneRadius,
-                  Vec3Param sphereTwoCenter,
-                  real sphereTwoRadius,
-                  Manifold* manifold)
+Type SphereSphere(Vec3Param sphereOneCenter, real sphereOneRadius, Vec3Param sphereTwoCenter, real sphereTwoRadius, Manifold* manifold)
 {
   Vec3 oneToTwo = sphereTwoCenter - sphereOneCenter;
 
@@ -913,12 +836,7 @@ Type SphereSphere(Vec3Param sphereOneCenter,
 }
 
 // Intersect a sphere with a triangle.
-Type SphereTriangle(Vec3Param sphereCenter,
-                    real sphereRadius,
-                    Vec3Param trianglePointA,
-                    Vec3Param trianglePointB,
-                    Vec3Param trianglePointC,
-                    Manifold* manifold)
+Type SphereTriangle(Vec3Param sphereCenter, real sphereRadius, Vec3Param trianglePointA, Vec3Param trianglePointB, Vec3Param trianglePointC, Manifold* manifold)
 {
   Vec3 closestPoint = sphereCenter;
   ClosestPointOnTriangleToPoint(trianglePointA, trianglePointB, trianglePointC, &closestPoint);
@@ -971,13 +889,7 @@ Type SphereTriangle(Vec3Param sphereCenter,
 
 // Intersect a triangle with a triangle. This may be slow, and the manifold
 // doesn't do anything.
-Type TriangleTriangle(Vec3Param triOnePointA,
-                      Vec3Param triOnePointB,
-                      Vec3Param triOnePointC,
-                      Vec3Param triTwoPointA,
-                      Vec3Param triTwoPointB,
-                      Vec3Param triTwoPointC,
-                      Manifold* manifold)
+Type TriangleTriangle(Vec3Param triOnePointA, Vec3Param triOnePointB, Vec3Param triOnePointC, Vec3Param triTwoPointA, Vec3Param triTwoPointB, Vec3Param triTwoPointC, Manifold* manifold)
 {
   // Compute the plane equation of triangle A.
   Vec3 planeNormalOne = Geometry::GenerateNormal(triOnePointA, triOnePointB, triOnePointC);
@@ -985,11 +897,9 @@ Type TriangleTriangle(Vec3Param triOnePointA,
 
   // Exit with no intersection if the vertices of triangle B are on the same
   // side of this plane. Save these results for later usage.
-  Type pointSideOne[3] = {PointPlane(triTwoPointA, planeNormalOne, planeDistanceOne),
-                          PointPlane(triTwoPointB, planeNormalOne, planeDistanceOne),
-                          PointPlane(triTwoPointC, planeNormalOne, planeDistanceOne)};
-  if ((pointSideOne[0] == pointSideOne[1]) && (pointSideOne[0] == pointSideOne[2]) &&
-      (pointSideOne[1] == pointSideOne[2]))
+  Type pointSideOne[3] = {
+      PointPlane(triTwoPointA, planeNormalOne, planeDistanceOne), PointPlane(triTwoPointB, planeNormalOne, planeDistanceOne), PointPlane(triTwoPointC, planeNormalOne, planeDistanceOne)};
+  if ((pointSideOne[0] == pointSideOne[1]) && (pointSideOne[0] == pointSideOne[2]) && (pointSideOne[1] == pointSideOne[2]))
   {
     return None;
   }
@@ -1000,11 +910,9 @@ Type TriangleTriangle(Vec3Param triOnePointA,
 
   // Exit with no intersection if the vertices of triangle A are on the same
   // side of this plane. Save these results for later usage.
-  Type pointSideTwo[3] = {PointPlane(triOnePointA, planeNormalTwo, planeDistanceTwo),
-                          PointPlane(triOnePointB, planeNormalTwo, planeDistanceTwo),
-                          PointPlane(triOnePointC, planeNormalTwo, planeDistanceTwo)};
-  if ((pointSideTwo[0] == pointSideTwo[1]) && (pointSideTwo[0] == pointSideTwo[2]) &&
-      (pointSideTwo[1] == pointSideTwo[2]))
+  Type pointSideTwo[3] = {
+      PointPlane(triOnePointA, planeNormalTwo, planeDistanceTwo), PointPlane(triOnePointB, planeNormalTwo, planeDistanceTwo), PointPlane(triOnePointC, planeNormalTwo, planeDistanceTwo)};
+  if ((pointSideTwo[0] == pointSideTwo[1]) && (pointSideTwo[0] == pointSideTwo[2]) && (pointSideTwo[1] == pointSideTwo[2]))
   {
     return None;
   }

@@ -4,8 +4,7 @@
 namespace Math
 {
 
-const Matrix3 Matrix3::cIdentity(
-    real(1.0), real(0.0), real(0.0), real(0.0), real(1.0), real(0.0), real(0.0), real(0.0), real(1.0));
+const Matrix3 Matrix3::cIdentity(real(1.0), real(0.0), real(0.0), real(0.0), real(1.0), real(0.0), real(0.0), real(0.0), real(1.0));
 
 Matrix3::Matrix3(real p00, real p01, real p02, real p10, real p11, real p12, real p20, real p21, real p22)
 {

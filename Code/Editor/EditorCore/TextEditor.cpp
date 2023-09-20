@@ -31,11 +31,7 @@ public:
   ~ScintillaWidget();
   ScintillaEngine* mScintilla;
   Scintilla::SurfaceImpl mSurface;
-  void RenderUpdate(ViewBlock& viewBlock,
-                    FrameBlock& frameBlock,
-                    Mat4Param parentTx,
-                    ColorTransform colorTx,
-                    WidgetRect clipRect) override;
+  void RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect) override;
 };
 
 // To prevent interference the set of indicators is divided up into
@@ -90,8 +86,7 @@ public:
   void ClaimSelection() override;
   void CopyToClipboard(const Scintilla::SelectionText& selectedText) override;
 
-  void
-  InsertPasteText(const char* text, int len, Scintilla::SelectionPosition selStart, bool isRectangular, bool isLine);
+  void InsertPasteText(const char* text, int len, Scintilla::SelectionPosition selStart, bool isRectangular, bool isLine);
   uint SendEditor(unsigned int Msg, unsigned long wParam = 0, long lParam = 0);
   void InsertAutoCompleteText(const char* text, int length, int removeCount, int charOffset);
 
@@ -138,8 +133,7 @@ ScintillaWidget::~ScintillaWidget()
   SafeDelete(mScintilla);
 }
 
-void ScintillaWidget::RenderUpdate(
-    ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
+void ScintillaWidget::RenderUpdate(ViewBlock& viewBlock, FrameBlock& frameBlock, Mat4Param parentTx, ColorTransform colorTx, WidgetRect clipRect)
 {
   Widget::RenderUpdate(viewBlock, frameBlock, parentTx, colorTx, clipRect);
 
@@ -463,8 +457,7 @@ void TextEditor::SetLexer(uint lexer)
 
   case Lexer::Shader:
   {
-    const char cppKeywords[] =
-        "break continue if else switch return for while do typedef namespace true false compile BlendState const void \
+    const char cppKeywords[] = "break continue if else switch return for while do typedef namespace true false compile BlendState const void \
       struct static extern register volatile inline target nointerpolation shared uniform varying attribute row_major column_major snorm \
       unorm bool bool1 bool2 bool3 bool4 int int1 int2 int3 int4 uint uint1 uint2 uint3 uint4 half half1 half2 half3 \
       half4 float float1 float2 float3 float4 double double1 double2 double3 double4 matrix bool1x1 bool1x2 bool1x3 \
@@ -532,22 +525,22 @@ void TextEditor::SetLexer(uint lexer)
   case Lexer::Raverie:
   {
     const char raverieKeywords[] = "abstract alias alignof as assert Assign auto base break case catch "
-                                 "checked "
-                                 "class compare const constructor continue copy decrement default "
-                                 "delegate delete "
-                                 "destructor do dynamic else enum explicit export extern false finally "
-                                 "fixed "
-                                 "flags for foreach friend function get global goto if immutable "
-                                 "implicit import in include "
-                                 "increment inline interface internal is local lock loop module mutable "
-                                 "namespace new "
-                                 "null operator out override package params partial positional private "
-                                 "protected public "
-                                 "readonly ref register require return sealed sends set signed sizeof "
-                                 "stackalloc static "
-                                 "struct switch throw true try typedef typeid typename typeof type "
-                                 "unchecked unsafe unsigned "
-                                 "using var virtual volatile where while yield timeout scope debug";
+                                   "checked "
+                                   "class compare const constructor continue copy decrement default "
+                                   "delegate delete "
+                                   "destructor do dynamic else enum explicit export extern false finally "
+                                   "fixed "
+                                   "flags for foreach friend function get global goto if immutable "
+                                   "implicit import in include "
+                                   "increment inline interface internal is local lock loop module mutable "
+                                   "namespace new "
+                                   "null operator out override package params partial positional private "
+                                   "protected public "
+                                   "readonly ref register require return sealed sends set signed sizeof "
+                                   "stackalloc static "
+                                   "struct switch throw true try typedef typeid typename typeof type "
+                                   "unchecked unsafe unsigned "
+                                   "using var virtual volatile where while yield timeout scope debug";
 
     const char raverieSpecial[] = "this value event";
 
@@ -1282,8 +1275,7 @@ void TextEditor::OnPaste(ClipboardEvent* event)
   // check for newlines for multiselect positions within the text to paste
   while (!clipboardRange.Empty())
   {
-    StringRange newLineGroup =
-        clipboardRange.SubString(clipboardRange.Begin(), clipboardRange.Begin() + newLineRuneCount);
+    StringRange newLineGroup = clipboardRange.SubString(clipboardRange.Begin(), clipboardRange.Begin() + newLineRuneCount);
     if (newLineGroup == newLine)
     {
       ++newLineCount;
@@ -1308,8 +1300,7 @@ void TextEditor::OnPaste(ClipboardEvent* event)
       selection.ClearVirtualSpace();
 
       StringIterator start = linePositions[i];
-      StringIterator end =
-          (i + 1 < linePositions.Size()) ? (linePositions[i + 1] - newLineRuneCount) : clipboardText.End();
+      StringIterator end = (i + 1 < linePositions.Size()) ? (linePositions[i + 1] - newLineRuneCount) : clipboardText.End();
       String lineChunk(start, end);
       mScintilla->pdoc->InsertString(selection.Start().Position(), lineChunk.Data(), lineChunk.SizeInBytes());
     }
@@ -1556,22 +1547,13 @@ void TextEditor::UpdateTextMatchHighlighting()
 
   // Call after 'UpdateHighlightIndicators' so that cursor indicators
   // draw on top of the highlight indicators.
-  UpdateIndicators(mScintilla->mCursorIndicators,
-                   mScintilla->sel.GetRanges(),
-                   Vec4(1, 1, 1, 0.85f),
-                   Vec2(cTextEditorVScrollCursorHeight, 0),
-                   0,
-                   0);
+  UpdateIndicators(mScintilla->mCursorIndicators, mScintilla->sel.GetRanges(), Vec4(1, 1, 1, 0.85f), Vec2(cTextEditorVScrollCursorHeight, 0), 0, 0);
 
   mIndicators->Upload();
 }
 
-void TextEditor::UpdateIndicators(Array<Rectangle>& indicators,
-                                  const std::vector<Scintilla::SelectionRange>& ranges,
-                                  Vec4Param indicatorColor,
-                                  Vec2Param minIndicatorHeight,
-                                  float indicatorWidth,
-                                  float indicatorOffsetX)
+void TextEditor::UpdateIndicators(
+    Array<Rectangle>& indicators, const std::vector<Scintilla::SelectionRange>& ranges, Vec4Param indicatorColor, Vec2Param minIndicatorHeight, float indicatorWidth, float indicatorOffsetX)
 {
   ScrollBar* verticalBar = GetVerticalScrollBar();
   if (!verticalBar->mVisible)
@@ -2133,8 +2115,7 @@ void TextEditor::OnNotify(Scintilla::SCNotification& notify)
   if (mSendEvents == true)
   {
     bool shouldSendEvent =
-        (notify.nmhdr.code == SCN_MODIFIED && notify.modificationType & (SC_MOD_INSERTTEXT | SC_MOD_DELETETEXT)) ||
-        (notify.nmhdr.code == SCN_CHARADDED || notify.nmhdr.code == SCN_KEY);
+        (notify.nmhdr.code == SCN_MODIFIED && notify.modificationType & (SC_MOD_INSERTTEXT | SC_MOD_DELETETEXT)) || (notify.nmhdr.code == SCN_CHARADDED || notify.nmhdr.code == SCN_KEY);
 
     if (shouldSendEvent)
     {
@@ -2176,8 +2157,7 @@ void ScintillaEngine::Clear()
   if (sel.Empty())
   {
     bool singleVirtual = false;
-    if ((sel.Count() == 1) && !RangeContainsProtected(sel.MainCaret(), sel.MainCaret() + 1) &&
-        sel.RangeMain().Start().VirtualSpace())
+    if ((sel.Count() == 1) && !RangeContainsProtected(sel.MainCaret(), sel.MainCaret() + 1) && sel.RangeMain().Start().VirtualSpace())
     {
       singleVirtual = true;
     }
@@ -2189,11 +2169,9 @@ void ScintillaEngine::Clear()
         if (sel.Range(r).Start().VirtualSpace())
         {
           if (sel.Range(r).anchor < sel.Range(r).caret)
-            sel.Range(r) = Scintilla::SelectionPosition(
-                InsertSpace(sel.Range(r).anchor.Position(), sel.Range(r).anchor.VirtualSpace()));
+            sel.Range(r) = Scintilla::SelectionPosition(InsertSpace(sel.Range(r).anchor.Position(), sel.Range(r).anchor.VirtualSpace()));
           else
-            sel.Range(r) = Scintilla::SelectionPosition(
-                InsertSpace(sel.Range(r).caret.Position(), sel.Range(r).caret.VirtualSpace()));
+            sel.Range(r) = Scintilla::SelectionPosition(InsertSpace(sel.Range(r).caret.Position(), sel.Range(r).caret.VirtualSpace()));
         }
         else
         {
@@ -2453,8 +2431,7 @@ int ScintillaEngine::KeyCommand(unsigned int iMessage)
       {
         Scintilla::SelectionRange& other = sel.Range(j);
 
-        if (other.caret.Position() < selection.anchor.Position() &&
-            other.anchor.Position() > selection.caret.Position())
+        if (other.caret.Position() < selection.anchor.Position() && other.anchor.Position() > selection.caret.Position())
         {
           Scintilla::SelectionPosition anchor(std::max(other.anchor.Position(), selection.anchor.Position()));
           Scintilla::SelectionPosition caret(std::min(other.caret.Position(), selection.caret.Position()));
@@ -2479,8 +2456,7 @@ int ScintillaEngine::KeyCommand(unsigned int iMessage)
       {
         Scintilla::SelectionRange& other = sel.Range(j);
 
-        if (other.caret.Position() > selection.anchor.Position() &&
-            other.anchor.Position() < selection.caret.Position())
+        if (other.caret.Position() > selection.anchor.Position() && other.anchor.Position() < selection.caret.Position())
         {
           Scintilla::SelectionPosition anchor(std::min(other.anchor.Position(), selection.anchor.Position()));
           Scintilla::SelectionPosition caret(std::max(other.caret.Position(), selection.caret.Position()));
@@ -2639,16 +2615,7 @@ bool ScintillaEngine::FindTextNotSelected(int start, int end, const char* text, 
   while (start < end)
   {
     int lengthFound = length;
-    int pos = pdoc->FindText(start,
-                             end,
-                             text,
-                             true,
-                             false,
-                             false,
-                             false,
-                             0,
-                             &lengthFound,
-                             std::unique_ptr<Scintilla::CaseFolder>(CaseFolderForEncoding()).get());
+    int pos = pdoc->FindText(start, end, text, true, false, false, false, 0, &lengthFound, std::unique_ptr<Scintilla::CaseFolder>(CaseFolderForEncoding()).get());
     if (pos == -1)
       return false;
 
@@ -2753,8 +2720,7 @@ void ScintillaEngine::UpdateHighlightIndicators()
   // 3) Selection line-wraps.
   // 4) Selection is rectangular.
   // 5) Selection has virtual space.
-  if (!mOwner->mTextMatchHighlighting || main.Empty() || lineAnchor != lineCaret || rectAnchor != rectCaret ||
-      main.anchor.VirtualSpace() || main.caret.VirtualSpace())
+  if (!mOwner->mTextMatchHighlighting || main.Empty() || lineAnchor != lineCaret || rectAnchor != rectCaret || main.anchor.VirtualSpace() || main.caret.VirtualSpace())
   {
     mHighlightIndicators.Clear();
     return;
@@ -2791,12 +2757,8 @@ void ScintillaEngine::UpdateHighlightIndicators()
     return;
 
   HighlightMatchingText(begin, end, text);
-  mOwner->UpdateIndicators(mHighlightIndicators,
-                           mHighlightRanges,
-                           GetColorScheme()->TextMatchIndicator,
-                           Vec2(cTextEditorVScrollIndicatorMinHeight, 1),
-                           cTextEditorVScrollIndicatorWidth,
-                           cTextEditorVScrollIndicatorOffset);
+  mOwner->UpdateIndicators(
+      mHighlightIndicators, mHighlightRanges, GetColorScheme()->TextMatchIndicator, Vec2(cTextEditorVScrollIndicatorMinHeight, 1), cTextEditorVScrollIndicatorWidth, cTextEditorVScrollIndicatorOffset);
 }
 
 void ScintillaEngine::ProcessTextMatch(char*& text, int* begin, int* end)
@@ -2946,16 +2908,7 @@ void ScintillaEngine::HighlightAllTextInstances(int begin, int end, const char* 
     while (start < stop)
     {
       int lengthFound = length;
-      int pos = pdoc->FindText(start,
-                               stop,
-                               text,
-                               true,
-                               false,
-                               false,
-                               false,
-                               0,
-                               &lengthFound,
-                               std::unique_ptr<Scintilla::CaseFolder>(CaseFolderForEncoding()).get());
+      int pos = pdoc->FindText(start, stop, text, true, false, false, false, 0, &lengthFound, std::unique_ptr<Scintilla::CaseFolder>(CaseFolderForEncoding()).get());
       if (pos == -1)
         break;
 

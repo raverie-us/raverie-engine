@@ -26,8 +26,7 @@ class Peer : public BandwidthStats<true>
 
 public:
   /// Creates a closed peer and assigns a permanent GUID
-  Peer(ProcessReceivedCustomPacketFn processReceivedCustomPacketFn,
-       ProcessReceivedCustomMessageFn processReceivedCustomMessageFn);
+  Peer(ProcessReceivedCustomPacketFn processReceivedCustomPacketFn, ProcessReceivedCustomMessageFn processReceivedCustomMessageFn);
 
   /// Destroys the peer (closes the peer if still open)
   ~Peer();
@@ -75,10 +74,7 @@ public:
   /// Initializes any pre-existing links and plugins managed by this peer
   /// Specifying InternetProtocol::Both will attempt to open both IPv4 and IPv6
   /// sockets
-  void Open(Status& status,
-            ushort port = AnyPort,
-            InternetProtocol::Enum internetProtocol = InternetProtocol::Both,
-            TransportProtocol::Enum transportProtocol = TransportProtocol::Udp);
+  void Open(Status& status, ushort port = AnyPort, InternetProtocol::Enum internetProtocol = InternetProtocol::Both, TransportProtocol::Enum transportProtocol = TransportProtocol::Udp);
 
   /// Closes the peer (safe to call multiple times)
   /// Uninitializes any initialized links and plugins managed by this peer

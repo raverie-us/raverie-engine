@@ -9,11 +9,7 @@ bool EqualsExact(const Vec2& a, const Vec2& b)
   return a.x == b.x && a.y == b.y;
 }
 
-void Initialize(TrapezoidMap::Node* node,
-                TrapezoidMap::Node::NodeType type,
-                s32 value,
-                TrapezoidMap::NodeId left = -1,
-                TrapezoidMap::NodeId right = -1)
+void Initialize(TrapezoidMap::Node* node, TrapezoidMap::Node::NodeType type, s32 value, TrapezoidMap::NodeId left = -1, TrapezoidMap::NodeId right = -1)
 {
   node->Type = type;
   node->Value = value;
@@ -52,19 +48,13 @@ struct Frame
   Frame()
   {
   }
-  Frame(TrapezoidMap::RegionId regionId_, s32 depth_, s32 winding_) :
-      regionId(regionId_),
-      depth(depth_),
-      winding(winding_)
+  Frame(TrapezoidMap::RegionId regionId_, s32 depth_, s32 winding_) : regionId(regionId_), depth(depth_), winding(winding_)
   {
   }
 };
 
 TrapezoidMap::TrapezoidMap(const Array<Vec2>& vertices, const Array<uint>& contours, s32 edgeCount, s32 seed) :
-    mNodes(vertices.Size() * 4 + 1 + vertices.Size() * 2),
-    mRegions(vertices.Size() * 2 + 1 + 1),
-    mRandom(seed),
-    mIsValid(true)
+    mNodes(vertices.Size() * 4 + 1 + vertices.Size() * 2), mRegions(vertices.Size() * 2 + 1 + 1), mRandom(seed), mIsValid(true)
 {
   // Total number of graph regions is n + k + 1
   // where n is the number of vertices and k is the number of edges
@@ -633,8 +623,7 @@ TrapezoidMap::RegionId TrapezoidMap::FindRegionBelow(RegionId regionIndex, EdgeI
 // R = new right region
 // +... = new edge
 // |... = existing edge
-bool TrapezoidMap::UpdateAbove(
-    Region* O, RegionId indexL, RegionId indexR, VertexId topEdgeIndex, RegionId leftParent, RegionId rightParent)
+bool TrapezoidMap::UpdateAbove(Region* O, RegionId indexL, RegionId indexR, VertexId topEdgeIndex, RegionId leftParent, RegionId rightParent)
 {
   // If a region has only 1 top region we will refer to it as A
   RegionId indexA = O->TopNeighbor[0];
@@ -783,13 +772,7 @@ bool TrapezoidMap::UpdateAbove(
   return false;
 }
 
-bool TrapezoidMap::UpdateBelow(Region* O,
-                               RegionId indexL,
-                               RegionId indexR,
-                               EdgeId edgeId,
-                               RegionId* leftParent,
-                               RegionId* rightParent,
-                               bool isLast)
+bool TrapezoidMap::UpdateBelow(Region* O, RegionId indexL, RegionId indexR, EdgeId edgeId, RegionId* leftParent, RegionId* rightParent, bool isLast)
 {
   EdgeId bottomEdgeIndex = mBotIndex[edgeId];
   *leftParent = *rightParent = -1;

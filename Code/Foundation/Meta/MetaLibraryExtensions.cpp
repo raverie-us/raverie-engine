@@ -89,12 +89,9 @@ void MetaLibraryExtensions::ProcessComponent(LibraryBuilder& builder, BoundType*
   }
 }
 
-void MetaLibraryExtensions::AddCompositionExtension(LibraryBuilder& builder,
-                                                    BoundType* compositionType,
-                                                    BoundType* componentType)
+void MetaLibraryExtensions::AddCompositionExtension(LibraryBuilder& builder, BoundType* compositionType, BoundType* componentType)
 {
-  Property* extensionProperty = builder.AddExtensionGetterSetter(
-      compositionType, componentType->Name, componentType, nullptr, GetComponent, MemberOptions::None);
+  Property* extensionProperty = builder.AddExtensionGetterSetter(compositionType, componentType->Name, componentType, nullptr, GetComponent, MemberOptions::None);
 
   ErrorIf(extensionProperty == nullptr, "Failed to bind event extension property");
 
