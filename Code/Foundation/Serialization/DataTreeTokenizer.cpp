@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 DeclareEnum18(TokenState,
@@ -353,4 +353,4 @@ void DataTreeTokenizer::EatWhitespace()
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

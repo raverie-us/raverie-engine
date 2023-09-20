@@ -1,47 +1,47 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Ranges
-ZilchDefineRange(UiWidgetComponentHierarchy::ChildListRange);
+RaverieDefineRange(UiWidgetComponentHierarchy::ChildListRange);
 
 // Enums
-ZilchDefineEnum(UiSizePolicy);
-ZilchDefineEnum(UiVerticalAlignment);
-ZilchDefineEnum(UiHorizontalAlignment);
-ZilchDefineEnum(UiDockMode);
-ZilchDefineEnum(UiFocusDirection);
-ZilchDefineEnum(UiStackLayoutDirection);
+RaverieDefineEnum(UiSizePolicy);
+RaverieDefineEnum(UiVerticalAlignment);
+RaverieDefineEnum(UiHorizontalAlignment);
+RaverieDefineEnum(UiDockMode);
+RaverieDefineEnum(UiFocusDirection);
+RaverieDefineEnum(UiStackLayoutDirection);
 
-ZilchDefineStaticLibrary(UiWidgetLibrary)
+RaverieDefineStaticLibrary(UiWidgetLibrary)
 {
   builder.CreatableInScriptDefault = false;
 
   // Ranges
-  ZilchInitializeRangeAs(UiWidgetComponentHierarchy::ChildListRange, "UiWidgetRange");
+  RaverieInitializeRangeAs(UiWidgetComponentHierarchy::ChildListRange, "UiWidgetRange");
 
   // Enums
-  ZilchInitializeEnum(UiSizePolicy);
-  ZilchInitializeEnum(UiVerticalAlignment);
-  ZilchInitializeEnum(UiHorizontalAlignment);
-  ZilchInitializeEnum(UiDockMode);
-  ZilchInitializeEnum(UiFocusDirection);
-  ZilchInitializeEnum(UiStackLayoutDirection);
+  RaverieInitializeEnum(UiSizePolicy);
+  RaverieInitializeEnum(UiVerticalAlignment);
+  RaverieInitializeEnum(UiHorizontalAlignment);
+  RaverieInitializeEnum(UiDockMode);
+  RaverieInitializeEnum(UiFocusDirection);
+  RaverieInitializeEnum(UiStackLayoutDirection);
 
   // Events
-  ZilchInitializeType(UiFocusEvent);
-  ZilchInitializeType(UiTransformUpdateEvent);
+  RaverieInitializeType(UiFocusEvent);
+  RaverieInitializeType(UiTransformUpdateEvent);
 
-  ZilchInitializeType(UiWidgetCastResultsRange);
-  ZilchInitializeType(UiWidgetComponentHierarchy);
-  ZilchInitializeType(UiWidget);
-  ZilchInitializeType(UiRootWidget);
-  ZilchInitializeType(UiLayout);
-  ZilchInitializeType(UiStackLayout);
-  ZilchInitializeType(UiFillLayout);
-  ZilchInitializeType(UiDockLayout);
+  RaverieInitializeType(UiWidgetCastResultsRange);
+  RaverieInitializeType(UiWidgetComponentHierarchy);
+  RaverieInitializeType(UiWidget);
+  RaverieInitializeType(UiRootWidget);
+  RaverieInitializeType(UiLayout);
+  RaverieInitializeType(UiStackLayout);
+  RaverieInitializeType(UiFillLayout);
+  RaverieInitializeType(UiDockLayout);
 
   EngineLibraryExtensions::AddNativeExtensions(builder);
 }
@@ -57,4 +57,4 @@ void UiWidgetLibrary::Shutdown()
   GetLibrary()->ClearComponents();
 }
 
-} // namespace Zero
+} // namespace Raverie

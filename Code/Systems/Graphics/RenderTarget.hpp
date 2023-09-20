@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Interface for rendering output. Texture data is managed and recycled by the
@@ -10,7 +10,7 @@ namespace Zero
 class RenderTarget : public SafeId32
 {
 public:
-  ZilchDeclareType(RenderTarget, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(RenderTarget, TypeCopyMode::ReferenceType);
 
   /// Texture that is rendered to. Can be used as shader input to a separate
   /// rendering operation.
@@ -71,4 +71,4 @@ private:
   RenderTargetTextureMap mUnusedTextures;
 };
 
-} // namespace Zero
+} // namespace Raverie

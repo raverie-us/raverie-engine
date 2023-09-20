@@ -1,16 +1,16 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 #include "Math/MathImports.hpp"
 typedef Math::EulerAnglesParam EulerAnglesParam;
 
 struct Aabb;
 struct Sphere;
-} // namespace Zero
+} // namespace Raverie
 
-namespace Zero
+namespace Raverie
 {
 
 inline float Snap(float input, float snapping)
@@ -67,4 +67,4 @@ String MetaToString(const BoundType* type, const byte* data)
 
 struct Ray;
 
-} // namespace Zero
+} // namespace Raverie

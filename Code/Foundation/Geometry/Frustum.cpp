@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 Frustum::Frustum()
 {
@@ -343,4 +343,4 @@ void Frustum::PointsAtDepth(Vec3 boxPoints[4], float depth) const
   boxPoints[3] = Math::Lerp(points[3], points[7], t);
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace WebResponseCode
@@ -131,7 +131,7 @@ public:
   WebRequestCompleteFn mOnComplete;
   void* mUserData;
 
-  ZeroDeclarePrivateDataBytes(128);
+  RaverieDeclarePrivateDataBytes(128);
 };
 
-} // namespace Zero
+} // namespace Raverie

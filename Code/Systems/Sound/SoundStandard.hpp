@@ -7,7 +7,7 @@
 #include "Systems/Engine/EngineStandard.hpp"
 #include "Foundation/Geometry/DebugDraw.hpp"
 
-namespace Zero
+namespace Raverie
 {
 // Forward declarations
 class SoundSystem;
@@ -21,16 +21,16 @@ class SoundTagEntry;
 class Sound;
 
 // Sound library
-class SoundLibrary : public Zilch::StaticLibrary
+class SoundLibrary : public Raverie::StaticLibrary
 {
 public:
-  ZilchDeclareStaticLibraryInternals(SoundLibrary);
+  RaverieDeclareStaticLibraryInternals(SoundLibrary);
 
   static void Initialize();
   static void Shutdown();
 };
 
-} // namespace Zero
+} // namespace Raverie
 
 #include "Definitions.hpp"
 #include "RingBuffer.hpp"

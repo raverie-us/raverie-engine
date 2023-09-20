@@ -1,14 +1,14 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Defines the collision volume for a cylinder defined by a height and radius.
 class CylinderCollider : public Collider
 {
 public:
-  ZilchDeclareType(CylinderCollider, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CylinderCollider, TypeCopyMode::ReferenceType);
 
   CylinderCollider();
 
@@ -61,4 +61,4 @@ private:
   AxisDirection::Enum mDirection;
 };
 
-} // namespace Zero
+} // namespace Raverie

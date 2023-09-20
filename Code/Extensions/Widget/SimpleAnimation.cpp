@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 void AnimateLayout(Array<LayoutResult>& Results, bool animate)
@@ -27,4 +27,4 @@ void AnimateLayout(Array<LayoutResult>& Results, bool animate)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,17 +1,17 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 bool MainConfig::sConfigCanSave = true;
 
-ZilchDefineType(MainConfig, builder, type)
+RaverieDefineType(MainConfig, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindDocumented();
-  ZilchBindGetterProperty(BuildDate);
-  ZilchBindGetterProperty(BuildVersion);
+  RaverieBindComponent();
+  RaverieBindDocumented();
+  RaverieBindGetterProperty(BuildDate);
+  RaverieBindGetterProperty(BuildVersion);
   type->AddAttribute(ObjectAttributes::cCore);
 }
 
@@ -34,13 +34,13 @@ void MainConfig::Serialize(Serializer& stream)
 {
 }
 
-ZilchDefineType(EditorConfig, builder, type)
+RaverieDefineType(EditorConfig, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindDocumented();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindComponent();
+  RaverieBindDocumented();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
   type->AddAttribute(ObjectAttributes::cCore);
-  ZilchBindFieldProperty(BugReportUsername);
+  RaverieBindFieldProperty(BugReportUsername);
 }
 
 void EditorConfig::Serialize(Serializer& stream)
@@ -50,10 +50,10 @@ void EditorConfig::Serialize(Serializer& stream)
   SerializeNameDefault(BugReportUsername, String());
 }
 
-ZilchDefineType(ContentConfig, builder, type)
+RaverieDefineType(ContentConfig, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindDocumented();
   type->AddAttribute(ObjectAttributes::cCore);
 }
 
@@ -65,13 +65,13 @@ void ContentConfig::Serialize(Serializer& stream)
   SerializeNameDefault(HistoryEnabled, true);
 }
 
-ZilchDefineType(UserConfig, builder, type)
+RaverieDefineType(UserConfig, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindDocumented();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZilchBindFieldProperty(UserName);
-  ZilchBindFieldProperty(UserEmail);
+  RaverieBindComponent();
+  RaverieBindDocumented();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindFieldProperty(UserName);
+  RaverieBindFieldProperty(UserEmail);
   type->AddAttribute(ObjectAttributes::cCore);
 }
 
@@ -89,13 +89,13 @@ void UserConfig::Serialize(Serializer& stream)
   SerializeNameDefault(LastVersionUsed, 0u);
 }
 
-ZilchDefineType(DeveloperConfig, builder, type)
+RaverieDefineType(DeveloperConfig, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindDocumented();
-  ZilchBindFieldProperty(mDoubleEscapeQuit);
-  ZilchBindFieldProperty(mProxyObjectsInPreviews);
-  ZilchBindFieldProperty(mCanModifyReadOnlyResources);
+  RaverieBindComponent();
+  RaverieBindDocumented();
+  RaverieBindFieldProperty(mDoubleEscapeQuit);
+  RaverieBindFieldProperty(mProxyObjectsInPreviews);
+  RaverieBindFieldProperty(mCanModifyReadOnlyResources);
 }
 
 DeveloperConfig::DeveloperConfig()
@@ -111,23 +111,23 @@ void DeveloperConfig::Serialize(Serializer& stream)
   SerializeNameDefault(mGenericFlags, HashSet<String>());
 }
 
-ZilchDefineType(TextEditorConfig, builder, type)
+RaverieDefineType(TextEditorConfig, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDocumented();
-  ZilchBindFieldProperty(TabWidth);
-  ZilchBindFieldProperty(ShowWhiteSpace);
-  ZilchBindFieldProperty(LineNumbers);
-  ZilchBindFieldProperty(CodeFolding);
-  ZilchBindFieldProperty(TextMatchHighlighting);
-  ZilchBindFieldProperty(HighlightPartialTextMatch);
-  ZilchBindFieldProperty(ConfidentAutoCompleteOnSymbols);
-  ZilchBindFieldProperty(LocalWordCompletion);
-  ZilchBindFieldProperty(KeywordAndTypeCompletion);
-  ZilchBindFieldProperty(AutoCompleteOnEnter);
-  ZilchBindField(ColorScheme);
-  ZilchBindFieldProperty(FontSize);
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
+  RaverieBindFieldProperty(TabWidth);
+  RaverieBindFieldProperty(ShowWhiteSpace);
+  RaverieBindFieldProperty(LineNumbers);
+  RaverieBindFieldProperty(CodeFolding);
+  RaverieBindFieldProperty(TextMatchHighlighting);
+  RaverieBindFieldProperty(HighlightPartialTextMatch);
+  RaverieBindFieldProperty(ConfidentAutoCompleteOnSymbols);
+  RaverieBindFieldProperty(LocalWordCompletion);
+  RaverieBindFieldProperty(KeywordAndTypeCompletion);
+  RaverieBindFieldProperty(AutoCompleteOnEnter);
+  RaverieBindField(ColorScheme);
+  RaverieBindFieldProperty(FontSize);
 
   type->AddAttribute(ObjectAttributes::cCore);
 }
@@ -145,7 +145,7 @@ void TextEditorConfig::Serialize(Serializer& stream)
   stream.SerializeFieldDefault("KeywordAndTypeCompletion", KeywordAndTypeCompletion, true);
   stream.SerializeFieldDefault("AutoCompleteOnEnter6", AutoCompleteOnEnter, true);
   SerializeNameDefault(FontSize, uint(13));
-  SerializeNameDefault(ColorScheme, String("DarkZero"));
+  SerializeNameDefault(ColorScheme, String("Dark"));
   SerializeNameDefault(LineNumbers, true);
   SerializeNameDefault(CodeFolding, false);
   SerializeNameDefault(TextMatchHighlighting, true);
@@ -305,4 +305,4 @@ String FindSourceDirectory()
   return GetWorkingDirectory();
 }
 
-} // namespace Zero
+} // namespace Raverie

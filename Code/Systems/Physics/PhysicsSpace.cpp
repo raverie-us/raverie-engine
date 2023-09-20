@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Tags
@@ -9,18 +9,18 @@ namespace Tags
 DefineTag(Physics);
 }
 
-ZilchDefineType(SweepResult, builder, type)
+RaverieDefineType(SweepResult, builder, type)
 {
-  ZilchBindDefaultCopyDestructor();
-  ZeroBindDocumented();
+  RaverieBindDefaultCopyDestructor();
+  RaverieBindDocumented();
 
-  ZilchBindGetterProperty(Time);
-  ZilchBindGetterProperty(OtherCollider);
-  ZilchBindGetterProperty(OtherObject);
-  ZilchBindGetterProperty(Penetration);
-  ZilchBindGetterProperty(WorldPoint);
-  ZilchBindGetterProperty(WorldNormalTowardsSelf);
-  ZilchBindGetterProperty(WorldNormalTowardsOther);
+  RaverieBindGetterProperty(Time);
+  RaverieBindGetterProperty(OtherCollider);
+  RaverieBindGetterProperty(OtherObject);
+  RaverieBindGetterProperty(Penetration);
+  RaverieBindGetterProperty(WorldPoint);
+  RaverieBindGetterProperty(WorldNormalTowardsSelf);
+  RaverieBindGetterProperty(WorldNormalTowardsOther);
 }
 
 real SweepResult::GetTime()
@@ -107,72 +107,72 @@ bool ClientPairSorter(ClientPair& a, ClientPair& b)
   return pairA > pairB;
 }
 
-ZilchDefineType(PhysicsSpace, builder, type)
+RaverieDefineType(PhysicsSpace, builder, type)
 {
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindSetup(SetupMode::DefaultSerialization);
   type->AddAttribute(ObjectAttributes::cCore);
 
-  ZeroBindComponent();
-  ZeroBindDocumented();
-  ZeroBindTag(Tags::Physics);
-  ZeroBindDependency(Space);
+  RaverieBindComponent();
+  RaverieBindDocumented();
+  RaverieBindTag(Tags::Physics);
+  RaverieBindDependency(Space);
 
-  ZeroBindEvent(Events::GroupCollisionStarted, CollisionGroupEvent);
-  ZeroBindEvent(Events::GroupCollisionEnded, CollisionGroupEvent);
-  ZeroBindEvent(Events::PhysicsUpdateFinished, ObjectEvent);
+  RaverieBindEvent(Events::GroupCollisionStarted, CollisionGroupEvent);
+  RaverieBindEvent(Events::GroupCollisionEnded, CollisionGroupEvent);
+  RaverieBindEvent(Events::PhysicsUpdateFinished, ObjectEvent);
 
-  ZilchBindGetterSetterProperty(SubStepCount);
-  ZilchBindGetterSetterProperty(AllowSleep);
-  ZilchBindGetterSetterProperty(Mode2D);
-  ZilchBindGetterSetterProperty(Deterministic);
-  ZilchBindGetterSetterProperty(CollisionTable);
-  ZilchBindGetterSetterProperty(PhysicsSolverConfig);
+  RaverieBindGetterSetterProperty(SubStepCount);
+  RaverieBindGetterSetterProperty(AllowSleep);
+  RaverieBindGetterSetterProperty(Mode2D);
+  RaverieBindGetterSetterProperty(Deterministic);
+  RaverieBindGetterSetterProperty(CollisionTable);
+  RaverieBindGetterSetterProperty(PhysicsSolverConfig);
 
   // Broad-phase types
-  ZilchBindFieldProperty(mDynamicBroadphaseType)->Add(new DynamicBroadphasePropertyExtension());
-  ZilchBindFieldProperty(mStaticBroadphaseType)->Add(new StaticBroadphasePropertyExtension());
+  RaverieBindFieldProperty(mDynamicBroadphaseType)->Add(new DynamicBroadphasePropertyExtension());
+  RaverieBindFieldProperty(mStaticBroadphaseType)->Add(new StaticBroadphasePropertyExtension());
 
-  ZilchBindMethod(AddPairFilter);
-  ZilchBindMethod(AddHierarchyPairFilter);
-  ZilchBindMethod(RemovePairFilter);
-  ZilchBindMethod(RemoveHierarchyPairFilter);
+  RaverieBindMethod(AddPairFilter);
+  RaverieBindMethod(AddHierarchyPairFilter);
+  RaverieBindMethod(RemovePairFilter);
+  RaverieBindMethod(RemoveHierarchyPairFilter);
 
-  ZilchBindMethod(FlushPhysicsQueue);
+  RaverieBindMethod(FlushPhysicsQueue);
 
   // Ray Cast
-  ZilchBindOverloadedMethod(CastRayFirst, ZilchInstanceOverload(CastResult, const Ray&));
-  ZilchBindOverloadedMethod(CastRayFirst, ZilchInstanceOverload(CastResult, const Ray&, CastFilter&));
-  ZilchBindOverloadedMethod(CastRay, ZilchInstanceOverload(CastResultsRange, const Ray&, uint));
-  ZilchBindOverloadedMethod(CastRay, ZilchInstanceOverload(CastResultsRange, const Ray&, uint, CastFilter&));
+  RaverieBindOverloadedMethod(CastRayFirst, RaverieInstanceOverload(CastResult, const Ray&));
+  RaverieBindOverloadedMethod(CastRayFirst, RaverieInstanceOverload(CastResult, const Ray&, CastFilter&));
+  RaverieBindOverloadedMethod(CastRay, RaverieInstanceOverload(CastResultsRange, const Ray&, uint));
+  RaverieBindOverloadedMethod(CastRay, RaverieInstanceOverload(CastResultsRange, const Ray&, uint, CastFilter&));
   // Segment Cast
-  ZilchBindOverloadedMethod(CastSegment, ZilchInstanceOverload(CastResultsRange, const Segment&, uint));
-  ZilchBindOverloadedMethod(CastSegment, ZilchInstanceOverload(CastResultsRange, const Segment&, uint, CastFilter&));
+  RaverieBindOverloadedMethod(CastSegment, RaverieInstanceOverload(CastResultsRange, const Segment&, uint));
+  RaverieBindOverloadedMethod(CastSegment, RaverieInstanceOverload(CastResultsRange, const Segment&, uint, CastFilter&));
   // Volume Cast
-  ZilchBindOverloadedMethod(CastAabb, ZilchInstanceOverload(CastResultsRange, const Aabb&, uint, CastFilter&));
-  ZilchBindOverloadedMethod(CastSphere, ZilchInstanceOverload(CastResultsRange, const Sphere&, uint, CastFilter&));
-  ZilchBindOverloadedMethod(CastFrustum, ZilchInstanceOverload(CastResultsRange, const Frustum&, uint, CastFilter&));
-  ZilchBindOverloadedMethod(CastCollider, ZilchInstanceOverload(CastResultsRange, Vec3Param, Collider*, CastFilter&));
+  RaverieBindOverloadedMethod(CastAabb, RaverieInstanceOverload(CastResultsRange, const Aabb&, uint, CastFilter&));
+  RaverieBindOverloadedMethod(CastSphere, RaverieInstanceOverload(CastResultsRange, const Sphere&, uint, CastFilter&));
+  RaverieBindOverloadedMethod(CastFrustum, RaverieInstanceOverload(CastResultsRange, const Frustum&, uint, CastFilter&));
+  RaverieBindOverloadedMethod(CastCollider, RaverieInstanceOverload(CastResultsRange, Vec3Param, Collider*, CastFilter&));
   // Event Dispatching in Region
-  ZilchBindOverloadedMethod(DispatchWithinSphere, ZilchInstanceOverload(void, const Sphere&, StringParam, Event*));
-  ZilchBindOverloadedMethod(DispatchWithinSphere,
-                            ZilchInstanceOverload(void, const Sphere&, CastFilter&, StringParam, Event*));
-  ZilchBindOverloadedMethod(DispatchWithinAabb, ZilchInstanceOverload(void, const Aabb&, StringParam, Event*));
-  ZilchBindOverloadedMethod(DispatchWithinAabb,
-                            ZilchInstanceOverload(void, const Aabb&, CastFilter&, StringParam, Event*));
+  RaverieBindOverloadedMethod(DispatchWithinSphere, RaverieInstanceOverload(void, const Sphere&, StringParam, Event*));
+  RaverieBindOverloadedMethod(DispatchWithinSphere,
+                            RaverieInstanceOverload(void, const Sphere&, CastFilter&, StringParam, Event*));
+  RaverieBindOverloadedMethod(DispatchWithinAabb, RaverieInstanceOverload(void, const Aabb&, StringParam, Event*));
+  RaverieBindOverloadedMethod(DispatchWithinAabb,
+                            RaverieInstanceOverload(void, const Aabb&, CastFilter&, StringParam, Event*));
 
   // Extra collider detection methods
-  ZilchBindMethod(SweepCollider);
+  RaverieBindMethod(SweepCollider);
 
   // Helpers
-  ZilchBindMethod(CreateJoint);
-  ZilchBindMethod(WhyAreTheyNotColliding);
+  RaverieBindMethod(CreateJoint);
+  RaverieBindMethod(WhyAreTheyNotColliding);
 
   // Debugging features for JoshD. Disabled for all users for now
-  // ZilchBindGetterSetterProperty(IslandingType);
-  // ZilchBindGetterSetterProperty(IslandPreProcessType);
-  // ZilchBindGetterSetterProperty(PostProcessIslands);
-  // ZilchBindGetterSetterProperty(IsSolverShared);
-  // ZilchBindGetter(IslandCount);
+  // RaverieBindGetterSetterProperty(IslandingType);
+  // RaverieBindGetterSetterProperty(IslandPreProcessType);
+  // RaverieBindGetterSetterProperty(PostProcessIslands);
+  // RaverieBindGetterSetterProperty(IsSolverShared);
+  // RaverieBindGetter(IslandCount);
 }
 
 PhysicsSpace::PhysicsSpace()
@@ -201,7 +201,7 @@ PhysicsSpace::~PhysicsSpace()
   {
     PhysicsEffect& effect = range.Front();
     range.PopFront();
-    effect.PhysicsEffect::ComponentRemoved(ZilchTypeId(PhysicsSpace), this);
+    effect.PhysicsEffect::ComponentRemoved(RaverieTypeId(PhysicsSpace), this);
   }
 
   mNodeManager->CommitChanges(mBroadPhase);
@@ -226,8 +226,8 @@ void PhysicsSpace::Serialize(Serializer& stream)
   SerializeResourceName(mPhysicsSolverConfig, PhysicsSolverConfigManager);
 
   // For now just save what broadphase to use, not any broadphase properties
-  SerializeNameDefault(mDynamicBroadphaseType, ZilchTypeId(DynamicAabbTreeBroadPhase)->Name);
-  SerializeNameDefault(mStaticBroadphaseType, ZilchTypeId(StaticAabbTreeBroadPhase)->Name);
+  SerializeNameDefault(mDynamicBroadphaseType, RaverieTypeId(DynamicAabbTreeBroadPhase)->Name);
+  SerializeNameDefault(mStaticBroadphaseType, RaverieTypeId(StaticAabbTreeBroadPhase)->Name);
 }
 
 void PhysicsSpace::Initialize(CogInitializer& initializer)
@@ -251,7 +251,7 @@ void PhysicsSpace::Initialize(CogInitializer& initializer)
   // editor mode (so moving static objects isn't slow)
   String staticBroadPhaseType = mStaticBroadphaseType;
   if (GetOwner()->GetSpace()->IsEditorMode())
-    staticBroadPhaseType = ZilchTypeId(DynamicAabbTreeBroadPhase)->Name;
+    staticBroadPhaseType = RaverieTypeId(DynamicAabbTreeBroadPhase)->Name;
 
   BroadPhaseLibrary* library = Z::gBroadPhaseLibrary;
   mBroadPhase->AddBroadPhase(BroadPhase::Static, library->CreateBroadPhase(staticBroadPhaseType));
@@ -1892,4 +1892,4 @@ void PhysicsSpace::ColliderToBroadPhaseData(Collider* collider, BroadPhaseData& 
   data.mBoundingSphere = collider->mBoundingSphere;
 }
 
-} // namespace Zero
+} // namespace Raverie

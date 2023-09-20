@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 uint GetAxis(DockArea::Enum dockArea)
@@ -114,25 +114,25 @@ void RemovePadding(Thickness padding, LayoutArea& area)
   area.Size += padding.Size();
 }
 
-ZilchDefineType(Layout, builder, type)
+RaverieDefineType(Layout, builder, type)
 {
-  ZilchBindDestructor();
+  RaverieBindDestructor();
 
-  ZilchBindMethod(Measure);
-  ZilchBindMethod(DoLayout);
+  RaverieBindMethod(Measure);
+  RaverieBindMethod(DoLayout);
 
-  ZilchBindFieldProperty(Padding);
+  RaverieBindFieldProperty(Padding);
 }
 
 Layout::Layout(Thickness padding) : Padding(padding), mDebug(false)
 {
 }
 
-ZilchDefineType(LayoutArea, builder, type)
+RaverieDefineType(LayoutArea, builder, type)
 {
 }
 
-ZilchDefineType(FillLayout, builder, type)
+RaverieDefineType(FillLayout, builder, type)
 {
 }
 
@@ -148,7 +148,7 @@ Vec2 FillLayout::Measure(Composite* widget, LayoutArea data)
 Vec2 FillLayout::DoLayout(Composite* widget, LayoutArea data)
 {
   if (mDebug)
-    ZeroDebugBreak();
+    RaverieDebugBreak();
 
   WidgetListRange children = widget->GetChildren();
 
@@ -207,7 +207,7 @@ Vec2 FillLayout::DoLayout(Composite* widget, LayoutArea data)
   return data.Size;
 }
 
-ZilchDefineType(StackLayout, builder, type)
+RaverieDefineType(StackLayout, builder, type)
 {
 }
 
@@ -267,7 +267,7 @@ float StackLayout::ComputeFlexRatio(float fixedSize, float totalFlex, float flex
 Vec2 StackLayout::DoLayout(Composite* widget, LayoutArea data)
 {
   if (mDebug)
-    ZeroDebugBreak();
+    RaverieDebugBreak();
 
   widget->DebugValidate();
   // Get all children of the widget
@@ -417,7 +417,7 @@ StackLayout* StackLayout::CreateRowLayout()
   return new StackLayout(LayoutDirection::LeftToRight, Vec2::cZero, Thickness::cZero);
 }
 
-ZilchDefineType(EdgeDockLayout, builder, type)
+RaverieDefineType(EdgeDockLayout, builder, type)
 {
 }
 
@@ -467,7 +467,7 @@ Vec2 EdgeDockLayout::DoLayout(Composite* widget, LayoutArea data)
   return data.Size;
 }
 
-ZilchDefineType(DockLayout, builder, type)
+RaverieDefineType(DockLayout, builder, type)
 {
 }
 
@@ -590,7 +590,7 @@ Vec2 DockLayout::DoLayout(Composite* widget, LayoutArea data)
   return data.Size;
 }
 
-ZilchDefineType(RatioLayout, builder, type)
+RaverieDefineType(RatioLayout, builder, type)
 {
 }
 
@@ -662,7 +662,7 @@ Vec2 RatioLayout::DoLayout(Composite* widget, LayoutArea data)
   return size;
 }
 
-ZilchDefineType(GridLayout, builder, type)
+RaverieDefineType(GridLayout, builder, type)
 {
 }
 
@@ -836,4 +836,4 @@ void PlaceWithLayout(LayoutResult& result, Widget* widget)
   widget->SetSize(result.Size);
 }
 
-} // namespace Zero
+} // namespace Raverie

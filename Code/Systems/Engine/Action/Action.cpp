@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 Action::Action()
 {
@@ -11,13 +11,13 @@ Action::~Action()
 {
 }
 
-ZilchDefineType(Action, builder, type)
+RaverieDefineType(Action, builder, type)
 {
-  ZeroBindDocumented();
-  ZilchBindMethod(Cancel);
-  ZilchBindGetterProperty(Completed);
-  ZilchBindGetterProperty(Active);
-  ZilchBindGetterProperty(Started);
+  RaverieBindDocumented();
+  RaverieBindMethod(Cancel);
+  RaverieBindGetterProperty(Completed);
+  RaverieBindGetterProperty(Active);
+  RaverieBindGetterProperty(Started);
 }
 
 bool Action::GetCompleted()
@@ -126,14 +126,14 @@ ActionState::Enum ProcessActions(InActionList& list, float dt, bool blocking)
     return ActionState::Running;
 }
 
-ZilchDefineType(ActionSet, builder, type)
+RaverieDefineType(ActionSet, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 }
 
-ZilchDefineType(Actions, builder, type)
+RaverieDefineType(Actions, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 }
 
 Actions::Actions(ActionSpace* space)
@@ -205,9 +205,9 @@ void Actions::Update(float dt, float realDt, ActionExecuteMode::Enum mode)
   }
 }
 
-ZilchDefineType(ActionGroup, builder, type)
+RaverieDefineType(ActionGroup, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 }
 
 ActionGroup::ActionGroup()
@@ -245,9 +245,9 @@ void ActionGroup::CancelOverride()
   CancelActions(mActions);
 }
 
-ZilchDefineType(ActionSequence, builder, type)
+RaverieDefineType(ActionSequence, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 }
 
 ActionSequence::ActionSequence()
@@ -286,4 +286,4 @@ ActionState::Enum ActionSequence::Update(float dt)
   return ProcessActions(mActions, dt, true);
 }
 
-} // namespace Zero
+} // namespace Raverie

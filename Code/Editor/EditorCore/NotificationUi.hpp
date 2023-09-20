@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class NotificationPopup : public Composite
@@ -20,7 +20,7 @@ class NotificationPopup : public Composite
   };
 
 public:
-  typedef NotificationPopup ZilchSelf;
+  typedef NotificationPopup RaverieSelf;
   NotificationPopup(Composite* composite, NotifyEvent* event);
   ~NotificationPopup();
 
@@ -64,4 +64,4 @@ private:
 
 void DoNotifyPopup(Composite* root, NotifyEvent* event);
 
-} // namespace Zero
+} // namespace Raverie

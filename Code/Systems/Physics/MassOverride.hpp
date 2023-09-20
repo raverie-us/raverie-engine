@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 DeclareBitField4(MassOverrideStates, Active, AutoComputeCenterOfMass, AutoComputeInertia, Serialized);
@@ -11,7 +11,7 @@ DeclareBitField4(MassOverrideStates, Active, AutoComputeCenterOfMass, AutoComput
 class MassOverride : public Component
 {
 public:
-  ZilchDeclareType(MassOverride, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MassOverride, TypeCopyMode::ReferenceType);
 
   MassOverride();
 
@@ -66,4 +66,4 @@ public:
   BitField<MassOverrideStates::Enum> mFlags;
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Column
@@ -231,4 +231,4 @@ void ErrorList::OnDataActivated(DataEvent* event)
   // Open the file and go to that error
 }
 
-} // namespace Zero
+} // namespace Raverie

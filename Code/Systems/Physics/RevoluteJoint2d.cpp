@@ -23,7 +23,7 @@ Linear Constraint:
   present, or is just not solved at all
 */
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Physics
@@ -65,12 +65,12 @@ ImplementJointType(RevoluteJoint2d);
 ImplementAnchorAccessors(RevoluteJoint2d, mAnchors);
 ImplementAngleAccessors(RevoluteJoint2d, mReferenceAngle);
 
-ZilchDefineType(RevoluteJoint2d, builder, type)
+RaverieDefineType(RevoluteJoint2d, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindInterface(Joint);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindInterface(Joint);
+  RaverieBindDocumented();
 
   BindAnchorAccessors(Vec3(1));
 }
@@ -101,7 +101,7 @@ void RevoluteJoint2d::ComputeInitialConfiguration()
 void RevoluteJoint2d::ComponentAdded(BoundType* typeId, Component* component)
 {
   Joint::ComponentAdded(typeId, component);
-  if (typeId == ZilchTypeId(JointLimit))
+  if (typeId == RaverieTypeId(JointLimit))
   {
     JointLimit* limit = static_cast<JointLimit*>(component);
     limit->mMinErr = -Math::cPi * real(0.25);
@@ -228,4 +228,4 @@ Vec3 RevoluteJoint2d::GetWorldAxis() const
 
 } // namespace Physics
 
-} // namespace Zero
+} // namespace Raverie

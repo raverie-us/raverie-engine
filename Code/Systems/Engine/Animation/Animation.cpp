@@ -1,10 +1,10 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(ObjectTrack, builder, type)
+RaverieDefineType(ObjectTrack, builder, type)
 {
 }
 
@@ -172,11 +172,11 @@ StringParam ObjectTrack::GetFullPath() const
   return FullPath;
 }
 
-ZilchDefineType(Animation, builder, type)
+RaverieDefineType(Animation, builder, type)
 {
-  ZilchBindGetterProperty(Duration);
+  RaverieBindGetterProperty(Duration);
 
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 }
 
 Animation::Animation()
@@ -276,7 +276,7 @@ struct AnimationLoadPattern
     track->SetFullPath(fullPath);
 
     // read the position key frames
-    PropertyTrack* translationTrack = MakePropertyTrack("Transform", "Translation", ZilchTypeId(Vec3));
+    PropertyTrack* translationTrack = MakePropertyTrack("Transform", "Translation", RaverieTypeId(Vec3));
     Array<PositionKey> positionKeys;
     positionKeys.Resize(trackHeader.mNumPositionKeys);
     reader.ReadArray(positionKeys.Data(), trackHeader.mNumPositionKeys);
@@ -285,7 +285,7 @@ struct AnimationLoadPattern
       translationTrack->InsertKey(positionKeys[i].Position, positionKeys[i].Keytime);
 
     // read the rotation key frames
-    PropertyTrack* rotationTrack = MakePropertyTrack("Transform", "Rotation", ZilchTypeId(Quat));
+    PropertyTrack* rotationTrack = MakePropertyTrack("Transform", "Rotation", RaverieTypeId(Quat));
     Array<RotationKey> rotationKeys;
     rotationKeys.Resize(trackHeader.mNumRotationKeys);
     reader.ReadArray(rotationKeys.Data(), trackHeader.mNumRotationKeys);
@@ -294,7 +294,7 @@ struct AnimationLoadPattern
       rotationTrack->InsertKey(rotationKeys[i].Rotation, rotationKeys[i].Keytime);
 
     // finally read the scale key frames
-    PropertyTrack* scaleTrack = MakePropertyTrack("Transform", "Scale", ZilchTypeId(Vec3));
+    PropertyTrack* scaleTrack = MakePropertyTrack("Transform", "Scale", RaverieTypeId(Vec3));
     Array<ScalingKey> scalingKeys;
     scalingKeys.Resize(trackHeader.mNumScalingKeys);
     reader.ReadArray(scalingKeys.Data(), trackHeader.mNumScalingKeys);
@@ -368,4 +368,4 @@ AnimationManager::AnimationManager(BoundType* resourceType) : ResourceManager(re
   // mTemplates.PushBack(ResourceTemplate("RichAnimation", String()));
 }
 
-} // namespace Zero
+} // namespace Raverie

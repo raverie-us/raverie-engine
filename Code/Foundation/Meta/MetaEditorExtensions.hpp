@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Editor Property Extension
@@ -9,7 +9,7 @@ namespace Zero
 class EditorPropertyExtension : public MetaAttribute
 {
 public:
-  ZilchDeclareType(EditorPropertyExtension, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(EditorPropertyExtension, TypeCopyMode::ReferenceType);
 
   virtual ~EditorPropertyExtension(){};
 };
@@ -21,7 +21,7 @@ extern const String StringArrayEdit;
 class EditorIndexedStringArray : public EditorPropertyExtension
 {
 public:
-  ZilchDeclareType(EditorIndexedStringArray, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(EditorIndexedStringArray, TypeCopyMode::ReferenceType);
 
   EditorIndexedStringArray(GetStringsFunc sourceArray);
   ~EditorIndexedStringArray()
@@ -40,7 +40,7 @@ public:
 class EditorRange : public EditorPropertyExtension
 {
 public:
-  ZilchDeclareType(EditorRange, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(EditorRange, TypeCopyMode::ReferenceType);
 
   EditorRange();
   EditorRange(float minValue, float maxValue, float increment);
@@ -56,7 +56,7 @@ public:
 class EditorSlider : public EditorRange
 {
 public:
-  ZilchDeclareType(EditorSlider, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(EditorSlider, TypeCopyMode::ReferenceType);
 
   EditorSlider();
 
@@ -71,7 +71,7 @@ public:
 class EditorRotationBasis : public EditorPropertyExtension
 {
 public:
-  ZilchDeclareType(EditorRotationBasis, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(EditorRotationBasis, TypeCopyMode::ReferenceType);
 
   EditorRotationBasis();
   EditorRotationBasis(StringParam archetypeName);
@@ -86,7 +86,7 @@ public:
 class MetaEditorResource : public EditorPropertyExtension
 {
 public:
-  ZilchDeclareType(MetaEditorResource, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MetaEditorResource, TypeCopyMode::ReferenceType);
 
   typedef bool (*SearchFilter)(HandleParam object, Property* property, HandleParam result, Status& status);
 
@@ -120,7 +120,7 @@ public:
 class MetaPropertyFilter : public MetaAttribute
 {
 public:
-  ZilchDeclareType(MetaPropertyFilter, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MetaPropertyFilter, TypeCopyMode::ReferenceType);
 
   virtual ~MetaPropertyFilter()
   {
@@ -177,7 +177,7 @@ public:
 class MetaPropertyBasicFilter : public MetaPropertyFilter
 {
 public:
-  ZilchDeclareType(MetaPropertyBasicFilter, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MetaPropertyBasicFilter, TypeCopyMode::ReferenceType);
 
   MetaPropertyBasicFilter(TemplateFilterBase* filter = nullptr) : mActualFilter(filter)
   {
@@ -200,7 +200,7 @@ public:
 class MetaShaderInput : public MetaAttribute
 {
 public:
-  ZilchDeclareType(MetaShaderInput, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MetaShaderInput, TypeCopyMode::ReferenceType);
 
   String mFragmentName;
   String mInputName;
@@ -210,25 +210,25 @@ public:
 class MetaEditorGizmo : public MetaAttribute
 {
 public:
-  ZilchDeclareType(MetaEditorGizmo, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MetaEditorGizmo, TypeCopyMode::ReferenceType);
   String mGizmoArchetype;
 };
 
-#define ZeroFilterBool(Member) Add(new MetaPropertyBasicFilter(new TemplateFilterBool<ZilchSelf, &ZilchSelf::Member>()))
+#define RaverieFilterBool(Member) Add(new MetaPropertyBasicFilter(new TemplateFilterBool<RaverieSelf, &RaverieSelf::Member>()))
 
-#define ZeroFilterNotBool(Member)                                                                                      \
-  Add(new MetaPropertyBasicFilter(new TemplateFilterNotBool<ZilchSelf, &ZilchSelf::Member>()))
+#define RaverieFilterNotBool(Member)                                                                                      \
+  Add(new MetaPropertyBasicFilter(new TemplateFilterNotBool<RaverieSelf, &RaverieSelf::Member>()))
 
-#define ZeroFilterEquality(Member, MemberType, ConstantValue)                                                          \
+#define RaverieFilterEquality(Member, MemberType, ConstantValue)                                                          \
   Add(new MetaPropertyBasicFilter(                                                                                     \
-      new TemplateFilterEquality<ZilchSelf, MemberType, &ZilchSelf::Member, ConstantValue>()))
+      new TemplateFilterEquality<RaverieSelf, MemberType, &RaverieSelf::Member, ConstantValue>()))
 
 // Meta Group
 /// Used for grouping properties in the property grid.
 class MetaGroup : public MetaAttribute
 {
 public:
-  ZilchDeclareType(MetaGroup, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MetaGroup, TypeCopyMode::ReferenceType);
   MetaGroup(StringParam name = String());
   String mName;
 };
@@ -239,7 +239,7 @@ public:
 class MetaCustomUi : public MetaAttribute
 {
 public:
-  ZilchDeclareType(MetaCustomUi, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MetaCustomUi, TypeCopyMode::ReferenceType);
   virtual void CreateUi(void* parentComposite, HandleParam object) = 0;
 };
 
@@ -248,7 +248,7 @@ public:
 class MetaPropertyRename : public MetaAttribute
 {
 public:
-  ZilchDeclareType(MetaPropertyRename, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MetaPropertyRename, TypeCopyMode::ReferenceType);
 
   MetaPropertyRename()
   {
@@ -258,4 +258,4 @@ public:
   String mOldName;
 };
 
-} // namespace Zero
+} // namespace Raverie

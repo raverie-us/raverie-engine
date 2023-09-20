@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Forward declarations
@@ -16,7 +16,7 @@ class BroadPhaseEditor : public Composite
 {
 public:
   /// Define the self type for connections.
-  typedef BroadPhaseEditor ZilchSelf;
+  typedef BroadPhaseEditor RaverieSelf;
 
   BroadPhaseEditor(Editor* parent);
 
@@ -56,4 +56,4 @@ private:
   Array<HandleOf<Widget>> mActiveWindows;
 };
 
-} // namespace Zero
+} // namespace Raverie

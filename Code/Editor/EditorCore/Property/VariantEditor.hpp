@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -13,7 +13,7 @@ DeclareEvent(TextUpdated);
 class TextUpdatedEvent : public Event
 {
 public:
-  ZilchDeclareType(TextUpdatedEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(TextUpdatedEvent, TypeCopyMode::ReferenceType);
 
   TextUpdatedEvent(Object* source) : mSource(source), mChangeAccepted(false){};
 
@@ -28,7 +28,7 @@ DeclareBitField1(InPlaceTextEditorFlags, EditOnDoubleClick);
 class FormattedInPlaceText
 {
 public:
-  ZilchDeclareType(FormattedInPlaceText, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(FormattedInPlaceText, TypeCopyMode::ReferenceType);
 
   FormattedInPlaceText()
   {
@@ -69,7 +69,7 @@ public:
 class InPlaceTextEditor : public ValueEditor
 {
 public:
-  ZilchDeclareType(InPlaceTextEditor, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(InPlaceTextEditor, TypeCopyMode::ReferenceType);
   InPlaceTextEditor(Composite* parent, u32 flags);
 
   /// Widget Interface.
@@ -112,7 +112,7 @@ public:
   typedef ValueEditor* (*ValueEditorCreator)(Composite* parent, AnyParam data, u32 flags);
 
   /// Meta Initialization.
-  ZilchDeclareType(ValueEditorFactory, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ValueEditorFactory, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   ValueEditorFactory();
@@ -128,4 +128,4 @@ private:
   HashMap<String, ValueEditorCreator> mRegisteredEditors;
 };
 
-} // namespace Zero
+} // namespace Raverie

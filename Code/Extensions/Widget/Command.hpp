@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Forward declarations
@@ -27,7 +27,7 @@ DeclareTag(Command);
 class CommandUpdateEvent : public ObjectEvent
 {
 public:
-  ZilchDeclareType(CommandUpdateEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CommandUpdateEvent, TypeCopyMode::ReferenceType);
 
   CommandUpdateEvent(Command* commmand);
 
@@ -37,7 +37,7 @@ public:
 class CommandEvent : public ObjectEvent
 {
 public:
-  ZilchDeclareType(CommandEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CommandEvent, TypeCopyMode::ReferenceType);
 
   CommandEvent(Object* source, CommandManager* manager);
 
@@ -51,7 +51,7 @@ public:
 class CommandExecuter : public Object
 {
 public:
-  ZilchDeclareType(CommandExecuter, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CommandExecuter, TypeCopyMode::ReferenceType);
 
   virtual ~CommandExecuter()
   {
@@ -79,7 +79,7 @@ CommandExecuter* BuildMetaCommandExecuter(StringParam executionFunction);
 class Command : public SafeId32EventObject
 {
 public:
-  ZilchDeclareType(Command, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Command, TypeCopyMode::ReferenceType);
 
   Command();
   ~Command();
@@ -170,7 +170,7 @@ public:
 class CommandManager : public ExplicitSingleton<CommandManager, EventObject>
 {
 public:
-  ZilchDeclareType(CommandManager, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CommandManager, TypeCopyMode::ReferenceType);
 
   CommandManager();
   ~CommandManager();
@@ -234,8 +234,8 @@ public:
 class CommandCaptureContextEvent : public Event
 {
 public:
-  ZilchDeclareType(CommandCaptureContextEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CommandCaptureContextEvent, TypeCopyMode::ReferenceType);
   CommandManager* ActiveSet;
 };
 
-} // namespace Zero
+} // namespace Raverie

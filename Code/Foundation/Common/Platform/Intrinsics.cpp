@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 static const u32 CtzLookupTable[] = {
@@ -63,4 +63,4 @@ u32 CountLeadingZerosNonIntrinsic(u32 x)
   return n;
 }
 
-} // namespace Zero
+} // namespace Raverie

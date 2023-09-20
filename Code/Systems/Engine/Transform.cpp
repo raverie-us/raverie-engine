@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Tags
@@ -9,7 +9,7 @@ namespace Tags
 DefineTag(Core);
 }
 
-ZilchDefineType(TransformMetaTransform, builder, type)
+RaverieDefineType(TransformMetaTransform, builder, type)
 {
 }
 
@@ -24,7 +24,7 @@ MetaTransformInstance TransformMetaTransform::BuildInstance(Transform* transform
   if (transform == nullptr)
     return MetaTransformInstance();
 
-  BoundType* t = ZilchTypeId(Transform);
+  BoundType* t = RaverieTypeId(Transform);
 
   MetaTransformInstance instance(transform);
 
@@ -99,48 +99,48 @@ Memory::Pool* Transform::sCachedWorldMatrixPool =
 
 bool Transform::sCacheWorldMatrices = true;
 
-ZilchDefineType(Transform, builder, type)
+RaverieDefineType(Transform, builder, type)
 {
   type->Add(new TransformMetaTransform());
 
-  ZeroBindComponent();
-  ZeroBindDocumented();
-  ZeroBindSetup(SetupMode::CallSetDefaults);
-  ZilchBindGetterSetterProperty(Translation)->ZeroLocalModificationOverride();
-  ZilchBindGetterSetterProperty(Rotation)->ZeroLocalModificationOverride();
-  ZilchBindGetterSetterProperty(Scale)->ZeroLocalModificationOverride();
-  ZilchBindMethod(SetRotationBases);
+  RaverieBindComponent();
+  RaverieBindDocumented();
+  RaverieBindSetup(SetupMode::CallSetDefaults);
+  RaverieBindGetterSetterProperty(Translation)->RaverieLocalModificationOverride();
+  RaverieBindGetterSetterProperty(Rotation)->RaverieLocalModificationOverride();
+  RaverieBindGetterSetterProperty(Scale)->RaverieLocalModificationOverride();
+  RaverieBindMethod(SetRotationBases);
 
-  ZilchBindMethod(TransformNormal);
-  ZilchBindMethod(TransformPoint);
-  ZilchBindMethod(TransformNormalLocal);
-  ZilchBindMethod(TransformPointLocal);
-  ZilchBindMethod(TransformNormalInverse);
-  ZilchBindMethod(TransformPointInverse);
+  RaverieBindMethod(TransformNormal);
+  RaverieBindMethod(TransformPoint);
+  RaverieBindMethod(TransformNormalLocal);
+  RaverieBindMethod(TransformPointLocal);
+  RaverieBindMethod(TransformNormalInverse);
+  RaverieBindMethod(TransformPointInverse);
 
-  ZilchBindMethod(RotateLocal);
-  ZilchBindMethod(RotateWorld);
-  ZilchBindMethod(RotateAround);
+  RaverieBindMethod(RotateLocal);
+  RaverieBindMethod(RotateWorld);
+  RaverieBindMethod(RotateAround);
 
-  ZilchBindMethod(RotateAnglesLocal);
-  ZilchBindMethod(RotateAnglesWorld);
+  RaverieBindMethod(RotateAnglesLocal);
+  RaverieBindMethod(RotateAnglesWorld);
 
-  ZilchBindMethod(SetEulerAnglesXYZ);
+  RaverieBindMethod(SetEulerAnglesXYZ);
 
-  ZilchBindGetterSetter(EulerAngles);
+  RaverieBindGetterSetter(EulerAngles);
 
-  ZilchBindGetterSetter(LocalScale);
-  ZilchBindGetterSetter(LocalRotation);
-  ZilchBindGetterSetter(LocalTranslation);
+  RaverieBindGetterSetter(LocalScale);
+  RaverieBindGetterSetter(LocalRotation);
+  RaverieBindGetterSetter(LocalTranslation);
 
-  ZilchBindGetterSetter(WorldScale);
-  ZilchBindGetterSetter(WorldRotation);
-  ZilchBindGetterSetter(WorldTranslation);
+  RaverieBindGetterSetter(WorldScale);
+  RaverieBindGetterSetter(WorldRotation);
+  RaverieBindGetterSetter(WorldTranslation);
 
-  ZilchBindGetter(WorldMatrix);
-  ZilchBindGetter(Parent);
+  RaverieBindGetter(WorldMatrix);
+  RaverieBindGetter(Parent);
 
-  ZeroBindTag(Tags::Core);
+  RaverieBindTag(Tags::Core);
 }
 
 Transform::Transform()
@@ -954,4 +954,4 @@ void Transform::FreeCachedMatrix()
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

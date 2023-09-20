@@ -48,10 +48,10 @@ target_sources(Meta
     ${CMAKE_CURRENT_LIST_DIR}/ThreadSafeReferenceCounted.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ThreadSafeReferenceCounted.hpp
     ${CMAKE_CURRENT_LIST_DIR}/VariantTypes.inl
-    ${CMAKE_CURRENT_LIST_DIR}/ZeroMetaArray.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/RaverieMetaArray.hpp
 )
 
 raverie_target_includes(Meta
   PUBLIC
-    Zilch
+    Raverie
 )

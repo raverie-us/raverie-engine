@@ -10,7 +10,7 @@
   Ji   : [-i, -cross(r1,i), i, cross(r2,i)]
 */
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Physics
@@ -22,12 +22,12 @@ ImplementJointType(PositionJoint);
 
 ImplementAnchorAccessors(PositionJoint, mAnchors);
 
-ZilchDefineType(PositionJoint, builder, type)
+RaverieDefineType(PositionJoint, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindInterface(Joint);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindInterface(Joint);
+  RaverieBindDocumented();
 
   BindAnchorAccessors(Vec3(1));
 }
@@ -146,4 +146,4 @@ uint PositionJoint::GetDefaultSpringIds() const
 
 } // namespace Physics
 
-} // namespace Zero
+} // namespace Raverie

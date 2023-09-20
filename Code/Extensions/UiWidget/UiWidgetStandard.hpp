@@ -7,20 +7,20 @@
 #include "Extensions/Widget/WidgetStandard.hpp"
 #include "Extensions/Gameplay/GameplayStandard.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // UiWidget library
-class UiWidgetLibrary : public Zilch::StaticLibrary
+class UiWidgetLibrary : public Raverie::StaticLibrary
 {
 public:
-  ZilchDeclareStaticLibraryInternals(UiWidgetLibrary);
+  RaverieDeclareStaticLibraryInternals(UiWidgetLibrary);
 
   static void Initialize();
   static void Shutdown();
 };
 
-} // namespace Zero
+} // namespace Raverie
 
 // Widget Core
 #include "UiWidget.hpp"

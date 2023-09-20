@@ -1,17 +1,17 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 Memory::Heap* Archetype::CacheHeap = new Memory::Heap("Archetypes", Memory::GetRoot());
 bool Archetype::sRebuilding = false;
 
 // Archetype
-ZilchDefineType(Archetype, builder, type)
+RaverieDefineType(Archetype, builder, type)
 {
-  ZeroBindDocumented();
-  ZilchBindField(mStoredType);
+  RaverieBindDocumented();
+  RaverieBindField(mStoredType);
 }
 
 Archetype::Archetype()
@@ -296,7 +296,7 @@ Archetype* ArchetypeManager::MakeNewArchetypeWith(Cog* cog,
     if (inheritedArchetype)
       archetype->mBaseResourceIdName = inheritedArchetype->ResourceIdName;
 
-    if (archetype->mStoredType != ZilchVirtualTypeId(cog))
+    if (archetype->mStoredType != RaverieVirtualTypeId(cog))
     {
       DoNotifyWarning("Can not set",
                       "Archetype Contains a different composition type than "
@@ -352,7 +352,7 @@ Archetype* ArchetypeManager::MakeNewArchetypeWith(Cog* cog,
 bool ArchetypeManager::SaveToContent(Cog* object, Archetype* archetype, ResourceId addResourceId)
 {
   archetype->mCachedObject = object;
-  archetype->mStoredType = ZilchVirtualTypeId(object);
+  archetype->mStoredType = RaverieVirtualTypeId(object);
   archetype->FilterTag = archetype->mStoredType->Name;
 
   if (Z::gRuntimeEditor == nullptr)
@@ -479,4 +479,4 @@ void ArchetypeManager::ArchetypeModified(Archetype* archetype)
   LevelManager::ClearCachedLevels();
 }
 
-} // namespace Zero
+} // namespace Raverie

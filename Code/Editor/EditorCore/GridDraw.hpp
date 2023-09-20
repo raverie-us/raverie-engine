@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 class UpdateEvent;
 
@@ -10,7 +10,7 @@ class GridDraw : public Component
 {
 public:
   // Meta Initialization
-  ZilchDeclareType(GridDraw, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(GridDraw, TypeCopyMode::ReferenceType);
 
   // Constants
   static const size_t NumAxes = 3;
@@ -66,4 +66,4 @@ public:
   AxisDirection::Enum mAxis;
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 ConsoleListener::~ConsoleListener()
@@ -31,12 +31,12 @@ void Console::PrintVa(Filter::Enum filter, cstr format, va_list args)
 {
   // Get the number of characters needed
   int bufferSize;
-  ZeroVSPrintfCount(format, args, 1, bufferSize);
+  RaverieVSPrintfCount(format, args, 1, bufferSize);
 
   if (bufferSize > 0)
   {
     char* messageBuffer = (char*)alloca((bufferSize + 1) * sizeof(char));
-    ZeroVSPrintf(messageBuffer, bufferSize, format, args);
+    RaverieVSPrintf(messageBuffer, bufferSize, format, args);
 
     PrintRaw(filter, messageBuffer);
   }
@@ -74,4 +74,4 @@ void Console::Remove(ConsoleListener* listener)
     ConsoleListeners.EraseAt(index);
 }
 
-} // namespace Zero
+} // namespace Raverie

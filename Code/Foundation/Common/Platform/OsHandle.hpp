@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 typedef void* OsHandle;
 typedef unsigned long OsInt;
@@ -42,4 +42,4 @@ public:
 
   OsHandle mHandle;
 };
-} // namespace Zero
+} // namespace Raverie

@@ -1,17 +1,17 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(Environment, builder, type)
+RaverieDefineType(Environment, builder, type)
 {
   // This is created once at startup and exists for the entirety of
   // the application so it's safe to bind as a raw pointer.
-  type->HandleManager = ZilchManagerId(PointerManager);
+  type->HandleManager = RaverieManagerId(PointerManager);
 
-  ZilchBindFieldProperty(mCommandLine);
-  ZilchBindMethod(GetParsedArgument);
+  RaverieBindFieldProperty(mCommandLine);
+  RaverieBindMethod(GetParsedArgument);
 }
 
 Environment* Environment::GetInstance()
@@ -60,4 +60,4 @@ void Environment::BuildCommandLine()
   mCommandLine = builder.ToString();
 }
 
-} // namespace Zero
+} // namespace Raverie

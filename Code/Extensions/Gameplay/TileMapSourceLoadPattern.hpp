@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 struct TileMapSourceLoadPattern
@@ -124,4 +124,4 @@ struct TileMapSourceLoadPattern
   }
 };
 
-} // namespace Zero
+} // namespace Raverie

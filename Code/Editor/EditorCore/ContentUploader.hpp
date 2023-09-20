@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Forward declarations
@@ -15,7 +15,7 @@ class ContentPackageExporter;
 class ContentExportTile : public TileViewWidget
 {
 public:
-  typedef ContentExportTile ZilchSelf;
+  typedef ContentExportTile RaverieSelf;
   ContentExportTile(Composite* parent,
                     TileView* tileView,
                     PreviewWidget* tileWidget,
@@ -48,7 +48,7 @@ private:
 class ContentExporterTileView : public TileView
 {
 public:
-  typedef ContentExporterTileView ZilchSelf;
+  typedef ContentExporterTileView RaverieSelf;
 
   ContentExporterTileView(ContentPackageExporter* parent);
   TileViewWidget* CreateTileViewWidget(Composite* parent,
@@ -65,7 +65,7 @@ public:
 class ContentPackageExporter : public Composite
 {
 public:
-  typedef ContentPackageExporter ZilchSelf;
+  typedef ContentPackageExporter RaverieSelf;
   ContentPackageExporter(Composite* parent);
   ~ContentPackageExporter();
 
@@ -94,4 +94,4 @@ private:
   Text* mHintText;
 };
 
-} // namespace Zero
+} // namespace Raverie

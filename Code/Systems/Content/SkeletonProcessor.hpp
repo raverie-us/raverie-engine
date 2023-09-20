@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 const String cCogPathParent("../");
@@ -24,4 +24,4 @@ public:
   String& mRootNodeName;
 };
 
-} // namespace Zero
+} // namespace Raverie

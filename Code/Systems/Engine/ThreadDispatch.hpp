@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 typedef uint ThreadContextId;
@@ -42,7 +42,7 @@ private:
 class ObjectThreadDispatch : public EventObject
 {
 public:
-  typedef ObjectThreadDispatch ZilchSelf;
+  typedef ObjectThreadDispatch RaverieSelf;
   struct ObjectQueuedEvent
   {
     String EventId;
@@ -88,4 +88,4 @@ inline void SendBlockingTaskFinish()
   Z::gDispatch->Dispatch(Z::gEngine, Events::BlockingTaskFinish, new Event());
 }
 
-} // namespace Zero
+} // namespace Raverie

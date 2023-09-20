@@ -2,7 +2,7 @@
 #pragma once
 #include "Systems/Engine/EngineEvents.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Support Functions
@@ -16,7 +16,7 @@ DeclareEnum2(ImageImport, Textures, Sprites);
 class ImageOptions : public Object
 {
 public:
-  ZilchDeclareType(ImageOptions, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ImageOptions, TypeCopyMode::ReferenceType);
 
   ImageOptions(ImportOptions* owner);
 
@@ -46,7 +46,7 @@ const float cMetersToInchesScaleFactor = 39.37f;
 class GeometryOptions : public Object
 {
 public:
-  ZilchDeclareType(GeometryOptions, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(GeometryOptions, TypeCopyMode::ReferenceType);
 
   GeometryOptions(ImportOptions* owner);
   ImportOptions* mOwner;
@@ -90,7 +90,7 @@ public:
 class ShowNormalGenerationOptionsFilter : public MetaPropertyFilter
 {
 public:
-  ZilchDeclareType(ShowNormalGenerationOptionsFilter, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ShowNormalGenerationOptionsFilter, TypeCopyMode::ReferenceType);
   bool Filter(Member* prop, HandleParam instance) override;
 };
 
@@ -98,7 +98,7 @@ DeclareEnum3(AudioCueImport, None, PerSound, Grouped);
 class AudioOptions : public Object
 {
 public:
-  ZilchDeclareType(AudioOptions, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(AudioOptions, TypeCopyMode::ReferenceType);
 
   AudioOptions(ImportOptions* owner);
 
@@ -112,7 +112,7 @@ DeclareEnum2(ConflictAction, Skip, Replace);
 class ConflictOptions : public Object
 {
 public:
-  ZilchDeclareType(ConflictOptions, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ConflictOptions, TypeCopyMode::ReferenceType);
 
   ConflictOptions(ImportOptions* owner);
 
@@ -131,7 +131,7 @@ DeclareEvent(ImportOptionsModified);
 class ImportOptions : public EventObject
 {
 public:
-  ZilchDeclareType(ImportOptions, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ImportOptions, TypeCopyMode::ReferenceType);
 
   ImportOptions();
   ~ImportOptions();
@@ -153,4 +153,4 @@ public:
   Array<String> mConflictedFiles;
 };
 
-} // namespace Zero
+} // namespace Raverie

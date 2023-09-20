@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Window Events
@@ -42,7 +42,7 @@ class OsShell;
 class OsWindow : public ThreadSafeId32EventObject
 {
 public:
-  ZilchDeclareType(OsWindow, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(OsWindow, TypeCopyMode::ReferenceType);
 
   OsWindow();
   virtual ~OsWindow();
@@ -78,7 +78,7 @@ public:
 class OsWindowEvent : public Event
 {
 public:
-  ZilchDeclareType(OsWindowEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(OsWindowEvent, TypeCopyMode::ReferenceType);
   OsWindowEvent();
 
   void Serialize(Serializer& stream);
@@ -90,7 +90,7 @@ public:
 class OsMouseEvent : public Event
 {
 public:
-  ZilchDeclareType(OsMouseEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(OsMouseEvent, TypeCopyMode::ReferenceType);
 
   OsMouseEvent();
   void Clear();
@@ -114,7 +114,7 @@ public:
 class OsWindowBorderHitTest : public Event
 {
 public:
-  ZilchDeclareType(OsWindowBorderHitTest, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(OsWindowBorderHitTest, TypeCopyMode::ReferenceType);
 
   OsWindowBorderHitTest();
 
@@ -125,7 +125,7 @@ public:
 class OsMouseDropEvent : public OsMouseEvent
 {
 public:
-  ZilchDeclareType(OsMouseDropEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(OsMouseDropEvent, TypeCopyMode::ReferenceType);
   OsMouseDropEvent()
   {
   }
@@ -135,4 +135,4 @@ public:
   Array<String> Files;
 };
 
-} // namespace Zero
+} // namespace Raverie

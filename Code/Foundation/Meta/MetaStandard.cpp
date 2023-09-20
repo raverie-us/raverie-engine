@@ -1,149 +1,149 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Ranges
-ZilchDefineRange(MetaSelection::range);
+RaverieDefineRange(MetaSelection::range);
 
 // METAREFACTOR - move to platform meta library
-ZilchDefineExternalBaseType(IpAddress, TypeCopyMode::ReferenceType, builder, type)
+RaverieDefineExternalBaseType(IpAddress, TypeCopyMode::ReferenceType, builder, type)
 {
   type->CreatableInScript = true;
 
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindConstructor();
-  ZilchBindConstructor(const IpAddress&);
-  ZilchBindConstructor(StringParam, uint, Zero::InternetProtocol::Enum);
-  ZilchBindConstructor(StringParam, uint);
+  RaverieBindConstructor();
+  RaverieBindConstructor(const IpAddress&);
+  RaverieBindConstructor(StringParam, uint, Raverie::InternetProtocol::Enum);
+  RaverieBindConstructor(StringParam, uint);
 
-  ZilchBindDestructor();
+  RaverieBindDestructor();
 
-  ZilchBindMethod(Clear);
+  RaverieBindMethod(Clear);
 
-  ZilchBindCustomGetterProperty(IsValid);
-  ZilchBindGetterProperty(InternetProtocol);
-  ZilchBindGetterProperty(String);
-  ZilchBindCustomGetterProperty(Hash);
+  RaverieBindCustomGetterProperty(IsValid);
+  RaverieBindGetterProperty(InternetProtocol);
+  RaverieBindGetterProperty(String);
+  RaverieBindCustomGetterProperty(Hash);
 
-  ZilchFullBindGetterSetter(builder,
+  RaverieFullBindGetterSetter(builder,
                             type,
-                            &Zero::IpAddress::GetHost,
-                            (String(Zero::IpAddress::*)() const),
-                            &Zero::IpAddress::SetHost,
-                            (void (Zero::IpAddress::*)(StringParam)),
+                            &Raverie::IpAddress::GetHost,
+                            (String(Raverie::IpAddress::*)() const),
+                            &Raverie::IpAddress::SetHost,
+                            (void (Raverie::IpAddress::*)(StringParam)),
                             "Host");
-  ZilchFullBindGetterSetter(builder,
+  RaverieFullBindGetterSetter(builder,
                             type,
-                            &Zero::IpAddress::GetPort,
-                            (uint(Zero::IpAddress::*)() const),
-                            &Zero::IpAddress::SetPort,
-                            (void (Zero::IpAddress::*)(uint)),
+                            &Raverie::IpAddress::GetPort,
+                            (uint(Raverie::IpAddress::*)() const),
+                            &Raverie::IpAddress::SetPort,
+                            (void (Raverie::IpAddress::*)(uint)),
                             "Port");
 
-  ZilchBindGetterProperty(PortString);
+  RaverieBindGetterProperty(PortString);
 }
 
 // Enums
-ZilchDefineEnum(SendsEvents);
-ZilchDefineEnum(InternetProtocol);
+RaverieDefineEnum(SendsEvents);
+RaverieDefineEnum(InternetProtocol);
 
-ZilchDefineStaticLibrary(MetaLibrary)
+RaverieDefineStaticLibrary(MetaLibrary)
 {
   builder.CreatableInScriptDefault = false;
 
   // Ranges
-  ZilchInitializeRangeAs(MetaSelection::range, "MetaSelectionRange");
+  RaverieInitializeRangeAs(MetaSelection::range, "MetaSelectionRange");
 
   // Enums
-  ZilchInitializeEnum(SendsEvents);
-  ZilchInitializeEnum(InternetProtocol);
+  RaverieInitializeEnum(SendsEvents);
+  RaverieInitializeEnum(InternetProtocol);
 
   // This needs to be the first thing initialized
-  ZilchInitializeType(Object);
-  ZilchInitializeType(EventObject);
+  RaverieInitializeType(Object);
+  RaverieInitializeType(EventObject);
 
   // Basic handles
-  ZilchInitializeType(ReferenceCountedEmpty);
-  ZilchInitializeType(SafeId32);
-  ZilchInitializeType(SafeId64);
-  ZilchInitializeType(ThreadSafeId32);
-  ZilchInitializeType(ThreadSafeId64);
-  ZilchInitializeType(ReferenceCountedSafeId32);
-  ZilchInitializeType(ReferenceCountedSafeId64);
-  ZilchInitializeType(ReferenceCountedThreadSafeId32);
-  ZilchInitializeType(ReferenceCountedThreadSafeId64);
+  RaverieInitializeType(ReferenceCountedEmpty);
+  RaverieInitializeType(SafeId32);
+  RaverieInitializeType(SafeId64);
+  RaverieInitializeType(ThreadSafeId32);
+  RaverieInitializeType(ThreadSafeId64);
+  RaverieInitializeType(ReferenceCountedSafeId32);
+  RaverieInitializeType(ReferenceCountedSafeId64);
+  RaverieInitializeType(ReferenceCountedThreadSafeId32);
+  RaverieInitializeType(ReferenceCountedThreadSafeId64);
 
   // Object handles
-  ZilchInitializeType(ReferenceCountedObject);
-  ZilchInitializeType(SafeId32Object);
-  ZilchInitializeType(SafeId64Object);
-  ZilchInitializeType(ThreadSafeId32Object);
-  ZilchInitializeType(ThreadSafeId64Object);
-  ZilchInitializeType(ReferenceCountedSafeId32Object);
-  ZilchInitializeType(ReferenceCountedSafeId64Object);
-  ZilchInitializeType(ReferenceCountedThreadSafeId32Object);
-  ZilchInitializeType(ReferenceCountedThreadSafeId64Object);
+  RaverieInitializeType(ReferenceCountedObject);
+  RaverieInitializeType(SafeId32Object);
+  RaverieInitializeType(SafeId64Object);
+  RaverieInitializeType(ThreadSafeId32Object);
+  RaverieInitializeType(ThreadSafeId64Object);
+  RaverieInitializeType(ReferenceCountedSafeId32Object);
+  RaverieInitializeType(ReferenceCountedSafeId64Object);
+  RaverieInitializeType(ReferenceCountedThreadSafeId32Object);
+  RaverieInitializeType(ReferenceCountedThreadSafeId64Object);
 
   // EventObject handles
-  ZilchInitializeType(ReferenceCountedEventObject);
-  ZilchInitializeType(SafeId32EventObject);
-  ZilchInitializeType(SafeId64EventObject);
-  ZilchInitializeType(ThreadSafeId32EventObject);
-  ZilchInitializeType(ThreadSafeId64EventObject);
-  ZilchInitializeType(ReferenceCountedSafeId32EventObject);
-  ZilchInitializeType(ReferenceCountedSafeId64EventObject);
-  ZilchInitializeType(ReferenceCountedThreadSafeId32EventObject);
-  ZilchInitializeType(ReferenceCountedThreadSafeId64EventObject);
+  RaverieInitializeType(ReferenceCountedEventObject);
+  RaverieInitializeType(SafeId32EventObject);
+  RaverieInitializeType(SafeId64EventObject);
+  RaverieInitializeType(ThreadSafeId32EventObject);
+  RaverieInitializeType(ThreadSafeId64EventObject);
+  RaverieInitializeType(ReferenceCountedSafeId32EventObject);
+  RaverieInitializeType(ReferenceCountedSafeId64EventObject);
+  RaverieInitializeType(ReferenceCountedThreadSafeId32EventObject);
+  RaverieInitializeType(ReferenceCountedThreadSafeId64EventObject);
 
-  ZilchInitializeType(ThreadSafeReferenceCounted);
+  RaverieInitializeType(ThreadSafeReferenceCounted);
 
   // Meta Components
-  ZilchInitializeType(MetaAttribute);
-  ZilchInitializeType(CogComponentMeta);
-  ZilchInitializeType(MetaOwner);
-  ZilchInitializeType(MetaGroup);
-  ZilchInitializeType(MetaCustomUi);
-  ZilchInitializeType(MetaOperations);
-  ZilchInitializeType(MetaPropertyFilter);
-  ZilchInitializeType(MetaPropertyBasicFilter);
-  ZilchInitializeType(MetaEditorGizmo);
-  ZilchInitializeType(MetaDisplay);
-  ZilchInitializeType(TypeNameDisplay);
-  ZilchInitializeType(StringNameDisplay);
-  ZilchInitializeType(MetaTransform);
-  ZilchInitializeType(MetaPropertyRename);
-  ZilchInitializeType(MetaShaderInput);
-  ZilchInitializeType(EditorPropertyExtension);
-  ZilchInitializeType(EditorIndexedStringArray);
-  ZilchInitializeType(EditorRange);
-  ZilchInitializeType(EditorSlider);
-  ZilchInitializeType(EditorRotationBasis);
-  ZilchInitializeType(MetaEditorResource);
-  ZilchInitializeType(MetaDataInheritance);
-  ZilchInitializeType(MetaDataInheritanceRoot);
-  ZilchInitializeType(MetaSerializedProperty);
-  ZilchInitializeType(MetaComposition);
-  ZilchInitializeType(MetaArray);
-  ZilchInitializeType(MetaArrayWrapper);
+  RaverieInitializeType(MetaAttribute);
+  RaverieInitializeType(CogComponentMeta);
+  RaverieInitializeType(MetaOwner);
+  RaverieInitializeType(MetaGroup);
+  RaverieInitializeType(MetaCustomUi);
+  RaverieInitializeType(MetaOperations);
+  RaverieInitializeType(MetaPropertyFilter);
+  RaverieInitializeType(MetaPropertyBasicFilter);
+  RaverieInitializeType(MetaEditorGizmo);
+  RaverieInitializeType(MetaDisplay);
+  RaverieInitializeType(TypeNameDisplay);
+  RaverieInitializeType(StringNameDisplay);
+  RaverieInitializeType(MetaTransform);
+  RaverieInitializeType(MetaPropertyRename);
+  RaverieInitializeType(MetaShaderInput);
+  RaverieInitializeType(EditorPropertyExtension);
+  RaverieInitializeType(EditorIndexedStringArray);
+  RaverieInitializeType(EditorRange);
+  RaverieInitializeType(EditorSlider);
+  RaverieInitializeType(EditorRotationBasis);
+  RaverieInitializeType(MetaEditorResource);
+  RaverieInitializeType(MetaDataInheritance);
+  RaverieInitializeType(MetaDataInheritanceRoot);
+  RaverieInitializeType(MetaSerializedProperty);
+  RaverieInitializeType(MetaComposition);
+  RaverieInitializeType(MetaArray);
+  RaverieInitializeType(MetaArrayWrapper);
 
   // Events
-  ZilchInitializeType(Event);
-  ZilchInitializeType(MetaLibraryEvent);
-  ZilchInitializeType(SelectionChangedEvent);
-  ZilchInitializeType(NotifyEvent);
-  ZilchInitializeType(PropertyEvent);
-  ZilchInitializeType(TypeEvent);
+  RaverieInitializeType(Event);
+  RaverieInitializeType(MetaLibraryEvent);
+  RaverieInitializeType(SelectionChangedEvent);
+  RaverieInitializeType(NotifyEvent);
+  RaverieInitializeType(PropertyEvent);
+  RaverieInitializeType(TypeEvent);
 
-  ZilchInitializeType(MetaSelection);
-  ZilchInitializeType(ObjectEvent);
-  ZilchInitializeType(LocalModifications);
-  ZilchInitializeType(PropertyPath);
-  ZilchInitializeExternalType(IpAddress);
+  RaverieInitializeType(MetaSelection);
+  RaverieInitializeType(ObjectEvent);
+  RaverieInitializeType(LocalModifications);
+  RaverieInitializeType(PropertyPath);
+  RaverieInitializeExternalType(IpAddress);
 
-  ZilchInitializeType(PropertyPath);
+  RaverieInitializeType(PropertyPath);
 
   MetaLibraryExtensions::AddNativeExtensions(builder);
 }
@@ -155,15 +155,15 @@ void MetaLibrary::Initialize()
 
   AttributeExtensions::Initialize();
 
-  RegisterFunctionAttribute(Zilch::StaticAttribute)->AllowStatic(true);
-  RegisterFunctionAttribute(Zilch::VirtualAttribute);
-  RegisterFunctionAttribute(Zilch::OverrideAttribute);
+  RegisterFunctionAttribute(Raverie::StaticAttribute)->AllowStatic(true);
+  RegisterFunctionAttribute(Raverie::VirtualAttribute);
+  RegisterFunctionAttribute(Raverie::OverrideAttribute);
   RegisterFunctionAttribute(PropertyAttributes::cInternal);
   RegisterFunctionAttribute(FunctionAttributes::cDisplay)->AllowStatic(true);
 
-  RegisterPropertyAttribute(Zilch::StaticAttribute)->AllowStatic(true);
-  RegisterPropertyAttribute(Zilch::VirtualAttribute);
-  RegisterPropertyAttribute(Zilch::OverrideAttribute);
+  RegisterPropertyAttribute(Raverie::StaticAttribute)->AllowStatic(true);
+  RegisterPropertyAttribute(Raverie::VirtualAttribute);
+  RegisterPropertyAttribute(Raverie::OverrideAttribute);
   RegisterPropertyAttribute(PropertyAttributes::cProperty);
   RegisterPropertyAttribute(PropertyAttributes::cInternal);
   RegisterPropertyAttribute(PropertyAttributes::cSerialize);
@@ -186,4 +186,4 @@ void MetaLibrary::Shutdown()
   GetLibrary()->ClearComponents();
 }
 
-} // namespace Zero
+} // namespace Raverie

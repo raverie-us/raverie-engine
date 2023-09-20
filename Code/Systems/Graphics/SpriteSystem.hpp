@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Sprite Particle System Enums
@@ -23,7 +23,7 @@ DeclareEnum2(SpriteParticleAnimationMode, Single, Looping);
 class SpriteParticleSystem : public ParticleSystem
 {
 public:
-  ZilchDeclareType(SpriteParticleSystem, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SpriteParticleSystem, TypeCopyMode::ReferenceType);
 
   // Component Interface
 
@@ -66,4 +66,4 @@ public:
   void CheckSort(ViewBlock& viewBlock);
 };
 
-} // namespace Zero
+} // namespace Raverie

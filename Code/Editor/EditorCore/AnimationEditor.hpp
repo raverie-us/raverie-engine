@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Forward Declarations
@@ -36,7 +36,7 @@ DeclareEnum5(ErrorState,
 class PropertyKeyIcon : public Composite
 {
 public:
-  typedef PropertyKeyIcon ZilchSelf;
+  typedef PropertyKeyIcon RaverieSelf;
   PropertyKeyIcon(Composite* parent, HandleParam object, Property* metaProperty, AnimationEditor* editor);
 
   void UpdateTransform() override;
@@ -55,7 +55,7 @@ public:
 class AnimationEditor : public Composite
 {
 public:
-  ZilchDeclareType(AnimationEditor, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(AnimationEditor, TypeCopyMode::ReferenceType);
 
   /// We want the main viewport to get keyboard input for creating keys.
   AnimationEditor(Composite* parent);
@@ -253,4 +253,4 @@ Archetype* GetAnimationPreviewArchetype(Animation* animation);
 
 Cog* CreateAnimationPreview(Space* space, Animation* animation, Archetype* previewArchetype = NULL);
 
-} // namespace Zero
+} // namespace Raverie

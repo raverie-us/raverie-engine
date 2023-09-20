@@ -1,13 +1,13 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 const cstr cLocation = "EditorUi/Interaction";
 Tweakable(bool, DebugTextArea, false, cLocation);
 
-ZilchDefineType(Text, builder, type)
+RaverieDefineType(Text, builder, type)
 {
 }
 
@@ -101,7 +101,7 @@ Vec2 Text::GetMinSize()
     return mFont->MeasureText(mText.All());
 }
 
-ZilchDefineType(Label, builder, type)
+RaverieDefineType(Label, builder, type)
 {
 }
 
@@ -162,4 +162,4 @@ void Label::UpdateTransform()
   Composite::UpdateTransform();
 }
 
-} // namespace Zero
+} // namespace Raverie

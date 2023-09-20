@@ -85,7 +85,7 @@ bool Epa::Expand(CSOVertex newPoint)
   }
 
   // Find every face that the new point is in front of
-  Zero::Array<unsigned> visibleFaces;
+  Raverie::Array<unsigned> visibleFaces;
   // float maxDot = 0.0f;
   for (unsigned i = 0; i < mFaces.Size(); ++i)
   {
@@ -220,25 +220,25 @@ bool Epa::DebugStep(void)
 
 void Epa::DrawDebug(void)
 {
-  Zero::gDebugDraw->Add(Zero::Debug::Sphere(mDebugPoint.cso, 0.01f).Color(Color::Red));
+  Raverie::gDebugDraw->Add(Raverie::Debug::Sphere(mDebugPoint.cso, 0.01f).Color(Color::Red));
 
   for (unsigned i = 0; i < mEdges.Size(); ++i)
   {
     Edge& edge = mEdges[i];
-    Zero::gDebugDraw->Add(Zero::Debug::Line(mVertices[edge.p0].cso, mVertices[edge.p1].cso).Color(Color::Orange));
+    Raverie::gDebugDraw->Add(Raverie::Debug::Line(mVertices[edge.p0].cso, mVertices[edge.p1].cso).Color(Color::Orange));
   }
 
   for (unsigned i = 0; i < mFaces.Size(); ++i)
   {
     Face& face = mFaces[i];
     ByteColor color;
-    if (mVisibleFaces.FindIndex(i) != Zero::Array<unsigned>::InvalidIndex)
+    if (mVisibleFaces.FindIndex(i) != Raverie::Array<unsigned>::InvalidIndex)
       color = Color::Orange;
     else if (i == mIndexClosest)
       color = Color::Red;
     else
       color = Color::Blue;
-    Zero::gDebugDraw->Add(Zero::Debug::Triangle(mVertices[face.p0].cso, mVertices[face.p1].cso, mVertices[face.p2].cso)
+    Raverie::gDebugDraw->Add(Raverie::Debug::Triangle(mVertices[face.p0].cso, mVertices[face.p1].cso, mVertices[face.p2].cso)
                               .Color(color)
                               .Border(true)
                               .Alpha(50));

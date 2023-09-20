@@ -7,7 +7,7 @@
 #include "BitTypes.hpp"
 #include "Log2.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 /// Verify platform byte length
@@ -275,7 +275,7 @@ inline R_ENABLE_IF(is_floating_point<T>::value, T) DivCeil(T numerator, T denomi
   return std::ceil(numerator / denominator);
 }
 
-} // namespace Zero
+} // namespace Raverie
 
 // Using directives
-// using Zero::uintptr;
+// using Raverie::uintptr;

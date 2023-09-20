@@ -5,7 +5,7 @@
 #include "SimVectors.hpp"
 #include "SimMatrix3.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Physics
@@ -106,4 +106,4 @@ SimInline void SolveConstraintSse(SimVecRef v0,
 
 } // namespace Physics
 
-} // namespace Zero
+} // namespace Raverie

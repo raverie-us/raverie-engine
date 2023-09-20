@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -27,7 +27,7 @@ DeclareEnum4(SelectMode, Left, Right, Start, End);
 class EditText : public Widget
 {
 public:
-  ZilchDeclareType(EditText, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(EditText, TypeCopyMode::ReferenceType);
 
   EditText(Composite* parent);
   ~EditText();
@@ -126,4 +126,4 @@ public:
   String mDisplayText;
 };
 
-} // namespace Zero
+} // namespace Raverie

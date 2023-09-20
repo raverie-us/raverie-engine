@@ -4,7 +4,7 @@
 #include "Typedefs.hpp"
 #include "Time.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Smaller of two is put in the top 32 bits.
@@ -129,4 +129,4 @@ bool IsBigEndian();
 /// Will result in zero if most significant bit is set
 u32 NextPowerOfTwo(u32 x);
 
-} // namespace Zero
+} // namespace Raverie

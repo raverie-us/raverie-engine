@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Mostly internal states used by point effects.
@@ -14,7 +14,7 @@ DeclareBitField6(
 class BasicPointEffect : public PhysicsEffect
 {
 public:
-  ZilchDeclareType(BasicPointEffect, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(BasicPointEffect, TypeCopyMode::ReferenceType);
 
   BasicPointEffect();
 
@@ -98,7 +98,7 @@ protected:
 class PointForceEffect : public BasicPointEffect
 {
 public:
-  ZilchDeclareType(PointForceEffect, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(PointForceEffect, TypeCopyMode::ReferenceType);
 
   PointForceEffect();
 
@@ -114,7 +114,7 @@ public:
 class PointGravityEffect : public BasicPointEffect
 {
 public:
-  ZilchDeclareType(PointGravityEffect, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(PointGravityEffect, TypeCopyMode::ReferenceType);
 
   PointGravityEffect();
 
@@ -122,4 +122,4 @@ public:
   void ApplyEffect(RigidBody* obj, real dt) override;
 };
 
-} // namespace Zero
+} // namespace Raverie

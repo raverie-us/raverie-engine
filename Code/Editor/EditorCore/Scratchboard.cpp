@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 class ScratchboardDrawer : public Widget
@@ -316,4 +316,4 @@ Aabb Scratchboard::GetObjectsAabb()
   return aabb;
 }
 
-} // namespace Zero
+} // namespace Raverie

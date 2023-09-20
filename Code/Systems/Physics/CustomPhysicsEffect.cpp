@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -10,15 +10,15 @@ DefineEvent(CustomPhysicsEffectPrecalculatePhase);
 DefineEvent(ApplyCustomPhysicsEffect);
 } // namespace Events
 
-ZilchDefineType(CustomPhysicsEffectEvent, builder, type)
+RaverieDefineType(CustomPhysicsEffectEvent, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
 
-  ZilchBindFieldProperty(mDt);
-  ZilchBindFieldProperty(mEffect);
-  ZilchBindFieldProperty(mRigidBody);
+  RaverieBindFieldProperty(mDt);
+  RaverieBindFieldProperty(mEffect);
+  RaverieBindFieldProperty(mRigidBody);
 }
 
 CustomPhysicsEffectEvent::CustomPhysicsEffectEvent()
@@ -28,14 +28,14 @@ CustomPhysicsEffectEvent::CustomPhysicsEffectEvent()
   mDt = 0;
 }
 
-ZilchDefineType(CustomPhysicsEffect, builder, type)
+RaverieDefineType(CustomPhysicsEffect, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
 
-  ZeroBindEvent(Events::CustomPhysicsEffectPrecalculatePhase, CustomPhysicsEffectEvent);
-  ZeroBindEvent(Events::ApplyCustomPhysicsEffect, CustomPhysicsEffectEvent);
+  RaverieBindEvent(Events::CustomPhysicsEffectPrecalculatePhase, CustomPhysicsEffectEvent);
+  RaverieBindEvent(Events::ApplyCustomPhysicsEffect, CustomPhysicsEffectEvent);
 }
 
 CustomPhysicsEffect::CustomPhysicsEffect()
@@ -73,4 +73,4 @@ void CustomPhysicsEffect::ApplyEffect(RigidBody* obj, real dt)
   GetOwner()->DispatchEvent(Events::ApplyCustomPhysicsEffect, &toSend);
 }
 
-} // namespace Zero
+} // namespace Raverie

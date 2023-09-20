@@ -1,23 +1,23 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(FlowEffect, builder, type)
+RaverieDefineType(FlowEffect, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetterProperty(LocalForce)->ZeroSerialize(true);
-  ZilchBindGetterSetterProperty(AttractToFlowCenter)->ZeroSerialize(false);
-  ZilchBindGetterSetterProperty(FlowSpeed)->ZeroSerialize(real(10));
-  ZilchBindGetterSetterProperty(MaxFlowForce)->ZeroSerialize(real(10));
-  ZilchBindGetterSetterProperty(FlowDirection)->ZeroSerialize(Vec3(0, 1, 0));
-  ZilchBindGetterProperty(WorldFlowDirection);
-  ZilchBindGetterSetterProperty(AttractSpeed)->ZeroSerialize(real(5));
-  ZilchBindGetterSetterProperty(MaxAttractForce)->ZeroSerialize(real(50));
+  RaverieBindGetterSetterProperty(LocalForce)->RaverieSerialize(true);
+  RaverieBindGetterSetterProperty(AttractToFlowCenter)->RaverieSerialize(false);
+  RaverieBindGetterSetterProperty(FlowSpeed)->RaverieSerialize(real(10));
+  RaverieBindGetterSetterProperty(MaxFlowForce)->RaverieSerialize(real(10));
+  RaverieBindGetterSetterProperty(FlowDirection)->RaverieSerialize(Vec3(0, 1, 0));
+  RaverieBindGetterProperty(WorldFlowDirection);
+  RaverieBindGetterSetterProperty(AttractSpeed)->RaverieSerialize(real(5));
+  RaverieBindGetterSetterProperty(MaxAttractForce)->RaverieSerialize(real(50));
 }
 
 FlowEffect::FlowEffect()
@@ -307,4 +307,4 @@ void FlowEffect::SetAttractSpeed(real speed)
   CheckWakeUp();
 }
 
-} // namespace Zero
+} // namespace Raverie

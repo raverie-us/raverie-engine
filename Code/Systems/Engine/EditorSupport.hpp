@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class ContentLibrary;
@@ -148,4 +148,4 @@ extern const String ViewCube;
 extern const String Wedge;
 } // namespace CoreArchetypes
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Tags
@@ -30,15 +30,15 @@ Handle ComponentGetOwner(HandleParam object)
   return component->GetOwner();
 }
 
-ZilchDefineTemplateType(ProxyObject<Component>, builder, type)
+RaverieDefineTemplateType(ProxyObject<Component>, builder, type)
 {
 }
 
 // Component
-ZilchDefineType(Component, builder, type)
+RaverieDefineType(Component, builder, type)
 {
-  ZilchBindDefaultConstructor();
-  type->HandleManager = ZilchManagerId(ComponentHandleManager);
+  RaverieBindDefaultConstructor();
+  type->HandleManager = RaverieManagerId(ComponentHandleManager);
 
   // METAREFACTOR Take care of this stuff (meta components)
   // type->ShortDescription = GetShortDescriptionComponent;
@@ -49,14 +49,14 @@ ZilchDefineType(Component, builder, type)
   type->Add(new ComponentMetaOperations());
   type->AddAttribute(ObjectAttributes::cStoreLocalModifications);
 
-  ZeroBindDocumented();
-  ZilchBindGetterAs(OwnerScript, "Owner");
-  ZilchBindGetter(Space);
-  ZilchBindGetter(LevelSettings);
-  ZilchBindGetter(GameSession);
+  RaverieBindDocumented();
+  RaverieBindGetterAs(OwnerScript, "Owner");
+  RaverieBindGetter(Space);
+  RaverieBindGetter(LevelSettings);
+  RaverieBindGetter(GameSession);
 
-  ZilchBindMethod(DebugDraw);
-  ZeroBindTag(Tags::Component);
+  RaverieBindMethod(DebugDraw);
+  RaverieBindTag(Tags::Component);
 }
 
 Component::Component() : mOwner(NULL)
@@ -125,7 +125,7 @@ bool Component::IsInitialized()
 
 void Component::WriteDescription(StringBuilder& builder)
 {
-  BoundType* type = ZilchVirtualTypeId(this);
+  BoundType* type = RaverieVirtualTypeId(this);
   builder << "Component " << type->Name << " of ";
 
   if (mOwner != nullptr)
@@ -172,7 +172,7 @@ void ComponentHandleManager::ObjectToHandle(const byte* object, BoundType* type,
   Component* component = (Component*)object;
 
   ComponentHandleData& data = *(ComponentHandleData*)(handleToInitialize.Data);
-  data.mComponentType = ZilchVirtualTypeId(component);
+  data.mComponentType = RaverieVirtualTypeId(component);
 
   Cog* cog = component->mOwner;
 
@@ -229,4 +229,4 @@ void ComponentHandleManager::Delete(const Handle& handle)
   zDeallocate(data.mRawObject);
 }
 
-} // namespace Zero
+} // namespace Raverie

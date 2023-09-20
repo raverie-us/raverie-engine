@@ -1,0 +1,9 @@
+[Version:1]
+TextContent 
+{
+	RaverieScriptBuilder 
+	{
+		var Name = "UiChangeCursor"
+		var ResourceId = 0x59ae1cfcc3f9c322
+	}
+}

@@ -1,24 +1,24 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(DynamicMotor, builder, type)
+RaverieDefineType(DynamicMotor, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
 
-  ZeroBindDependency(Transform);
-  ZeroBindDependency(Collider);
-  ZeroBindDependency(RigidBody);
+  RaverieBindDependency(Transform);
+  RaverieBindDependency(Collider);
+  RaverieBindDependency(RigidBody);
 
-  ZilchBindMethod(MoveInDirection);
-  ZilchBindMethod(SetReferenceFrameToWorld);
-  ZilchBindMethod(SetReferenceFrameToObject);
-  ZilchBindGetterSetter(Active);
-  ZilchBindGetterSetter(MaxMoveImpulse);
+  RaverieBindMethod(MoveInDirection);
+  RaverieBindMethod(SetReferenceFrameToWorld);
+  RaverieBindMethod(SetReferenceFrameToObject);
+  RaverieBindGetterSetter(Active);
+  RaverieBindGetterSetter(MaxMoveImpulse);
 }
 
 DynamicMotor::DynamicMotor()
@@ -188,4 +188,4 @@ void DynamicMotor::SetMaxMoveImpulse(float val)
   velJoint->SetMaxImpulse(2, val);
 }
 
-} // namespace Zero
+} // namespace Raverie

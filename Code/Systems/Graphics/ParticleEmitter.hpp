@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -15,7 +15,7 @@ DeclareEvent(AllParticlesDead);
 class ParticleEmitter : public Component
 {
 public:
-  ZilchDeclareType(ParticleEmitter, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ParticleEmitter, TypeCopyMode::ReferenceType);
 
   ParticleEmitter();
   ~ParticleEmitter();
@@ -46,7 +46,7 @@ typedef InList<ParticleEmitter> EmitterList;
 class ParticleEmitterShared : public ParticleEmitter
 {
 public:
-  ZilchDeclareType(ParticleEmitterShared, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ParticleEmitterShared, TypeCopyMode::ReferenceType);
 
   ParticleEmitterShared();
   ~ParticleEmitterShared();
@@ -149,7 +149,7 @@ public:
 class HideBaseFilter : public MetaPropertyFilter
 {
 public:
-  ZilchDeclareType(HideBaseFilter, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(HideBaseFilter, TypeCopyMode::ReferenceType);
 
   HideBaseFilter(BoundType* hiddenOnType);
 
@@ -159,6 +159,6 @@ public:
   BoundType* mHiddenOnType;
 };
 
-#define HideOnDerivedType(type) Add(new HideBaseFilter(ZilchTypeId(type)))
+#define HideOnDerivedType(type) Add(new HideBaseFilter(RaverieTypeId(type)))
 
-} // namespace Zero
+} // namespace Raverie

@@ -2,7 +2,7 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 const float degreesToRadians = Math::cTwoPi / 360.0f;
 const float FrontSpeakerRadians = 90.0f * degreesToRadians;
@@ -339,4 +339,4 @@ float VBAP::Calculate180Panning(SpeakerInfo* speaker, Math::Vec2& source, float 
   return speakerGain * gain;
 }
 
-} // namespace Zero
+} // namespace Raverie

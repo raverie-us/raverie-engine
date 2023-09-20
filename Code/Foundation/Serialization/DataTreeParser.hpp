@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class DataNode;
@@ -42,4 +42,4 @@ private:
   DataTreeContext& mContext;
 };
 
-} // namespace Zero
+} // namespace Raverie

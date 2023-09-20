@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class Document;
@@ -16,7 +16,7 @@ DeclareEvent(AutoCompleteItemDoubleClicked);
 class DocumentEditor : public TextEditor
 {
 public:
-  ZilchDeclareType(DocumentEditor, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(DocumentEditor, TypeCopyMode::ReferenceType);
 
   DocumentEditor(Composite* parent);
   ~DocumentEditor();
@@ -72,7 +72,7 @@ public:
 class AutoCompletePopUp : public PopUp
 {
 public:
-  ZilchDeclareType(AutoCompletePopUp, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(AutoCompletePopUp, TypeCopyMode::ReferenceType);
 
   AutoCompletePopUp(Widget* source);
 
@@ -102,7 +102,7 @@ public:
 class CallTipPopUp : public PopUp
 {
 public:
-  ZilchDeclareType(CallTipPopUp, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CallTipPopUp, TypeCopyMode::ReferenceType);
 
   CallTipPopUp(Widget* source);
 
@@ -132,8 +132,8 @@ DeclareEnum2(UserCompletion, ExplitilyRequested, OnlyIfMatching);
 class ScriptEditor : public DocumentEditor, public ICodeEditor
 {
 public:
-  typedef ScriptEditor ZilchSelf;
-  typedef DocumentEditor ZilchBase;
+  typedef ScriptEditor RaverieSelf;
+  typedef DocumentEditor RaverieBase;
   ScriptEditor(Composite* parent);
   ~ScriptEditor();
 
@@ -159,9 +159,9 @@ public:
   ToolTip* ShowToolTip(StringParam text);
   ToolTip* ShowToolTip(StringParam text, Vec3Param screenPos);
   void HideToolTip();
-  bool GetCompleteZeroConnectInfo(String& eventNameOut, String& indentOut, int& functionPositionOut);
-  bool CanCompleteZeroConnect();
-  bool AutoCompleteZeroConnect();
+  bool GetCompleteRaverieConnectInfo(String& eventNameOut, String& indentOut, int& functionPositionOut);
+  bool CanCompleteRaverieConnect();
+  bool AutoCompleteRaverieConnect();
 
   // ICodeEditor interface
   void ShowAutoComplete(Array<Completion>& tips, CompletionConfidence::Enum confidence) override;
@@ -209,4 +209,4 @@ public:
 ScriptEditor* CreateScriptEditor(Composite* parent, ResourceDocument* scriptDocument);
 DocumentEditor* CreateDocumentEditor(Composite* parent, Document* document);
 
-} // namespace Zero
+} // namespace Raverie

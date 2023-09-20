@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 void Reactive::Initialize(CogInitializer& initializer)
@@ -14,47 +14,47 @@ void Reactive::Serialize(Serializer& stream)
   SerializeName(mActive);
 }
 
-ZilchDefineType(Reactive, builder, type)
+RaverieDefineType(Reactive, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::CallSetDefaults);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::CallSetDefaults);
+  RaverieBindDocumented();
 
-  ZilchBindFieldProperty(mActive);
+  RaverieBindFieldProperty(mActive);
 
-  ZeroBindEvent(Events::MouseFileDrop, MouseFileDropEvent);
+  RaverieBindEvent(Events::MouseFileDrop, MouseFileDropEvent);
 
-  ZeroBindEvent(Events::MouseEnter, ViewportMouseEvent);
-  ZeroBindEvent(Events::MouseEnterPreview, ViewportMouseEvent);
-  ZeroBindEvent(Events::MouseExit, ViewportMouseEvent);
+  RaverieBindEvent(Events::MouseEnter, ViewportMouseEvent);
+  RaverieBindEvent(Events::MouseEnterPreview, ViewportMouseEvent);
+  RaverieBindEvent(Events::MouseExit, ViewportMouseEvent);
 
-  ZeroBindEvent(Events::MouseEnterHierarchy, ViewportMouseEvent);
-  ZeroBindEvent(Events::MouseExitHierarchy, ViewportMouseEvent);
+  RaverieBindEvent(Events::MouseEnterHierarchy, ViewportMouseEvent);
+  RaverieBindEvent(Events::MouseExitHierarchy, ViewportMouseEvent);
 
-  ZeroBindEvent(Events::MouseMove, ViewportMouseEvent);
-  ZeroBindEvent(Events::MouseUpdate, ViewportMouseEvent);
-  ZeroBindEvent(Events::MouseScroll, ViewportMouseEvent);
+  RaverieBindEvent(Events::MouseMove, ViewportMouseEvent);
+  RaverieBindEvent(Events::MouseUpdate, ViewportMouseEvent);
+  RaverieBindEvent(Events::MouseScroll, ViewportMouseEvent);
 
-  ZeroBindEvent(Events::DoubleClick, ViewportMouseEvent);
+  RaverieBindEvent(Events::DoubleClick, ViewportMouseEvent);
 
-  ZeroBindEvent(Events::MouseDown, ViewportMouseEvent);
-  ZeroBindEvent(Events::MouseUp, ViewportMouseEvent);
+  RaverieBindEvent(Events::MouseDown, ViewportMouseEvent);
+  RaverieBindEvent(Events::MouseUp, ViewportMouseEvent);
 
-  ZeroBindEvent(Events::LeftMouseDown, ViewportMouseEvent);
-  ZeroBindEvent(Events::LeftMouseUp, ViewportMouseEvent);
+  RaverieBindEvent(Events::LeftMouseDown, ViewportMouseEvent);
+  RaverieBindEvent(Events::LeftMouseUp, ViewportMouseEvent);
 
-  ZeroBindEvent(Events::RightMouseDown, ViewportMouseEvent);
-  ZeroBindEvent(Events::RightMouseUp, ViewportMouseEvent);
+  RaverieBindEvent(Events::RightMouseDown, ViewportMouseEvent);
+  RaverieBindEvent(Events::RightMouseUp, ViewportMouseEvent);
 
-  ZeroBindEvent(Events::MiddleMouseDown, ViewportMouseEvent);
-  ZeroBindEvent(Events::MiddleMouseUp, ViewportMouseEvent);
+  RaverieBindEvent(Events::MiddleMouseDown, ViewportMouseEvent);
+  RaverieBindEvent(Events::MiddleMouseUp, ViewportMouseEvent);
 
-  ZeroBindEvent(Events::LeftClick, ViewportMouseEvent);
-  ZeroBindEvent(Events::RightClick, ViewportMouseEvent);
-  ZeroBindEvent(Events::MiddleClick, ViewportMouseEvent);
+  RaverieBindEvent(Events::LeftClick, ViewportMouseEvent);
+  RaverieBindEvent(Events::RightClick, ViewportMouseEvent);
+  RaverieBindEvent(Events::MiddleClick, ViewportMouseEvent);
 
-  ZeroBindEvent(Events::MouseHold, ViewportMouseEvent);
-  ZeroBindEvent(Events::MouseHover, ViewportMouseEvent);
+  RaverieBindEvent(Events::MouseHold, ViewportMouseEvent);
+  RaverieBindEvent(Events::MouseHover, ViewportMouseEvent);
 }
 
 void Reactive::SetDefaults()
@@ -70,16 +70,16 @@ Reactive::~Reactive()
 {
 }
 
-ZilchDefineType(ReactiveSpace, builder, type)
+RaverieDefineType(ReactiveSpace, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
 
-  ZeroBindDependency(Space);
+  RaverieBindDependency(Space);
 
-  ZilchBindGetter(Over);
-  ZilchBindFieldProperty(mRaycaster);
+  RaverieBindGetter(Over);
+  RaverieBindFieldProperty(mRaycaster);
 }
 
 void ReactiveSpace::Serialize(Serializer& stream)
@@ -100,4 +100,4 @@ Cog* ReactiveSpace::GetOver()
   return mOver;
 }
 
-} // namespace Zero
+} // namespace Raverie

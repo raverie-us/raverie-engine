@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -10,16 +10,16 @@ DefineEvent(ObjectLinkChanged);
 DefineEvent(ObjectLinkPointChanged);
 } // namespace Events
 
-ZilchDefineType(ObjectLinkEdge, builder, type)
+RaverieDefineType(ObjectLinkEdge, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
   // This should be safe to bind even though we contain an inlist link because
   // when we're returned we can't perform any operations on the link itself.
-  ZilchBindDefaultCopyDestructor();
+  RaverieBindDefaultCopyDestructor();
 
-  ZilchBindGetterProperty(SelfCog);
-  ZilchBindGetterProperty(OtherCog);
-  ZilchBindGetterProperty(ObjectLink);
+  RaverieBindGetterProperty(SelfCog);
+  RaverieBindGetterProperty(OtherCog);
+  RaverieBindGetterProperty(ObjectLink);
 }
 
 ObjectLinkEdge::ObjectLinkEdge()
@@ -125,13 +125,13 @@ ObjectLinkEdge& ObjectLinkRange::Front()
   return mRange.Front();
 }
 
-ZilchDefineType(ObjectLinkAnchor, builder, type)
+RaverieDefineType(ObjectLinkAnchor, builder, type)
 {
-  ZeroBindComponent();
+  RaverieBindComponent();
   type->AddAttribute(ObjectAttributes::cHidden);
 
-  ZeroBindDocumented();
-  ZilchBindGetterProperty(ObjectLinks);
+  RaverieBindDocumented();
+  RaverieBindGetterProperty(ObjectLinks);
 }
 
 void ObjectLinkAnchor::OnDestroy(uint flags)
@@ -161,27 +161,27 @@ ObjectLink::ObjectLink()
   mValid = false;
 }
 
-ZilchDefineType(ObjectLink, builder, type)
+RaverieDefineType(ObjectLink, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetterProperty(ObjectAPath)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
-  ZilchBindGetterSetterProperty(ObjectBPath)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
+  RaverieBindGetterSetterProperty(ObjectAPath)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
+  RaverieBindGetterSetterProperty(ObjectBPath)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
 
-  ZilchBindGetterSetter(ObjectA);
-  ZilchBindGetterSetter(ObjectB);
+  RaverieBindGetterSetter(ObjectA);
+  RaverieBindGetterSetter(ObjectB);
 
-  ZilchBindGetterSetterProperty(WorldPointA);
-  ZilchBindGetterSetterProperty(WorldPointB);
+  RaverieBindGetterSetterProperty(WorldPointA);
+  RaverieBindGetterSetterProperty(WorldPointB);
 
-  ZilchBindGetterSetterProperty(LocalPointA)->ZeroSerialize(Vec3::cZero);
-  ZilchBindGetterSetterProperty(LocalPointB)->ZeroSerialize(Vec3::cZero);
+  RaverieBindGetterSetterProperty(LocalPointA)->RaverieSerialize(Vec3::cZero);
+  RaverieBindGetterSetterProperty(LocalPointB)->RaverieSerialize(Vec3::cZero);
 
-  ZeroBindEvent(Events::ObjectLinkChanged, ObjectLinkEvent);
-  ZeroBindEvent(Events::ObjectLinkPointChanged, ObjectLinkPointChangedEvent);
-  ZeroBindTag(Tags::Core);
+  RaverieBindEvent(Events::ObjectLinkChanged, ObjectLinkEvent);
+  RaverieBindEvent(Events::ObjectLinkPointChanged, ObjectLinkPointChangedEvent);
+  RaverieBindTag(Tags::Core);
 }
 
 void ObjectLink::Serialize(Serializer& stream)
@@ -463,13 +463,13 @@ void ObjectLink::Unlink()
   mValid = false;
 }
 
-ZilchDefineType(ObjectLinkEvent, builder, type)
+RaverieDefineType(ObjectLinkEvent, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindFieldProperty(NewCog);
-  ZilchBindFieldProperty(OldCog);
-  ZilchBindFieldProperty(EdgeId);
+  RaverieBindFieldProperty(NewCog);
+  RaverieBindFieldProperty(OldCog);
+  RaverieBindFieldProperty(EdgeId);
 }
 
 ObjectLinkEvent::ObjectLinkEvent()
@@ -486,13 +486,13 @@ void ObjectLinkEvent::Set(uint edgeIndex, Cog* oldCog, Cog* newCog)
   NewCog = newCog;
 }
 
-ZilchDefineType(ObjectLinkPointChangedEvent, builder, type)
+RaverieDefineType(ObjectLinkPointChangedEvent, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindFieldProperty(mOldLocalPoint);
-  ZilchBindFieldProperty(mNewLocalPoint);
-  ZilchBindFieldProperty(mEdgeId);
+  RaverieBindFieldProperty(mOldLocalPoint);
+  RaverieBindFieldProperty(mNewLocalPoint);
+  RaverieBindFieldProperty(mEdgeId);
 }
 
 ObjectLinkPointChangedEvent::ObjectLinkPointChangedEvent()
@@ -507,4 +507,4 @@ void ObjectLinkPointChangedEvent::Set(uint edgeIndex, Vec3Param oldPoint, Vec3Pa
   mNewLocalPoint = newPoint;
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -2,7 +2,7 @@
 #pragma once
 #include "ObjectLoader.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Memory
@@ -20,7 +20,7 @@ class ObjectState;
 class Archetype : public Resource
 {
 public:
-  ZilchDeclareType(Archetype, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Archetype, TypeCopyMode::ReferenceType);
 
   /// Constructor / Destructor.
   Archetype();
@@ -100,4 +100,4 @@ public:
   void ArchetypeModified(Archetype* archetype);
 };
 
-} // namespace Zero
+} // namespace Raverie

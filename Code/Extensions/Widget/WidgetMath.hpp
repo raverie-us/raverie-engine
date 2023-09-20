@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class Widget;
@@ -127,4 +127,4 @@ Vec2 ExpandSizeByThickness(Thickness thickness, Vec2Param size);
 
 WidgetRect RemoveThicknessRect(Thickness thickness, Vec2Param outerSize);
 
-} // namespace Zero
+} // namespace Raverie

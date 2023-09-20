@@ -7,7 +7,7 @@
 #include "String/CharacterTraits.hpp"
 #include "String/StringUtility.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 const char cExtensionDelimiter = '.';
@@ -87,4 +87,4 @@ String ConvertToValidName(StringParam source)
   return builder.ToString();
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -16,32 +16,32 @@ DefineEvent(WebResponseComplete);
 
 static const String cCacheDirectory("ZeroCache");
 
-ZilchDefineType(AsyncWebRequest, builder, type)
+RaverieDefineType(AsyncWebRequest, builder, type)
 {
-  ZeroBindDocumented();
-  ZeroBindEvent(Events::WebResponseHeaders, WebResponseEvent);
-  ZeroBindEvent(Events::WebResponsePartialData, WebResponseEvent);
-  ZeroBindEvent(Events::WebResponseComplete, WebResponseEvent);
-  ZilchBindField(mUrl);
-  ZilchBindMethod(Run);
-  ZilchBindMethod(Cancel);
-  ZilchBindMethod(ClearAll);
-  ZilchBindMethod(ClearRequestData);
-  ZilchBindMethod(ClearResponseData);
-  ZilchBindMethod(AddHeader);
-  ZilchBindMethod(AddFile);
-  ZilchBindMethod(AddField);
-  ZilchBindGetterProperty(IsRunning);
+  RaverieBindDocumented();
+  RaverieBindEvent(Events::WebResponseHeaders, WebResponseEvent);
+  RaverieBindEvent(Events::WebResponsePartialData, WebResponseEvent);
+  RaverieBindEvent(Events::WebResponseComplete, WebResponseEvent);
+  RaverieBindField(mUrl);
+  RaverieBindMethod(Run);
+  RaverieBindMethod(Cancel);
+  RaverieBindMethod(ClearAll);
+  RaverieBindMethod(ClearRequestData);
+  RaverieBindMethod(ClearResponseData);
+  RaverieBindMethod(AddHeader);
+  RaverieBindMethod(AddFile);
+  RaverieBindMethod(AddField);
+  RaverieBindGetterProperty(IsRunning);
 
-  ZilchBindMethod(Create);
+  RaverieBindMethod(Create);
 
-  ZilchBindFieldGetterProperty(mStoreData);
+  RaverieBindFieldGetterProperty(mStoreData);
 
-  ZilchBindFieldGetterProperty(mTotalDownloaded);
-  ZilchBindFieldGetterProperty(mTotalExpected);
-  ZilchBindFieldGetterProperty(mProgress);
-  ZilchBindFieldGetterProperty(mProgressType);
-  ZilchBindFieldGetterProperty(mError);
+  RaverieBindFieldGetterProperty(mTotalDownloaded);
+  RaverieBindFieldGetterProperty(mTotalExpected);
+  RaverieBindFieldGetterProperty(mProgress);
+  RaverieBindFieldGetterProperty(mProgressType);
+  RaverieBindFieldGetterProperty(mError);
 }
 
 InList<AsyncWebRequest> AsyncWebRequest::mActiveRequests;
@@ -432,18 +432,18 @@ void AsyncWebRequest::OnWebResponseCompleteInternal(WebResponseEvent* event)
   DispatchEvent(Events::WebResponseComplete, event);
 }
 
-ZilchDefineType(WebResponseEvent, builder, type)
+RaverieDefineType(WebResponseEvent, builder, type)
 {
-  ZilchBindField(mAsyncWebRequest);
-  ZilchBindFieldProperty(mResponseCode);
-  ZilchBindFieldProperty(mData);
-  ZilchBindGetterProperty(HeaderCount);
-  ZilchBindMethod(GetHeader);
-  ZilchBindFieldGetterProperty(mTotalDownloaded);
-  ZilchBindFieldGetterProperty(mTotalExpected);
-  ZilchBindFieldGetterProperty(mProgress);
-  ZilchBindFieldGetterProperty(mProgressType);
-  ZilchBindFieldGetterProperty(mError);
+  RaverieBindField(mAsyncWebRequest);
+  RaverieBindFieldProperty(mResponseCode);
+  RaverieBindFieldProperty(mData);
+  RaverieBindGetterProperty(HeaderCount);
+  RaverieBindMethod(GetHeader);
+  RaverieBindFieldGetterProperty(mTotalDownloaded);
+  RaverieBindFieldGetterProperty(mTotalExpected);
+  RaverieBindFieldGetterProperty(mProgress);
+  RaverieBindFieldGetterProperty(mProgressType);
+  RaverieBindFieldGetterProperty(mError);
 }
 
 WebResponseEvent::WebResponseEvent() :
@@ -478,7 +478,7 @@ JsonValue* WebResponseEvent::ReadJson(Status& status)
 
   static const String cOrigin = "WebResponseEvent";
   CompilationErrors errors;
-  JsonValue* value = Zilch::JsonReader::ReadIntoTreeFromString(errors, mData, cOrigin, nullptr);
+  JsonValue* value = Raverie::JsonReader::ReadIntoTreeFromString(errors, mData, cOrigin, nullptr);
   if (!value)
   {
     status.SetFailed("Failed to parse JSON");
@@ -488,23 +488,23 @@ JsonValue* WebResponseEvent::ReadJson(Status& status)
   return value;
 }
 
-ZilchDefineType(WebRequester, builder, type)
+RaverieDefineType(WebRequester, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDocumented();
-  ZeroBindEvent(Events::WebResponseHeaders, WebResponseEvent);
-  ZeroBindEvent(Events::WebResponsePartialData, WebResponseEvent);
-  ZeroBindEvent(Events::WebResponseComplete, WebResponseEvent);
-  ZilchBindGetterSetterProperty(Url);
-  ZilchBindMethod(Run);
-  ZilchBindMethod(Clear);
-  ZilchBindMethod(CancelActiveRequests);
-  ZilchBindMethod(AddHeader);
-  ZilchBindMethod(AddFile);
-  ZilchBindMethod(AddField);
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
+  RaverieBindEvent(Events::WebResponseHeaders, WebResponseEvent);
+  RaverieBindEvent(Events::WebResponsePartialData, WebResponseEvent);
+  RaverieBindEvent(Events::WebResponseComplete, WebResponseEvent);
+  RaverieBindGetterSetterProperty(Url);
+  RaverieBindMethod(Run);
+  RaverieBindMethod(Clear);
+  RaverieBindMethod(CancelActiveRequests);
+  RaverieBindMethod(AddHeader);
+  RaverieBindMethod(AddFile);
+  RaverieBindMethod(AddField);
 
-  ZilchBindMemberProperty(mCancelOnDestruction);
+  RaverieBindMemberProperty(mCancelOnDestruction);
 }
 
 WebRequester::WebRequester() : mCancelOnDestruction(true)
@@ -623,4 +623,4 @@ void WebRequester::CleanDeadRequests()
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

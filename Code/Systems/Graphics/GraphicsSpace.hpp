@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -32,7 +32,7 @@ typedef AvlDynamicAabbTree<Graphical*> GraphicsBroadPhase;
 class GraphicsSpace : public Component
 {
 public:
-  ZilchDeclareType(GraphicsSpace, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(GraphicsSpace, TypeCopyMode::ReferenceType);
 
   // Component Interface
   void Initialize(CogInitializer& initializer) override;
@@ -112,4 +112,4 @@ public:
   Math::Random mRandom;
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -13,7 +13,7 @@ DeclareEvent(ParticlesSpawned);
 class ParticleEvent : public Event
 {
 public:
-  ZilchDeclareType(ParticleEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ParticleEvent, TypeCopyMode::ReferenceType);
 
   ParticleEvent()
   {
@@ -33,7 +33,7 @@ DeclareEnum2(SystemSpace, WorldSpace, LocalSpace);
 class ParticleSystem : public Graphical
 {
 public:
-  ZilchDeclareType(ParticleSystem, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ParticleSystem, TypeCopyMode::ReferenceType);
 
   // Component Interface
 
@@ -121,4 +121,4 @@ public:
   bool mDebugDrawing;
 };
 
-} // namespace Zero
+} // namespace Raverie

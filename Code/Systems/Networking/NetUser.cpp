@@ -1,39 +1,39 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 //                                   NetUser //
 
-ZilchDefineType(NetUser, builder, type)
+RaverieDefineType(NetUser, builder, type)
 {
-  ZeroBindComponent();
+  RaverieBindComponent();
 
   // Bind documentation
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
   // Bind base class as interface
-  ZeroBindInterface(NetObject);
+  RaverieBindInterface(NetObject);
 
   // Bind dependencies
-  ZeroBindDependency(Cog);
+  RaverieBindDependency(Cog);
 
   // Bind setup (can be added in the editor)
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindSetup(SetupMode::DefaultSerialization);
 
   // Bind member properties
-  ZilchBindFieldGetterProperty(mNetUserId)->Add(new EditInGameFilter);
-  ZilchBindFieldGetterProperty(mNetPeerId)->Add(new EditInGameFilter);
+  RaverieBindFieldGetterProperty(mNetUserId)->Add(new EditInGameFilter);
+  RaverieBindFieldGetterProperty(mNetPeerId)->Add(new EditInGameFilter);
 
   // Bind ownership interface
-  ZilchBindCustomGetterProperty(AddedByMyPeer)->Add(new EditInGameFilter);
-  ZilchBindMethod(AddedByPeer);
-  ZilchBindMethod(FindOwnedNetObjectByNameInSpace);
-  ZilchBindMethod(FindOwnedNetObjectByName);
-  ZilchBindGetter(OwnedNetObjects);
-  ZilchBindGetterProperty(OwnedNetObjectCount)->Add(new EditInGameFilter);
-  ZilchBindMethodProperty(ReleaseOwnedNetObjects)->Add(new EditInGameFilter);
+  RaverieBindCustomGetterProperty(AddedByMyPeer)->Add(new EditInGameFilter);
+  RaverieBindMethod(AddedByPeer);
+  RaverieBindMethod(FindOwnedNetObjectByNameInSpace);
+  RaverieBindMethod(FindOwnedNetObjectByName);
+  RaverieBindGetter(OwnedNetObjects);
+  RaverieBindGetterProperty(OwnedNetObjectCount)->Add(new EditInGameFilter);
+  RaverieBindMethodProperty(ReleaseOwnedNetObjects)->Add(new EditInGameFilter);
 }
 
 NetUser::NetUser() : NetObject(), mNetPeerId(0), mNetUserId(0), mOwnedNetObjects(), mRequestBundle(), mResponseBundle()
@@ -291,4 +291,4 @@ PendingNetUser::PendingNetUser(GameSession* gameSession) : mOurRequestBundle(gam
 {
 }
 
-} // namespace Zero
+} // namespace Raverie

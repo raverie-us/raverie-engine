@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace MenuUi
@@ -82,7 +82,7 @@ void Context::Clear()
   mContextMap.Clear();
 }
 
-ZilchDefineType(ContextMenuEvent, builder, type)
+RaverieDefineType(ContextMenuEvent, builder, type)
 {
 }
 
@@ -97,23 +97,23 @@ ContextMenuEvent::ContextMenuEvent(ContextMenuEntry* rootEntry, Handle source)
   Source = source;
 }
 
-ZilchDefineType(ContextMenuEntry, builder, type)
+RaverieDefineType(ContextMenuEntry, builder, type)
 {
-  ZeroBindDocumented();
-  ZilchBindConstructor();
+  RaverieBindDocumented();
+  RaverieBindConstructor();
 
-  ZilchBindOverloadedMethodAs(AddEntry, ZilchInstanceOverload(ContextMenuEntry*, StringParam, bool), "AddEntry");
-  ZilchBindMethod(AddDivider);
-  ZilchBindMethod(AddCommandByName);
-  ZilchBindOverloadedMethodAs(RemoveEntry, ZilchInstanceOverload(void, StringParam), "RemoveEntry");
+  RaverieBindOverloadedMethodAs(AddEntry, RaverieInstanceOverload(ContextMenuEntry*, StringParam, bool), "AddEntry");
+  RaverieBindMethod(AddDivider);
+  RaverieBindMethod(AddCommandByName);
+  RaverieBindOverloadedMethodAs(RemoveEntry, RaverieInstanceOverload(void, StringParam), "RemoveEntry");
 
-  ZilchBindMethod(GetEntry);
-  ZilchBindMethodAs(GetEntries, "Entries");
+  RaverieBindMethod(GetEntry);
+  RaverieBindMethodAs(GetEntries, "Entries");
 
-  ZilchBindFieldProperty(mName);
-  ZilchBindFieldProperty(mIcon);
+  RaverieBindFieldProperty(mName);
+  RaverieBindFieldProperty(mIcon);
 
-  ZeroBindEvent(Events::ContextMenuCreated, ContextMenuEvent);
+  RaverieBindEvent(Events::ContextMenuCreated, ContextMenuEvent);
 }
 
 ContextMenuEntry::ContextMenuEntry(StringParam name, StringParam icon, bool readOnly) :
@@ -298,9 +298,9 @@ void ContextMenuEntry::CreateSubMenu(ContextMenuItem* menuItem)
 }
 
 // ContextMenuEntryDivider
-ZilchDefineType(ContextMenuEntryDivider, builder, type)
+RaverieDefineType(ContextMenuEntryDivider, builder, type)
 {
-  ZilchBindConstructor();
+  RaverieBindConstructor();
 }
 
 Widget* ContextMenuEntryDivider::Create(ContextMenu* parent)
@@ -311,10 +311,10 @@ Widget* ContextMenuEntryDivider::Create(ContextMenu* parent)
 }
 
 // ContextMenuEntryCommand
-ZilchDefineType(ContextMenuEntryCommand, builder, type)
+RaverieDefineType(ContextMenuEntryCommand, builder, type)
 {
-  ZilchFullBindConstructor(builder, type, ContextMenuEntryCommand, "commandName", StringParam);
-  ZilchBindFieldProperty(mCommandName);
+  RaverieFullBindConstructor(builder, type, ContextMenuEntryCommand, "commandName", StringParam);
+  RaverieBindFieldProperty(mCommandName);
 }
 
 ContextMenuEntryCommand::ContextMenuEntryCommand(Command* command) : mCommand(command)
@@ -345,10 +345,10 @@ Widget* ContextMenuEntryCommand::Create(ContextMenu* parent)
 }
 
 // ContextMenuEntryMenu
-ZilchDefineType(ContextMenuEntryMenu, builder, type)
+RaverieDefineType(ContextMenuEntryMenu, builder, type)
 {
-  ZilchFullBindConstructor(builder, type, ContextMenuEntryMenu, "menuName", StringParam);
-  ZilchBindFieldProperty(mMenuName);
+  RaverieFullBindConstructor(builder, type, ContextMenuEntryMenu, "menuName", StringParam);
+  RaverieBindFieldProperty(mMenuName);
 }
 
 ContextMenuEntryMenu::ContextMenuEntryMenu(StringParam menuName) : mMenuName(menuName)
@@ -736,7 +736,7 @@ void ContextMenu::OnMenuEntriesModified(Event* event)
   MarkAsNeedsUpdate();
 }
 
-Zero::ContextMenuEntry* ContextMenu::GetRootEntry()
+Raverie::ContextMenuEntry* ContextMenu::GetRootEntry()
 {
   return mRootEntry;
 }
@@ -751,7 +751,7 @@ void ContextMenu::AddDivider()
   mRootEntry->AddEntry(new ContextMenuEntryDivider());
 }
 
-void ContextMenu::AddZeroContextMenu(StringParam menuName)
+void ContextMenu::AddContextMenu(StringParam menuName)
 {
   mRootEntry->AddEntry(new ContextMenuEntryMenu(menuName));
 }
@@ -850,7 +850,7 @@ bool ContextMenu::IsFocusInSubMenuRecursive(Widget* focusObject)
   return false;
 }
 
-ZilchDefineType(MenuBarItem, builder, type)
+RaverieDefineType(MenuBarItem, builder, type)
 {
 }
 
@@ -901,7 +901,7 @@ void MenuBarItem::OpenContextMenu()
 {
   ContextMenu* contextMenu = new ContextMenu(this);
   contextMenu->SetTranslation(this->GetScreenPosition() + Pixels(0, mSize.y, 0));
-  contextMenu->AddZeroContextMenu(mName);
+  contextMenu->AddContextMenu(mName);
   contextMenu->SizeToContents();
   mContextMenu = contextMenu;
   GetMenuBar()->mOpenMenuBarItem = this;
@@ -936,7 +936,7 @@ void MenuBarItem::ClearOpenMenu(FocusEvent* event)
   }
 }
 
-ZilchDefineType(MenuBar, builder, type)
+RaverieDefineType(MenuBar, builder, type)
 {
 }
 
@@ -969,4 +969,4 @@ MenuBarItem* MenuBar::GetOpenMenuBarItem()
   return mOpenMenuBarItem;
 }
 
-} // namespace Zero
+} // namespace Raverie

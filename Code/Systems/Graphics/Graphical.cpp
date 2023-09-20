@@ -2,7 +2,7 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Tags
@@ -45,36 +45,36 @@ void MakeLocalToViewAligned(Mat4& localToView, Mat4Param localToWorld, Mat4Param
   localToView = worldToView * localToWorldRotated;
 }
 
-ZilchDefineType(GraphicalEvent, builder, type)
+RaverieDefineType(GraphicalEvent, builder, type)
 {
-  ZeroBindDocumented();
-  ZilchBindFieldProperty(mViewingObject);
+  RaverieBindDocumented();
+  RaverieBindFieldProperty(mViewingObject);
 }
 
-ZilchDefineType(Graphical, builder, type)
+RaverieDefineType(Graphical, builder, type)
 {
-  ZeroBindDocumented();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDependency(Transform);
+  RaverieBindDocumented();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDependency(Transform);
 
-  ZilchBindGetterSetterProperty(Visible);
-  ZilchBindGetterSetterProperty(ViewCulling);
-  ZilchBindFieldProperty(mVisibilityEvents);
-  ZilchBindGetterSetterProperty(OverrideBoundingBox)->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  ZilchBindGetterSetterProperty(LocalAabbCenter)->ZeroFilterEquality(mOverrideBoundingBox, bool, true);
-  ZilchBindGetterSetterProperty(LocalAabbHalfExtents)->ZeroFilterEquality(mOverrideBoundingBox, bool, true);
-  ZilchBindFieldProperty(mGroupSortValue);
-  ZilchBindGetterSetterProperty(Material);
-  ZilchBindGetterSetter(ShaderInputs);
+  RaverieBindGetterSetterProperty(Visible);
+  RaverieBindGetterSetterProperty(ViewCulling);
+  RaverieBindFieldProperty(mVisibilityEvents);
+  RaverieBindGetterSetterProperty(OverrideBoundingBox)->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  RaverieBindGetterSetterProperty(LocalAabbCenter)->RaverieFilterEquality(mOverrideBoundingBox, bool, true);
+  RaverieBindGetterSetterProperty(LocalAabbHalfExtents)->RaverieFilterEquality(mOverrideBoundingBox, bool, true);
+  RaverieBindFieldProperty(mGroupSortValue);
+  RaverieBindGetterSetterProperty(Material);
+  RaverieBindGetterSetter(ShaderInputs);
 
-  ZilchBindGetter(WorldAabb);
+  RaverieBindGetter(WorldAabb);
 
-  ZeroBindEvent(Events::EnterView, GraphicalEvent);
-  ZeroBindEvent(Events::EnterViewAny, GraphicalEvent);
-  ZeroBindEvent(Events::ExitView, GraphicalEvent);
-  ZeroBindEvent(Events::ExitViewAll, GraphicalEvent);
+  RaverieBindEvent(Events::EnterView, GraphicalEvent);
+  RaverieBindEvent(Events::EnterViewAny, GraphicalEvent);
+  RaverieBindEvent(Events::ExitView, GraphicalEvent);
+  RaverieBindEvent(Events::ExitViewAll, GraphicalEvent);
 
-  ZeroBindTag(Tags::Graphical);
+  RaverieBindTag(Tags::Graphical);
 }
 
 void Graphical::Initialize(CogInitializer& initializer)
@@ -347,13 +347,13 @@ void Graphical::RebuildComponentShaderInputs()
 
 void Graphical::AddComponentShaderInputs(Component* component)
 {
-  // If a ZilchComponent becomes a proxy, the GraphicsEngine does not spend time
+  // If a RaverieComponent becomes a proxy, the GraphicsEngine does not spend time
   // trying to detect it to remove its entries from mComponentShaderProperties.
-  BoundType* componentType = ZilchVirtualTypeId(component);
+  BoundType* componentType = RaverieVirtualTypeId(component);
   if (componentType->HasAttribute(ObjectAttributes::cProxy))
     return;
 
-  String componentName = ZilchVirtualTypeId(component)->Name;
+  String componentName = RaverieVirtualTypeId(component)->Name;
   Array<ShaderMetaProperty>* shaderProperties =
       Z::gEngine->has(GraphicsEngine)->mComponentShaderProperties.FindPointer(componentName);
 
@@ -361,11 +361,11 @@ void Graphical::AddComponentShaderInputs(Component* component)
   if (shaderProperties == nullptr)
     return;
 
-  ZilchShaderGenerator* shaderGenerator = Z::gEngine->has(GraphicsEngine)->mShaderGenerator;
+  RaverieShaderGenerator* shaderGenerator = Z::gEngine->has(GraphicsEngine)->mShaderGenerator;
 
   forRange (ShaderMetaProperty& shaderProperty, shaderProperties->All())
   {
-    Property* metaProperty = ZilchVirtualTypeId(component)->GetProperty(shaderProperty.mMetaPropertyName);
+    Property* metaProperty = RaverieVirtualTypeId(component)->GetProperty(shaderProperty.mMetaPropertyName);
     String fragmentName = shaderProperty.mFragmentName;
     String inputName = shaderProperty.mInputName;
 
@@ -379,7 +379,7 @@ void Graphical::AddComponentShaderInputs(Component* component)
     {
       forRange (MaterialBlock* materialBlock, mMaterial->mMaterialBlocks.All())
       {
-        BoundType* metaType = ZilchVirtualTypeId(materialBlock);
+        BoundType* metaType = RaverieVirtualTypeId(materialBlock);
         if (metaType->HasAttribute(ObjectAttributes::cProxy))
           continue;
 
@@ -415,4 +415,4 @@ void Graphical::AddComponentShaderInputs(Component* component)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,14 +1,14 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 //                                  EventRange //
 
 //                           EventBundleMetaComposition //
 
-ZilchDefineType(EventBundleMetaComposition, builder, type)
+RaverieDefineType(EventBundleMetaComposition, builder, type)
 {
 }
 
@@ -16,7 +16,7 @@ ZilchDefineType(EventBundleMetaComposition, builder, type)
 // MetaComposition Interface
 //
 
-EventBundleMetaComposition::EventBundleMetaComposition() : MetaComposition(ZilchTypeId(Event))
+EventBundleMetaComposition::EventBundleMetaComposition() : MetaComposition(RaverieTypeId(Event))
 {
   mSupportsComponentAddition = false;
 }
@@ -86,7 +86,7 @@ void EventBundleMetaComposition::RemoveComponent(HandleParam instance, HandlePar
 
   // Get event instance
   Event* event = subObject.Get<Event*>();
-  Assert(ZilchVirtualTypeId(event) == typeToRemove);
+  Assert(RaverieVirtualTypeId(event) == typeToRemove);
 
   // Remove event by type ID from event bundle
   bool success = eventBundle->RemoveEventByType(typeToRemove);
@@ -95,36 +95,36 @@ void EventBundleMetaComposition::RemoveComponent(HandleParam instance, HandlePar
 
 //                                 EventBundle //
 
-ZilchDefineType(EventBundle, builder, type)
+RaverieDefineType(EventBundle, builder, type)
 {
   // Bind documentation
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
   // Bind destructor
-  ZilchBindDestructor();
+  RaverieBindDestructor();
 
   // Bind constructor
-  ZilchBindDefaultConstructor();
-  ZilchBindConstructor(Event*);
-  ZilchBindConstructor(GameSession*);
-  ZilchBindConstructor(GameSession*, Event*);
-  ZilchBindConstructor(const EventBundle&);
+  RaverieBindDefaultConstructor();
+  RaverieBindConstructor(Event*);
+  RaverieBindConstructor(GameSession*);
+  RaverieBindConstructor(GameSession*, Event*);
+  RaverieBindConstructor(const EventBundle&);
 
   // Bind interface
-  ZilchBindCustomGetterProperty(IsEmpty);
-  ZilchBindMethod(AddEvent);
-  ZilchBindGetterSetter(GameSession);
-  // ZilchBindMethod(GetEventByTypeName);
-  // ZilchBindMethod(GetEventByType);
-  // ZilchBindMethod(GetEventByIndex);
-  // ZilchBindMethod(GetEventIndexByType);
-  ZilchBindMethod(GetEvents);
-  // ZilchBindMethod(GetEventCount);
-  ZilchBindMethod(RemoveEvent);
-  ZilchBindMethodAs(RemoveEventByTypeName, "RemoveEvent");
-  // ZilchBindMethod(RemoveEventByType);
-  // ZilchBindMethod(RemoveEventByIndex);
-  ZilchBindMethod(Clear);
+  RaverieBindCustomGetterProperty(IsEmpty);
+  RaverieBindMethod(AddEvent);
+  RaverieBindGetterSetter(GameSession);
+  // RaverieBindMethod(GetEventByTypeName);
+  // RaverieBindMethod(GetEventByType);
+  // RaverieBindMethod(GetEventByIndex);
+  // RaverieBindMethod(GetEventIndexByType);
+  RaverieBindMethod(GetEvents);
+  // RaverieBindMethod(GetEventCount);
+  RaverieBindMethod(RemoveEvent);
+  RaverieBindMethodAs(RemoveEventByTypeName, "RemoveEvent");
+  // RaverieBindMethod(RemoveEventByType);
+  // RaverieBindMethod(RemoveEventByIndex);
+  RaverieBindMethod(Clear);
 
   // Make constructible in script
   type->CreatableInScript = true;
@@ -237,7 +237,7 @@ EventBundle& EventBundle::operator=(MoveReference<BitStream> rhs)
   Clear();
 
   // Move bitstream
-  mBitStream = ZeroMove(rhs);
+  mBitStream = RaverieMove(rhs);
   mNeedToDeserialize = true; // (Our bitstream has been modified)
 
   return *this;
@@ -272,7 +272,7 @@ bool EventBundle::AddEvent(Event* event)
   }
 
   // Get event type
-  BoundType* eventType = ZilchVirtualTypeId(event);
+  BoundType* eventType = RaverieVirtualTypeId(event);
   if (!eventType)
   {
     Assert(false);
@@ -304,7 +304,7 @@ Event* EventBundle::GetEventByTypeName(StringParam eventTypeName)
 
   // Find event by type name
   for (uint i = 0; i < mEvents.Size(); ++i)
-    if (ZilchVirtualTypeId(static_cast<Event*>(mEvents[i]))->Name == eventTypeName) // Found?
+    if (RaverieVirtualTypeId(static_cast<Event*>(mEvents[i]))->Name == eventTypeName) // Found?
     {
       // Return event by index
       return GetEventByIndex(i);
@@ -322,7 +322,7 @@ Event* EventBundle::GetEventByType(BoundType* eventType)
 
   // Find event by type ID
   for (uint i = 0; i < mEvents.Size(); ++i)
-    if (ZilchVirtualTypeId(static_cast<Event*>(mEvents[i])) == eventType) // Found?
+    if (RaverieVirtualTypeId(static_cast<Event*>(mEvents[i])) == eventType) // Found?
     {
       // Return event by index
       return GetEventByIndex(i);
@@ -355,7 +355,7 @@ uint EventBundle::GetEventIndexByType(BoundType* eventType)
 
   // Find event by type ID
   for (uint i = 0; i < mEvents.Size(); ++i)
-    if (ZilchVirtualTypeId(static_cast<Event*>(mEvents[i])) == eventType)
+    if (RaverieVirtualTypeId(static_cast<Event*>(mEvents[i])) == eventType)
       return i; // Return index
 
   // Not found
@@ -388,7 +388,7 @@ bool EventBundle::RemoveEvent(Event* event)
   }
 
   // Get event type
-  BoundType* eventType = ZilchVirtualTypeId(event);
+  BoundType* eventType = RaverieVirtualTypeId(event);
   if (!eventType)
   {
     Assert(false);
@@ -407,7 +407,7 @@ bool EventBundle::RemoveEventByTypeName(StringParam eventTypeName)
 
   // Find event by type name
   for (uint i = 0; i < mEvents.Size(); ++i)
-    if (ZilchVirtualTypeId(static_cast<Event*>(mEvents[i]))->Name == eventTypeName) // Found?
+    if (RaverieVirtualTypeId(static_cast<Event*>(mEvents[i]))->Name == eventTypeName) // Found?
     {
       // Remove event by index
       return RemoveEventByIndex(i);
@@ -425,7 +425,7 @@ bool EventBundle::RemoveEventByType(BoundType* eventType)
 
   // Find event by type ID
   for (uint i = 0; i < mEvents.Size(); ++i)
-    if (ZilchVirtualTypeId(static_cast<Event*>(mEvents[i])) == eventType) // Found?
+    if (RaverieVirtualTypeId(static_cast<Event*>(mEvents[i])) == eventType) // Found?
     {
       // Remove event by index
       return RemoveEventByIndex(i);
@@ -536,4 +536,4 @@ bool EventBundle::DeserializeBitStreamToEvents()
   return true;
 }
 
-} // namespace Zero
+} // namespace Raverie

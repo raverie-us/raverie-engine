@@ -2,7 +2,7 @@
 #include "Precompiled.hpp"
 #include "Foundation/Platform/PlatformCommunication.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 void LoadProject(Editor* editor, Cog* projectCog, StringParam path, StringParam projectFile)
@@ -193,4 +193,4 @@ void BindProjectCommands(Cog* config, CommandManager* commands)
   commands->AddCommand("SaveProject", BindCommandFunction(SaveProject));
 }
 
-} // namespace Zero
+} // namespace Raverie

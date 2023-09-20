@@ -1,24 +1,24 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Serialization Filter
-ZilchDefineType(CogSerializationFilter, builder, type)
+RaverieDefineType(CogSerializationFilter, builder, type)
 {
 }
 
 bool CogSerializationFilter::ShouldSerialize(Object* object)
 {
-  bool isCog = !ZilchVirtualTypeId(object)->IsA(ZilchTypeId(Cog));
+  bool isCog = !RaverieVirtualTypeId(object)->IsA(RaverieTypeId(Cog));
   ReturnIf(isCog, false, "Invalid object given for filter");
 
   return CogSerialization::ShouldSave(object);
 }
 
 // Cog Meta Operations
-ZilchDefineType(CogMetaOperations, builder, type)
+RaverieDefineType(CogMetaOperations, builder, type)
 {
 }
 
@@ -94,13 +94,13 @@ ObjectRestoreState* CogMetaOperations::GetRestoreState(HandleParam object)
 }
 
 // Meta Data Inheritance
-ZilchDefineType(CogMetaDataInheritance, builder, type)
+RaverieDefineType(CogMetaDataInheritance, builder, type)
 {
 }
 
 String CogMetaDataInheritance::GetInheritId(HandleParam instance, InheritIdContext::Enum context)
 {
-  ReturnIf(!instance.StoredType->IsA(ZilchTypeId(Cog)), "", "Expected Cog");
+  ReturnIf(!instance.StoredType->IsA(RaverieTypeId(Cog)), "", "Expected Cog");
 
   Cog* cog = instance.Get<Cog*>();
   if (Archetype* archetype = cog->GetArchetype())
@@ -202,7 +202,7 @@ void CogMetaDataInheritance::RebuildObject(HandleParam instance)
 }
 
 // Cog Meta Transform
-ZilchDefineType(CogMetaTransform, builder, type)
+RaverieDefineType(CogMetaTransform, builder, type)
 {
 }
 
@@ -219,7 +219,7 @@ MetaTransformInstance CogMetaTransform::GetInstance(HandleParam object)
   if (transform != nullptr)
   {
     instanceHandle = transform;
-    type = ZilchTypeId(Transform);
+    type = RaverieTypeId(Transform);
   }
   else
   {
@@ -227,7 +227,7 @@ MetaTransformInstance CogMetaTransform::GetInstance(HandleParam object)
     if (objectLink != nullptr)
     {
       instanceHandle = objectLink;
-      type = ZilchTypeId(ObjectLink);
+      type = RaverieTypeId(ObjectLink);
     }
   }
 
@@ -249,7 +249,7 @@ MetaTransformInstance CogMetaTransform::GetInstance(HandleParam object)
     if (Transform* parentTransform = parent->has(Transform))
     {
       instance.mParentInstance = parentTransform;
-      BoundType* t = ZilchTypeId(Transform);
+      BoundType* t = RaverieTypeId(Transform);
       instance.mParentWorldMatrix = t->GetProperty("WorldMatrix");
       instance.mParentLocalMatrix = t->GetProperty("LocalMatrix");
     }
@@ -258,12 +258,12 @@ MetaTransformInstance CogMetaTransform::GetInstance(HandleParam object)
 }
 
 // Archetype Extension
-ZilchDefineType(CogArchetypeExtension, builder, type)
+RaverieDefineType(CogArchetypeExtension, builder, type)
 {
 }
 
 // Cog Meta Display
-ZilchDefineType(CogMetaDisplay, builder, type)
+RaverieDefineType(CogMetaDisplay, builder, type)
 {
 }
 
@@ -277,7 +277,7 @@ String CogMetaDisplay::GetName(HandleParam object)
   if (Archetype* archetype = cog->GetArchetype())
     return String::Format("(%s)[%d]", archetype->Name.c_str(), cog->GetId().Id);
   else
-    return String::Format("(%s)[%d]", ZilchTypeId(Cog)->Name.c_str(), cog->GetId().Id);
+    return String::Format("(%s)[%d]", RaverieTypeId(Cog)->Name.c_str(), cog->GetId().Id);
 }
 
 String CogMetaDisplay::GetDebugText(HandleParam object)
@@ -288,7 +288,7 @@ String CogMetaDisplay::GetDebugText(HandleParam object)
 // Cog Meta Display
 bool CogMetaSerialization::sSaveContextIds = true;
 
-ZilchDefineType(CogMetaSerialization, builder, type)
+RaverieDefineType(CogMetaSerialization, builder, type)
 {
 }
 
@@ -325,7 +325,7 @@ void CogMetaSerialization::AddCustomAttributes(HandleParam object, TextSaver* sa
   }
 }
 
-ZilchDefineType(CogArchetypePropertyFilter, builder, type)
+RaverieDefineType(CogArchetypePropertyFilter, builder, type)
 {
 }
 
@@ -337,4 +337,4 @@ bool CogArchetypePropertyFilter::Filter(Member* prop, HandleParam instance)
   return true;
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Recording Node
@@ -11,7 +11,7 @@ namespace Zero
 class RecordingNode : public SimpleCollapseNode
 {
 public:
-  ZilchDeclareType(RecordingNode, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(RecordingNode, TypeCopyMode::ReferenceType);
 
   RecordingNode(StringParam name, unsigned ID);
   ~RecordingNode();
@@ -38,17 +38,17 @@ private:
                         const unsigned numberOfChannels,
                         ListenerNode* listener,
                         const bool firstRequest) override;
-  void WriteBuffer(Zero::Array<float>* buffer, unsigned numberOfChannels);
+  void WriteBuffer(Raverie::Array<float>* buffer, unsigned numberOfChannels);
 
-  Zero::String mFileName;
-  Zero::File mFileStream;
+  Raverie::String mFileName;
+  Raverie::File mFileStream;
   unsigned mSamplesRecorded;
   const float cMaxValue;
   ThreadedInt mRecording;
   ThreadedInt mPaused;
   unsigned mChannels;
   bool mStreaming;
-  Zero::Array<float> mSavedSamples;
+  Raverie::Array<float> mSavedSamples;
 
   struct WavHeader
   {
@@ -75,7 +75,7 @@ private:
 class SaveAudioNode : public SimpleCollapseNode
 {
 public:
-  ZilchDeclareType(SaveAudioNode, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SaveAudioNode, TypeCopyMode::ReferenceType);
 
   SaveAudioNode(StringParam name, unsigned ID);
 
@@ -103,4 +103,4 @@ private:
   size_t mPlaybackIndexThreaded;
 };
 
-} // namespace Zero
+} // namespace Raverie

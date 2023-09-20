@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -14,9 +14,9 @@ DefineEvent(RotationBasisAabbQuery);
 } // namespace Events
 
 // RotationBasisGizmoInitializationEvent
-ZilchDefineType(RotationBasisGizmoInitializationEvent, builder, type)
+RaverieDefineType(RotationBasisGizmoInitializationEvent, builder, type)
 {
-  ZilchBindFieldProperty(mIntData);
+  RaverieBindFieldProperty(mIntData);
 }
 
 RotationBasisGizmoInitializationEvent::RotationBasisGizmoInitializationEvent()
@@ -24,7 +24,7 @@ RotationBasisGizmoInitializationEvent::RotationBasisGizmoInitializationEvent()
   mIntData = 0;
 }
 
-ZilchDefineType(RotationBasisGizmoAabbQueryEvent, builder, type)
+RaverieDefineType(RotationBasisGizmoAabbQueryEvent, builder, type)
 {
 }
 
@@ -33,7 +33,7 @@ RotationBasisGizmoAabbQueryEvent::RotationBasisGizmoAabbQueryEvent()
   mAabb.SetInvalid();
 }
 
-ZilchDefineType(RotationBasisGizmoMetaTransform, builder, type)
+RaverieDefineType(RotationBasisGizmoMetaTransform, builder, type)
 {
 }
 
@@ -43,7 +43,7 @@ MetaTransformInstance RotationBasisGizmoMetaTransform::GetInstance(HandleParam o
   ReturnIf(gizmo == nullptr, MetaTransformInstance(), "Invalid object given");
 
   Transform* transform = gizmo->mTransform;
-  BoundType* transformType = ZilchTypeId(Transform);
+  BoundType* transformType = RaverieTypeId(Transform);
 
   MetaTransformInstance instance(transform);
   instance.mSpace = gizmo->GetSpace();
@@ -60,25 +60,25 @@ MetaTransformInstance RotationBasisGizmoMetaTransform::GetInstance(HandleParam o
   return instance;
 }
 
-ZilchDefineType(RotationBasisGizmo, builder, type)
+RaverieDefineType(RotationBasisGizmo, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDependency(Transform);
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDependency(Transform);
   type->Add(new RotationBasisGizmoMetaTransform());
 
-  ZeroBindEvent(Events::RotationBasisGizmoBegin, Event);
-  ZeroBindEvent(Events::RotationBasisGizmoModified, Event);
-  ZeroBindEvent(Events::RotationBasisGizmoEnd, Event);
-  ZeroBindEvent(Events::RotationBasisAabbQuery, RotationBasisGizmoAabbQueryEvent);
+  RaverieBindEvent(Events::RotationBasisGizmoBegin, Event);
+  RaverieBindEvent(Events::RotationBasisGizmoModified, Event);
+  RaverieBindEvent(Events::RotationBasisGizmoEnd, Event);
+  RaverieBindEvent(Events::RotationBasisAabbQuery, RotationBasisGizmoAabbQueryEvent);
 
-  ZilchBindMethod(ActivateAsGizmo);
+  RaverieBindMethod(ActivateAsGizmo);
   // Does not need to be serialized. Purely for editing purposes.
-  ZilchBindGetterSetterProperty(WorldRotation);
+  RaverieBindGetterSetterProperty(WorldRotation);
 
-  ZilchBindField(mXAxisName)->ZeroSerialize(String("X-Axis"));
-  ZilchBindField(mYAxisName)->ZeroSerialize(String("Y-Axis"));
-  ZilchBindField(mZAxisName)->ZeroSerialize(String("Z-Axis"));
+  RaverieBindField(mXAxisName)->RaverieSerialize(String("X-Axis"));
+  RaverieBindField(mYAxisName)->RaverieSerialize(String("Y-Axis"));
+  RaverieBindField(mZAxisName)->RaverieSerialize(String("Z-Axis"));
 }
 
 RotationBasisGizmo::RotationBasisGizmo()
@@ -244,11 +244,11 @@ void RotationBasisGizmo::OnFrameUpdate(Event* e)
   DrawBasisText(zRotation, mZAxisName, Vec3(3, 0.6f, 0));
 }
 
-ZilchDefineType(OrientationBasisGizmo, builder, type)
+RaverieDefineType(OrientationBasisGizmo, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindDependency(RotationBasisGizmo);
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindComponent();
+  RaverieBindDependency(RotationBasisGizmo);
+  RaverieBindSetup(SetupMode::DefaultSerialization);
 }
 
 OrientationBasisGizmo::OrientationBasisGizmo()
@@ -474,11 +474,11 @@ Quat OrientationBasisGizmo::ToRightHanded(QuatParam basis)
   return Math::ToQuaternion(basisMat);
 }
 
-ZilchDefineType(PhysicsCarWheelBasisGizmo, builder, type)
+RaverieDefineType(PhysicsCarWheelBasisGizmo, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindDependency(RotationBasisGizmo);
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindComponent();
+  RaverieBindDependency(RotationBasisGizmo);
+  RaverieBindSetup(SetupMode::DefaultSerialization);
 }
 
 PhysicsCarWheelBasisGizmo::PhysicsCarWheelBasisGizmo()
@@ -657,11 +657,11 @@ void PhysicsCarWheelBasisGizmo::SetWorldRotation(SimpleBasisProperty& prop, Quat
   return wheel->SetWorldWheelBasis(rotation);
 }
 
-ZilchDefineType(RevoluteBasisGizmo, builder, type)
+RaverieDefineType(RevoluteBasisGizmo, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindDependency(RotationBasisGizmo);
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindComponent();
+  RaverieBindDependency(RotationBasisGizmo);
+  RaverieBindSetup(SetupMode::DefaultSerialization);
 }
 
 RevoluteBasisGizmo::RevoluteBasisGizmo()
@@ -941,4 +941,4 @@ void RevoluteBasisGizmo::SetWorldBasis(RevoluteJoint* joint, uint colliderIndex,
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

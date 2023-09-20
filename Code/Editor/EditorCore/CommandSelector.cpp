@@ -1,10 +1,10 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(GeneralSearchView, builder, type)
+RaverieDefineType(GeneralSearchView, builder, type)
 {
 }
 
@@ -90,4 +90,4 @@ void FloatingSearchView::UpdateTransform()
   PopUp::UpdateTransform();
 }
 
-} // namespace Zero
+} // namespace Raverie

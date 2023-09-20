@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 Cog* LowestCommonAncestor(Cog* objectA, Cog* objectB);
@@ -26,4 +26,4 @@ void SendHierarchyEvents(cstr op,
                          uint hierarchyFlag,
                          FlagCallback callback);
 
-} // namespace Zero
+} // namespace Raverie

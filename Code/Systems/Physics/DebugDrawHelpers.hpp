@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Get a animation time for the cog to debug draw. Typically just comes from the
@@ -26,4 +26,4 @@ Cylinder GetSupportShapeCylinder(const Intersection::SupportShape& supportShape,
 // Used currently in flow effects
 Cylinder GetCogCylinder(Cog* cog, Vec3Param primaryAxis);
 
-} // namespace Zero
+} // namespace Raverie

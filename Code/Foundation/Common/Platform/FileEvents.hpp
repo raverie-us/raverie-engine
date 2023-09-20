@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class FileModifiedState
@@ -29,4 +29,4 @@ private:
   TimeType mLastCleanup;
 };
 
-} // namespace Zero
+} // namespace Raverie

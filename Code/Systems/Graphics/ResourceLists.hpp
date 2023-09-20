@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -14,7 +14,7 @@ DeclareEvent(ResourceListItemRemoved);
 class ResourceListEvent : public Event
 {
 public:
-  ZilchDeclareType(ResourceListEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ResourceListEvent, TypeCopyMode::ReferenceType);
   String mResourceIdName;
 };
 
@@ -72,7 +72,7 @@ public:
 class RenderGroupList : public GraphicsResourceList
 {
 public:
-  ZilchDeclareType(RenderGroupList, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(RenderGroupList, TypeCopyMode::ReferenceType);
 
   RenderGroupList(Resource* owner);
 
@@ -92,7 +92,7 @@ public:
 class ChildRenderGroupList : public RenderGroupList
 {
 public:
-  ZilchDeclareType(ChildRenderGroupList, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ChildRenderGroupList, TypeCopyMode::ReferenceType);
 
   ChildRenderGroupList(Resource* owner);
 
@@ -102,7 +102,7 @@ public:
 class MaterialList : public GraphicsResourceList
 {
 public:
-  ZilchDeclareType(MaterialList, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MaterialList, TypeCopyMode::ReferenceType);
 
   MaterialList(Resource* owner);
 
@@ -258,4 +258,4 @@ void ResourceListResolveReferences(RenderGroup* renderGroup);
 // idNames.
 void ResolveRenderGroupHierarchies();
 
-} // namespace Zero
+} // namespace Raverie

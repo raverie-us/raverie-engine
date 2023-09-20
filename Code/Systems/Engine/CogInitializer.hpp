@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 namespace Events
 {
@@ -15,7 +15,7 @@ typedef InList<Cog, &Cog::SpaceLink> SpaceCogList;
 class CogInitializerEvent : public Event
 {
 public:
-  ZilchDeclareType(CogInitializerEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CogInitializerEvent, TypeCopyMode::ReferenceType);
 
   CogInitializer* mCogInitializer;
 };
@@ -25,7 +25,7 @@ public:
 class CogInitializer : public SafeId32EventObject
 {
 public:
-  ZilchDeclareType(CogInitializer, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CogInitializer, TypeCopyMode::ReferenceType);
 
   CogInitializer(Space* space, GameSession* gameSession = nullptr);
   ~CogInitializer();
@@ -77,4 +77,4 @@ public:
   CogCreationContext* Context;
 };
 
-} // namespace Zero
+} // namespace Raverie

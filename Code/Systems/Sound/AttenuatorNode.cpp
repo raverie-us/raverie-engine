@@ -2,14 +2,14 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Attenuator Node
 const float cLowPassCutoffHighValue = 15000.0f;
 const float cLowPassCutoffLowValue = 1000.0f;
 
-ZilchDefineType(AttenuatorNode, builder, type)
+RaverieDefineType(AttenuatorNode, builder, type)
 {
 }
 
@@ -244,4 +244,4 @@ void AttenuatorNode::UpdateLowPassInterpolator()
                                     mAttenStartDist.Get(AudioThreads::MixThread));
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 extern const bool cBindCogChildrenReverseRange;
@@ -73,7 +73,7 @@ class Cog : public BaseCog
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(Cog, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Cog, TypeCopyMode::ReferenceType);
 
   /// Memory Allocation
   OverloadedNew();
@@ -461,7 +461,7 @@ String CogDisplayName(HandleParam object);
 template <typename type>
 inline type* Cog::Has()
 {
-  return (type*)QueryComponentType(ZilchTypeId(type));
+  return (type*)QueryComponentType(RaverieTypeId(type));
 }
 
 template <typename type>
@@ -480,7 +480,7 @@ inline type* HasOrAdd(Cog* cog)
 template <typename T>
 inline void SetUpObject(T* object)
 {
-  BoundType* type = ZilchVirtualTypeId(object);
+  BoundType* type = RaverieVirtualTypeId(object);
   CogComponentMeta* metaComponent = type->HasInherited<CogComponentMeta>();
 
   SetupMode::Enum constructionMode = metaComponent->mSetupMode;
@@ -519,4 +519,4 @@ public:
   size_t Hash(const Handle& handle) override;
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -2,25 +2,25 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(RenderGroup, builder, type)
+RaverieDefineType(RenderGroup, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindMethod(IsSubRenderGroup);
-  ZilchBindMethod(IsSubRenderGroupOf);
+  RaverieBindMethod(IsSubRenderGroup);
+  RaverieBindMethod(IsSubRenderGroupOf);
 
-  ZilchBindFieldGetterPropertyAs(mSerializedList, "Materials");
-  ZilchBindFieldGetterProperty(mReferencedByList);
+  RaverieBindFieldGetterPropertyAs(mSerializedList, "Materials");
+  RaverieBindFieldGetterProperty(mReferencedByList);
 
-  ZilchBindFieldProperty(mGraphicalSortMethod);
+  RaverieBindFieldProperty(mGraphicalSortMethod);
 
   MetaEditorResource* metaEditor = new MetaEditorResource(true, true, String(), false, false);
   metaEditor->Filter = ParentRenderGroupFilter;
-  ZilchBindGetterSetterProperty(ParentRenderGroup)->Add(metaEditor);
-  ZilchBindFieldGetterProperty(mChildRenderGroups);
+  RaverieBindGetterSetterProperty(ParentRenderGroup)->Add(metaEditor);
+  RaverieBindFieldGetterProperty(mChildRenderGroups);
 }
 
 RenderGroup::RenderGroup() :
@@ -213,4 +213,4 @@ void ListItemValidChild(GraphicsResourceList* resourceList, String entryIdName, 
     status.SetFailed("RenderGroup cannot be a child with the current configuration.");
 }
 
-} // namespace Zero
+} // namespace Raverie

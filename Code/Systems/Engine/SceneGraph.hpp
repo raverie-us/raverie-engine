@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class Material;
@@ -57,7 +57,7 @@ public:
 class SceneGraphSource
 {
 public:
-  ZilchDeclareType(SceneGraphSource, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SceneGraphSource, TypeCopyMode::ReferenceType);
 
   String Name;
 
@@ -77,4 +77,4 @@ public:
   void Serialize(Serializer& stream);
 };
 
-} // namespace Zero
+} // namespace Raverie

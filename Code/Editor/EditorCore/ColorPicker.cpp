@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -11,7 +11,7 @@ DefineEvent(ColorChanged);
 DefineEvent(ColorPickCancelled);
 } // namespace Events
 
-ZilchDefineType(ColorEvent, builder, type)
+RaverieDefineType(ColorEvent, builder, type)
 {
 }
 
@@ -1059,4 +1059,4 @@ void DrawCheckers(PixelBuffer* buffer, uint checkerSize)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

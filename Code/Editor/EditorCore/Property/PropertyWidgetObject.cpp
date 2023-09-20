@@ -2,7 +2,7 @@
 #include "Precompiled.hpp"
 #include "Foundation/Platform/PlatformCommunication.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 const String cPropArrowRight = "PropArrowRight";
@@ -26,7 +26,7 @@ Tweakable(Vec4, LocallyRemoved, Vec4(1, 1, 1, 1), cLocation);
 
 HashSet<String> PropertyWidgetObject::mExpandedTypes;
 
-ZilchDefineType(PropertyWidgetObject, builder, type)
+RaverieDefineType(PropertyWidgetObject, builder, type)
 {
 }
 
@@ -446,7 +446,7 @@ void PropertyWidgetObject::LayoutChildren(bool animate)
   if (isRoot)
     currY = 0.0f;
 
-  BoundType* widgetObjectType = ZilchTypeId(PropertyWidgetObject);
+  BoundType* widgetObjectType = RaverieTypeId(PropertyWidgetObject);
 
   Vec2 parentSize = GetParent()->GetSize();
 
@@ -455,7 +455,7 @@ void PropertyWidgetObject::LayoutChildren(bool animate)
   // Layout each child widget
   forRange (PropertyWidget& child, ChildWidgets.All())
   {
-    bool childIsObject = (ZilchVirtualTypeId(&child) == widgetObjectType);
+    bool childIsObject = (RaverieVirtualTypeId(&child) == widgetObjectType);
 
     child.mSize.x = childWidth;
 
@@ -464,7 +464,7 @@ void PropertyWidgetObject::LayoutChildren(bool animate)
     child.UpdateTransformExternal();
 
     // Add extra spacing before the AddComponent button
-    if (ZilchVirtualTypeId(&child) == ZilchTypeId(AddObjectWidget))
+    if (RaverieVirtualTypeId(&child) == RaverieTypeId(AddObjectWidget))
       currY += PropertyViewUi::PropertySpacing;
 
     // The height of the current object
@@ -557,9 +557,9 @@ void PropertyWidgetObject::AnimateCloseNode()
   ActionSequence* sequence = new ActionSequence(this);
   Vec2 destinationSize = Vec2(mSize.x, PropertyViewUi::ObjectSize);
   sequence->Add(SizeWidgetAction(this, destinationSize, ComponentUi::OpenTime));
-  sequence->Add(new CallAction<ZilchSelf, &ZilchSelf::CloseNode>(this));
+  sequence->Add(new CallAction<RaverieSelf, &RaverieSelf::CloseNode>(this));
   sequence->Add(new ActionDelayOnce());
-  sequence->Add(new CallAction<ZilchSelf, &ZilchSelf::AnimationFinished>(this));
+  sequence->Add(new CallAction<RaverieSelf, &RaverieSelf::AnimationFinished>(this));
 }
 
 MetaPropertyEditor* GetPropertyEditor(Property* property)
@@ -567,7 +567,7 @@ MetaPropertyEditor* GetPropertyEditor(Property* property)
   // First check the property for an editor extension
   if (EditorPropertyExtension* extension = property->HasInherited<EditorPropertyExtension>())
   {
-    BoundType* extensionType = ZilchVirtualTypeId(extension);
+    BoundType* extensionType = RaverieVirtualTypeId(extension);
     MetaPropertyEditor* editor = extensionType->HasInherited<MetaPropertyEditor>();
     ErrorIf(editor == nullptr, "Property extension didn't have a property Editor.");
     return editor;
@@ -768,7 +768,7 @@ void PropertyWidgetObject::OpenNode(bool animate)
     ActionSequence* sequence = new ActionSequence(this);
     Vec2 destinationSize = Vec2(mSize.x, currY);
     sequence->Add(SizeWidgetAction(this, destinationSize, ComponentUi::OpenTime));
-    sequence->Add(new CallAction<ZilchSelf, &ZilchSelf::AnimationFinished>(this));
+    sequence->Add(new CallAction<RaverieSelf, &RaverieSelf::AnimationFinished>(this));
   }
 }
 
@@ -837,7 +837,7 @@ void PropertyWidgetObject::AnimateRemoveSelf()
   ActionSequence* sequence = new ActionSequence(this);
   Vec2 destinationSize = Vec2(mSize.x, 0);
   sequence->Add(SizeWidgetAction(this, destinationSize, ComponentUi::OpenTime * 3.0f));
-  sequence->Add(new CallAction<ZilchSelf, &ZilchSelf::RemoveSelf>(this));
+  sequence->Add(new CallAction<RaverieSelf, &RaverieSelf::RemoveSelf>(this));
 
   // Animate the title bar to red
   ActionSequence* colorSequence = new ActionSequence(this);
@@ -1333,7 +1333,7 @@ void PropertyWidgetObject::RemoveRedHighlight()
   if (mMouseOverTitle)
     color = ComponentUi::TitleHighlight;
   seq->Add(AnimatePropertyGetSet(Element, Color, Ease::Quad::InOut, mTitleBackground, ComponentUi::OpenTime, color));
-  seq->Add(new CallAction<ZilchSelf, &ZilchSelf::AnimationFinished>(this));
+  seq->Add(new CallAction<RaverieSelf, &RaverieSelf::AnimationFinished>(this));
 
   // Animate the background
   seq = new ActionSequence(this);
@@ -1439,4 +1439,4 @@ void PropertyWidgetObject::OnEditScriptPressed(Event* e)
   Z::gEditor->EditResource(resource);
 }
 
-} // namespace Zero
+} // namespace Raverie

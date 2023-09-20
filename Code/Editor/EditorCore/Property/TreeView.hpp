@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class ScrollArea;
@@ -134,14 +134,14 @@ DeclareEvent(TreeViewHeaderAdded);
 class TreeEvent : public Event
 {
 public:
-  ZilchDeclareType(TreeEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(TreeEvent, TypeCopyMode::ReferenceType);
   TreeRow* Row;
 };
 
 /// A new ColumnHeader was constructed.
 class TreeViewHeaderAddedEvent : public Event
 {
-  ZilchDeclareType(TreeViewHeaderAddedEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(TreeViewHeaderAddedEvent, TypeCopyMode::ReferenceType);
 
   TreeViewHeaderAddedEvent(uint headerIndex, ColumnHeader* newHeader);
 
@@ -155,7 +155,7 @@ DeclareEnum3(HighlightType, None, Selected, Preview);
 class TreeRow : public TreeBase
 {
 public:
-  ZilchDeclareType(TreeRow, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(TreeRow, TypeCopyMode::ReferenceType);
   typedef InListBaseLink<TreeRow, TreeBase> TreeRowList;
 
   TreeRow(TreeView* grid, TreeRow* rowparent, DataEntry* entry);
@@ -247,7 +247,7 @@ public:
 class ColumnHeader : public Composite
 {
 public:
-  typedef ColumnHeader ZilchSelf;
+  typedef ColumnHeader RaverieSelf;
   ColumnHeader(TreeView* tree, ColumnFormat* format);
 
   void SetText(StringParam name);
@@ -272,7 +272,7 @@ public:
 class ColumnResizer : public Composite
 {
 public:
-  typedef ColumnResizer ZilchSelf;
+  typedef ColumnResizer RaverieSelf;
   ColumnResizer(Composite* parent, ColumnFormat* left, ColumnFormat* right);
 
   void UpdateTransform() override;
@@ -293,7 +293,7 @@ public:
 class TreeView : public Composite
 {
 public:
-  ZilchDeclareType(TreeView, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(TreeView, TypeCopyMode::ReferenceType);
 
   TreeView(Composite* parent);
   ~TreeView();
@@ -442,4 +442,4 @@ DeclareTweakable(Vec4, PrimaryColor);
 DeclareTweakable(Vec4, SecondaryColor);
 } // namespace TreeViewValidUi
 
-} // namespace Zero
+} // namespace Raverie

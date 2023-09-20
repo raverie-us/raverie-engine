@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -14,18 +14,18 @@ DefineEvent(ObjectRotateGizmoModified);
 DefineEvent(ObjectTransformGizmoEnd);
 } // namespace Events
 
-ZilchDefineType(ObjectTransformGizmoEvent, builder, type)
+RaverieDefineType(ObjectTransformGizmoEvent, builder, type)
 {
-  ZilchBindGetterSetter(FinalLocalTranslation);
-  ZilchBindGetterSetter(FinalLocalScale);
-  ZilchBindGetterSetter(FinalLocalRotation);
+  RaverieBindGetterSetter(FinalLocalTranslation);
+  RaverieBindGetterSetter(FinalLocalScale);
+  RaverieBindGetterSetter(FinalLocalRotation);
 }
 
 ObjectTransformGizmoEvent::ObjectTransformGizmoEvent(Component* sourceGizmo, Cog* owner, ViewportMouseEvent* base) :
     GizmoEvent(owner, base)
 {
   mSource = sourceGizmo;
-  mGizmoType = sourceGizmo->ZilchGetDerivedType();
+  mGizmoType = sourceGizmo->RaverieGetDerivedType();
 
   mFinalLocalTranslation = Vec3::cZero;
   mFinalLocalScale = Vec3::cZero;
@@ -35,9 +35,9 @@ ObjectTransformGizmoEvent::ObjectTransformGizmoEvent(Component* sourceGizmo, Cog
   mCanAlterRotation = false;
 
   // Note: All transform gizmo's can alter translation.
-  if (mGizmoType == ZilchTypeId(ObjectScaleGizmo))
+  if (mGizmoType == RaverieTypeId(ObjectScaleGizmo))
     mCanAlterScale = true;
-  else if (mGizmoType == ZilchTypeId(ObjectRotateGizmo))
+  else if (mGizmoType == RaverieTypeId(ObjectRotateGizmo))
     mCanAlterRotation = true;
 }
 
@@ -111,33 +111,33 @@ ObjectTransformState::ObjectTransformState()
 
 static const float cPivotDistanceThreshold = 0.001f;
 
-ZilchDefineType(ObjectTransformGizmo, builder, type)
+RaverieDefineType(ObjectTransformGizmo, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindTag(Tags::Gizmo);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindTag(Tags::Gizmo);
+  RaverieBindDocumented();
 
-  ZeroBindEvent(Events::GizmoObjectsDuplicated, Event);
-  ZeroBindEvent(Events::ObjectTransformGizmoStart, GizmoUpdateEvent);
-  ZeroBindEvent(Events::ObjectTranslateGizmoModified, ObjectTransformGizmoEvent);
-  ZeroBindEvent(Events::ObjectScaleGizmoModified, ObjectTransformGizmoEvent);
-  ZeroBindEvent(Events::ObjectRotateGizmoModified, ObjectTransformGizmoEvent);
-  ZeroBindEvent(Events::ObjectTransformGizmoEnd, ObjectTransformGizmoEvent);
+  RaverieBindEvent(Events::GizmoObjectsDuplicated, Event);
+  RaverieBindEvent(Events::ObjectTransformGizmoStart, GizmoUpdateEvent);
+  RaverieBindEvent(Events::ObjectTranslateGizmoModified, ObjectTransformGizmoEvent);
+  RaverieBindEvent(Events::ObjectScaleGizmoModified, ObjectTransformGizmoEvent);
+  RaverieBindEvent(Events::ObjectRotateGizmoModified, ObjectTransformGizmoEvent);
+  RaverieBindEvent(Events::ObjectTransformGizmoEnd, ObjectTransformGizmoEvent);
 
-  ZeroBindDependency(Transform);
-  ZeroBindDependency(Gizmo);
+  RaverieBindDependency(Transform);
+  RaverieBindDependency(Gizmo);
 
-  ZilchBindGetterSetterProperty(Basis);
-  ZilchBindGetterSetterProperty(Pivot);
+  RaverieBindGetterSetterProperty(Basis);
+  RaverieBindGetterSetterProperty(Pivot);
 
-  ZilchBindMethod(AddObject);
-  ZilchBindMethod(RemoveObject);
-  ZilchBindMethod(ClearObjects);
-  ZilchBindMethod(SetOperationQueue);
-  ZilchBindMethod(ToggleCoordinateMode);
-  ZilchBindGetterProperty(ObjectCount);
-  ZilchBindMethod(GetObjectAtIndex);
+  RaverieBindMethod(AddObject);
+  RaverieBindMethod(RemoveObject);
+  RaverieBindMethod(ClearObjects);
+  RaverieBindMethod(SetOperationQueue);
+  RaverieBindMethod(ToggleCoordinateMode);
+  RaverieBindGetterProperty(ObjectCount);
+  RaverieBindMethod(GetObjectAtIndex);
 }
 
 void ObjectTransformGizmo::Serialize(Serializer& stream)
@@ -419,7 +419,7 @@ void ObjectTransformGizmo::OnMouseDragEnd(ViewportMouseEvent* event)
       {
         if (Area* area = areaCog->has(Area))
         {
-          Property* sizeProperty = ZilchVirtualTypeId(area)->GetProperty("Size");
+          Property* sizeProperty = RaverieVirtualTypeId(area)->GetProperty("Size");
           area->SetSize(objectState.StartSize);
 
           // Queue the change to size
@@ -430,7 +430,7 @@ void ObjectTransformGizmo::OnMouseDragEnd(ViewportMouseEvent* event)
           {
             if (BoxCollider* collider = areaCog->has(BoxCollider))
             {
-              BoundType* colliderType = ZilchVirtualTypeId(collider);
+              BoundType* colliderType = RaverieVirtualTypeId(collider);
 
               Vec3 startOffset = collider->GetOffset();
               Vec3 startSize = collider->GetSize();
@@ -558,13 +558,13 @@ GizmoPivot::Enum ObjectTransformGizmo::GetPivot()
   return mPivot;
 }
 
-ZilchDefineType(ObjectTranslateGizmo, builder, type)
+RaverieDefineType(ObjectTranslateGizmo, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindInterface(ObjectTransformGizmo);
-  ZeroBindDependency(TranslateGizmo);
+  RaverieBindComponent();
+  RaverieBindInterface(ObjectTransformGizmo);
+  RaverieBindDependency(TranslateGizmo);
 
-  ZilchBindFieldProperty(mDuplicateOnCtrlDrag);
+  RaverieBindFieldProperty(mDuplicateOnCtrlDrag);
 }
 
 void ObjectTranslateGizmo::Serialize(Serializer& stream)
@@ -781,13 +781,13 @@ void ObjectTranslateGizmo::SnapToSurface(GizmoUpdateEvent* event, Vec3* movement
   }
 }
 
-ZilchDefineType(ObjectScaleGizmo, builder, type)
+RaverieDefineType(ObjectScaleGizmo, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindInterface(ObjectTransformGizmo);
-  ZeroBindDependency(ScaleGizmo);
+  RaverieBindComponent();
+  RaverieBindInterface(ObjectTransformGizmo);
+  RaverieBindDependency(ScaleGizmo);
 
-  ZilchBindFieldProperty(mAffectTranslation);
+  RaverieBindFieldProperty(mAffectTranslation);
 }
 
 void ObjectScaleGizmo::Serialize(Serializer& stream)
@@ -925,13 +925,13 @@ void ObjectScaleGizmo::OnGizmoModified(ScaleGizmoUpdateEvent* event)
   }
 }
 
-ZilchDefineType(ObjectRotateGizmo, builder, type)
+RaverieDefineType(ObjectRotateGizmo, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindInterface(ObjectTransformGizmo);
-  ZeroBindDependency(RotateGizmo);
+  RaverieBindComponent();
+  RaverieBindInterface(ObjectTransformGizmo);
+  RaverieBindDependency(RotateGizmo);
 
-  ZilchBindFieldProperty(mAffectTranslation);
+  RaverieBindFieldProperty(mAffectTranslation);
 }
 
 void ObjectRotateGizmo::Serialize(Serializer& stream)
@@ -1082,4 +1082,4 @@ void ObjectRotateGizmo::OnGizmoModified(RotateGizmoUpdateEvent* event)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

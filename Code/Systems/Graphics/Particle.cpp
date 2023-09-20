@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Tags
@@ -16,18 +16,18 @@ void PushFront(Particle*& front, Particle* particle)
   front = particle;
 }
 
-ZilchDefineType(Particle, builder, type)
+RaverieDefineType(Particle, builder, type)
 {
-  type->HandleManager = ZilchManagerId(PointerManager);
-  ZilchBindFieldProperty(Time);
-  ZilchBindFieldProperty(Lifetime);
-  ZilchBindFieldProperty(Size);
-  ZilchBindFieldProperty(Rotation);
-  ZilchBindFieldProperty(RotationalVelocity);
-  ZilchBindFieldProperty(Position);
-  ZilchBindFieldProperty(Velocity);
-  ZilchBindFieldProperty(Color);
-  ZilchBindFieldProperty(WanderAngle);
+  type->HandleManager = RaverieManagerId(PointerManager);
+  RaverieBindFieldProperty(Time);
+  RaverieBindFieldProperty(Lifetime);
+  RaverieBindFieldProperty(Size);
+  RaverieBindFieldProperty(Rotation);
+  RaverieBindFieldProperty(RotationalVelocity);
+  RaverieBindFieldProperty(Position);
+  RaverieBindFieldProperty(Velocity);
+  RaverieBindFieldProperty(Color);
+  RaverieBindFieldProperty(WanderAngle);
 }
 
 Memory::Pool* ParticleList::Memory = NULL;
@@ -87,4 +87,4 @@ void ParticleList::FreeParticles()
   ErrorIf(mActiveParticles != 0, "Particle system memory error.");
 }
 
-} // namespace Zero
+} // namespace Raverie

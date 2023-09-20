@@ -1,12 +1,12 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(TilePaletteSource, builder, type)
+RaverieDefineType(TilePaletteSource, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 }
 
 TilePaletteSource::TilePaletteSource()
@@ -62,4 +62,4 @@ TilePaletteSourceManager::TilePaletteSourceManager(BoundType* resourceType) : Re
   mCanCreateNew = true;
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 struct PolymorphicNode;
@@ -62,7 +62,7 @@ extern BroadPhaseLibrary* gBroadPhaseLibrary;
 } // namespace Z
 
 #define RegisterBroadPhase(type, canBeUsedAs)                                                                          \
-  Z::gBroadPhaseLibrary->RegisterBroadPhaseCreator(ZilchTypeId(type), new BroadPhaseCreatorType<type>(), canBeUsedAs);
+  Z::gBroadPhaseLibrary->RegisterBroadPhaseCreator(RaverieTypeId(type), new BroadPhaseCreatorType<type>(), canBeUsedAs);
 
 /// A property editor for enumerating broadphase types
 /// (BroadPhaseType is used to distinguish between Static and Dynamic
@@ -71,7 +71,7 @@ template <uint BroadphaseType>
 class BroadphasePropertyExtension : public EditorIndexedStringArray
 {
 public:
-  ZilchDeclareType(BroadphasePropertyExtension, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(BroadphasePropertyExtension, TypeCopyMode::ReferenceType);
   static void EnumerateBroadphases(HandleParam instance, Property* property, Array<String>& strings)
   {
     Z::gBroadPhaseLibrary->EnumerateNamesOfType(BroadphaseType, strings);
@@ -85,4 +85,4 @@ public:
 typedef BroadphasePropertyExtension<BroadPhase::Dynamic> DynamicBroadphasePropertyExtension;
 typedef BroadphasePropertyExtension<BroadPhase::Static> StaticBroadphasePropertyExtension;
 
-} // namespace Zero
+} // namespace Raverie

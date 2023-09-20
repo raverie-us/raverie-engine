@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 TextureProcessor::TextureProcessor(TextureContent* textureContent, String outputPath, String inputFile) :
@@ -55,4 +55,4 @@ void TextureProcessor::CreateTexture(aiTexture* texture, uint textureIndex, Stri
   WriteToFile(filePath.c_str(), (byte*)texture->pcData, texture->mWidth);
 }
 
-} // namespace Zero
+} // namespace Raverie

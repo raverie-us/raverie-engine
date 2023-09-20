@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace PreviewWidgetUi
@@ -722,7 +722,7 @@ ResourceTablePreview::ResourceTablePreview(PreviewWidgetInitializer& initializer
   ResourceTable* table = initializer.Object.Get<ResourceTable*>();
 
   // Prevent infinite loops of resource tables of resource tables
-  if (table->mResourceType == ZilchTypeId(ResourceTable)->Name)
+  if (table->mResourceType == RaverieTypeId(ResourceTable)->Name)
     return;
 
   uint size = table->Size();
@@ -779,7 +779,7 @@ GameArchetypePreview::GameArchetypePreview(PreviewWidgetInitializer& initializer
   else
   {
     mObject = (GameSession*)Z::gFactory->CreateCheckedType(
-        ZilchTypeId(GameSession), nullptr, archetype->Name, CreationFlags::Editing | CreationFlags::Preview, nullptr);
+        RaverieTypeId(GameSession), nullptr, archetype->Name, CreationFlags::Editing | CreationFlags::Preview, nullptr);
     UsingEditorGameSession = false;
   }
 }
@@ -803,16 +803,16 @@ PreviewWidget* CreateArchetypePreviewWidget(PreviewWidgetInitializer& initialize
   PreviewWidget* preview = nullptr;
   Archetype* archetype = initializer.Object.Get<Archetype*>();
 
-  if (archetype->mStoredType == ZilchTypeId(Cog))
+  if (archetype->mStoredType == RaverieTypeId(Cog))
   {
     // Basic archetype
     preview = new ArchetypePreview(initializer);
   }
-  else if (archetype->mStoredType == ZilchTypeId(Space))
+  else if (archetype->mStoredType == RaverieTypeId(Space))
   {
     preview = new SpaceArchetypePreview(initializer, archetype);
   }
-  else if (archetype->mStoredType == ZilchTypeId(GameSession))
+  else if (archetype->mStoredType == RaverieTypeId(GameSession))
   {
     preview = new GameArchetypePreview(initializer, archetype);
   }
@@ -868,9 +868,9 @@ void RegisterEditorTileViewWidgets()
       PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<PhysicsPreview>);
 
   // Simple resource types
-  previewFactory->Creators["ZilchScript"] =
+  previewFactory->Creators["RaverieScript"] =
       PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<ScriptPreview>);
-  previewFactory->Creators["ZilchFragment"] =
+  previewFactory->Creators["RaverieFragment"] =
       PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<ScriptPreview>);
   previewFactory->Creators["TextBlock"] =
       PreviewWidgetCreator(PreviewImportance::Simple, &CreatePreviewWidgetT<ScriptPreview>);
@@ -896,4 +896,4 @@ void RegisterEditorTileViewWidgets()
   previewFactory->Creators["Cog"] = PreviewWidgetCreator(PreviewImportance::High, &CreatePreviewWidgetT<CogPreview>);
 }
 
-} // namespace Zero
+} // namespace Raverie

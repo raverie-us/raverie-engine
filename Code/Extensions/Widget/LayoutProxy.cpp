@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 LayoutProxy::LayoutProxy(Widget* widgetToProxy) : Composite(widgetToProxy->GetParent())
@@ -85,4 +85,4 @@ LayoutProxy* ProxyAndAnimateIn(Widget* widget, Vec3Param startPos, float transla
   return proxy;
 }
 
-} // namespace Zero
+} // namespace Raverie

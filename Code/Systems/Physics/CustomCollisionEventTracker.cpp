@@ -1,22 +1,22 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(CustomCollisionEventTracker, builder, type)
+RaverieDefineType(CustomCollisionEventTracker, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
 
   // This works with physics, we must have a collider (otherwise collision
   // events would need to change)
-  ZeroBindDependency(Collider);
-  ZeroBindDependency(Cog);
+  RaverieBindDependency(Collider);
+  RaverieBindDependency(Cog);
 
-  ZilchBindMethod(AddCollision);
-  ZilchBindMethod(SendEvents);
+  RaverieBindMethod(AddCollision);
+  RaverieBindMethod(SendEvents);
 }
 
 void CustomCollisionEventTracker::AddCollision(Collider* otherCollider,
@@ -138,4 +138,4 @@ void CustomCollisionEventTracker::SendEventList(Array<CollisionData>& events, St
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -2,7 +2,7 @@
 #pragma once
 #include "Utility/Standard.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 typedef size_t MemCounterType;
@@ -40,4 +40,4 @@ MemPtr zStaticAllocate(size_t size);
     AllocatorObj->Deallocate(pMem, size);                                                                              \
   }
 
-} // namespace Zero
+} // namespace Raverie

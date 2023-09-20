@@ -1,14 +1,14 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(AutoCompletePopUp, builder, type)
+RaverieDefineType(AutoCompletePopUp, builder, type)
 {
 }
 
-ZilchDefineType(CallTipPopUp, builder, type)
+RaverieDefineType(CallTipPopUp, builder, type)
 {
 }
 
@@ -581,7 +581,7 @@ bool CallTipPopUp::HasOverloads()
   return mTips.Size() > 1;
 }
 
-ZilchDefineType(DocumentEditor, builder, type)
+RaverieDefineType(DocumentEditor, builder, type)
 {
 }
 
@@ -925,7 +925,7 @@ void ScriptEditor::OnKeyDown(KeyboardEvent* event)
 
   if (event->Key == Keys::Tab)
   {
-    if (this->AutoCompleteZeroConnect())
+    if (this->AutoCompleteRaverieConnect())
       return;
   }
 
@@ -964,7 +964,7 @@ void ScriptEditor::OnAutoCompleteItemDoubleClicked(ObjectEvent* event)
 
 void ScriptEditor::OnTextModified(Event* event)
 {
-  ZilchBase::OnTextModified(event);
+  RaverieBase::OnTextModified(event);
 
   ICodeInspector* inspector = GetCodeInspector();
   if (!inspector)
@@ -1558,7 +1558,7 @@ void ScriptEditor::OnCharacterAdded(TextEditorEvent* event)
 
   if (code && (addedRune == ' ' || addedRune == ','))
   {
-    if (this->CanCompleteZeroConnect())
+    if (this->CanCompleteRaverieConnect())
     {
       this->ShowToolTip("Press Tab to add event handler");
     }
@@ -1605,39 +1605,39 @@ void ScriptEditor::OnCharacterAdded(TextEditorEvent* event)
   CheckPopups();
 }
 
-bool ScriptEditor::GetCompleteZeroConnectInfo(String& eventNameOut, String& indentOut, int& functionPositionOut)
+bool ScriptEditor::GetCompleteRaverieConnectInfo(String& eventNameOut, String& indentOut, int& functionPositionOut)
 {
   functionPositionOut = -1;
 
   ICodeInspector* code = this->GetCodeInspector();
-  if (code && code->SupportsZeroConnect())
+  if (code && code->SupportsRaverieConnect())
   {
     String line = GetCurrentLineText();
-    Regex zeroConnect("Zero.Connect\\(.+,\\s*Events\\.([a-zA-Z0-9_]+)\\s*,\\s*$");
+    Regex raverieConnect("Raverie.Connect\\(.+,\\s*Events\\.([a-zA-Z0-9_]+)\\s*,\\s*$");
     Matches matches;
-    zeroConnect.Search(line, matches);
+    raverieConnect.Search(line, matches);
 
     if (matches.Size() != 2)
     {
-      Regex zeroConnectString("Zero.Connect\\(.+,\\s*\"([a-zA-Z0-9_]+)\"\\s*,\\s*$");
-      zeroConnectString.Search(line, matches);
+      Regex raverieConnectString("Raverie.Connect\\(.+,\\s*\"([a-zA-Z0-9_]+)\"\\s*,\\s*$");
+      raverieConnectString.Search(line, matches);
 
       if (matches.Size() != 2)
       {
-        Regex zeroConnectString("Zero.Connect\\(.+,\\s*.*\\.([a-zA-Z0-9_]+)\\s*,\\s*$");
-        zeroConnectString.Search(line, matches);
+        Regex raverieConnectString("Raverie.Connect\\(.+,\\s*.*\\.([a-zA-Z0-9_]+)\\s*,\\s*$");
+        raverieConnectString.Search(line, matches);
 
         if (matches.Size() != 2)
         {
-          Regex zeroConnectString("Zero.Connect\\(.+,\\s*([^,;]*)\\s*,\\s*$");
-          zeroConnectString.Search(line, matches);
+          Regex raverieConnectString("Raverie.Connect\\(.+,\\s*([^,;]*)\\s*,\\s*$");
+          raverieConnectString.Search(line, matches);
         }
       }
     }
 
     if (matches.Size() == 2)
     {
-      eventNameOut = Zilch::LibraryBuilder::FixIdentifier(matches[1], TokenCheck::IsUpper);
+      eventNameOut = Raverie::LibraryBuilder::FixIdentifier(matches[1], TokenCheck::IsUpper);
 
       if (eventNameOut.Empty())
       {
@@ -1659,25 +1659,25 @@ bool ScriptEditor::GetCompleteZeroConnectInfo(String& eventNameOut, String& inde
   return false;
 }
 
-bool ScriptEditor::CanCompleteZeroConnect()
+bool ScriptEditor::CanCompleteRaverieConnect()
 {
   String eventName;
   String indent;
   int functionPosition;
-  return GetCompleteZeroConnectInfo(eventName, indent, functionPosition);
+  return GetCompleteRaverieConnectInfo(eventName, indent, functionPosition);
 }
 
-bool ScriptEditor::AutoCompleteZeroConnect()
+bool ScriptEditor::AutoCompleteRaverieConnect()
 {
   String eventName;
   String indent;
   int functionPosition;
-  if (GetCompleteZeroConnectInfo(eventName, indent, functionPosition))
+  if (GetCompleteRaverieConnectInfo(eventName, indent, functionPosition))
   {
     this->StartUndo();
 
     // We know this is always valid since the
-    // 'GetCompleteZeroConnectInfo' wouldn't return true if it wasn't
+    // 'GetCompleteRaverieConnectInfo' wouldn't return true if it wasn't
     ICodeInspector* code = this->GetCodeInspector();
 
     String eventTypeName;
@@ -1709,7 +1709,7 @@ bool ScriptEditor::AutoCompleteZeroConnect()
       // Get the type of the event
       BoundType* eventType = MetaDatabase::GetInstance()->mEventMap.FindValue(eventName, nullptr);
       if (eventType == nullptr)
-        eventType = ZilchTypeId(Event);
+        eventType = RaverieTypeId(Event);
 
       eventTypeName = eventType->Name;
     }
@@ -1919,8 +1919,8 @@ ScriptEditor* CreateScriptEditor(Composite* parent, ResourceDocument* doc)
 
   if (format == "Python")
     editor->SetLexer(Lexer::Python);
-  else if (format == "Zilch")
-    editor->SetLexer(Lexer::Zilch);
+  else if (format == "Raverie")
+    editor->SetLexer(Lexer::Raverie);
   else if (format == "Shader")
     editor->SetLexer(Lexer::Shader);
   else if (format == "C++")
@@ -1943,4 +1943,4 @@ DocumentEditor* CreateDocumentEditor(Composite* parent, Document* doc)
   return editor;
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class TreeView;
@@ -18,7 +18,7 @@ void RegisterObjectViewEditors();
 class ObjectView : public Composite
 {
 public:
-  ZilchDeclareType(ObjectView, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ObjectView, TypeCopyMode::ReferenceType);
 
   ObjectView(Composite* parent);
   ~ObjectView();
@@ -61,7 +61,7 @@ private:
 class RemovedEntry : public Object
 {
 public:
-  ZilchDeclareType(RemovedEntry, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(RemovedEntry, TypeCopyMode::ReferenceType);
 
   RemovedEntry(Cog* parent, Guid childId);
 
@@ -75,4 +75,4 @@ public:
   Guid mChildId;
 };
 
-} // Namespace Zero
+} // namespace Raverie

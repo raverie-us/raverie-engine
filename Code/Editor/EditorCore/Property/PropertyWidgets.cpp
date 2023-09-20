@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 PropertyEditAction::PropertyEditAction(PropertyWidgetInitializer& init, Function* method, HandleParam instance) :
@@ -28,7 +28,7 @@ void PropertyEditAction::OnButtonPress(Event* event)
     mProp->mPropertyGrid->Invalidate();
 }
 
-ZilchDefineType(AddObjectWidget, builder, type)
+RaverieDefineType(AddObjectWidget, builder, type)
 {
 }
 
@@ -123,11 +123,11 @@ void AddObjectWidget::OnLeftClick(MouseEvent* event)
 void AddObjectWidget::OnPostResourceAdded(PostAddResourceEvent* event)
 {
   Resource* resource = event->mResourceAdd->SourceResource;
-  BoundType* resourceType = ZilchVirtualTypeId(resource);
+  BoundType* resourceType = RaverieVirtualTypeId(resource);
 
   // If a cog, or selection of cogs, invoked the add resource dialog to create
-  // a ZilchComponent - then add that new component to those compositions.
-  if (resourceType == ZilchTypeId(ZilchScript))
+  // a RaverieComponent - then add that new component to those compositions.
+  if (resourceType == RaverieTypeId(RaverieScript))
   {
     String componentName = event->mResourceAdd->Name;
 
@@ -157,7 +157,7 @@ void AddObjectWidget::OnPostResourceAdded(PostAddResourceEvent* event)
 
 void AddObjectWidget::OnAlternateSearchCompleted(AlternateSearchCompletedEvent* event)
 {
-  AddResourceWindow* addDialog = OpenAddWindow(ZilchTypeId(ZilchScript), nullptr, event->mSearchText);
+  AddResourceWindow* addDialog = OpenAddWindow(RaverieTypeId(RaverieScript), nullptr, event->mSearchText);
   ConnectThisTo(addDialog, Events::PostAddResource, OnPostResourceAdded);
 }
 
@@ -225,4 +225,4 @@ void AddObjectWidget::OnOpenAdd(Event* e)
   OpenSearch(this->GetScreenPosition());
 }
 
-} // namespace Zero
+} // namespace Raverie

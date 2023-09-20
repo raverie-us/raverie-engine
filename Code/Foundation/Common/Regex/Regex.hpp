@@ -6,7 +6,7 @@
 #include "Containers/Array.hpp"
 #include "Utility/EnumDeclaration.hpp"
 
-namespace Zero
+namespace Raverie
 {
 // Forward declaration
 struct RegexPrivateData;
@@ -115,4 +115,4 @@ private:
   // Store the private data
   RegexPrivateData* mPrivate;
 };
-} // namespace Zero
+} // namespace Raverie

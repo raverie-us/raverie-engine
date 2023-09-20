@@ -5,7 +5,7 @@
 #include "Systems/Engine/Tweakables.hpp"
 #include "Systems/Engine/SystemObjectManager.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -31,7 +31,7 @@ namespace Z
 BackgroundTasks* gBackgroundTasks = nullptr;
 } // namespace Z
 
-ZilchDefineType(BackgroundTaskEvent, builder, type)
+RaverieDefineType(BackgroundTaskEvent, builder, type)
 {
 }
 
@@ -174,9 +174,9 @@ void BackgroundTask::Completed()
     mCallback(this, mJob);
 }
 
-ZilchDefineType(BackgroundTasks, builder, type)
+RaverieDefineType(BackgroundTasks, builder, type)
 {
-  type->HandleManager = ZilchManagerId(PointerManager);
+  type->HandleManager = RaverieManagerId(PointerManager);
 }
 
 BackgroundTasks::BackgroundTasks()
@@ -248,4 +248,4 @@ void BackgroundTasks::OnTaskUpdated(BackgroundTaskEvent* e)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Encodes a string to be safely passed as a parameter
@@ -11,4 +11,4 @@ String UrlParamEncode(StringParam string);
 /// Decodes a string from a Url using Percent-encoding.
 String UrlParamDecode(StringParam string);
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 void Socket::Close()
@@ -11,4 +11,4 @@ void Socket::Close()
   Close(status);
 }
 
-} // namespace Zero
+} // namespace Raverie

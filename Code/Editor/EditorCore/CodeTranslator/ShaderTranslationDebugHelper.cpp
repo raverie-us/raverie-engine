@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 FragmentSearchProvider::FragmentSearchProvider(StringParam attribute) : SearchProvider("Fragment")
@@ -11,19 +11,19 @@ FragmentSearchProvider::FragmentSearchProvider(StringParam attribute) : SearchPr
 
 void FragmentSearchProvider::Search(SearchData& search)
 {
-  ZilchShaderGenerator* generator = Z::gEngine->has(GraphicsEngine)->mShaderGenerator;
-  ZilchShaderIRLibraryRef shaderLibrary = generator->GetCurrentInternalProjectLibrary();
+  RaverieShaderGenerator* generator = Z::gEngine->has(GraphicsEngine)->mShaderGenerator;
+  RaverieShaderIRLibraryRef shaderLibrary = generator->GetCurrentInternalProjectLibrary();
 
   // Search this library and all dependencies
-  HashSet<ZilchShaderIRLibrary*> visitedLibraries;
+  HashSet<RaverieShaderIRLibrary*> visitedLibraries;
   Search(search, shaderLibrary, visitedLibraries);
 }
 
 void FragmentSearchProvider::Search(SearchData& search,
-                                    ZilchShaderIRLibrary* shaderLibrary,
-                                    HashSet<ZilchShaderIRLibrary*>& visitedLibraries)
+                                    RaverieShaderIRLibrary* shaderLibrary,
+                                    HashSet<RaverieShaderIRLibrary*>& visitedLibraries)
 {
-  forRange (ZilchShaderIRType* shaderType, shaderLibrary->mTypes.Values())
+  forRange (RaverieShaderIRType* shaderType, shaderLibrary->mTypes.Values())
   {
     ShaderIRTypeMeta* shaderTypeMeta = shaderType->mMeta;
     if (shaderTypeMeta == nullptr)
@@ -32,27 +32,27 @@ void FragmentSearchProvider::Search(SearchData& search,
     if (!shaderTypeMeta->ContainsAttribute(mAttribute))
       continue;
 
-    int priority = PartialMatch(search.SearchString.All(), shaderTypeMeta->mZilchName.All(), CaseInsensitiveCompare);
+    int priority = PartialMatch(search.SearchString.All(), shaderTypeMeta->mRaverieName.All(), CaseInsensitiveCompare);
     if (priority != cNoMatch)
     {
       // Add a match
       SearchViewResult& result = search.Results.PushBack();
       result.Data = shaderTypeMeta;
       result.Interface = this;
-      result.Name = shaderTypeMeta->mZilchName;
+      result.Name = shaderTypeMeta->mRaverieName;
       result.Priority = priority;
     }
   }
 
   // Handle having no dependencies
-  ZilchShaderIRModule* dependencies = shaderLibrary->mDependencies;
+  RaverieShaderIRModule* dependencies = shaderLibrary->mDependencies;
   if (dependencies == nullptr)
     return;
 
   // Walk all dependencies (making sure to not walk any library twice)
   for (size_t i = 0; i < dependencies->Size(); ++i)
   {
-    ZilchShaderIRLibrary* dependency = (*dependencies)[i];
+    RaverieShaderIRLibrary* dependency = (*dependencies)[i];
     if (visitedLibraries.Contains(dependency))
       return;
     visitedLibraries.Insert(dependency);
@@ -199,8 +199,8 @@ SearchView* ShaderTranslationDebugHelper::CreateSearchView(SearchProvider* searc
 
 SearchView* ShaderTranslationDebugHelper::CreateFragmentSearchView(StringParam attribute)
 {
-  Array<String> hiddenTags = Array<String>(ZeroInit, "Resources", "ZilchFragment");
-  // Create a search view to filter zilch fragments that have the provided
+  Array<String> hiddenTags = Array<String>(RaverieInit, "Resources", "RaverieFragment");
+  // Create a search view to filter raverie fragments that have the provided
   // attribute
   SearchView* searchView = CreateSearchView(new FragmentSearchProvider(attribute), hiddenTags);
   searchView->Search(String());
@@ -209,7 +209,7 @@ SearchView* ShaderTranslationDebugHelper::CreateFragmentSearchView(StringParam a
 
 void ShaderTranslationDebugHelper::CreateGlslShaderLanguageEntry(int version, bool es)
 {
-  ZeroZilchShaderGlslBackend* glslBackend = new ZeroZilchShaderGlslBackend();
+  RaverieEngineShaderGlslBackend* glslBackend = new RaverieEngineShaderGlslBackend();
   glslBackend->mTargetVersion = version;
   glslBackend->mTargetGlslEs = es;
 
@@ -234,7 +234,7 @@ void ShaderTranslationDebugHelper::OnCoreVertexSelected(SearchViewEvent* e)
 void ShaderTranslationDebugHelper::OnMaterialClicked(Event* e)
 {
   // Create a search view for materials
-  Array<String> hiddenTags = Array<String>(ZeroInit, "Resources", "Material");
+  Array<String> hiddenTags = Array<String>(RaverieInit, "Resources", "Material");
   SearchView* searchView = CreateSearchView(GetResourceSearchProvider(), hiddenTags);
   searchView->Search(String());
   ConnectThisTo(searchView, Events::SearchCompleted, OnMaterialSelected);
@@ -259,7 +259,7 @@ void ShaderTranslationDebugHelper::OnRenderPassSelected(SearchViewEvent* e)
   mActiveSearch->Destroy();
 }
 
-void ShaderTranslationDebugHelper::OnCompileZilchFragments(ZilchCompileFragmentEvent* event)
+void ShaderTranslationDebugHelper::OnCompileRaverieFragments(RaverieCompileFragmentEvent* event)
 {
   if (mShaderGenerator == nullptr)
     return;
@@ -278,7 +278,7 @@ void ShaderTranslationDebugHelper::OnCompileZilchFragments(ZilchCompileFragmentE
     // Use the returned library here instead of the one in the map. The one in
     // the map is garbage.
     Library* externalLibrary = event->mReturnedLibrary;
-    ZilchShaderIRLibraryRef shaderLibrary = range.Front().second;
+    RaverieShaderIRLibraryRef shaderLibrary = range.Front().second;
 
     mShaderGenerator->mCurrentToInternal.Insert(externalLibrary, shaderLibrary);
   }
@@ -286,12 +286,12 @@ void ShaderTranslationDebugHelper::OnCompileZilchFragments(ZilchCompileFragmentE
   mShaderGenerator->MapFragmentTypes();
 }
 
-void ShaderTranslationDebugHelper::OnScriptsCompiledPrePatch(ZilchCompileEvent* event)
+void ShaderTranslationDebugHelper::OnScriptsCompiledPrePatch(RaverieCompileEvent* event)
 {
   if (mShaderGenerator == nullptr)
     return;
 
-  // Probably not necessary here since OnCompileZilchFragments basically
+  // Probably not necessary here since OnCompileRaverieFragments basically
   // takes care of everything. Leaving this in just in case.
   mShaderGenerator->Commit(event);
 }
@@ -302,8 +302,8 @@ void ShaderTranslationDebugHelper::OnScriptCompilationFailed(Event* event)
   mShaderGenerator = nullptr;
 }
 //
-// void ShaderTranslationDebugHelper::ValidateComposition(ZilchShaderGenerator&
-// generator, ZilchFragmentInfo& info, FragmentType::Enum fragmentType)
+// void ShaderTranslationDebugHelper::ValidateComposition(RaverieShaderGenerator&
+// generator, RaverieFragmentInfo& info, FragmentType::Enum fragmentType)
 //{
 //  ShaderFragmentsInfoMap* fragmentMap = info.mFragmentMap;
 //  if(fragmentMap == nullptr)
@@ -326,8 +326,8 @@ void ShaderTranslationDebugHelper::OnScriptCompilationFailed(Event* event)
 //
 //        // Get the shader field that had an error
 //        String fragmentName = compositeInfo->mFragmentName;
-//        String fieldName = fieldInfo.mZilchName;
-//        ZilchShaderIRType* fragmentShaderType =
+//        String fieldName = fieldInfo.mRaverieName;
+//        RaverieShaderIRType* fragmentShaderType =
 //        generator.GetCurrentInternalProjectLibrary()->FindType(fragmentName);
 //        ShaderIRFieldMeta* shaderField =
 //        fragmentShaderType->mMeta->FindField(fieldName);
@@ -366,23 +366,23 @@ void ShaderTranslationDebugHelper::OnRunTranslation(Event* e)
 {
   GraphicsEngine* graphicsEngine = Z::gEngine->has(GraphicsEngine);
   mShaderGenerator = graphicsEngine->mShaderGenerator;
-  ZilchShaderGenerator& generator = *mShaderGenerator;
+  RaverieShaderGenerator& generator = *mShaderGenerator;
 
   // Clear the old results
   mTranslationEntries.Clear();
 
-  // Listen for all compilation events on the zilch manager
-  ZilchManager* zilchManager = ZilchManager::GetInstance();
-  ConnectThisTo(zilchManager, Events::CompileZilchFragments, OnCompileZilchFragments);
-  ConnectThisTo(zilchManager, Events::ScriptsCompiledPrePatch, OnScriptsCompiledPrePatch);
-  ConnectThisTo(zilchManager, Events::ScriptCompilationFailed, OnScriptCompilationFailed);
+  // Listen for all compilation events on the raverie manager
+  RaverieManager* raverieManager = RaverieManager::GetInstance();
+  ConnectThisTo(raverieManager, Events::CompileRaverieFragments, OnCompileRaverieFragments);
+  ConnectThisTo(raverieManager, Events::ScriptsCompiledPrePatch, OnScriptsCompiledPrePatch);
+  ConnectThisTo(raverieManager, Events::ScriptCompilationFailed, OnScriptCompilationFailed);
 
   // Ideally we'd force compile all fragments but this can crash right now.
   // Z::gEditor->SaveAll(false, false);
 
   // Disconnect all events for compilation
-  EventDispatcher* dispatcher = zilchManager->GetDispatcher();
-  dispatcher->DisconnectEvent(Events::CompileZilchFragments, this);
+  EventDispatcher* dispatcher = raverieManager->GetDispatcher();
+  dispatcher->DisconnectEvent(Events::CompileRaverieFragments, this);
   dispatcher->DisconnectEvent(Events::ScriptsCompiledPrePatch, this);
   dispatcher->DisconnectEvent(Events::ScriptCompilationFailed, this);
 
@@ -396,8 +396,8 @@ void ShaderTranslationDebugHelper::OnRunTranslation(Event* e)
   mShaderGenerator = nullptr;
 
   // Build the shader library for this material
-  ZilchShaderIRCompositor::ShaderDefinition shaderDef;
-  ZilchShaderIRLibraryRef shaderLibrary = BuildShaderLibrary(generator, shaderDef);
+  RaverieShaderIRCompositor::ShaderDefinition shaderDef;
+  RaverieShaderIRLibraryRef shaderLibrary = BuildShaderLibrary(generator, shaderDef);
   if (shaderLibrary == nullptr)
     return;
 
@@ -405,31 +405,31 @@ void ShaderTranslationDebugHelper::OnRunTranslation(Event* e)
   ShaderPipelineDescription pipelineDescription;
   if (mOptimizerCheckBox->GetChecked())
     pipelineDescription.mToolPasses.PushBack(new SpirVOptimizerPass());
-  pipelineDescription.mDebugPasses.PushBack(new ZilchSpirVDisassemblerBackend());
+  pipelineDescription.mDebugPasses.PushBack(new RaverieSpirVDisassemblerBackend());
   int index = mTranslationModeComboBox->GetSelectedItem();
   pipelineDescription.mBackend = mLanguagesDataSource[index].mBackend;
 
-  // Grab the zilch, shader, and disassembler results (put them in separate
+  // Grab the raverie, shader, and disassembler results (put them in separate
   // lists to control the order.
-  Array<ShaderTranslationEntry> zilchResultEntries;
+  Array<ShaderTranslationEntry> raverieResultEntries;
   Array<ShaderTranslationEntry> shaderResultEntries;
   Array<ShaderTranslationEntry> disassemblyResultEntries;
   for (size_t i = 0; i < FragmentType::Size; ++i)
   {
-    ZilchShaderIRCompositor::ShaderStageDescription& stageDesc = shaderDef.mResults[i];
+    RaverieShaderIRCompositor::ShaderStageDescription& stageDesc = shaderDef.mResults[i];
     if (stageDesc.mShaderCode.Empty())
       continue;
 
     // Find the generated type for this shader stage
-    ZilchShaderIRType* shaderType = shaderLibrary->FindType(stageDesc.mClassName);
+    RaverieShaderIRType* shaderType = shaderLibrary->FindType(stageDesc.mClassName);
     // Run the pipeline
     Array<TranslationPassResultRef> pipelineResults, debugPipelineResults;
     CompilePipeline(shaderType, pipelineDescription, pipelineResults, debugPipelineResults);
 
     String stageName = FragmentType::Names[i];
-    // Generate the zilch entry.
-    zilchResultEntries.PushBack(
-        ShaderTranslationEntry(Lexer::Zilch, BuildString("Zilch", stageName), stageDesc.mShaderCode));
+    // Generate the raverie entry.
+    raverieResultEntries.PushBack(
+        ShaderTranslationEntry(Lexer::Raverie, BuildString("Raverie", stageName), stageDesc.mShaderCode));
     // Generate the translated shader entry.
     TranslationPassResultRef passResult = pipelineResults.Back();
     shaderResultEntries.PushBack(
@@ -440,9 +440,9 @@ void ShaderTranslationDebugHelper::OnRunTranslation(Event* e)
         ShaderTranslationEntry(Lexer::SpirV, BuildString("SpirV", stageName), disassemblyPassResult->ToString()));
   }
 
-  // Re-order the entries so it's all zilch, then all shader, then all
+  // Re-order the entries so it's all raverie, then all shader, then all
   // disassembly
-  mTranslationEntries.Insert(mTranslationEntries.End(), zilchResultEntries.All());
+  mTranslationEntries.Insert(mTranslationEntries.End(), raverieResultEntries.All());
   mTranslationEntries.Insert(mTranslationEntries.End(), shaderResultEntries.All());
   mTranslationEntries.Insert(mTranslationEntries.End(), disassemblyResultEntries.All());
 
@@ -465,12 +465,12 @@ void ShaderTranslationDebugHelper::OnScriptDisplayChanged(Event* e)
   mScriptEditor->SetScrolledPercentage(scrollPercentage);
 }
 
-ZilchShaderIRLibraryRef ShaderTranslationDebugHelper::BuildShaderLibrary(
-    ZilchShaderGenerator& generator, ZilchShaderIRCompositor::ShaderDefinition& shaderDef)
+RaverieShaderIRLibraryRef ShaderTranslationDebugHelper::BuildShaderLibrary(
+    RaverieShaderGenerator& generator, RaverieShaderIRCompositor::ShaderDefinition& shaderDef)
 {
   mShaderProject.Clear();
 
-  ZilchShaderIRLibrary* fragmentLibrary = generator.GetCurrentInternalProjectLibrary();
+  RaverieShaderIRLibrary* fragmentLibrary = generator.GetCurrentInternalProjectLibrary();
 
   // Get the core vertex, material, and render pass values
   Material* material = MaterialManager::GetInstance()->Find(mMaterialTextBox->GetText());
@@ -487,7 +487,7 @@ ZilchShaderIRLibraryRef ShaderTranslationDebugHelper::BuildShaderLibrary(
   // Then add all fragments on the material.
   for (auto fragmentNames = material->mFragmentNames.All(); !fragmentNames.Empty(); fragmentNames.PopFront())
   {
-    ZilchShaderIRType* fragmentType = fragmentLibrary->FindType(fragmentNames.Front());
+    RaverieShaderIRType* fragmentType = fragmentLibrary->FindType(fragmentNames.Front());
     shaderDef.mFragments.PushBack(fragmentType);
   }
   // ApiPerspectiveOutput needs to be after vertex fragments (can be after pixel
@@ -498,26 +498,26 @@ ZilchShaderIRLibraryRef ShaderTranslationDebugHelper::BuildShaderLibrary(
 
   // Composite the shader together
   ShaderCapabilities capabilities;
-  ZilchShaderIRCompositor compositor;
+  RaverieShaderIRCompositor compositor;
   compositor.Composite(shaderDef, capabilities, generator.mSpirVSettings);
 
   // Add each non-empty shader stage to the shader project to be compiled
   for (size_t i = 0; i < FragmentType::Size; ++i)
   {
-    ZilchShaderIRCompositor::ShaderStageDescription& stageDesc = shaderDef.mResults[i];
+    RaverieShaderIRCompositor::ShaderStageDescription& stageDesc = shaderDef.mResults[i];
     if (!stageDesc.mShaderCode.Empty())
       mShaderProject.AddCodeFromString(stageDesc.mShaderCode, "");
   }
 
   // Compile the shader project to get a library
-  ZilchShaderIRModuleRef shaderDependencies = new ZilchShaderIRModule();
+  RaverieShaderIRModuleRef shaderDependencies = new RaverieShaderIRModule();
   shaderDependencies->PushBack(fragmentLibrary);
-  ZilchShaderIRLibraryRef shaderLibrary =
+  RaverieShaderIRLibraryRef shaderLibrary =
       mShaderProject.CompileAndTranslate(shaderDependencies, generator.mFrontEndTranslator);
   return shaderLibrary;
 }
 
-bool ShaderTranslationDebugHelper::CompilePipeline(ZilchShaderIRType* shaderType,
+bool ShaderTranslationDebugHelper::CompilePipeline(RaverieShaderIRType* shaderType,
                                                    ShaderPipelineDescription& pipeline,
                                                    Array<TranslationPassResultRef>& pipelineResults,
                                                    Array<TranslationPassResultRef>& debugPipelineResults)
@@ -531,13 +531,13 @@ bool ShaderTranslationDebugHelper::CompilePipeline(ZilchShaderIRType* shaderType
   // Convert from the in-memory format of spir-v to actual binary (array of
   // words)
   ShaderByteStreamWriter byteWriter(&binaryBackendData->mByteStream);
-  ZilchShaderSpirVBinaryBackend binaryBackend;
+  RaverieShaderSpirVBinaryBackend binaryBackend;
   binaryBackend.TranslateType(shaderType, byteWriter, binaryBackendData->mReflectionData);
 
   // Run each tool in the pipeline
   for (size_t i = 0; i < pipeline.mToolPasses.Size(); ++i)
   {
-    ZilchShaderIRTranslationPass* translationPass = pipeline.mToolPasses[i];
+    RaverieShaderIRTranslationPass* translationPass = pipeline.mToolPasses[i];
 
     ShaderTranslationPassResult* prevPassData = pipelineResults.Back();
     ShaderTranslationPassResult* toolData = new ShaderTranslationPassResult();
@@ -550,7 +550,7 @@ bool ShaderTranslationDebugHelper::CompilePipeline(ZilchShaderIRType* shaderType
 
   for (size_t i = 0; i < pipeline.mDebugPasses.Size(); ++i)
   {
-    ZilchShaderIRTranslationPass* debugBackend = pipeline.mDebugPasses[i];
+    RaverieShaderIRTranslationPass* debugBackend = pipeline.mDebugPasses[i];
 
     ShaderTranslationPassResult* prevPassData = pipelineResults.Back();
     ShaderTranslationPassResult* resultData = new ShaderTranslationPassResult();
@@ -569,4 +569,4 @@ bool ShaderTranslationDebugHelper::CompilePipeline(ZilchShaderIRType* shaderType
   return true;
 }
 
-} // namespace Zero
+} // namespace Raverie

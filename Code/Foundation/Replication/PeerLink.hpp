@@ -5,7 +5,7 @@
 
 /// Should peer links disconnect via latency?
 /// Will disconnect if RTT exceeds latency limit
-#ifdef ZeroDebug
+#ifdef RaverieDebug
 #  define PEER_LINK_ENABLE_DISCONNECT_VIA_LATENCY 0
 #else
 #  define PEER_LINK_ENABLE_DISCONNECT_VIA_LATENCY 1
@@ -14,7 +14,7 @@
 /// Should peer links disconnect via timeout?
 /// Will disconnect if (RTT/2) * timeout factor elapses without receiving any
 /// packets
-#ifdef ZeroDebug
+#ifdef RaverieDebug
 #  define PEER_LINK_ENABLE_DISCONNECT_VIA_TIMEOUT 0
 #else
 #  define PEER_LINK_ENABLE_DISCONNECT_VIA_TIMEOUT 1
@@ -23,13 +23,13 @@
 /// Should peer links fail connect attempts via timeout?
 /// Will disconnect if (RTT/2) * connect attempt factor elapses during a
 /// connection attempt stage
-#ifdef ZeroDebug
+#ifdef RaverieDebug
 #  define PEER_LINK_ENABLE_FAIL_CONNECT_VIA_TIMEOUT 0
 #else
 #  define PEER_LINK_ENABLE_FAIL_CONNECT_VIA_TIMEOUT 1
 #endif
 
-namespace Zero
+namespace Raverie
 {
 
 /// Typedefs
@@ -824,4 +824,4 @@ private:
   friend class LinkOutbox;
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -8,7 +8,7 @@
   Ji   : [0, -i, 0, i]
 */
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Physics
@@ -20,12 +20,12 @@ ImplementJointType(FixedAngleJoint);
 
 ImplementAngleAccessors(FixedAngleJoint, mReferenceAngle);
 
-ZilchDefineType(FixedAngleJoint, builder, type)
+RaverieDefineType(FixedAngleJoint, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindInterface(Joint);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindInterface(Joint);
+  RaverieBindDocumented();
 
   BindAngleAccessors();
 }
@@ -145,4 +145,4 @@ uint FixedAngleJoint::GetDefaultSpringIds() const
 
 } // namespace Physics
 
-} // namespace Zero
+} // namespace Raverie

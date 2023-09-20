@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 Image::Image()
@@ -305,4 +305,4 @@ void AddPixelBorders(Image* image, int frameWidth, int frameHeight, int borderWi
   image->Swap(&output);
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // MetaAnimatePropertyAction
@@ -23,7 +23,7 @@ Any NoInterpolation(AnyParam starting, AnyParam ending, float t)
 }
 
 #define InterpolatorFor(type)                                                                                          \
-  if (typeId == ZilchTypeId(type))                                                                                     \
+  if (typeId == RaverieTypeId(type))                                                                                     \
     return InterpolateType<type>;
 
 Interpolator GetInterpolator(Type* typeId)
@@ -162,4 +162,4 @@ ActionState::Enum MetaCallAction::Update(float dt)
   return ActionState::Completed;
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 struct JointNode;
@@ -14,7 +14,7 @@ struct JointNode;
 /// with post stabilization.
 struct JointConfigOverride : public Component
 {
-  ZilchDeclareType(JointConfigOverride, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(JointConfigOverride, TypeCopyMode::ReferenceType);
 
   JointConfigOverride();
   virtual ~JointConfigOverride();
@@ -63,4 +63,4 @@ struct JointConfigOverride : public Component
   JointNode* mNode;
 };
 
-} // namespace Zero
+} // namespace Raverie

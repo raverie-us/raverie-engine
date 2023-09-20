@@ -1,14 +1,14 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
-ZilchDefineType(SampleCurve, builder, type)
+RaverieDefineType(SampleCurve, builder, type)
 {
-  ZilchBindMethod(Sample);
-  ZilchBindMethod(DebugSample);
-  ZilchBindGetterProperty(WidthMax);
-  ZilchBindGetterProperty(HeightMax);
+  RaverieBindMethod(Sample);
+  RaverieBindMethod(DebugSample);
+  RaverieBindGetterProperty(WidthMax);
+  RaverieBindGetterProperty(HeightMax);
 }
 
 SampleCurve::SampleCurve()
@@ -251,4 +251,4 @@ SampleCurve* CurveManager::CreateNewResourceInternal(StringParam name)
   return curve;
 }
 
-} // namespace Zero
+} // namespace Raverie

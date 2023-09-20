@@ -4,7 +4,7 @@
 #include "Containers/ContainerCommon.hpp"
 #include "StringConversion.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // ToString buffer size
@@ -105,4 +105,4 @@ struct has_global_to_string : public integral_constant<bool, has_global_to_strin
 {
 };
 
-} // namespace Zero
+} // namespace Raverie

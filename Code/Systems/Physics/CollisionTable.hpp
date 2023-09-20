@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 DeclareEnum2(RegisteredGroupInstanceAccessMode, UseDefault, ReturnNull);
@@ -13,7 +13,7 @@ DeclareEnum2(RegisteredGroupInstanceAccessMode, UseDefault, ReturnNull);
 class CollisionTable : public DataResource
 {
 public:
-  ZilchDeclareType(CollisionTable, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CollisionTable, TypeCopyMode::ReferenceType);
   typedef CollisionFilter value_type;
 
   CollisionTable();
@@ -97,4 +97,4 @@ public:
   void OnCollisionGroupRemoved(ResourceEvent* event);
 };
 
-} // namespace Zero
+} // namespace Raverie

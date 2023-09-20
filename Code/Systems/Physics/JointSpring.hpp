@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 struct JointNode;
@@ -14,7 +14,7 @@ struct JointNode;
 class JointSpring : public Component
 {
 public:
-  ZilchDeclareType(JointSpring, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(JointSpring, TypeCopyMode::ReferenceType);
 
   JointSpring();
   ~JointSpring();
@@ -51,4 +51,4 @@ public:
   bool mActive;
 };
 
-} // namespace Zero
+} // namespace Raverie

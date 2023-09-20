@@ -4,15 +4,15 @@
 #include "OpenglRenderer.hpp"
 
 #ifdef ZeroGl
-#  define ZeroIfGl(X) X
+#  define RaverieIfGl(X) X
 #else
-#  define ZeroIfGl(X)
+#  define RaverieIfGl(X)
 #endif
 
-#ifdef ZeroWebgl
-#  define ZeroIfWebgl(X) X
+#ifdef RaverieWebgl
+#  define RaverieIfWebgl(X) X
 #else
-#  define ZeroIfWebgl(X)
+#  define RaverieIfWebgl(X)
 #endif
 
 static const size_t cMaxDrawBuffers = 4;
@@ -21,37 +21,37 @@ static const size_t cMaxDrawBuffers = 4;
 // RenderQueue structures should have semantics for setting shader parameters
 namespace
 {
-const Zero::String cFrameTime("FrameData.FrameTime");
-const Zero::String cLogicTime("FrameData.LogicTime");
-const Zero::String cNearPlane("CameraData.NearPlane");
-const Zero::String cFarPlane("CameraData.FarPlane");
-const Zero::String cViewportSize("CameraData.ViewportSize");
-const Zero::String cInverseViewportSize("CameraData.InverseViewportSize");
-const Zero::String cObjectWorldPosition("CameraData.ObjectWorldPosition");
+const Raverie::String cFrameTime("FrameData.FrameTime");
+const Raverie::String cLogicTime("FrameData.LogicTime");
+const Raverie::String cNearPlane("CameraData.NearPlane");
+const Raverie::String cFarPlane("CameraData.FarPlane");
+const Raverie::String cViewportSize("CameraData.ViewportSize");
+const Raverie::String cInverseViewportSize("CameraData.InverseViewportSize");
+const Raverie::String cObjectWorldPosition("CameraData.ObjectWorldPosition");
 
-const Zero::String cLocalToWorld("TransformData.LocalToWorld");
-const Zero::String cWorldToLocal("TransformData.WorldToLocal");
-const Zero::String cWorldToView("TransformData.WorldToView");
-const Zero::String cViewToWorld("TransformData.ViewToWorld");
-const Zero::String cLocalToView("TransformData.LocalToView");
-const Zero::String cViewToLocal("TransformData.ViewToLocal");
-const Zero::String cLocalToWorldNormal("TransformData.LocalToWorldNormal");
-const Zero::String cWorldToLocalNormal("TransformData.WorldToLocalNormal");
-const Zero::String cLocalToViewNormal("TransformData.LocalToViewNormal");
-const Zero::String cViewToLocalNormal("TransformData.ViewToLocalNormal");
-const Zero::String cLocalToPerspective("TransformData.LocalToPerspective");
-const Zero::String cViewToPerspective("TransformData.ViewToPerspective");
-const Zero::String cPerspectiveToView("TransformData.PerspectiveToView");
-const Zero::String cZeroPerspectiveToApiPerspective("TransformData.ZeroPerspectiveToApiPerspective");
+const Raverie::String cLocalToWorld("TransformData.LocalToWorld");
+const Raverie::String cWorldToLocal("TransformData.WorldToLocal");
+const Raverie::String cWorldToView("TransformData.WorldToView");
+const Raverie::String cViewToWorld("TransformData.ViewToWorld");
+const Raverie::String cLocalToView("TransformData.LocalToView");
+const Raverie::String cViewToLocal("TransformData.ViewToLocal");
+const Raverie::String cLocalToWorldNormal("TransformData.LocalToWorldNormal");
+const Raverie::String cWorldToLocalNormal("TransformData.WorldToLocalNormal");
+const Raverie::String cLocalToViewNormal("TransformData.LocalToViewNormal");
+const Raverie::String cViewToLocalNormal("TransformData.ViewToLocalNormal");
+const Raverie::String cLocalToPerspective("TransformData.LocalToPerspective");
+const Raverie::String cViewToPerspective("TransformData.ViewToPerspective");
+const Raverie::String cPerspectiveToView("TransformData.PerspectiveToView");
+const Raverie::String cEnginePerspectiveToApiPerspective("TransformData.EnginePerspectiveToApiPerspective");
 
-const Zero::String cSpriteSource("SpriteSource_SpriteSourceColor");
-const Zero::String cSpriteSourceCubePreview("SpriteSource_TextureCubePreview");
+const Raverie::String cSpriteSource("SpriteSource_SpriteSourceColor");
+const Raverie::String cSpriteSourceCubePreview("SpriteSource_TextureCubePreview");
 
-const Zero::String cBoneTransforms("MiscData.BoneTransforms");
+const Raverie::String cBoneTransforms("MiscData.BoneTransforms");
 
 } // namespace
 
-namespace Zero
+namespace Raverie
 {
 
 void EmptyUniformFunc(GLint, GLsizei, const void*)
@@ -348,7 +348,7 @@ GLuint GlTextureMipMapping(TextureMipMapping::Enum value)
 
 void CheckShader(GLuint shader, StringParam shaderCode)
 {
-#ifdef ZeroDebug
+#ifdef RaverieDebug
   GLint status = 0;
   ImportGlGetShaderiv(shader, GL_COMPILE_STATUS, &status);
   if (status == GL_FALSE)
@@ -694,7 +694,7 @@ void BindTexture(TextureType::Enum textureType, uint textureSlot, uint textureId
 
 void CheckFramebufferStatus()
 {
-#ifdef ZeroDebug
+#ifdef RaverieDebug
   GLenum status = ImportGlCheckFramebufferStatus(GL_FRAMEBUFFER);
   switch (status)
   {
@@ -805,24 +805,24 @@ void StreamedVertexBuffer::Initialize()
                         GL_FLOAT,
                         GL_FALSE,
                         sizeof(StreamedVertex),
-                        (void*)ZeroOffsetOf(StreamedVertex, mPosition));
+                        (void*)RaverieOffsetOf(StreamedVertex, mPosition));
   ImportGlEnableVertexAttribArray(VertexSemantic::Uv);
   ImportGlVertexAttribPointer(
-      VertexSemantic::Uv, 2, GL_FLOAT, GL_FALSE, sizeof(StreamedVertex), (void*)ZeroOffsetOf(StreamedVertex, mUv));
+      VertexSemantic::Uv, 2, GL_FLOAT, GL_FALSE, sizeof(StreamedVertex), (void*)RaverieOffsetOf(StreamedVertex, mUv));
   ImportGlEnableVertexAttribArray(VertexSemantic::Color);
   ImportGlVertexAttribPointer(VertexSemantic::Color,
                         4,
                         GL_FLOAT,
                         GL_FALSE,
                         sizeof(StreamedVertex),
-                        (void*)ZeroOffsetOf(StreamedVertex, mColor));
+                        (void*)RaverieOffsetOf(StreamedVertex, mColor));
   ImportGlEnableVertexAttribArray(VertexSemantic::UvAux);
   ImportGlVertexAttribPointer(VertexSemantic::UvAux,
                         2,
                         GL_FLOAT,
                         GL_FALSE,
                         sizeof(StreamedVertex),
-                        (void*)ZeroOffsetOf(StreamedVertex, mUvAux));
+                        (void*)RaverieOffsetOf(StreamedVertex, mUvAux));
 
   ImportGlBindVertexArray(0);
 
@@ -947,7 +947,7 @@ OpenglRenderer::OpenglRenderer() {
   ImportGlPixelStorei(GL_PACK_ALIGNMENT, 1);
   ImportGlPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-#if !defined(ZeroWebgl)
+#if !defined(RaverieWebgl)
   ImportGlEnable(GL_TEXTURE_2D);
   ImportGlEnable(GL_TEXTURE_CUBE_MAP);
   if (ImportGlewIsSupported("GL_ARB_seamless_cube_map"))
@@ -976,10 +976,10 @@ OpenglRenderer::OpenglRenderer() {
                         GL_FLOAT,
                         GL_FALSE,
                         sizeof(StreamedVertex),
-                        (void*)ZeroOffsetOf(StreamedVertex, mPosition));
+                        (void*)RaverieOffsetOf(StreamedVertex, mPosition));
   ImportGlEnableVertexAttribArray(VertexSemantic::Uv);
   ImportGlVertexAttribPointer(
-      VertexSemantic::Uv, 2, GL_FLOAT, GL_FALSE, sizeof(StreamedVertex), (void*)ZeroOffsetOf(StreamedVertex, mUv));
+      VertexSemantic::Uv, 2, GL_FLOAT, GL_FALSE, sizeof(StreamedVertex), (void*)RaverieOffsetOf(StreamedVertex, mUv));
 
   mTriangleIndex = ImportGlGenBuffer();
   ImportGlBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mTriangleIndex);
@@ -1009,16 +1009,16 @@ OpenglRenderer::OpenglRenderer() {
 
   mStreamedVertexBuffer.Initialize();
 
-#define ZeroGlVertexIn ZeroIfGl("in") ZeroIfWebgl("attribute")
-#define ZeroGlVertexOut ZeroIfGl("out") ZeroIfWebgl("varying")
-#define ZeroGlPixelIn ZeroIfGl("in") ZeroIfWebgl("varying")
+#define RaverieGlVertexIn RaverieIfGl("in") RaverieIfWebgl("attribute")
+#define RaverieGlVertexOut RaverieIfGl("out") RaverieIfWebgl("varying")
+#define RaverieGlPixelIn RaverieIfGl("in") RaverieIfWebgl("varying")
 
   // @Nate: This will most likley have to change to use uniform buffers
-  String loadingShaderVertex = ZeroIfGl("#version 150\n") ZeroIfWebgl("#version 100\n")
-      ZeroIfWebgl("precision mediump float;\n") "uniform mat4 Transform;\n"
+  String loadingShaderVertex = RaverieIfGl("#version 150\n") RaverieIfWebgl("#version 100\n")
+      RaverieIfWebgl("precision mediump float;\n") "uniform mat4 Transform;\n"
                                                 "uniform mat3 "
-                                                "UvTransform;\n" ZeroGlVertexIn " vec3 LocalPosition;\n" ZeroGlVertexIn
-                                                " vec2 Uv;\n" ZeroGlVertexOut " vec2 psInUv;\n"
+                                                "UvTransform;\n" RaverieGlVertexIn " vec3 LocalPosition;\n" RaverieGlVertexIn
+                                                " vec2 Uv;\n" RaverieGlVertexOut " vec2 psInUv;\n"
                                                 "void main(void)\n"
                                                 "{\n"
                                                 "  psInUv = (vec3(Uv, 1.0) * "
@@ -1027,9 +1027,9 @@ OpenglRenderer::OpenglRenderer() {
                                                 "1.0) * Transform;\n"
                                                 "}";
 
-  String loadingShaderPixel = ZeroIfGl("#version 150\n") ZeroIfWebgl("#version 100\n")
-      ZeroIfWebgl("precision mediump float;\n") "uniform sampler2D Texture;\n"
-                                                "uniform float Alpha;\n" ZeroGlPixelIn " vec2 psInUv;\n"
+  String loadingShaderPixel = RaverieIfGl("#version 150\n") RaverieIfWebgl("#version 100\n")
+      RaverieIfWebgl("precision mediump float;\n") "uniform sampler2D Texture;\n"
+                                                "uniform float Alpha;\n" RaverieGlPixelIn " vec2 psInUv;\n"
                                                 "void main(void)\n"
                                                 "{\n"
                                                 "  vec2 uv = vec2(psInUv.x, 1.0 - "
@@ -1217,7 +1217,7 @@ void OpenglRenderer::AddTexture(AddTextureInfo* info)
     // A texture resource with uploaded data will never set data size to 0.
     if (info->mTotalDataSize == 0)
     {
-      ZeroIfWebgl(WebglConvertRenderTargetFormat(info));
+      RaverieIfWebgl(WebglConvertRenderTargetFormat(info));
       GlTextureEnums texEnums = gTextureEnums[info->mFormat];
 
       // Rendering to cubemap is not implemented.
@@ -1233,7 +1233,7 @@ void OpenglRenderer::AddTexture(AddTextureInfo* info)
     // Do not try to reallocate texture data if no new data is given.
     else if (info->mImageData != nullptr)
     {
-      ZeroIfWebgl(WebglConvertTextureFormat(info));
+      RaverieIfWebgl(WebglConvertTextureFormat(info));
       GlTextureEnums texEnums = gTextureEnums[info->mFormat];
 
       for (uint i = 0; i < info->mMipCount; ++i)
@@ -1936,7 +1936,7 @@ void OpenglRenderer::SetShaderParameters(FrameBlock* frameBlock, ViewBlock* view
 
   SetShaderParameterMatrix(cWorldToView, viewBlock->mWorldToView);
   SetShaderParameterMatrix(cViewToPerspective, viewBlock->mViewToPerspective);
-  SetShaderParameterMatrix(cZeroPerspectiveToApiPerspective, viewBlock->mZeroPerspectiveToApiPerspective);
+  SetShaderParameterMatrix(cEnginePerspectiveToApiPerspective, viewBlock->mEnginePerspectiveToApiPerspective);
   SetShaderParameterMatrixInv(cViewToWorld, viewBlock->mWorldToView);
   SetShaderParameterMatrixInv(cPerspectiveToView, viewBlock->mViewToPerspective);
 
@@ -2042,7 +2042,7 @@ void OpenglRenderer::SetShaderParameters(u64 objectId, uint shaderInputsId, uint
 
 void OpenglRenderer::CreateShader(ShaderEntry& entry)
 {
-#ifdef ZeroDebug
+#ifdef RaverieDebug
   ZPrint(
       "Compiling shader: %s %s %s\n", entry.mCoreVertex.c_str(), entry.mComposite.c_str(), entry.mRenderPass.c_str());
 #endif
@@ -2069,7 +2069,7 @@ void OpenglRenderer::CreateShader(StringParam vertexSource,
                                   StringParam pixelSource,
                                   GLuint& shader)
 {
-#ifdef ZeroDebug
+#ifdef RaverieDebug
   Timer compileTimer;
 #endif
 
@@ -2121,23 +2121,23 @@ void OpenglRenderer::CreateShader(StringParam vertexSource,
   ImportGlBindAttribLocation(program, 14, "Aux4");
   ImportGlBindAttribLocation(program, 15, "Aux5");
 
-#ifdef ZeroDebug
+#ifdef RaverieDebug
   double compileSeconds = compileTimer.UpdateAndGetTime();
   ZPrint("Compiled shader in %f seconds\n", compileSeconds);
 #endif
 
-#ifdef ZeroDebug
+#ifdef RaverieDebug
   Timer linkTimer;
 #endif
 
   ImportGlLinkProgram(program);
 
-#ifdef ZeroDebug
+#ifdef RaverieDebug
   double linkSeconds = linkTimer.UpdateAndGetTime();
   ZPrint("Linked shader in %f seconds\n", linkSeconds);
 #endif
 
-#ifdef ZeroDebug
+#ifdef RaverieDebug
   GLint status;
   ImportGlGetProgramiv(program, GL_LINK_STATUS, &status);
   if (status == GL_FALSE)
@@ -2276,4 +2276,4 @@ Renderer* CreateRenderer()
   return new OpenglRenderer();
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,18 +1,18 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(EllipsoidCollider, builder, type)
+RaverieDefineType(EllipsoidCollider, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindInterface(Collider);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindInterface(Collider);
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetterProperty(Radii);
-  ZilchBindGetter(WorldRadii);
+  RaverieBindGetterSetterProperty(Radii);
+  RaverieBindGetter(WorldRadii);
 }
 
 EllipsoidCollider::EllipsoidCollider()
@@ -110,4 +110,4 @@ Vec3 EllipsoidCollider::GetWorldRadii() const
   return mRadii * GetWorldScale();
 }
 
-} // namespace Zero
+} // namespace Raverie

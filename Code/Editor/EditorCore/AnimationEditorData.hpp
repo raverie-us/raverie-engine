@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace AnimationConstants
@@ -40,7 +40,7 @@ class AnimationEditorData : public EventObject
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(AnimationEditorData, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(AnimationEditorData, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   AnimationEditorData(AnimationEditor* editor, Cog* animGraphObject, Animation* animation, ScrollingGraph* graphData);
@@ -85,4 +85,4 @@ public:
 /// Coverts the given animation into a new rich animation.
 RichAnimation* ConvertToRichAnimation(Animation* animation);
 
-} // namespace Zero
+} // namespace Raverie

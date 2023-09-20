@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 void InitializeKeyboard();
 
@@ -15,8 +15,8 @@ void CommonLibrary::Initialize()
   WebRequest::Initialize();
 
   // Initialize platform socket library
-  Zero::Status socketLibraryInitStatus;
-  Zero::Socket::InitializeSocketLibrary(socketLibraryInitStatus);
+  Raverie::Status socketLibraryInitStatus;
+  Raverie::Socket::InitializeSocketLibrary(socketLibraryInitStatus);
 
   // Setup keyboard enumerations
   InitializeKeyboard();
@@ -40,10 +40,10 @@ void CommonLibrary::Shutdown()
   WebRequest::Shutdown();
 
   // Uninitialize platform socket library
-  Zero::Status socketLibraryUninitStatus;
-  Zero::Socket::UninitializeSocketLibrary(socketLibraryUninitStatus);
+  Raverie::Status socketLibraryUninitStatus;
+  Raverie::Socket::UninitializeSocketLibrary(socketLibraryUninitStatus);
 
   Memory::Shutdown();
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,32 +1,32 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(ContentComponent, builder, type)
+RaverieDefineType(ContentComponent, builder, type)
 {
-  type->HandleManager = ZilchManagerId(PointerManager);
+  type->HandleManager = RaverieManagerId(PointerManager);
   type->Add(new MetaSerialization());
 }
 
-ZilchDefineType(BuilderComponent, builder, type)
+RaverieDefineType(BuilderComponent, builder, type)
 {
   type->AddAttribute(ObjectAttributes::cCore);
 }
 
 DefineSafeIdHandle(ContentComposition);
-ZilchDefineType(ContentComposition, builder, type)
+RaverieDefineType(ContentComposition, builder, type)
 {
-  ZeroBindHandle();
+  RaverieBindHandle();
   type->Add(new ContentMetaComposition());
 }
 
-ZilchDefineType(ContentMetaComposition, builder, type)
+RaverieDefineType(ContentMetaComposition, builder, type)
 {
 }
 
-ContentMetaComposition::ContentMetaComposition() : MetaComposition(ZilchTypeId(ContentComponent))
+ContentMetaComposition::ContentMetaComposition() : MetaComposition(RaverieTypeId(ContentComponent))
 {
 }
 
@@ -50,7 +50,7 @@ Handle ContentMetaComposition::GetComponentAt(HandleParam owner, uint index)
 
 Handle ContentMetaComposition::MakeObject(BoundType* typeToCreate)
 {
-  return ZilchAllocate(ContentComponent, typeToCreate);
+  return RaverieAllocate(ContentComponent, typeToCreate);
 }
 
 void ContentMetaComposition::AddComponent(HandleParam owner,
@@ -145,7 +145,7 @@ void SerializeComponents(Serializer& stream, ContentComposition* contentItem)
 void ContentComposition::AddComponent(ContentComponent* cc)
 {
   mComponents.PushBack(cc);
-  mComponentMap.Insert(ZilchVirtualTypeId(cc), cc);
+  mComponentMap.Insert(RaverieVirtualTypeId(cc), cc);
   cc->mOwner = this;
 
   ObjectEvent e(this);
@@ -232,4 +232,4 @@ void BuilderComponent::Rename(StringParam newName)
 {
 }
 
-} // namespace Zero
+} // namespace Raverie

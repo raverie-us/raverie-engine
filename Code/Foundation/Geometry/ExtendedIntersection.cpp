@@ -8,7 +8,7 @@
 #include "Foundation/Geometry/Intersection.hpp"
 #include "Foundation/Geometry/Mpr.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 bool SupportShapeOverlap(const Intersection::SupportShape& a, const Intersection::SupportShape& b)
@@ -1543,4 +1543,4 @@ bool Overlap(const SweptTriangle& sweptTri1, const SweptTriangle& sweptTri2)
   return SupportShapeOverlap(a, b);
 }
 
-} // namespace Zero
+} // namespace Raverie

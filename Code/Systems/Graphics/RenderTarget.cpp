@@ -2,30 +2,30 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineExternalBaseType(SamplerSettings, TypeCopyMode::ReferenceType, builder, type)
+RaverieDefineExternalBaseType(SamplerSettings, TypeCopyMode::ReferenceType, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
   type->CreatableInScript = true;
-  ZilchBindFieldProperty(mAddressingX);
-  ZilchBindFieldProperty(mAddressingY);
-  ZilchBindFieldProperty(mFiltering);
-  ZilchBindFieldProperty(mCompareMode);
-  ZilchBindFieldProperty(mCompareFunc);
+  RaverieBindFieldProperty(mAddressingX);
+  RaverieBindFieldProperty(mAddressingY);
+  RaverieBindFieldProperty(mFiltering);
+  RaverieBindFieldProperty(mCompareMode);
+  RaverieBindFieldProperty(mCompareFunc);
 
-  ZilchBindDestructor();
-  ZilchBindConstructor();
+  RaverieBindDestructor();
+  RaverieBindConstructor();
 }
 
-ZilchDefineType(RenderTarget, builder, type)
+RaverieDefineType(RenderTarget, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindFieldGetter(mTexture);
-  ZilchBindMethod(Release);
+  RaverieBindFieldGetter(mTexture);
+  RaverieBindMethod(Release);
 }
 
 RenderTarget::RenderTarget(RenderTargetManager* manager) : mManager(manager)
@@ -186,4 +186,4 @@ HandleOf<Texture> RenderTargetManager::FindTexture(u64 lookupId, RenderTargetTex
   return nullptr;
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Bound Type Handle
@@ -81,4 +81,4 @@ ComponentType* MetaComponentHandle<ComponentType>::operator->() const
   return nullptr;
 }
 
-} // namespace Zero
+} // namespace Raverie

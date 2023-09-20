@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 VertexDescriptionBuilder::VertexDescriptionBuilder() : mCurrentOffset(0), mIndex(0)
@@ -81,4 +81,4 @@ FixedVertexDescription VertexDescriptionBuilder::GetDescription()
   return mVertexDescription;
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 class Cog;
 class CommandManager;
@@ -10,17 +10,17 @@ class Editor;
 class ObjectEvent;
 class Material;
 class ShaderDefinition;
-class ZilchShaderDefinition;
-class SimpleZilchShaderGenerator;
-class ZilchFragment;
+class RaverieShaderDefinition;
+class SimpleRaverieShaderGenerator;
+class RaverieFragment;
 
 // Base class for displaying translated scripts in the editor. Mostly manages a
-// lot of helper functions on a ZilchCompositor and the actual script editor
+// lot of helper functions on a RaverieCompositor and the actual script editor
 // display.
 class TranslatedShaderScriptEditor : public ScriptEditor
 {
 public:
-  typedef TranslatedShaderScriptEditor ZilchSelf;
+  typedef TranslatedShaderScriptEditor RaverieSelf;
   TranslatedShaderScriptEditor(Composite* parent);
   ~TranslatedShaderScriptEditor();
 
@@ -32,8 +32,8 @@ public:
   virtual String OnTranslate();
 
   // Helper functions
-  // void CompileAndTranslateFragments(SimpleZilchShaderGenerator&
-  // shaderGenerator); void TranslateMaterial(SimpleZilchShaderGenerator&
+  // void CompileAndTranslateFragments(SimpleRaverieShaderGenerator&
+  // shaderGenerator); void TranslateMaterial(SimpleRaverieShaderGenerator&
   // shaderGenerator, Material* material);
 
   // The Connect macro doesn't seem to work when trying to connect from a
@@ -45,7 +45,7 @@ public:
     ConnectThisTo(resource, Events::ResourceModified, OnBuild);
   }
 
-  SimpleZilchShaderGenerator* mShaderGenerator;
+  SimpleRaverieShaderGenerator* mShaderGenerator;
 };
 
 // Translates a given fragment. As long as this editor is open on
@@ -53,23 +53,23 @@ public:
 class FragmentFileTranslatorScriptEditor : public TranslatedShaderScriptEditor
 {
 public:
-  typedef FragmentFileTranslatorScriptEditor ZilchSelf;
+  typedef FragmentFileTranslatorScriptEditor RaverieSelf;
   FragmentFileTranslatorScriptEditor(Composite* parent);
 
-  void SetResource(ZilchFragment* fragment);
+  void SetResource(RaverieFragment* fragment);
   String OnTranslate() override;
 
-  ZilchFragment* mFragment;
+  RaverieFragment* mFragment;
 };
 
-// Builds the zilch script representing a composite from a material. As long as
+// Builds the raverie script representing a composite from a material. As long as
 // this editor is open on save/modification of the fragment the script editor
 // will be updated.
-class ZilchCompositorScriptEditor : public TranslatedShaderScriptEditor
+class RaverieCompositorScriptEditor : public TranslatedShaderScriptEditor
 {
 public:
-  typedef ZilchCompositorScriptEditor ZilchSelf;
-  ZilchCompositorScriptEditor(Composite* parent);
+  typedef RaverieCompositorScriptEditor RaverieSelf;
+  RaverieCompositorScriptEditor(Composite* parent);
 
   void SetResource(Material* material);
   String OnTranslate() override;
@@ -78,13 +78,13 @@ public:
 };
 
 DeclareEnum4(TranslationDisplayMode, Pixel, Geometry, Vertex, Full);
-// Translates the zilch script of a material. As long as this editor is open
+// Translates the raverie script of a material. As long as this editor is open
 // on save/modification of the fragment the script editor will be updated.
-class TranslatedZilchCompositorScriptEditor : public TranslatedShaderScriptEditor
+class TranslatedRaverieCompositorScriptEditor : public TranslatedShaderScriptEditor
 {
 public:
-  typedef TranslatedZilchCompositorScriptEditor self_type;
-  TranslatedZilchCompositorScriptEditor(Composite* parent);
+  typedef TranslatedRaverieCompositorScriptEditor self_type;
+  TranslatedRaverieCompositorScriptEditor(Composite* parent);
 
   void SetResource(Material* material);
   String OnTranslate() override;
@@ -98,7 +98,7 @@ public:
 class BaseSplitScriptEditor : public Composite
 {
 public:
-  typedef BaseSplitScriptEditor ZilchSelf;
+  typedef BaseSplitScriptEditor RaverieSelf;
   BaseSplitScriptEditor(Composite* parent);
 
   void Setup();
@@ -125,7 +125,7 @@ public:
 class FragmentSplitScriptEditor : public BaseSplitScriptEditor
 {
 public:
-  typedef FragmentSplitScriptEditor ZilchSelf;
+  typedef FragmentSplitScriptEditor RaverieSelf;
   FragmentSplitScriptEditor(Composite* parent);
 
   virtual void SetTranslatedEditor() override;
@@ -134,9 +134,9 @@ public:
   // virtual void BuildFinalShader(ShaderTypeTranslation& shaderResult)
   // override;
 
-  void SetResource(ZilchFragment* fragment);
+  void SetResource(RaverieFragment* fragment);
 
-  ZilchFragment* mFragment;
+  RaverieFragment* mFragment;
 };
 
 // A simple script editor to view a translated shader and a source material.
@@ -144,7 +144,7 @@ public:
 class MaterialSplitScriptEditor : public BaseSplitScriptEditor
 {
 public:
-  typedef MaterialSplitScriptEditor ZilchSelf;
+  typedef MaterialSplitScriptEditor RaverieSelf;
   MaterialSplitScriptEditor(Composite* parent);
 
   void SetTranslatedEditor() override;
@@ -162,20 +162,20 @@ public:
 class CodeTranslatorListener : public EventObject
 {
 public:
-  typedef CodeTranslatorListener ZilchSelf;
+  typedef CodeTranslatorListener RaverieSelf;
   CodeTranslatorListener();
 
-  void OnComposeZilchMaterial(ObjectEvent* e);
-  void OnTranslateZilchFragment(ObjectEvent* e);
-  void OnTranslateZilchPixelFragment(ObjectEvent* e);
-  void OnTranslateZilchGeometryFragment(ObjectEvent* e);
-  void OnTranslateZilchVertexFragment(ObjectEvent* e);
+  void OnComposeRaverieMaterial(ObjectEvent* e);
+  void OnTranslateRaverieFragment(ObjectEvent* e);
+  void OnTranslateRaveriePixelFragment(ObjectEvent* e);
+  void OnTranslateRaverieGeometryFragment(ObjectEvent* e);
+  void OnTranslateRaverieVertexFragment(ObjectEvent* e);
 
-  void OnTranslateZilchFragmentWithLineNumbers(ObjectEvent* e);
-  void OnTranslateZilchPixelFragmentWithLineNumbers(ObjectEvent* e);
-  void OnTranslateZilchVertexFragmentWithLineNumbers(ObjectEvent* e);
+  void OnTranslateRaverieFragmentWithLineNumbers(ObjectEvent* e);
+  void OnTranslateRaveriePixelFragmentWithLineNumbers(ObjectEvent* e);
+  void OnTranslateRaverieVertexFragmentWithLineNumbers(ObjectEvent* e);
 };
 
 void BindCodeTranslatorCommands(Cog* configCog, CommandManager* commands);
 
-} // namespace Zero
+} // namespace Raverie

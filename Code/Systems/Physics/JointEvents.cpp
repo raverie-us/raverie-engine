@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -11,15 +11,15 @@ DefineEvent(JointLowerLimitReached);
 DefineEvent(JointUpperLimitReached);
 } // namespace Events
 
-ZilchDefineType(JointEvent, builder, type)
+RaverieDefineType(JointEvent, builder, type)
 {
-  ZeroBindDocumented();
-  ZilchBindGetterProperty(ObjectA);
-  ZilchBindGetterProperty(ObjectB);
-  ZilchBindGetterProperty(JointCog);
-  ZilchBindGetterProperty(Joint);
+  RaverieBindDocumented();
+  RaverieBindGetterProperty(ObjectA);
+  RaverieBindGetterProperty(ObjectB);
+  RaverieBindGetterProperty(JointCog);
+  RaverieBindGetterProperty(Joint);
 
-  ZeroBindTag(Tags::Physics);
+  RaverieBindTag(Tags::Physics);
 }
 
 JointEvent::JointEvent()
@@ -49,4 +49,4 @@ Joint* JointEvent::GetJoint()
   return mJoint;
 }
 
-} // namespace Zero
+} // namespace Raverie

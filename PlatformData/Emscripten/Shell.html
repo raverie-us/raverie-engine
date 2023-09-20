@@ -269,7 +269,7 @@
         // every ccall or cwrap will result in a promise. Some functions, like clipboard operations
         // cannot allow async calls, so we trick emscripten into letting us make sync calls.
         // Another way we could cludge this problme is to go back to using Emscripten's main loop,
-        // and only use emscripten_sleep when we're inside of the Zilch debugger.
+        // and only use emscripten_sleep when we're inside of the Raverie debugger.
         const previous = Asyncify.currData;
         Asyncify.currData = null;
         const result = ccall(...args);

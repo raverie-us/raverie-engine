@@ -1,10 +1,10 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
-// Zero Library Extensions
+// Raverie Library Extensions
 class MetaLibraryExtensions
 {
 public:
@@ -19,7 +19,7 @@ public:
   static void AddExtensionsPostCompilation(LibraryBuilder& builder);
 
   // Called after each type is parsed (only called for Resource Libraries)
-  static void TypeParsedCallback(Zilch::ParseEvent* e, void* userData);
+  static void TypeParsedCallback(Raverie::ParseEvent* e, void* userData);
 
   // Internal
 
@@ -33,4 +33,4 @@ public:
   static void AddCompositionExtension(LibraryBuilder& builder, BoundType* compositionType, BoundType* componentType);
 };
 
-} // namespace Zero
+} // namespace Raverie

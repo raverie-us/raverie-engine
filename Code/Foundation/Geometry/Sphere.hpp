@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 struct Aabb;
@@ -44,4 +44,4 @@ struct Sphere
   real mRadius;
 };
 
-} // namespace Zero
+} // namespace Raverie

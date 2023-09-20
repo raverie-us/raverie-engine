@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 const bool cBindCogChildrenReverseRange = false;
@@ -53,9 +53,9 @@ String CogDisplayName(HandleParam object)
 // Cog
 Memory::Heap* Cog::sHeap = new Memory::Heap("Cogs", Memory::GetNamedHeap("Objects"));
 
-ZilchDefineType(Cog, builder, type)
+RaverieDefineType(Cog, builder, type)
 {
-  type->HandleManager = ZilchManagerId(CogHandleManager);
+  type->HandleManager = RaverieManagerId(CogHandleManager);
 
   // METAREFACTOR Componentize this stuff
   // type->ShortDescription = GetShortDescriptionCog;
@@ -76,96 +76,96 @@ ZilchDefineType(Cog, builder, type)
   type->AddAttribute(ObjectAttributes::cStoreLocalModifications);
 
   // When serialized as a property, Cogs save out the CogId
-  ZeroBindSerializationPrimitive();
+  RaverieBindSerializationPrimitive();
 
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindDefaultConstructor();
+  RaverieBindDefaultConstructor();
 
   // Properties
-  ZilchBindGetterSetterProperty(Name)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
-  ZilchBindGetterSetterProperty(Archetype)->Add(new CogArchetypeExtension())->Add(new CogArchetypePropertyFilter());
-  ZilchBindGetterProperty(BaseArchetype)->Add(new MetaEditorResource(false, false, "", true));
+  RaverieBindGetterSetterProperty(Name)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
+  RaverieBindGetterSetterProperty(Archetype)->Add(new CogArchetypeExtension())->Add(new CogArchetypePropertyFilter());
+  RaverieBindGetterProperty(BaseArchetype)->Add(new MetaEditorResource(false, false, "", true));
 
-  ZilchBindGetter(Space);
-  ZilchBindGetter(LevelSettings);
-  ZilchBindGetter(GameSession);
-  ZilchBindGetter(Actions);
-  ZilchBindGetter(RuntimeId);
-  ZilchBindGetterSetter(Transient);
-  ZilchBindGetterSetter(Persistent);
-  ZilchBindGetterSetter(EditorViewportHidden);
-  ZilchBindGetterSetter(ObjectViewHidden);
-  ZilchBindGetterSetter(Locked);
-  ZilchBindGetter(ChildCount);
+  RaverieBindGetter(Space);
+  RaverieBindGetter(LevelSettings);
+  RaverieBindGetter(GameSession);
+  RaverieBindGetter(Actions);
+  RaverieBindGetter(RuntimeId);
+  RaverieBindGetterSetter(Transient);
+  RaverieBindGetterSetter(Persistent);
+  RaverieBindGetterSetter(EditorViewportHidden);
+  RaverieBindGetterSetter(ObjectViewHidden);
+  RaverieBindGetterSetter(Locked);
+  RaverieBindGetter(ChildCount);
 
-  ZilchBindMethod(Destroy);
-  ZilchBindMethod(Clone);
+  RaverieBindMethod(Destroy);
+  RaverieBindMethod(Clone);
 
   // Components
-  ZilchBindMethod(AddComponentByType);
-  ZilchBindMethod(AddComponentByName);
+  RaverieBindMethod(AddComponentByType);
+  RaverieBindMethod(AddComponentByName);
 
-  ZilchBindMethod(GetComponentByName);
-  ZilchBindMethod(GetComponentByIndex);
-  ZilchBindGetter(ComponentCount);
-  ZilchBindMethod(GetComponentIndex);
+  RaverieBindMethod(GetComponentByName);
+  RaverieBindMethod(GetComponentByIndex);
+  RaverieBindGetter(ComponentCount);
+  RaverieBindMethod(GetComponentIndex);
 
-  ZilchBindMethod(RemoveComponentByType);
-  ZilchBindMethod(RemoveComponentByName);
+  RaverieBindMethod(RemoveComponentByType);
+  RaverieBindMethod(RemoveComponentByName);
 
   // Children
-  ZilchBindGetter(Parent);
-  ZilchBindMethod(FindRoot);
-  ZilchBindGetter(Children);
+  RaverieBindGetter(Parent);
+  RaverieBindMethod(FindRoot);
+  RaverieBindGetter(Children);
 
   if (cBindCogChildrenReverseRange)
-    ZilchBindGetter(ChildrenReversed);
+    RaverieBindGetter(ChildrenReversed);
 
-  ZilchBindMethod(AttachToPreserveLocal);
-  ZilchBindMethod(AttachTo);
-  ZilchBindMethod(DetachPreserveLocal);
-  ZilchBindMethod(Detach);
+  RaverieBindMethod(AttachToPreserveLocal);
+  RaverieBindMethod(AttachTo);
+  RaverieBindMethod(DetachPreserveLocal);
+  RaverieBindMethod(Detach);
 
-  ZilchBindMethod(FindChildByName);
-  ZilchBindMethod(FindDirectChildByName);
-  ZilchBindMethod(FindAllChildrenByName);
-  ZilchBindMethod(FindAllDirectChildrenByName);
+  RaverieBindMethod(FindChildByName);
+  RaverieBindMethod(FindDirectChildByName);
+  RaverieBindMethod(FindAllChildrenByName);
+  RaverieBindMethod(FindAllDirectChildrenByName);
 
-  ZilchBindMethod(IsDescendant)->AddAttribute(DeprecatedAttribute);
-  ZilchBindMethod(IsDescendantOf);
-  ZilchBindMethod(IsAncestorOf);
+  RaverieBindMethod(IsDescendant)->AddAttribute(DeprecatedAttribute);
+  RaverieBindMethod(IsDescendantOf);
+  RaverieBindMethod(IsAncestorOf);
 
-  ZilchBindMethod(FindNextSibling);
-  ZilchBindMethod(FindPreviousSibling);
-  ZilchBindMethod(FindNextInOrder);
-  ZilchBindMethod(FindPreviousInOrder);
+  RaverieBindMethod(FindNextSibling);
+  RaverieBindMethod(FindPreviousSibling);
+  RaverieBindMethod(FindNextInOrder);
+  RaverieBindMethod(FindPreviousInOrder);
 
-  ZilchBindMethod(PlaceBeforeSibling);
-  ZilchBindMethod(PlaceAfterSibling);
-  ZilchBindMethod(ReplaceChild);
+  RaverieBindMethod(PlaceBeforeSibling);
+  RaverieBindMethod(PlaceAfterSibling);
+  RaverieBindMethod(ReplaceChild);
 
   // Archetypes
-  ZilchBindMethod(IsModifiedFromArchetype);
-  ZilchBindMethod(ClearArchetype);
-  ZilchBindMethod(UploadToArchetype);
-  ZilchBindMethod(FindNearestArchetype);
-  ZilchBindMethod(FindRootArchetype);
+  RaverieBindMethod(IsModifiedFromArchetype);
+  RaverieBindMethod(ClearArchetype);
+  RaverieBindMethod(UploadToArchetype);
+  RaverieBindMethod(FindNearestArchetype);
+  RaverieBindMethod(FindRootArchetype);
 
   // Events
-  ZilchBindMethod(DispatchEvent);
-  ZilchBindMethod(DispatchUp);
-  ZilchBindMethod(DispatchDown);
+  RaverieBindMethod(DispatchEvent);
+  RaverieBindMethod(DispatchUp);
+  RaverieBindMethod(DispatchDown);
 
   // Other
-  ZilchBindGetter(MarkedForDestruction);
-  ZilchBindMethod(DebugDraw);
-  ZilchBindMethod(SanitizeName);
+  RaverieBindGetter(MarkedForDestruction);
+  RaverieBindMethod(DebugDraw);
+  RaverieBindMethod(SanitizeName);
 
-  ZeroBindEvent(Events::CogNameChanged, ObjectEvent);
-  ZeroBindEvent(Events::TransformUpdated, ObjectEvent);
-  ZeroBindEvent(Events::CogDestroy, ObjectEvent);
-  ZeroBindEvent(Events::CogDelayedDestroy, ObjectEvent);
+  RaverieBindEvent(Events::CogNameChanged, ObjectEvent);
+  RaverieBindEvent(Events::TransformUpdated, ObjectEvent);
+  RaverieBindEvent(Events::CogDestroy, ObjectEvent);
+  RaverieBindEvent(Events::CogDelayedDestroy, ObjectEvent);
 }
 
 void* Cog::operator new(size_t size)
@@ -506,7 +506,7 @@ void Cog::Initialize(CogInitializer& initializer)
     component->mOwner = this;
     component->Initialize(initializer);
 
-    BoundType* componentType = ZilchVirtualTypeId(component);
+    BoundType* componentType = RaverieVirtualTypeId(component);
     forRange (CogComponentMeta* meta, componentType->HasAll<CogComponentMeta>())
     {
       // Add component interfaces
@@ -554,7 +554,7 @@ bool Cog::IsInitialized() const
 bool Cog::AddComponent(Component* component, int index)
 {
   // We need to check for missing dependencies and possible duplicates
-  BoundType* componentType = ZilchVirtualTypeId(component);
+  BoundType* componentType = RaverieVirtualTypeId(component);
   if (CheckForAdditionWithNotify(componentType) == false)
     return false;
 
@@ -564,7 +564,7 @@ bool Cog::AddComponent(Component* component, int index)
 
 void Cog::ForceAddComponent(Component* component, int index)
 {
-  BoundType* componentType = ZilchVirtualTypeId(component);
+  BoundType* componentType = RaverieVirtualTypeId(component);
 
   AddComponentInternal(componentType, component, index);
   CogInitializer initializer(mSpace);
@@ -613,7 +613,7 @@ bool Cog::AddComponentByType(BoundType* componentType)
     return false;
 
   // Create the component
-  Component* component = ZilchAllocate(Component, componentType, HeapFlags::NonReferenceCounted);
+  Component* component = RaverieAllocate(Component, componentType, HeapFlags::NonReferenceCounted);
 
   // If the returned component is null, most likely a script was
   // proxied and they're trying to create it by name.
@@ -682,7 +682,7 @@ uint Cog::GetComponentIndex(BoundType* componentType)
   for (uint i = 0; i < mComponents.Size(); ++i)
   {
     Component* component = mComponents[i];
-    if (ZilchVirtualTypeId(component) == componentType)
+    if (RaverieVirtualTypeId(component) == componentType)
       return i;
   }
 
@@ -698,7 +698,7 @@ bool Cog::RemoveComponent(Component* component)
 {
   ErrorIf(component->mOwner != this, "Removing a component from a cog it doesn't belong to.");
 
-  if (CheckForRemovalWithNotify(ZilchVirtualTypeId(component)) == false)
+  if (CheckForRemovalWithNotify(RaverieVirtualTypeId(component)) == false)
     return false;
 
   ForceRemoveComponent(component);
@@ -721,7 +721,7 @@ void Cog::ForceRemoveComponent(Component* component)
 
   // Inform all the other components that this component
   // is being removed
-  BoundType* typeId = ZilchVirtualTypeId(component);
+  BoundType* typeId = RaverieVirtualTypeId(component);
   ComponentRange range = mComponents.All();
   for (; !range.Empty(); range.PopFront())
     range.Front()->ComponentRemoved(typeId, component);
@@ -752,7 +752,7 @@ bool Cog::RemoveComponentByType(BoundType* componentType)
 
   // This check isn't really necessary as it will fail to find the Component,
   // but it may be useful for the user to see a more informative error message
-  if (componentType->IsA(ZilchTypeId(Component)) == false)
+  if (componentType->IsA(RaverieTypeId(Component)) == false)
   {
     String message = String::Format("Type of name '%s' is not a Component type", componentType->Name.c_str());
     DoNotifyException("Could not remove Component", message);
@@ -818,7 +818,7 @@ void Cog::AddComponentInternal(BoundType* typeId, Component* component, int inde
   mComponentMap.Insert(typeId, component);
   component->mOwner = this;
 
-  BoundType* componentType = ZilchVirtualTypeId(component);
+  BoundType* componentType = RaverieVirtualTypeId(component);
   forRange (CogComponentMeta* meta, componentType->HasAll<CogComponentMeta>())
   {
     // Add component interfaces
@@ -827,7 +827,7 @@ void Cog::AddComponentInternal(BoundType* typeId, Component* component, int inde
   }
 
   // Move Hierarchy to end
-  uint hierarchyIndex = GetComponentIndex(ZilchTypeId(Hierarchy));
+  uint hierarchyIndex = GetComponentIndex(RaverieTypeId(Hierarchy));
   if (hierarchyIndex != uint(-1))
   {
     Component* hierarchy = mComponents[hierarchyIndex];
@@ -848,7 +848,7 @@ void Cog::RemoveComponentInternal(Component* component)
 
 bool CheckForAddition(Cog* cog, BoundType* componentMeta, AddInfo& info)
 {
-  BoundType* cogType = ZilchVirtualTypeId(cog);
+  BoundType* cogType = RaverieVirtualTypeId(cog);
 
   bool canBeAdded = false;
 
@@ -864,13 +864,13 @@ bool CheckForAddition(Cog* cog, BoundType* componentMeta, AddInfo& info)
 bool Cog::CheckForAddition(BoundType* metaOfComponent)
 {
   AddInfo info;
-  return Zero::CheckForAddition(this, metaOfComponent, info);
+  return Raverie::CheckForAddition(this, metaOfComponent, info);
 }
 
 bool Cog::CheckForAdditionWithNotify(BoundType* componentType)
 {
   AddInfo info;
-  if (Zero::CheckForAddition(this, componentType, info) == false)
+  if (Raverie::CheckForAddition(this, componentType, info) == false)
   {
     DoNotifyWarning("Can't Add Component.", info.Reason);
     return false;
@@ -886,7 +886,7 @@ bool Cog::CheckForRemovalWithNotify(BoundType* componentType)
 
   // Query our Composition to see if we can be removed
 
-  BoundType* cogType = ZilchVirtualTypeId(this);
+  BoundType* cogType = RaverieVirtualTypeId(this);
   MetaComposition* composition = cogType->Has<MetaComposition>();
 
   String reason;
@@ -2111,7 +2111,7 @@ bool Cog::GetMarkedForDestruction() const
 
 void Cog::WriteDescription(StringBuilder& builder)
 {
-  BoundType* type = ZilchVirtualTypeId(this);
+  BoundType* type = RaverieVirtualTypeId(this);
   builder << type->Name;
   if (!mName.Empty())
     builder << " '" << mName << "'";
@@ -2182,7 +2182,7 @@ bool CogIsModifiedFromArchetype(Cog* cog, bool ignoreOverrideProperties)
   forRange (Component* component, cog->GetComponents())
   {
     // Ignore the Hierarchy Component as we're handling child objects manually
-    if (ZilchVirtualTypeId(component) == ZilchTypeId(Hierarchy))
+    if (RaverieVirtualTypeId(component) == RaverieTypeId(Hierarchy))
       continue;
 
     if (modifications->IsModified(component, true, ignoreOverrideProperties))
@@ -2237,7 +2237,7 @@ void ClearCogModifications(Cog* rootCog,
   forRange (Component* component, cog->GetComponents())
   {
     // Ignore the Hierarchy Component as we're handling child objects manually
-    if (ZilchVirtualTypeId(component) == ZilchTypeId(Hierarchy))
+    if (RaverieVirtualTypeId(component) == RaverieTypeId(Hierarchy))
       continue;
 
     modifications->ClearModifications(component, true, retainOverrideProperties, cachedMemory);
@@ -2332,4 +2332,4 @@ size_t CogHandleManager::Hash(const Handle& handle)
   return (int)data.mCogId.Hash();
 }
 
-} // namespace Zero
+} // namespace Raverie

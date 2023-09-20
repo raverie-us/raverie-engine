@@ -1,12 +1,12 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(SendableEvent, builder, type)
+RaverieDefineType(SendableEvent, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 }
 
 SendableEvent::SendableEvent() : Connection(NULL)
@@ -55,7 +55,7 @@ SendableEvent* SendableEvent::Load(Serializer& stream)
     // METAREFACTOR This may not work since we're using the calling state for
     // everything
     // Create the object with no flags, then serialize it's data into the loader
-    HandleOf<SendableEvent> event = ZilchAllocate(SendableEvent, boundType);
+    HandleOf<SendableEvent> event = RaverieAllocate(SendableEvent, boundType);
 
     // Make sure we got a packet object
     if (!event.IsNull())
@@ -90,7 +90,7 @@ SendableEvent* SendableEvent::Load(Serializer& stream)
 void SendableEvent::Save(SendableEvent* event, Serializer& stream)
 {
   // Get the meta class for the event
-  BoundType* eventType = ZilchVirtualTypeId(event);
+  BoundType* eventType = RaverieVirtualTypeId(event);
 
   // Make sure that the meta class exists
   ErrorIf(eventType == nullptr,
@@ -107,4 +107,4 @@ void SendableEvent::Save(SendableEvent* event, Serializer& stream)
   stream.EndPolymorphic();
 }
 
-} // namespace Zero
+} // namespace Raverie

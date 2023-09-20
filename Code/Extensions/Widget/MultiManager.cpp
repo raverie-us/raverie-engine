@@ -1,10 +1,10 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(MultiManager, builder, type)
+RaverieDefineType(MultiManager, builder, type)
 {
 }
 
@@ -96,7 +96,7 @@ Widget* MultiManager::ShowWidgetWith(HandleParam searchObject)
 {
   Widget* widget = FindWidgetWith(searchObject);
   if (widget)
-    Zero::ShowWidget(widget);
+    Raverie::ShowWidget(widget);
   return widget;
 }
 
@@ -111,7 +111,7 @@ Widget* MultiManager::ShowWidget(StringParam name)
   {
     widget = this->FindWidget(name);
     if (widget)
-      Zero::ShowWidget(widget);
+      Raverie::ShowWidget(widget);
   }
 
   // Let the widget know its being shown
@@ -126,7 +126,7 @@ Widget* MultiManager::ShowWidget(StringParam name)
 Widget* MultiManager::ToggleWidget(StringParam name)
 {
   if (Widget* widget = FindWidget(name))
-    Zero::CloseTabContaining(widget);
+    Raverie::CloseTabContaining(widget);
   else
     return ShowWidget(name);
   return nullptr;
@@ -135,7 +135,7 @@ Widget* MultiManager::ToggleWidget(StringParam name)
 Widget* MultiManager::HideWidget(StringParam name)
 {
   if (Widget* widget = FindWidget(name))
-    Zero::CloseTabContaining(widget);
+    Raverie::CloseTabContaining(widget);
   return nullptr;
 }
 
@@ -191,4 +191,4 @@ void MultiManager::OnWindowKeyDown(KeyboardEvent* event)
   this->DispatchEvent(Events::OsKeyDown, event);
 }
 
-} // namespace Zero
+} // namespace Raverie

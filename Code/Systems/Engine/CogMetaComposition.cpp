@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Meta Creation Context
@@ -24,11 +24,11 @@ CogInitializer* CogMetaCreationContext::GetInitializer(Space* space)
 }
 
 // Cog Meta Composition
-ZilchDefineType(CogMetaComposition, builder, type)
+RaverieDefineType(CogMetaComposition, builder, type)
 {
 }
 
-CogMetaComposition::CogMetaComposition() : MetaComposition(ZilchTypeId(Component))
+CogMetaComposition::CogMetaComposition() : MetaComposition(RaverieTypeId(Component))
 {
 }
 
@@ -64,7 +64,7 @@ bool CogMetaComposition::CanAddComponent(HandleParam owner, BoundType* typeToAdd
   }
 
   // We cannot add a Transform if our parent doesn't have a transform
-  if (typeToAdd == ZilchTypeId(Transform))
+  if (typeToAdd == RaverieTypeId(Transform))
   {
     if (cog->GetParent() && !cog->GetParent()->has(Transform))
     {
@@ -80,7 +80,7 @@ bool CogMetaComposition::CanAddComponent(HandleParam owner, BoundType* typeToAdd
 
 Handle CogMetaComposition::MakeObject(BoundType* typeToCreate)
 {
-  Component* component = ZilchAllocate(Component, typeToCreate);
+  Component* component = RaverieAllocate(Component, typeToCreate);
 
   // Call SetDefaults or default serialize the object
   SetUpObject(component);
@@ -163,7 +163,7 @@ bool CogMetaComposition::CanRemoveComponent(HandleParam owner, HandleParam compo
 
   // The child transform's TransformParent* will not be fixed and be a dangling
   // pointer.
-  if (typeToRemove->IsA(ZilchTypeId(Transform)))
+  if (typeToRemove->IsA(RaverieTypeId(Transform)))
   {
     // Can only remove it if we have no children with a Transform
     forRange (Cog& child, cog->GetChildren())
@@ -306,4 +306,4 @@ void CogMetaComposition::MoveComponent(HandleParam owner, HandleParam component,
 //  modifications->SetChildOrderModified(cog, true);
 //}
 
-} // namespace Zero
+} // namespace Raverie

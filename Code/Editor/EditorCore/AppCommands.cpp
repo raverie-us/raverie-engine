@@ -2,7 +2,7 @@
 #include "Precompiled.hpp"
 #include "Foundation/Platform/PlatformCommunication.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 void OpenDocumentation()
@@ -121,7 +121,7 @@ void CopyLibraryOut(StringParam outputDirectory, ContentLibrary* library, bool s
     CopyFile(packFileDestination, packFileSource);
   }
 
-  BoundType* zilchDocumentType = ZilchTypeId(ZilchDocumentResource);
+  BoundType* raverieDocumentType = RaverieTypeId(RaverieDocumentResource);
 
   int itemsDone = 0;
   float librarySize = (float)library->GetContentItems().Size();
@@ -136,13 +136,13 @@ void CopyLibraryOut(StringParam outputDirectory, ContentLibrary* library, bool s
     contentItem->BuildListing(listing);
     forRange (ResourceEntry& entry, listing.All())
     {
-      // Skip zilch Resource Templates
+      // Skip raverie Resource Templates
       if (isTemplate && skipTemplates)
       {
         BoundType* resourceType = MetaDatabase::FindType(entry.Type);
 
-        // Skip zilch resource types
-        if (resourceType->IsA(zilchDocumentType))
+        // Skip raverie resource types
+        if (resourceType->IsA(raverieDocumentType))
         {
           continue;
         }
@@ -195,4 +195,4 @@ void BindAppCommands(Cog* config, CommandManager* commands)
   commands->AddCommand("CopyPrebuiltContent", BindCommandFunction(CopyPrebuiltContent));
 }
 
-} // namespace Zero
+} // namespace Raverie

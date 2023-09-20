@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 //                                  BitStream //
@@ -329,7 +329,7 @@ Bits BitStream::TrimFront(Bits dataBits)
   // Create trimmed copy and overwrite this
   BitStream copy;
   copy.Append(*this, dataBits);
-  *this = ZeroMove(copy);
+  *this = RaverieMove(copy);
 
   // Success
   Assert(originalSize >= GetBitsWritten());
@@ -670,4 +670,4 @@ String GetBinaryString(const BitStream& bitStream, Bytes bytesPerLine)
   return result.ToString();
 }
 
-} // namespace Zero
+} // namespace Raverie

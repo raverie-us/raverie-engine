@@ -8,7 +8,7 @@
 #include "RichAnimation.hpp"
 #include "Platform/FilePath.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 ContentItem* MakeDataContent(ContentInitializer& initializer)
@@ -40,7 +40,7 @@ ContentItem* MakeDataContent(ContentInitializer& initializer)
   return content;
 }
 
-ZilchDefineType(DataContent, builder, type)
+RaverieDefineType(DataContent, builder, type)
 {
 }
 
@@ -49,9 +49,9 @@ DataContent::DataContent()
   EditMode = ContentEditMode::ResourceObject;
 }
 
-ZilchDefineType(DataBuilder, builder, type)
+RaverieDefineType(DataBuilder, builder, type)
 {
-  ZeroBindDependency(DataContent);
+  RaverieBindDependency(DataContent);
 }
 
 String DataBuilder::GetOutputFile()
@@ -122,7 +122,7 @@ void CreateDataContent(ContentSystem* system)
   AddContentComponent<RichAnimationBuilder>(system);
   AddContent<DataContent>(system);
 
-  system->CreatorsByExtension["data"] = ContentTypeEntry(ZilchTypeId(DataContent), MakeDataContent);
+  system->CreatorsByExtension["data"] = ContentTypeEntry(RaverieTypeId(DataContent), MakeDataContent);
 }
 
-} // namespace Zero
+} // namespace Raverie

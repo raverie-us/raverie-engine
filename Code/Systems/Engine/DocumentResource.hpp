@@ -1,13 +1,13 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
 {
 // Sent on the document to inform any editors that they should clear annotations
-// (such as errors) This is primarily used when Zilch fully compiles and informs
+// (such as errors) This is primarily used when Raverie fully compiles and informs
 // all script editors to clear their errors
 DeclareEvent(ClearAllAnnotations);
 } // namespace Events
@@ -139,14 +139,14 @@ public:
   /// complete the class name
   virtual bool CanStartLocalWordCompletion(ICodeEditor* editor);
 
-  /// Gets whether or not we support completion of Zero.Connect(...
-  virtual bool SupportsZeroConnect();
+  /// Gets whether or not we support completion of Raverie.Connect(...
+  virtual bool SupportsRaverieConnect();
 
   /// Attempts to go to the definition at the cursor position (type, member,
   /// variable, etc)
   virtual void AttemptGetDefinition(ICodeEditor* editor, size_t cursorPosition, CodeDefinition& definition);
 
-  /// When generating the Zero.Connect function, where should we put it?
+  /// When generating the Raverie.Connect function, where should we put it?
   /// Set positionOut to -1 if you are unable to find a position
   virtual void FindPositionToGenerateFunction(ICodeEditor* editor, int& positionOut, String& indent);
 
@@ -201,7 +201,7 @@ public:
 
   /// Takes a meta method and populates a call tip (always attempts to look for
   /// a DocMethod first)
-  static void AddCallTipFromMetaMethod(Array<CallTip>& tips, BoundType* owner, Zilch::Function* method);
+  static void AddCallTipFromMetaMethod(Array<CallTip>& tips, BoundType* owner, Raverie::Function* method);
 
   /// Takes a meta method and populates a call tip (always attempts to look for
   /// a DocMethod first)
@@ -218,7 +218,7 @@ public:
 class DocumentResource : public Resource
 {
 public:
-  ZilchDeclareType(DocumentResource, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(DocumentResource, TypeCopyMode::ReferenceType);
 
   DocumentResource();
   ~DocumentResource();
@@ -266,7 +266,7 @@ DeclareEvent(SaveCheck);
 class SavingEvent : public Event
 {
 public:
-  ZilchDeclareType(SavingEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SavingEvent, TypeCopyMode::ReferenceType);
   SavingEvent() : NeedSaving(false)
   {
   }
@@ -274,4 +274,4 @@ public:
   Status SaveStatus;
 };
 
-} // namespace Zero
+} // namespace Raverie

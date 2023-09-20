@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class MainPropertyView;
@@ -9,7 +9,7 @@ class MainPropertyView;
 class SelectionHistory : public EventObject
 {
 public:
-  typedef SpriteFrame ZilchSelf;
+  typedef SpriteFrame RaverieSelf;
 
   SelectionHistory();
   ~SelectionHistory();
@@ -30,4 +30,4 @@ public:
   void MovedToObject(MetaSelection* selection);
 };
 
-} // namespace Zero
+} // namespace Raverie

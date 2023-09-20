@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class Item;
@@ -11,7 +11,7 @@ class ItemGroup;
 class ItemList : public Composite
 {
 public:
-  ZilchDeclareType(ItemList, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ItemList, TypeCopyMode::ReferenceType);
   ItemList(Composite* parent, float itemHeight, uint columns);
 
   void UpdateTransform() override;
@@ -47,7 +47,7 @@ private:
 class WeightedComposite : public ColoredComposite
 {
 public:
-  ZilchDeclareType(WeightedComposite, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(WeightedComposite, TypeCopyMode::ReferenceType);
   WeightedComposite(Composite* parent, StringParam displayName, uint weight, Vec4Param color);
   bool operator<(const WeightedComposite& rhs);
   uint mWeight;
@@ -57,7 +57,7 @@ public:
 class ItemGroup : public WeightedComposite
 {
 public:
-  ZilchDeclareType(ItemGroup, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ItemGroup, TypeCopyMode::ReferenceType);
   ItemGroup(Composite* parent, StringParam name, uint weight, float itemHeight, uint columns);
 
   Item* AddItem(StringParam name, StringParam displayName, uint weight);
@@ -73,7 +73,7 @@ public:
 class Item : public WeightedComposite
 {
 public:
-  ZilchDeclareType(Item, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Item, TypeCopyMode::ReferenceType);
   Item(Composite* parent, StringParam itemName, StringParam displayName, uint weight);
 
   void OnMouseEnter(Event*);
@@ -108,4 +108,4 @@ public:
   Vec2 DoLayout(Composite* widget, LayoutArea data) override;
 };
 
-} // namespace Zero
+} // namespace Raverie

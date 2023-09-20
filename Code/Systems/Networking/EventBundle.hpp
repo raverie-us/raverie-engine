@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Typedefs.
@@ -18,7 +18,7 @@ typedef EventArray::range EventRange;
 class EventBundleMetaComposition : public MetaComposition
 {
 public:
-  ZilchDeclareType(EventBundleMetaComposition, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(EventBundleMetaComposition, TypeCopyMode::ReferenceType);
 
   EventBundleMetaComposition();
 
@@ -46,7 +46,7 @@ public:
 class EventBundle : public Object
 {
 public:
-  ZilchDeclareType(EventBundle, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(EventBundle, TypeCopyMode::ReferenceType);
 
   /// Constructors.
   EventBundle();
@@ -133,4 +133,4 @@ private:
                                 ///< update our events.
 };
 
-} // namespace Zero
+} // namespace Raverie

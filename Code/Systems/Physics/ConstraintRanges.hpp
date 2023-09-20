@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// A bi-directional graph edge between a collider and a constraint. This is a
@@ -90,7 +90,7 @@ protected:
 /// Exposes some internals to Contact which currently can't be exposed.
 struct ContactGraphEdge : public BaseConstraintGraphEdge<Physics::Contact, Physics::ContactEdge>
 {
-  ZilchDeclareType(ContactGraphEdge, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ContactGraphEdge, TypeCopyMode::ReferenceType);
   typedef Physics::Contact Contact;
   typedef Physics::ContactEdge EdgeType;
   typedef BaseConstraintGraphEdge<Contact, EdgeType> BaseType;
@@ -160,7 +160,7 @@ struct BaseJointGraphEdge : public BaseConstraintGraphEdge<JointType, JointEdge>
 /// Exposes convenience functions for iterating over the graph.
 struct JointGraphEdge : public BaseJointGraphEdge<Joint>
 {
-  ZilchDeclareType(JointGraphEdge, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(JointGraphEdge, TypeCopyMode::ReferenceType);
 
   typedef BaseJointGraphEdge<Joint> BaseType;
   JointGraphEdge()
@@ -436,4 +436,4 @@ inline BaseConstraintRange<Joint, JointType> FilterJointBodyRange(Collider* coll
 
 ContactBodyRange FilterContactBodyRange(Collider* collider);
 
-} // namespace Zero
+} // namespace Raverie

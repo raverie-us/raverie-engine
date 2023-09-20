@@ -3,7 +3,7 @@
 #include "Containers/Array.hpp"
 #include "Graph.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Memory
@@ -71,4 +71,4 @@ type* Block::AllocateType()
 }
 
 } // namespace Memory
-} // namespace Zero
+} // namespace Raverie

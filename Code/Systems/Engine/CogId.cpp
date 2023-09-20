@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 CogId::CogId() : Id(cInvalidObjectRawId), Slot(cInvalidObjectRawId)
 {
@@ -136,7 +136,7 @@ Cog* RestoreLink(CogId* id, CogCreationContext* context, Component* component, S
     // Look in space if 'LocalModificationOverride' is set on the property
     if (component)
     {
-      BoundType* componentType = ZilchVirtualTypeId(component);
+      BoundType* componentType = RaverieVirtualTypeId(component);
       Property* metaProperty = componentType->GetProperty(propertyName);
       ErrorIf(metaProperty == nullptr,
               String::Format(
@@ -179,4 +179,4 @@ Cog* RestoreLink(CogId* id, CogCreationContext* context, Component* component, S
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// The BroadPhase interface for the StaticAabbTree. The interface
@@ -9,7 +9,7 @@ namespace Zero
 class StaticAabbTreeBroadPhase : public IBroadPhase
 {
 public:
-  ZilchDeclareType(StaticAabbTreeBroadPhase, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(StaticAabbTreeBroadPhase, TypeCopyMode::ReferenceType);
 
   virtual void Serialize(Serializer& stream);
 
@@ -42,4 +42,4 @@ private:
   StaticAabbTreeDefault mTree;
 };
 
-} // namespace Zero
+} // namespace Raverie

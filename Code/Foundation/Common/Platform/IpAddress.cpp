@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 //                                  IpAddress //
@@ -246,4 +246,4 @@ void IpAddress::Clear()
   mHostPortString.Clear();
 }
 
-} // namespace Zero
+} // namespace Raverie

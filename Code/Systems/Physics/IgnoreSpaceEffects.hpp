@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Allows a cog to ignore certain effect types (such as gravity or drag)
@@ -10,7 +10,7 @@ namespace Zero
 class IgnoreSpaceEffects : public Component
 {
 public:
-  ZilchDeclareType(IgnoreSpaceEffects, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(IgnoreSpaceEffects, TypeCopyMode::ReferenceType);
 
   // Component Interface
   void Serialize(Serializer& stream) override;
@@ -66,4 +66,4 @@ private:
   BitField<PhysicsEffectType::Enum> mFlags;
 };
 
-} // namespace Zero
+} // namespace Raverie

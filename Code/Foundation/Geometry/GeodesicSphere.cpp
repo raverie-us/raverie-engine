@@ -32,8 +32,8 @@ struct Face
 
 typedef Face* FacePtr;
 
-typedef Zero::PodArray<Vec3> Vec3Buffer;
-typedef Zero::PodArray<Face> FaceBuffer;
+typedef Raverie::PodArray<Vec3> Vec3Buffer;
+typedef Raverie::PodArray<Face> FaceBuffer;
 
 const real cSamePoint = real(0.00001);
 } // namespace

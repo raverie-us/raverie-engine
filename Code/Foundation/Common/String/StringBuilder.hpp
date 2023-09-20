@@ -2,7 +2,7 @@
 #pragma once
 #include "Containers/ByteBuffer.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Simple String Builder
@@ -127,4 +127,4 @@ inline String GetBinaryString(const T& value)
   return result.ToString();
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class Collider;
@@ -33,7 +33,7 @@ DeclareBitField8(JointFlags, OnIsland, Ghost, Valid, Active, SendsEvents, AutoSn
 /// defined in terms of the position and velocities of the objects involved.
 struct Joint : public Component
 {
-  ZilchDeclareType(Joint, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Joint, TypeCopyMode::ReferenceType);
   typedef JointEdge EdgeType;
 
   Joint();
@@ -345,7 +345,7 @@ struct Joint : public Component
 // expected. This interface is called by certain solvers to avoid as much
 // virtual function overhead as possible.
 #define DeclareJointType(jointType)                                                                                    \
-  ZilchDeclareType(jointType, TypeCopyMode::ReferenceType);                                                            \
+  RaverieDeclareType(jointType, TypeCopyMode::ReferenceType);                                                            \
   static cstr JointName;                                                                                               \
   static const JointEnums::JointTypes mJointType;                                                                      \
   static cstr StaticGetJointName();                                                                                    \
@@ -448,4 +448,4 @@ struct Joint : public Component
     return Joint::GetAngularErrorCorrection(StaticGetJointType());                                                     \
   }
 
-} // namespace Zero
+} // namespace Raverie

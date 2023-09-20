@@ -1,13 +1,13 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class BoundingBoxBroadPhase : public IBroadPhase
 {
 public:
-  ZilchDeclareType(BoundingBoxBroadPhase, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(BoundingBoxBroadPhase, TypeCopyMode::ReferenceType);
 
   virtual void Serialize(Serializer& stream);
   virtual void Draw(int level, uint debugDrawFlags)
@@ -49,4 +49,4 @@ private:
   ClientPairArray mDataPairs;
 };
 
-} // namespace Zero
+} // namespace Raverie

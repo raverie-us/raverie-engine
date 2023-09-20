@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Callback is expected to have a method called QueryCallback (world space
@@ -128,4 +128,4 @@ void QueryTreeVsTree(CallbackType* callback, NodeType* rootA, NodeType* rootB)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 bool IsWord(Rune r)
@@ -351,4 +351,4 @@ StringRange Tokenizer::ReadUntil(char value)
   return MergeFront(text, range);
 }
 
-} // namespace Zero
+} // namespace Raverie

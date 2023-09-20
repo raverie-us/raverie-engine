@@ -2,28 +2,28 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 // Simple Sound
 
-ZilchDefineType(SimpleSound, builder, type)
+RaverieDefineType(SimpleSound, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindDocumented();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindComponent();
+  RaverieBindDocumented();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
 
-  ZeroBindDependency(Cog);
-  ZeroBindDependency(SoundEmitter);
-  ZeroBindTag(Tags::Sound);
+  RaverieBindDependency(Cog);
+  RaverieBindDependency(SoundEmitter);
+  RaverieBindTag(Tags::Sound);
 
-  ZilchBindGetterSetterProperty(Cue);
-  ZilchBindFieldProperty(mStartPlaying);
-  ZilchBindFieldProperty(mPositional);
+  RaverieBindGetterSetterProperty(Cue);
+  RaverieBindFieldProperty(mStartPlaying);
+  RaverieBindFieldProperty(mPositional);
 
-  ZilchBindGetter(IsPlaying);
-  ZilchBindGetterSetter(Paused);
-  ZilchBindMethod(Play);
-  ZilchBindMethod(Stop);
+  RaverieBindGetter(IsPlaying);
+  RaverieBindGetterSetter(Paused);
+  RaverieBindMethod(Play);
+  RaverieBindMethod(Stop);
 }
 
 SimpleSound::SimpleSound() : mInstance(nullptr), mStartPlaying(true), mPositional(false)
@@ -111,4 +111,4 @@ bool SimpleSound::GetIsPlaying()
     return false;
 }
 
-} // namespace Zero
+} // namespace Raverie

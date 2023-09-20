@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 PerformanceGraphWidget::PerformanceGraphWidget(Composite* parent) : Widget(parent)
@@ -366,4 +366,4 @@ float MemoryGraphWidget::DrawMemoryGraph(Vec3 position,
   return xsize;
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,0 +1,98 @@
+// MIT Licensed (see LICENSE.md).
+
+[RunInEditor]
+class UiEditorExtension : RaverieComponent
+{
+  [Dependency] var UiRootWidget : UiRootWidget;
+  [Property] var HighlightColor : Real4 = Real4(1,0,0,1);
+  
+  function Initialize(init : CogInitializer)
+  {
+    Raverie.Connect(this.Space, Events.SelectToolPreSelect, this.OnSelectToolPreSelect);
+    Raverie.Connect(this.Space, Events.MetaDrop, this.OnMetaDrop);
+    Raverie.Connect(this.Space, Events.MetaDropTest, this.OnMetaDrop);
+    Raverie.Connect(this.Space, Events.MetaDropUpdate, this.OnMetaDrop);
+  }
+
+  function OnSelectToolPreSelect(event : ViewportMouseEvent)
+  {
+    var hitWidget = this.GetHitCog(event.ToWorldZPlane(0));
+    if(hitWidget != null)
+    {
+      var selection = Raverie.Editor.Selection;
+      if(event.ShiftPressed)
+      {
+        if(selection.Contains(hitWidget))
+          selection.Remove(hitWidget);
+        else
+          selection.Add(hitWidget);
+      }
+      else
+      {
+        selection.SelectOnly(hitWidget);
+      }
+      Raverie.Editor.Selection.FinalSelectionChanged();
+      event.HandledEvent = true;
+    }
+  }
+  
+  function OnMetaDrop(event : MetaDropEvent)
+  {
+    var archetype = event.Object as Archetype;
+    if(archetype == null)
+      return;
+  
+    var mouseOver = this.GetHitCog(event.ViewportMouseEvent.ToWorldZPlane(0));
+    if(mouseOver != null)
+    {
+      if(event.Testing)
+      {
+        event.Result = "Attach to `mouseOver.Name`";
+        
+        var area = mouseOver.Area;
+      
+        var offset = mouseOver.Transform.WorldTranslation;
+        var line = DebugLine();
+        line.Color = this.HighlightColor;
+        
+        this.DrawLine(line, offset, area.TopLeft, area.TopRight);
+        this.DrawLine(line, offset, area.TopRight, area.BottomRight);
+        this.DrawLine(line, offset, area.BottomRight, area.BottomLeft);
+        this.DrawLine(line, offset, area.BottomLeft, area.TopLeft);
+      }
+      else
+      {
+        var opQueue = Raverie.Editor.OperationQueue;
+        opQueue.BeginBatch();
+        var worldPos = event.ViewportMouseEvent.ToWorldZPlane(0);
+        
+        var cog = this.Space.Create(archetype);
+        cog.AttachTo(mouseOver);
+        cog.UiWidget.SetWorldLocation(cog.Area.Origin, worldPos.XY);
+        
+        opQueue.ObjectCreated(cog);
+        opQueue.EndBatch();
+        
+        Raverie.Editor.Selection.SelectOnly(cog);
+        Raverie.Editor.Selection.FinalSelectionChanged();
+      }
+      
+      event.Handled = true;
+    }
+  }
+  
+  function GetHitCog(worldPoint : Real3) : Cog
+  {
+    var hitWidget = this.UiRootWidget.CastPoint(worldPoint.XY, null, false);
+    if(hitWidget != null)
+      return hitWidget.Owner;
+    return null;
+  }
+  
+  function DrawLine(line : DebugLine, offset : Real3, start : Real2, end : Real2)
+  {
+    line.Start = (Real3(start, 0) + offset);
+    line.End = (Real3(end, 0) + offset);
+    DebugDraw.Add(line);
+  }
+}

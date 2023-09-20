@@ -1,19 +1,19 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(ConstraintConfigBlock, builder, type)
+RaverieDefineType(ConstraintConfigBlock, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetterProperty(Slop);
-  ZilchBindGetterSetterProperty(LinearBaumgarte);
-  ZilchBindGetterSetterProperty(AngularBaumgarte);
-  ZilchBindGetterSetterProperty(LinearErrorCorrection);
-  ZilchBindGetterSetterProperty(AngularErrorCorrection);
-  ZilchBindGetterSetterProperty(PositionCorrectionType);
+  RaverieBindGetterSetterProperty(Slop);
+  RaverieBindGetterSetterProperty(LinearBaumgarte);
+  RaverieBindGetterSetterProperty(AngularBaumgarte);
+  RaverieBindGetterSetterProperty(LinearErrorCorrection);
+  RaverieBindGetterSetterProperty(AngularErrorCorrection);
+  RaverieBindGetterSetterProperty(PositionCorrectionType);
 }
 
 ConstraintConfigBlock::ConstraintConfigBlock()
@@ -256,50 +256,50 @@ void ConstraintConfigBlock::ResetDefaultValues()
   }
 }
 
-ZilchDefineType(ContactBlock, builder, type)
+RaverieDefineType(ContactBlock, builder, type)
 {
-  ZeroBindComponent();
-  type->HasOrAdd<::Zero::CogComponentMeta>(type);
+  RaverieBindComponent();
+  type->HasOrAdd<::Raverie::CogComponentMeta>(type);
   type->Add(new MetaSerialization());
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindSetup(SetupMode::DefaultSerialization);
 }
 
 // joint block type
 #define JointType(jointType)                                                                                           \
-  ZilchDefineType(jointType##Block, builder, type)                                                                     \
+  RaverieDefineType(jointType##Block, builder, type)                                                                     \
   {                                                                                                                    \
-    ZeroBindComponent();                                                                                               \
-    type->HasOrAdd<::Zero::CogComponentMeta>(type);                                                                    \
+    RaverieBindComponent();                                                                                               \
+    type->HasOrAdd<::Raverie::CogComponentMeta>(type);                                                                    \
     type->Add(new MetaSerialization());                                                                                \
-    ZeroBindSetup(SetupMode::DefaultSerialization);                                                                    \
+    RaverieBindSetup(SetupMode::DefaultSerialization);                                                                    \
   }
 #include "JointList.hpp"
 #undef JointType
 
 // Config Factory
-ZilchDefineTemplateType(PhysicsSolverConfigMetaComposition, builder, type)
+RaverieDefineTemplateType(PhysicsSolverConfigMetaComposition, builder, type)
 {
 }
 
-ZilchDefineType(PhysicsSolverConfig, builder, type)
+RaverieDefineType(PhysicsSolverConfig, builder, type)
 {
-  ZeroBindDocumented();
-  ZilchBindDefaultDestructor();
+  RaverieBindDocumented();
+  RaverieBindDefaultDestructor();
   type->Add(new PhysicsSolverConfigMetaComposition(true));
 
-  ZilchBindGetterSetterProperty(SolverIterationCount);
-  ZilchBindGetterSetterProperty(PositionIterationCount);
-  ZilchBindGetterSetterProperty(VelocityRestitutionThreshold);
+  RaverieBindGetterSetterProperty(SolverIterationCount);
+  RaverieBindGetterSetterProperty(PositionIterationCount);
+  RaverieBindGetterSetterProperty(VelocityRestitutionThreshold);
 
   // @JoshD: Hide for now so these won't confuse anyone
   // These properties are only for showing people how constraints handle
   // when you don't implement important features
-  // ZilchBindFieldProperty(mWarmStart);
-  // ZilchBindFieldProperty(mCacheContacts);
-  // ZilchBindGetterSetterProperty(SubCorrectionType);
-  // ZilchBindGetterSetterProperty(SolverType);
+  // RaverieBindFieldProperty(mWarmStart);
+  // RaverieBindFieldProperty(mCacheContacts);
+  // RaverieBindGetterSetterProperty(SubCorrectionType);
+  // RaverieBindGetterSetterProperty(SolverType);
 
-  ZilchBindGetterSetterProperty(PositionCorrectionType);
+  RaverieBindGetterSetterProperty(PositionCorrectionType);
 }
 
 PhysicsSolverConfig::PhysicsSolverConfig()
@@ -330,7 +330,7 @@ void PhysicsSolverConfig::Serialize(Serializer& stream)
   SerializeEnumNameDefault(PhysicsSolverSubType, mSubType, PhysicsSolverSubType::BlockSolving);
 
   // Serialize our composition of constraint config blocks
-  BoundType* selfBoundType = this->ZilchGetDerivedType();
+  BoundType* selfBoundType = this->RaverieGetDerivedType();
   PhysicsSolverConfigMetaComposition* factory = selfBoundType->Has<PhysicsSolverConfigMetaComposition>();
   factory->SerializeArray(stream, mBlocks);
 
@@ -481,11 +481,11 @@ void PhysicsSolverConfig::CopyTo(PhysicsSolverConfig* destination)
   DeleteObjectsInContainer(destination->mBlocks);
   destination->mBlocks.Clear();
   // Clone all of our blocks into the destination
-  BoundType* selfBoundType = this->ZilchGetDerivedType();
+  BoundType* selfBoundType = this->RaverieGetDerivedType();
   PhysicsSolverConfigMetaComposition* factory = selfBoundType->Has<PhysicsSolverConfigMetaComposition>();
   for (size_t i = 0; i < mBlocks.Size(); ++i)
   {
-    BoundType* blockMeta = ZilchVirtualTypeId(mBlocks[i]);
+    BoundType* blockMeta = RaverieVirtualTypeId(mBlocks[i]);
     ConstraintConfigBlock* newBlock = factory->MakeObject(blockMeta).Get<ConstraintConfigBlock*>();
     destination->mBlocks.PushBack(newBlock);
   }
@@ -512,7 +512,7 @@ HandleOf<ConstraintConfigBlock> PhysicsSolverConfig::GetById(BoundType* typeId)
   for (size_t i = 0; i < mBlocks.Size(); ++i)
   {
     ConstraintConfigBlock* block = mBlocks[i];
-    if (ZilchVirtualTypeId(block) == typeId)
+    if (RaverieVirtualTypeId(block) == typeId)
       return block;
   }
 
@@ -558,4 +558,4 @@ PhysicsSolverConfigManager::PhysicsSolverConfigManager(BoundType* resourceType) 
   mExtension = DataResourceExtension;
 }
 
-} // namespace Zero
+} // namespace Raverie

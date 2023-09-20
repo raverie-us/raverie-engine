@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 namespace Events
 {
@@ -16,21 +16,21 @@ static const String cHttpNewline("\r\n");
 // These values must correspond with the enum values in WebServerRequestMethod.
 static const String cMethods[] = {"OPTIONS", "GET", "HEAD", "POST", "PUT", "DELETE", "TRACE", "CONNECT"};
 
-ZilchDefineType(WebServerRequestEvent, builder, type)
+RaverieDefineType(WebServerRequestEvent, builder, type)
 {
-  ZilchBindFieldGetter(mWebServer);
-  ZilchBindFieldGetter(mMethod);
-  ZilchBindFieldGetter(mMethodString);
-  ZilchBindFieldGetter(mOriginalUri);
-  ZilchBindFieldGetter(mDecodedUri);
-  ZilchBindFieldGetter(mPostData);
-  ZilchBindFieldGetter(mData);
-  ZilchBindMethod(HasHeader);
-  ZilchBindMethod(GetHeaderValue);
-  ZilchBindMethod(GetHeaderNames);
-  ZilchBindOverloadedMethod(Respond, ZilchInstanceOverload(void, WebResponseCode::Enum, StringParam, StringParam));
-  ZilchBindOverloadedMethod(Respond, ZilchInstanceOverload(void, StringParam, StringParam, StringParam));
-  ZilchBindOverloadedMethod(Respond, ZilchInstanceOverload(void, StringParam));
+  RaverieBindFieldGetter(mWebServer);
+  RaverieBindFieldGetter(mMethod);
+  RaverieBindFieldGetter(mMethodString);
+  RaverieBindFieldGetter(mOriginalUri);
+  RaverieBindFieldGetter(mDecodedUri);
+  RaverieBindFieldGetter(mPostData);
+  RaverieBindFieldGetter(mData);
+  RaverieBindMethod(HasHeader);
+  RaverieBindMethod(GetHeaderValue);
+  RaverieBindMethod(GetHeaderNames);
+  RaverieBindOverloadedMethod(Respond, RaverieInstanceOverload(void, WebResponseCode::Enum, StringParam, StringParam));
+  RaverieBindOverloadedMethod(Respond, RaverieInstanceOverload(void, StringParam, StringParam, StringParam));
+  RaverieBindOverloadedMethod(Respond, RaverieInstanceOverload(void, StringParam));
 }
 
 WebServerRequestEvent::WebServerRequestEvent(WebServerConnection* connection) :
@@ -362,20 +362,20 @@ OsInt WebServerConnection::ReadWriteThread(void* userData)
   return 0;
 }
 
-ZilchDefineType(WebServer, builder, type)
+RaverieDefineType(WebServer, builder, type)
 {
-  ZeroBindEvent(Events::WebServerRequest, WebServerRequestEvent);
-  ZeroBindEvent(Events::WebServerUnhandledRequest, WebServerRequestEvent);
-  ZilchBindMethod(Create);
-  ZilchBindMethod(Host);
-  ZilchBindMethod(Close);
-  ZilchBindMethod(GetWebResponseCodeString);
-  ZilchBindMethod(UrlParamEncode);
-  ZilchBindMethod(UrlParamDecode);
-  ZilchBindMethod(MapExtensionToMimeType);
-  ZilchBindMethod(GetMimeTypeFromExtension);
-  ZilchBindMethod(ClearMimeTypes);
-  ZilchBindFieldProperty(mPath);
+  RaverieBindEvent(Events::WebServerRequest, WebServerRequestEvent);
+  RaverieBindEvent(Events::WebServerUnhandledRequest, WebServerRequestEvent);
+  RaverieBindMethod(Create);
+  RaverieBindMethod(Host);
+  RaverieBindMethod(Close);
+  RaverieBindMethod(GetWebResponseCodeString);
+  RaverieBindMethod(UrlParamEncode);
+  RaverieBindMethod(UrlParamDecode);
+  RaverieBindMethod(MapExtensionToMimeType);
+  RaverieBindMethod(GetMimeTypeFromExtension);
+  RaverieBindMethod(ClearMimeTypes);
+  RaverieBindFieldProperty(mPath);
 }
 
 WebServer::WebServer()
@@ -527,12 +527,12 @@ String WebServer::GetWebResponseCodeString(WebResponseCode::Enum code)
 
 String WebServer::UrlParamEncode(StringParam string)
 {
-  return Zero::UrlParamEncode(string);
+  return Raverie::UrlParamEncode(string);
 }
 
 String WebServer::UrlParamDecode(StringParam string)
 {
-  return Zero::UrlParamDecode(string);
+  return Raverie::UrlParamDecode(string);
 }
 
 String StripDotFromExtension(StringParam extension)
@@ -695,7 +695,7 @@ OsInt WebServer::AcceptThread(void* userData)
     if (status.Succeeded() && acceptedSocket.IsOpen())
     {
       WebServerConnection* connection = new WebServerConnection(self);
-      connection->mSocket = ZeroMove(acceptedSocket);
+      connection->mSocket = RaverieMove(acceptedSocket);
 
       connection->mReadWriteThread.Initialize(
           &WebServerConnection::ReadWriteThread, connection, "WebServerConnectionReadWrite");
@@ -710,4 +710,4 @@ OsInt WebServer::AcceptThread(void* userData)
   return 0;
 }
 
-} // namespace Zero
+} // namespace Raverie

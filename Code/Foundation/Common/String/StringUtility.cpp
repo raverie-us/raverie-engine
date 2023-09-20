@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 bool CaseInsensitiveStringLess(StringParam a, StringParam b)
@@ -166,4 +166,4 @@ void SuperPermute(StringParam src, Array<String>& perms)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

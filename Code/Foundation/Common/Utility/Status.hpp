@@ -4,7 +4,7 @@
 #include "EnumDeclaration.hpp"
 // #include "StringBuilder.hpp"
 
-namespace Zero
+namespace Raverie
 {
 DeclareEnum2(StatusState, Success, Failure);
 
@@ -12,7 +12,7 @@ template <typename T>
 class StatusContext
 {
 public:
-  static void ZilchDoNotBind();
+  static void RaverieDoNotBind();
 
   typedef void (*StatusFn)(StringParam message, const T& context, void* userData);
 
@@ -137,4 +137,4 @@ typedef StatusContext<u32> Status;
 
 #define StatusReturnIfFailed(Status, ...) ReturnIf((Status).Failed(), __VA_ARGS__, "%s", (Status).Message.c_str())
 
-} // namespace Zero
+} // namespace Raverie

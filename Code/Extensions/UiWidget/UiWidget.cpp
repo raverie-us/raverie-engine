@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 const float cUiWidgetSnapSize = 1.0f;
@@ -15,10 +15,10 @@ DefineEvent(UiPostUpdate);
 
 } // namespace Events
 
-ZilchDefineType(UiTransformUpdateEvent, builder, type)
+RaverieDefineType(UiTransformUpdateEvent, builder, type)
 {
-  ZeroBindDocumented();
-  ZilchBindGetterProperty(RootWidget);
+  RaverieBindDocumented();
+  RaverieBindGetterProperty(RootWidget);
 }
 
 UiRootWidget* UiTransformUpdateEvent::GetRootWidget()
@@ -40,15 +40,15 @@ uint GetAxis(UiDockMode::Enum mode)
 } // namespace UiDockMode
 
 // Widget Cast Results Range
-ZilchDefineType(UiWidgetCastResultsRange, builder, type)
+RaverieDefineType(UiWidgetCastResultsRange, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
   // METAREFACTOR - range type?
   // BindAsRangeType();
-  ZilchBindMethod(Empty);
-  ZilchBindMethod(Front);
-  ZilchBindMethod(PopFront);
-  ZilchBindMethod(Size);
+  RaverieBindMethod(Empty);
+  RaverieBindMethod(Front);
+  RaverieBindMethod(PopFront);
+  RaverieBindMethod(Size);
 }
 
 UiWidgetCastResultsRange::UiWidgetCastResultsRange(const UiWidgetArray& overlappingWidgets) :
@@ -90,105 +90,105 @@ uint UiWidgetCastResultsRange::Size()
 }
 
 // Widget
-ZilchDefineType(UiWidget, builder, type)
+RaverieDefineType(UiWidget, builder, type)
 {
-  ZeroBindDocumented();
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
 
-  ZeroBindDependency(Transform);
-  ZeroBindDependency(Area);
+  RaverieBindDependency(Transform);
+  RaverieBindDependency(Area);
 
   // Events
-  ZeroBindEvent(Events::UiPreUpdate, UiTransformUpdateEvent);
-  ZeroBindEvent(Events::UiPostUpdate, UiTransformUpdateEvent);
+  RaverieBindEvent(Events::UiPreUpdate, UiTransformUpdateEvent);
+  RaverieBindEvent(Events::UiPostUpdate, UiTransformUpdateEvent);
 
-  ZilchBindGetterSetterProperty(Active);
-  ZilchBindGetterSetterProperty(Visible);
-  ZilchBindGetterSetterProperty(Interactive);
-  ZilchBindGetterSetterProperty(OnTop);
-  ZilchBindGetterSetterProperty(LocalTranslation)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
-  ZilchBindGetterSetterProperty(WorldTranslation)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
-  ZilchBindGetterSetterProperty(Size)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
+  RaverieBindGetterSetterProperty(Active);
+  RaverieBindGetterSetterProperty(Visible);
+  RaverieBindGetterSetterProperty(Interactive);
+  RaverieBindGetterSetterProperty(OnTop);
+  RaverieBindGetterSetterProperty(LocalTranslation)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
+  RaverieBindGetterSetterProperty(WorldTranslation)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
+  RaverieBindGetterSetterProperty(Size)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
 
-  ZilchBindGetterSetter(LocalRectangle);
-  ZilchBindGetterSetter(WorldRectangle);
+  RaverieBindGetterSetter(LocalRectangle);
+  RaverieBindGetterSetter(WorldRectangle);
 
-  ZilchBindMethod(SetLocalLocation);
-  ZilchBindMethod(SetWorldLocation);
-  ZilchBindMethod(MarkAsNeedsUpdate);
+  RaverieBindMethod(SetLocalLocation);
+  RaverieBindMethod(SetWorldLocation);
+  RaverieBindMethod(MarkAsNeedsUpdate);
 
-  ZilchBindGetterSetter(LocalTopLeft);
-  ZilchBindGetterSetter(WorldTopLeft);
-  ZilchBindGetterSetter(LocalTopCenter);
-  ZilchBindGetterSetter(WorldTopCenter);
-  ZilchBindGetterSetter(LocalTopRight);
-  ZilchBindGetterSetter(WorldTopRight);
+  RaverieBindGetterSetter(LocalTopLeft);
+  RaverieBindGetterSetter(WorldTopLeft);
+  RaverieBindGetterSetter(LocalTopCenter);
+  RaverieBindGetterSetter(WorldTopCenter);
+  RaverieBindGetterSetter(LocalTopRight);
+  RaverieBindGetterSetter(WorldTopRight);
 
-  ZilchBindGetterSetter(LocalCenterLeft);
-  ZilchBindGetterSetter(WorldCenterLeft);
-  ZilchBindGetterSetter(LocalCenter);
-  ZilchBindGetterSetter(WorldCenter);
-  ZilchBindGetterSetter(LocalCenterRight);
-  ZilchBindGetterSetter(WorldCenterRight);
+  RaverieBindGetterSetter(LocalCenterLeft);
+  RaverieBindGetterSetter(WorldCenterLeft);
+  RaverieBindGetterSetter(LocalCenter);
+  RaverieBindGetterSetter(WorldCenter);
+  RaverieBindGetterSetter(LocalCenterRight);
+  RaverieBindGetterSetter(WorldCenterRight);
 
-  ZilchBindGetterSetter(LocalBottomLeft);
-  ZilchBindGetterSetter(WorldBottomLeft);
-  ZilchBindGetterSetter(LocalBottomCenter);
-  ZilchBindGetterSetter(WorldBottomCenter);
-  ZilchBindGetterSetter(LocalBottomRight);
-  ZilchBindGetterSetter(WorldBottomRight);
+  RaverieBindGetterSetter(LocalBottomLeft);
+  RaverieBindGetterSetter(WorldBottomLeft);
+  RaverieBindGetterSetter(LocalBottomCenter);
+  RaverieBindGetterSetter(WorldBottomCenter);
+  RaverieBindGetterSetter(LocalBottomRight);
+  RaverieBindGetterSetter(WorldBottomRight);
 
-  ZilchBindGetterSetter(LocalTop);
-  ZilchBindGetterSetter(WorldTop);
-  ZilchBindGetterSetter(LocalRight);
-  ZilchBindGetterSetter(WorldRight);
-  ZilchBindGetterSetter(LocalBottom);
-  ZilchBindGetterSetter(WorldBottom);
-  ZilchBindGetterSetter(LocalLeft);
-  ZilchBindGetterSetter(WorldLeft);
+  RaverieBindGetterSetter(LocalTop);
+  RaverieBindGetterSetter(WorldTop);
+  RaverieBindGetterSetter(LocalRight);
+  RaverieBindGetterSetter(WorldRight);
+  RaverieBindGetterSetter(LocalBottom);
+  RaverieBindGetterSetter(WorldBottom);
+  RaverieBindGetterSetter(LocalLeft);
+  RaverieBindGetterSetter(WorldLeft);
 
-  ZilchBindFieldProperty(mAbsoluteMinSize);
-  ZilchBindFieldProperty(mLocalColor);
-  ZilchBindFieldProperty(mHierarchyColor);
-  ZilchBindGetterSetterProperty(ClipChildren);
-  ZilchBindGetterSetterProperty(InLayout)->ZeroLocalModificationOverride();
+  RaverieBindFieldProperty(mAbsoluteMinSize);
+  RaverieBindFieldProperty(mLocalColor);
+  RaverieBindFieldProperty(mHierarchyColor);
+  RaverieBindGetterSetterProperty(ClipChildren);
+  RaverieBindGetterSetterProperty(InLayout)->RaverieLocalModificationOverride();
 
   static const String sLayoutGroup = "Layout";
 
-  ZilchBindGetterSetterProperty(SizePolicyX)->ZeroSetPropertyGroup(sLayoutGroup)->ZeroLocalModificationOverride();
-  ZilchBindGetterSetterProperty(SizePolicyY)->ZeroSetPropertyGroup(sLayoutGroup)->ZeroLocalModificationOverride();
-  ZilchBindFieldProperty(mFlexSize)->ZeroSetPropertyGroup(sLayoutGroup)->ZeroLocalModificationOverride();
+  RaverieBindGetterSetterProperty(SizePolicyX)->RaverieSetPropertyGroup(sLayoutGroup)->RaverieLocalModificationOverride();
+  RaverieBindGetterSetterProperty(SizePolicyY)->RaverieSetPropertyGroup(sLayoutGroup)->RaverieLocalModificationOverride();
+  RaverieBindFieldProperty(mFlexSize)->RaverieSetPropertyGroup(sLayoutGroup)->RaverieLocalModificationOverride();
 
-  ZilchBindGetterSetterProperty(VerticalAlignment)->ZeroSetPropertyGroup(sLayoutGroup)->ZeroLocalModificationOverride();
-  ZilchBindGetterSetterProperty(HorizontalAlignment)
-      ->ZeroSetPropertyGroup(sLayoutGroup)
-      ->ZeroLocalModificationOverride();
+  RaverieBindGetterSetterProperty(VerticalAlignment)->RaverieSetPropertyGroup(sLayoutGroup)->RaverieLocalModificationOverride();
+  RaverieBindGetterSetterProperty(HorizontalAlignment)
+      ->RaverieSetPropertyGroup(sLayoutGroup)
+      ->RaverieLocalModificationOverride();
 
-  ZilchBindGetterSetterProperty(MarginLeft)->ZeroSetPropertyGroup(sLayoutGroup)->ZeroLocalModificationOverride();
-  ZilchBindGetterSetterProperty(MarginTop)->ZeroSetPropertyGroup(sLayoutGroup)->ZeroLocalModificationOverride();
-  ZilchBindGetterSetterProperty(MarginRight)->ZeroSetPropertyGroup(sLayoutGroup)->ZeroLocalModificationOverride();
-  ZilchBindGetterSetterProperty(MarginBottom)->ZeroSetPropertyGroup(sLayoutGroup)->ZeroLocalModificationOverride();
+  RaverieBindGetterSetterProperty(MarginLeft)->RaverieSetPropertyGroup(sLayoutGroup)->RaverieLocalModificationOverride();
+  RaverieBindGetterSetterProperty(MarginTop)->RaverieSetPropertyGroup(sLayoutGroup)->RaverieLocalModificationOverride();
+  RaverieBindGetterSetterProperty(MarginRight)->RaverieSetPropertyGroup(sLayoutGroup)->RaverieLocalModificationOverride();
+  RaverieBindGetterSetterProperty(MarginBottom)->RaverieSetPropertyGroup(sLayoutGroup)->RaverieLocalModificationOverride();
 
-  ZilchBindGetterSetterProperty(DockMode)->ZeroSetPropertyGroup(sLayoutGroup)->ZeroLocalModificationOverride();
-  ZilchBindGetterSetterProperty(CanTakeFocus);
-  ZilchBindGetter(MouseOver);
-  ZilchBindGetter(MouseOverHierarchy);
-  ZilchBindGetter(HasFocus);
-  ZilchBindGetter(HierarchyHasFocus);
+  RaverieBindGetterSetterProperty(DockMode)->RaverieSetPropertyGroup(sLayoutGroup)->RaverieLocalModificationOverride();
+  RaverieBindGetterSetterProperty(CanTakeFocus);
+  RaverieBindGetter(MouseOver);
+  RaverieBindGetter(MouseOverHierarchy);
+  RaverieBindGetter(HasFocus);
+  RaverieBindGetter(HierarchyHasFocus);
 
-  ZilchBindGetter(Root);
+  RaverieBindGetter(Root);
 
-  ZilchBindMethodProperty(SizeToContents);
-  ZilchBindMethod(TakeFocus);
-  ZilchBindMethod(LoseFocus);
-  ZilchBindMethod(TabJump);
-  ZilchBindMethod(TabJumpDirection);
-  ZilchBindMethod(TransformPoint);
-  ZilchBindMethod(TransformPointInverse);
-  ZilchBindMethod(CastPoint);
-  ZilchBindMethod(CastRect);
-  ZilchBindMethod(Update);
+  RaverieBindMethodProperty(SizeToContents);
+  RaverieBindMethod(TakeFocus);
+  RaverieBindMethod(LoseFocus);
+  RaverieBindMethod(TabJump);
+  RaverieBindMethod(TabJumpDirection);
+  RaverieBindMethod(TransformPoint);
+  RaverieBindMethod(TransformPointInverse);
+  RaverieBindMethod(CastPoint);
+  RaverieBindMethod(CastRect);
+  RaverieBindMethod(Update);
 }
 
 UiWidget::~UiWidget()
@@ -1031,9 +1031,9 @@ void UiWidget::SetMarginBottom(float val)
 void UiWidget::OnPropertyModified(PropertyEvent* e)
 {
   BoundType* modifiedType = e->mObject.StoredType;
-  if (modifiedType->IsA(ZilchTypeId(Transform)))
+  if (modifiedType->IsA(RaverieTypeId(Transform)))
     SetLocalTranslation(GetLocalTranslation());
-  else if (modifiedType->IsA(ZilchTypeId(Area)))
+  else if (modifiedType->IsA(RaverieTypeId(Area)))
     SetSize(GetSize());
 }
 
@@ -1095,4 +1095,4 @@ void FindNextFocus(UiWidget* widget, UiFocusDirection::Enum direction)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

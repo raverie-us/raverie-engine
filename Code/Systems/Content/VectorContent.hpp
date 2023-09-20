@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Font content file are true type font files. Loading into
@@ -9,7 +9,7 @@ namespace Zero
 class FontContent : public ContentComposition
 {
 public:
-  ZilchDeclareType(FontContent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(FontContent, TypeCopyMode::ReferenceType);
 
   FontContent();
 };
@@ -18,9 +18,9 @@ public:
 class FontBuilder : public DirectBuilderComponent
 {
 public:
-  ZilchDeclareType(FontBuilder, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(FontBuilder, TypeCopyMode::ReferenceType);
   FontBuilder();
   void Generate(ContentInitializer& initializer) override;
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -92,5 +92,5 @@ target_sources(Widget
 raverie_target_includes(Widget
   PUBLIC
     Engine
-    ZilchShaders
+    RaverieShaders
 )

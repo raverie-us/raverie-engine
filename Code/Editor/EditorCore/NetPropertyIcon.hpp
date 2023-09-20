@@ -2,13 +2,13 @@
 #pragma once
 
 // Forward Declarations
-namespace Zero
+namespace Raverie
 {
 class NetPropertyInfo;
 class SearchViewEvent;
-} // namespace Zero
+} // namespace Raverie
 
-namespace Zero
+namespace Raverie
 {
 
 //                               NetPropertyIcon //
@@ -19,7 +19,7 @@ class NetPropertyIcon : public Composite
 {
 public:
   /// Typedefs
-  typedef NetPropertyIcon ZilchSelf;
+  typedef NetPropertyIcon RaverieSelf;
 
   /// Constructor
   NetPropertyIcon(Composite* parent, HandleParam object, Property* metaProperty);
@@ -77,4 +77,4 @@ bool ShouldDisplayNetPropertyIcon(HandleParam selection);
 /// Callback for adding custom icons to the property grid
 Widget* CreateNetPropertyIcon(Composite* parent, HandleParam object, Property* metaProperty, void* clientData);
 
-} // namespace Zero
+} // namespace Raverie

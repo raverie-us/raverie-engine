@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Typedefs
@@ -21,4 +21,4 @@ struct CogHashSetRange : public CogHashSet::range
   Cog* Front();
 };
 
-} // namespace Zero
+} // namespace Raverie

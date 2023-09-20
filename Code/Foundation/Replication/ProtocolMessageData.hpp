@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 //
@@ -585,4 +585,4 @@ inline Bits Serialize<ReceiptData>(SerializeDirection::Enum direction, BitStream
   }
 };
 
-} // namespace Zero
+} // namespace Raverie

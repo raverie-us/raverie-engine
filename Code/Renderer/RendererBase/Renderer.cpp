@@ -2,7 +2,7 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 const String cPostVertex("PostVertex");
 
@@ -959,10 +959,10 @@ void YInvertBlockCompressed(
   }
 }
 
-void BuildOrthographicTransformZero(
+void BuildOrthographicTransformEngine(
     Mat4& matrix, float verticalSize, float aspectRatio, float nearDistance, float farDistance)
 {
-  // Zero maps NDC [-1,-1,-1] to [1,1,1] ([l,b,n] to [r,t,f])
+  // Raverie maps NDC [-1,-1,-1] to [1,1,1] ([l,b,n] to [r,t,f])
   BuildOrthographicTransformGl(matrix, verticalSize, aspectRatio, nearDistance, farDistance);
 }
 
@@ -1018,10 +1018,10 @@ void BuildOrthographicTransformDx(
   matrix.m23 = -nearDistance / depth;
 }
 
-void BuildPerspectiveTransformZero(
+void BuildPerspectiveTransformEngine(
     Mat4& matrix, float verticalFov, float aspectRatio, float nearDistance, float farDistance)
 {
-  // Zero maps NDC [-1,-1,-1] to [1,1,1] ([l,b,n] to [r,t,f])
+  // Raverie maps NDC [-1,-1,-1] to [1,1,1] ([l,b,n] to [r,t,f])
   BuildPerspectiveTransformGl(matrix, verticalFov, aspectRatio, nearDistance, farDistance);
 }
 
@@ -1644,4 +1644,4 @@ bool RenderTaskRange::operator<(const RenderTaskRange& other) const
   return mRenderOrder < other.mRenderOrder;
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 void LoadContentConfig()
@@ -93,4 +93,4 @@ void LoadCoreContent(Array<String>& coreLibs)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 DeclareBitField7(PhysicsSpaceDebugDrawFlags,
@@ -13,4 +13,4 @@ DeclareBitField7(PhysicsSpaceDebugDrawFlags,
                  DrawSleepPreventors,
                  DrawCenterMass);
 
-} // namespace Zero
+} // namespace Raverie

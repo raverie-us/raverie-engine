@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Particle Animator Interface. Particle Animators effect particles in the
@@ -9,7 +9,7 @@ namespace Zero
 class ParticleAnimator : public Component
 {
 public:
-  ZilchDeclareType(ParticleAnimator, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ParticleAnimator, TypeCopyMode::ReferenceType);
 
   ParticleAnimator();
 
@@ -24,4 +24,4 @@ public:
 
 typedef InList<ParticleAnimator> AnimatorList;
 
-} // namespace Zero
+} // namespace Raverie

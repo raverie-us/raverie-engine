@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Physics
@@ -76,4 +76,4 @@ struct UniversalJoint : public Joint
 
 typedef Physics::UniversalJoint UniversalJoint;
 
-} // namespace Zero
+} // namespace Raverie

@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// How pixel values (source) are combined with the active render target's
@@ -179,4 +179,4 @@ DeclareEnum2(TextureCompareMode, Disabled, Enabled);
 /// resolution that fits in the window.</param>
 DeclareEnum4(ViewportScaling, Fill, Letterbox, Exact, LargestMultiple);
 
-} // namespace Zero
+} // namespace Raverie

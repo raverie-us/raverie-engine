@@ -1,21 +1,21 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(BasicPointEffect, builder, type)
+RaverieDefineType(BasicPointEffect, builder, type)
 {
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDocumented();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetterProperty(MinDistance)->ZeroSerialize(real(1));
-  ZilchBindGetterSetterProperty(MaxDistance)->ZeroSerialize(real(5));
-  ZilchBindGetterSetterProperty(StrengthAtMin)->ZeroSerialize(real(1));
-  ZilchBindGetterSetterProperty(StrengthAtMax)->ZeroSerialize(real(5));
-  ZilchBindGetterSetterProperty(LocalPositionOffset)->ZeroSerialize(Vec3::cZero);
-  ZilchBindGetterSetterProperty(InterpolationType)->ZeroSerialize(PhysicsEffectInterpolationType::Linear);
-  ZilchBindGetterSetterProperty(EndCondition)->ZeroSerialize(PhysicsEffectEndCondition::ClampToMax);
+  RaverieBindGetterSetterProperty(MinDistance)->RaverieSerialize(real(1));
+  RaverieBindGetterSetterProperty(MaxDistance)->RaverieSerialize(real(5));
+  RaverieBindGetterSetterProperty(StrengthAtMin)->RaverieSerialize(real(1));
+  RaverieBindGetterSetterProperty(StrengthAtMax)->RaverieSerialize(real(5));
+  RaverieBindGetterSetterProperty(LocalPositionOffset)->RaverieSerialize(Vec3::cZero);
+  RaverieBindGetterSetterProperty(InterpolationType)->RaverieSerialize(PhysicsEffectInterpolationType::Linear);
+  RaverieBindGetterSetterProperty(EndCondition)->RaverieSerialize(PhysicsEffectEndCondition::ClampToMax);
 }
 
 BasicPointEffect::BasicPointEffect()
@@ -292,12 +292,12 @@ void BasicPointEffect::SetInterpolationType(PhysicsEffectInterpolationType::Enum
   CheckWakeUp();
 }
 
-ZilchDefineType(PointForceEffect, builder, type)
+RaverieDefineType(PointForceEffect, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
 
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 }
 
 PointForceEffect::PointForceEffect()
@@ -317,12 +317,12 @@ void PointForceEffect::ApplyEffect(RigidBody* obj, real dt)
   obj->ApplyForceNoWakeUp(force);
 }
 
-ZilchDefineType(PointGravityEffect, builder, type)
+RaverieDefineType(PointGravityEffect, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
 
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 }
 
 PointGravityEffect::PointGravityEffect()
@@ -343,4 +343,4 @@ void PointGravityEffect::ApplyEffect(RigidBody* obj, real dt)
   obj->ApplyForceNoWakeUp(scaledForce);
 }
 
-} // namespace Zero
+} // namespace Raverie

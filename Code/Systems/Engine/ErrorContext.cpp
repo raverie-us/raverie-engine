@@ -1,10 +1,10 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZeroThreadLocal ErrorContextStack* ActiveErrorContextStack = nullptr;
+RaverieThreadLocal ErrorContextStack* ActiveErrorContextStack = nullptr;
 
 ErrorContext::ErrorContext()
 {
@@ -30,7 +30,7 @@ String ErrorContextObject::GetDescription()
 
   if (ContextObject)
   {
-    BoundType* metaType = ZilchVirtualTypeId(ContextObject);
+    BoundType* metaType = RaverieVirtualTypeId(ContextObject);
     if (MetaDisplay* display = metaType->HasInherited<MetaDisplay>())
       objectDesc = display->GetDebugText(Handle(ContextObject));
     else
@@ -64,4 +64,4 @@ void CleanUpErrorContext()
     SafeDelete(ActiveErrorContextStack);
 }
 
-} // namespace Zero
+} // namespace Raverie

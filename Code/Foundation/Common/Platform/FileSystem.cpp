@@ -8,7 +8,7 @@
 #  define DebugFileTime(...)
 #endif
 
-namespace Zero
+namespace Raverie
 {
 
 String GetRemoteUserDocumentsApplicationDirectory(StringParam organization, StringParam applicationName)
@@ -183,4 +183,4 @@ String FindFirstMissingDirectory(StringParam directory)
   return subPath;
 }
 
-} // namespace Zero
+} // namespace Raverie

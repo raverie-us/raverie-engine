@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 DeclareEnum3(DocumentState, New, Saved, Modified);
@@ -22,7 +22,7 @@ class ICodeInspector;
 class Document : public EventObject
 {
 public:
-  ZilchDeclareType(Document, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Document, TypeCopyMode::ReferenceType);
 
   Document(u64 id);
   Document();
@@ -81,7 +81,7 @@ private:
 class DocumentManager : public ExplicitSingleton<DocumentManager, EventObject>
 {
 public:
-  ZilchDeclareType(DocumentManager, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(DocumentManager, TypeCopyMode::ReferenceType);
 
   DocumentManager();
   ~DocumentManager();
@@ -150,4 +150,4 @@ public:
   String mPath;
 };
 
-} // namespace Zero
+} // namespace Raverie

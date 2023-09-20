@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class ConsoleUi;
@@ -22,7 +22,7 @@ class SavingEvent;
 class MainWindow;
 class Editor;
 class MessageBoxEvent;
-class ZilchCompiledEvent;
+class RaverieCompiledEvent;
 class CogCommandManager;
 class EventDirectoryWatcher;
 class FileEditEvent;
@@ -41,7 +41,7 @@ DeclareEvent(LoadedProject);
 class EditorEvent : public Event
 {
 public:
-  ZilchDeclareType(EditorEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(EditorEvent, TypeCopyMode::ReferenceType);
 
   EditorEvent(Editor* editor);
   Editor* mEditor;
@@ -55,7 +55,7 @@ class Editor : public MultiDock
 {
 public:
   // Meta Initialization
-  ZilchDeclareType(Editor, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Editor, TypeCopyMode::ReferenceType);
 
   Editor(Composite* parent);
   ~Editor();
@@ -201,13 +201,13 @@ public:
 
   /// To re-initialize script objects, we need to remove all live script that
   /// run in editor, then re-add them after the scripts have been compiled.
-  void OnScriptsCompiledPrePatch(ZilchCompileEvent* e);
-  void OnScriptsCompiledPatch(ZilchCompileEvent* e);
+  void OnScriptsCompiledPrePatch(RaverieCompileEvent* e);
+  void OnScriptsCompiledPatch(RaverieCompileEvent* e);
 
-  /// Removes all live zilch objects on all game sessions. It will add all
+  /// Removes all live raverie objects on all game sessions. It will add all
   /// removal operations to the mReInitializeQueue so they can all be
   /// re-added at a later point.
-  void TearDownZilchStateOnGames(HashSet<ResourceLibrary*>& modifiedLibraries);
+  void TearDownRaverieStateOnGames(HashSet<ResourceLibrary*>& modifiedLibraries);
 
   /// The easiest way to re-initialize all script components is to use
   /// operations to remove, then undo to re-add them.
@@ -221,8 +221,8 @@ public:
   // Internals
   void OnSaveCheck(SavingEvent* event);
   RuntimeEditorImpl* mRuntimeEditorImpl;
-  /// This function is marked for removal from Zero.Editor, use
-  /// Zero.Editor.Selection's functionality instead.
+  /// This function is marked for removal from Raverie.Editor, use
+  /// Raverie.Editor.Selection's functionality instead.
   void SelectPrimary(HandleParam object);
   virtual void OnEngineUpdate(UpdateEvent* event);
   void OnResourcesUnloaded(ResourceEvent* event);
@@ -277,4 +277,4 @@ namespace Z
 extern Editor* gEditor;
 } // namespace Z
 
-} // namespace Zero
+} // namespace Raverie

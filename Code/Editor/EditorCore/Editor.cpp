@@ -2,7 +2,7 @@
 #include "Precompiled.hpp"
 #include "Foundation/Platform/PlatformCommunication.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Z
@@ -17,10 +17,10 @@ DefineEvent(UnloadProject);
 DefineEvent(LoadedProject);
 } // namespace Events
 
-ZilchDefineType(EditorEvent, builder, type)
+RaverieDefineType(EditorEvent, builder, type)
 {
 
-  ZilchBindFieldProperty(mEditor);
+  RaverieBindFieldProperty(mEditor);
 }
 
 EditorEvent::EditorEvent(Editor* editor)
@@ -81,7 +81,7 @@ public:
 
       DoNotifyError("Resource Id Conflict. ",
                     "Id conflict, resources fail to load. See console for "
-                    "details or contact zero support team.");
+                    "details or contact Raverie support team.");
     }
   }
 
@@ -98,7 +98,7 @@ public:
                                Archetype* archetype,
                                bool modified) override
   {
-    return Zero::NewResourceOnWrite(resourceManager, type, property, space, resource, archetype, modified);
+    return Raverie::NewResourceOnWrite(resourceManager, type, property, space, resource, archetype, modified);
   }
 
   bool HasFocus(GameSession* game) override
@@ -176,42 +176,42 @@ public:
   }
 };
 
-ZilchDefineType(Editor, builder, type)
+RaverieDefineType(Editor, builder, type)
 {
-  ZilchBindGetterProperty(Actions);
-  ZilchBindGetterProperty(EditSpace);
-  ZilchBindGetterProperty(EditGameSession);
-  ZilchBindGetterProperty(EditLevel);
-  ZilchBindGetterProperty(Selection);
-  ZilchBindGetterProperty(OperationQueue);
-  ZilchBindGetterProperty(ProjectCog);
-  ZilchBindMethod(SetFocus);
-  ZilchBindMethod(DisplayGameSession);
-  ZilchBindMethod(ExecuteCommand);
-  ZilchBindMethod(SelectPrimary)->AddAttribute(DeprecatedAttribute);
-  ZilchBindMethod(PlayGame);
-  ZilchBindMethod(PlaySingleGame);
-  ZilchBindMethod(PlayNewGame);
-  Zilch::Function* pauseFunction = ZilchBindMethod(PauseGame);
+  RaverieBindGetterProperty(Actions);
+  RaverieBindGetterProperty(EditSpace);
+  RaverieBindGetterProperty(EditGameSession);
+  RaverieBindGetterProperty(EditLevel);
+  RaverieBindGetterProperty(Selection);
+  RaverieBindGetterProperty(OperationQueue);
+  RaverieBindGetterProperty(ProjectCog);
+  RaverieBindMethod(SetFocus);
+  RaverieBindMethod(DisplayGameSession);
+  RaverieBindMethod(ExecuteCommand);
+  RaverieBindMethod(SelectPrimary)->AddAttribute(DeprecatedAttribute);
+  RaverieBindMethod(PlayGame);
+  RaverieBindMethod(PlaySingleGame);
+  RaverieBindMethod(PlayNewGame);
+  Raverie::Function* pauseFunction = RaverieBindMethod(PauseGame);
   pauseFunction->AddAttribute(DeprecatedAttribute);
   pauseFunction->Description = "PauseGame() is deprecated, please call ToggleGamePaused()";
-  ZilchBindMethod(ToggleGamePaused);
-  ZilchBindMethod(SetGamePaused);
-  ZilchBindMethod(StopGame);
-  ZilchBindMethod(StepGame);
-  ZilchBindMethod(EditGameSpaces);
-  ZilchBindMethod(AddResource);
-  ZilchBindMethod(AddResourceType);
-  ZilchBindMethod(ZoomOnGame);
-  ZilchBindMethod(SelectTool);
-  ZilchBindMethod(SetMainPropertyViewObject);
-  ZilchBindMethod(EditResource);
-  ZilchBindMethod(CreateDockableWindow);
-  ZilchBindMethod(DebuggerResume);
-  ZilchBindMethod(DebuggerPause);
-  ZilchBindMethod(DebuggerStepIn);
-  ZilchBindMethod(DebuggerStepOver);
-  ZilchBindMethod(DebuggerStepOut);
+  RaverieBindMethod(ToggleGamePaused);
+  RaverieBindMethod(SetGamePaused);
+  RaverieBindMethod(StopGame);
+  RaverieBindMethod(StepGame);
+  RaverieBindMethod(EditGameSpaces);
+  RaverieBindMethod(AddResource);
+  RaverieBindMethod(AddResourceType);
+  RaverieBindMethod(ZoomOnGame);
+  RaverieBindMethod(SelectTool);
+  RaverieBindMethod(SetMainPropertyViewObject);
+  RaverieBindMethod(EditResource);
+  RaverieBindMethod(CreateDockableWindow);
+  RaverieBindMethod(DebuggerResume);
+  RaverieBindMethod(DebuggerPause);
+  RaverieBindMethod(DebuggerStepIn);
+  RaverieBindMethod(DebuggerStepOver);
+  RaverieBindMethod(DebuggerStepOut);
 }
 
 Editor::Editor(Composite* parent) : MultiDock(parent)
@@ -239,9 +239,9 @@ Editor::Editor(Composite* parent) : MultiDock(parent)
 
   MetaSelection* selection = GetSelection();
 
-  ZilchManager* zilchManager = ZilchManager::GetInstance();
-  ConnectThisTo(zilchManager, Events::ScriptsCompiledPrePatch, OnScriptsCompiledPrePatch);
-  ConnectThisTo(zilchManager, Events::ScriptsCompiledPatch, OnScriptsCompiledPatch);
+  RaverieManager* raverieManager = RaverieManager::GetInstance();
+  ConnectThisTo(raverieManager, Events::ScriptsCompiledPrePatch, OnScriptsCompiledPrePatch);
+  ConnectThisTo(raverieManager, Events::ScriptsCompiledPatch, OnScriptsCompiledPatch);
 
   ConnectThisTo(this, Events::CommandCaptureContext, OnCaptureContext);
   ConnectThisTo(selection, Events::SelectionFinal, OnSelectionFinal);
@@ -251,7 +251,7 @@ Editor::Editor(Composite* parent) : MultiDock(parent)
   ConnectThisTo(Z::gResources, Events::ResourcesUnloaded, OnResourcesUnloaded);
   ConnectThisTo(GetRootWidget(), Events::MouseFileDrop, OnMouseFileDrop);
 
-  BoundType* editorMeta = ZilchTypeId(Editor);
+  BoundType* editorMeta = RaverieTypeId(Editor);
   Z::gSystemObjects->Add(this, editorMeta, ObjectCleanup::None);
 }
 
@@ -448,7 +448,7 @@ GameSession* Editor::EditorCreateGameSession(uint flags)
   else
   {
     game = (GameSession*)Z::gFactory->CreateCheckedType(
-        ZilchTypeId(GameSession), nullptr, CoreArchetypes::Game, flags, nullptr);
+        RaverieTypeId(GameSession), nullptr, CoreArchetypes::Game, flags, nullptr);
 
     // For some reason we failed to actually create a game session. Maybe the
     // archetype contained the wrong expected type?
@@ -540,7 +540,7 @@ void Editor::OnSelectionFinal(SelectionChangedEvent* event)
       // Walk each component and look for valid gizmo archetypes
       forRange (Component* component, primaryCog->GetComponents())
       {
-        if (MetaEditorGizmo* editorGizmo = ZilchVirtualTypeId(component)->HasInherited<MetaEditorGizmo>())
+        if (MetaEditorGizmo* editorGizmo = RaverieVirtualTypeId(component)->HasInherited<MetaEditorGizmo>())
         {
           String archetypeName = editorGizmo->mGizmoArchetype;
           Cog* gizmo = primaryCog->GetSpace()->CreateAt(archetypeName, objectPos);
@@ -863,7 +863,7 @@ void ArchiveLibraryOutput(Archive& archive, ContentLibrary* library)
     String relativePath = FilePath::Combine(archivePath, resource.Location);
 
     // Don't export resources that are marked as template files.
-    if (resource.GetResourceTemplate() && resource.Type.Contains("Zilch"))
+    if (resource.GetResourceTemplate() && resource.Type.Contains("Raverie"))
       continue;
 
     archive.AddFile(fullPath, relativePath);
@@ -936,11 +936,11 @@ Status Editor::SaveAll(bool showNotify, bool externalSave)
     projectCog->has(ProjectSettings)->Save();
 
   // Scripts need to be fully compiling before we run
-  ZilchManager* zilchManager = ZilchManager::GetInstance();
-  zilchManager->TriggerCompileExternally();
-  if (zilchManager->mLastCompileResult == CompileResult::CompilationFailed) {
+  RaverieManager* raverieManager = RaverieManager::GetInstance();
+  raverieManager->TriggerCompileExternally();
+  if (raverieManager->mLastCompileResult == CompileResult::CompilationFailed) {
     Z::gEngine->LoadingFinish();
-    return Status(StatusState::Failure, "Failed to compile Zilch Scripts");
+    return Status(StatusState::Failure, "Failed to compile Raverie Scripts");
   }
 
   Tweakables::Save();
@@ -966,7 +966,7 @@ Status Editor::SaveAll(bool showNotify, bool externalSave)
 
     ArchiveLibraryOutput(contentArchive, "FragmentCore");
     ArchiveLibraryOutput(contentArchive, "Loading");
-    ArchiveLibraryOutput(contentArchive, "ZeroCore");
+    ArchiveLibraryOutput(contentArchive, "EngineCore");
     ArchiveLibraryOutput(contentArchive, "UiWidget");
     ArchiveLibraryOutput(contentArchive, "EditorUi");
     ArchiveLibraryOutput(contentArchive, "Editor");
@@ -982,7 +982,7 @@ Status Editor::SaveAll(bool showNotify, bool externalSave)
 
     ArchiveLibraryOutput(contentArchive, projectSettings->ProjectContentLibrary);
 
-    contentArchive.AddFile(projectSettings->ProjectFile, "Project.zeroproj");
+    contentArchive.AddFile(projectSettings->ProjectFile, "Project.raverieproj");
 
     ByteBufferBlock contentBlock(contentArchive.ComputeZipSize());
     contentArchive.WriteBuffer(contentBlock);
@@ -1048,7 +1048,7 @@ void ReInitializeScriptsOnObject(Cog* cog, OperationQueue& queue, HashSet<Resour
   forRange (Cog& child, cog->GetChildren())
     ReInitializeScriptsOnObject(&child, queue, modifiedLibraries);
 
-  BoundType* zilchComponentType = ZilchTypeId(ZilchComponent);
+  BoundType* raverieComponentType = RaverieTypeId(RaverieComponent);
 
   // We want to walk the components in reverse so we don't run into issues
   // with dependencies
@@ -1056,7 +1056,7 @@ void ReInitializeScriptsOnObject(Cog* cog, OperationQueue& queue, HashSet<Resour
   while (!r.Empty())
   {
     Component* component = r.Back();
-    BoundType* componentType = ZilchVirtualTypeId(component);
+    BoundType* componentType = RaverieVirtualTypeId(component);
 
     // NOTE: We could attempt to optimize this by only removing the components
     // that were modified however we have to be very careful because any
@@ -1065,14 +1065,14 @@ void ReInitializeScriptsOnObject(Cog* cog, OperationQueue& queue, HashSet<Resour
 
     // Remove proxies in case they were replaced by the actual script type
     bool isProxy = componentType->HasAttribute(ObjectAttributes::cProxy);
-    bool isZilchComponent = componentType->IsA(zilchComponentType);
+    bool isRaverieComponent = componentType->IsA(raverieComponentType);
 
-    // We want to force remove the component as we need all zilch objects
+    // We want to force remove the component as we need all raverie objects
     // to be freed. We need to do this because they could have components
     // in an invalid order caused by adding dependencies after the fact
     bool ignoreDependencies = true;
 
-    if (isProxy || isZilchComponent)
+    if (isProxy || isRaverieComponent)
       QueueRemoveComponent(&queue, cog, componentType, ignoreDependencies);
 
     r.PopBack();
@@ -1123,7 +1123,7 @@ void RevertSpaceModifiedState(GameSession* game, HashMap<Space*, bool>& spaceMod
   }
 }
 
-void ClearSelections(ZilchCompileEvent* e)
+void ClearSelections(RaverieCompileEvent* e)
 {
   Array<Handle> objectsToDeselect;
   HashSet<MetaSelection*> modifiedSelections;
@@ -1149,23 +1149,23 @@ void ClearSelections(ZilchCompileEvent* e)
     selection->FinalSelectionChanged();
 }
 
-void Editor::OnScriptsCompiledPrePatch(ZilchCompileEvent* e)
+void Editor::OnScriptsCompiledPrePatch(RaverieCompileEvent* e)
 {
   Archetype::sRebuilding = true;
 
   ClearSelections(e);
 
-  TearDownZilchStateOnGames(e->mModifiedLibraries);
+  TearDownRaverieStateOnGames(e->mModifiedLibraries);
 }
 
-void Editor::OnScriptsCompiledPatch(ZilchCompileEvent* e)
+void Editor::OnScriptsCompiledPatch(RaverieCompileEvent* e)
 {
-  // ZilchScriptManager* zilchManager = ZilchScriptManager::GetInstance();
+  // RaverieScriptManager* raverieManager = RaverieScriptManager::GetInstance();
   //
   //// Patch anything that was not reinitialized if the compilation was
   /// successful
   // if(e->mLibrary != nullptr)
-  //  zilchManager->PatchLibraryIfNeeded(e->mLibrary);
+  //  raverieManager->PatchLibraryIfNeeded(e->mLibrary);
 
   // Re-add all the components
   mReInitializeQueue.Undo();
@@ -1181,12 +1181,12 @@ void Editor::OnScriptsCompiledPatch(ZilchCompileEvent* e)
   Archetype::sRebuilding = false;
 }
 
-void Editor::TearDownZilchStateOnGames(HashSet<ResourceLibrary*>& modifiedLibraries)
+void Editor::TearDownRaverieStateOnGames(HashSet<ResourceLibrary*>& modifiedLibraries)
 {
   // Shouldn't be anything in here, but just in case..
   mReInitializeQueue.ClearAll();
   mReInitializeQueue.BeginBatch();
-  mReInitializeQueue.SetActiveBatchName("TearDownZilchStateOnGames");
+  mReInitializeQueue.SetActiveBatchName("TearDownRaverieStateOnGames");
 
   EditorSettings* settings = Z::gEngine->GetConfigCog()->has(EditorSettings);
 
@@ -1215,7 +1215,7 @@ void Editor::OnResourcesUnloaded(ResourceEvent* event)
     }
     // Currently, handles to resources will fallback to a default resource,
     // making IsNull() return false.
-    else if (handle.StoredType->IsA(ZilchTypeId(Resource)))
+    else if (handle.StoredType->IsA(RaverieTypeId(Resource)))
     {
       // Manually query for resource but with fallback disabled.
       ResourceHandleManager* manager = (ResourceHandleManager*)handle.Manager;
@@ -1411,8 +1411,8 @@ GameSession* Editor::PlayGame(PlayGameOptions::Enum options, bool takeFocus, boo
 {
   // If the debugger is breakpointed then we signal it to resume instead of
   // playing a new game
-  Zilch::Debugger& debugger = ZilchManager::GetInstance()->mDebugger;
-  if (debugger.IsBreakpointed || debugger.Action != Zilch::DebuggerAction::Resume)
+  Raverie::Debugger& debugger = RaverieManager::GetInstance()->mDebugger;
+  if (debugger.IsBreakpointed || debugger.Action != Raverie::DebuggerAction::Resume)
   {
     debugger.Resume();
 
@@ -1452,7 +1452,7 @@ GameSession* Editor::PlayGame(PlayGameOptions::Enum options, bool takeFocus, boo
   // Attempt to save the game, and if it fails do not play
   // Note: This should definitely come down here, before we close out of the
   // first game The reason is that if anything is 'in use' while the game is
-  // running (eg the Zilch library) then it cannot be updated by saving
+  // running (eg the Raverie library) then it cannot be updated by saving
   Status status = SaveAll(false, false);
   if (status.Failed())
   {
@@ -1524,7 +1524,7 @@ void Editor::EditGameSpaces()
 
 void Editor::StepGame()
 {
-  Zilch::Debugger& debugger = ZilchManager::GetInstance()->mDebugger;
+  Raverie::Debugger& debugger = RaverieManager::GetInstance()->mDebugger;
   if (debugger.IsBreakpointed)
   {
     DoNotifyWarning("Editor", "Cannot step the game while we're paused in the debugger");
@@ -1560,7 +1560,7 @@ void Editor::DestroyGames()
 
 void Editor::StopGame()
 {
-  ZilchManager::GetInstance()->mDebugger.Resume();
+  RaverieManager::GetInstance()->mDebugger.Resume();
 
   // Wait until after system updates to stop game.
   // This prevents events such as LogicUpdate from happening in an unexpected
@@ -1678,27 +1678,27 @@ void Editor::OnSaveQuitMessageBox(MessageBoxEvent* event)
 
 void Editor::DebuggerResume()
 {
-  ZilchManager::GetInstance()->mDebugger.Resume();
+  RaverieManager::GetInstance()->mDebugger.Resume();
 }
 
 void Editor::DebuggerPause()
 {
-  ZilchManager::GetInstance()->mDebugger.Pause();
+  RaverieManager::GetInstance()->mDebugger.Pause();
 }
 
 void Editor::DebuggerStepIn()
 {
-  ZilchManager::GetInstance()->mDebugger.StepIn();
+  RaverieManager::GetInstance()->mDebugger.StepIn();
 }
 
 void Editor::DebuggerStepOver()
 {
-  ZilchManager::GetInstance()->mDebugger.StepOver();
+  RaverieManager::GetInstance()->mDebugger.StepOver();
 }
 
 void Editor::DebuggerStepOut()
 {
-  ZilchManager::GetInstance()->mDebugger.StepOut();
+  RaverieManager::GetInstance()->mDebugger.StepOut();
 }
 
-} // namespace Zero
+} // namespace Raverie

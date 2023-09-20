@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// A range for iterating through the cast results of the BoundingBox
@@ -87,4 +87,4 @@ public:
   }
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Utility selection behavior for objects in the editor.
@@ -11,7 +11,7 @@ class SelectionIcon : public Graphical
 public:
   // Does not bind Graphical as an interface because this component
   // is only for special behavior that needs to draw.
-  ZilchDeclareDerivedTypeExplicit(SelectionIcon, Component, TypeCopyMode::ReferenceType);
+  RaverieDeclareDerivedTypeExplicit(SelectionIcon, Component, TypeCopyMode::ReferenceType);
 
   static const float cBaseScale;
 
@@ -56,4 +56,4 @@ public:
   void SetSelectionFlag(bool selectionLimited);
 };
 
-} // namespace Zero
+} // namespace Raverie

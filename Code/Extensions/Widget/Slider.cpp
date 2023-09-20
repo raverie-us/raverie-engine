@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace ProgressBarUi
@@ -25,7 +25,7 @@ DefineEvent(SliderIncrementalChange);
 DefineEvent(SliderChanged);
 } // namespace Events
 
-ZilchDefineType(ProgressBar, builder, type)
+RaverieDefineType(ProgressBar, builder, type)
 {
 }
 
@@ -147,7 +147,7 @@ public:
   Slider* mSliderTarget;
 };
 
-ZilchDefineType(Slider, builder, type)
+RaverieDefineType(Slider, builder, type)
 {
 }
 
@@ -448,7 +448,7 @@ void Slider::OnTextSubmit(Event* e)
   // Set the new value
   String textValue = mEditTextBox->GetText();
   float newValue;
-  Zero::ToValue(textValue.All(), newValue);
+  Raverie::ToValue(textValue.All(), newValue);
   CommitValue(newValue);
 
   // Destroy the text box
@@ -482,4 +482,4 @@ void Slider::OnFocusLost(Event* e)
     CommitValue(mValue);
 }
 
-} // namespace Zero
+} // namespace Raverie

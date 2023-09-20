@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 template <typename ToType, typename FromType>
 class PointerCastHelper
@@ -59,4 +59,4 @@ ToType PointerCast(FromType from)
   return PointerCastHelper<ToType, FromType>::DoCast(from);
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Physics
@@ -58,12 +58,12 @@ struct UprightPolicy : public DefaultFragmentPolicy<UprightJoint>
 ImplementJointType(UprightJoint);
 ImplementAxisAccessors(UprightJoint, mAxes);
 
-ZilchDefineType(UprightJoint, builder, type)
+RaverieDefineType(UprightJoint, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindInterface(Joint);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindInterface(Joint);
+  RaverieBindDocumented();
   BindAxisAccessors(Vec3::cYAxis);
 }
 
@@ -185,4 +185,4 @@ uint UprightJoint::GetDefaultSpringIds() const
 
 } // namespace Physics
 
-} // namespace Zero
+} // namespace Raverie

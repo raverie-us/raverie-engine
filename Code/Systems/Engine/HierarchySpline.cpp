@@ -1,27 +1,27 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(HierarchySpline, builder, type)
+RaverieDefineType(HierarchySpline, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
 
-  ZeroBindEvent(Events::QuerySpline, SplineEvent);
-  ZeroBindEvent(Events::SplineModified, SplineEvent);
+  RaverieBindEvent(Events::QuerySpline, SplineEvent);
+  RaverieBindEvent(Events::SplineModified, SplineEvent);
 
-  ZilchBindGetter(Spline);
-  ZilchBindGetterSetterProperty(Closed)->ZeroSerialize(false);
-  ZilchBindGetterSetterProperty(SplineType)->ZeroSerialize(SplineType::CatmullRom);
-  ZilchBindGetterSetterProperty(Error)->ZeroSerialize(real(0.01f));
-  ZilchBindGetterSetterProperty(DebugDrawSpline)->ZeroSerialize(true);
-  ZilchBindGetterSetterProperty(SplineColor)->ZeroSerialize(Vec4(0, 0, 0, 1));
+  RaverieBindGetter(Spline);
+  RaverieBindGetterSetterProperty(Closed)->RaverieSerialize(false);
+  RaverieBindGetterSetterProperty(SplineType)->RaverieSerialize(SplineType::CatmullRom);
+  RaverieBindGetterSetterProperty(Error)->RaverieSerialize(real(0.01f));
+  RaverieBindGetterSetterProperty(DebugDrawSpline)->RaverieSerialize(true);
+  RaverieBindGetterSetterProperty(SplineColor)->RaverieSerialize(Vec4(0, 0, 0, 1));
 
-  ZilchBindMethod(RebuildIfModified);
-  ZilchBindMethod(ForceRebuild);
+  RaverieBindMethod(RebuildIfModified);
+  RaverieBindMethod(ForceRebuild);
 }
 
 HierarchySpline::HierarchySpline()
@@ -229,4 +229,4 @@ void HierarchySpline::GetChildrenConnections()
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

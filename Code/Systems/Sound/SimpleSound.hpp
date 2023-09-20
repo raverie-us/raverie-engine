@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 // Simple Sound
 
@@ -11,7 +11,7 @@ namespace Zero
 class SimpleSound : public Component
 {
 public:
-  ZilchDeclareType(SimpleSound, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SimpleSound, TypeCopyMode::ReferenceType);
 
   SimpleSound();
   ~SimpleSound();
@@ -53,4 +53,4 @@ private:
   friend class SoundEmitter;
 };
 
-} // namespace Zero
+} // namespace Raverie

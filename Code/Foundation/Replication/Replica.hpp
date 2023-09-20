@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 //                                  Replica //
@@ -253,4 +253,4 @@ private:
   Replica& operator=(const Replica&);
 };
 
-} // namespace Zero
+} // namespace Raverie

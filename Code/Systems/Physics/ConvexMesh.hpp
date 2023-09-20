@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// A convex mesh meant for use with dynamic rigid bodies. Computes efficient
@@ -10,7 +10,7 @@ namespace Zero
 class ConvexMesh : public GenericPhysicsMesh
 {
 public:
-  ZilchDeclareType(ConvexMesh, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ConvexMesh, TypeCopyMode::ReferenceType);
 
   // Interface
   void Serialize(Serializer& stream) override;
@@ -42,4 +42,4 @@ public:
   Array<ConvexMeshReference> mModifiedMeshes;
 };
 
-} // namespace Zero
+} // namespace Raverie

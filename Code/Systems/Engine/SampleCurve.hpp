@@ -1,13 +1,13 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class SampleCurve : public DataResource
 {
 public:
-  ZilchDeclareType(SampleCurve, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SampleCurve, TypeCopyMode::ReferenceType);
 
   struct ControlPoint;
   typedef Array<ControlPoint> ControlPointArray;
@@ -143,4 +143,4 @@ public:
   SampleCurve* CreateNewResourceInternal(StringParam name) override;
 };
 
-} // namespace Zero
+} // namespace Raverie

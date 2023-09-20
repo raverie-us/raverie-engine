@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class TextBox;
@@ -12,7 +12,7 @@ DeclareBitField2(GraphAxes, AxisX, AxisY);
 class GraphWidget : public Widget
 {
 public:
-  typedef GraphWidget ZilchSelf;
+  typedef GraphWidget RaverieSelf;
 
   GraphWidget(Composite* parent);
 
@@ -85,4 +85,4 @@ private:
   BitField<GraphAxes::Enum> mFlags;
 };
 
-} // namespace Zero
+} // namespace Raverie

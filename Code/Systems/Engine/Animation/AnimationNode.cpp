@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 const uint cInvalidFrameId = uint(-1);
@@ -27,9 +27,9 @@ void LerpFrame(AnimationFrame& a, AnimationFrame& b, float t, AnimationFrame& re
     result.Tracks[i].Active = true;
     if (aActive & bActive)
     {
-      if (valA.StoredType == ZilchTypeId(Vec3))
+      if (valA.StoredType == RaverieTypeId(Vec3))
         dest = Math::Lerp(valA.Get<Vec3>(), valB.Get<Vec3>(), t);
-      else if (valA.StoredType == ZilchTypeId(Quat))
+      else if (valA.StoredType == RaverieTypeId(Quat))
         dest = Quat::SlerpUnnormalized(valA.Get<Quat>(), valB.Get<Quat>(), t);
       else
         dest = valA;
@@ -55,25 +55,25 @@ AnimationNode::AnimationNode()
   mUpdatedFrameId = cInvalidFrameId;
 }
 
-ZilchDefineType(AnimationNode, builder, type)
+RaverieDefineType(AnimationNode, builder, type)
 {
-  ZeroBindDocumented();
-  ZilchBindMethod(Clone);
-  ZilchBindMethod(IsActive);
-  ZilchBindMethod(PrintNode);
-  ZilchBindMethod(CollapseToPose);
-  ZilchBindMethod(SetNormalizedTime);
-  ZilchBindMethod(GetNormalizedTime);
-  ZilchBindFieldProperty(mCollapseToPoseOnFinish);
-  ZilchBindFieldProperty(mPaused);
-  ZilchBindGetterSetterProperty(Time);
-  ZilchBindGetterSetterProperty(Duration);
-  ZilchBindFieldProperty(mTimeScale);
+  RaverieBindDocumented();
+  RaverieBindMethod(Clone);
+  RaverieBindMethod(IsActive);
+  RaverieBindMethod(PrintNode);
+  RaverieBindMethod(CollapseToPose);
+  RaverieBindMethod(SetNormalizedTime);
+  RaverieBindMethod(GetNormalizedTime);
+  RaverieBindFieldProperty(mCollapseToPoseOnFinish);
+  RaverieBindFieldProperty(mPaused);
+  RaverieBindGetterSetterProperty(Time);
+  RaverieBindGetterSetterProperty(Duration);
+  RaverieBindFieldProperty(mTimeScale);
 }
 
 String AnimationNode::GetDisplayName()
 {
-  return ZilchVirtualTypeId(this)->Name;
+  return RaverieVirtualTypeId(this)->Name;
 }
 
 void AnimationNode::CollapseToPose()
@@ -124,7 +124,7 @@ bool AnimationNode::HasUpdatedAtLeastOnce()
   return mUpdatedFrameId != cInvalidFrameId;
 }
 
-ZilchDefineType(PoseNode, builder, type)
+RaverieDefineType(PoseNode, builder, type)
 {
 }
 
@@ -144,10 +144,10 @@ void PoseNode::PrintNode(uint tabs)
   DebugPrint("Pose");
 }
 
-ZilchDefineType(BasicAnimation, builder, type)
+RaverieDefineType(BasicAnimation, builder, type)
 {
-  ZilchBindGetterSetterProperty(Animation)->Add(new MetaEditorResource());
-  ZilchBindFieldProperty(mPlayMode);
+  RaverieBindGetterSetterProperty(Animation)->Add(new MetaEditorResource());
+  RaverieBindFieldProperty(mPlayMode);
 }
 
 BasicAnimation::BasicAnimation()
@@ -333,7 +333,7 @@ AnimationNode* BuildBasic(AnimationGraph* animGraph, Animation* animation, float
   return new BasicAnimation(animGraph, animation, t, playMode);
 }
 
-ZilchDefineType(DirectBlend, builder, type)
+RaverieDefineType(DirectBlend, builder, type)
 {
 }
 
@@ -426,14 +426,14 @@ AnimationNode* BuildDirectBlend(AnimationGraph* t, AnimationNode* a, AnimationNo
   return direct;
 }
 
-ZilchDefineType(CrossBlend, builder, type)
+RaverieDefineType(CrossBlend, builder, type)
 {
-  ZilchBindFieldProperty(mTimeScaleFrom);
-  ZilchBindFieldProperty(mTimeScaleTo);
-  ZilchBindFieldProperty(mType);
-  ZilchBindFieldProperty(mMode);
-  ZilchBindMethod(SyncCadence);
-  ZilchBindMethod(SetNormalizedTimeScale);
+  RaverieBindFieldProperty(mTimeScaleFrom);
+  RaverieBindFieldProperty(mTimeScaleTo);
+  RaverieBindFieldProperty(mType);
+  RaverieBindFieldProperty(mMode);
+  RaverieBindMethod(SyncCadence);
+  RaverieBindMethod(SetNormalizedTimeScale);
 }
 
 CrossBlend::CrossBlend()
@@ -604,9 +604,9 @@ AnimationNode* BuildCrossBlend(AnimationGraph* t, AnimationNode* a, AnimationNod
   return blend;
 }
 
-ZilchDefineType(SelectiveNode, builder, type)
+RaverieDefineType(SelectiveNode, builder, type)
 {
-  ZilchBindGetterSetterProperty(Root);
+  RaverieBindGetterSetterProperty(Root);
 }
 
 SelectiveNode::SelectiveNode()
@@ -760,7 +760,7 @@ AnimationNode* BuildSelectiveNode(AnimationGraph* t, AnimationNode* a, Animation
   return selective;
 }
 
-ZilchDefineType(ChainNode, builder, type)
+RaverieDefineType(ChainNode, builder, type)
 {
 }
 
@@ -841,4 +841,4 @@ AnimationNode* BuildChainNode(AnimationGraph* t, AnimationNode* a, AnimationNode
   return chain;
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 static const String DefaultTileArchetype = "DefaultTile";
@@ -9,7 +9,7 @@ static const String DefaultTileSpriteSource = "SquareBordered";
 static const String DefaultTilePhysicsMesh = "Box";
 
 // Sprite
-ZilchDefineType(TilePaletteSprite, builder, type)
+RaverieDefineType(TilePaletteSprite, builder, type)
 {
 }
 
@@ -153,21 +153,21 @@ public:
 
 const String TilePaletteView::mCollisionTextureName = "TileCollisionSheet";
 
-ZilchDefineType(TilePaletteView, builder, type)
+RaverieDefineType(TilePaletteView, builder, type)
 {
   // METAREFACTOR - We don't want to inherit base class meta..
   // Can't bind base or composite properties will be exposed
   // BindBase(EventObject);
 
-  ZilchBindGetterSetterProperty(TilePalette)->Add(new MetaEditorResource(true, false));
+  RaverieBindGetterSetterProperty(TilePalette)->Add(new MetaEditorResource(true, false));
 
-  ZilchBindGetterSetterProperty(Archetype);
+  RaverieBindGetterSetterProperty(Archetype);
 
-  ZilchBindGetterSetterProperty(Sprite)->Add(new MetaEditorResource(true, true));
+  RaverieBindGetterSetterProperty(Sprite)->Add(new MetaEditorResource(true, true));
 
-  ZilchBindGetterSetterProperty(Collision)->Add(new MetaEditorResource(true, true, "TileMesh"));
+  RaverieBindGetterSetterProperty(Collision)->Add(new MetaEditorResource(true, true, "TileMesh"));
 
-  ZilchBindGetterSetterProperty(Mergeable);
+  RaverieBindGetterSetterProperty(Mergeable);
 }
 
 TilePaletteView::TilePaletteView(Composite* parent, TileEditor2D* editor) :
@@ -958,4 +958,4 @@ void TilePaletteView::SelectionRange::PopFront()
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

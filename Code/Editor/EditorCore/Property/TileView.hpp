@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -19,7 +19,7 @@ class TileView;
 class TileViewEvent : public Event
 {
 public:
-  ZilchDeclareType(TileViewEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(TileViewEvent, TypeCopyMode::ReferenceType);
   TileViewWidget* mTile;
 };
 
@@ -38,7 +38,7 @@ public:
 class TileViewWidget : public Composite
 {
 public:
-  ZilchDeclareType(TileViewWidget, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(TileViewWidget, TypeCopyMode::ReferenceType);
 
   TileViewWidget(Composite* parent, TileView* tileView, PreviewWidget* tileWidget, DataIndex dataIndex);
   ~TileViewWidget();
@@ -98,7 +98,7 @@ protected:
 class TileView : public Composite
 {
 public:
-  ZilchDeclareType(TileView, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(TileView, TypeCopyMode::ReferenceType);
 
   TileView(Composite* parent);
   ~TileView();
@@ -176,4 +176,4 @@ private:
   Element* mBackground;
 };
 
-} // namespace Zero
+} // namespace Raverie

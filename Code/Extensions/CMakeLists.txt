@@ -1,4 +1,4 @@
-add_subdirectory(ZilchShaders)
+add_subdirectory(RaverieShaders)
 add_subdirectory(Widget)
 add_subdirectory(UiWidget)
 add_subdirectory(Gameplay)

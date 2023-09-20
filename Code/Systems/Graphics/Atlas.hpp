@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 const uint cAtlasSize = 4096;
@@ -10,7 +10,7 @@ const uint cAtlasSize = 4096;
 class Atlas : public Resource
 {
 public:
-  ZilchDeclareType(Atlas, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Atlas, TypeCopyMode::ReferenceType);
 
   static const int sMaxMipLevel = 2;
   // Border width must be 2^sMaxMipLevel in order to
@@ -41,4 +41,4 @@ public:
   void RemoveSpriteSource(SpriteSource* source);
 };
 
-} // namespace Zero
+} // namespace Raverie

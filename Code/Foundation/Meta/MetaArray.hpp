@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Meta Array
@@ -9,7 +9,7 @@ namespace Zero
 class MetaArray : public ReferenceCountedEventObject
 {
 public:
-  ZilchDeclareType(MetaArray, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MetaArray, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   MetaArray(BoundType* containedType);
@@ -60,7 +60,7 @@ public:
 class MetaArrayWrapper : public MetaArray
 {
 public:
-  ZilchDeclareType(MetaArrayWrapper, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MetaArrayWrapper, TypeCopyMode::ReferenceType);
 
   MetaArrayWrapper(BoundType* typeToWrap) : MetaArray(nullptr)
   {
@@ -107,4 +107,4 @@ public:
   MetaArray* mContainedMetaArray;
 };
 
-} // namespace Zero
+} // namespace Raverie

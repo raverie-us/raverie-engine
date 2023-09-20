@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -98,7 +98,7 @@ extern String NamedMouseClick[3];
 class HandleableEvent : public Event
 {
 public:
-  ZilchDeclareType(HandleableEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(HandleableEvent, TypeCopyMode::ReferenceType);
   HandleableEvent() : Handled(false){};
   /// Set to true to signify that you have responded to this event, and that
   /// other event responders should do nothing.
@@ -110,7 +110,7 @@ class Widget;
 class FocusEvent : public Event
 {
 public:
-  ZilchDeclareType(FocusEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(FocusEvent, TypeCopyMode::ReferenceType);
 
   FocusEvent(Widget* focusGained, Widget* focusLost) : ReceivedFocus(focusGained), LostFocus(focusLost)
   {
@@ -138,7 +138,7 @@ public:
 class MouseEvent : public Event
 {
 public:
-  ZilchDeclareType(MouseEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MouseEvent, TypeCopyMode::ReferenceType);
 
   MouseEvent();
 
@@ -187,7 +187,7 @@ public:
 class MouseDragEvent : public MouseEvent
 {
 public:
-  ZilchDeclareType(MouseDragEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MouseDragEvent, TypeCopyMode::ReferenceType);
   Vec2 StartPosition;
 };
 
@@ -195,7 +195,7 @@ public:
 class MouseFileDropEvent : public MouseEvent
 {
 public:
-  ZilchDeclareType(MouseFileDropEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MouseFileDropEvent, TypeCopyMode::ReferenceType);
 
   MouseFileDropEvent();
   MouseFileDropEvent(const MouseEvent& rhs);
@@ -206,4 +206,4 @@ public:
   HandleOf<ArrayString> Files;
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Tags
@@ -12,40 +12,40 @@ DefineTag(Collider);
 // An ever incrementing id to give each collider a unique id.
 static u32 colliderId = 0;
 
-ZilchDefineType(Collider, builder, type)
+RaverieDefineType(Collider, builder, type)
 {
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindTag(Tags::Physics);
-  ZeroBindTag(Tags::Collider);
-  ZeroBindDocumented();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindTag(Tags::Physics);
+  RaverieBindTag(Tags::Collider);
+  RaverieBindDocumented();
 
-  ZeroBindDependency(Cog);
-  ZeroBindDependency(Transform);
-  ZeroBindEvent(Events::CollisionStarted, CollisionEvent);
-  ZeroBindEvent(Events::CollisionEnded, CollisionEvent);
+  RaverieBindDependency(Cog);
+  RaverieBindDependency(Transform);
+  RaverieBindEvent(Events::CollisionStarted, CollisionEvent);
+  RaverieBindEvent(Events::CollisionEnded, CollisionEvent);
   // Hide this for now because it's not that useful and needs renaming
   // BindSignal(Events::Collision, CollisionEvent);
-  ZeroBindEvent(Events::CollisionPersisted, CollisionEvent);
-  ZeroBindEvent(Events::GroupCollisionPersisted, CollisionGroupEvent);
-  ZeroBindEvent(Events::GroupCollisionPreSolve, PreSolveEvent);
+  RaverieBindEvent(Events::CollisionPersisted, CollisionEvent);
+  RaverieBindEvent(Events::GroupCollisionPersisted, CollisionGroupEvent);
+  RaverieBindEvent(Events::GroupCollisionPreSolve, PreSolveEvent);
 
-  ZilchBindGetterSetterProperty(Material);
-  ZilchBindGetterSetterProperty(CollisionGroup);
-  ZilchBindGetterSetterProperty(Ghost);
-  ZilchBindGetterSetterProperty(SendsEvents);
-  ZilchBindGetterSetterProperty(Offset);
+  RaverieBindGetterSetterProperty(Material);
+  RaverieBindGetterSetterProperty(CollisionGroup);
+  RaverieBindGetterSetterProperty(Ghost);
+  RaverieBindGetterSetterProperty(SendsEvents);
+  RaverieBindGetterSetterProperty(Offset);
 
-  ZilchBindMethod(ComputeVolume);
-  ZilchBindMethod(GetPointVelocity);
+  RaverieBindMethod(ComputeVolume);
+  RaverieBindMethod(GetPointVelocity);
 
-  ZilchBindGetter(ActiveBody);
-  ZilchBindGetter(ContactCount);
-  ZilchBindGetter(Contacts);
-  ZilchBindGetter(JointCount);
-  ZilchBindGetter(Joints);
+  RaverieBindGetter(ActiveBody);
+  RaverieBindGetter(ContactCount);
+  RaverieBindGetter(Contacts);
+  RaverieBindGetter(JointCount);
+  RaverieBindGetter(Joints);
 
-  ZilchBindGetter(WorldAabb);
-  ZilchBindGetter(WorldBoundingSphere);
+  RaverieBindGetter(WorldAabb);
+  RaverieBindGetter(WorldBoundingSphere);
 }
 
 Collider::Collider()
@@ -823,4 +823,4 @@ void Collider::DestroyAllContacts(bool sendImmediately)
   mContactCount = 0;
 }
 
-} // namespace Zero
+} // namespace Raverie

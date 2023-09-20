@@ -12,23 +12,23 @@
 #include "Systems/Engine/Time.hpp"
 
 // Physics typedefs
-namespace Zero
+namespace Raverie
 {
 
 /// Defines a primary direction for an axis.
 DeclareEnum3(AxisDirection, X, Y, Z);
 
 // Physics library
-class PhysicsLibrary : public Zilch::StaticLibrary
+class PhysicsLibrary : public Raverie::StaticLibrary
 {
 public:
-  ZilchDeclareStaticLibraryInternals(PhysicsLibrary);
+  RaverieDeclareStaticLibraryInternals(PhysicsLibrary);
 
   static void Initialize();
   static void Shutdown();
 };
 
-} // namespace Zero
+} // namespace Raverie
 
 #include "ForwardDeclarations.hpp"
 

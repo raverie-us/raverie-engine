@@ -7,7 +7,7 @@
 #include "HashedContainer.hpp"
 #include "Memory/Allocator.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 template <typename Hasher, typename KeyType, typename DataType>
@@ -328,4 +328,4 @@ public:
 private:
 };
 
-} // namespace Zero
+} // namespace Raverie

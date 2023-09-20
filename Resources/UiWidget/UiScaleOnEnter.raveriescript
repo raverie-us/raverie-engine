@@ -1,0 +1,42 @@
+// MIT Licensed (see LICENSE.md).
+
+class UiScaleOnEnter : RaverieComponent
+{
+  [Dependency] var UiWidget : UiWidget;
+  
+  [Property] var Active : Boolean = true;
+  [Property] var TargetCog : CogPath = new CogPath(".");
+  [Property] var Scalar : Real2 = Real2(1.1);
+  [Property] var AnimateTime : Real = 0.0;
+  
+  var OriginalSize : Real2;
+  
+  function Initialize(init : CogInitializer)
+  {
+    var targetCog = this.TargetCog.Cog;
+    
+    this.OriginalSize = this.UiWidget.Size;
+    
+    Raverie.Connect(targetCog, Events.MouseEnterHierarchy, this.OnMouseEnter);
+    Raverie.Connect(targetCog, Events.MouseExitHierarchy, this.OnMouseExit);
+  }
+  
+  function OnMouseEnter(event : ViewportMouseEvent)
+  {
+      this.SetSize(this.OriginalSize * this.Scalar);
+  }
+  
+  function OnMouseExit(event : ViewportMouseEvent)
+  {
+      this.SetSize(this.OriginalSize);
+  }
+  
+  function SetSize(size : Real2)
+  {
+    if(this.Active == false)
+      return;
+    
+    var seq = Action.Sequence(this.Owner.Actions);
+    Action.Property(seq, @this.UiWidget.Size, size, this.AnimateTime, Ease.QuadOut);
+  }
+}

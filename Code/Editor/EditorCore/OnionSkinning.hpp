@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class AnimationEditor;
@@ -35,4 +35,4 @@ private:
   AnimationEditor* mEditor;
 };
 
-} // namespace Zero
+} // namespace Raverie

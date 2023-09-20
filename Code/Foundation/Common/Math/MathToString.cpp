@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 template <int size, typename subtype>
@@ -58,4 +58,4 @@ String ToString(Math::Mat4Param value, bool shortFormat)
   return ToStringArray<16>(value.array, shortFormat);
 }
 
-} // namespace Zero
+} // namespace Raverie

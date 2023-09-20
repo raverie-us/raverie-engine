@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class Resampler
@@ -25,4 +25,4 @@ private:
   unsigned InputChannels;
 };
 
-} // namespace Zero
+} // namespace Raverie

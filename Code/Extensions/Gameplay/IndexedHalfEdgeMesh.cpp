@@ -3,17 +3,17 @@
 
 #include "IndexedHalfEdgeMesh.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 #define DefineHalfEdgeArrayType(arrayType)                                                                             \
-  ZilchDefineType(arrayType, builder, type)                                                                            \
+  RaverieDefineType(arrayType, builder, type)                                                                            \
   {                                                                                                                    \
-    ZeroBindDocumented();                                                                                              \
+    RaverieBindDocumented();                                                                                              \
                                                                                                                        \
-    ZilchBindMethod(Get);                                                                                              \
-    ZilchBindGetter(All);                                                                                              \
-    ZilchBindGetterProperty(Count);                                                                                    \
+    RaverieBindMethod(Get);                                                                                              \
+    RaverieBindGetter(All);                                                                                              \
+    RaverieBindGetterProperty(Count);                                                                                    \
   }
 
 DefineHalfEdgeArrayType(IndexedHalfEdgeMeshVertexArray);
@@ -21,20 +21,20 @@ DefineHalfEdgeArrayType(IndexedHalfEdgeMeshEdgeArray);
 DefineHalfEdgeArrayType(IndexedHalfEdgeFaceEdgeIndexArray);
 DefineHalfEdgeArrayType(IndexedHalfEdgeMeshFaceArray);
 
-ZilchDefineType(IndexedHalfEdge, builder, type)
+RaverieDefineType(IndexedHalfEdge, builder, type)
 {
-  ZilchBindDefaultCopyDestructor();
+  RaverieBindDefaultCopyDestructor();
 
-  ZilchBindFieldGetter(mVertexIndex);
-  ZilchBindFieldGetter(mTwinIndex);
-  ZilchBindFieldGetter(mFaceIndex);
+  RaverieBindFieldGetter(mVertexIndex);
+  RaverieBindFieldGetter(mTwinIndex);
+  RaverieBindFieldGetter(mFaceIndex);
 }
 
-ZilchDefineType(IndexedHalfEdgeFace, builder, type)
+RaverieDefineType(IndexedHalfEdgeFace, builder, type)
 {
-  ZilchBindDefaultCopyDestructor();
+  RaverieBindDefaultCopyDestructor();
 
-  ZilchBindGetter(Edges);
+  RaverieBindGetter(Edges);
 }
 
 IndexedHalfEdgeFace::IndexedHalfEdgeFace()
@@ -47,13 +47,13 @@ IndexedHalfEdgeFace::BoundEdgeArray* IndexedHalfEdgeFace::GetEdges()
   return &mBoundEdges;
 }
 
-ZilchDefineType(IndexedHalfEdgeMesh, builder, type)
+RaverieDefineType(IndexedHalfEdgeMesh, builder, type)
 {
-  ZilchBindDefaultCopyDestructor();
+  RaverieBindDefaultCopyDestructor();
 
-  ZilchBindGetter(Vertices);
-  ZilchBindGetter(Edges);
-  ZilchBindGetter(Faces);
+  RaverieBindGetter(Vertices);
+  RaverieBindGetter(Edges);
+  RaverieBindGetter(Faces);
 }
 
 IndexedHalfEdgeMesh::IndexedHalfEdgeMesh()
@@ -99,4 +99,4 @@ IndexedHalfEdgeMesh::BoundFaceArray* IndexedHalfEdgeMesh::GetFaces()
   return &mBoundFaces;
 }
 
-} // namespace Zero
+} // namespace Raverie

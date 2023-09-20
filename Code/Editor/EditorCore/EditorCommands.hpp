@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 void BindEditorCommands(Cog* configCog, CommandManager* commands);
@@ -50,4 +50,4 @@ void EditInGame(Editor* editor);
 bool ExecuteShortCuts(Space* space, Viewport* viewport, KeyboardEvent* event);
 bool CogHierarchyIndexCompareFn(Cog* lhs, Cog* rhs);
 
-} // namespace Zero
+} // namespace Raverie

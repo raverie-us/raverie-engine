@@ -13,7 +13,7 @@
 #include "Serialization\SerializationTraits.hpp"
 #include "Serialization\Serialization.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 typedef std::string StlString;
@@ -166,7 +166,7 @@ struct Policy<std::map<keytype, valuetype>>
     bool started = stream.Start("Map", fieldName, StructureType::Array);
     if (started)
     {
-      if (stream.GetMode() == Zero::SerializerMode::Saving)
+      if (stream.GetMode() == Raverie::SerializerMode::Saving)
       {
         StdSaveSequence(stream, container);
       }
@@ -189,7 +189,7 @@ struct Policy<std::set<type>>
     bool started = stream.Start("Array", fieldName, StructureType::Array);
     if (started)
     {
-      if (stream.GetMode() == Zero::SerializerMode::Saving)
+      if (stream.GetMode() == Raverie::SerializerMode::Saving)
       {
         StdSaveSequence(stream, container);
       }
@@ -204,4 +204,4 @@ struct Policy<std::set<type>>
 };
 
 } // namespace Serialization
-} // namespace Zero
+} // namespace Raverie

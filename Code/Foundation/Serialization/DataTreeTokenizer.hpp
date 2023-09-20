@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 DeclareEnum17(DataTokenType,
@@ -49,4 +49,4 @@ private:
   StringRange mRange;
 };
 
-} // namespace Zero
+} // namespace Raverie

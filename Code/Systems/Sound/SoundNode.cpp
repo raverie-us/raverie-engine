@@ -2,7 +2,7 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 using namespace AudioConstants;
@@ -18,29 +18,29 @@ DefineEvent(SoundListenerRemoved);
 
 // Sound Node
 
-ZilchDefineType(SoundNode, builder, type)
+RaverieDefineType(SoundNode, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindMethod(AddInputNode);
-  ZilchBindMethod(InsertNodeAfter);
-  ZilchBindMethod(InsertNodeBefore);
-  ZilchBindMethod(ReplaceWith);
-  ZilchBindMethod(RemoveInputNode);
-  ZilchBindMethod(RemoveAllInputs);
-  ZilchBindMethod(RemoveAllOutputs);
-  ZilchBindMethod(RemoveAndAttachInputsToOutputs);
-  ZilchBindGetterSetter(AutoCollapse);
-  ZilchBindGetter(HasInputs);
-  ZilchBindGetter(HasOutputs);
-  ZilchBindGetter(InputCount);
-  ZilchBindGetter(OutputCount);
-  ZilchBindGetterSetter(BypassPercent)->AddAttribute(DeprecatedAttribute);
-  ZilchBindGetterSetter(BypassValue);
+  RaverieBindMethod(AddInputNode);
+  RaverieBindMethod(InsertNodeAfter);
+  RaverieBindMethod(InsertNodeBefore);
+  RaverieBindMethod(ReplaceWith);
+  RaverieBindMethod(RemoveInputNode);
+  RaverieBindMethod(RemoveAllInputs);
+  RaverieBindMethod(RemoveAllOutputs);
+  RaverieBindMethod(RemoveAndAttachInputsToOutputs);
+  RaverieBindGetterSetter(AutoCollapse);
+  RaverieBindGetter(HasInputs);
+  RaverieBindGetter(HasOutputs);
+  RaverieBindGetter(InputCount);
+  RaverieBindGetter(OutputCount);
+  RaverieBindGetterSetter(BypassPercent)->AddAttribute(DeprecatedAttribute);
+  RaverieBindGetterSetter(BypassValue);
 
-  ZeroBindEvent(Events::AudioInterpolationDone, SoundEvent);
-  ZeroBindEvent(Events::SoundNodeDisconnected, SoundEvent);
-  ZeroBindEvent(Events::SoundListenerRemoved, SoundEvent);
+  RaverieBindEvent(Events::AudioInterpolationDone, SoundEvent);
+  RaverieBindEvent(Events::SoundNodeDisconnected, SoundEvent);
+  RaverieBindEvent(Events::SoundListenerRemoved, SoundEvent);
 }
 
 SoundNode::SoundNode(StringParam name, int ID, bool listenerDependent, bool generator) :
@@ -556,7 +556,7 @@ void SoundNode::RemoveInputNodeThreaded(HandleOf<SoundNode> node)
 
 // Simple Collapse Node
 
-ZilchDefineType(SimpleCollapseNode, builder, Type)
+RaverieDefineType(SimpleCollapseNode, builder, Type)
 {
 }
 
@@ -572,7 +572,7 @@ void SimpleCollapseNode::CollapseNode()
 
 // Output Node
 
-ZilchDefineType(OutputNode, builder, Type)
+RaverieDefineType(OutputNode, builder, Type)
 {
 }
 
@@ -602,11 +602,11 @@ bool OutputNode::GetOutputSamples(BufferType* outputBuffer,
 
 // Combine Node
 
-ZilchDefineType(CombineNode, builder, Type)
+RaverieDefineType(CombineNode, builder, Type)
 {
 }
 
-CombineNode::CombineNode(Zero::StringParam name, unsigned ID) : SimpleCollapseNode(name, ID, false, false)
+CombineNode::CombineNode(Raverie::StringParam name, unsigned ID) : SimpleCollapseNode(name, ID, false, false)
 {
 }
 
@@ -627,11 +627,11 @@ bool CombineNode::GetOutputSamples(BufferType* outputBuffer,
 
 // Combine And Pause Node
 
-ZilchDefineType(CombineAndPauseNode, builder, Type)
+RaverieDefineType(CombineAndPauseNode, builder, Type)
 {
 }
 
-CombineAndPauseNode::CombineAndPauseNode(Zero::StringParam name, unsigned ID) :
+CombineAndPauseNode::CombineAndPauseNode(Raverie::StringParam name, unsigned ID) :
     SimpleCollapseNode(name, ID, false, false),
     mPaused(cFalse),
     mPausingThreaded(false),
@@ -782,4 +782,4 @@ void CombineAndPauseNode::SetMutedThreaded(const bool muted)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

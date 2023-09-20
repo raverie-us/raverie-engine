@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Z
@@ -145,4 +145,4 @@ void ShutdownThreadSystem()
   SafeDelete(Z::gDispatch);
 }
 
-} // namespace Zero
+} // namespace Raverie

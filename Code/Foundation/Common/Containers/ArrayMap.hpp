@@ -4,7 +4,7 @@
 // Includes
 #include "ArraySet.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 /// Policy for how key-data pairs are sorted
@@ -161,7 +161,7 @@ public:
   }
 
   /// Move Constructor
-  ArrayMap(MoveReference<this_type> rhs) : base_type(ZeroMove(static_cast<base_type&>(*rhs)))
+  ArrayMap(MoveReference<this_type> rhs) : base_type(RaverieMove(static_cast<base_type&>(*rhs)))
   {
   }
 
@@ -175,7 +175,7 @@ public:
   /// Move Assignment Operator
   ArrayMap& operator=(MoveReference<this_type> rhs)
   {
-    base_type::operator=(ZeroMove(static_cast<base_type&>(*rhs)));
+    base_type::operator=(RaverieMove(static_cast<base_type&>(*rhs)));
     return *this;
   }
 
@@ -282,7 +282,7 @@ public:
       // Insert unique element
       size_type index = position - base_type::mData;
       value_type newValue = value_type(key, data);
-      base_type::Insert(position, ZeroMove(newValue));
+      base_type::Insert(position, RaverieMove(newValue));
       return pointer_bool_pair(base_type::mData + index, true);
     }
   }
@@ -296,8 +296,8 @@ public:
     {
       // Insert unique element
       size_type index = position - base_type::mData;
-      value_type newValue = value_type(key, ZeroMove(data));
-      base_type::Insert(position, ZeroMove(newValue));
+      value_type newValue = value_type(key, RaverieMove(data));
+      base_type::Insert(position, RaverieMove(newValue));
       return pointer_bool_pair(base_type::mData + index, true);
     }
   }
@@ -314,7 +314,7 @@ public:
       // Insert unique element
       size_type index = position - base_type::mData;
       value_type newValue = value_type(key);
-      base_type::Insert(position, ZeroMove(newValue));
+      base_type::Insert(position, RaverieMove(newValue));
       return base_type::mData[index].second;
     }
   }
@@ -326,12 +326,12 @@ public:
   pointer_bool_pair Insert(const_key_reference key, const_data_reference data)
   {
     value_type value = value_type(key, data);
-    return base_type::Insert(ZeroMove(value));
+    return base_type::Insert(RaverieMove(value));
   }
   pointer_bool_pair Insert(const_key_reference key, MoveReference<data_type> data)
   {
-    value_type value = value_type(key, ZeroMove(data));
-    return base_type::Insert(ZeroMove(value));
+    value_type value = value_type(key, RaverieMove(data));
+    return base_type::Insert(RaverieMove(value));
   }
 
   /// Inserts a unique element at it's sorted position in the array or assigns
@@ -342,12 +342,12 @@ public:
   pointer_bool_pair InsertOrAssign(const_key_reference key, const_data_reference data)
   {
     value_type value = value_type(key, data);
-    return base_type::InsertOrAssign(ZeroMove(value));
+    return base_type::InsertOrAssign(RaverieMove(value));
   }
   pointer_bool_pair InsertOrAssign(const_key_reference key, MoveReference<data_type> data)
   {
-    value_type value = value_type(key, ZeroMove(data));
-    return base_type::InsertOrAssign(ZeroMove(value));
+    value_type value = value_type(key, RaverieMove(data));
+    return base_type::InsertOrAssign(RaverieMove(value));
   }
 
   //
@@ -394,4 +394,4 @@ public:
   }
 };
 
-} // namespace Zero
+} // namespace Raverie

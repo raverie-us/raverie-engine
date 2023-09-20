@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -12,12 +12,12 @@ DefineEvent(MetaRemoved);
 DefineEvent(ObjectStructureModified);
 } // namespace Events
 
-ZilchDefineType(MetaLibraryEvent, builder, type)
+RaverieDefineType(MetaLibraryEvent, builder, type)
 {
 }
 
 // Meta Serialize Property
-ZilchDefineType(MetaSerializedProperty, builder, type)
+RaverieDefineType(MetaSerializedProperty, builder, type)
 {
 }
 
@@ -64,7 +64,7 @@ void MetaDatabase::AddLibrary(LibraryParam library, bool sendModifiedEvent)
     mTypeMap[type->Name] = type;
 
     // Add the type to meta compositions if it belongs to one
-    // e.g. add ZilchComponents to the ComponentTypes on CogMetaComposition
+    // e.g. add RaverieComponents to the ComponentTypes on CogMetaComposition
     forRange (BoundType* compositionType, mCompositionTypes.All())
     {
       MetaComposition* composition = compositionType->HasInherited<MetaComposition>();
@@ -112,7 +112,7 @@ void MetaDatabase::RemoveLibrary(LibraryParam library)
   forRange (BoundType* type, library->BoundTypes.Values())
   {
     // Remove the type from meta compositions if it belongs to one
-    // e.g. remove ZilchComponents from the ComponentTypes on CogMetaComposition
+    // e.g. remove RaverieComponents from the ComponentTypes on CogMetaComposition
     forRange (BoundType* compositionType, MetaDatabase::GetInstance()->mCompositionTypes.All())
     {
       MetaComposition* composition = compositionType->HasInherited<MetaComposition>();
@@ -160,4 +160,4 @@ void MetaDatabase::ClearRemovedLibraries()
   mRemovedLibraries.Clear();
 }
 
-} // namespace Zero
+} // namespace Raverie

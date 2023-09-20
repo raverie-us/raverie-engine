@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace
@@ -22,7 +22,7 @@ DefineEvent(ChatNameChange);
 DefineEvent(ChatChannelNames);
 } // namespace Events
 
-ZilchDefineType(IrcClient, builder, type)
+RaverieDefineType(IrcClient, builder, type)
 {
 }
 
@@ -532,4 +532,4 @@ void IrcClient::ReceivedData(ReceivedDataEvent* event)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

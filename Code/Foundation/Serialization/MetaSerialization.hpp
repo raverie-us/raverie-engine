@@ -1,28 +1,28 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 struct PolymorphicNode;
 
 // See SerializationAttributes::cSerializationPrimitive
-#define ZeroBindSerializationPrimitive() type->AddAttribute(SerializationAttributes::cSerializationPrimitive)
-#define ZeroBindSerializationPrimitiveExternal(type)                                                                   \
-  ZilchTypeId(type)->AddAttribute(SerializationAttributes::cSerializationPrimitive)
+#define RaverieBindSerializationPrimitive() type->AddAttribute(SerializationAttributes::cSerializationPrimitive)
+#define RaverieBindSerializationPrimitiveExternal(type)                                                                   \
+  RaverieTypeId(type)->AddAttribute(SerializationAttributes::cSerializationPrimitive)
 
 // Meta Serialization
 class MetaSerialization : public ReferenceCountedEventObject
 {
 public:
-  ZilchDeclareType(MetaSerialization, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MetaSerialization, TypeCopyMode::ReferenceType);
 
   virtual void SerializeProperty(HandleParam instance, Property* property, Serializer& serializer);
 
   virtual bool SerializePrimitiveProperty(BoundType* propertyType, cstr fieldName, Any& value, Serializer& serializer);
   virtual bool SerializeReferenceProperty(BoundType* propertyType, cstr fieldName, Any& value, Serializer& serializer);
 
-  // The default serialize object assumes that the value inherits from Zero's
+  // The default serialize object assumes that the value inherits from Raverie's
   // Object class
   virtual void SerializeObject(AnyParam object, Serializer& serializer);
 
@@ -48,7 +48,7 @@ public:
 class EnumMetaSerialization : public MetaSerialization
 {
 public:
-  ZilchDeclareType(EnumMetaSerialization, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(EnumMetaSerialization, TypeCopyMode::ReferenceType);
 
   EnumMetaSerialization(BoundType* enumType);
 
@@ -65,7 +65,7 @@ template <typename T>
 class PrimitiveMetaSerialization : public MetaSerialization
 {
 public:
-  ZilchDeclareType(PrimitiveMetaSerialization, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(PrimitiveMetaSerialization, TypeCopyMode::ReferenceType);
 
   bool SerializePrimitiveProperty(BoundType* meta, cstr fieldName, Any& value, Serializer& serializer) override;
   String ConvertToString(AnyParam input) override;
@@ -76,7 +76,7 @@ public:
 class MetaStringSerialization : public MetaSerialization
 {
 public:
-  ZilchDeclareType(MetaStringSerialization, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MetaStringSerialization, TypeCopyMode::ReferenceType);
 
   bool SerializeReferenceProperty(BoundType* propertyType, cstr fieldName, Any& value, Serializer& serializer) override;
   String ConvertToString(AnyParam input) override;
@@ -87,7 +87,7 @@ public:
 class SerializationFilter : public ReferenceCountedEventObject
 {
 public:
-  ZilchDeclareType(SerializationFilter, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SerializationFilter, TypeCopyMode::ReferenceType);
   virtual bool ShouldSerialize(Object* object) = 0;
 };
 
@@ -144,7 +144,7 @@ struct Policy<Variant>
 
 } // namespace Serialization
 
-#define ZeroSerialize(DefaultValue)                                                                                    \
+#define RaverieSerialize(DefaultValue)                                                                                    \
   AddAttributeChainable(PropertyAttributes::cSerialize)->Add(new MetaSerializedProperty(DefaultValue))
 
 template <typename T>
@@ -191,4 +191,4 @@ String PrimitiveMetaSerialization<T>::ConvertToString(AnyParam input)
   return ToString(input.Get<T>());
 }
 
-} // namespace Zero
+} // namespace Raverie

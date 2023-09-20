@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class BaseDefinition;
@@ -39,7 +39,7 @@ public:
 class DefinitionSet : public BaseDefinition
 {
 public:
-  ZilchDeclareType(DefinitionSet, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(DefinitionSet, TypeCopyMode::ReferenceType);
 
   DefinitionSet();
   ~DefinitionSet();
@@ -79,8 +79,8 @@ public:
   template <typename definitionType>
   void AddDefinitionCreator()
   {
-    CreatorMap.Insert(ZilchTypeId(definitionType)->Name, new DefinitionCreatorType<definitionType>);
+    CreatorMap.Insert(RaverieTypeId(definitionType)->Name, new DefinitionCreatorType<definitionType>);
   }
 };
 
-} // namespace Zero
+} // namespace Raverie

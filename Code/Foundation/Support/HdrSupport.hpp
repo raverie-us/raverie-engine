@@ -1,10 +1,10 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 // This define controls whether we use our own Hdr loading/saving
-#define ZeroCustomHdrSupport
+#define RaverieCustomHdrSupport
 
 // When reading, file positions must be at the beginning (0).
 
@@ -35,4 +35,4 @@ void SaveHdr(Status& status, Stream* stream, const byte* image, uint width, uint
 void RgbeToRgb32f(byte* rgbe, float* rgb32f);
 void Rgb32fToRgbe(float* rgb32f, byte* rgbe);
 
-} // namespace Zero
+} // namespace Raverie

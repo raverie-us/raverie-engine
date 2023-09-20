@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class RigidBody;
@@ -34,4 +34,4 @@ struct Integration
 
 } // namespace Physics
 
-} // namespace Zero
+} // namespace Raverie

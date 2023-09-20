@@ -3,7 +3,7 @@
 
 #include "png.h"
 
-namespace Zero
+namespace Raverie
 {
 
 const uint PngSignatureSize = 8;
@@ -297,4 +297,4 @@ void SavePng(Status& status, Stream* stream, const byte* image, uint width, uint
   png_destroy_write_struct(&png_ptr, &pngInfo);
 }
 
-} // namespace Zero
+} // namespace Raverie

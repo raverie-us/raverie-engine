@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Audio Task
@@ -219,4 +219,4 @@ private:
   static void CopySamples(const float* source, float* destination, const unsigned channels);
 };
 
-} // namespace Zero
+} // namespace Raverie

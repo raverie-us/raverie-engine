@@ -3,7 +3,7 @@
 #include "Containers/Array.hpp"
 #include "Graph.hpp"
 
-namespace Zero
+namespace Raverie
 {
 namespace Memory
 {
@@ -111,4 +111,4 @@ void Pool::DeallocateType(type* instance)
 }
 
 } // namespace Memory
-} // namespace Zero
+} // namespace Raverie

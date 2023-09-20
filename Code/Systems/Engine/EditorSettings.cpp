@@ -1,22 +1,22 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 static const real sViewCubeMinSize = 0.1f;
 static const real sViewCubeMaxSize = 0.3f;
 
-ZilchDefineType(EditorSettings, builder, type)
+RaverieDefineType(EditorSettings, builder, type)
 {
   type->AddAttribute(ObjectAttributes::cCore);
 
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDocumented();
-  ZilchBindFieldProperty(mViewCube);
-  ZilchBindGetterSetterProperty(ViewCubeSize)->Add(new EditorSlider(sViewCubeMinSize, sViewCubeMaxSize, 0.01f));
-  ZilchBindFieldProperty(mAutoUpdateContentChanges);
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
+  RaverieBindFieldProperty(mViewCube);
+  RaverieBindGetterSetterProperty(ViewCubeSize)->Add(new EditorSlider(sViewCubeMinSize, sViewCubeMaxSize, 0.01f));
+  RaverieBindFieldProperty(mAutoUpdateContentChanges);
 }
 
 EditorSettings::EditorSettings()
@@ -40,4 +40,4 @@ void EditorSettings::SetViewCubeSize(real size)
   mViewCubeSize = Math::Clamp(size, sViewCubeMinSize, sViewCubeMaxSize);
 }
 
-} // namespace Zero
+} // namespace Raverie

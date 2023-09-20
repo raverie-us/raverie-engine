@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -183,31 +183,31 @@ void SetUpKeyNames()
 
 Keyboard* Keyboard::Instance = nullptr;
 
-ZilchDefineType(Keyboard, builder, type)
+RaverieDefineType(Keyboard, builder, type)
 {
-  ZeroBindDocumented();
-  type->HandleManager = ZilchManagerId(PointerManager);
+  RaverieBindDocumented();
+  type->HandleManager = RaverieManagerId(PointerManager);
 
-  ZilchBindMethod(IsAnyKeyDown);
-  ZilchBindMethod(IsAnyNonModifierDown);
-  ZilchBindMethod(KeyIsDown);
-  ZilchBindMethod(KeyIsUp);
-  ZilchBindMethod(KeyIsPressed);
-  ZilchBindMethod(KeyIsReleased);
+  RaverieBindMethod(IsAnyKeyDown);
+  RaverieBindMethod(IsAnyNonModifierDown);
+  RaverieBindMethod(KeyIsDown);
+  RaverieBindMethod(KeyIsUp);
+  RaverieBindMethod(KeyIsPressed);
+  RaverieBindMethod(KeyIsReleased);
 
-  ZilchBindMethod(GetKeyName);
+  RaverieBindMethod(GetKeyName);
 
-  ZilchBindOverloadedMethod(Valid, ZilchInstanceOverload(bool, Keys::Enum));
-  ZilchBindOverloadedMethod(Valid, ZilchInstanceOverload(bool, StringParam));
+  RaverieBindOverloadedMethod(Valid, RaverieInstanceOverload(bool, Keys::Enum));
+  RaverieBindOverloadedMethod(Valid, RaverieInstanceOverload(bool, StringParam));
 
-  ZilchBindMethod(ToKey);
-  ZilchBindOverloadedMethod(ToSymbol, ZilchInstanceOverload(String, Keys::Enum));
-  ZilchBindOverloadedMethod(ToSymbol, ZilchInstanceOverload(String, StringParam));
+  RaverieBindMethod(ToKey);
+  RaverieBindOverloadedMethod(ToSymbol, RaverieInstanceOverload(String, Keys::Enum));
+  RaverieBindOverloadedMethod(ToSymbol, RaverieInstanceOverload(String, StringParam));
 
-  ZeroBindEvent(Events::KeyUp, KeyboardEvent);
-  ZeroBindEvent(Events::KeyDown, KeyboardEvent);
-  ZeroBindEvent(Events::KeyRepeated, KeyboardEvent);
-  ZeroBindEvent(Events::TextTyped, KeyboardTextEvent);
+  RaverieBindEvent(Events::KeyUp, KeyboardEvent);
+  RaverieBindEvent(Events::KeyDown, KeyboardEvent);
+  RaverieBindEvent(Events::KeyRepeated, KeyboardEvent);
+  RaverieBindEvent(Events::TextTyped, KeyboardTextEvent);
 }
 
 Keyboard::Keyboard()
@@ -373,18 +373,18 @@ void Keyboard::UpdateKeys(KeyboardEvent& event)
   }
 }
 
-ZilchDefineType(KeyboardEvent, builder, type)
+RaverieDefineType(KeyboardEvent, builder, type)
 {
-  ZeroBindDocumented();
-  ZilchBindFieldProperty(Key);
-  ZilchBindFieldProperty(State);
-  ZilchBindFieldProperty(ShiftPressed);
-  ZilchBindFieldProperty(AltPressed);
-  ZilchBindFieldProperty(CtrlPressed);
-  ZilchBindFieldProperty(SpacePressed);
-  ZilchBindFieldPropertyAs(HandledEventScript, "HandledEvent");
-  ZilchBindGetterProperty(Keyboard);
-  ZilchBindGetterProperty(ModifierPressed);
+  RaverieBindDocumented();
+  RaverieBindFieldProperty(Key);
+  RaverieBindFieldProperty(State);
+  RaverieBindFieldProperty(ShiftPressed);
+  RaverieBindFieldProperty(AltPressed);
+  RaverieBindFieldProperty(CtrlPressed);
+  RaverieBindFieldProperty(SpacePressed);
+  RaverieBindFieldPropertyAs(HandledEventScript, "HandledEvent");
+  RaverieBindGetterProperty(Keyboard);
+  RaverieBindGetterProperty(ModifierPressed);
 }
 
 KeyboardEvent::KeyboardEvent()
@@ -416,10 +416,10 @@ bool KeyboardEvent::GetModifierPressed()
 }
 
 // KeyboardTextEvent
-ZilchDefineType(KeyboardTextEvent, builder, type)
+RaverieDefineType(KeyboardTextEvent, builder, type)
 {
-  ZeroBindDocumented();
-  ZilchBindFieldProperty(mRune);
+  RaverieBindDocumented();
+  RaverieBindFieldProperty(mRune);
 }
 
 KeyboardTextEvent::KeyboardTextEvent() : mRune(Rune::Invalid), mHandled(false)
@@ -432,4 +432,4 @@ void KeyboardTextEvent::Serialize(Serializer& stream)
   stream.SerializeFieldDefault("Rune", mRune.value, 0u);
 }
 
-} // namespace Zero
+} // namespace Raverie

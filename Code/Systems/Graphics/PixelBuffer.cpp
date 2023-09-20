@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 PixelBuffer::PixelBuffer() :
     Width(0),
@@ -227,4 +227,4 @@ void PixelBuffer::SetAll(byte* data)
   Upload();
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace PreviewWidgetUi
@@ -15,7 +15,7 @@ namespace Events
 DefineEvent(PreviewObjectChanged);
 }
 
-ZilchDefineType(PreviewWidget, builder, type)
+RaverieDefineType(PreviewWidget, builder, type)
 {
 }
 
@@ -160,7 +160,7 @@ Vec2 PreviewWidgetGroup::GetMinTileSize()
   return itemSize;
 }
 
-ZilchDefineType(PreviewWidgetFactory, builder, type)
+RaverieDefineType(PreviewWidgetFactory, builder, type)
 {
 }
 
@@ -200,4 +200,4 @@ PreviewImportance::Enum ResourcePreview::GetPreviewImportance(BoundType* resourc
   return createTileWidget->Importance;
 }
 
-} // namespace Zero
+} // namespace Raverie

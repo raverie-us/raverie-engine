@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // This is a central place for all our online locations.
@@ -16,4 +16,4 @@ extern const cstr cOpenProject;
 extern const cstr cNewProject;
 } // namespace Urls
 
-} // namespace Zero
+} // namespace Raverie

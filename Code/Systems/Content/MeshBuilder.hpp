@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 #pragma pack(push, 4)
 class FixedVertexDescription
@@ -39,7 +39,7 @@ public:
 class MeshBuilder : public BuilderComponent
 {
 public:
-  ZilchDeclareType(MeshBuilder, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MeshBuilder, TypeCopyMode::ReferenceType);
 
   MeshBuilder();
 
@@ -60,4 +60,4 @@ public:
   void BuildListing(ResourceListing& listing) override;
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 namespace Events
 {
@@ -9,27 +9,27 @@ DefineEvent(SelectionChanged);
 DefineEvent(SelectionFinal);
 } // namespace Events
 
-ZilchDefineType(SelectionChangedEvent, builder, type)
+RaverieDefineType(SelectionChangedEvent, builder, type)
 {
 }
 
-ZilchDefineType(MetaSelection, builder, type)
+RaverieDefineType(MetaSelection, builder, type)
 {
-  ZilchBindMethod(Count);
-  ZilchBindMethod(Empty);
-  ZilchFullBindMethod(builder, type, &MetaSelection::Clear, (void (MetaSelection::*)()), "Clear", ZilchNoNames);
-  ZilchBindMethod(SelectOnly);
-  ZilchFullBindMethod(builder, type, &MetaSelection::Add, (void (MetaSelection::*)(HandleParam)), "Add", ZilchNoNames);
-  ZilchBindMethod(Remove);
-  ZilchBindMethod(Replace);
-  ZilchBindMethod(Contains);
-  ZilchBindMethod(FinalSelectionChanged);
-  ZilchBindGetterSetterProperty(Primary);
+  RaverieBindMethod(Count);
+  RaverieBindMethod(Empty);
+  RaverieFullBindMethod(builder, type, &MetaSelection::Clear, (void (MetaSelection::*)()), "Clear", RaverieNoNames);
+  RaverieBindMethod(SelectOnly);
+  RaverieFullBindMethod(builder, type, &MetaSelection::Add, (void (MetaSelection::*)(HandleParam)), "Add", RaverieNoNames);
+  RaverieBindMethod(Remove);
+  RaverieBindMethod(Replace);
+  RaverieBindMethod(Contains);
+  RaverieBindMethod(FinalSelectionChanged);
+  RaverieBindGetterSetterProperty(Primary);
 
-  ZeroBindEvent(Events::SelectionChanged, Event);
-  ZeroBindEvent(Events::SelectionFinal, Event);
+  RaverieBindEvent(Events::SelectionChanged, Event);
+  RaverieBindEvent(Events::SelectionFinal, Event);
 
-  ZilchBindCustomGetter(All);
+  RaverieBindCustomGetter(All);
 }
 
 MetaSelection::MetaSelectionArray MetaSelection::sSelections;
@@ -300,4 +300,4 @@ MetaSelection::range MetaSelection::All()
   return range(mSelectedObjects.All());
 }
 
-} // namespace Zero
+} // namespace Raverie

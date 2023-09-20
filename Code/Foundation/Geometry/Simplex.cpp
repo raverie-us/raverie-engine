@@ -57,9 +57,9 @@ void Simplex::Update(void)
   ComputeSupportVector();
 }
 
-Zero::Array<CSOVertex> Simplex::GetPoints(void)
+Raverie::Array<CSOVertex> Simplex::GetPoints(void)
 {
-  Zero::Array<CSOVertex> points;
+  Raverie::Array<CSOVertex> points;
   for (unsigned i = 0; i < mCount; ++i)
     points.PushBack(mPoints[i]);
   return points;

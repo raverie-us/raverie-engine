@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 const String cPopUpNormal = "ItemPopUp";
@@ -19,11 +19,11 @@ namespace Events
 DefineEvent(PopUpClosed);
 }
 
-ZilchDefineType(FloatingComposite, builder, type)
+RaverieDefineType(FloatingComposite, builder, type)
 {
 }
 
-ZilchDefineType(PopUp, builder, type)
+RaverieDefineType(PopUp, builder, type)
 {
 }
 
@@ -175,4 +175,4 @@ void PopUp::OnFocusOut(FocusEvent* event)
   FadeOut();
 }
 
-} // namespace Zero
+} // namespace Raverie

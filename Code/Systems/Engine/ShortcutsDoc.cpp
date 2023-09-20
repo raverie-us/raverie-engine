@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 void ShortcutEntry::Serialize(Serializer& stream)
@@ -20,7 +20,7 @@ void ShortcutSetEntry::Serialize(Serializer& stream)
   SerializeName(mShortcutSet);
 }
 
-ZilchDefineType(Shortcuts, builder, type)
+RaverieDefineType(Shortcuts, builder, type)
 {
 }
 
@@ -150,4 +150,4 @@ bool ShortcutSource::SetData(DataEntry* dataEntry, AnyParam variant, StringParam
   return false;
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Forward declarations
@@ -44,7 +44,7 @@ class LibraryView : public Composite
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(LibraryView, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(LibraryView, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   LibraryView(Composite* parent);
@@ -113,12 +113,12 @@ private:
   void OnEditTags(ObjectEvent* event);
   void OnMessageBox(MessageBoxEvent* event);
   void OnDuplicate(Event* event);
-  /// Extra context menus for zilch fragment translation. These should
+  /// Extra context menus for raverie fragment translation. These should
   /// eventually be moved to some external registration once it is possible.
-  void OnComposeZilchMaterial(Event* event);
-  void OnTranslateZilchPixelMaterial(Event* event);
-  void OnTranslateZilchGeometryMaterial(Event* event);
-  void OnTranslateZilchVertexMaterial(Event* event);
+  void OnComposeRaverieMaterial(Event* event);
+  void OnTranslateRaveriePixelMaterial(Event* event);
+  void OnTranslateRaverieGeometryMaterial(Event* event);
+  void OnTranslateRaverieVertexMaterial(Event* event);
   void OnTranslateFragment(Event* event);
 
   void OnAddTagToSearch(ObjectEvent* event);
@@ -190,4 +190,4 @@ private:
   ResourceTagEditor* mTagEditor;
 };
 
-} // namespace Zero
+} // namespace Raverie

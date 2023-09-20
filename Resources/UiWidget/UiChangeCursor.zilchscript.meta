@@ -1,9 +1,0 @@
-[Version:1]
-TextContent 
-{
-	ZilchScriptBuilder 
-	{
-		var Name = "UiChangeCursor"
-		var ResourceId = 0x59ae1cfcc3f9c322
-	}
-}

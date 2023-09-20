@@ -1,14 +1,14 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Meta Composition
 class MetaCompositionWrapper : public MetaComposition
 {
 public:
-  ZilchDeclareType(MetaCompositionWrapper, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MetaCompositionWrapper, TypeCopyMode::ReferenceType);
 
   MetaCompositionWrapper(BoundType* typeToWrap) : MetaComposition(nullptr)
   {
@@ -111,4 +111,4 @@ public:
   MetaComposition* mContainedComposition;
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// This is responsible for
@@ -65,4 +65,4 @@ public:
   Guid mChildId;
 };
 
-} // namespace Zero
+} // namespace Raverie

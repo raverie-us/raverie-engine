@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Validation that a float is not NAN/IND/INF
@@ -50,4 +50,4 @@ bool CorrectNonFiniteValues<double>(double& value)
   return true;
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -4,7 +4,7 @@
 #include "FixedString.hpp"
 #include "String.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Convert Integers into hexadecimal format "4a34"
@@ -153,4 +153,4 @@ struct has_global_to_buffer : public integral_constant<bool, has_global_to_buffe
 {
 };
 
-} // namespace Zero
+} // namespace Raverie

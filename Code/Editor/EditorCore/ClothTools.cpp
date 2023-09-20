@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 uint GetClosestTrianglePoint(const Triangle& tri, Vec3Param pointOnTriangle)
@@ -25,13 +25,13 @@ uint GetClosestTrianglePoint(const Triangle& tri, Vec3Param pointOnTriangle)
     return 2;
 }
 
-ZilchDefineType(SpringSubTool, builder, type)
+RaverieDefineType(SpringSubTool, builder, type)
 {
   // These options are referred to directly by pointer on the import options
   // (unsafe for script)
-  type->HandleManager = ZilchManagerId(PointerManager);
+  type->HandleManager = RaverieManagerId(PointerManager);
   type->Add(new TypeNameDisplay());
-  ZeroBindExpanded();
+  RaverieBindExpanded();
 }
 
 SpringSystem* SpringSubTool::GetSystem()
@@ -102,7 +102,7 @@ bool SpringSubTool::RayCastCog(ViewportMouseEvent* e, CogId& hitCog, Vec3& hitPo
   return true;
 }
 
-ZilchDefineType(DragSelectSubTool, builder, type)
+RaverieDefineType(DragSelectSubTool, builder, type)
 {
 }
 
@@ -173,7 +173,7 @@ void DragSelectSubTool::OnMouseEndDrag(Event* e)
 
   dragElement->SetVisible(false);
 }
-ZilchDefineType(SelectorSpringSubTool, builder, type)
+RaverieDefineType(SelectorSpringSubTool, builder, type)
 {
 }
 
@@ -280,7 +280,7 @@ void SelectorSpringSubTool::GetSelection(PointMap& indices)
   }
 }
 
-ZilchDefineType(PointMassSelectorSubTool, builder, type)
+RaverieDefineType(PointMassSelectorSubTool, builder, type)
 {
 }
 
@@ -326,10 +326,10 @@ void PointMassSelectorSubTool::CastFrustum(const Frustum& frustum)
   }
 }
 
-ZilchDefineType(AnchoringSubTool, builder, type)
+RaverieDefineType(AnchoringSubTool, builder, type)
 {
-  ZilchBindFieldProperty(mDrawAnchoredPoints);
-  ZilchBindFieldProperty(mAnchoredPointMassColor);
+  RaverieBindFieldProperty(mDrawAnchoredPoints);
+  RaverieBindFieldProperty(mAnchoredPointMassColor);
 }
 
 AnchoringSubTool::AnchoringSubTool()
@@ -358,7 +358,7 @@ void AnchoringSubTool::Draw()
   PointMassSelectorSubTool::Draw();
 }
 
-ZilchDefineType(PointSelectorSubTool, builder, type)
+RaverieDefineType(PointSelectorSubTool, builder, type)
 {
 }
 
@@ -366,7 +366,7 @@ PointSelectorSubTool::PointSelectorSubTool()
 {
 }
 
-ZilchDefineType(SpringSelectorSubTool, builder, type)
+RaverieDefineType(SpringSelectorSubTool, builder, type)
 {
 }
 
@@ -422,7 +422,7 @@ void SpringSelectorSubTool::CastFrustum(const Frustum& frustum)
   }
 }
 
-ZilchDefineType(SpringCreatorSubTool, builder, type)
+RaverieDefineType(SpringCreatorSubTool, builder, type)
 {
 }
 
@@ -499,9 +499,9 @@ void SpringCreatorSubTool::ConnectDifferentSystems()
   system0->GetSpace()->MarkModified();
 }
 
-ZilchDefineType(RopeCreatorSubTool, builder, type)
+RaverieDefineType(RopeCreatorSubTool, builder, type)
 {
-  ZilchBindFieldProperty(mNumberOfLinks);
+  RaverieBindFieldProperty(mNumberOfLinks);
 }
 
 RopeCreatorSubTool::RopeCreatorSubTool()
@@ -710,13 +710,13 @@ void SetInvMassHelper(SpringSystem* system, uint index, real invMass)
   SpringSystem::PointMass& point = system->mPointMasses[index];
   point.mInvMass = invMass;
 }
-ZilchDefineType(SpringPointProxy, builder, type)
+RaverieDefineType(SpringPointProxy, builder, type)
 {
-  type->HandleManager = ZilchManagerId(PointerManager);
+  type->HandleManager = RaverieManagerId(PointerManager);
 
-  ZilchBindGetterSetterProperty(Fixed);
-  ZilchBindGetterSetterProperty(Anchor);
-  ZilchBindGetterSetterProperty(Mass);
+  RaverieBindGetterSetterProperty(Fixed);
+  RaverieBindGetterSetterProperty(Anchor);
+  RaverieBindGetterSetterProperty(Mass);
 }
 
 SpringPointProxy::SpringPointProxy()
@@ -772,9 +772,9 @@ PropertyState SpringPointProxy::GetMassState()
   return GetGroupState(mAnchorTool, GetMassStateHelper);
 }
 
-ZilchDefineType(SpringPointProxyProperty, builder, type)
+RaverieDefineType(SpringPointProxyProperty, builder, type)
 {
-  type->HandleManager = ZilchManagerId(PointerManager);
+  type->HandleManager = RaverieManagerId(PointerManager);
 }
 
 PropertyState SpringPointProxyProperty::GetValue(HandleParam object, PropertyPathParam property)
@@ -792,18 +792,18 @@ PropertyState SpringPointProxyProperty::GetValue(HandleParam object, PropertyPat
   return PropertyState();
 }
 
-ZilchDefineType(SpringTools, builder, type)
+RaverieDefineType(SpringTools, builder, type)
 {
   type->AddAttribute(ObjectAttributes::cHidden);
-  ZeroBindComponent();
-  ZeroBindDependency(MouseCapture);
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindComponent();
+  RaverieBindDependency(MouseCapture);
+  RaverieBindSetup(SetupMode::DefaultSerialization);
 
   type->AddAttribute(ObjectAttributes::cTool);
 
   // changing this property will invalidate us (so we refresh the property view)
-  ZilchBindGetterSetterProperty(CurrentSubToolType)->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  ZilchBindFieldProperty(mCurrentSubTool);
+  RaverieBindGetterSetterProperty(CurrentSubToolType)->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  RaverieBindFieldProperty(mCurrentSubTool);
 }
 
 SpringTools::SpringTools()
@@ -1024,4 +1024,4 @@ void SpringTools::OnGetToolInfo(ToolUiEvent* e)
   e->mNeedsPropertyGrid = true;
 }
 
-} // namespace Zero
+} // namespace Raverie

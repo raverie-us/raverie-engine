@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class Collider;
@@ -77,4 +77,4 @@ struct RelativeVelocityJoint : public Joint
 
 typedef Physics::RelativeVelocityJoint RelativeVelocityJoint;
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class VertexDescriptionBuilder
@@ -22,4 +22,4 @@ private:
   FixedVertexDescription mVertexDescription;
 };
 
-} // namespace Zero
+} // namespace Raverie

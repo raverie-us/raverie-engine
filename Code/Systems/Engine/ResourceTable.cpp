@@ -1,23 +1,23 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 String ResourceTable::mStringType = "String";
 
-ZilchDefineType(ResourceTableEntry, builder, type)
+RaverieDefineType(ResourceTableEntry, builder, type)
 {
   type->CreatableInScript = true;
-  ZilchBindDefaultCopyDestructor();
-  ZeroBindDocumented();
+  RaverieBindDefaultCopyDestructor();
+  RaverieBindDocumented();
 
-  ZilchBindFieldProperty(mName);
-  ZilchBindGetterSetterProperty(Value);
-  ZilchBindGetterSetterProperty(Weight);
-  ZilchBindGetterSetterProperty(Resource);
-  ZilchBindFieldProperty(mResourceType);
-  ZilchBindMethod(Clone);
+  RaverieBindFieldProperty(mName);
+  RaverieBindGetterSetterProperty(Value);
+  RaverieBindGetterSetterProperty(Weight);
+  RaverieBindGetterSetterProperty(Resource);
+  RaverieBindFieldProperty(mResourceType);
+  RaverieBindMethod(Clone);
 }
 
 ResourceTableEntry::ResourceTableEntry()
@@ -80,41 +80,41 @@ ResourceTableEntry* ResourceTableEntry::Clone()
   return newEntry;
 }
 
-ZilchDefineType(ResourceTable, builder, type)
+RaverieDefineType(ResourceTable, builder, type)
 {
-  ZeroBindDocumented();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
 
-  ZilchBindMethod(CreateRuntime);
-  ZilchBindMethod(RuntimeClone);
+  RaverieBindMethod(CreateRuntime);
+  RaverieBindMethod(RuntimeClone);
 
-  ZilchBindMethod(AddOrError);
-  ZilchBindMethod(AddOrIgnore);
-  ZilchBindMethod(AddOrOverwrite);
-  ZilchBindMethod(GetOrDefault);
-  ZilchBindMethod(GetOrError);
-  ZilchBindMethod(GetOrNull);
+  RaverieBindMethod(AddOrError);
+  RaverieBindMethod(AddOrIgnore);
+  RaverieBindMethod(AddOrOverwrite);
+  RaverieBindMethod(GetOrDefault);
+  RaverieBindMethod(GetOrError);
+  RaverieBindMethod(GetOrNull);
   // Array Get/Set
-  ZilchBindOverloadedMethod(Get, ZilchInstanceOverload(ResourceTableEntry*, int));
-  ZilchBindOverloadedMethod(Set, ZilchInstanceOverload(void, int, ResourceTableEntry*));
+  RaverieBindOverloadedMethod(Get, RaverieInstanceOverload(ResourceTableEntry*, int));
+  RaverieBindOverloadedMethod(Set, RaverieInstanceOverload(void, int, ResourceTableEntry*));
   // HashSet Get/Set
-  ZilchBindOverloadedMethod(Get, ZilchInstanceOverload(ResourceTableEntry*, ResourceTableEntry*));
-  ZilchBindOverloadedMethod(Set, ZilchInstanceOverload(void, ResourceTableEntry*));
+  RaverieBindOverloadedMethod(Get, RaverieInstanceOverload(ResourceTableEntry*, ResourceTableEntry*));
+  RaverieBindOverloadedMethod(Set, RaverieInstanceOverload(void, ResourceTableEntry*));
   // HashMap Get/Set
-  ZilchBindOverloadedMethod(Get, ZilchInstanceOverload(ResourceTableEntry*, StringParam));
-  ZilchBindOverloadedMethod(Set, ZilchInstanceOverload(void, StringParam, ResourceTableEntry*));
-  ZilchBindMethod(RemoveAt);
-  ZilchBindMethod(RemoveOrError);
-  ZilchBindMethod(RemoveOrIgnore);
-  ZilchBindMethod(Contains);
-  ZilchBindGetterProperty(Count);
-  ZilchBindGetterProperty(All);
-  ZilchBindMethod(Clear);
-  ZilchBindGetterSetterProperty(ResourceType);
-  ZilchBindGetterSetterProperty(MaxWeight);
-  ZilchBindOverloadedMethod(SampleIndex, ZilchInstanceOverload(uint, float, float));
-  ZilchBindOverloadedMethod(Sample, ZilchInstanceOverload(ResourceTableEntry*, float, float));
-  ZilchBindMethod(ForceRebuild);
+  RaverieBindOverloadedMethod(Get, RaverieInstanceOverload(ResourceTableEntry*, StringParam));
+  RaverieBindOverloadedMethod(Set, RaverieInstanceOverload(void, StringParam, ResourceTableEntry*));
+  RaverieBindMethod(RemoveAt);
+  RaverieBindMethod(RemoveOrError);
+  RaverieBindMethod(RemoveOrIgnore);
+  RaverieBindMethod(Contains);
+  RaverieBindGetterProperty(Count);
+  RaverieBindGetterProperty(All);
+  RaverieBindMethod(Clear);
+  RaverieBindGetterSetterProperty(ResourceType);
+  RaverieBindGetterSetterProperty(MaxWeight);
+  RaverieBindOverloadedMethod(SampleIndex, RaverieInstanceOverload(uint, float, float));
+  RaverieBindOverloadedMethod(Sample, RaverieInstanceOverload(ResourceTableEntry*, float, float));
+  RaverieBindMethod(ForceRebuild);
 }
 
 ResourceTable::ResourceTable()
@@ -671,4 +671,4 @@ void ResourceTableManager::OnValidateTables(ResourceEvent* e)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

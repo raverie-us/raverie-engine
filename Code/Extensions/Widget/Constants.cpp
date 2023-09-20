@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 const String cBackground = "Background";
 const String cWhiteSquare = "WhiteSquare";
@@ -18,4 +18,4 @@ const String cHighlight = "Highlight";
 const String cDragBox = "DragBox";
 const String Divider = "Divider";
 const String DefaultTextStyle = "Text";
-} // namespace Zero
+} // namespace Raverie

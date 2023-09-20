@@ -3,7 +3,7 @@
 #include "Hashing.hpp"
 #include "Guid.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 size_t Guid::Hash() const
@@ -11,4 +11,4 @@ size_t Guid::Hash() const
   return HashPolicy<u64>()(mValue);
 }
 
-} // namespace Zero
+} // namespace Raverie

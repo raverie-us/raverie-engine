@@ -2,7 +2,7 @@
 #include "Precompiled.hpp"
 #include "Foundation/Platform/PlatformCommunication.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 void CreateEditor(StringParam projectFile);
@@ -63,7 +63,7 @@ void GameOrEditorStartup::Initialize()
   CommandLineToStringArray();
 
   mStdoutListener = new StdOutListener();
-  Zero::Console::Add(mStdoutListener);
+  Raverie::Console::Add(mStdoutListener);
 
   // Start the profiling system used to performance counters and timers.
   Profile::ProfileSystem::Initialize();
@@ -71,7 +71,7 @@ void GameOrEditorStartup::Initialize()
 
   // Mirror console output to a log file.
   mFileListener = new FileListener();
-  Zero::Console::Add(mFileListener);
+  Raverie::Console::Add(mFileListener);
 
   Environment* environment = Environment::GetInstance();
   environment->ParseCommandArgs(gCommandLineArguments);
@@ -84,28 +84,28 @@ void GameOrEditorStartup::Initialize()
   CommonLibrary::Initialize();
 
   // Temporary location for registering handle managers
-  // ZilchRegisterSharedHandleManager(ReferenceCountedHandleManager);
-  ZilchRegisterSharedHandleManager(CogHandleManager);
-  ZilchRegisterSharedHandleManager(ComponentHandleManager);
-  ZilchRegisterSharedHandleManager(ResourceHandleManager);
-  ZilchRegisterSharedHandleManager(WidgetHandleManager);
-  ZilchRegisterSharedHandleManager(ContentItemHandleManager);
+  // RaverieRegisterSharedHandleManager(ReferenceCountedHandleManager);
+  RaverieRegisterSharedHandleManager(CogHandleManager);
+  RaverieRegisterSharedHandleManager(ComponentHandleManager);
+  RaverieRegisterSharedHandleManager(ResourceHandleManager);
+  RaverieRegisterSharedHandleManager(WidgetHandleManager);
+  RaverieRegisterSharedHandleManager(ContentItemHandleManager);
 
   RegisterCommonHandleManagers();
 
-  ZeroRegisterHandleManager(ContentComposition);
+  RaverieRegisterHandleManager(ContentComposition);
 
   // Graphics specific
-  ZeroRegisterThreadSafeReferenceCountedHandleManager(ThreadSafeReferenceCounted);
-  ZeroRegisterThreadSafeReferenceCountedHandleManager(GraphicsBlendSettings);
-  ZeroRegisterThreadSafeReferenceCountedHandleManager(GraphicsDepthSettings);
+  RaverieRegisterThreadSafeReferenceCountedHandleManager(ThreadSafeReferenceCounted);
+  RaverieRegisterThreadSafeReferenceCountedHandleManager(GraphicsBlendSettings);
+  RaverieRegisterThreadSafeReferenceCountedHandleManager(GraphicsDepthSettings);
 
-  // Setup the core Zilch library
-  mZilchSetup = new ZilchSetup(SetupFlags::DoNotShutdownMemory);
+  // Setup the core Raverie library
+  mRaverieSetup = new RaverieSetup(SetupFlags::DoNotShutdownMemory);
 
   // We need the calling state to be set so we can create Handles for Meta
   // Components
-  Zilch::Module module;
+  Raverie::Module module;
   mState = module.Link();
 
   ExecutableState::CallingState = mState;
@@ -115,7 +115,7 @@ void GameOrEditorStartup::Initialize()
   // Add the core library to the meta database
   MetaDatabase::GetInstance()->AddNativeLibrary(Core::GetInstance().GetLibrary());
 
-  // Initialize Zero Libraries
+  // Initialize Raverie Libraries
   GeometryLibrary::Initialize();
   // Geometry doesn't know about the Meta Library, so it cannot add itself to
   // the MetaDatabase
@@ -136,7 +136,7 @@ void GameOrEditorStartup::Initialize()
   EditorLibrary::Initialize();
   UiWidgetLibrary::Initialize();
 
-  ZilchScriptLibrary::Initialize();
+  RaverieScriptLibrary::Initialize();
 
   NativeBindingList::ValidateTypes();
 
@@ -240,7 +240,7 @@ void GameOrEditorStartup::Shutdown()
     Core::GetInstance().GetLibrary()->ClearComponents();
 
     // Shutdown in reverse order
-    ZilchScriptLibrary::Shutdown();
+    RaverieScriptLibrary::Shutdown();
 
     UiWidgetLibrary::Shutdown();
     EditorLibrary::Shutdown();
@@ -260,7 +260,7 @@ void GameOrEditorStartup::Shutdown()
     GeometryLibrary::Shutdown();
 
     // ClearLibrary
-    ZilchScriptLibrary::GetInstance().ClearLibrary();
+    RaverieScriptLibrary::GetInstance().ClearLibrary();
 
     UiWidgetLibrary::GetInstance().ClearLibrary();
     EditorLibrary::GetInstance().ClearLibrary();
@@ -280,7 +280,7 @@ void GameOrEditorStartup::Shutdown()
     GeometryLibrary::GetInstance().ClearLibrary();
 
     // Destroy
-    ZilchScriptLibrary::Destroy();
+    RaverieScriptLibrary::Destroy();
 
     UiWidgetLibrary::Destroy();
     EditorLibrary::Destroy();
@@ -299,11 +299,11 @@ void GameOrEditorStartup::Shutdown()
     MetaLibrary::Destroy();
     GeometryLibrary::Destroy();
 
-    ZilchManager::Destroy();
+    RaverieManager::Destroy();
     MetaDatabase::Destroy();
 
     delete mState;
-    delete mZilchSetup;
+    delete mRaverieSetup;
 
     CommonLibrary::Shutdown();
 
@@ -351,13 +351,13 @@ void GameOrEditorStartup::UserInitialize()
   String projectFile;
   if (mProjectArchive.GetBegin()) {
     ExtractArchiveTo(mProjectArchive, basePath);
-    projectFile = FilePath::Combine(basePath, "Project.zeroproj");
+    projectFile = FilePath::Combine(basePath, "Project.raverieproj");
   } else if (mBuiltContentArchive.GetBegin()) {
     ExtractArchiveTo(mBuiltContentArchive, basePath);
-    projectFile = FilePath::Combine(basePath, "Project.zeroproj");
+    projectFile = FilePath::Combine(basePath, "Project.raverieproj");
     mPlayGame = true;
   } else {
-    projectFile = FilePath::Combine(mainConfig->DataDirectory, "Fallback", "Project.zeroproj");
+    projectFile = FilePath::Combine(mainConfig->DataDirectory, "Fallback", "Project.raverieproj");
   }
 
   // The options defaults are already tailored to the Editor.
@@ -389,7 +389,7 @@ void GameOrEditorStartup::UserStartup()
   else
   {
     Array<String> coreLibs;
-    coreLibs.PushBack("ZeroCore");
+    coreLibs.PushBack("EngineCore");
     coreLibs.PushBack("UiWidget");
     coreLibs.PushBack("EditorUi");
     coreLibs.PushBack("Editor");
@@ -417,4 +417,4 @@ void GameOrEditorStartup::UserCreation()
   Shell::sInstance->SetProgress(nullptr, 1.0f);
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 String ToString(Math::IntVec2Param value, bool shortFormat = false);
@@ -16,4 +16,4 @@ String ToString(Math::Mat2Param value, bool shortFormat = false);
 String ToString(Math::Mat3Param value, bool shortFormat = false);
 String ToString(Math::Mat4Param value, bool shortFormat = false);
 
-} // namespace Zero
+} // namespace Raverie

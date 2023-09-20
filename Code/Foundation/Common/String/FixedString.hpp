@@ -3,7 +3,7 @@
 
 #include "StringRange.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 template <typename type, size_t maxSize>
@@ -256,4 +256,4 @@ inline bool operator==(const StringRange& left, const FixedString<s>& right)
   return strcmp(left.Data(), right.Data()) == 0;
 }
 
-} // namespace Zero
+} // namespace Raverie

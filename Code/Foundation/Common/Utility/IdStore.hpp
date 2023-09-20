@@ -5,7 +5,7 @@
 #include "Containers/ArraySet.hpp"
 #include "UintNType.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 /// Manages a recyclable ID system (where 0 represents an invalid ID)
@@ -24,7 +24,7 @@ public:
   }
 
   /// Move Constructor
-  IdStore(MoveReference<IdStore> rhs) : mNewId(rhs->mNewId), mFreeIds(ZeroMove(rhs->mFreeIds))
+  IdStore(MoveReference<IdStore> rhs) : mNewId(rhs->mNewId), mFreeIds(RaverieMove(rhs->mFreeIds))
   {
   }
 
@@ -32,7 +32,7 @@ public:
   IdStore& operator=(MoveReference<IdStore> rhs)
   {
     mNewId = rhs->mNewId;
-    mFreeIds = ZeroMove(rhs->mFreeIds);
+    mFreeIds = RaverieMove(rhs->mFreeIds);
 
     return *this;
   }
@@ -137,8 +137,8 @@ struct MoveWithoutDestructionOperator<IdStore<Id>>
 {
   static inline void MoveWithoutDestruction(IdStore<Id>* dest, IdStore<Id>* source)
   {
-    new (dest) IdStore<Id>(ZeroMove(*source));
+    new (dest) IdStore<Id>(RaverieMove(*source));
   }
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -29,7 +29,7 @@ DeclareEvent(SoundCuePostPlay);
 class SoundInstanceEvent : public Event
 {
 public:
-  ZilchDeclareType(SoundInstanceEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SoundInstanceEvent, TypeCopyMode::ReferenceType);
 
   SoundInstanceEvent() : mSoundInstance(nullptr)
   {
@@ -126,7 +126,7 @@ class TagObject;
 class SoundInstance : public SimpleCollapseNode
 {
 public:
-  ZilchDeclareType(SoundInstance, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SoundInstance, TypeCopyMode::ReferenceType);
 
   SoundInstance(Status& status, SoundSpace* space, SoundAsset* asset, float volume, float pitch);
   ~SoundInstance();
@@ -284,7 +284,7 @@ private:
   void SetBeatsPerMinuteThreaded(float beats);
   void SetTimeSignatureThreaded(float beats, float noteType);
 
-  typedef Zero::Array<TagObject*> TagListType;
+  typedef Raverie::Array<TagObject*> TagListType;
   // List of tags that the instance is currently associated with.
   TagListType TagListThreaded;
 
@@ -364,4 +364,4 @@ private:
   BufferType SavedSamplesThreaded;
 };
 
-} // namespace Zero
+} // namespace Raverie

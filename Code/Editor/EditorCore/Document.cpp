@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -10,9 +10,9 @@ DefineEvent(DocumentRemoved);
 DefineEvent(DocumentReload);
 } // namespace Events
 
-ZilchDefineType(Document, builder, type)
+RaverieDefineType(Document, builder, type)
 {
-  type->HandleManager = ZilchManagerId(PointerManager);
+  type->HandleManager = RaverieManagerId(PointerManager);
 }
 
 Document::Document(u64 id) : Id(id)
@@ -45,7 +45,7 @@ void Document::ReloadEditor()
   DispatchEvent(Events::DocumentReload, &e);
 }
 
-ZilchDefineType(DocumentManager, builder, type)
+RaverieDefineType(DocumentManager, builder, type)
 {
 }
 
@@ -204,4 +204,4 @@ DocumentResource* FileDocument::GetResource()
   return nullptr;
 }
 
-} // namespace Zero
+} // namespace Raverie

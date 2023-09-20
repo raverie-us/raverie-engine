@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class DownloadTaskJob : public BackgroundTaskJob
@@ -10,7 +10,7 @@ public:
   static BackgroundTask* DownloadToBuffer(StringParam url);
   static BackgroundTask* DownloadToBuffer(StringParam url, StringParam fileName);
 
-  typedef DownloadTaskJob ZilchSelf;
+  typedef DownloadTaskJob RaverieSelf;
   DownloadTaskJob(StringParam url, u64 forceCacheSeconds = 0);
 
   /// Job Interface.
@@ -32,4 +32,4 @@ protected:
   HandleOf<AsyncWebRequest> mRequest;
 };
 
-} // namespace Zero
+} // namespace Raverie

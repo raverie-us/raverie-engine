@@ -1,6 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 
-namespace Zero
+namespace Raverie
 {
 
 template <typename ClientDataType>
@@ -329,4 +329,4 @@ AabbNode<ClientDataType>* SerializeAabbTree(Serializer& stream)
   return nullptr;
 }
 
-} // namespace Zero
+} // namespace Raverie

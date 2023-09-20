@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -86,7 +86,7 @@ const String AllChannels = "~<ALL>~";
 class IrcClient : public EventObject
 {
 public:
-  ZilchDeclareType(IrcClient, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(IrcClient, TypeCopyMode::ReferenceType);
 
   // Constructor
   IrcClient();
@@ -157,4 +157,4 @@ private:
   HashMap<String, ChannelNamesEvent*> mNameRequests;
 };
 
-} // namespace Zero
+} // namespace Raverie

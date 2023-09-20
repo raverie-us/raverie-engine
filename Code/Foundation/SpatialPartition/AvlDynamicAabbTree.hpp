@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Memory
@@ -92,6 +92,6 @@ public:
 private:
 };
 
-} // namespace Zero
+} // namespace Raverie
 
 #include "AvlDynamicAabbTree.inl"

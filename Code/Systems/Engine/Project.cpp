@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -10,20 +10,20 @@ DefineEvent(ProjectLoaded);
 DefineEvent(NoProjectLoaded);
 } // namespace Events
 
-ZilchDefineType(ProjectSettings, builder, type)
+RaverieDefineType(ProjectSettings, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
   type->AddAttribute(ObjectAttributes::cCore);
 
-  ZilchBindFieldGetter(ProjectName);
-  ZilchBindFieldGetter(ProjectFolder);
-  ZilchBindFieldGetter(ContentFolder);
-  ZilchBindFieldGetter(EditorContentFolder);
+  RaverieBindFieldGetter(ProjectName);
+  RaverieBindFieldGetter(ProjectFolder);
+  RaverieBindFieldGetter(ContentFolder);
+  RaverieBindFieldGetter(EditorContentFolder);
 
-  ZilchBindFieldProperty(ProjectOwner);
-  ZilchBindFieldProperty(AutoTakeProjectScreenshot);
+  RaverieBindFieldProperty(ProjectOwner);
+  RaverieBindFieldProperty(AutoTakeProjectScreenshot);
 }
 
 ProjectSettings::ProjectSettings()
@@ -75,7 +75,7 @@ String ProjectSettings::GetEditorContentFolder()
 void ProjectSettings::Save()
 {
   if (ProjectFile.Empty())
-    ProjectFile = FilePath::Combine(ProjectFolder, "Project.zeroproj");
+    ProjectFile = FilePath::Combine(ProjectFolder, "Project.raverieproj");
 
   SaveToDataFile(*mOwner, ProjectFile);
 }
@@ -213,9 +213,9 @@ Guid ProjectSettings::GetProjectGuid()
   return mGuid;
 }
 
-ZilchDefineType(ContentLibraryReference, builder, type)
+RaverieDefineType(ContentLibraryReference, builder, type)
 {
-  ZilchBindFieldProperty(mContentLibraryName);
+  RaverieBindFieldProperty(mContentLibraryName);
 }
 
 void ContentLibraryReference::Serialize(Serializer& stream)
@@ -223,12 +223,12 @@ void ContentLibraryReference::Serialize(Serializer& stream)
   SerializeNameDefault(mContentLibraryName, String());
 }
 
-ZilchDefineType(SharedContent, builder, type)
+RaverieDefineType(SharedContent, builder, type)
 {
-  ZeroBindComponent();
-  // ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindComponent();
+  // RaverieBindSetup(SetupMode::DefaultSerialization);
 
-  ZilchBindFieldProperty(ExtraContentLibraries);
+  RaverieBindFieldProperty(ExtraContentLibraries);
 }
 
 void SharedContent::Serialize(Serializer& stream)
@@ -236,13 +236,13 @@ void SharedContent::Serialize(Serializer& stream)
   SerializeName(ExtraContentLibraries);
 }
 
-ZilchDefineType(ProjectDescription, builder, type)
+RaverieDefineType(ProjectDescription, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZilchBindFieldProperty(ShortDescription);
-  ZilchBindFieldProperty(LongDescription);
-  ZilchBindFieldProperty(Tags);
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindFieldProperty(ShortDescription);
+  RaverieBindFieldProperty(LongDescription);
+  RaverieBindFieldProperty(Tags);
 }
 
 void ProjectDescription::Serialize(Serializer& stream)
@@ -315,14 +315,14 @@ String ProjectDescription::GetTagsString(StringParam splitChar)
   return tagText;
 }
 
-ZilchDefineType(FrameRateSettings, builder, type)
+RaverieDefineType(FrameRateSettings, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindDocumented();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindComponent();
+  RaverieBindDocumented();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
 
-  ZilchBindFieldProperty(mLimitFrameRate);
-  ZilchBindGetterSetterProperty(FrameRate);
+  RaverieBindFieldProperty(mLimitFrameRate);
+  RaverieBindGetterSetterProperty(FrameRate);
 }
 
 void FrameRateSettings::Serialize(Serializer& stream)
@@ -345,13 +345,13 @@ void FrameRateSettings::SetFrameRate(int frameRate)
   mFrameRate = Math::Max(frameRate, 1);
 }
 
-ZilchDefineType(DebugSettings, builder, type)
+RaverieDefineType(DebugSettings, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindDocumented();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindComponent();
+  RaverieBindDocumented();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
 
-  ZilchBindGetterSetterProperty(MaxDebugObjects);
+  RaverieBindGetterSetterProperty(MaxDebugObjects);
 }
 
 void DebugSettings::Serialize(Serializer& stream)
@@ -373,11 +373,11 @@ void DebugSettings::SetMaxDebugObjects(int maxDebugObjects)
   mMaxDebugObjects = Math::Max(maxDebugObjects, 0);
 }
 
-ZilchDefineType(ExportSettings, builder, type)
+RaverieDefineType(ExportSettings, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindDocumented();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindComponent();
+  RaverieBindDocumented();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
 }
 
 void ExportSettings::Serialize(Serializer& stream)
@@ -385,4 +385,4 @@ void ExportSettings::Serialize(Serializer& stream)
   SerializeNameDefault(mActiveTargets, HashSet<String>());
 }
 
-} // namespace Zero
+} // namespace Raverie

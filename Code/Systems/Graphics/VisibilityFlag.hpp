@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class VisibilityFlag
@@ -97,4 +97,4 @@ public:
   }
 };
 
-} // namespace Zero
+} // namespace Raverie

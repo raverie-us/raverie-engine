@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class TextureProcessor
@@ -17,4 +17,4 @@ public:
   String mFilename;
 };
 
-} // namespace Zero
+} // namespace Raverie

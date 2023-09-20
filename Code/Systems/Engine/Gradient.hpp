@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Specifies a range of values that can be interpolated between.
@@ -185,4 +185,4 @@ public:
   KeyArray mControlPoints;
 };
 
-} // namespace Zero
+} // namespace Raverie

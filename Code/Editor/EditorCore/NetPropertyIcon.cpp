@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace NetPropertyUi
@@ -71,10 +71,10 @@ void NetPropertyIcon::UpdateTransform()
   }
 
   // Get component meta type
-  BoundType* componentType = ZilchVirtualTypeId(component);
+  BoundType* componentType = RaverieVirtualTypeId(component);
 
   // Is the net object component?
-  if (componentType->IsA(ZilchTypeId(NetObject)))
+  if (componentType->IsA(RaverieTypeId(NetObject)))
   {
     // Hide net property icon
     mIcon->SetActive(false);
@@ -181,10 +181,10 @@ void NetPropertyIcon::OnLeftClick(Event* event)
   }
 
   // Get component meta type
-  BoundType* componentType = ZilchVirtualTypeId(component);
+  BoundType* componentType = RaverieVirtualTypeId(component);
 
   // Is the net object component?
-  if (componentType->IsA(ZilchTypeId(NetObject)))
+  if (componentType->IsA(RaverieTypeId(NetObject)))
   {
     // Hide net property icon
     mIcon->SetActive(false);
@@ -279,7 +279,7 @@ void NetPropertyIcon::OnSearchCompleted(SearchViewEvent* event)
     return;
 
   // Get component meta type
-  BoundType* componentType = ZilchVirtualTypeId(component);
+  BoundType* componentType = RaverieVirtualTypeId(component);
 
   // Get property name
   String propertyName = mProperty->Name;
@@ -313,7 +313,7 @@ NetPropertyInfo* NetPropertyIcon::GetNetPropertyInfo()
     return nullptr;
 
   // Get component meta type
-  BoundType* componentType = ZilchVirtualTypeId(component);
+  BoundType* componentType = RaverieVirtualTypeId(component);
 
   // Get property name
   String propertyName = mProperty->Name;
@@ -374,4 +374,4 @@ Widget* CreateNetPropertyIcon(Composite* parent, HandleParam object, Property* m
   return nullptr;
 }
 
-} // namespace Zero
+} // namespace Raverie

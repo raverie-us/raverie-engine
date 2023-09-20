@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 typedef u64 PairId;
@@ -202,4 +202,4 @@ typedef Array<BroadPhaseObject> BroadPhaseObjectArray;
 typedef Array<ClientPair> ClientPairArray;
 typedef Array<BroadPhaseDataPair> DataPairArray;
 
-} // namespace Zero
+} // namespace Raverie

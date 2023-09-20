@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 //                                    NetHost //
@@ -10,7 +10,7 @@ namespace Zero
 class NetHost : public SafeId32
 {
 public:
-  ZilchDeclareType(NetHost, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(NetHost, TypeCopyMode::ReferenceType);
 
   /// Constructors.
   NetHost();
@@ -75,4 +75,4 @@ struct NetHostRange : public NetHostSet::range
   }
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class ObjectEvent;
@@ -11,7 +11,7 @@ class TextButton;
 class SelectorButton : public Composite
 {
 public:
-  ZilchDeclareType(SelectorButton, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SelectorButton, TypeCopyMode::ReferenceType);
 
   SelectorButton(Composite* parent);
 
@@ -59,4 +59,4 @@ public:
   bool mAllowSelect;
 };
 
-} // namespace Zero
+} // namespace Raverie

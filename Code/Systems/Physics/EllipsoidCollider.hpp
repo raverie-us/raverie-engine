@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Defines the collision volume for an ellipsoid (3 dimensional ellipse)
@@ -9,7 +9,7 @@ namespace Zero
 class EllipsoidCollider : public Collider
 {
 public:
-  ZilchDeclareType(EllipsoidCollider, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(EllipsoidCollider, TypeCopyMode::ReferenceType);
 
   EllipsoidCollider();
 
@@ -37,4 +37,4 @@ private:
   Vec3 mRadii;
 };
 
-} // namespace Zero
+} // namespace Raverie

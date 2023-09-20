@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Utilities
@@ -175,4 +175,4 @@ size_t EncodedCodepointLength(byte utf8FirstByte)
 
 } // namespace UTF8
 
-} // namespace Zero
+} // namespace Raverie

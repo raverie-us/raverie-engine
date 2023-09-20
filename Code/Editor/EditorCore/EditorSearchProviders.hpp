@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class PostAddResourceEvent;
@@ -93,4 +93,4 @@ SearchProvider* GetLibrarySearchProvider(bool canReturnResources = false, Resour
 SearchProvider* GetResourceSearchProvider(ResourceLibrary* resourceLibrary = NULL, bool showHidden = false);
 void AddEditorProviders(SearchData& search);
 
-} // namespace Zero
+} // namespace Raverie

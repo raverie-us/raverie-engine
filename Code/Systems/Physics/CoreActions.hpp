@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Physics
@@ -113,4 +113,4 @@ struct BroadPhaseAction
 
 } // namespace Physics
 
-} // namespace Zero
+} // namespace Raverie

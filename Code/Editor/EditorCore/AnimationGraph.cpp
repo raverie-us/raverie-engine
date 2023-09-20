@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace AnimGraphUi
@@ -676,7 +676,7 @@ Vec2 AnimationGraphEditor::ToGraphPosition(Vec2Param pixelPos)
 
 bool ExpandAabbByTrack(Vec2* min, Vec2* max, TrackNode* track)
 {
-  ErrorIf(track->mPropertyType != ZilchTypeId(float), "Invalid track type.");
+  ErrorIf(track->mPropertyType != RaverieTypeId(float), "Invalid track type.");
 
   if (track->mKeyFrames.Empty())
     return false;
@@ -721,7 +721,7 @@ void AnimationGraphEditor::FocusOnSelectedCurves(IntVec2Param axes)
     forRange (TrackNode* track, mEditorData->mVisiblePropertyTracks.All())
     {
       // Expand the aabb
-      if (track->mPropertyType == ZilchTypeId(float))
+      if (track->mPropertyType == RaverieTypeId(float))
         validAabb |= ExpandAabbByTrack(&min, &max, track);
     }
   }
@@ -769,8 +769,7 @@ ByteColor GetNextCurveColor(uint index)
   const float cSaturationSwitch = 0;
   const float cValueSwitch = -0;
 
-  // The starting values of HSV. I wanted the first color to be similar
-  // to the Zero Engine orange, so these initial values start us there
+  // The starting values of HSV.
   float hue = 26;
   float saturation = 51;
   float value = 97;
@@ -871,7 +870,7 @@ void AnimationGraphEditor::RebuildCurves()
     BoundType* keyType = track->mPropertyType;
 
     // Only create graphs for tracks whose key values are floats
-    if (keyType != ZilchTypeId(float))
+    if (keyType != RaverieTypeId(float))
       continue;
 
     AnimationCurveObject* curveObject = NULL;
@@ -1015,4 +1014,4 @@ void AnimationGraphEditor::OnMouseEnter(MouseEvent* e)
   this->SoftTakeFocus();
 }
 
-} // namespace Zero
+} // namespace Raverie

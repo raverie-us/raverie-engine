@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 DeclareEnum2(ToolBarMode, Dockable, Fixed);
 
@@ -9,7 +9,7 @@ class ToolBarGroupPopUp;
 class CommandSubItem : public Composite
 {
 public:
-  typedef CommandSubItem ZilchSelf;
+  typedef CommandSubItem RaverieSelf;
   CommandSubItem(ToolBarGroupPopUp* parent, Command* command);
 
   float MeasureWidth();
@@ -40,7 +40,7 @@ class CommandSubItem;
 class ToolBarGroup : public Composite
 {
 public:
-  typedef ToolBarGroup ZilchSelf;
+  typedef ToolBarGroup RaverieSelf;
   ToolBarGroup(Composite* parent, StringParam name);
 
   void UpdateTransform() override;
@@ -67,7 +67,7 @@ public:
 class ToolBar : public Composite
 {
 public:
-  typedef ToolBar ZilchSelf;
+  typedef ToolBar RaverieSelf;
 
   ToolBar(Composite* parent);
   ~ToolBar();
@@ -93,4 +93,4 @@ private:
   ToolBarMode::Type mToolBarMode;
 };
 
-} // namespace Zero
+} // namespace Raverie

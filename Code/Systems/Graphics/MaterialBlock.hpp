@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Represents meta data of shader fragment types that can be composited
@@ -10,7 +10,7 @@ namespace Zero
 class MaterialBlock : public Object
 {
 public:
-  ZilchDeclareInheritableType(MaterialBlock, TypeCopyMode::ReferenceType);
+  RaverieDeclareInheritableType(MaterialBlock, TypeCopyMode::ReferenceType);
 
   MaterialBlock();
   virtual ~MaterialBlock()
@@ -32,7 +32,7 @@ typedef HandleOf<MaterialBlock> MaterialBlockHandle;
 
 // Meta functions for shader fragments that inherit from MaterialBlock.
 
-// Constructor/Destructor for fragments being created in a ZilchScript.
+// Constructor/Destructor for fragments being created in a RaverieScript.
 void FragmentConstructor(Call& call, ExceptionReport& report);
 void FragmentDestructor(Call& call, ExceptionReport& report);
 
@@ -44,4 +44,4 @@ void FragmentSetter(Call& call, ExceptionReport& report);
 void FragmentTextureGetter(Call& call, ExceptionReport& report);
 void FragmentTextureSetter(Call& call, ExceptionReport& report);
 
-} // namespace Zero
+} // namespace Raverie

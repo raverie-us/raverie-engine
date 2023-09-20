@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Forward Declarations
@@ -24,7 +24,7 @@ class TranslateGizmoUpdateEvent : public GizmoUpdateEvent
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TranslateGizmoUpdateEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(TranslateGizmoUpdateEvent, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   TranslateGizmoUpdateEvent(GizmoUpdateEvent* e);
@@ -37,7 +37,7 @@ class ScaleGizmoUpdateEvent : public GizmoUpdateEvent
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(ScaleGizmoUpdateEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ScaleGizmoUpdateEvent, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   ScaleGizmoUpdateEvent(GizmoUpdateEvent* e);
@@ -50,7 +50,7 @@ class RotateGizmoUpdateEvent : public GizmoUpdateEvent
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(RotateGizmoUpdateEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(RotateGizmoUpdateEvent, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   RotateGizmoUpdateEvent(GizmoUpdateEvent* e);
@@ -129,7 +129,7 @@ class SimpleGizmoBase : public Component
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(SimpleGizmoBase, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SimpleGizmoBase, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   SimpleGizmoBase();
@@ -178,7 +178,7 @@ class SquareGizmo : public SimpleGizmoBase
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(SquareGizmo, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SquareGizmo, TypeCopyMode::ReferenceType);
 
   /// Component Interface.
   void Serialize(Serializer& stream) override;
@@ -205,7 +205,7 @@ class ArrowGizmo : public SimpleGizmoBase
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(ArrowGizmo, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ArrowGizmo, TypeCopyMode::ReferenceType);
 
   /// Component Interface.
   void Serialize(Serializer& stream) override;
@@ -246,7 +246,7 @@ class RingGizmoEvent : public GizmoUpdateEvent
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(RingGizmoEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(RingGizmoEvent, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   RingGizmoEvent(GizmoUpdateEvent* e);
@@ -261,7 +261,7 @@ class RingGizmo : public SimpleGizmoBase
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(RingGizmo, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(RingGizmo, TypeCopyMode::ReferenceType);
 
   /// Component Interface.
   void Serialize(Serializer& stream) override;
@@ -322,7 +322,7 @@ class TranslateGizmo : public Component
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(TranslateGizmo, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(TranslateGizmo, TypeCopyMode::ReferenceType);
 
   /// Component Interface.
   void Serialize(Serializer& stream) override;
@@ -367,7 +367,7 @@ class ScaleGizmo : public Component
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(ScaleGizmo, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ScaleGizmo, TypeCopyMode::ReferenceType);
 
   /// Component Interface.
   void Serialize(Serializer& stream) override;
@@ -416,7 +416,7 @@ class RotateGizmo : public Component
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(RotateGizmo, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(RotateGizmo, TypeCopyMode::ReferenceType);
 
   /// Component Interface.
   void Serialize(Serializer& stream) override;
@@ -437,4 +437,4 @@ public:
   float mPreviousSnap;
 };
 
-} // namespace Zero
+} // namespace Raverie

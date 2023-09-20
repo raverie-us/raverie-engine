@@ -1,9 +1,9 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
-ZilchDefineType(DataSource, builder, type)
+RaverieDefineType(DataSource, builder, type)
 {
 }
 
@@ -31,11 +31,11 @@ DefineEvent(DataCommandRun);
 DefineEvent(DataReplaced);
 } // namespace Events
 
-ZilchDefineType(DataEvent, builder, type)
+RaverieDefineType(DataEvent, builder, type)
 {
 }
 
-ZilchDefineType(DataReplaceEvent, builder, type)
+RaverieDefineType(DataReplaceEvent, builder, type)
 {
 }
 
@@ -276,4 +276,4 @@ String EnumSource::GetDescriptionAt(DataIndex index)
   return mDescriptions[(uint)index.Id];
 }
 
-} // namespace Zero
+} // namespace Raverie

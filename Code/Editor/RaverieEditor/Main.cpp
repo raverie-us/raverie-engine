@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-using namespace Zero;
+using namespace Raverie;
 
 static GameOrEditorStartup* startup = nullptr;
 
@@ -9,15 +9,15 @@ extern "C" {
 void __wasm_call_ctors();
 }
 
-void* ZeroExportNamed(ExportAllocate)(size_t size) {
+void* RaverieExportNamed(ExportAllocate)(size_t size) {
   return malloc(size);
 }
 
-void ZeroExportNamed(ExportFree)(void* pointer) {
+void RaverieExportNamed(ExportFree)(void* pointer) {
   free(pointer);
 }
 
-void ZeroExportNamed(ExportInitialize)(
+void RaverieExportNamed(ExportInitialize)(
   const char* arguments,
   int32_t clientWidth,
   int32_t clientHeight,
@@ -35,7 +35,7 @@ void ZeroExportNamed(ExportInitialize)(
   gCommandLine = arguments;
 }
 
-void ZeroExportNamed(ExportRunIteration)() {
+void RaverieExportNamed(ExportRunIteration)() {
   startup->RunIteration();
 }
 

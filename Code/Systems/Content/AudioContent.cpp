@@ -2,9 +2,9 @@
 #include "Precompiled.hpp"
 #include "../Sound/SoundStandard.hpp"
 
-namespace Zero
+namespace Raverie
 {
-ZilchDefineType(AudioContent, builder, type)
+RaverieDefineType(AudioContent, builder, type)
 {
 }
 
@@ -27,16 +27,16 @@ ContentItem* MakeAudioContent(ContentInitializer& initializer)
 }
 
 // SoundBuilder
-ZilchDefineType(SoundBuilder, builder, type)
+RaverieDefineType(SoundBuilder, builder, type)
 {
-  ZeroBindDependency(AudioContent);
-  ZeroBindDocumented();
-  ZeroBindExpanded();
+  RaverieBindDependency(AudioContent);
+  RaverieBindDocumented();
+  RaverieBindExpanded();
 
-  ZilchBindFieldProperty(Name);
-  ZilchBindFieldProperty(mFileLoadType);
-  ZilchBindFieldProperty(mNormalize)->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  ZilchBindFieldProperty(mMaxVolume)->Add(new EditorSlider(0.0f, 1.0f, 0.1f))->ZeroFilterBool(mNormalize);
+  RaverieBindFieldProperty(Name);
+  RaverieBindFieldProperty(mFileLoadType);
+  RaverieBindFieldProperty(mNormalize)->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  RaverieBindFieldProperty(mMaxVolume)->Add(new EditorSlider(0.0f, 1.0f, 0.1f))->RaverieFilterBool(mNormalize);
 }
 
 void SoundBuilder::Generate(ContentInitializer& initializer)
@@ -111,9 +111,9 @@ void CreateAudioContent(ContentSystem* system)
   AddContent<AudioContent>(system);
   AddContentComponent<SoundBuilder>(system);
 
-  ContentTypeEntry audioContent(ZilchTypeId(AudioContent), MakeAudioContent);
+  ContentTypeEntry audioContent(RaverieTypeId(AudioContent), MakeAudioContent);
   system->CreatorsByExtension["wav"] = audioContent;
   system->CreatorsByExtension["ogg"] = audioContent;
 }
 
-} // namespace Zero
+} // namespace Raverie

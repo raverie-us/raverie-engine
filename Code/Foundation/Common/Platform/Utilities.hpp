@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 /// System Memory Information
 struct MemoryInfo
@@ -40,4 +40,4 @@ u64 GenerateUniqueId64();
     }                                                                                                                  \
   } while (gConditionalFalseConstant)
 
-} // namespace Zero
+} // namespace Raverie

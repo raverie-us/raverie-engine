@@ -1,10 +1,10 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(SlicedDefinition, builder, type)
+RaverieDefineType(SlicedDefinition, builder, type)
 {
 }
 
@@ -46,7 +46,7 @@ void SlicedDefinition::Unload()
   TexturePtr = nullptr;
 }
 
-ZilchDefineType(ImageDefinition, builder, type)
+RaverieDefineType(ImageDefinition, builder, type)
 {
 }
 
@@ -76,4 +76,4 @@ void ImageDefinition::Serialize(Serializer& stream)
   SerializeName(Uv1);
 }
 
-} // namespace Zero
+} // namespace Raverie

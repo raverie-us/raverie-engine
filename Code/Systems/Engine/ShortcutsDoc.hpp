@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class ShortcutEntry
@@ -31,7 +31,7 @@ public:
 class Shortcuts : public LazySingleton<Shortcuts, EventObject>
 {
 public:
-  ZilchDeclareType(Shortcuts, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Shortcuts, TypeCopyMode::ReferenceType);
 
   ~Shortcuts();
 
@@ -73,4 +73,4 @@ public:
   ShortcutSet mSet;
 };
 
-} // namespace Zero
+} // namespace Raverie

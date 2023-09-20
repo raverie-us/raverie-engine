@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -12,7 +12,7 @@ DefineEvent(TextSubmit);
 DefineEvent(TextEnter);
 } // namespace Events
 
-ZilchDefineType(EditText, builder, type)
+RaverieDefineType(EditText, builder, type)
 {
 }
 
@@ -819,4 +819,4 @@ void EditText::OnMouseDrag(MouseEvent* mouseEvent)
     mouseEvent->Handled = true;
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Computes edges/contours from a density field. This class could be greatly
@@ -74,4 +74,4 @@ public:
   Array<Contour> mContours;
 };
 
-} // namespace Zero
+} // namespace Raverie

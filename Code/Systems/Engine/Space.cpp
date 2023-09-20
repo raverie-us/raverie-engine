@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -14,40 +14,40 @@ DefineEvent(SpaceDestroyed);
 
 Memory::Pool* Space::sCogLists = new Memory::Pool("CogLists", Memory::GetNamedHeap("CogList"), sizeof(NameCogList), 64);
 
-ZilchDefineType(Space, builder, type)
+RaverieDefineType(Space, builder, type)
 {
-  ZeroBindDocumented();
-  ZilchBindGetterProperty(ObjectCount);
-  ZilchBindDefaultConstructor();
-  ZilchBindDestructor();
+  RaverieBindDocumented();
+  RaverieBindGetterProperty(ObjectCount);
+  RaverieBindDefaultConstructor();
+  RaverieBindDestructor();
 
-  ZilchBindMethod(Create);
-  ZilchBindMethod(CreateAtPosition);
-  ZilchBindMethod(CreateLink);
+  RaverieBindMethod(Create);
+  RaverieBindMethod(CreateAtPosition);
+  RaverieBindMethod(CreateLink);
 
-  ZilchBindMethod(LoadLevel);
-  ZilchBindMethod(ReloadLevel);
-  ZilchBindGetter(CurrentLevel);
-  ZilchBindMethod(AddObjectsFromLevel);
+  RaverieBindMethod(LoadLevel);
+  RaverieBindMethod(ReloadLevel);
+  RaverieBindGetter(CurrentLevel);
+  RaverieBindMethod(AddObjectsFromLevel);
 
-  ZilchBindMethod(FindObjectByName);
-  ZilchBindMethod(FindFirstObjectByName);
-  ZilchBindMethod(FindLastObjectByName);
-  ZilchBindMethod(FindFirstRootObjectByName);
-  ZilchBindMethod(FindLastRootObjectByName);
-  ZilchBindMethod(FindAllObjectsByName);
-  ZilchBindMethod(FindAllRootObjectsByName);
+  RaverieBindMethod(FindObjectByName);
+  RaverieBindMethod(FindFirstObjectByName);
+  RaverieBindMethod(FindLastObjectByName);
+  RaverieBindMethod(FindFirstRootObjectByName);
+  RaverieBindMethod(FindLastRootObjectByName);
+  RaverieBindMethod(FindAllObjectsByName);
+  RaverieBindMethod(FindAllRootObjectsByName);
 
-  ZilchBindMethod(DestroyAll);
-  ZilchBindMethod(DestroyAllFromLevel);
+  RaverieBindMethod(DestroyAll);
+  RaverieBindMethod(DestroyAllFromLevel);
 
-  ZilchBindCustomGetter(IsEditorMode);
-  ZilchBindMethod(MarkModified);
-  ZilchBindMethod(GetModified);
-  ZilchBindMethod(MarkNotModified);
+  RaverieBindCustomGetter(IsEditorMode);
+  RaverieBindMethod(MarkModified);
+  RaverieBindMethod(GetModified);
+  RaverieBindMethod(MarkNotModified);
 
-  ZilchBindCustomGetter(AllObjects);
-  ZilchBindCustomGetter(AllRootObjects);
+  RaverieBindCustomGetter(AllObjects);
+  RaverieBindCustomGetter(AllRootObjects);
 }
 
 Space::Space()
@@ -182,7 +182,7 @@ Cog* Space::CreateAt(StringParam source, Vec3Param position, QuatParam rotation,
 
   CogInitializer initializer(this);
   initializer.Context = &context;
-  Cog* cog = Z::gFactory->BuildAndSerialize(ZilchTypeId(Cog), source, &context);
+  Cog* cog = Z::gFactory->BuildAndSerialize(RaverieTypeId(Cog), source, &context);
 
   if (cog == nullptr)
     return nullptr;
@@ -207,7 +207,7 @@ Cog* Space::CreateAt(StringParam source, Vec3Param position, QuatParam rotation)
 
   CogInitializer initializer(this);
   initializer.Context = &context;
-  Cog* cog = Z::gFactory->BuildAndSerialize(ZilchTypeId(Cog), source, &context);
+  Cog* cog = Z::gFactory->BuildAndSerialize(RaverieTypeId(Cog), source, &context);
 
   if (cog == nullptr)
     return nullptr;
@@ -231,7 +231,7 @@ Cog* Space::CreateAt(StringParam source, Vec3Param position, Vec3Param scale)
 
   CogInitializer initializer(this);
   initializer.Context = &context;
-  Cog* cog = Z::gFactory->BuildAndSerialize(ZilchTypeId(Cog), source, &context);
+  Cog* cog = Z::gFactory->BuildAndSerialize(RaverieTypeId(Cog), source, &context);
 
   if (cog == nullptr)
     return nullptr;
@@ -258,7 +258,7 @@ Cog* Space::CreateAt(StringParam source, Vec3Param position)
 
   CogInitializer initializer(this);
   initializer.Context = &context;
-  Cog* cog = Z::gFactory->BuildAndSerialize(ZilchTypeId(Cog), source, &context);
+  Cog* cog = Z::gFactory->BuildAndSerialize(RaverieTypeId(Cog), source, &context);
   if (cog == nullptr)
     return nullptr;
 
@@ -334,7 +334,7 @@ Cog* Space::CreateNamed(StringParam source, StringParam name)
 
   CogInitializer initializer(this);
   initializer.Context = &context;
-  Cog* cog = Z::gFactory->BuildAndSerialize(ZilchTypeId(Cog), source, &context);
+  Cog* cog = Z::gFactory->BuildAndSerialize(RaverieTypeId(Cog), source, &context);
   if (cog == nullptr)
     return nullptr;
 
@@ -374,7 +374,7 @@ Cog* Space::CreateNamedLink(StringParam archetypeName, Cog* objectA, Cog* object
 
   CogInitializer initializer(this);
   initializer.Context = &context;
-  Cog* cog = Z::gFactory->BuildAndSerialize(ZilchTypeId(Cog), archetypeName, &context);
+  Cog* cog = Z::gFactory->BuildAndSerialize(RaverieTypeId(Cog), archetypeName, &context);
 
   if (cog == nullptr)
     return nullptr;
@@ -808,4 +808,4 @@ Level* Space::GetCurrentLevel()
     return nullptr;
 }
 
-} // namespace Zero
+} // namespace Raverie

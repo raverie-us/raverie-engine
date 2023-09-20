@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 cstr errorMessage = "Need builder type for binary files."
@@ -47,7 +47,7 @@ ContentItem* MakeBinaryContent(ContentInitializer& initializer)
   return content;
 }
 
-ZilchDefineType(BinaryContent, builder, type)
+RaverieDefineType(BinaryContent, builder, type)
 {
 }
 
@@ -56,11 +56,11 @@ BinaryContent::BinaryContent()
   EditMode = ContentEditMode::ResourceObject;
 }
 
-ZilchDefineType(BinaryBuilder, builder, type)
+RaverieDefineType(BinaryBuilder, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::CallSetDefaults);
-  ZeroBindDependency(BinaryContent);
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::CallSetDefaults);
+  RaverieBindDependency(BinaryContent);
 }
 
 void BinaryBuilder::Serialize(Serializer& stream)
@@ -93,7 +93,7 @@ void CreateBinaryContent(ContentSystem* system)
   AddContentComponent<BinaryBuilder>(system);
   AddContent<BinaryContent>(system);
 
-  ContentTypeEntry binary(ZilchTypeId(BinaryContent), MakeBinaryContent);
+  ContentTypeEntry binary(RaverieTypeId(BinaryContent), MakeBinaryContent);
   system->CreatorsByExtension["bin"] = binary;
   system->CreatorsByExtension["convexmesh"] = binary;
   system->CreatorsByExtension["multiconvexmesh"] = binary;
@@ -102,4 +102,4 @@ void CreateBinaryContent(ContentSystem* system)
   // system->CreatorsByExtension["hdr"] = binary;
 }
 
-} // namespace Zero
+} // namespace Raverie

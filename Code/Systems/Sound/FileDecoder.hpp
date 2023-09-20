@@ -4,7 +4,7 @@
 
 struct OpusDecoder;
 
-namespace Zero
+namespace Raverie
 {
 
 // Decoded Packet
@@ -62,7 +62,7 @@ public:
   static int GetPacketDataSize(const byte* packetHeader);
   // Reads the header data of the file into the object and returns the size of
   // the file's data
-  static unsigned OpenAndReadHeader(Zero::Status& status, const String& fileName, File* file, FileHeader* header);
+  static unsigned OpenAndReadHeader(Raverie::Status& status, const String& fileName, File* file, FileHeader* header);
   // Creates the requested number of opus decoders, returns false if
   // unsuccessful
   static bool CreateDecoders(Status& status, OpusDecoder** decoderArray, int howMany);
@@ -135,8 +135,8 @@ protected:
 class DecompressedDecoder : public AudioFileDecoder
 {
 public:
-  DecompressedDecoder(Zero::Status& status,
-                      const Zero::String& fileName,
+  DecompressedDecoder(Raverie::Status& status,
+                      const Raverie::String& fileName,
                       FileDecoderCallback callback,
                       void* callbackData);
   ~DecompressedDecoder();
@@ -149,7 +149,7 @@ public:
 
 private:
   // Opens a file and reads in its data
-  void OpenAndReadFile(Zero::Status& status, const Zero::String& fileName);
+  void OpenAndReadFile(Raverie::Status& status, const Raverie::String& fileName);
   // Destroys decoders and deletes input data
   void ClearData() override;
 
@@ -168,16 +168,16 @@ class StreamingDecoder : public AudioFileDecoder
 public:
   // The file object must be already open, and will not be closed by this
   // decoder
-  StreamingDecoder(Zero::Status& status,
-                   Zero::File* inputFile,
-                   Zero::ThreadLock* lock,
+  StreamingDecoder(Raverie::Status& status,
+                   Raverie::File* inputFile,
+                   Raverie::ThreadLock* lock,
                    unsigned channels,
                    unsigned frames,
                    FileDecoderCallback callback,
                    void* callbackData);
   // The input data buffer must already exist, and will not be deleted by this
   // decoder
-  StreamingDecoder(Zero::Status& status,
+  StreamingDecoder(Raverie::Status& status,
                    byte* inputData,
                    unsigned dataSize,
                    unsigned channels,
@@ -211,4 +211,4 @@ private:
   ThreadLock* mLock;
 };
 
-} // namespace Zero
+} // namespace Raverie

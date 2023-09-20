@@ -5,7 +5,7 @@ AnimatePropertyType<propertyType>::AnimatePropertyType(StringParam componentName
 {
   mComponentName = componentName;
   mPropertyName = propertyName;
-  TypeId = ZilchTypeId(propertyType);
+  TypeId = RaverieTypeId(propertyType);
 
   // Look up the type name
   TypeName = TypeId->Name;
@@ -33,7 +33,7 @@ void AnimatePropertyType<propertyType>::LinkInstance(PropertyTrackPlayData& data
   if (data.mComponent == nullptr)
     return;
 
-  BoundType* componentType = ZilchVirtualTypeId(data.mComponent);
+  BoundType* componentType = RaverieVirtualTypeId(data.mComponent);
   Property* property = componentType->GetProperty(mPropertyName);
   ReturnIf(property == nullptr, , "Failed to find property.");
 
@@ -84,7 +84,7 @@ void AnimatePropertyType<propertyType>::GetKeyValues(Array<Any>& values)
 template <typename propertyType>
 void AnimatePropertyType<propertyType>::InsertKey(PropertyTrackPlayData& data, float time)
 {
-  BoundType* componentType = ZilchVirtualTypeId(data.mComponent);
+  BoundType* componentType = RaverieVirtualTypeId(data.mComponent);
   Property* property = componentType->GetProperty(mPropertyName);
   ReturnIf(property == nullptr, , "Failed to find property.");
 

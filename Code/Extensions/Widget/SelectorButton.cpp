@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace SelectorButtonUi
@@ -17,7 +17,7 @@ Tweakable(Vec4, DefaultTextColor, Vec4(1, 1, 1, 1), cLocation);
 Tweakable(Vec4, SelectedTextColor, Vec4(1, 1, 1, 1), cLocation);
 } // namespace SelectorButtonUi
 
-ZilchDefineType(SelectorButton, builder, type)
+RaverieDefineType(SelectorButton, builder, type)
 {
 }
 
@@ -184,4 +184,4 @@ void SelectorButton::DeselectAll()
     DeSelectButton(mButtons[i]);
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Forward Declarations.
@@ -18,7 +18,7 @@ DeclareEvent(ModalButtonPressed);
 class ModalConfirmEvent : public Event
 {
 public:
-  ZilchDeclareType(ModalConfirmEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ModalConfirmEvent, TypeCopyMode::ReferenceType);
   ModalConfirmEvent();
 
   /// Whether or not confirmed was pressed.
@@ -33,7 +33,7 @@ public:
 class ModalButtonEvent : public Event
 {
 public:
-  ZilchDeclareType(ModalButtonEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ModalButtonEvent, TypeCopyMode::ReferenceType);
   String mButtonName;
 
   /// The user data from the modal (the modal could be closed)
@@ -46,7 +46,7 @@ DeclareEnum2(ModalSizeMode, Fixed, Percentage);
 class Modal : public Composite
 {
 public:
-  ZilchDeclareType(Modal, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Modal, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   Modal(Composite* parent, float fadeInTime = 0.25f);
@@ -116,7 +116,7 @@ class ModalConfirmAction : public ModalStrip
 {
 public:
   /// Typedefs.
-  typedef ModalConfirmAction ZilchSelf;
+  typedef ModalConfirmAction RaverieSelf;
 
   /// Constructor.
   ModalConfirmAction(Composite* parent, StringParam title, float fadeInTime = 0.25f);
@@ -146,7 +146,7 @@ class ModalButtonsAction : public ModalStrip
 {
 public:
   /// Typedefs.
-  typedef ModalButtonsAction ZilchSelf;
+  typedef ModalButtonsAction RaverieSelf;
 
   /// Construct an with an array of buttons
   ModalButtonsAction(Composite* parent,
@@ -182,4 +182,4 @@ public:
   Array<TextButton*> mButtons;
 };
 
-} // namespace Zero
+} // namespace Raverie

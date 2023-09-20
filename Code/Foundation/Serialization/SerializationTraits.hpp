@@ -3,7 +3,7 @@
 
 #include "Foundation/Serialization/Serialization.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 class Serializer;
@@ -101,7 +101,7 @@ struct Policy<type*>
 
 } // namespace Serialization
 
-} // namespace Zero
+} // namespace Raverie
 
 #define DecalareTypeName(type, ctypename)                                                                              \
   namespace Serialization                                                                                              \

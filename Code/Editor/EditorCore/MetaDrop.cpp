@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -11,23 +11,23 @@ DefineEvent(MetaDropTest);
 DefineEvent(MetaDropUpdate);
 } // namespace Events
 
-ZilchDefineType(MetaDropEvent, builder, type)
+RaverieDefineType(MetaDropEvent, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZeroBindEvent(Events::MetaDrop, MetaDropEvent);
-  ZeroBindEvent(Events::MetaDropTest, MetaDropEvent);
-  ZeroBindEvent(Events::MetaDropUpdate, MetaDropEvent);
+  RaverieBindEvent(Events::MetaDrop, MetaDropEvent);
+  RaverieBindEvent(Events::MetaDropTest, MetaDropEvent);
+  RaverieBindEvent(Events::MetaDropUpdate, MetaDropEvent);
 
-  ZilchBindFieldProperty(Handled);
-  ZilchBindFieldProperty(Failed);
-  ZilchBindFieldProperty(Testing);
-  ZilchBindFieldProperty(Position);
-  ZilchBindFieldProperty(Result);
-  ZilchBindGetterProperty(Object);
-  ZilchBindGetterProperty(MouseOverObject);
-  ZilchBindGetterProperty(MouseEvent);
-  ZilchBindGetterProperty(ViewportMouseEvent);
+  RaverieBindFieldProperty(Handled);
+  RaverieBindFieldProperty(Failed);
+  RaverieBindFieldProperty(Testing);
+  RaverieBindFieldProperty(Position);
+  RaverieBindFieldProperty(Result);
+  RaverieBindGetterProperty(Object);
+  RaverieBindGetterProperty(MouseOverObject);
+  RaverieBindGetterProperty(MouseEvent);
+  RaverieBindGetterProperty(ViewportMouseEvent);
 }
 
 MetaDropEvent::MetaDropEvent(MouseEvent* e) : mMouseEvent(e), mViewportMouseEvent(nullptr)
@@ -187,4 +187,4 @@ void MetaDrag::OnMouseUpdate(MouseEvent* event)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

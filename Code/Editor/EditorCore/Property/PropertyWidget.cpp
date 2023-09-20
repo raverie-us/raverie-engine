@@ -1,16 +1,16 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 const String cLabel = "PropertyLabel";
 
-ZilchDefineType(MetaPropertyEditor, builder, type)
+RaverieDefineType(MetaPropertyEditor, builder, type)
 {
 }
 
-ZilchDefineType(PropertyWidget, builder, type)
+RaverieDefineType(PropertyWidget, builder, type)
 {
 }
 
@@ -127,4 +127,4 @@ LayoutResult PropertyWidget::GetContentLayout(LayoutResult& nameLayout)
   return r;
 }
 
-} // namespace Zero
+} // namespace Raverie

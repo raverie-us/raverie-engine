@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 real GetAnimationTime(Cog* cog)
@@ -133,4 +133,4 @@ Cylinder GetCogCylinder(Cog* cog, Vec3Param primaryAxis)
   return GetSupportShapeCylinder(supportShape, primaryAxis);
 }
 
-} // namespace Zero
+} // namespace Raverie

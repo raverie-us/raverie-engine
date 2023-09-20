@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 extern const String sRaverieOrganization;
@@ -76,4 +76,4 @@ cstr GetConfigurationString();
 /// Get the full string description of the build version.
 String GetBuildVersionName();
 
-} // namespace Zero
+} // namespace Raverie

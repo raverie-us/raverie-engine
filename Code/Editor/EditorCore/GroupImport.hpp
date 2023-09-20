@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 void RunGroupImport(ImportOptions& options);
@@ -13,7 +13,7 @@ void LoadDroppedFiles(Array<HandleOfString>& files);
 class GroupImportWindow : public Composite
 {
 public:
-  typedef GroupImportWindow ZilchSelf;
+  typedef GroupImportWindow RaverieSelf;
 
   ImportOptions* mOptions;
   PropertyView* mPropertyView;
@@ -36,10 +36,10 @@ public:
 class ImportCallback : public SafeId32EventObject
 {
 public:
-  typedef ImportCallback ZilchSelf;
+  typedef ImportCallback RaverieSelf;
 
   void Open();
   void OnFilesSelected(OsFileSelection* fileSelection);
 };
 
-} // namespace Zero
+} // namespace Raverie

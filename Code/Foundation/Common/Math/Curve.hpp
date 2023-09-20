@@ -4,7 +4,7 @@
 namespace Math
 {
 
-typedef Zero::Array<Math::Vector3> Vec3Array;
+typedef Raverie::Array<Math::Vector3> Vec3Array;
 
 DeclareEnum3(CurveType, Linear, BSpline, CatmullRom);
 
@@ -122,7 +122,7 @@ private:
   // Binary search to find the index just below the given arc-length.
   uint SampleLowerBound(real distance) const;
 
-  Zero::Array<BakedData> mArcLengthTable;
+  Raverie::Array<BakedData> mArcLengthTable;
 };
 
 struct PiecewiseFunction
@@ -141,7 +141,7 @@ struct PiecewiseFunction
 
   /// Sets all the control points and sorts after.
   /// This will invalidate the baked curve.
-  void SetControlPoints(Zero::Array<ControlPoint>& controlPoints);
+  void SetControlPoints(Raverie::Array<ControlPoint>& controlPoints);
 
   /// Samples the curve at the given point. This will bake the curve
   /// if not already baked.
@@ -170,7 +170,7 @@ struct PiecewiseFunction
   CurveType::Enum mCurveType;
 
   /// All control points in the curve.
-  Zero::Array<ControlPoint> mControlPoints;
+  Raverie::Array<ControlPoint> mControlPoints;
 
   /// The allowed distance of a point on the curve from the baked approximation.
   real mError;

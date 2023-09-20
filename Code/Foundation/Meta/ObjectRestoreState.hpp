@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Forward declarations
@@ -28,4 +28,4 @@ public:
   virtual Object* RestoreObject() = 0;
 };
 
-} // namespace Zero
+} // namespace Raverie

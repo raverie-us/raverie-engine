@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// This is the Sap (Sweep and Prune) broad phase structure. Sap is a BroadPhase
@@ -154,6 +154,6 @@ private:
   EndPointArray mAxes[3];
 };
 
-} // namespace Zero
+} // namespace Raverie
 
 #include "Foundation/SpatialPartition/Sap.inl"

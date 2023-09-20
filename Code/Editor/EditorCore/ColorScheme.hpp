@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -13,7 +13,7 @@ DeclareEvent(ColorSchemeChanged);
 class ColorScheme : public ExplicitSingleton<ColorScheme, EventObject>
 {
 public:
-  ZilchDeclareType(ColorScheme, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ColorScheme, TypeCopyMode::ReferenceType);
 
   ColorScheme();
   ~ColorScheme();
@@ -69,4 +69,4 @@ public:
 // Get the global color scheme object
 ColorScheme* GetColorScheme();
 
-} // namespace Zero
+} // namespace Raverie

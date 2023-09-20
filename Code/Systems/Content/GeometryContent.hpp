@@ -5,14 +5,14 @@
 #include "BaseBuilders.hpp"
 #include "ContentEnumerations.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 /// General import settings for Geometry scene.
 class GeometryImport : public ContentComponent
 {
 public:
-  ZilchDeclareType(GeometryImport, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(GeometryImport, TypeCopyMode::ReferenceType);
 
   void Serialize(Serializer& stream) override;
   void Generate(ContentInitializer& initializer) override;
@@ -34,7 +34,7 @@ public:
 class GeometryResourceEntry : public Object
 {
 public:
-  ZilchDeclareType(GeometryResourceEntry, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(GeometryResourceEntry, TypeCopyMode::ReferenceType);
 
   void Serialize(Serializer& stream);
   void SetDefaults();
@@ -49,7 +49,7 @@ public:
 class PhysicsMeshBuilder : public BuilderComponent
 {
 public:
-  ZilchDeclareType(PhysicsMeshBuilder, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(PhysicsMeshBuilder, TypeCopyMode::ReferenceType);
 
   PhysicsMeshBuilder(){};
 
@@ -72,7 +72,7 @@ public:
 class AnimationClip : public Object
 {
 public:
-  ZilchDeclareType(AnimationClip, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(AnimationClip, TypeCopyMode::ReferenceType);
 
   void Serialize(Serializer& stream);
   void SetDefaults();
@@ -86,7 +86,7 @@ public:
 class AnimationBuilder : public DirectBuilderComponent
 {
 public:
-  ZilchDeclareType(AnimationBuilder, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(AnimationBuilder, TypeCopyMode::ReferenceType);
 
   AnimationBuilder() : DirectBuilderComponent(10, ".animset.data", "AnimationSet")
   {
@@ -106,7 +106,7 @@ public:
 class GeneratedArchetype : public ContentComponent
 {
 public:
-  ZilchDeclareType(GeneratedArchetype, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(GeneratedArchetype, TypeCopyMode::ReferenceType);
 
   GeneratedArchetype();
 
@@ -121,7 +121,7 @@ public:
 class TextureContent : public ContentComponent
 {
 public:
-  ZilchDeclareType(TextureContent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(TextureContent, TypeCopyMode::ReferenceType);
 
   void Serialize(Serializer& stream) override;
   void Generate(ContentInitializer& initializer) override;
@@ -133,7 +133,7 @@ public:
 class GeometryContent : public ContentComposition
 {
 public:
-  ZilchDeclareType(GeometryContent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(GeometryContent, TypeCopyMode::ReferenceType);
 
   GeometryContent();
   GeometryContent(StringParam inputFilename);
@@ -145,4 +145,4 @@ public:
 
 void AddGeometryFileFilters(ResourceManager* manager);
 
-} // namespace Zero
+} // namespace Raverie

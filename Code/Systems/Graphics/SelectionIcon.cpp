@@ -2,31 +2,31 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 const float SelectionIcon::cBaseScale = 0.45f;
 
-ZilchDefineType(SelectionIcon, builder, type)
+RaverieDefineType(SelectionIcon, builder, type)
 {
   // Not requiring a Transform component, but this means that
   // Graphical methods that use Transform cannot be called
   // BindDependency(Transform);
 
-  ZeroBindComponent();
-  ZeroBindDocumented();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindComponent();
+  RaverieBindDocumented();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
 
   // Graphical data
-  ZilchBindGetterSetterProperty(Visible);
-  ZilchBindFieldProperty(mVisibilityEvents);
-  ZilchBindGetterSetterProperty(Material);
-  ZilchBindGetterSetter(ShaderInputs);
+  RaverieBindGetterSetterProperty(Visible);
+  RaverieBindFieldProperty(mVisibilityEvents);
+  RaverieBindGetterSetterProperty(Material);
+  RaverieBindGetterSetter(ShaderInputs);
 
   // SelectionIcon data
-  ZilchBindGetterSetterProperty(SpriteSource)->Add(new MetaEditorResource(true, false, "SelectionIcon"));
-  ZilchBindFieldProperty(mViewScale);
-  ZilchBindGetterSetterProperty(OverrideSelections);
+  RaverieBindGetterSetterProperty(SpriteSource)->Add(new MetaEditorResource(true, false, "SelectionIcon"));
+  RaverieBindFieldProperty(mViewScale);
+  RaverieBindGetterSetterProperty(OverrideSelections);
 }
 
 void SelectionIcon::Serialize(Serializer& stream)
@@ -211,4 +211,4 @@ void SelectionIcon::SetSelectionFlag(bool selectionLimited)
     GetOwner()->mFlags.ClearFlag(CogFlags::SelectionLimited);
 }
 
-} // namespace Zero
+} // namespace Raverie

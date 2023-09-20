@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 DeclareEnum3(PartitionMethods, MinimizeVolumeSum, MinimuzeSurfaceAreaSum, MidPoint);
@@ -86,4 +86,4 @@ bool FrustumNodeTest(NodeType* tree, CastDataParam castData, real& t);
 
 #include "Foundation/SpatialPartition/AabbTreeMethods.inl"
 
-} // namespace Zero
+} // namespace Raverie

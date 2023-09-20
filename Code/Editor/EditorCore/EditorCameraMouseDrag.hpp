@@ -1,13 +1,13 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class EditorCameraMouseDrag : public MouseManipulation
 {
 public:
-  typedef EditorCameraMouseDrag ZilchSelf;
+  typedef EditorCameraMouseDrag RaverieSelf;
   HandleOf<EditorCameraController> mController;
   HandleOf<Viewport> mViewport;
   HandleOf<EditorViewport> mEditorViewport;
@@ -34,4 +34,4 @@ public:
   void OnTargetDestroy(MouseEvent* event) override;
 };
 
-} // namespace Zero
+} // namespace Raverie

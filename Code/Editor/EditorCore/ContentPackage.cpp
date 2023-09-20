@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 ContentPackageListing::~ContentPackageListing()
@@ -152,4 +152,4 @@ void ImportContentPackageListing(ContentPackageListing& listing, ContentLibrary*
   Z::gResources->ReloadPackage(resourceLibrary, package);
 }
 
-} // namespace Zero
+} // namespace Raverie

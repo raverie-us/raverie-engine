@@ -1,19 +1,19 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class PropertyEditAction : public PropertyWidget
 {
 public:
-  typedef PropertyEditAction ZilchSelf;
+  typedef PropertyEditAction RaverieSelf;
 
-  PropertyEditAction(PropertyWidgetInitializer& init, Zilch::Function* method, HandleParam instance);
+  PropertyEditAction(PropertyWidgetInitializer& init, Raverie::Function* method, HandleParam instance);
 
   void OnButtonPress(Event* event);
 
-  Zilch::Function* mMethod;
+  Raverie::Function* mMethod;
   Handle mInstance;
   Element* mAction;
   TextButton* mButton;
@@ -22,7 +22,7 @@ public:
 class AddObjectWidget : public PropertyWidget
 {
 public:
-  ZilchDeclareType(AddObjectWidget, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(AddObjectWidget, TypeCopyMode::ReferenceType);
   AddObjectWidget(PropertyWidgetInitializer& init,
                   PropertyWidgetObject* parentNode,
                   PropertyView* grid,
@@ -53,4 +53,4 @@ public:
   HandleOf<MetaArray> mMetaArray;
 };
 
-} // namespace Zero
+} // namespace Raverie

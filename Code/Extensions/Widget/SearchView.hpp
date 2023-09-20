@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Forward Declarations
@@ -27,7 +27,7 @@ DeclareEvent(AlternateSearchCompleted);
 class SearchViewEvent : public Event
 {
 public:
-  ZilchDeclareType(SearchViewEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SearchViewEvent, TypeCopyMode::ReferenceType);
 
   SearchView* View;
   SearchViewResult* Element;
@@ -37,7 +37,7 @@ public:
 class AlternateSearchCompletedEvent : public Event
 {
 public:
-  ZilchDeclareType(AlternateSearchCompletedEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(AlternateSearchCompletedEvent, TypeCopyMode::ReferenceType);
 
   String mSearchText;
 };
@@ -205,7 +205,7 @@ struct SearchData
 class SearchViewElement : public Composite
 {
 public:
-  ZilchDeclareType(SearchViewElement, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SearchViewElement, TypeCopyMode::ReferenceType);
 
   SearchViewElement(Composite* parent);
   void OnMouseUp(MouseEvent* event);
@@ -224,7 +224,7 @@ public:
 class SearchView : public Composite
 {
 public:
-  ZilchDeclareType(SearchView, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SearchView, TypeCopyMode::ReferenceType);
 
   SearchView(Composite* parent);
   ~SearchView();
@@ -336,4 +336,4 @@ bool CheckAndAddTags(SearchData& search, StringContainer& tags)
     return false;
 }
 
-} // namespace Zero
+} // namespace Raverie

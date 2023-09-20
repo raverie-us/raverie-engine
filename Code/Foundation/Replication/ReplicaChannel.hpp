@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 //                               ReplicaChannel //
@@ -415,4 +415,4 @@ public:
 typedef UniquePointer<ReplicaChannelType> ReplicaChannelTypePtr;
 typedef ArraySet<ReplicaChannelTypePtr, PointerSortPolicy<ReplicaChannelTypePtr>> ReplicaChannelTypeSet;
 
-} // namespace Zero
+} // namespace Raverie

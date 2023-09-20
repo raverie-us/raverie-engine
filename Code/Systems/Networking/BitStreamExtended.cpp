@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 //                              BitStreamExtended //
@@ -10,357 +10,357 @@ namespace Zero
 const int BitStreamExtended::DefaultIntegralQuantum = 1;
 const float BitStreamExtended::DefaultFloatingPointQuantum = 0.0001;
 
-ZilchDefineType(BitStreamExtended, builder, type)
+RaverieDefineType(BitStreamExtended, builder, type)
 {
   // Bind documentation
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
   // Bind destructor
-  ZilchBindDestructor();
+  RaverieBindDestructor();
 
   // Bind default constructor
-  ZilchBindDefaultConstructor();
+  RaverieBindDefaultConstructor();
 
   // Bind measure operations
-  ZilchBindMethod(MeasureBoolean);
+  RaverieBindMethod(MeasureBoolean);
 
-  ZilchBindMethod(MeasureInteger);
-  ZilchBindMethod(MeasureDoubleInteger);
-  ZilchBindMethod(MeasureInteger2);
-  ZilchBindMethod(MeasureInteger3);
-  ZilchBindMethod(MeasureInteger4);
+  RaverieBindMethod(MeasureInteger);
+  RaverieBindMethod(MeasureDoubleInteger);
+  RaverieBindMethod(MeasureInteger2);
+  RaverieBindMethod(MeasureInteger3);
+  RaverieBindMethod(MeasureInteger4);
 
-  ZilchBindMethod(MeasureReal);
-  ZilchBindMethod(MeasureDoubleReal);
-  ZilchBindMethod(MeasureReal2);
-  ZilchBindMethod(MeasureReal3);
-  ZilchBindMethod(MeasureReal4);
-  ZilchBindMethod(MeasureQuaternion);
+  RaverieBindMethod(MeasureReal);
+  RaverieBindMethod(MeasureDoubleReal);
+  RaverieBindMethod(MeasureReal2);
+  RaverieBindMethod(MeasureReal3);
+  RaverieBindMethod(MeasureReal4);
+  RaverieBindMethod(MeasureQuaternion);
 
-  ZilchBindOverloadedMethod(MeasureString, ZilchStaticOverload(Bits));
-  ZilchBindOverloadedMethod(MeasureString, ZilchStaticOverload(Bits, StringParam));
+  RaverieBindOverloadedMethod(MeasureString, RaverieStaticOverload(Bits));
+  RaverieBindOverloadedMethod(MeasureString, RaverieStaticOverload(Bits, StringParam));
 
   // Bind measure half operations
-  ZilchBindMethod(MeasureRealHalf);
-  ZilchBindMethod(MeasureReal2Half);
-  ZilchBindMethod(MeasureReal3Half);
-  ZilchBindMethod(MeasureReal4Half);
+  RaverieBindMethod(MeasureRealHalf);
+  RaverieBindMethod(MeasureReal2Half);
+  RaverieBindMethod(MeasureReal3Half);
+  RaverieBindMethod(MeasureReal4Half);
 
   // Bind measure quantized operations
-  ZilchBindOverloadedMethod(MeasureIntegerQuantized, ZilchStaticOverload(Bits, int, int));
-  ZilchBindOverloadedMethod(MeasureIntegerQuantized, ZilchStaticOverload(Bits, int, int, int));
+  RaverieBindOverloadedMethod(MeasureIntegerQuantized, RaverieStaticOverload(Bits, int, int));
+  RaverieBindOverloadedMethod(MeasureIntegerQuantized, RaverieStaticOverload(Bits, int, int, int));
 
-  ZilchBindOverloadedMethod(MeasureDoubleIntegerQuantized, ZilchStaticOverload(Bits, s64, s64));
-  ZilchBindOverloadedMethod(MeasureDoubleIntegerQuantized, ZilchStaticOverload(Bits, s64, s64, s64));
+  RaverieBindOverloadedMethod(MeasureDoubleIntegerQuantized, RaverieStaticOverload(Bits, s64, s64));
+  RaverieBindOverloadedMethod(MeasureDoubleIntegerQuantized, RaverieStaticOverload(Bits, s64, s64, s64));
 
-  ZilchBindOverloadedMethod(MeasureInteger2Quantized,
-                            ZilchStaticOverload(Bits, const Math::IntVector2&, const Math::IntVector2&));
-  ZilchBindOverloadedMethod(
+  RaverieBindOverloadedMethod(MeasureInteger2Quantized,
+                            RaverieStaticOverload(Bits, const Math::IntVector2&, const Math::IntVector2&));
+  RaverieBindOverloadedMethod(
       MeasureInteger2Quantized,
-      ZilchStaticOverload(Bits, const Math::IntVector2&, const Math::IntVector2&, const Math::IntVector2&));
+      RaverieStaticOverload(Bits, const Math::IntVector2&, const Math::IntVector2&, const Math::IntVector2&));
 
-  ZilchBindOverloadedMethod(MeasureInteger3Quantized,
-                            ZilchStaticOverload(Bits, const Math::IntVector3&, const Math::IntVector3&));
-  ZilchBindOverloadedMethod(
+  RaverieBindOverloadedMethod(MeasureInteger3Quantized,
+                            RaverieStaticOverload(Bits, const Math::IntVector3&, const Math::IntVector3&));
+  RaverieBindOverloadedMethod(
       MeasureInteger3Quantized,
-      ZilchStaticOverload(Bits, const Math::IntVector3&, const Math::IntVector3&, const Math::IntVector3&));
+      RaverieStaticOverload(Bits, const Math::IntVector3&, const Math::IntVector3&, const Math::IntVector3&));
 
-  ZilchBindOverloadedMethod(MeasureInteger4Quantized,
-                            ZilchStaticOverload(Bits, const Math::IntVector4&, const Math::IntVector4&));
-  ZilchBindOverloadedMethod(
+  RaverieBindOverloadedMethod(MeasureInteger4Quantized,
+                            RaverieStaticOverload(Bits, const Math::IntVector4&, const Math::IntVector4&));
+  RaverieBindOverloadedMethod(
       MeasureInteger4Quantized,
-      ZilchStaticOverload(Bits, const Math::IntVector4&, const Math::IntVector4&, const Math::IntVector4&));
+      RaverieStaticOverload(Bits, const Math::IntVector4&, const Math::IntVector4&, const Math::IntVector4&));
 
-  ZilchBindOverloadedMethod(MeasureRealQuantized, ZilchStaticOverload(Bits, float, float));
-  ZilchBindOverloadedMethod(MeasureRealQuantized, ZilchStaticOverload(Bits, float, float, float));
+  RaverieBindOverloadedMethod(MeasureRealQuantized, RaverieStaticOverload(Bits, float, float));
+  RaverieBindOverloadedMethod(MeasureRealQuantized, RaverieStaticOverload(Bits, float, float, float));
 
-  ZilchBindOverloadedMethod(MeasureDoubleRealQuantized, ZilchStaticOverload(Bits, double, double));
-  ZilchBindOverloadedMethod(MeasureDoubleRealQuantized, ZilchStaticOverload(Bits, double, double, double));
+  RaverieBindOverloadedMethod(MeasureDoubleRealQuantized, RaverieStaticOverload(Bits, double, double));
+  RaverieBindOverloadedMethod(MeasureDoubleRealQuantized, RaverieStaticOverload(Bits, double, double, double));
 
-  ZilchBindOverloadedMethod(MeasureReal2Quantized,
-                            ZilchStaticOverload(Bits, const Math::Vector2&, const Math::Vector2&));
-  ZilchBindOverloadedMethod(
+  RaverieBindOverloadedMethod(MeasureReal2Quantized,
+                            RaverieStaticOverload(Bits, const Math::Vector2&, const Math::Vector2&));
+  RaverieBindOverloadedMethod(
       MeasureReal2Quantized,
-      ZilchStaticOverload(Bits, const Math::Vector2&, const Math::Vector2&, const Math::Vector2&));
+      RaverieStaticOverload(Bits, const Math::Vector2&, const Math::Vector2&, const Math::Vector2&));
 
-  ZilchBindOverloadedMethod(MeasureReal3Quantized,
-                            ZilchStaticOverload(Bits, const Math::Vector3&, const Math::Vector3&));
-  ZilchBindOverloadedMethod(
+  RaverieBindOverloadedMethod(MeasureReal3Quantized,
+                            RaverieStaticOverload(Bits, const Math::Vector3&, const Math::Vector3&));
+  RaverieBindOverloadedMethod(
       MeasureReal3Quantized,
-      ZilchStaticOverload(Bits, const Math::Vector3&, const Math::Vector3&, const Math::Vector3&));
+      RaverieStaticOverload(Bits, const Math::Vector3&, const Math::Vector3&, const Math::Vector3&));
 
-  ZilchBindOverloadedMethod(MeasureReal4Quantized,
-                            ZilchStaticOverload(Bits, const Math::Vector4&, const Math::Vector4&));
-  ZilchBindOverloadedMethod(
+  RaverieBindOverloadedMethod(MeasureReal4Quantized,
+                            RaverieStaticOverload(Bits, const Math::Vector4&, const Math::Vector4&));
+  RaverieBindOverloadedMethod(
       MeasureReal4Quantized,
-      ZilchStaticOverload(Bits, const Math::Vector4&, const Math::Vector4&, const Math::Vector4&));
+      RaverieStaticOverload(Bits, const Math::Vector4&, const Math::Vector4&, const Math::Vector4&));
 
   // Bind write operations
-  ZilchBindMethod(WriteBoolean);
+  RaverieBindMethod(WriteBoolean);
 
-  ZilchBindMethod(WriteInteger);
-  ZilchBindMethod(WriteDoubleInteger);
-  ZilchBindMethod(WriteInteger2);
-  ZilchBindMethod(WriteInteger3);
-  ZilchBindMethod(WriteInteger4);
+  RaverieBindMethod(WriteInteger);
+  RaverieBindMethod(WriteDoubleInteger);
+  RaverieBindMethod(WriteInteger2);
+  RaverieBindMethod(WriteInteger3);
+  RaverieBindMethod(WriteInteger4);
 
-  ZilchBindMethod(WriteReal);
-  ZilchBindMethod(WriteDoubleReal);
-  ZilchBindMethod(WriteReal2);
-  ZilchBindMethod(WriteReal3);
-  ZilchBindMethod(WriteReal4);
-  ZilchBindMethod(WriteQuaternion);
+  RaverieBindMethod(WriteReal);
+  RaverieBindMethod(WriteDoubleReal);
+  RaverieBindMethod(WriteReal2);
+  RaverieBindMethod(WriteReal3);
+  RaverieBindMethod(WriteReal4);
+  RaverieBindMethod(WriteQuaternion);
 
-  ZilchBindMethod(WriteString);
+  RaverieBindMethod(WriteString);
 
   // Bind write half operations
-  ZilchBindMethod(WriteRealHalf);
-  ZilchBindMethod(WriteReal2Half);
-  ZilchBindMethod(WriteReal3Half);
-  ZilchBindMethod(WriteReal4Half);
+  RaverieBindMethod(WriteRealHalf);
+  RaverieBindMethod(WriteReal2Half);
+  RaverieBindMethod(WriteReal3Half);
+  RaverieBindMethod(WriteReal4Half);
 
   // Bind write quantized operations
-  ZilchBindOverloadedMethod(WriteIntegerQuantized, ZilchInstanceOverload(void, int, int, int));
-  ZilchBindOverloadedMethod(WriteIntegerQuantized, ZilchInstanceOverload(void, int, int, int, int));
+  RaverieBindOverloadedMethod(WriteIntegerQuantized, RaverieInstanceOverload(void, int, int, int));
+  RaverieBindOverloadedMethod(WriteIntegerQuantized, RaverieInstanceOverload(void, int, int, int, int));
 
-  ZilchBindOverloadedMethod(WriteDoubleIntegerQuantized, ZilchInstanceOverload(void, s64, s64, s64));
-  ZilchBindOverloadedMethod(WriteDoubleIntegerQuantized, ZilchInstanceOverload(void, s64, s64, s64, s64));
+  RaverieBindOverloadedMethod(WriteDoubleIntegerQuantized, RaverieInstanceOverload(void, s64, s64, s64));
+  RaverieBindOverloadedMethod(WriteDoubleIntegerQuantized, RaverieInstanceOverload(void, s64, s64, s64, s64));
 
-  ZilchBindOverloadedMethod(
+  RaverieBindOverloadedMethod(
       WriteInteger2Quantized,
-      ZilchInstanceOverload(void, const Math::IntVector2&, const Math::IntVector2&, const Math::IntVector2&));
-  ZilchBindOverloadedMethod(
+      RaverieInstanceOverload(void, const Math::IntVector2&, const Math::IntVector2&, const Math::IntVector2&));
+  RaverieBindOverloadedMethod(
       WriteInteger2Quantized,
-      ZilchInstanceOverload(
+      RaverieInstanceOverload(
           void, const Math::IntVector2&, const Math::IntVector2&, const Math::IntVector2&, const Math::IntVector2&));
 
-  ZilchBindOverloadedMethod(
+  RaverieBindOverloadedMethod(
       WriteInteger3Quantized,
-      ZilchInstanceOverload(void, const Math::IntVector3&, const Math::IntVector3&, const Math::IntVector3&));
-  ZilchBindOverloadedMethod(
+      RaverieInstanceOverload(void, const Math::IntVector3&, const Math::IntVector3&, const Math::IntVector3&));
+  RaverieBindOverloadedMethod(
       WriteInteger3Quantized,
-      ZilchInstanceOverload(
+      RaverieInstanceOverload(
           void, const Math::IntVector3&, const Math::IntVector3&, const Math::IntVector3&, const Math::IntVector3&));
 
-  ZilchBindOverloadedMethod(
+  RaverieBindOverloadedMethod(
       WriteInteger4Quantized,
-      ZilchInstanceOverload(void, const Math::IntVector4&, const Math::IntVector4&, const Math::IntVector4&));
-  ZilchBindOverloadedMethod(
+      RaverieInstanceOverload(void, const Math::IntVector4&, const Math::IntVector4&, const Math::IntVector4&));
+  RaverieBindOverloadedMethod(
       WriteInteger4Quantized,
-      ZilchInstanceOverload(
+      RaverieInstanceOverload(
           void, const Math::IntVector4&, const Math::IntVector4&, const Math::IntVector4&, const Math::IntVector4&));
 
-  ZilchBindOverloadedMethod(WriteRealQuantized, ZilchInstanceOverload(void, float, float, float));
-  ZilchBindOverloadedMethod(WriteRealQuantized, ZilchInstanceOverload(void, float, float, float, float));
+  RaverieBindOverloadedMethod(WriteRealQuantized, RaverieInstanceOverload(void, float, float, float));
+  RaverieBindOverloadedMethod(WriteRealQuantized, RaverieInstanceOverload(void, float, float, float, float));
 
-  ZilchBindOverloadedMethod(WriteDoubleRealQuantized, ZilchInstanceOverload(void, double, double, double));
-  ZilchBindOverloadedMethod(WriteDoubleRealQuantized, ZilchInstanceOverload(void, double, double, double, double));
+  RaverieBindOverloadedMethod(WriteDoubleRealQuantized, RaverieInstanceOverload(void, double, double, double));
+  RaverieBindOverloadedMethod(WriteDoubleRealQuantized, RaverieInstanceOverload(void, double, double, double, double));
 
-  ZilchBindOverloadedMethod(
+  RaverieBindOverloadedMethod(
       WriteReal2Quantized,
-      ZilchInstanceOverload(void, const Math::Vector2&, const Math::Vector2&, const Math::Vector2&));
-  ZilchBindOverloadedMethod(
+      RaverieInstanceOverload(void, const Math::Vector2&, const Math::Vector2&, const Math::Vector2&));
+  RaverieBindOverloadedMethod(
       WriteReal2Quantized,
-      ZilchInstanceOverload(
+      RaverieInstanceOverload(
           void, const Math::Vector2&, const Math::Vector2&, const Math::Vector2&, const Math::Vector2&));
 
-  ZilchBindOverloadedMethod(
+  RaverieBindOverloadedMethod(
       WriteReal3Quantized,
-      ZilchInstanceOverload(void, const Math::Vector3&, const Math::Vector3&, const Math::Vector3&));
-  ZilchBindOverloadedMethod(
+      RaverieInstanceOverload(void, const Math::Vector3&, const Math::Vector3&, const Math::Vector3&));
+  RaverieBindOverloadedMethod(
       WriteReal3Quantized,
-      ZilchInstanceOverload(
+      RaverieInstanceOverload(
           void, const Math::Vector3&, const Math::Vector3&, const Math::Vector3&, const Math::Vector3&));
 
-  ZilchBindOverloadedMethod(
+  RaverieBindOverloadedMethod(
       WriteReal4Quantized,
-      ZilchInstanceOverload(void, const Math::Vector4&, const Math::Vector4&, const Math::Vector4&));
-  ZilchBindOverloadedMethod(
+      RaverieInstanceOverload(void, const Math::Vector4&, const Math::Vector4&, const Math::Vector4&));
+  RaverieBindOverloadedMethod(
       WriteReal4Quantized,
-      ZilchInstanceOverload(
+      RaverieInstanceOverload(
           void, const Math::Vector4&, const Math::Vector4&, const Math::Vector4&, const Math::Vector4&));
 
   // Bind can-read operations
-  ZilchBindMethod(CanReadBoolean);
+  RaverieBindMethod(CanReadBoolean);
 
-  ZilchBindMethod(CanReadInteger);
-  ZilchBindMethod(CanReadDoubleInteger);
-  ZilchBindMethod(CanReadInteger2);
-  ZilchBindMethod(CanReadInteger3);
-  ZilchBindMethod(CanReadInteger4);
+  RaverieBindMethod(CanReadInteger);
+  RaverieBindMethod(CanReadDoubleInteger);
+  RaverieBindMethod(CanReadInteger2);
+  RaverieBindMethod(CanReadInteger3);
+  RaverieBindMethod(CanReadInteger4);
 
-  ZilchBindMethod(CanReadReal);
-  ZilchBindMethod(CanReadDoubleReal);
-  ZilchBindMethod(CanReadReal2);
-  ZilchBindMethod(CanReadReal3);
-  ZilchBindMethod(CanReadReal4);
-  ZilchBindMethod(CanReadQuaternion);
+  RaverieBindMethod(CanReadReal);
+  RaverieBindMethod(CanReadDoubleReal);
+  RaverieBindMethod(CanReadReal2);
+  RaverieBindMethod(CanReadReal3);
+  RaverieBindMethod(CanReadReal4);
+  RaverieBindMethod(CanReadQuaternion);
 
-  ZilchBindMethod(CanReadString);
+  RaverieBindMethod(CanReadString);
 
   // Bind can-read half operations
-  ZilchBindMethod(CanReadRealHalf);
-  ZilchBindMethod(CanReadReal2Half);
-  ZilchBindMethod(CanReadReal3Half);
-  ZilchBindMethod(CanReadReal4Half);
+  RaverieBindMethod(CanReadRealHalf);
+  RaverieBindMethod(CanReadReal2Half);
+  RaverieBindMethod(CanReadReal3Half);
+  RaverieBindMethod(CanReadReal4Half);
 
   // Bind can-read quantized operations
-  ZilchBindOverloadedMethod(CanReadIntegerQuantized, ZilchConstInstanceOverload(bool, int, int));
-  ZilchBindOverloadedMethod(CanReadIntegerQuantized, ZilchConstInstanceOverload(bool, int, int, int));
+  RaverieBindOverloadedMethod(CanReadIntegerQuantized, RaverieConstInstanceOverload(bool, int, int));
+  RaverieBindOverloadedMethod(CanReadIntegerQuantized, RaverieConstInstanceOverload(bool, int, int, int));
 
-  ZilchBindOverloadedMethod(CanReadDoubleIntegerQuantized, ZilchConstInstanceOverload(bool, s64, s64));
-  ZilchBindOverloadedMethod(CanReadDoubleIntegerQuantized, ZilchConstInstanceOverload(bool, s64, s64, s64));
+  RaverieBindOverloadedMethod(CanReadDoubleIntegerQuantized, RaverieConstInstanceOverload(bool, s64, s64));
+  RaverieBindOverloadedMethod(CanReadDoubleIntegerQuantized, RaverieConstInstanceOverload(bool, s64, s64, s64));
 
-  ZilchBindOverloadedMethod(CanReadInteger2Quantized,
-                            ZilchConstInstanceOverload(bool, const Math::IntVector2&, const Math::IntVector2&));
-  ZilchBindOverloadedMethod(
+  RaverieBindOverloadedMethod(CanReadInteger2Quantized,
+                            RaverieConstInstanceOverload(bool, const Math::IntVector2&, const Math::IntVector2&));
+  RaverieBindOverloadedMethod(
       CanReadInteger2Quantized,
-      ZilchConstInstanceOverload(bool, const Math::IntVector2&, const Math::IntVector2&, const Math::IntVector2&));
+      RaverieConstInstanceOverload(bool, const Math::IntVector2&, const Math::IntVector2&, const Math::IntVector2&));
 
-  ZilchBindOverloadedMethod(CanReadInteger3Quantized,
-                            ZilchConstInstanceOverload(bool, const Math::IntVector3&, const Math::IntVector3&));
-  ZilchBindOverloadedMethod(
+  RaverieBindOverloadedMethod(CanReadInteger3Quantized,
+                            RaverieConstInstanceOverload(bool, const Math::IntVector3&, const Math::IntVector3&));
+  RaverieBindOverloadedMethod(
       CanReadInteger3Quantized,
-      ZilchConstInstanceOverload(bool, const Math::IntVector3&, const Math::IntVector3&, const Math::IntVector3&));
+      RaverieConstInstanceOverload(bool, const Math::IntVector3&, const Math::IntVector3&, const Math::IntVector3&));
 
-  ZilchBindOverloadedMethod(CanReadInteger4Quantized,
-                            ZilchConstInstanceOverload(bool, const Math::IntVector4&, const Math::IntVector4&));
-  ZilchBindOverloadedMethod(
+  RaverieBindOverloadedMethod(CanReadInteger4Quantized,
+                            RaverieConstInstanceOverload(bool, const Math::IntVector4&, const Math::IntVector4&));
+  RaverieBindOverloadedMethod(
       CanReadInteger4Quantized,
-      ZilchConstInstanceOverload(bool, const Math::IntVector4&, const Math::IntVector4&, const Math::IntVector4&));
+      RaverieConstInstanceOverload(bool, const Math::IntVector4&, const Math::IntVector4&, const Math::IntVector4&));
 
-  ZilchBindOverloadedMethod(CanReadRealQuantized, ZilchConstInstanceOverload(bool, float, float));
-  ZilchBindOverloadedMethod(CanReadRealQuantized, ZilchConstInstanceOverload(bool, float, float, float));
+  RaverieBindOverloadedMethod(CanReadRealQuantized, RaverieConstInstanceOverload(bool, float, float));
+  RaverieBindOverloadedMethod(CanReadRealQuantized, RaverieConstInstanceOverload(bool, float, float, float));
 
-  ZilchBindOverloadedMethod(CanReadDoubleRealQuantized, ZilchConstInstanceOverload(bool, double, double));
-  ZilchBindOverloadedMethod(CanReadDoubleRealQuantized, ZilchConstInstanceOverload(bool, double, double, double));
+  RaverieBindOverloadedMethod(CanReadDoubleRealQuantized, RaverieConstInstanceOverload(bool, double, double));
+  RaverieBindOverloadedMethod(CanReadDoubleRealQuantized, RaverieConstInstanceOverload(bool, double, double, double));
 
-  ZilchBindOverloadedMethod(CanReadReal2Quantized,
-                            ZilchConstInstanceOverload(bool, const Math::Vector2&, const Math::Vector2&));
-  ZilchBindOverloadedMethod(
+  RaverieBindOverloadedMethod(CanReadReal2Quantized,
+                            RaverieConstInstanceOverload(bool, const Math::Vector2&, const Math::Vector2&));
+  RaverieBindOverloadedMethod(
       CanReadReal2Quantized,
-      ZilchConstInstanceOverload(bool, const Math::Vector2&, const Math::Vector2&, const Math::Vector2&));
+      RaverieConstInstanceOverload(bool, const Math::Vector2&, const Math::Vector2&, const Math::Vector2&));
 
-  ZilchBindOverloadedMethod(CanReadReal3Quantized,
-                            ZilchConstInstanceOverload(bool, const Math::Vector3&, const Math::Vector3&));
-  ZilchBindOverloadedMethod(
+  RaverieBindOverloadedMethod(CanReadReal3Quantized,
+                            RaverieConstInstanceOverload(bool, const Math::Vector3&, const Math::Vector3&));
+  RaverieBindOverloadedMethod(
       CanReadReal3Quantized,
-      ZilchConstInstanceOverload(bool, const Math::Vector3&, const Math::Vector3&, const Math::Vector3&));
+      RaverieConstInstanceOverload(bool, const Math::Vector3&, const Math::Vector3&, const Math::Vector3&));
 
-  ZilchBindOverloadedMethod(CanReadReal4Quantized,
-                            ZilchConstInstanceOverload(bool, const Math::Vector4&, const Math::Vector4&));
-  ZilchBindOverloadedMethod(
+  RaverieBindOverloadedMethod(CanReadReal4Quantized,
+                            RaverieConstInstanceOverload(bool, const Math::Vector4&, const Math::Vector4&));
+  RaverieBindOverloadedMethod(
       CanReadReal4Quantized,
-      ZilchConstInstanceOverload(bool, const Math::Vector4&, const Math::Vector4&, const Math::Vector4&));
+      RaverieConstInstanceOverload(bool, const Math::Vector4&, const Math::Vector4&, const Math::Vector4&));
 
   // Bind read operations
-  ZilchBindMethod(ReadBoolean);
+  RaverieBindMethod(ReadBoolean);
 
-  ZilchBindMethod(ReadInteger);
-  ZilchBindMethod(ReadDoubleInteger);
-  ZilchBindMethod(ReadInteger2);
-  ZilchBindMethod(ReadInteger3);
-  ZilchBindMethod(ReadInteger4);
+  RaverieBindMethod(ReadInteger);
+  RaverieBindMethod(ReadDoubleInteger);
+  RaverieBindMethod(ReadInteger2);
+  RaverieBindMethod(ReadInteger3);
+  RaverieBindMethod(ReadInteger4);
 
-  ZilchBindMethod(ReadReal);
-  ZilchBindMethod(ReadDoubleReal);
-  ZilchBindMethod(ReadReal2);
-  ZilchBindMethod(ReadReal3);
-  ZilchBindMethod(ReadReal4);
-  ZilchBindMethod(ReadQuaternion);
+  RaverieBindMethod(ReadReal);
+  RaverieBindMethod(ReadDoubleReal);
+  RaverieBindMethod(ReadReal2);
+  RaverieBindMethod(ReadReal3);
+  RaverieBindMethod(ReadReal4);
+  RaverieBindMethod(ReadQuaternion);
 
-  ZilchBindMethod(ReadString);
+  RaverieBindMethod(ReadString);
 
   // Bind read half operations
-  ZilchBindMethod(ReadRealHalf);
-  ZilchBindMethod(ReadReal2Half);
-  ZilchBindMethod(ReadReal3Half);
-  ZilchBindMethod(ReadReal4Half);
+  RaverieBindMethod(ReadRealHalf);
+  RaverieBindMethod(ReadReal2Half);
+  RaverieBindMethod(ReadReal3Half);
+  RaverieBindMethod(ReadReal4Half);
 
   // Bind read quantized operations
-  ZilchBindOverloadedMethod(ReadIntegerQuantized, ZilchConstInstanceOverload(int, int, int));
-  ZilchBindOverloadedMethod(ReadIntegerQuantized, ZilchConstInstanceOverload(int, int, int, int));
+  RaverieBindOverloadedMethod(ReadIntegerQuantized, RaverieConstInstanceOverload(int, int, int));
+  RaverieBindOverloadedMethod(ReadIntegerQuantized, RaverieConstInstanceOverload(int, int, int, int));
 
-  ZilchBindOverloadedMethod(ReadDoubleIntegerQuantized, ZilchConstInstanceOverload(s64, s64, s64));
-  ZilchBindOverloadedMethod(ReadDoubleIntegerQuantized, ZilchConstInstanceOverload(s64, s64, s64, s64));
+  RaverieBindOverloadedMethod(ReadDoubleIntegerQuantized, RaverieConstInstanceOverload(s64, s64, s64));
+  RaverieBindOverloadedMethod(ReadDoubleIntegerQuantized, RaverieConstInstanceOverload(s64, s64, s64, s64));
 
-  ZilchBindOverloadedMethod(
+  RaverieBindOverloadedMethod(
       ReadInteger2Quantized,
-      ZilchConstInstanceOverload(Math::IntVector2, const Math::IntVector2&, const Math::IntVector2&));
-  ZilchBindOverloadedMethod(
+      RaverieConstInstanceOverload(Math::IntVector2, const Math::IntVector2&, const Math::IntVector2&));
+  RaverieBindOverloadedMethod(
       ReadInteger2Quantized,
-      ZilchConstInstanceOverload(
+      RaverieConstInstanceOverload(
           Math::IntVector2, const Math::IntVector2&, const Math::IntVector2&, const Math::IntVector2&));
 
-  ZilchBindOverloadedMethod(
+  RaverieBindOverloadedMethod(
       ReadInteger3Quantized,
-      ZilchConstInstanceOverload(Math::IntVector3, const Math::IntVector3&, const Math::IntVector3&));
-  ZilchBindOverloadedMethod(
+      RaverieConstInstanceOverload(Math::IntVector3, const Math::IntVector3&, const Math::IntVector3&));
+  RaverieBindOverloadedMethod(
       ReadInteger3Quantized,
-      ZilchConstInstanceOverload(
+      RaverieConstInstanceOverload(
           Math::IntVector3, const Math::IntVector3&, const Math::IntVector3&, const Math::IntVector3&));
 
-  ZilchBindOverloadedMethod(
+  RaverieBindOverloadedMethod(
       ReadInteger4Quantized,
-      ZilchConstInstanceOverload(Math::IntVector4, const Math::IntVector4&, const Math::IntVector4&));
-  ZilchBindOverloadedMethod(
+      RaverieConstInstanceOverload(Math::IntVector4, const Math::IntVector4&, const Math::IntVector4&));
+  RaverieBindOverloadedMethod(
       ReadInteger4Quantized,
-      ZilchConstInstanceOverload(
+      RaverieConstInstanceOverload(
           Math::IntVector4, const Math::IntVector4&, const Math::IntVector4&, const Math::IntVector4&));
 
-  ZilchBindOverloadedMethod(ReadRealQuantized, ZilchConstInstanceOverload(float, float, float));
-  ZilchBindOverloadedMethod(ReadRealQuantized, ZilchConstInstanceOverload(float, float, float, float));
+  RaverieBindOverloadedMethod(ReadRealQuantized, RaverieConstInstanceOverload(float, float, float));
+  RaverieBindOverloadedMethod(ReadRealQuantized, RaverieConstInstanceOverload(float, float, float, float));
 
-  ZilchBindOverloadedMethod(ReadDoubleRealQuantized, ZilchConstInstanceOverload(double, double, double));
-  ZilchBindOverloadedMethod(ReadDoubleRealQuantized, ZilchConstInstanceOverload(double, double, double, double));
+  RaverieBindOverloadedMethod(ReadDoubleRealQuantized, RaverieConstInstanceOverload(double, double, double));
+  RaverieBindOverloadedMethod(ReadDoubleRealQuantized, RaverieConstInstanceOverload(double, double, double, double));
 
-  ZilchBindOverloadedMethod(ReadReal2Quantized,
-                            ZilchConstInstanceOverload(Math::Vector2, const Math::Vector2&, const Math::Vector2&));
-  ZilchBindOverloadedMethod(
+  RaverieBindOverloadedMethod(ReadReal2Quantized,
+                            RaverieConstInstanceOverload(Math::Vector2, const Math::Vector2&, const Math::Vector2&));
+  RaverieBindOverloadedMethod(
       ReadReal2Quantized,
-      ZilchConstInstanceOverload(Math::Vector2, const Math::Vector2&, const Math::Vector2&, const Math::Vector2&));
+      RaverieConstInstanceOverload(Math::Vector2, const Math::Vector2&, const Math::Vector2&, const Math::Vector2&));
 
-  ZilchBindOverloadedMethod(ReadReal3Quantized,
-                            ZilchConstInstanceOverload(Math::Vector3, const Math::Vector3&, const Math::Vector3&));
-  ZilchBindOverloadedMethod(
+  RaverieBindOverloadedMethod(ReadReal3Quantized,
+                            RaverieConstInstanceOverload(Math::Vector3, const Math::Vector3&, const Math::Vector3&));
+  RaverieBindOverloadedMethod(
       ReadReal3Quantized,
-      ZilchConstInstanceOverload(Math::Vector3, const Math::Vector3&, const Math::Vector3&, const Math::Vector3&));
+      RaverieConstInstanceOverload(Math::Vector3, const Math::Vector3&, const Math::Vector3&, const Math::Vector3&));
 
-  ZilchBindOverloadedMethod(ReadReal4Quantized,
-                            ZilchConstInstanceOverload(Math::Vector4, const Math::Vector4&, const Math::Vector4&));
-  ZilchBindOverloadedMethod(
+  RaverieBindOverloadedMethod(ReadReal4Quantized,
+                            RaverieConstInstanceOverload(Math::Vector4, const Math::Vector4&, const Math::Vector4&));
+  RaverieBindOverloadedMethod(
       ReadReal4Quantized,
-      ZilchConstInstanceOverload(Math::Vector4, const Math::Vector4&, const Math::Vector4&, const Math::Vector4&));
+      RaverieConstInstanceOverload(Math::Vector4, const Math::Vector4&, const Math::Vector4&, const Math::Vector4&));
 
   // Bind bitstream methods
-  ZilchBindMethod(GetBitCapacity);
-  ZilchBindMethod(GetByteCapacity);
+  RaverieBindMethod(GetBitCapacity);
+  RaverieBindMethod(GetByteCapacity);
 
-  ZilchBindMethod(GetBitsWritten);
-  ZilchBindMethod(GetBytesWritten);
+  RaverieBindMethod(GetBitsWritten);
+  RaverieBindMethod(GetBytesWritten);
 
-  ZilchBindMethod(GetBitsUnwritten);
-  ZilchBindMethod(GetBytesUnwritten);
+  RaverieBindMethod(GetBitsUnwritten);
+  RaverieBindMethod(GetBytesUnwritten);
 
-  ZilchBindMethod(GetBitsRead);
-  ZilchBindMethod(GetBytesRead);
+  RaverieBindMethod(GetBitsRead);
+  RaverieBindMethod(GetBytesRead);
 
-  ZilchBindMethod(GetBitsUnread);
-  ZilchBindMethod(GetBytesUnread);
+  RaverieBindMethod(GetBitsUnread);
+  RaverieBindMethod(GetBytesUnread);
 
-  ZilchBindMethod(IsEmpty);
-  ZilchBindMethod(Reserve);
-  ZilchBindMethod(Clear);
+  RaverieBindMethod(IsEmpty);
+  RaverieBindMethod(Reserve);
+  RaverieBindMethod(Clear);
 
-  // ZilchBindMethod(Unwrite);
-  ZilchBindMethod(SetBitsWritten);
-  ZilchBindMethod(SetBytesWritten);
-  ZilchBindMethod(ClearBitsWritten);
+  // RaverieBindMethod(Unwrite);
+  RaverieBindMethod(SetBitsWritten);
+  RaverieBindMethod(SetBytesWritten);
+  RaverieBindMethod(ClearBitsWritten);
 
-  ZilchBindMethod(Unread);
-  ZilchBindMethod(SetBitsRead);
-  ZilchBindMethod(SetBytesRead);
-  ZilchBindMethod(ClearBitsRead);
+  RaverieBindMethod(Unread);
+  RaverieBindMethod(SetBitsRead);
+  RaverieBindMethod(SetBytesRead);
+  RaverieBindMethod(ClearBitsRead);
 
   // Make constructible in script
   type->CreatableInScript = true;
@@ -1764,7 +1764,7 @@ bool BitStreamExtended::WriteEvent(Event* event)
   }
 
   // Get event type
-  BoundType* eventType = ZilchVirtualTypeId(event);
+  BoundType* eventType = RaverieVirtualTypeId(event);
   if (!eventType)
   {
     Assert(false);
@@ -1809,7 +1809,7 @@ bool BitStreamExtended::WriteEvent(Event* event)
       Assert(IsValidNetPropertyType(property->PropertyType));
 
       // Is Cog type?
-      if (property->PropertyType == ZilchTypeId(Cog))
+      if (property->PropertyType == RaverieTypeId(Cog))
       {
         // Get cog as net object ID
         // (Using ReplicaId to take advantage of WriteQuantized)
@@ -1819,7 +1819,7 @@ bool BitStreamExtended::WriteEvent(Event* event)
         BitStream::Write(netObjectId);
       }
       // Is CogPath type?
-      else if (property->PropertyType == ZilchTypeId(CogPath))
+      else if (property->PropertyType == RaverieTypeId(CogPath))
       {
         // Get cog path value
         Any cogPathAny = property->GetValue(event);
@@ -1934,7 +1934,7 @@ HandleOf<Event> BitStreamExtended::ReadEvent(GameSession* gameSession) const
       Assert(IsValidNetPropertyType(property->PropertyType));
 
       // Is Cog type?
-      if (property->PropertyType == ZilchTypeId(Cog))
+      if (property->PropertyType == RaverieTypeId(Cog))
       {
         // NetPeer not provided?
         if (!netPeer)
@@ -1958,7 +1958,7 @@ HandleOf<Event> BitStreamExtended::ReadEvent(GameSession* gameSession) const
         SetNetPropertyCogAsNetObjectId(property, event, netPeer, netObjectId.value());
       }
       // Is CogPath type?
-      else if (property->PropertyType == ZilchTypeId(CogPath))
+      else if (property->PropertyType == RaverieTypeId(CogPath))
       {
         // Get cog path value
         Any cogPathAny = property->GetValue(event);
@@ -2136,4 +2136,4 @@ Bits Serialize<BitStreamExtended>(SerializeDirection::Enum direction, BitStream&
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

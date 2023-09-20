@@ -1,9 +1,0 @@
-[Version:1]
-TextContent 
-{
-	ZilchScriptBuilder 
-	{
-		var Name = "ZCogChildrenUtilities"
-		var ResourceId = 0x5a6054d4c2ecef9c
-	}
-}

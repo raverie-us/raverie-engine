@@ -1,0 +1,139 @@
+// MIT Licensed (see LICENSE.md).
+
+class ZUiPeakVolumeBar : RaverieComponent
+{
+  var Bar : Cog;
+  var WidgetSize : Real;
+  var MaxMove : Real;
+  
+  function Initialize(init : CogInitializer)
+  {
+    Raverie.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+    
+    this.WidgetSize = this.Owner.UiWidget.Size.Y;
+    this.MaxMove = this.WidgetSize / 200.0;
+    this.Bar = this.Owner.FindChildByName("PeakVolumeBar");
+    
+    this.Bar.UiWidget.LocalTranslation = Real2(-5, 0);
+  }
+
+  function OnLogicUpdate(event : UpdateEvent)
+  {
+    // Translate from floating point to decibels
+    var decibels = this.ToDecibels(Raverie.Audio.PeakOutputLevel);
+    // What percentage of the decibel scale is this?
+    var percent = decibels / -42.0;
+    percent = Math.Min(percent, 1.0);
+      
+    // Y position is the percentage 
+    var position = this.WidgetSize * (1.0 - percent);
+    
+    // Is the bar moving down? (0 is at the top)
+    if (position < this.Bar.UiWidget.LocalTranslation.Y)
+    {
+      // Make it go down slowly
+      var difference = this.Bar.UiWidget.LocalTranslation.Y - position;
+      if (difference > this.MaxMove)
+        position = this.Bar.UiWidget.LocalTranslation.Y - this.MaxMove;
+    }
+      
+    // Set the position of the bar
+    this.Bar.UiWidget.LocalTranslation = Real2(-5, position);
+  }
+    
+  function ToDecibels(volume : Real) : Real
+  {
+    if (volume == 0.0)
+      return -100.0;
+    
+    return 20.0 * Math.Log10(volume);
+  }
+}
+
+class ZUiVolumeBarSegments : RaverieComponent
+{
+  // The decibel level at which the bar will change color
+  [Property] var DecibelLimit : Real = 0;
+  // The color the bar should use
+  [Property] var Color : Real4 = Real4(0.05, 0.36, 0.08, 1.0);
+  
+  function Initialize(init : CogInitializer)
+  {
+    Raverie.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+  }
+
+  function OnLogicUpdate(event : UpdateEvent)
+  { 
+    var decibels = this.ToDecibels(Raverie.Audio.RMSOutputLevel);
+      
+    // If the decibels are higher than the limit, set to custom color
+    if (decibels >= this.DecibelLimit)
+    {
+       this.Owner.UiWidget.LocalColor = this.Color;
+    }
+    // Otherwise, set to white
+    else
+    {
+       this.Owner.UiWidget.LocalColor = Real4(1,1,1,1);
+    }
+  }
+  
+  function ToDecibels(volume : Real) : Real
+  {
+    if (volume == 0.0)
+        return -100.0;
+    
+    return 20.0 * Math.Log10(volume);
+  }
+}
+
+class ZUiVolumeSlider : RaverieComponent
+{
+  [Dependency] var Slider : ZUiSlider;
+  
+  var Volume : Real;
+  
+  function Initialize(init : CogInitializer)
+  {
+    Raverie.Connect(this.Owner, Events.ZUiSliderChanged, this.OnVolumeChange);
+    Raverie.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+    
+    this.Volume = Raverie.Audio.SystemVolume;
+    this.Slider.SetHandlePosition(this.GetPercent());
+  }
+
+  function OnVolumeChange(event : ZUiSliderEvent)
+  {
+    var decibels = (1.0 - event.SliderPercentage) * -48.0;
+    decibels += 12;
+    
+    this.Volume = Math.Pow(10.0, decibels / 20.0);
+    
+    Raverie.Audio.SystemVolume = this.Volume;
+  }
+  
+  function OnLogicUpdate(event : UpdateEvent)
+  {
+    if (Raverie.Audio.SystemVolume != this.Volume)
+    {
+      this.Volume = Raverie.Audio.SystemVolume;
+      this.Slider.SetHandlePosition(this.GetPercent());
+    }
+  }
+    
+  function ToDecibels(volume : Real) : Real
+  {
+    if (volume == 0.0)
+      return -100.0;
+    
+    return 20.0 * Math.Log10(volume);
+  }
+  
+  function GetPercent() : Real
+  {
+    var decibels = this.ToDecibels(this.Volume);
+    decibels -= 12;
+    decibels *= -1;
+    return Math.Clamp(1.0 - (decibels / 48.0), 0.0, 1.0);
+  }
+}

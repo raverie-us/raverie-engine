@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class AddMaterialJob;
@@ -83,7 +83,7 @@ class TextureRenderData;
 class ViewBlock;
 class ViewNode;
 class ViewportInterface;
-class ZilchFragment;
-class ZilchShaderGenerator;
+class RaverieFragment;
+class RaverieShaderGenerator;
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace UploaderUi
@@ -391,8 +391,8 @@ void ContentPackageExporter::OnExportPressed(Event* e)
   if (packageName.Empty()) {
     packageName = "Package";
   }
-  String packageFile = BuildString(packageName, ".zeropack");
-  Download("Package.zeropack", packageBuffer.ToString());
+  String packageFile = BuildString(packageName, ".raveriepack");
+  Download("Package.raveriepack", packageBuffer.ToString());
 
   // If info provided write that out
   if (!mTempPackage.mName.Empty())
@@ -444,4 +444,4 @@ void ContentPackageExporter::RemoveSelectedItems(Event*)
   RefreshTileView();
 }
 
-} // namespace Zero
+} // namespace Raverie

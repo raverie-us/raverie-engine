@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Memory
@@ -84,6 +84,6 @@ private:
 typedef DynamicTreeNode<void*> DynamicTreeNodeDefault;
 typedef DynamicAabbTree<void*> DynamicAabbTreeDefault;
 
-} // namespace Zero
+} // namespace Raverie
 
 #include "DynamicAabbTree.inl"

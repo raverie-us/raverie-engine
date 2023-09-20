@@ -3,7 +3,7 @@
 #pragma once
 #include "Array.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // OwnedArray
@@ -22,4 +22,4 @@ public:
   }
 };
 
-} // namespace Zero
+} // namespace Raverie

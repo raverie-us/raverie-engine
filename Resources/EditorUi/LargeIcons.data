@@ -131,14 +131,6 @@ DefinitionSet =
 		float[] Uv0 = [ 32, 96 ],
 		float[] Uv1 = [ 32 , 32 ],
 	},
-
-	ImageDefinition ZeroEngine =
-	{
-		string Texture = "LargeIcons",
-		int ImageMode = 0,
-		float[] Uv0 = [ 64, 96 ],
-		float[] Uv1 = [ 32 , 32 ],
-	},
 	
 	ImageDefinition LargeEmpty =
 	{

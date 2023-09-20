@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 BuildOptions::BuildOptions(ContentLibrary* library)
 {
@@ -10,4 +10,4 @@ BuildOptions::BuildOptions(ContentLibrary* library)
   SourcePath = library->SourcePath;
   OutputPath = library->GetOutputPath();
 }
-} // namespace Zero
+} // namespace Raverie

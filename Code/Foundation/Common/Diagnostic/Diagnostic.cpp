@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 ErrorSignaler::ErrorHandler ErrorSignaler::sActiveErrorHandler = Os::ErrorProcessHandler;
@@ -26,10 +26,10 @@ bool ErrorSignaler::SignalError(
     va_start(args, msgFormat);
     // Get the number of characters needed for message
     int bufferSize;
-    ZeroVSPrintfCount(msgFormat, args, 1, bufferSize);
+    RaverieVSPrintfCount(msgFormat, args, 1, bufferSize);
 
     char* messageBuffer = (char*)alloca((bufferSize + 1) * sizeof(char));
-    ZeroVSPrintf(messageBuffer, bufferSize + 1, msgFormat, args);
+    RaverieVSPrintf(messageBuffer, bufferSize + 1, msgFormat, args);
     va_end(args);
     errorData.Message = messageBuffer;
   }
@@ -39,4 +39,4 @@ bool ErrorSignaler::SignalError(
   return result;
 }
 
-} // namespace Zero
+} // namespace Raverie

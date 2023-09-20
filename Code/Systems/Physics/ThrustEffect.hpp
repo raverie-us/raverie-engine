@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 DeclareBitField1(ThrustFlags, LocalSpaceDirection);
@@ -12,7 +12,7 @@ DeclareBitField1(ThrustFlags, LocalSpaceDirection);
 class ThrustEffect : public PhysicsEffect
 {
 public:
-  ZilchDeclareType(ThrustEffect, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ThrustEffect, TypeCopyMode::ReferenceType);
 
   ThrustEffect();
 
@@ -49,4 +49,4 @@ private:
   Vec3 mWorldThrustDirection;
 };
 
-} // namespace Zero
+} // namespace Raverie

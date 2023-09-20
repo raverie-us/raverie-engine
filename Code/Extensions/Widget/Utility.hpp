@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class ColorBlock : public Widget
@@ -42,4 +42,4 @@ inline ColorBlock* CreateBlackOut(Composite* composite, AttachType::Enum attach 
   return block;
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,21 +1,21 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 //                                NetHostRecord //
 
-ZilchDefineType(NetHostRecord, builder, type)
+RaverieDefineType(NetHostRecord, builder, type)
 {
   // Bind documentation
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
   // Bind member properties
-  ZilchBindFieldGetterProperty(mIpAddress);
-  ZilchBindFieldGetterProperty(mBasicHostInfo);
-  ZilchBindFieldGetterProperty(mLifetime);
-  // ZilchBindFieldGetterProperty(mProjectGuid); //This type is not yet bound.
+  RaverieBindFieldGetterProperty(mIpAddress);
+  RaverieBindFieldGetterProperty(mBasicHostInfo);
+  RaverieBindFieldGetterProperty(mLifetime);
+  // RaverieBindFieldGetterProperty(mProjectGuid); //This type is not yet bound.
   // (int64 I think)
 }
 
@@ -59,4 +59,4 @@ bool NetHostRecord::operator<(const IpAddress& rhs) const
   return mIpAddress < rhs;
 }
 
-} // namespace Zero
+} // namespace Raverie

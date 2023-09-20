@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Forward Declarations.
@@ -19,7 +19,7 @@ class UiRootWidget : public UiWidget
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(UiRootWidget, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(UiRootWidget, TypeCopyMode::ReferenceType);
 
   UiRootWidget();
 
@@ -182,4 +182,4 @@ public:
   Array<UiWidget*> mOnTopWidgets;
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 IntVec2 GetDefaultValue(IntVec2* dummy)
@@ -101,4 +101,4 @@ void ToValue(StringRange range, Mat4& value)
   ToValue<16>(range, value.array);
 }
 
-} // namespace Zero
+} // namespace Raverie

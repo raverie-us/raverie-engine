@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 Material* CreateMaterialFromGraphMaterial(SceneGraphMaterial* sceneMaterial)
@@ -308,7 +308,7 @@ void DoEditorSideGeometryImporting(GeometryContent* geometryContent,
       Animation* animation = (Animation*)Z::gResources->GetResource(animations->mAnimations[0].mResourceId);
       if (animation)
       {
-        if (object->AddComponentByType(ZilchTypeId(SimpleAnimation)))
+        if (object->AddComponentByType(RaverieTypeId(SimpleAnimation)))
         {
           SimpleAnimation* playAnimation = object->has(SimpleAnimation);
           playAnimation->SetAnimation(animation);
@@ -478,4 +478,4 @@ void DoEditorSideImporting(ResourcePackage* package, ImportOptions* options)
     BuildSoundCues(package, options->mAudioOptions);
 }
 
-} // namespace Zero
+} // namespace Raverie

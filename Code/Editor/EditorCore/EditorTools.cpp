@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 class ToolSelectionCommand : public CommandExecuter
@@ -42,7 +42,7 @@ void SetupTools(Editor* editor)
   // Tools->AddOrUpdateTool(ArchetypeManager::FindOrNull("GeometryBuilderTool"));
 
   // Old tools
-  if (Z::gEngine->GetConfigCog()->has(Zero::DeveloperConfig))
+  if (Z::gEngine->GetConfigCog()->has(Raverie::DeveloperConfig))
   {
     Tools->AddOrUpdateTool(ArchetypeManager::FindOrNull("SpringTools"));
   }
@@ -56,4 +56,4 @@ void SetupTools(Editor* editor)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

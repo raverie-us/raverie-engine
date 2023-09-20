@@ -1,23 +1,23 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(DefaultGameSetup, builder, type)
+RaverieDefineType(DefaultGameSetup, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindDependency(GameSession);
-  ZeroBindDocumented();
-  ZeroBindSetup(SetupMode::CallSetDefaults);
+  RaverieBindComponent();
+  RaverieBindDependency(GameSession);
+  RaverieBindDocumented();
+  RaverieBindSetup(SetupMode::CallSetDefaults);
 
   MetaEditorResource* editorResource = new MetaEditorResource();
-  editorResource->FilterTag = ZilchTypeId(Space)->Name;
-  ZilchBindGetterSetterProperty(StartingSpace)->Add(editorResource);
+  editorResource->FilterTag = RaverieTypeId(Space)->Name;
+  RaverieBindGetterSetterProperty(StartingSpace)->Add(editorResource);
 
-  ZilchBindGetterSetterProperty(StartingLevel);
+  RaverieBindGetterSetterProperty(StartingLevel);
 
-  ZilchBindFieldProperty(mLoadEditingLevel);
+  RaverieBindFieldProperty(mLoadEditingLevel);
 }
 
 DefaultGameSetup::DefaultGameSetup()
@@ -50,7 +50,7 @@ void DefaultGameSetup::OnSetup(GameEvent* event)
   Archetype* spaceArchetype = mStartingSpace;
 
   // Check to see if the starting space archetype is actually a space
-  if (mStartingSpace->mStoredType != ZilchTypeId(Space))
+  if (mStartingSpace->mStoredType != RaverieTypeId(Space))
   {
     // Space archetype has been removed or an invalid archetype has been
     // selected.
@@ -85,4 +85,4 @@ void DefaultGameSetup::OnSetup(GameEvent* event)
     gameSpace->LoadLevelAdditive(levelToLoad);
 }
 
-} // namespace Zero
+} // namespace Raverie

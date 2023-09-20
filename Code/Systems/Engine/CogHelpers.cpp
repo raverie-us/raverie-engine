@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 Cog* LowestCommonAncestor(Cog* objectA, Cog* objectB)
@@ -89,4 +89,4 @@ void SendHierarchyEvents(cstr op,
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

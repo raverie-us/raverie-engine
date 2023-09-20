@@ -2,7 +2,7 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 ModifiedHeightMapCell::ModifiedHeightMapCell(const HeightMapCell& cell, float originalHeight, float height)
@@ -231,4 +231,4 @@ void WeightMapUndoRedo::Redo()
   ApplyWeightHelper(1);
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -2,11 +2,11 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(ViewportInterface, builder, type)
+RaverieDefineType(ViewportInterface, builder, type)
 {
 }
 
-} // namespace Zero
+} // namespace Raverie

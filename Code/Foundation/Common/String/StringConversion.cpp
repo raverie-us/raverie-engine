@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 bool StringStartsWith0x(const StringRange& hexString)
@@ -258,84 +258,84 @@ void ToValue(StringRangeParam range, Guid& value)
 
 uint ToBuffer(char* buffer, uint bufferSize, String value, bool shortFormat)
 {
-  return ZeroSPrintf(buffer, bufferSize, "%s", value.c_str());
+  return RaverieSPrintf(buffer, bufferSize, "%s", value.c_str());
 }
 uint ToBuffer(char* buffer, uint bufferSize, StringRange value, bool shortFormat)
 {
-  return ZeroSPrintf(buffer, bufferSize, "%s", value.mBegin);
+  return RaverieSPrintf(buffer, bufferSize, "%s", value.mBegin);
 }
 
 uint ToBuffer(char* buffer, uint bufferSize, bool value, bool shortFormat)
 {
   if (value)
   {
-    ZeroStrCpy(buffer, bufferSize, TextTrue);
+    RaverieStrCpy(buffer, bufferSize, TextTrue);
     return sizeof(TextTrue) - 1;
   }
   else
   {
-    ZeroStrCpy(buffer, bufferSize, TextFalse);
+    RaverieStrCpy(buffer, bufferSize, TextFalse);
     return sizeof(TextFalse) - 1;
   }
 }
 
 uint ToBuffer(char* buffer, uint bufferSize, char value, bool shortFormat)
 {
-  return ZeroSPrintf(buffer, bufferSize, "%c", value);
+  return RaverieSPrintf(buffer, bufferSize, "%c", value);
 }
 
 uint ToBuffer(char* buffer, uint bufferSize, int8 value, bool shortFormat)
 {
-  return ZeroSPrintf(buffer, bufferSize, "%hhd", value);
+  return RaverieSPrintf(buffer, bufferSize, "%hhd", value);
 }
 uint ToBuffer(char* buffer, uint bufferSize, int16 value, bool shortFormat)
 {
-  return ZeroSPrintf(buffer, bufferSize, "%hd", value);
+  return RaverieSPrintf(buffer, bufferSize, "%hd", value);
 }
 uint ToBuffer(char* buffer, uint bufferSize, int32 value, bool shortFormat)
 {
-  return ZeroSPrintf(buffer, bufferSize, "%d", value);
+  return RaverieSPrintf(buffer, bufferSize, "%d", value);
 }
 uint ToBuffer(char* buffer, uint bufferSize, int64 value, bool shortFormat)
 {
-  return ZeroSPrintf(buffer, bufferSize, "%lld", value);
+  return RaverieSPrintf(buffer, bufferSize, "%lld", value);
 }
 
 uint ToBuffer(char* buffer, uint bufferSize, uint8 value, bool shortFormat)
 {
-  return ZeroSPrintf(buffer, bufferSize, "%hhu", value);
+  return RaverieSPrintf(buffer, bufferSize, "%hhu", value);
 }
 uint ToBuffer(char* buffer, uint bufferSize, uint16 value, bool shortFormat)
 {
-  return ZeroSPrintf(buffer, bufferSize, "%hu", value);
+  return RaverieSPrintf(buffer, bufferSize, "%hu", value);
 }
 uint ToBuffer(char* buffer, uint bufferSize, uint32 value, bool shortFormat)
 {
-  return ZeroSPrintf(buffer, bufferSize, "%u", value);
+  return RaverieSPrintf(buffer, bufferSize, "%u", value);
 }
 uint ToBuffer(char* buffer, uint bufferSize, uint64 value, bool shortFormat)
 {
-  return ZeroSPrintf(buffer, bufferSize, "%llu", value);
+  return RaverieSPrintf(buffer, bufferSize, "%llu", value);
 }
 
 uint ToBuffer(char* buffer, uint bufferSize, ulong value, bool shortFormat)
 {
-  return ZeroSPrintf(buffer, bufferSize, "%llu", (uint64)value);
+  return RaverieSPrintf(buffer, bufferSize, "%llu", (uint64)value);
 }
 
 uint ToBuffer(char* buffer, uint bufferSize, float value, bool shortFormat)
 {
   if (shortFormat)
-    return ZeroSPrintf(buffer, bufferSize, "%g", value);
+    return RaverieSPrintf(buffer, bufferSize, "%g", value);
   else
-    return ZeroSPrintf(buffer, bufferSize, "%.9g", value);
+    return RaverieSPrintf(buffer, bufferSize, "%.9g", value);
 }
 uint ToBuffer(char* buffer, uint bufferSize, double value, bool shortFormat)
 {
   if (shortFormat)
-    return ZeroSPrintf(buffer, bufferSize, "%f", value);
+    return RaverieSPrintf(buffer, bufferSize, "%f", value);
   else
-    return ZeroSPrintf(buffer, bufferSize, "%.9f", value);
+    return RaverieSPrintf(buffer, bufferSize, "%.9f", value);
 }
 
 uint ToBuffer(char* buffer, uint bufferSize, Guid value, bool shortFormat)
@@ -376,4 +376,4 @@ void ConvertUnicodeToAscii(char* destAscii, uint bufferSize, const wchar_t* unic
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

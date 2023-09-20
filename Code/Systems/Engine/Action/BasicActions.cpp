@@ -1,14 +1,14 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(ActionDelay, builder, type)
+RaverieDefineType(ActionDelay, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindField(mTimeLeft);
+  RaverieBindField(mTimeLeft);
 }
 
-} // namespace Zero
+} // namespace Raverie

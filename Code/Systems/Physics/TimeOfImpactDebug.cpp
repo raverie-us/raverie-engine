@@ -2,23 +2,23 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(TimeOfImpactDebug, builder, type)
+RaverieDefineType(TimeOfImpactDebug, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultConstructor);
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultConstructor);
 
-  ZeroBindDependency(Collider);
-  ZeroBindDependency(RigidBody);
+  RaverieBindDependency(Collider);
+  RaverieBindDependency(RigidBody);
 
-  ZilchBindGetterSetterProperty(OtherObject);
-  ZilchBindFieldProperty(mSimulatedDt);
+  RaverieBindGetterSetterProperty(OtherObject);
+  RaverieBindFieldProperty(mSimulatedDt);
 
-  ZilchBindFieldProperty(mSteps);
+  RaverieBindFieldProperty(mSteps);
 
-  ZilchBindMethodProperty(Step);
+  RaverieBindMethodProperty(Step);
 }
 
 TimeOfImpactDebug::TimeOfImpactDebug() : mSimulatedDt(0.0167), mSteps(0)
@@ -154,4 +154,4 @@ void TimeOfImpactDebug::SetOtherObject(Cog* cog)
     mOtherObject = cog->GetId();
 }
 
-} // namespace Zero
+} // namespace Raverie

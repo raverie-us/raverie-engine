@@ -27,7 +27,7 @@
   present, or is just not solved at all
 */
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Physics
@@ -41,18 +41,18 @@ ImplementJointType(WheelJoint2d);
 ImplementAnchorAccessors(WheelJoint2d, mAnchors);
 ImplementAngleAccessors(WheelJoint2d, mReferenceAngle);
 
-ZilchDefineType(WheelJoint2d, builder, type)
+RaverieDefineType(WheelJoint2d, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindInterface(Joint);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindInterface(Joint);
+  RaverieBindDocumented();
 
   BindAnchorAccessors(Vec3(1));
   BindAngleAccessors();
-  ZilchBindGetterSetterProperty(ShockAxis)->ZeroSerialize(Vec3::cYAxis);
+  RaverieBindGetterSetterProperty(ShockAxis)->RaverieSerialize(Vec3::cYAxis);
   // @MetaSerialization: Property needs to cause rescans
-  ZilchBindGetterSetterProperty(WorldShockAxis);
+  RaverieBindGetterSetterProperty(WorldShockAxis);
 }
 
 WheelJoint2d::WheelJoint2d()
@@ -122,7 +122,7 @@ void WheelJoint2d::ComputeMoleculeData(MoleculeData& moleculeData)
 void WheelJoint2d::ComponentAdded(BoundType* typeId, Component* component)
 {
   Joint::ComponentAdded(typeId, component);
-  if (typeId == ZilchTypeId(JointLimit))
+  if (typeId == RaverieTypeId(JointLimit))
   {
     JointLimit* limit = static_cast<JointLimit*>(component);
     limit->mMinErr = -Math::cPi * real(0.25);
@@ -255,4 +255,4 @@ void WheelJoint2d::SetWorldShockAxis(Vec3Param axis)
 
 } // namespace Physics
 
-} // namespace Zero
+} // namespace Raverie

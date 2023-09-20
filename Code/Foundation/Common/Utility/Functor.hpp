@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 class Functor
 {
@@ -402,4 +402,4 @@ Functor* CreateFunctor(ReferenceType& reference, ValueType value)
   functor->mValue = value;
   return functor;
 }
-} // namespace Zero
+} // namespace Raverie

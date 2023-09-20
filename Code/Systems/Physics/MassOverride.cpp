@@ -1,31 +1,31 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(MassOverride, builder, type)
+RaverieDefineType(MassOverride, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
 
-  ZeroBindDependency(Cog);
-  ZeroBindDependency(RigidBody);
+  RaverieBindDependency(Cog);
+  RaverieBindDependency(RigidBody);
 
-  ZilchBindGetterSetterProperty(Active)->ZeroSerialize(true);
-  ZilchBindGetterSetter(InverseMass)->ZeroSerialize(real(1));
+  RaverieBindGetterSetterProperty(Active)->RaverieSerialize(true);
+  RaverieBindGetterSetter(InverseMass)->RaverieSerialize(real(1));
   // @MetaSerialization: Property needs to not cause rescans
-  ZilchBindGetterSetterProperty(Mass);
-  ZilchBindGetterSetter(LocalInverseInertiaTensor)->ZeroSerialize(Mat3::cIdentity);
-  ZilchBindGetterSetter(LocalCenterOfMass)->ZeroSerialize(Vec3::cZero);
+  RaverieBindGetterSetterProperty(Mass);
+  RaverieBindGetterSetter(LocalInverseInertiaTensor)->RaverieSerialize(Mat3::cIdentity);
+  RaverieBindGetterSetter(LocalCenterOfMass)->RaverieSerialize(Vec3::cZero);
 
   // Runtime modifications (not serialized)
-  ZilchBindGetterSetter(AutoComputeInertia);
-  ZilchBindGetterSetter(AutoComputeCenterOfMass);
-  ZilchBindMethodProperty(RecomputeMass);
+  RaverieBindGetterSetter(AutoComputeInertia);
+  RaverieBindGetterSetter(AutoComputeCenterOfMass);
+  RaverieBindMethodProperty(RecomputeMass);
 
-  ZeroBindTag(Tags::Physics);
+  RaverieBindTag(Tags::Physics);
 }
 
 MassOverride::MassOverride()
@@ -246,4 +246,4 @@ void MassOverride::QueueUpdate()
   body->QueueMassUpdate();
 }
 
-} // namespace Zero
+} // namespace Raverie

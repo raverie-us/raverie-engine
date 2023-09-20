@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -124,107 +124,107 @@ void BindNetEvents(LibraryBuilder& builder, BoundType* type)
   //
 
   // Host Info:
-  ZeroBindEvent(Events::AcquireBasicNetHostInfo, AcquireNetHostInfo);
-  ZeroBindEvent(Events::AcquireExtraNetHostInfo, AcquireNetHostInfo);
+  RaverieBindEvent(Events::AcquireBasicNetHostInfo, AcquireNetHostInfo);
+  RaverieBindEvent(Events::AcquireExtraNetHostInfo, AcquireNetHostInfo);
 
   // Host Discovery:
-  ZeroBindEvent(Events::NetHostDiscovered, NetHostUpdate);
-  ZeroBindEvent(Events::NetHostListDiscovered, NetHostListUpdate);
-  ZeroBindEvent(Events::NetHostRefreshed, NetHostUpdate);
-  ZeroBindEvent(Events::NetHostListRefreshed, NetHostListUpdate);
+  RaverieBindEvent(Events::NetHostDiscovered, NetHostUpdate);
+  RaverieBindEvent(Events::NetHostListDiscovered, NetHostListUpdate);
+  RaverieBindEvent(Events::NetHostRefreshed, NetHostUpdate);
+  RaverieBindEvent(Events::NetHostListRefreshed, NetHostListUpdate);
 
   //
   // NetPeer Events
   //
 
   // Peer Status:
-  ZeroBindEvent(Events::NetPeerOpened, NetPeerOpened);
-  ZeroBindEvent(Events::NetPeerClosed, NetPeerClosed);
+  RaverieBindEvent(Events::NetPeerOpened, NetPeerOpened);
+  RaverieBindEvent(Events::NetPeerClosed, NetPeerClosed);
 
   // Game Scope:
-  ZeroBindEvent(Events::NetGameOnline, NetObjectOnline);
-  ZeroBindEvent(Events::NetGameOffline, NetObjectOffline);
+  RaverieBindEvent(Events::NetGameOnline, NetObjectOnline);
+  RaverieBindEvent(Events::NetGameOffline, NetObjectOffline);
 
   // Game State:
-  ZeroBindEvent(Events::NetGameStarted, NetGameStarted);
+  RaverieBindEvent(Events::NetGameStarted, NetGameStarted);
 
   //
   // NetLink Events
   //
 
   // Link Handshake Sequence:
-  ZeroBindEvent(Events::NetPeerSentConnectRequest, NetPeerSentConnectRequest);
-  ZeroBindEvent(Events::NetPeerReceivedConnectRequest, NetPeerReceivedConnectRequest);
-  ZeroBindEvent(Events::NetPeerSentConnectResponse, NetPeerSentConnectResponse);
-  ZeroBindEvent(Events::NetPeerReceivedConnectResponse, NetPeerReceivedConnectResponse);
+  RaverieBindEvent(Events::NetPeerSentConnectRequest, NetPeerSentConnectRequest);
+  RaverieBindEvent(Events::NetPeerReceivedConnectRequest, NetPeerReceivedConnectRequest);
+  RaverieBindEvent(Events::NetPeerSentConnectResponse, NetPeerSentConnectResponse);
+  RaverieBindEvent(Events::NetPeerReceivedConnectResponse, NetPeerReceivedConnectResponse);
 
   // Link Status:
-  ZeroBindEvent(Events::NetLinkConnected, NetLinkConnected);
-  ZeroBindEvent(Events::NetLinkDisconnected, NetLinkDisconnected);
+  RaverieBindEvent(Events::NetLinkConnected, NetLinkConnected);
+  RaverieBindEvent(Events::NetLinkDisconnected, NetLinkDisconnected);
 
   //
   // NetSpace Events
   //
 
   // Space Scope:
-  ZeroBindEvent(Events::NetSpaceOnline, NetObjectOnline);
-  ZeroBindEvent(Events::NetSpaceOffline, NetObjectOffline);
+  RaverieBindEvent(Events::NetSpaceOnline, NetObjectOnline);
+  RaverieBindEvent(Events::NetSpaceOffline, NetObjectOffline);
 
   // Level State:
-  ZeroBindEvent(Events::NetLevelStarted, NetLevelStarted);
+  RaverieBindEvent(Events::NetLevelStarted, NetLevelStarted);
 
   //
   // NetUser Events
   //
 
   // User Add Handshake Sequence:
-  ZeroBindEvent(Events::NetPeerSentUserAddRequest, NetPeerSentUserAddRequest);
-  ZeroBindEvent(Events::NetPeerReceivedUserAddRequest, NetPeerReceivedUserAddRequest);
-  ZeroBindEvent(Events::NetPeerSentUserAddResponse, NetPeerSentUserAddResponse);
-  ZeroBindEvent(Events::NetPeerReceivedUserAddResponse, NetPeerReceivedUserAddResponse);
+  RaverieBindEvent(Events::NetPeerSentUserAddRequest, NetPeerSentUserAddRequest);
+  RaverieBindEvent(Events::NetPeerReceivedUserAddRequest, NetPeerReceivedUserAddRequest);
+  RaverieBindEvent(Events::NetPeerSentUserAddResponse, NetPeerSentUserAddResponse);
+  RaverieBindEvent(Events::NetPeerReceivedUserAddResponse, NetPeerReceivedUserAddResponse);
 
   // User Scope:
-  ZeroBindEvent(Events::NetUserOnline, NetObjectOnline);
-  ZeroBindEvent(Events::NetUserOffline, NetObjectOffline);
+  RaverieBindEvent(Events::NetUserOnline, NetObjectOnline);
+  RaverieBindEvent(Events::NetUserOffline, NetObjectOffline);
 
   // Network Ownership:
-  ZeroBindEvent(Events::NetUserLostObjectOwnership, NetUserLostObjectOwnership);
-  ZeroBindEvent(Events::NetUserAcquiredObjectOwnership, NetUserAcquiredObjectOwnership);
+  RaverieBindEvent(Events::NetUserLostObjectOwnership, NetUserLostObjectOwnership);
+  RaverieBindEvent(Events::NetUserAcquiredObjectOwnership, NetUserAcquiredObjectOwnership);
 
   //
   // NetObject Events
   //
 
   // Object Scope:
-  ZeroBindEvent(Events::NetObjectOnline, NetObjectOnline);
-  ZeroBindEvent(Events::NetObjectOffline, NetObjectOffline);
+  RaverieBindEvent(Events::NetObjectOnline, NetObjectOnline);
+  RaverieBindEvent(Events::NetObjectOffline, NetObjectOffline);
 
   // Network Ownership:
-  ZeroBindEvent(Events::NetUserOwnerChanged, NetUserOwnerChanged);
+  RaverieBindEvent(Events::NetUserOwnerChanged, NetUserOwnerChanged);
 
   // Network Channel Property Change:
-  ZeroBindEvent(Events::NetChannelOutgoingPropertyInitialized, NetChannelPropertyChange);
-  ZeroBindEvent(Events::NetChannelIncomingPropertyInitialized, NetChannelPropertyChange);
-  ZeroBindEvent(Events::NetChannelOutgoingPropertyUninitialized, NetChannelPropertyChange);
-  ZeroBindEvent(Events::NetChannelIncomingPropertyUninitialized, NetChannelPropertyChange);
-  ZeroBindEvent(Events::NetChannelOutgoingPropertyChanged, NetChannelPropertyChange);
-  ZeroBindEvent(Events::NetChannelIncomingPropertyChanged, NetChannelPropertyChange);
+  RaverieBindEvent(Events::NetChannelOutgoingPropertyInitialized, NetChannelPropertyChange);
+  RaverieBindEvent(Events::NetChannelIncomingPropertyInitialized, NetChannelPropertyChange);
+  RaverieBindEvent(Events::NetChannelOutgoingPropertyUninitialized, NetChannelPropertyChange);
+  RaverieBindEvent(Events::NetChannelIncomingPropertyUninitialized, NetChannelPropertyChange);
+  RaverieBindEvent(Events::NetChannelOutgoingPropertyChanged, NetChannelPropertyChange);
+  RaverieBindEvent(Events::NetChannelIncomingPropertyChanged, NetChannelPropertyChange);
 
   //
   // NetEvent Events
   //
 
   // Event Handling:
-  ZeroBindEvent(Events::NetEventSent, NetEventSent);
-  ZeroBindEvent(Events::NetEventReceived, NetEventReceived);
+  RaverieBindEvent(Events::NetEventSent, NetEventSent);
+  RaverieBindEvent(Events::NetEventReceived, NetEventReceived);
 
   //
   // MasterServer Events
   //
 
-  ZeroBindEvent(Events::NetHostRecordDiscovered, NetHostRecordEvent);
-  ZeroBindEvent(Events::NetHostRecordUpdate, NetHostRecordEvent);
-  ZeroBindEvent(Events::NetHostRecordExpired, NetHostRecordEvent);
+  RaverieBindEvent(Events::NetHostRecordDiscovered, NetHostRecordEvent);
+  RaverieBindEvent(Events::NetHostRecordUpdate, NetHostRecordEvent);
+  RaverieBindEvent(Events::NetHostRecordExpired, NetHostRecordEvent);
 }
 
 //                                  NetRequest //
@@ -246,13 +246,13 @@ NetRequest::NetRequest(NetRequestType::Enum netRequestType,
 
 //                              AcquireNetHostInfo //
 
-ZilchDefineType(AcquireNetHostInfo, builder, type)
+RaverieDefineType(AcquireNetHostInfo, builder, type)
 {
   // Bind documentation
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
   // Bind properties
-  ZilchBindFieldProperty(mReturnHostInfo);
+  RaverieBindFieldProperty(mReturnHostInfo);
 }
 
 AcquireNetHostInfo::AcquireNetHostInfo(GameSession* gameSession) : mReturnHostInfo(gameSession)
@@ -265,16 +265,16 @@ AcquireNetHostInfo::AcquireNetHostInfo(GameSession* gameSession) : mReturnHostIn
 
 //                                 NetHostUpdate //
 
-ZilchDefineType(NetHostUpdate, builder, type)
+RaverieDefineType(NetHostUpdate, builder, type)
 {
   // Bind documentation
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
   // Bind properties
-  ZilchBindFieldGetterProperty(mRefreshResult);
-  ZilchBindFieldGetterProperty(mResponseTime);
-  ZilchBindFieldGetterProperty(mNetwork);
-  ZilchBindFieldGetterProperty(mHost);
+  RaverieBindFieldGetterProperty(mRefreshResult);
+  RaverieBindFieldGetterProperty(mResponseTime);
+  RaverieBindFieldGetterProperty(mNetwork);
+  RaverieBindFieldGetterProperty(mHost);
 }
 
 NetHostUpdate::NetHostUpdate() :
@@ -287,13 +287,13 @@ NetHostUpdate::NetHostUpdate() :
 
 //                                 NetHostListUpdate //
 
-ZilchDefineType(NetHostListUpdate, builder, type)
+RaverieDefineType(NetHostListUpdate, builder, type)
 {
   // Bind documentation
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
   // Bind properties
-  ZilchBindFieldGetterProperty(mNetwork);
+  RaverieBindFieldGetterProperty(mNetwork);
 }
 
 NetHostListUpdate::NetHostListUpdate() : mNetwork(Network::LAN)
@@ -308,18 +308,18 @@ NetHostListUpdate::NetHostListUpdate() : mNetwork(Network::LAN)
 
 //                                NetPeerOpened //
 
-ZilchDefineType(NetPeerOpened, builder, type)
+RaverieDefineType(NetPeerOpened, builder, type)
 {
   // Bind documentation
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 }
 
 //                                 NetPeerClosed //
 
-ZilchDefineType(NetPeerClosed, builder, type)
+RaverieDefineType(NetPeerClosed, builder, type)
 {
   // Bind documentation
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 }
 
 ////////////////
@@ -328,13 +328,13 @@ ZilchDefineType(NetPeerClosed, builder, type)
 
 //                                 NetGameStarted //
 
-ZilchDefineType(NetGameStarted, builder, type)
+RaverieDefineType(NetGameStarted, builder, type)
 {
   // Bind documentation
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
   // Bind properties
-  ZilchBindFieldGetterProperty(mGameSession);
+  RaverieBindFieldGetterProperty(mGameSession);
 }
 
 NetGameStarted::NetGameStarted() : mGameSession(nullptr)
@@ -349,15 +349,15 @@ NetGameStarted::NetGameStarted() : mGameSession(nullptr)
 
 //                           NetPeerSentConnectRequest //
 
-ZilchDefineType(NetPeerSentConnectRequest, builder, type)
+RaverieDefineType(NetPeerSentConnectRequest, builder, type)
 {
   // Bind documentation
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
   // Bind properties
-  ZilchBindFieldGetterProperty(mTheirIpAddress);
-  ZilchBindFieldGetterProperty(mOurRequestBundle);
-  ZilchBindFieldGetterProperty(mOurPendingUserAddRequestCount);
+  RaverieBindFieldGetterProperty(mTheirIpAddress);
+  RaverieBindFieldGetterProperty(mOurRequestBundle);
+  RaverieBindFieldGetterProperty(mOurPendingUserAddRequestCount);
 }
 
 NetPeerSentConnectRequest::NetPeerSentConnectRequest(GameSession* gameSession) :
@@ -369,18 +369,18 @@ NetPeerSentConnectRequest::NetPeerSentConnectRequest(GameSession* gameSession) :
 
 //                         NetPeerReceivedConnectRequest //
 
-ZilchDefineType(NetPeerReceivedConnectRequest, builder, type)
+RaverieDefineType(NetPeerReceivedConnectRequest, builder, type)
 {
   // Bind documentation
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
   // Bind properties
-  ZilchBindFieldGetterProperty(mTheirIpAddress);
-  ZilchBindFieldGetterProperty(mTheirRequestBundle);
-  ZilchBindFieldGetterProperty(mTheirPendingUserAddRequestCount);
-  ZilchBindFieldGetterProperty(mOurIpAddress);
-  ZilchBindFieldProperty(mReturnOurConnectResponse);
-  ZilchBindFieldProperty(mReturnOurResponseBundle);
+  RaverieBindFieldGetterProperty(mTheirIpAddress);
+  RaverieBindFieldGetterProperty(mTheirRequestBundle);
+  RaverieBindFieldGetterProperty(mTheirPendingUserAddRequestCount);
+  RaverieBindFieldGetterProperty(mOurIpAddress);
+  RaverieBindFieldProperty(mReturnOurConnectResponse);
+  RaverieBindFieldProperty(mReturnOurResponseBundle);
 }
 
 NetPeerReceivedConnectRequest::NetPeerReceivedConnectRequest(GameSession* gameSession) :
@@ -395,19 +395,19 @@ NetPeerReceivedConnectRequest::NetPeerReceivedConnectRequest(GameSession* gameSe
 
 //                           NetPeerSentConnectResponse //
 
-ZilchDefineType(NetPeerSentConnectResponse, builder, type)
+RaverieDefineType(NetPeerSentConnectResponse, builder, type)
 {
   // Bind documentation
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
   // Bind properties
-  ZilchBindFieldGetterProperty(mTheirNetPeerId);
-  ZilchBindFieldGetterProperty(mTheirIpAddress);
-  ZilchBindFieldGetterProperty(mTheirRequestBundle);
-  ZilchBindFieldGetterProperty(mTheirPendingUserAddRequestCount);
-  ZilchBindFieldGetterProperty(mOurIpAddress);
-  ZilchBindFieldGetterProperty(mOurConnectResponse);
-  ZilchBindFieldGetterProperty(mOurResponseBundle);
+  RaverieBindFieldGetterProperty(mTheirNetPeerId);
+  RaverieBindFieldGetterProperty(mTheirIpAddress);
+  RaverieBindFieldGetterProperty(mTheirRequestBundle);
+  RaverieBindFieldGetterProperty(mTheirPendingUserAddRequestCount);
+  RaverieBindFieldGetterProperty(mOurIpAddress);
+  RaverieBindFieldGetterProperty(mOurConnectResponse);
+  RaverieBindFieldGetterProperty(mOurResponseBundle);
 }
 
 NetPeerSentConnectResponse::NetPeerSentConnectResponse(GameSession* gameSession) :
@@ -423,19 +423,19 @@ NetPeerSentConnectResponse::NetPeerSentConnectResponse(GameSession* gameSession)
 
 //                        NetPeerReceivedConnectResponse //
 
-ZilchDefineType(NetPeerReceivedConnectResponse, builder, type)
+RaverieDefineType(NetPeerReceivedConnectResponse, builder, type)
 {
   // Bind documentation
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
   // Bind properties
-  ZilchBindFieldGetterProperty(mTheirIpAddress);
-  ZilchBindFieldGetterProperty(mOurRequestBundle);
-  ZilchBindFieldGetterProperty(mOurPendingUserAddRequestCount);
-  ZilchBindFieldGetterProperty(mOurIpAddress);
-  ZilchBindFieldGetterProperty(mTheirConnectResponse);
-  ZilchBindFieldGetterProperty(mTheirResponseBundle);
-  ZilchBindFieldGetterProperty(mOurNetPeerId);
+  RaverieBindFieldGetterProperty(mTheirIpAddress);
+  RaverieBindFieldGetterProperty(mOurRequestBundle);
+  RaverieBindFieldGetterProperty(mOurPendingUserAddRequestCount);
+  RaverieBindFieldGetterProperty(mOurIpAddress);
+  RaverieBindFieldGetterProperty(mTheirConnectResponse);
+  RaverieBindFieldGetterProperty(mTheirResponseBundle);
+  RaverieBindFieldGetterProperty(mOurNetPeerId);
 }
 
 NetPeerReceivedConnectResponse::NetPeerReceivedConnectResponse(GameSession* gameSession) :
@@ -455,15 +455,15 @@ NetPeerReceivedConnectResponse::NetPeerReceivedConnectResponse(GameSession* game
 
 //                                NetLinkConnected //
 
-ZilchDefineType(NetLinkConnected, builder, type)
+RaverieDefineType(NetLinkConnected, builder, type)
 {
   // Bind documentation
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
   // Bind properties
-  ZilchBindFieldGetterProperty(mTheirNetPeerId);
-  ZilchBindFieldGetterProperty(mTheirIpAddress);
-  ZilchBindFieldGetterProperty(mDirection);
+  RaverieBindFieldGetterProperty(mTheirNetPeerId);
+  RaverieBindFieldGetterProperty(mTheirIpAddress);
+  RaverieBindFieldGetterProperty(mDirection);
 }
 
 NetLinkConnected::NetLinkConnected() :
@@ -475,17 +475,17 @@ NetLinkConnected::NetLinkConnected() :
 
 //                              NetLinkDisconnected //
 
-ZilchDefineType(NetLinkDisconnected, builder, type)
+RaverieDefineType(NetLinkDisconnected, builder, type)
 {
   // Bind documentation
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
   // Bind properties
-  ZilchBindFieldGetterProperty(mTheirNetPeerId);
-  ZilchBindFieldGetterProperty(mTheirIpAddress);
-  ZilchBindFieldGetterProperty(mDisconnectReason);
-  ZilchBindFieldGetterProperty(mRequestBundle);
-  ZilchBindFieldGetterProperty(mDirection);
+  RaverieBindFieldGetterProperty(mTheirNetPeerId);
+  RaverieBindFieldGetterProperty(mTheirIpAddress);
+  RaverieBindFieldGetterProperty(mDisconnectReason);
+  RaverieBindFieldGetterProperty(mRequestBundle);
+  RaverieBindFieldGetterProperty(mDirection);
 }
 
 NetLinkDisconnected::NetLinkDisconnected(GameSession* gameSession) :
@@ -505,15 +505,15 @@ NetLinkDisconnected::NetLinkDisconnected(GameSession* gameSession) :
 
 //                                NetLevelStarted //
 
-ZilchDefineType(NetLevelStarted, builder, type)
+RaverieDefineType(NetLevelStarted, builder, type)
 {
   // Bind documentation
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
   // Bind properties
-  ZilchBindFieldGetterProperty(mGameSession);
-  ZilchBindFieldGetterProperty(mSpace);
-  ZilchBindFieldGetterProperty(mLevelName);
+  RaverieBindFieldGetterProperty(mGameSession);
+  RaverieBindFieldGetterProperty(mSpace);
+  RaverieBindFieldGetterProperty(mLevelName);
 }
 
 NetLevelStarted::NetLevelStarted() : mGameSession(nullptr), mSpace(nullptr), mLevelName()
@@ -528,15 +528,15 @@ NetLevelStarted::NetLevelStarted() : mGameSession(nullptr), mSpace(nullptr), mLe
 
 //                          NetPeerSentUserAddRequest //
 
-ZilchDefineType(NetPeerSentUserAddRequest, builder, type)
+RaverieDefineType(NetPeerSentUserAddRequest, builder, type)
 {
   // Bind documentation
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
   // Bind properties
-  ZilchBindFieldGetterProperty(mTheirNetPeerId);
-  ZilchBindFieldGetterProperty(mTheirIpAddress);
-  ZilchBindFieldGetterProperty(mOurRequestBundle);
+  RaverieBindFieldGetterProperty(mTheirNetPeerId);
+  RaverieBindFieldGetterProperty(mTheirIpAddress);
+  RaverieBindFieldGetterProperty(mOurRequestBundle);
 }
 
 NetPeerSentUserAddRequest::NetPeerSentUserAddRequest(GameSession* gameSession) :
@@ -548,19 +548,19 @@ NetPeerSentUserAddRequest::NetPeerSentUserAddRequest(GameSession* gameSession) :
 
 //                        NetPeerReceivedUserAddRequest //
 
-ZilchDefineType(NetPeerReceivedUserAddRequest, builder, type)
+RaverieDefineType(NetPeerReceivedUserAddRequest, builder, type)
 {
   // Bind documentation
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
   // Bind properties
-  ZilchBindFieldGetterProperty(mTheirNetPeerId);
-  ZilchBindFieldGetterProperty(mTheirIpAddress);
-  ZilchBindFieldGetterProperty(mTheirRequestBundle);
-  ZilchBindFieldProperty(mReturnOurAddResponse);
-  ZilchBindFieldProperty(mReturnOurResponseBundle);
-  ZilchBindFieldProperty(mReturnTheirNetUser);
-  ZilchBindFieldGetterProperty(mTheirNetUserId);
+  RaverieBindFieldGetterProperty(mTheirNetPeerId);
+  RaverieBindFieldGetterProperty(mTheirIpAddress);
+  RaverieBindFieldGetterProperty(mTheirRequestBundle);
+  RaverieBindFieldProperty(mReturnOurAddResponse);
+  RaverieBindFieldProperty(mReturnOurResponseBundle);
+  RaverieBindFieldProperty(mReturnTheirNetUser);
+  RaverieBindFieldGetterProperty(mTheirNetUserId);
 }
 
 NetPeerReceivedUserAddRequest::NetPeerReceivedUserAddRequest(GameSession* gameSession) :
@@ -576,19 +576,19 @@ NetPeerReceivedUserAddRequest::NetPeerReceivedUserAddRequest(GameSession* gameSe
 
 //                          NetPeerSentUserAddResponse //
 
-ZilchDefineType(NetPeerSentUserAddResponse, builder, type)
+RaverieDefineType(NetPeerSentUserAddResponse, builder, type)
 {
   // Bind documentation
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
   // Bind properties
-  ZilchBindFieldGetterProperty(mTheirNetPeerId);
-  ZilchBindFieldGetterProperty(mTheirIpAddress);
-  ZilchBindFieldGetterProperty(mTheirRequestBundle);
-  ZilchBindFieldGetterProperty(mOurAddResponse);
-  ZilchBindFieldGetterProperty(mOurResponseBundle);
-  ZilchBindFieldGetterProperty(mTheirNetUserId);
-  ZilchBindFieldGetterProperty(mTheirNetUser);
+  RaverieBindFieldGetterProperty(mTheirNetPeerId);
+  RaverieBindFieldGetterProperty(mTheirIpAddress);
+  RaverieBindFieldGetterProperty(mTheirRequestBundle);
+  RaverieBindFieldGetterProperty(mOurAddResponse);
+  RaverieBindFieldGetterProperty(mOurResponseBundle);
+  RaverieBindFieldGetterProperty(mTheirNetUserId);
+  RaverieBindFieldGetterProperty(mTheirNetUser);
 }
 
 /// Constructor.
@@ -605,18 +605,18 @@ NetPeerSentUserAddResponse::NetPeerSentUserAddResponse(GameSession* gameSession)
 
 //                        NetPeerReceivedUserAddResponse //
 
-ZilchDefineType(NetPeerReceivedUserAddResponse, builder, type)
+RaverieDefineType(NetPeerReceivedUserAddResponse, builder, type)
 {
   // Bind documentation
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
   // Bind properties
-  ZilchBindFieldGetterProperty(mTheirNetPeerId);
-  ZilchBindFieldGetterProperty(mTheirIpAddress);
-  ZilchBindFieldGetterProperty(mOurRequestBundle);
-  ZilchBindFieldGetterProperty(mTheirAddResponse);
-  ZilchBindFieldGetterProperty(mTheirResponseBundle);
-  ZilchBindFieldGetterProperty(mOurNetUserId);
+  RaverieBindFieldGetterProperty(mTheirNetPeerId);
+  RaverieBindFieldGetterProperty(mTheirIpAddress);
+  RaverieBindFieldGetterProperty(mOurRequestBundle);
+  RaverieBindFieldGetterProperty(mTheirAddResponse);
+  RaverieBindFieldGetterProperty(mTheirResponseBundle);
+  RaverieBindFieldGetterProperty(mOurNetUserId);
 }
 
 NetPeerReceivedUserAddResponse::NetPeerReceivedUserAddResponse(GameSession* gameSession) :
@@ -635,26 +635,26 @@ NetPeerReceivedUserAddResponse::NetPeerReceivedUserAddResponse(GameSession* game
 
 //                          NetUserLostObjectOwnership //
 
-ZilchDefineType(NetUserLostObjectOwnership, builder, type)
+RaverieDefineType(NetUserLostObjectOwnership, builder, type)
 {
   // Bind documentation
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
   // Bind properties
-  ZilchBindFieldGetterProperty(mLostObject);
-  ZilchBindFieldGetterProperty(mCurrentNetUserOwner);
+  RaverieBindFieldGetterProperty(mLostObject);
+  RaverieBindFieldGetterProperty(mCurrentNetUserOwner);
 }
 
 //                        NetUserAcquiredObjectOwnership //
 
-ZilchDefineType(NetUserAcquiredObjectOwnership, builder, type)
+RaverieDefineType(NetUserAcquiredObjectOwnership, builder, type)
 {
   // Bind documentation
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
   // Bind properties
-  ZilchBindFieldGetterProperty(mAcquiredObject);
-  ZilchBindFieldGetterProperty(mPreviousNetUserOwner);
+  RaverieBindFieldGetterProperty(mAcquiredObject);
+  RaverieBindFieldGetterProperty(mPreviousNetUserOwner);
 }
 
 //                               NetObject Events //
@@ -665,10 +665,10 @@ ZilchDefineType(NetUserAcquiredObjectOwnership, builder, type)
 
 //                           RegisterCppNetProperties //
 
-ZilchDefineType(RegisterCppNetProperties, builder, type)
+RaverieDefineType(RegisterCppNetProperties, builder, type)
 {
   // Bind documentation
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 }
 
 //////////////////
@@ -677,30 +677,30 @@ ZilchDefineType(RegisterCppNetProperties, builder, type)
 
 //                                 NetObjectOnline //
 
-ZilchDefineType(NetObjectOnline, builder, type)
+RaverieDefineType(NetObjectOnline, builder, type)
 {
   // Bind documentation
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
   // Bind properties
-  ZilchBindFieldGetterProperty(mGameSession);
-  ZilchBindFieldGetterProperty(mSpace);
-  ZilchBindFieldGetterProperty(mObject);
-  ZilchBindFieldGetterProperty(mIsStartOfLifespan);
+  RaverieBindFieldGetterProperty(mGameSession);
+  RaverieBindFieldGetterProperty(mSpace);
+  RaverieBindFieldGetterProperty(mObject);
+  RaverieBindFieldGetterProperty(mIsStartOfLifespan);
 }
 
 //                               NetObjectOffline //
 
-ZilchDefineType(NetObjectOffline, builder, type)
+RaverieDefineType(NetObjectOffline, builder, type)
 {
   // Bind documentation
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
   // Bind properties
-  ZilchBindFieldGetterProperty(mGameSession);
-  ZilchBindFieldGetterProperty(mSpace);
-  ZilchBindFieldGetterProperty(mObject);
-  ZilchBindFieldGetterProperty(mIsEndOfLifespan);
+  RaverieBindFieldGetterProperty(mGameSession);
+  RaverieBindFieldGetterProperty(mSpace);
+  RaverieBindFieldGetterProperty(mObject);
+  RaverieBindFieldGetterProperty(mIsEndOfLifespan);
 }
 
 ///////////////////////
@@ -709,14 +709,14 @@ ZilchDefineType(NetObjectOffline, builder, type)
 
 //                             NetUserOwnerChanged //
 
-ZilchDefineType(NetUserOwnerChanged, builder, type)
+RaverieDefineType(NetUserOwnerChanged, builder, type)
 {
   // Bind documentation
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
   // Bind properties
-  ZilchBindFieldGetterProperty(mPreviousNetUserOwner);
-  ZilchBindFieldGetterProperty(mCurrentNetUserOwner);
+  RaverieBindFieldGetterProperty(mPreviousNetUserOwner);
+  RaverieBindFieldGetterProperty(mCurrentNetUserOwner);
 }
 
 /////////////////////////////////////
@@ -725,19 +725,19 @@ ZilchDefineType(NetUserOwnerChanged, builder, type)
 
 //                           NetChannelPropertyChange //
 
-ZilchDefineType(NetChannelPropertyChange, builder, type)
+RaverieDefineType(NetChannelPropertyChange, builder, type)
 {
   // Bind documentation
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
   // Bind properties
-  ZilchBindFieldGetterProperty(mTimestamp);
-  ZilchBindFieldGetterProperty(mReplicationPhase);
-  ZilchBindFieldGetterProperty(mDirection);
-  ZilchBindFieldGetterProperty(mObject);
-  ZilchBindFieldGetterProperty(mChannelName);
-  ZilchBindFieldGetterProperty(mComponentName);
-  ZilchBindFieldGetterProperty(mPropertyName);
+  RaverieBindFieldGetterProperty(mTimestamp);
+  RaverieBindFieldGetterProperty(mReplicationPhase);
+  RaverieBindFieldGetterProperty(mDirection);
+  RaverieBindFieldGetterProperty(mObject);
+  RaverieBindFieldGetterProperty(mChannelName);
+  RaverieBindFieldGetterProperty(mComponentName);
+  RaverieBindFieldGetterProperty(mPropertyName);
 }
 
 //                                NetEvent Events //
@@ -748,40 +748,40 @@ ZilchDefineType(NetChannelPropertyChange, builder, type)
 
 //                                 NetEventSent //
 
-ZilchDefineType(NetEventSent, builder, type)
+RaverieDefineType(NetEventSent, builder, type)
 {
   // Bind documentation
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
   // Bind properties
-  ZilchBindFieldGetterProperty(mTheirNetPeerId);
-  ZilchBindFieldGetterProperty(mNetEvent);
-  ZilchBindFieldGetterProperty(mDestination);
+  RaverieBindFieldGetterProperty(mTheirNetPeerId);
+  RaverieBindFieldGetterProperty(mNetEvent);
+  RaverieBindFieldGetterProperty(mDestination);
 }
 
 //                               NetEventReceived //
 
-ZilchDefineType(NetEventReceived, builder, type)
+RaverieDefineType(NetEventReceived, builder, type)
 {
   // Bind documentation
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
   // Bind properties
-  ZilchBindFieldGetterProperty(mTheirNetPeerId);
-  ZilchBindFieldGetterProperty(mNetEvent);
-  ZilchBindFieldGetterProperty(mDestination);
-  ZilchBindFieldProperty(mReturnAllow);
+  RaverieBindFieldGetterProperty(mTheirNetPeerId);
+  RaverieBindFieldGetterProperty(mNetEvent);
+  RaverieBindFieldGetterProperty(mDestination);
+  RaverieBindFieldProperty(mReturnAllow);
 }
 
 //                                 NetHostUpdate //
 
-ZilchDefineType(NetHostRecordEvent, builder, type)
+RaverieDefineType(NetHostRecordEvent, builder, type)
 {
   // Bind documentation
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
   // Bind properties
-  ZilchBindFieldGetterProperty(mHostRecord);
+  RaverieBindFieldGetterProperty(mHostRecord);
 }
 
 NetHostRecordEvent::NetHostRecordEvent() : mHostRecord(nullptr)
@@ -792,4 +792,4 @@ NetHostRecordEvent::NetHostRecordEvent(NetHostRecord* netHostRecord) : mHostReco
 {
 }
 
-} // namespace Zero
+} // namespace Raverie

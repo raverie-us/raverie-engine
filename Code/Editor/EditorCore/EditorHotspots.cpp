@@ -2,7 +2,7 @@
 #include "Precompiled.hpp"
 #include "Foundation/Platform/PlatformCommunication.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // http:\\ or https:\\ then any number of url elements till space
@@ -60,7 +60,7 @@ void ResourceHotspot::OnClick(Matches& matches)
 
     // Edit all resources except for levels (clicking on level
     // in the console should not change levels)
-    if (resource && ZilchVirtualTypeId(resource) != ZilchTypeId(Level))
+    if (resource && RaverieVirtualTypeId(resource) != RaverieTypeId(Level))
     {
       // Edit the resource
       Z::gEditor->EditResource(resource);
@@ -69,7 +69,7 @@ void ResourceHotspot::OnClick(Matches& matches)
       // (to make sure the user sees that the resource window that was opened)
       Z::gEditor->ShowWindow("Properties");
     }
-    else if (ZilchVirtualTypeId(resource) == ZilchTypeId(Level))
+    else if (RaverieVirtualTypeId(resource) == RaverieTypeId(Level))
     {
       return;
     }
@@ -116,7 +116,7 @@ void ObjectHotspot::OnClick(Matches& matches)
   }
 }
 
-// File form of File "C:\File.z", line 33, message
+// File form of File "C:\File.raveriescript", line 33, message
 cstr FileRegex = "File \"(.*)\", line ([0-9]+)";
 
 FileHotspot::FileHotspot() : TextEditorHotspot(FileRegex)
@@ -151,4 +151,4 @@ void FileHotspot::OnClick(Matches& matches)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

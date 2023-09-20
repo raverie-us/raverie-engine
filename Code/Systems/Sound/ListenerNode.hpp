@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 // Listener Position Info
 
@@ -30,9 +30,9 @@ public:
 class ListenerNode : public SoundNode
 {
 public:
-  ZilchDeclareType(ListenerNode, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ListenerNode, TypeCopyMode::ReferenceType);
 
-  ListenerNode(Zero::StringParam name, unsigned ID, ListenerWorldPositionInfo positionInfo);
+  ListenerNode(Raverie::StringParam name, unsigned ID, ListenerWorldPositionInfo positionInfo);
   ~ListenerNode();
 
   // Updates the position and velocity of the listener
@@ -81,4 +81,4 @@ private:
   bool mDeactivatingThreaded;
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Regions are used to make PhysicsEffects affect a region of space. Any
@@ -10,7 +10,7 @@ namespace Zero
 class Region : public Component
 {
 public:
-  ZilchDeclareType(Region, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Region, TypeCopyMode::ReferenceType);
 
   Region();
 
@@ -65,4 +65,4 @@ private:
 
 typedef InList<Region, &Region::SpaceLink> RegionList;
 
-} // namespace Zero
+} // namespace Raverie

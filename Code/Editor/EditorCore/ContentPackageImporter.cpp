@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace ContentImportUi
@@ -159,20 +159,20 @@ struct ContentImporterSource : public DataSource
     if (flip)
     {
       if (column == CommonColumns::Name)
-        Zero::Sort(mListing->SortedEntries.All(), GetSorter(ContentEntryNameSorter, greater<String>));
+        Raverie::Sort(mListing->SortedEntries.All(), GetSorter(ContentEntryNameSorter, greater<String>));
       else if (column == CommonColumns::Type)
-        Zero::Sort(mListing->SortedEntries.All(), GetSorter(ContentEntryExtensionSorter, greater<String>));
+        Raverie::Sort(mListing->SortedEntries.All(), GetSorter(ContentEntryExtensionSorter, greater<String>));
       else if (column == "Import")
-        Zero::Sort(mListing->SortedEntries.All(), GetSorter(ContentEntryActiveSorter, greater<bool>));
+        Raverie::Sort(mListing->SortedEntries.All(), GetSorter(ContentEntryActiveSorter, greater<bool>));
     }
     else
     {
       if (column == CommonColumns::Name)
-        Zero::Sort(mListing->SortedEntries.All(), GetSorter(ContentEntryNameSorter, less<String>));
+        Raverie::Sort(mListing->SortedEntries.All(), GetSorter(ContentEntryNameSorter, less<String>));
       else if (column == CommonColumns::Type)
-        Zero::Sort(mListing->SortedEntries.All(), GetSorter(ContentEntryExtensionSorter, less<String>));
+        Raverie::Sort(mListing->SortedEntries.All(), GetSorter(ContentEntryExtensionSorter, less<String>));
       else if (column == "Import")
-        Zero::Sort(mListing->SortedEntries.All(), GetSorter(ContentEntryActiveSorter, less<bool>));
+        Raverie::Sort(mListing->SortedEntries.All(), GetSorter(ContentEntryActiveSorter, less<bool>));
     }
   }
 };
@@ -360,8 +360,8 @@ void ImportContentPackage()
   FileDialogConfig* config = FileDialogConfig::Create();
   config->EventName = "OnImportFileSelected";
   config->CallbackObject = widget;
-  config->AddFilter("Import Pack File", "*.zeropack");
+  config->AddFilter("Import Pack File", "*.raveriepack");
   Shell::sInstance->OpenFile(*config);
 }
 
-} // namespace Zero
+} // namespace Raverie

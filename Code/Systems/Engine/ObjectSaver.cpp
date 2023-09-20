@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Object Saver
@@ -33,7 +33,7 @@ void ObjectSaver::SaveObject(
     Object* object, Object* propertyPathParent, PropertyPath& path, bool patching, InheritIdContext::Enum context)
 {
   // Check to see if we should serialize this object
-  BoundType* objectType = ZilchVirtualTypeId(object);
+  BoundType* objectType = RaverieVirtualTypeId(object);
 
   // Check to see if we should serialize this object
   if (SerializationFilter* filter = objectType->HasInherited<SerializationFilter>())
@@ -134,7 +134,7 @@ void ObjectSaver::SaveProperties(Object* object,
     // Only save out properties if the object had modifications
     if (ObjectState* objectState = modifications->GetObjectState(propertyPathParent))
     {
-      BoundType* objectType = ZilchVirtualTypeId(object);
+      BoundType* objectType = RaverieVirtualTypeId(object);
       forRange (Property* metaProperty, objectType->GetProperties())
       {
         // Skip properties that aren't serialized (disabled until full meta
@@ -198,7 +198,7 @@ void ObjectSaver::SaveChildren(Object* object,
                                bool onlyModifiedChildren)
 {
   // We need a MetaComposition to get access to the object's children
-  BoundType* objectMeta = ZilchVirtualTypeId(object);
+  BoundType* objectMeta = RaverieVirtualTypeId(object);
 
   MetaComposition* composition = objectMeta->Has<MetaComposition>();
   if (composition == nullptr)
@@ -252,7 +252,7 @@ void ObjectSaver::BuildPolymorphicInfo(PolymorphicInfo& info,
                                        bool patching)
 {
   LocalModifications* modifications = LocalModifications::GetInstance();
-  BoundType* objectType = ZilchVirtualTypeId(object);
+  BoundType* objectType = RaverieVirtualTypeId(object);
 
   // Set up serialization info
   info.mTypeName = objectType->Name.c_str();
@@ -303,4 +303,4 @@ void ObjectSaver::BuildPolymorphicInfo(PolymorphicInfo& info,
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

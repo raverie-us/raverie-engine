@@ -4,7 +4,7 @@
 // Includes
 #include "Typedefs.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Conversion from paper:
@@ -49,4 +49,4 @@ private:
   u16 mOffsetTable[64];
 };
 
-} // namespace Zero
+} // namespace Raverie

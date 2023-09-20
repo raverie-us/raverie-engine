@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 //                                  PeerLink //
@@ -12,9 +12,9 @@ void PeerLink::ResetSession()
   mTheirGuid = 0;
   mOurIpAddress = IpAddress();
   LinkInbox defaultInbox(this);
-  mInbox = ZeroMove(defaultInbox);
+  mInbox = RaverieMove(defaultInbox);
   LinkOutbox defaultOutbox(this);
-  mOutbox = ZeroMove(defaultOutbox);
+  mOutbox = RaverieMove(defaultOutbox);
 
   /// State Data
   mConnectRequested = false;
@@ -246,7 +246,7 @@ MessageReceiptId PeerLink::Send(Status& status,
   messageCopy.mType = RelativeToAbsolute(messageCopy.mType);
 
   // Send message
-  return SendInternal(status, ZeroMove(messageCopy), reliable, channelId, receipt, priority, lifetime, false);
+  return SendInternal(status, RaverieMove(messageCopy), reliable, channelId, receipt, priority, lifetime, false);
 }
 MessageReceiptId PeerLink::Send(Status& status,
                                 MoveReference<Message> message,
@@ -268,7 +268,7 @@ MessageReceiptId PeerLink::Send(Status& status,
   message->mType = RelativeToAbsolute(message->mType);
 
   // Send message
-  return SendInternal(status, ZeroMove(message), reliable, channelId, receipt, priority, lifetime, false);
+  return SendInternal(status, RaverieMove(message), reliable, channelId, receipt, priority, lifetime, false);
 }
 
 TimeMs PeerLink::GetLocalTime() const
@@ -737,7 +737,7 @@ MessageReceiptId PeerLink::SendInternal(Status& status,
                                         bool isProtocol)
 {
   MessageReceiptId receiptId =
-      mOutbox.PushMessage(status, ZeroMove(message), reliable, channelId, receipt, priority, lifetime, isProtocol);
+      mOutbox.PushMessage(status, RaverieMove(message), reliable, channelId, receipt, priority, lifetime, isProtocol);
   Assert(isProtocol ? status.Succeeded() : true); // (All protocol sends should succeed)
   Assert(receipt ? receiptId : true);             // (All receipted messages should be given
                                                   // a non-zero receipt ID)
@@ -815,7 +815,7 @@ void PeerLink::ReceivePacket(MoveReference<InPacket> inPacket)
   UpdateReceivedPacketBytes(BITS_TO_BYTES(inPacket->GetTotalBits()));
 
   // Receive packet to be processed later
-  mInbox.ReceivePacket(ZeroMove(inPacket));
+  mInbox.ReceivePacket(RaverieMove(inPacket));
 }
 
 void PeerLink::SendPacket(OutPacket& outPacket)
@@ -987,7 +987,7 @@ UpdateLinkState:
 
           // Send connect response message
           Status status;
-          mStateACKId = SendInternal(status, ZeroMove(connectResponseMessage), true, 0, true);
+          mStateACKId = SendInternal(status, RaverieMove(connectResponseMessage), true, 0, true);
 
           // [Link Event]
           LinkEventConnectResponded(TransmissionDirection::Outgoing, connectResponseData);
@@ -1023,7 +1023,7 @@ UpdateLinkState:
 
       // Send connect request message
       Status status;
-      SendInternal(status, ZeroMove(connectRequestMessage), true);
+      SendInternal(status, RaverieMove(connectRequestMessage), true);
 
       // [Link Event]
       LinkEventConnectRequested(TransmissionDirection::Outgoing, connectRequestData);
@@ -1283,7 +1283,7 @@ UpdateLinkState:
 
       // Send connect response message
       Status status;
-      MessageReceiptId receiptId = SendInternal(status, ZeroMove(connectResponseMessage), true, 0, true);
+      MessageReceiptId receiptId = SendInternal(status, RaverieMove(connectResponseMessage), true, 0, true);
 
       // [Link Event]
       LinkEventConnectResponded(TransmissionDirection::Outgoing, connectResponseData);
@@ -1397,7 +1397,7 @@ UpdateLinkState:
 
         // Send disconnect notice message
         Status status;
-        mStateACKId = SendInternal(status, ZeroMove(disconnectNoticeMessage), true, 0, true);
+        mStateACKId = SendInternal(status, RaverieMove(disconnectNoticeMessage), true, 0, true);
 
         // [Link Event]
         LinkEventDisconnectNoticed(TransmissionDirection::Outgoing, disconnectNoticeData);
@@ -1458,7 +1458,7 @@ bool PeerLink::ProcessReceivedCustomMessage(Message& message, bool isEvent)
 
   // Attempt to receive the custom message as a plugin message
   bool continueProcessingCustomMessages = true;
-  bool belongsToPlugin = AttemptPluginMessageReceive(ZeroMove(message), continueProcessingCustomMessages);
+  bool belongsToPlugin = AttemptPluginMessageReceive(RaverieMove(message), continueProcessingCustomMessages);
   if (!belongsToPlugin) // Not a plugin message?
   {
     // Should be a user type
@@ -1632,7 +1632,7 @@ bool PeerLink::AttemptPluginMessageReceipt(MoveReference<OutMessage> message, Re
       message->mType = plugin->AbsoluteToRelative(message->mType);
 
       // [Link Plugin Event]
-      plugin->OnPluginMessageReceipt(ZeroMove(message), receipt);
+      plugin->OnPluginMessageReceipt(RaverieMove(message), receipt);
       return true;
     }
 
@@ -1649,7 +1649,7 @@ bool PeerLink::AttemptPluginMessageReceive(MoveReference<Message> message, bool&
       message->mType = plugin->AbsoluteToRelative(message->mType);
 
       // [Link Plugin Event]
-      plugin->OnPluginMessageReceive(ZeroMove(message), continueProcessingCustomMessages);
+      plugin->OnPluginMessageReceive(RaverieMove(message), continueProcessingCustomMessages);
       return true;
     }
 
@@ -1670,7 +1670,7 @@ void PeerLink::LinkEventConnectRequested(TransmissionDirection::Enum direction,
   connectRequestedMessage.GetData().Write(connectRequestedData);
 
   // Push connect requested event message
-  PushUserEventMessage(ZeroMove(connectRequestedMessage));
+  PushUserEventMessage(RaverieMove(connectRequestedMessage));
 }
 void PeerLink::LinkEventConnectResponded(TransmissionDirection::Enum direction,
                                          const ConnectResponseData& connectResponseData)
@@ -1685,7 +1685,7 @@ void PeerLink::LinkEventConnectResponded(TransmissionDirection::Enum direction,
   connectRespondedMessage.GetData().Write(connectRespondedData);
 
   // Push connect responded event message
-  PushUserEventMessage(ZeroMove(connectRespondedMessage));
+  PushUserEventMessage(RaverieMove(connectRespondedMessage));
 }
 void PeerLink::LinkEventDisconnectNoticed(TransmissionDirection::Enum direction,
                                           const DisconnectNoticeData& disconnectNoticeData)
@@ -1700,7 +1700,7 @@ void PeerLink::LinkEventDisconnectNoticed(TransmissionDirection::Enum direction,
   disconnectNoticedMessage.GetData().Write(disconnectNoticedData);
 
   // Push disconnect noticed event message
-  PushUserEventMessage(ZeroMove(disconnectNoticedMessage));
+  PushUserEventMessage(RaverieMove(disconnectNoticedMessage));
 }
 void PeerLink::LinkEventIncomingChannelOpened(MessageChannelId channelId, TransferMode::Enum transferMode)
 {
@@ -1714,7 +1714,7 @@ void PeerLink::LinkEventIncomingChannelOpened(MessageChannelId channelId, Transf
   incomingChannelOpenedMessage.GetData().Write(incomingChannelOpenedData);
 
   // Push incoming channel opened event message
-  PushUserEventMessage(ZeroMove(incomingChannelOpenedMessage));
+  PushUserEventMessage(RaverieMove(incomingChannelOpenedMessage));
 }
 void PeerLink::LinkEventIncomingChannelClosed(MessageChannelId channelId)
 {
@@ -1727,7 +1727,7 @@ void PeerLink::LinkEventIncomingChannelClosed(MessageChannelId channelId)
   incomingChannelClosedMessage.GetData().Write(incomingChannelClosedData);
 
   // Push incoming channel closed event message
-  PushUserEventMessage(ZeroMove(incomingChannelClosedMessage));
+  PushUserEventMessage(RaverieMove(incomingChannelClosedMessage));
 }
 void PeerLink::LinkEventStateChange(LinkState::Enum newState)
 {
@@ -1740,7 +1740,7 @@ void PeerLink::LinkEventStateChange(LinkState::Enum newState)
   stateChangeMessage.GetData().Write(stateChangeData);
 
   // Push state change event message
-  PushUserEventMessage(ZeroMove(stateChangeMessage));
+  PushUserEventMessage(RaverieMove(stateChangeMessage));
 }
 void PeerLink::LinkEventStatusChange(LinkStatus::Enum newStatus)
 {
@@ -1753,7 +1753,7 @@ void PeerLink::LinkEventStatusChange(LinkStatus::Enum newStatus)
   statusChangeMessage.GetData().Write(statusChangeData);
 
   // Push status change event message
-  PushUserEventMessage(ZeroMove(statusChangeMessage));
+  PushUserEventMessage(RaverieMove(statusChangeMessage));
 }
 void PeerLink::LinkEventReceipt(MessageReceiptId receiptId, Receipt::Enum receipt, bool forUser)
 {
@@ -1768,18 +1768,18 @@ void PeerLink::LinkEventReceipt(MessageReceiptId receiptId, Receipt::Enum receip
 
   // Push receipt event message
   if (forUser)
-    PushUserEventMessage(ZeroMove(receiptMessage));
+    PushUserEventMessage(RaverieMove(receiptMessage));
   else
-    PushProtocolEventMessage(ZeroMove(receiptMessage));
+    PushProtocolEventMessage(RaverieMove(receiptMessage));
 }
 
 void PeerLink::PushUserEventMessage(MoveReference<Message> message)
 {
-  mInbox.PushUserEventMessage(ZeroMove(message));
+  mInbox.PushUserEventMessage(RaverieMove(message));
 }
 void PeerLink::PushProtocolEventMessage(MoveReference<Message> message)
 {
-  mInbox.PushProtocolEventMessage(ZeroMove(message));
+  mInbox.PushProtocolEventMessage(RaverieMove(message));
 }
 
 //                                 LinkPlugin //
@@ -1863,7 +1863,7 @@ MessageReceiptId LinkPlugin::Send(Status& status,
   messageCopy.mType = RelativeToAbsolute(messageCopy.mType);
 
   // Send message
-  return mLink->SendInternal(status, ZeroMove(messageCopy), reliable, channelId, receipt, priority, lifetime, false);
+  return mLink->SendInternal(status, RaverieMove(messageCopy), reliable, channelId, receipt, priority, lifetime, false);
 }
 MessageReceiptId LinkPlugin::Send(Status& status,
                                   MoveReference<Message> message,
@@ -1893,7 +1893,7 @@ MessageReceiptId LinkPlugin::Send(Status& status,
   message->mType = RelativeToAbsolute(message->mType);
 
   // Send message
-  return mLink->SendInternal(status, ZeroMove(message), reliable, channelId, receipt, priority, lifetime, false);
+  return mLink->SendInternal(status, RaverieMove(message), reliable, channelId, receipt, priority, lifetime, false);
 }
 
 LinkPlugin::LinkPlugin(size_t messageTypeCount) :
@@ -1958,4 +1958,4 @@ void LinkPlugin::SetMessageTypeStart(MessageType messageTypeStart)
   mMessageTypeStart = messageTypeStart;
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class EditorViewport;
@@ -9,7 +9,7 @@ class EditorViewport;
 class OrientationGizmoViewport : public Widget
 {
 public:
-  typedef OrientationGizmoViewport ZilchSelf;
+  typedef OrientationGizmoViewport RaverieSelf;
 
   OrientationGizmoViewport(EditorViewport* editorViewport);
   ~OrientationGizmoViewport();
@@ -38,4 +38,4 @@ private:
   Raycaster mRayCaster;
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 const WidgetRect WidgetRect::cZero = WidgetRect::CenterAndSize(Vec2(0, 0), Vec2(0, 0));
@@ -198,4 +198,4 @@ WidgetRect RemoveThicknessRect(Thickness thickness, Vec2Param size)
   return r;
 }
 
-} // namespace Zero
+} // namespace Raverie

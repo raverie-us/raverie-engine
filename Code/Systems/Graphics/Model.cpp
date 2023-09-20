@@ -2,17 +2,17 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(Model, builder, type)
+RaverieDefineType(Model, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindDocumented();
-  ZeroBindInterface(Graphical);
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindComponent();
+  RaverieBindDocumented();
+  RaverieBindInterface(Graphical);
+  RaverieBindSetup(SetupMode::DefaultSerialization);
 
-  ZilchBindGetterSetterProperty(Mesh);
+  RaverieBindGetterSetterProperty(Mesh);
 }
 
 void Model::Initialize(CogInitializer& initializer)
@@ -93,4 +93,4 @@ void Model::OnMeshModified(ResourceEvent* event)
     UpdateBroadPhaseAabb();
 }
 
-} // namespace Zero
+} // namespace Raverie

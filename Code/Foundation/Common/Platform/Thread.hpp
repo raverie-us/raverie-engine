@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Is threading enabled on this platform?
@@ -70,7 +70,7 @@ public:
 
 private:
   String mThreadName;
-  ZeroDeclarePrivateData(Thread, 20);
+  RaverieDeclarePrivateData(Thread, 20);
 };
 
-} // namespace Zero
+} // namespace Raverie

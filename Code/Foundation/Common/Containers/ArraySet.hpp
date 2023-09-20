@@ -4,7 +4,7 @@
 // Includes
 #include "SortedArray.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 /// Array Set is an Associative Sequenced Container
@@ -50,7 +50,7 @@ public:
   }
 
   /// Move Constructor
-  ArraySet(MoveReference<this_type> rhs) : base_type(ZeroMove(static_cast<base_type&>(*rhs)))
+  ArraySet(MoveReference<this_type> rhs) : base_type(RaverieMove(static_cast<base_type&>(*rhs)))
   {
   }
 
@@ -64,7 +64,7 @@ public:
   /// Move Assignment Operator
   ArraySet& operator=(MoveReference<this_type> rhs)
   {
-    base_type::operator=(ZeroMove(static_cast<base_type&>(*rhs)));
+    base_type::operator=(RaverieMove(static_cast<base_type&>(*rhs)));
     return *this;
   }
 
@@ -131,7 +131,7 @@ public:
     {
       // Insert unique element
       size_type index = position - base_type::mData;
-      base_type::Insert(position, ZeroMove(value));
+      base_type::Insert(position, RaverieMove(value));
       return pointer_bool_pair(base_type::mData + index, true);
     }
   }
@@ -166,14 +166,14 @@ public:
     if (position != base_type::End() && base_type::mSorter.Equal(*position, *value)) // Found?
     {
       // Assign over equivalent element
-      *position = ZeroMove(value);
+      *position = RaverieMove(value);
       return pointer_bool_pair(position, false);
     }
     else
     {
       // Insert unique element
       size_type index = position - base_type::mData;
-      base_type::Insert(position, ZeroMove(value));
+      base_type::Insert(position, RaverieMove(value));
       return pointer_bool_pair(base_type::mData + index, true);
     }
   }
@@ -196,7 +196,7 @@ public:
   {
     // Insert all elements in range
     for (; inputRange.Empty(); inputRange.PopFront())
-      Insert(ZeroMove(inputRange.Front()));
+      Insert(RaverieMove(inputRange.Front()));
   }
 
   /// Clears the array and inserts a range of elements at their sorted positions
@@ -217,8 +217,8 @@ public:
   void Assign(MoveReference<inputRangeType> range)
   {
     base_type::Clear();
-    Insert(ZeroMove(range));
+    Insert(RaverieMove(range));
   }
 };
 
-} // namespace Zero
+} // namespace Raverie

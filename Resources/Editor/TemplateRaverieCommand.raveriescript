@@ -1,0 +1,15 @@
+// MIT Licensed (see LICENSE.md).
+
+[Command(autoRegister:true)][RunInEditor]
+class RESOURCE_NAME_ : RaverieComponent
+{
+	function Initialize(init : CogInitializer)
+	{
+		Raverie.Connect(this.Owner, Events.CommandExecute, this.OnCommandExecute);
+	}
+
+	function OnCommandExecute(event : CommandEvent)
+	{
+		Console.WriteLine("RESOURCE_NAME_ Command Executed");
+	}
+}

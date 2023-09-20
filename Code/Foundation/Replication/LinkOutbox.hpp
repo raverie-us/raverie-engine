@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Typedefs
@@ -43,7 +43,7 @@ struct MoveWithoutDestructionOperator<FragmentedReceipt>
 {
   static inline void MoveWithoutDestruction(FragmentedReceipt* dest, FragmentedReceipt* source)
   {
-    new (dest) FragmentedReceipt(ZeroMove(*source));
+    new (dest) FragmentedReceipt(RaverieMove(*source));
   }
 };
 
@@ -166,4 +166,4 @@ class LinkOutbox
   friend class PeerLink;
 };
 
-} // namespace Zero
+} // namespace Raverie

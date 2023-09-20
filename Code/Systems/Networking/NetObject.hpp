@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 //                                  NetObject //
@@ -11,7 +11,7 @@ namespace Zero
 class NetObject : public Replica, public Component
 {
 public:
-  ZilchDeclareType(NetObject, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(NetObject, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetObject();
@@ -461,7 +461,7 @@ public:
 class EditInGameFilter : public MetaPropertyFilter
 {
 public:
-  ZilchDeclareType(EditInGameFilter, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(EditInGameFilter, TypeCopyMode::ReferenceType);
   bool Filter(Member* prop, HandleParam instance) override;
 };
 
@@ -533,4 +533,4 @@ public:
 
 // --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-} // namespace Zero
+} // namespace Raverie

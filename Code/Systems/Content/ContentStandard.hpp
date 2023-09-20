@@ -5,7 +5,7 @@
 #include "Systems/Engine/EngineStandard.hpp"
 #include "Foundation/SpatialPartition/SpatialPartitionStandard.hpp"
 
-namespace Zero
+namespace Raverie
 {
 // Forward declarations
 class ContentLibrary;
@@ -15,16 +15,16 @@ class BuildOptions;
 class ContentComposition;
 
 // Content library
-class ContentMetaLibrary : public Zilch::StaticLibrary
+class ContentMetaLibrary : public Raverie::StaticLibrary
 {
 public:
-  ZilchDeclareStaticLibraryInternals(ContentMetaLibrary);
+  RaverieDeclareStaticLibraryInternals(ContentMetaLibrary);
 
   static void Initialize();
   static void Shutdown();
 };
 
-} // namespace Zero
+} // namespace Raverie
 
 // Our includes
 #include "FileExtensionManager.hpp"

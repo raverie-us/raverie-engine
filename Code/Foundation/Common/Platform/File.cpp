@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 byte* ReadFileIntoMemory(cstr filePath, size_t& fileSize, size_t extra)
@@ -83,11 +83,11 @@ ByteBufferBlock ReadFileIntoByteBufferBlock(cstr path)
 
 String ReadFileIntoString(StringParam path)
 {
-  Zero::DataBlock block = Zero::ReadFileIntoDataBlock(path.c_str());
+  Raverie::DataBlock block = Raverie::ReadFileIntoDataBlock(path.c_str());
   if (block.Data == nullptr)
     return String();
 
-  Zero::String dataFormat((char*)block.Data, block.Size);
+  Raverie::String dataFormat((char*)block.Data, block.Size);
   zDeallocate(block.Data);
   return dataFormat;
 }
@@ -232,4 +232,4 @@ void FileStream::Flush()
   mFile->Flush();
 }
 
-} // namespace Zero
+} // namespace Raverie

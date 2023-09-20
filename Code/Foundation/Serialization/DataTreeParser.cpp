@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Data Tree Parser
@@ -284,7 +284,7 @@ bool DataTreeParser::AcceptValue(bool createNode, DataTokenType::Enum tokenType)
   }
   else if (token.mType == DataTokenType::StringLiteral)
   {
-    node->mTypeName = ZilchTypeId(String)->Name;
+    node->mTypeName = RaverieTypeId(String)->Name;
 
     StringBuilder builder;
     StringRange text = token.mText;
@@ -366,4 +366,4 @@ DataToken& DataTreeParser::GetLastAcceptedToken()
   return mTokens[mCurrentIndex - 1];
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Tags
@@ -23,7 +23,7 @@ DeclareBitField7(TransformUpdateFlags,
 class Transform : public Component
 {
 public:
-  ZilchDeclareType(Transform, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Transform, TypeCopyMode::ReferenceType);
 
   /// Concatenating matrices to generate a world matrix can be very expensive
   /// when dealing with deep hierarchies that are constantly changing. Caching
@@ -178,7 +178,7 @@ private:
 class TransformMetaTransform : public MetaTransform
 {
 public:
-  ZilchDeclareType(TransformMetaTransform, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(TransformMetaTransform, TypeCopyMode::ReferenceType);
 
   MetaTransformInstance GetInstance(HandleParam object) override;
   static MetaTransformInstance BuildInstance(Transform* transform);
@@ -195,4 +195,4 @@ void SetRotationLookAt(Transform* transform, Vec3 point, Vec3 up, Facing::Enum f
 Quat LookAt(Vec3 eyePoint, Vec3 lookAtPoint, Vec3 up, Facing::Enum facing);
 Quat LookTowards(Vec3 direction, Vec3 up, Facing::Enum facing);
 
-} // namespace Zero
+} // namespace Raverie

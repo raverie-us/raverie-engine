@@ -1,29 +1,29 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 DefinePhysicsRuntimeClone(PhysicsMaterial);
 
-ZilchDefineType(PhysicsMaterial, builder, type)
+RaverieDefineType(PhysicsMaterial, builder, type)
 {
-  ZeroBindTag(Tags::Physics);
-  ZeroBindDocumented();
+  RaverieBindTag(Tags::Physics);
+  RaverieBindDocumented();
 
   // For runtime clone
-  ZilchBindConstructor();
+  RaverieBindConstructor();
 
-  ZilchBindMethod(CreateRuntime);
-  ZilchBindMethod(RuntimeClone);
+  RaverieBindMethod(CreateRuntime);
+  RaverieBindMethod(RuntimeClone);
 
-  ZilchBindGetterSetterProperty(Density);
-  ZilchBindFieldProperty(mRestitution)->Add(new EditorSlider(0, 1, real(0.001f)));
-  ZilchBindGetterSetterProperty(Friction);
-  ZilchBindFieldProperty(mRestitutionImportance);
-  ZilchBindFieldProperty(mFrictionImportance);
-  ZilchBindGetterSetter(HighPriority)->AddAttribute(DeprecatedAttribute);
-  ZilchBindMethod(UpdateAndNotifyIfModified);
+  RaverieBindGetterSetterProperty(Density);
+  RaverieBindFieldProperty(mRestitution)->Add(new EditorSlider(0, 1, real(0.001f)));
+  RaverieBindGetterSetterProperty(Friction);
+  RaverieBindFieldProperty(mRestitutionImportance);
+  RaverieBindFieldProperty(mFrictionImportance);
+  RaverieBindGetterSetter(HighPriority)->AddAttribute(DeprecatedAttribute);
+  RaverieBindMethod(UpdateAndNotifyIfModified);
 }
 
 PhysicsMaterial::PhysicsMaterial()
@@ -189,4 +189,4 @@ void PhysicsMaterialManager::UpdateAndNotifyModifiedResources()
   mModifiedResources.Clear();
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -4,7 +4,7 @@
 #include "Memory/Allocator.hpp"
 #include "Utility/Hashing.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 void* const cHashOpenNode = nullptr;
@@ -206,11 +206,11 @@ public:
 
   void Swap(this_type& other)
   {
-    Zero::Swap(mTable, other.mTable);
-    Zero::Swap(mTableSize, other.mTableSize);
-    Zero::Swap(mSize, other.mSize);
-    Zero::Swap(mMaxLoadFactor, other.mMaxLoadFactor);
-    Zero::Swap(mHasher, other.mHasher);
+    Raverie::Swap(mTable, other.mTable);
+    Raverie::Swap(mTableSize, other.mTableSize);
+    Raverie::Swap(mSize, other.mSize);
+    Raverie::Swap(mMaxLoadFactor, other.mMaxLoadFactor);
+    Raverie::Swap(mHasher, other.mHasher);
   }
 
   ////////////Insertion///////////////////////
@@ -590,4 +590,4 @@ protected:
     return (Node*)cHashOpenNode;
   }
 };
-} // namespace Zero
+} // namespace Raverie

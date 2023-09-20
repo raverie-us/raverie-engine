@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 static String gEngineStartTime = GetTimeAndDateStamp();
@@ -86,4 +86,4 @@ public:
   }
 };
 
-} // namespace Zero
+} // namespace Raverie

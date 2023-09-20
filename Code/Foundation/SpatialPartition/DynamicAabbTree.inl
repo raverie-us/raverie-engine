@@ -1,6 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 
-namespace Zero
+namespace Raverie
 {
 
 template <typename ClientDataType>
@@ -180,4 +180,4 @@ void DynamicAabbTree<ClientDataType>::Rebalance(uint iterations)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

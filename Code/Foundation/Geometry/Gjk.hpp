@@ -37,7 +37,7 @@ private:
   Simplex mSimplex;
   Epa mEpa;
 
-  Zero::Array<Vec3> mCSO;
+  Raverie::Array<Vec3> mCSO;
 };
 
 } // namespace Intersection

@@ -7,7 +7,7 @@ namespace
 const float cMinMeshThickness = 0.025f;
 }
 
-namespace Zero
+namespace Raverie
 {
 
 VertexSemanticRange::VertexSemanticRange(const FixedVertexDescription& fixedDesc) :
@@ -34,36 +34,36 @@ void VertexSemanticRange::PopFront()
   ++mCurrentIndex;
 }
 
-ZilchDefineType(VertexBuffer, builder, type)
+RaverieDefineType(VertexBuffer, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindMethod(AddAttribute);
-  ZilchBindMethod(GetAttributes);
+  RaverieBindMethod(AddAttribute);
+  RaverieBindMethod(GetAttributes);
 
-  ZilchBindOverloadedMethod(AddByte, ZilchInstanceOverload(void, int));
-  ZilchBindOverloadedMethod(AddByte, ZilchInstanceOverload(void, IntVec2));
-  ZilchBindOverloadedMethod(AddByte, ZilchInstanceOverload(void, IntVec3));
-  ZilchBindOverloadedMethod(AddByte, ZilchInstanceOverload(void, IntVec4));
-  ZilchBindOverloadedMethod(AddShort, ZilchInstanceOverload(void, int));
-  ZilchBindOverloadedMethod(AddShort, ZilchInstanceOverload(void, IntVec2));
-  ZilchBindOverloadedMethod(AddShort, ZilchInstanceOverload(void, IntVec3));
-  ZilchBindOverloadedMethod(AddShort, ZilchInstanceOverload(void, IntVec4));
-  ZilchBindOverloadedMethod(AddReal, ZilchInstanceOverload(void, real));
-  ZilchBindOverloadedMethod(AddReal, ZilchInstanceOverload(void, Vec2));
-  ZilchBindOverloadedMethod(AddReal, ZilchInstanceOverload(void, Vec3));
-  ZilchBindOverloadedMethod(AddReal, ZilchInstanceOverload(void, Vec4));
-  ZilchBindOverloadedMethod(GetVertexData, ZilchInstanceOverload(Vec4, uint, VertexSemantic::Enum));
-  ZilchBindOverloadedMethod(GetVertexData,
-                            ZilchInstanceOverload(Vec4, uint, VertexSemantic::Enum, VertexElementType::Enum, uint));
-  ZilchBindMethod(IsValidVertexData);
+  RaverieBindOverloadedMethod(AddByte, RaverieInstanceOverload(void, int));
+  RaverieBindOverloadedMethod(AddByte, RaverieInstanceOverload(void, IntVec2));
+  RaverieBindOverloadedMethod(AddByte, RaverieInstanceOverload(void, IntVec3));
+  RaverieBindOverloadedMethod(AddByte, RaverieInstanceOverload(void, IntVec4));
+  RaverieBindOverloadedMethod(AddShort, RaverieInstanceOverload(void, int));
+  RaverieBindOverloadedMethod(AddShort, RaverieInstanceOverload(void, IntVec2));
+  RaverieBindOverloadedMethod(AddShort, RaverieInstanceOverload(void, IntVec3));
+  RaverieBindOverloadedMethod(AddShort, RaverieInstanceOverload(void, IntVec4));
+  RaverieBindOverloadedMethod(AddReal, RaverieInstanceOverload(void, real));
+  RaverieBindOverloadedMethod(AddReal, RaverieInstanceOverload(void, Vec2));
+  RaverieBindOverloadedMethod(AddReal, RaverieInstanceOverload(void, Vec3));
+  RaverieBindOverloadedMethod(AddReal, RaverieInstanceOverload(void, Vec4));
+  RaverieBindOverloadedMethod(GetVertexData, RaverieInstanceOverload(Vec4, uint, VertexSemantic::Enum));
+  RaverieBindOverloadedMethod(GetVertexData,
+                            RaverieInstanceOverload(Vec4, uint, VertexSemantic::Enum, VertexElementType::Enum, uint));
+  RaverieBindMethod(IsValidVertexData);
 
-  ZilchBindMethod(ClearAttributes);
-  ZilchBindMethod(ClearData);
+  RaverieBindMethod(ClearAttributes);
+  RaverieBindMethod(ClearData);
 
-  ZilchBindMethod(GetElementType);
-  ZilchBindMethod(GetElementCount);
-  ZilchBindGetterProperty(VertexCount);
+  RaverieBindMethod(GetElementType);
+  RaverieBindMethod(GetElementCount);
+  RaverieBindGetterProperty(VertexCount);
 }
 
 VertexBuffer::VertexBuffer()
@@ -414,15 +414,15 @@ void VertexBuffer::CopyTo(VertexBuffer& target)
   memcpy(target.mData, mData, mDataSize);
 }
 
-ZilchDefineType(IndexBuffer, builder, type)
+RaverieDefineType(IndexBuffer, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetterProperty(Count);
+  RaverieBindGetterSetterProperty(Count);
 
-  ZilchBindMethod(Add);
-  ZilchBindMethod(Get);
-  ZilchBindMethod(Clear);
+  RaverieBindMethod(Add);
+  RaverieBindMethod(Get);
+  RaverieBindMethod(Clear);
 }
 
 IndexBuffer::IndexBuffer()
@@ -481,20 +481,20 @@ void IndexBuffer::CopyTo(IndexBuffer& target)
   target = *this;
 }
 
-ZilchDefineType(Mesh, builder, type)
+RaverieDefineType(Mesh, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindMethod(CreateRuntime);
-  ZilchBindMethod(RuntimeClone);
+  RaverieBindMethod(CreateRuntime);
+  RaverieBindMethod(RuntimeClone);
 
-  ZilchBindFieldGetter(mVertices);
-  ZilchBindFieldGetter(mIndices);
-  ZilchBindFieldProperty(mPrimitiveType);
+  RaverieBindFieldGetter(mVertices);
+  RaverieBindFieldGetter(mIndices);
+  RaverieBindFieldProperty(mPrimitiveType);
 
-  ZilchBindMethod(Upload);
-  ZilchBindMethod(UploadNoRayCastInfo);
-  ZilchBindMethod(UploadNoRayCastInfoOrAabb);
+  RaverieBindMethod(Upload);
+  RaverieBindMethod(UploadNoRayCastInfo);
+  RaverieBindMethod(UploadNoRayCastInfoOrAabb);
 }
 
 HandleOf<Mesh> Mesh::CreateRuntime()
@@ -659,14 +659,14 @@ bool Mesh::TestRay(GraphicsRayCast& raycast, Mat4 worldTransform)
 
     switch (mPrimitiveType)
     {
-    case Zero::PrimitiveType::Triangles:
+    case Raverie::PrimitiveType::Triangles:
       result = Intersection::RayTriangle(localRay.Start, localRay.Direction, points[0], points[1], points[2], &point);
       break;
-    case Zero::PrimitiveType::Lines:
+    case Raverie::PrimitiveType::Lines:
       result =
           Intersection::RayCapsule(localRay.Start, localRay.Direction, points[0], points[1], cMinMeshThickness, &point);
       break;
-    case Zero::PrimitiveType::Points:
+    case Raverie::PrimitiveType::Points:
       result = Intersection::RaySphere(localRay.Start, localRay.Direction, points[0], cMinMeshThickness, &point);
       break;
     }
@@ -695,10 +695,10 @@ bool Mesh::TestRay(GraphicsRayCast& raycast, Mat4 worldTransform)
   Vec3 weights = Vec3::cZero;
   switch (mPrimitiveType)
   {
-  case Zero::PrimitiveType::Triangles:
+  case Raverie::PrimitiveType::Triangles:
     Geometry::BarycentricTriangle(point, points[0], points[1], points[2], &weights);
     break;
-  case Zero::PrimitiveType::Lines:
+  case Raverie::PrimitiveType::Lines:
   {
     float length0 = (point - points[0]).Length();
     float length1 = (points[1] - points[0]).Length();
@@ -709,7 +709,7 @@ bool Mesh::TestRay(GraphicsRayCast& raycast, Mat4 worldTransform)
     weights.x = 1.0f - weights.y;
   }
   break;
-  case Zero::PrimitiveType::Points:
+  case Raverie::PrimitiveType::Points:
     weights.x = 1.0f;
     break;
   }
@@ -754,15 +754,15 @@ bool Mesh::TestFrustum(const Frustum& frustum)
 
     switch (mPrimitiveType)
     {
-    case Zero::PrimitiveType::Triangles:
+    case Raverie::PrimitiveType::Triangles:
       if (Overlap(frustum, Triangle(points[0], points[1], points[2])))
         return true;
       break;
-    case Zero::PrimitiveType::Lines:
+    case Raverie::PrimitiveType::Lines:
       if (Overlap(frustum, Capsule(points[0], points[1], cMinMeshThickness)))
         return true;
       break;
-    case Zero::PrimitiveType::Points:
+    case Raverie::PrimitiveType::Points:
       if (Overlap(frustum, Sphere(points[0], cMinMeshThickness)))
         return true;
       break;
@@ -838,13 +838,13 @@ void LoadIndexChunk(Mesh& mesh, streamType& file)
 
   switch (indexType)
   {
-  case Zero::IndexElementType::Byte:
+  case Raverie::IndexElementType::Byte:
     FillIndexBuffer<byte>(indexBuffer, indexBufferData, numIndicies);
     break;
-  case Zero::IndexElementType::Ushort:
+  case Raverie::IndexElementType::Ushort:
     FillIndexBuffer<ushort>(indexBuffer, indexBufferData, numIndicies);
     break;
-  case Zero::IndexElementType::Uint:
+  case Raverie::IndexElementType::Uint:
     FillIndexBuffer<uint>(indexBuffer, indexBufferData, numIndicies);
     break;
   }
@@ -929,4 +929,4 @@ MeshManager::MeshManager(BoundType* resourceType) : ResourceManager(resourceType
   AddGeometryFileFilters(this);
 }
 
-} // namespace Zero
+} // namespace Raverie

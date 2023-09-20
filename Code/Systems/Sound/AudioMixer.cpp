@@ -2,7 +2,7 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 using namespace AudioConstants;
@@ -173,14 +173,14 @@ void AudioMixer::MixLoopThreaded()
     double timeDiff = (double)(clock() - time) / CLOCKS_PER_SEC;
     if (timeDiff > maxTime)
     {
-      AddTaskThreaded(Zero::CreateFunctor(&ExternalSystemInterface::SendAudioError,
+      AddTaskThreaded(Raverie::CreateFunctor(&ExternalSystemInterface::SendAudioError,
                                           ExternalInterface,
-                                          Zero::String("Mix took too long (informational message, not an error)")));
+                                          Raverie::String("Mix took too long (informational message, not an error)")));
     }
 #endif
 
     // Wait until more data is needed
-    if (running && Zero::ThreadingEnabled)
+    if (running && Raverie::ThreadingEnabled)
     {
       AudioIO.WaitUntilOutputNeededThreaded();
       if (mShuttingDown.Get() == cTrue)
@@ -189,7 +189,7 @@ void AudioMixer::MixLoopThreaded()
       }
     }
 
-  } while (running && Zero::ThreadingEnabled);
+  } while (running && Raverie::ThreadingEnabled);
 }
 
 void AudioMixer::AddTask(Functor* task, HandleOf<SoundNode> node)
@@ -399,7 +399,7 @@ bool AudioMixer::MixCurrentInstancesThreaded()
       // Otherwise, interpolate between two mix frames
       else
       {
-        Zero::Array<float> samples(mixChannels);
+        Raverie::Array<float> samples(mixChannels);
         OutputResampler.GetNextFrame(samples.Data());
         frame.SetSamples(samples.Data(), mixChannels);
       }
@@ -571,7 +571,7 @@ void AudioMixer::GetAudioInputDataThreaded(unsigned howManySamples)
     if (inputChannels != mixChannels)
     {
       // Get input data in a temporary array
-      Zero::Array<float> inputSamples;
+      Raverie::Array<float> inputSamples;
       AudioIO.GetInputDataThreaded(inputSamples, inputFrames * inputChannels);
 
       // Reset the InputBuffer
@@ -595,13 +595,13 @@ void AudioMixer::GetAudioInputDataThreaded(unsigned howManySamples)
     if (inputRate != cSystemSampleRate)
     {
       // Temporary array for resampled data
-      Zero::Array<float> resampledInput;
+      Raverie::Array<float> resampledInput;
       // Set the resampling factor on the resampler object
       InputResampler.SetFactor((double)inputRate / (double)cSystemSampleRate);
       // Set the buffer on the resampler
       InputResampler.SetInputBuffer(InputBuffer.Data(), InputBuffer.Size() / mixChannels, mixChannels);
       // Array to get a frame of samples from the resampler
-      Zero::Array<float> frame(mixChannels);
+      Raverie::Array<float> frame(mixChannels);
 
       bool working(true);
       while (working)
@@ -657,7 +657,7 @@ void AudioMixer::DispatchMicrophoneInput()
   {
     AudioFloatDataEvent event;
     event.Channels = channels;
-    event.AudioData = ZilchAllocate(ArrayClass<float>);
+    event.AudioData = RaverieAllocate(ArrayClass<float>);
     event.AudioData->NativeArray = inputData;
     Z::gSound->DispatchEvent(Events::MicrophoneUncompressedFloatData, &event);
   }
@@ -673,7 +673,7 @@ void AudioMixer::DispatchMicrophoneInput()
     // While we have at least the number of samples for a packet, encode them
     while (PreviousInputSamples.Size() > totalPacketSamples)
     {
-      Zero::Array<float> monoSamples;
+      Raverie::Array<float> monoSamples;
 
       // If the system is in mono, just add samples
       if (channels == 1)
@@ -696,12 +696,12 @@ void AudioMixer::DispatchMicrophoneInput()
       PreviousInputSamples.Erase(PreviousInputSamples.SubRange(0, totalPacketSamples));
 
       // Encode the packet
-      Zero::Array<byte> dataArray;
+      Raverie::Array<byte> dataArray;
       Encoder.EncodePacket(monoSamples.Data(), AudioFileEncoder::cPacketFrames, dataArray);
 
       // Send the event with the encoded data
       AudioByteDataEvent event;
-      event.AudioData = ZilchAllocate(ArrayClass<byte>);
+      event.AudioData = RaverieAllocate(ArrayClass<byte>);
       event.AudioData->NativeArray = dataArray;
       Z::gSound->DispatchEvent(Events::MicrophoneCompressedByteData, &event);
     }
@@ -1008,4 +1008,4 @@ void AudioFrame::CopySamples(const float* source, float* destination, const unsi
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

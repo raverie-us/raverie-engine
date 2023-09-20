@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Direct builder is a 'mix in' class for making builder components.
@@ -50,4 +50,4 @@ public:
   bool NeedsBuildingTool(BuildOptions& options, StringParam toolFile);
 };
 
-} // namespace Zero
+} // namespace Raverie

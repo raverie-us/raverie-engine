@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // All values that were proxied are stored here
@@ -65,7 +65,7 @@ TweakableNode::~TweakableNode()
   DeleteObjectsInContainer(mProperties);
 }
 
-BoundType* TweakableNode::ZilchGetDerivedType() const
+BoundType* TweakableNode::RaverieGetDerivedType() const
 {
   return Meta;
 }
@@ -106,9 +106,9 @@ void TweakableNode::Serialize(Serializer& stream)
 
 Tweakables::TweakableModifiedCallback Tweakables::sModifiedCallback = NULL;
 
-ZilchDefineType(Tweakables, builder, type)
+RaverieDefineType(Tweakables, builder, type)
 {
-  type->HandleManager = ZilchManagerId(PointerManager);
+  type->HandleManager = RaverieManagerId(PointerManager);
 }
 
 Tweakables::Tweakables() : TweakableNode("Tweakables")
@@ -222,4 +222,4 @@ BoundType* TweakablesComposition::GetComponentMeta(StringParam name)
   return MetaDatabase::GetInstance()->FindType(name);
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace GraphWidgetUi
@@ -401,4 +401,4 @@ float GraphWidget::GetIntervalSize(float range, float space)
   return step;
 }
 
-} // namespace Zero
+} // namespace Raverie

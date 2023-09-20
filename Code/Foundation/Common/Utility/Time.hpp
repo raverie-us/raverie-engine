@@ -3,7 +3,7 @@
 
 #include <time.h>
 
-namespace Zero
+namespace Raverie
 {
 
 typedef time_t TimeType;
@@ -56,4 +56,4 @@ public:
   }
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class TilePaletteProperty : public PropertyInterface
@@ -13,4 +13,4 @@ public:
   PropertyState GetValue(HandleParam object, PropertyPathParam property) override;
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class Polygon;
@@ -166,4 +166,4 @@ void BuildShapesFromContours(const ContourArray& contours, Array<Shape2D>* shape
 void TransformShape(Mat4Param matrix, Shape2D* shape);
 void TransformShape(Mat3Param matrix, Shape2D* shape);
 
-} // namespace Zero
+} // namespace Raverie

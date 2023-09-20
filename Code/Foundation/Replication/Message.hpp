@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 //                                   Message //
@@ -142,7 +142,7 @@ struct MoveWithoutDestructionOperator<Message>
 {
   static inline void MoveWithoutDestruction(Message* dest, Message* source)
   {
-    new (dest) Message(ZeroMove(*source));
+    new (dest) Message(RaverieMove(*source));
   }
 };
 
@@ -236,7 +236,7 @@ struct MoveWithoutDestructionOperator<OutMessage>
 {
   static inline void MoveWithoutDestruction(OutMessage* dest, OutMessage* source)
   {
-    new (dest) OutMessage(ZeroMove(*source));
+    new (dest) OutMessage(RaverieMove(*source));
   }
 };
 
@@ -325,8 +325,8 @@ struct MoveWithoutDestructionOperator<FragmentedMessage>
 {
   static inline void MoveWithoutDestruction(FragmentedMessage* dest, FragmentedMessage* source)
   {
-    new (dest) FragmentedMessage(ZeroMove(*source));
+    new (dest) FragmentedMessage(RaverieMove(*source));
   }
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class Space;
@@ -86,7 +86,7 @@ public:
 class RaycastProvider : public SafeId32Object
 {
 public:
-  ZilchDeclareType(RaycastProvider, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(RaycastProvider, TypeCopyMode::ReferenceType);
 
   RaycastProvider()
   {
@@ -114,7 +114,7 @@ public:
 class Raycaster : public SafeId32
 {
 public:
-  ZilchDeclareType(Raycaster, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Raycaster, TypeCopyMode::ReferenceType);
   ~Raycaster();
 
   void Serialize(Serializer& stream);
@@ -138,7 +138,7 @@ public:
 class RaycasterMetaComposition : public MetaComposition
 {
 public:
-  ZilchDeclareType(RaycasterMetaComposition, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(RaycasterMetaComposition, TypeCopyMode::ReferenceType);
 
   RaycasterMetaComposition();
 
@@ -147,4 +147,4 @@ public:
   Handle GetComponent(HandleParam owner, BoundType* componentType) override;
 };
 
-} // namespace Zero
+} // namespace Raverie

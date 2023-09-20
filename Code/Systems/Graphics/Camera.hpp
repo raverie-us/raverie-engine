@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -15,7 +15,7 @@ DeclareEvent(CameraDestroyed);
 class Camera : public Component
 {
 public:
-  ZilchDeclareType(Camera, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Camera, TypeCopyMode::ReferenceType);
 
   // Component Interface
 
@@ -110,4 +110,4 @@ public:
   HashSet<int> mUsedRenderGroupIds;
 };
 
-} // namespace Zero
+} // namespace Raverie

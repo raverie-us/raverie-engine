@@ -1,27 +1,27 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(JointLimit, builder, type)
+RaverieDefineType(JointLimit, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDocumented();
-  ZeroBindDependency(Joint);
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
+  RaverieBindDependency(Joint);
 
-  ZilchBindGetterSetterProperty(Active)->ZeroSerialize(true);
-  ZilchBindGetterSetterProperty(LowerLimit)->ZeroSerialize(real(0));
-  ZilchBindGetterSetterProperty(UpperLimit)->ZeroSerialize(real(5));
+  RaverieBindGetterSetterProperty(Active)->RaverieSerialize(true);
+  RaverieBindGetterSetterProperty(LowerLimit)->RaverieSerialize(real(0));
+  RaverieBindGetterSetterProperty(UpperLimit)->RaverieSerialize(real(5));
 
-  ZeroBindEvent(Events::JointLowerLimitReached, JointEvent);
-  ZeroBindEvent(Events::JointUpperLimitReached, JointEvent);
+  RaverieBindEvent(Events::JointLowerLimitReached, JointEvent);
+  RaverieBindEvent(Events::JointUpperLimitReached, JointEvent);
 
-  ZilchBindGetterSetter(AtomIds)->ZeroSerialize(255u);
+  RaverieBindGetterSetter(AtomIds)->RaverieSerialize(255u);
 
-  ZeroBindTag(Tags::Physics);
-  ZeroBindTag(Tags::Joint);
+  RaverieBindTag(Tags::Physics);
+  RaverieBindTag(Tags::Joint);
 }
 
 JointLimit::JointLimit()
@@ -160,4 +160,4 @@ void JointLimit::SetWasAtUpperLimit(bool state)
   return mState.SetState(JointLimitState::WasAtUpperLimit, state);
 }
 
-} // namespace Zero
+} // namespace Raverie

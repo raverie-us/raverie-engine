@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 String UrlParamEncode(StringParam string)
@@ -21,7 +21,7 @@ String UrlParamEncode(StringParam string)
   return builder.ToString();
 }
 
-Zero::String UrlParamDecode(StringParam string)
+Raverie::String UrlParamDecode(StringParam string)
 {
   StringBuilder builder;
   StringIterator it = string.Begin();
@@ -64,4 +64,4 @@ Zero::String UrlParamDecode(StringParam string)
   return builder.ToString();
 }
 
-} // namespace Zero
+} // namespace Raverie

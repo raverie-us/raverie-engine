@@ -1,14 +1,14 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
-ZilchDefineType(ContentItem, builder, type)
+RaverieDefineType(ContentItem, builder, type)
 {
-  type->HandleManager = ZilchManagerId(ContentItemHandleManager);
+  type->HandleManager = RaverieManagerId(ContentItemHandleManager);
   type->Add(new ContentItemMetaOperations());
 
-  ZilchBindGetterProperty(Name);
+  RaverieBindGetterProperty(Name);
 }
 
 void ContentItemHandleManager::ObjectToHandle(const byte* object, BoundType* type, Handle& handleToInitialize)
@@ -177,7 +177,7 @@ Object* ContentItem::GetEditingObject(Resource* resource)
     if (resource == nullptr)
       return Z::gResources->GetResource(mRuntimeResource);
 
-    BoundType* resourceType = ZilchVirtualTypeId(resource);
+    BoundType* resourceType = RaverieVirtualTypeId(resource);
 
     forRange (Property* prop, resourceType->GetProperties())
     {
@@ -226,7 +226,7 @@ void ContentItem::OnInitialize()
 }
 
 // Resource Meta Operations
-ZilchDefineType(ContentItemMetaOperations, builder, type)
+RaverieDefineType(ContentItemMetaOperations, builder, type)
 {
 }
 
@@ -241,4 +241,4 @@ void ContentItemMetaOperations::ObjectModified(HandleParam object, bool intermed
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

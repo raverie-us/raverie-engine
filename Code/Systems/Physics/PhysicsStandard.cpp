@@ -1,221 +1,221 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Ranges
-ZilchDefineRange(CastResultsRange);
-ZilchDefineRange(ContactPointRange);
-ZilchDefineRange(SweepResultRange);
-ZilchDefineRange(CastResults::range);
-ZilchDefineRange(ContactRange);
-ZilchDefineRange(JointRange);
-ZilchDefineRange(PhysicsMeshVertexData::RangeType);
-ZilchDefineRange(PhysicsMeshIndexData::RangeType);
-ZilchDefineRange(MultiConvexMeshVertexData::RangeType);
-ZilchDefineRange(MultiConvexMeshIndexData::RangeType);
-ZilchDefineRange(MultiConvexMeshSubMeshData::RangeType);
+RaverieDefineRange(CastResultsRange);
+RaverieDefineRange(ContactPointRange);
+RaverieDefineRange(SweepResultRange);
+RaverieDefineRange(CastResults::range);
+RaverieDefineRange(ContactRange);
+RaverieDefineRange(JointRange);
+RaverieDefineRange(PhysicsMeshVertexData::RangeType);
+RaverieDefineRange(PhysicsMeshIndexData::RangeType);
+RaverieDefineRange(MultiConvexMeshVertexData::RangeType);
+RaverieDefineRange(MultiConvexMeshIndexData::RangeType);
+RaverieDefineRange(MultiConvexMeshSubMeshData::RangeType);
 
 // Enums
-ZilchDefineEnum(RigidBodyDynamicState);
-ZilchDefineEnum(CastFilterState);
-ZilchDefineEnum(PhysicsEffectType);
-ZilchDefineEnum(PhysicsSolverPositionCorrection);
-ZilchDefineEnum(ConstraintPositionCorrection);
-ZilchDefineEnum(PhysicsSolverType);
-ZilchDefineEnum(PhysicsSolverSubType);
-ZilchDefineEnum(PhysicsIslandType);
-ZilchDefineEnum(PhysicsIslandPreProcessingMode);
-ZilchDefineEnum(PhysicsContactTangentTypes);
-ZilchDefineEnum(JointFrameOfReference);
-ZilchDefineEnum(AxisDirection);
-ZilchDefineEnum(PhysicsEffectInterpolationType);
-ZilchDefineEnum(PhysicsEffectEndCondition);
-ZilchDefineEnum(Mode2DStates);
-ZilchDefineEnum(CapsuleScalingMode);
-ZilchDefineEnum(CollisionFilterCollisionFlags);
-ZilchDefineEnum(CollisionFilterBlockType);
-ZilchDefineEnum(SpringDebugDrawMode);
-ZilchDefineEnum(SpringDebugDrawType);
-ZilchDefineEnum(SpringSortOrder);
+RaverieDefineEnum(RigidBodyDynamicState);
+RaverieDefineEnum(CastFilterState);
+RaverieDefineEnum(PhysicsEffectType);
+RaverieDefineEnum(PhysicsSolverPositionCorrection);
+RaverieDefineEnum(ConstraintPositionCorrection);
+RaverieDefineEnum(PhysicsSolverType);
+RaverieDefineEnum(PhysicsSolverSubType);
+RaverieDefineEnum(PhysicsIslandType);
+RaverieDefineEnum(PhysicsIslandPreProcessingMode);
+RaverieDefineEnum(PhysicsContactTangentTypes);
+RaverieDefineEnum(JointFrameOfReference);
+RaverieDefineEnum(AxisDirection);
+RaverieDefineEnum(PhysicsEffectInterpolationType);
+RaverieDefineEnum(PhysicsEffectEndCondition);
+RaverieDefineEnum(Mode2DStates);
+RaverieDefineEnum(CapsuleScalingMode);
+RaverieDefineEnum(CollisionFilterCollisionFlags);
+RaverieDefineEnum(CollisionFilterBlockType);
+RaverieDefineEnum(SpringDebugDrawMode);
+RaverieDefineEnum(SpringDebugDrawType);
+RaverieDefineEnum(SpringSortOrder);
 
 // Bind the joint types special because they're generated using the #define
 // #include trick
-ZilchDefineExternalBaseType(JointTypes::Enum, TypeCopyMode::ValueType, builder, type)
+RaverieDefineExternalBaseType(JointTypes::Enum, TypeCopyMode::ValueType, builder, type)
 {
-  ZilchFullBindEnum(builder, type, SpecialType::Enumeration);
+  RaverieFullBindEnum(builder, type, SpecialType::Enumeration);
   // Add all of the joint types
   for (size_t i = 0; i < JointTypes::Size; ++i)
   {
-    ZilchFullBindEnumValue(builder, type, i, JointTypes::Names[i]);
+    RaverieFullBindEnumValue(builder, type, i, JointTypes::Names[i]);
   }
 }
 
-ZilchDefineStaticLibrary(PhysicsLibrary)
+RaverieDefineStaticLibrary(PhysicsLibrary)
 {
   builder.CreatableInScriptDefault = false;
 
   // Ranges
-  ZilchInitializeRangeAs(ContactPointRange, "ContactPointRange");
-  ZilchInitializeRange(ContactRange);
-  ZilchInitializeRange(JointRange);
-  ZilchInitializeRange(CastResultsRange);
-  ZilchInitializeRangeAs(CastResults::range, "CastResultsArrayRange");
-  ZilchInitializeRange(SweepResultRange);
-  ZilchInitializeRangeAs(PhysicsMeshVertexData::RangeType, "PhysicsMeshVertexRange");
-  ZilchInitializeRangeAs(PhysicsMeshIndexData::RangeType, "PhysicsMeshIndexRange");
+  RaverieInitializeRangeAs(ContactPointRange, "ContactPointRange");
+  RaverieInitializeRange(ContactRange);
+  RaverieInitializeRange(JointRange);
+  RaverieInitializeRange(CastResultsRange);
+  RaverieInitializeRangeAs(CastResults::range, "CastResultsArrayRange");
+  RaverieInitializeRange(SweepResultRange);
+  RaverieInitializeRangeAs(PhysicsMeshVertexData::RangeType, "PhysicsMeshVertexRange");
+  RaverieInitializeRangeAs(PhysicsMeshIndexData::RangeType, "PhysicsMeshIndexRange");
 
   // Enums
-  ZilchInitializeEnum(RigidBodyDynamicState);
-  ZilchInitializeEnum(CastFilterState);
-  ZilchInitializeEnum(PhysicsEffectType);
-  ZilchInitializeEnum(PhysicsSolverPositionCorrection);
-  ZilchInitializeEnum(ConstraintPositionCorrection);
-  ZilchInitializeEnum(PhysicsSolverType);
-  ZilchInitializeEnum(PhysicsSolverSubType);
-  ZilchInitializeEnum(PhysicsIslandType);
-  ZilchInitializeEnum(PhysicsIslandPreProcessingMode);
-  ZilchInitializeEnum(PhysicsContactTangentTypes);
-  ZilchInitializeEnum(JointFrameOfReference);
-  ZilchInitializeEnum(AxisDirection);
-  ZilchInitializeEnum(PhysicsEffectInterpolationType);
-  ZilchInitializeEnum(PhysicsEffectEndCondition);
-  ZilchInitializeEnum(Mode2DStates);
-  ZilchInitializeEnum(CapsuleScalingMode);
-  ZilchInitializeEnum(CollisionFilterCollisionFlags);
-  ZilchInitializeEnum(CollisionFilterBlockType);
-  ZilchInitializeEnum(SpringDebugDrawMode);
-  ZilchInitializeEnum(SpringDebugDrawType);
-  ZilchInitializeEnum(SpringSortOrder);
-  ZilchInitializeEnum(JointTypes);
+  RaverieInitializeEnum(RigidBodyDynamicState);
+  RaverieInitializeEnum(CastFilterState);
+  RaverieInitializeEnum(PhysicsEffectType);
+  RaverieInitializeEnum(PhysicsSolverPositionCorrection);
+  RaverieInitializeEnum(ConstraintPositionCorrection);
+  RaverieInitializeEnum(PhysicsSolverType);
+  RaverieInitializeEnum(PhysicsSolverSubType);
+  RaverieInitializeEnum(PhysicsIslandType);
+  RaverieInitializeEnum(PhysicsIslandPreProcessingMode);
+  RaverieInitializeEnum(PhysicsContactTangentTypes);
+  RaverieInitializeEnum(JointFrameOfReference);
+  RaverieInitializeEnum(AxisDirection);
+  RaverieInitializeEnum(PhysicsEffectInterpolationType);
+  RaverieInitializeEnum(PhysicsEffectEndCondition);
+  RaverieInitializeEnum(Mode2DStates);
+  RaverieInitializeEnum(CapsuleScalingMode);
+  RaverieInitializeEnum(CollisionFilterCollisionFlags);
+  RaverieInitializeEnum(CollisionFilterBlockType);
+  RaverieInitializeEnum(SpringDebugDrawMode);
+  RaverieInitializeEnum(SpringDebugDrawType);
+  RaverieInitializeEnum(SpringSortOrder);
+  RaverieInitializeEnum(JointTypes);
 
   // Meta Components
-  ZilchInitializeType(CollisionFilterMetaComposition);
-  ZilchInitializeType(PhysicsSolverConfigMetaComposition);
+  RaverieInitializeType(CollisionFilterMetaComposition);
+  RaverieInitializeType(PhysicsSolverConfigMetaComposition);
   // Events
-  ZilchInitializeType(BaseCollisionEvent);
-  ZilchInitializeType(CollisionEvent);
-  ZilchInitializeType(CollisionGroupEvent);
-  ZilchInitializeType(CustomJointEvent);
-  ZilchInitializeType(JointEvent);
-  ZilchInitializeType(CustomPhysicsEffectEvent);
-  ZilchInitializeType(CastFilterEvent);
-  ZilchInitializeType(PreSolveEvent);
+  RaverieInitializeType(BaseCollisionEvent);
+  RaverieInitializeType(CollisionEvent);
+  RaverieInitializeType(CollisionGroupEvent);
+  RaverieInitializeType(CustomJointEvent);
+  RaverieInitializeType(JointEvent);
+  RaverieInitializeType(CustomPhysicsEffectEvent);
+  RaverieInitializeType(CastFilterEvent);
+  RaverieInitializeType(PreSolveEvent);
 
-  ZilchInitializeType(PhysicsEngine);
-  ZilchInitializeType(PhysicsSpace);
-  ZilchInitializeType(RigidBody);
-  ZilchInitializeType(Region);
-  ZilchInitializeType(MassOverride);
+  RaverieInitializeType(PhysicsEngine);
+  RaverieInitializeType(PhysicsSpace);
+  RaverieInitializeType(RigidBody);
+  RaverieInitializeType(Region);
+  RaverieInitializeType(MassOverride);
 
   // Colliders
-  ZilchInitializeType(Collider);
-  ZilchInitializeType(BoxCollider);
-  ZilchInitializeType(CapsuleCollider);
-  ZilchInitializeType(ConvexMeshCollider);
-  ZilchInitializeType(CylinderCollider);
-  ZilchInitializeType(EllipsoidCollider);
-  ZilchInitializeType(HeightMapCollider);
-  ZilchInitializeType(MeshCollider);
-  ZilchInitializeType(MultiConvexMeshCollider);
-  ZilchInitializeType(SphereCollider);
+  RaverieInitializeType(Collider);
+  RaverieInitializeType(BoxCollider);
+  RaverieInitializeType(CapsuleCollider);
+  RaverieInitializeType(ConvexMeshCollider);
+  RaverieInitializeType(CylinderCollider);
+  RaverieInitializeType(EllipsoidCollider);
+  RaverieInitializeType(HeightMapCollider);
+  RaverieInitializeType(MeshCollider);
+  RaverieInitializeType(MultiConvexMeshCollider);
+  RaverieInitializeType(SphereCollider);
 
   // PhysicsEffects
-  ZilchInitializeType(PhysicsEffect);
-  ZilchInitializeType(BasicDirectionEffect);
-  ZilchInitializeType(ForceEffect);
-  ZilchInitializeType(GravityEffect);
-  ZilchInitializeType(BasicPointEffect);
-  ZilchInitializeType(PointForceEffect);
-  ZilchInitializeType(PointGravityEffect);
-  ZilchInitializeType(BuoyancyEffect);
-  ZilchInitializeType(DragEffect);
-  ZilchInitializeType(FlowEffect);
-  ZilchInitializeType(IgnoreSpaceEffects);
-  ZilchInitializeType(ThrustEffect);
-  ZilchInitializeType(TorqueEffect);
-  ZilchInitializeType(VortexEffect);
-  ZilchInitializeType(WindEffect);
-  ZilchInitializeType(CustomPhysicsEffect);
+  RaverieInitializeType(PhysicsEffect);
+  RaverieInitializeType(BasicDirectionEffect);
+  RaverieInitializeType(ForceEffect);
+  RaverieInitializeType(GravityEffect);
+  RaverieInitializeType(BasicPointEffect);
+  RaverieInitializeType(PointForceEffect);
+  RaverieInitializeType(PointGravityEffect);
+  RaverieInitializeType(BuoyancyEffect);
+  RaverieInitializeType(DragEffect);
+  RaverieInitializeType(FlowEffect);
+  RaverieInitializeType(IgnoreSpaceEffects);
+  RaverieInitializeType(ThrustEffect);
+  RaverieInitializeType(TorqueEffect);
+  RaverieInitializeType(VortexEffect);
+  RaverieInitializeType(WindEffect);
+  RaverieInitializeType(CustomPhysicsEffect);
 
   // Joints
-  ZilchInitializeType(CustomConstraintInfo);
-  ZilchInitializeType(JointSpring);
-  ZilchInitializeType(JointLimit);
-  ZilchInitializeType(JointMotor);
-  ZilchInitializeType(JointDebugDrawConfig);
-  ZilchInitializeType(JointConfigOverride);
-  ZilchInitializeType(Joint);
-  ZilchInitializeType(CustomJoint);
-  ZilchInitializeType(ConstraintConfigBlock);
+  RaverieInitializeType(CustomConstraintInfo);
+  RaverieInitializeType(JointSpring);
+  RaverieInitializeType(JointLimit);
+  RaverieInitializeType(JointMotor);
+  RaverieInitializeType(JointDebugDrawConfig);
+  RaverieInitializeType(JointConfigOverride);
+  RaverieInitializeType(Joint);
+  RaverieInitializeType(CustomJoint);
+  RaverieInitializeType(ConstraintConfigBlock);
   // Joints and JointBlocks
 #define JointType(jointType)                                                                                           \
-  ZilchInitializeType(jointType);                                                                                      \
-  ZilchInitializeType(jointType##Block);
+  RaverieInitializeType(jointType);                                                                                      \
+  RaverieInitializeType(jointType##Block);
 #include "JointList.hpp"
 #undef JointType
-  ZilchInitializeType(ContactBlock);
+  RaverieInitializeType(ContactBlock);
 
   // FilterBlocks
-  ZilchInitializeType(CollisionFilterBlock);
-  ZilchInitializeType(CollisionStartBlock);
-  ZilchInitializeType(CollisionPersistedBlock);
-  ZilchInitializeType(CollisionEndBlock);
-  ZilchInitializeType(PreSolveBlock);
+  RaverieInitializeType(CollisionFilterBlock);
+  RaverieInitializeType(CollisionStartBlock);
+  RaverieInitializeType(CollisionPersistedBlock);
+  RaverieInitializeType(CollisionEndBlock);
+  RaverieInitializeType(PreSolveBlock);
 
   // Resources
-  ZilchInitializeType(PhysicsMaterial);
-  ZilchInitializeType(GenericPhysicsMesh);
-  ZilchInitializeType(ConvexMesh);
-  ZilchInitializeType(MultiConvexMesh);
-  ZilchInitializeType(PhysicsMesh);
-  ZilchInitializeType(CollisionFilter);
-  ZilchInitializeType(CollisionGroup);
-  ZilchInitializeType(CollisionTable);
-  ZilchInitializeType(PhysicsSolverConfig);
+  RaverieInitializeType(PhysicsMaterial);
+  RaverieInitializeType(GenericPhysicsMesh);
+  RaverieInitializeType(ConvexMesh);
+  RaverieInitializeType(MultiConvexMesh);
+  RaverieInitializeType(PhysicsMesh);
+  RaverieInitializeType(CollisionFilter);
+  RaverieInitializeType(CollisionGroup);
+  RaverieInitializeType(CollisionTable);
+  RaverieInitializeType(PhysicsSolverConfig);
   // Resource Helpers
-  ZilchInitializeType(PhysicsMeshVertexData);
-  ZilchInitializeType(PhysicsMeshIndexData);
-  ZilchInitializeType(MultiConvexMeshVertexData);
-  ZilchInitializeType(MultiConvexMeshIndexData);
-  ZilchInitializeType(SubConvexMesh);
-  ZilchInitializeType(MultiConvexMeshSubMeshData);
-  ZilchInitializeRangeAs(MultiConvexMeshVertexData::RangeType, "MultiConvexMeshVertexRange");
-  ZilchInitializeRangeAs(MultiConvexMeshIndexData::RangeType, "MultiConvexMeshIndexRange");
-  ZilchInitializeRangeAs(MultiConvexMeshSubMeshData::RangeType, "MultiConvexMeshSubMeshRange");
+  RaverieInitializeType(PhysicsMeshVertexData);
+  RaverieInitializeType(PhysicsMeshIndexData);
+  RaverieInitializeType(MultiConvexMeshVertexData);
+  RaverieInitializeType(MultiConvexMeshIndexData);
+  RaverieInitializeType(SubConvexMesh);
+  RaverieInitializeType(MultiConvexMeshSubMeshData);
+  RaverieInitializeRangeAs(MultiConvexMeshVertexData::RangeType, "MultiConvexMeshVertexRange");
+  RaverieInitializeRangeAs(MultiConvexMeshIndexData::RangeType, "MultiConvexMeshIndexRange");
+  RaverieInitializeRangeAs(MultiConvexMeshSubMeshData::RangeType, "MultiConvexMeshSubMeshRange");
 
   // Casting
-  ZilchInitializeType(BaseCastFilter);
-  ZilchInitializeType(CastFilter);
-  ZilchInitializeType(CastResult);
-  ZilchInitializeType(CastResults);
-  ZilchInitializeType(SweepResult);
+  RaverieInitializeType(BaseCastFilter);
+  RaverieInitializeType(CastFilter);
+  RaverieInitializeType(CastResult);
+  RaverieInitializeType(CastResults);
+  RaverieInitializeType(SweepResult);
 
   // Misc
-  ZilchInitializeType(PhysicsCar);
-  ZilchInitializeTypeAs(PhysicsCar::CarWheelRef, "CarWheelRef");
-  ZilchInitializeTypeAs(PhysicsCar::CarWheelArray, "CarWheelArray");
-  ZilchInitializeType(PhysicsCarWheel);
-  ZilchInitializeType(CustomCollisionEventTracker);
+  RaverieInitializeType(PhysicsCar);
+  RaverieInitializeTypeAs(PhysicsCar::CarWheelRef, "CarWheelRef");
+  RaverieInitializeTypeAs(PhysicsCar::CarWheelArray, "CarWheelArray");
+  RaverieInitializeType(PhysicsCarWheel);
+  RaverieInitializeType(CustomCollisionEventTracker);
 
-  ZilchInitializeType(JointCreator);
-  ZilchInitializeType(DynamicMotor);
-  ZilchInitializeType(PhysicsRaycastProvider);
-  ZilchInitializeTypeAs(ContactPoint, "ContactPoint");
-  ZilchInitializeType(ContactGraphEdge);
-  ZilchInitializeType(JointGraphEdge);
+  RaverieInitializeType(JointCreator);
+  RaverieInitializeType(DynamicMotor);
+  RaverieInitializeType(PhysicsRaycastProvider);
+  RaverieInitializeTypeAs(ContactPoint, "ContactPoint");
+  RaverieInitializeType(ContactGraphEdge);
+  RaverieInitializeType(JointGraphEdge);
 
   // Not ready for consumption yet, but I want to test it with dev config
   // METAREFACTOR they should always be initialized, but hidden with an
   // attribute
-  // ZilchInitializeType(SpringSystem);
-  // ZilchInitializeType(DecorativeCloth);
-  // ZilchInitializeType(DecorativeRope);
-  // ZilchInitializeType(GjkDebug);
-  // ZilchInitializeType(MeshDebug);
-  // ZilchInitializeType(TimeOfImpactDebug);
-  // ZilchInitializeType(ColliderInspector);
+  // RaverieInitializeType(SpringSystem);
+  // RaverieInitializeType(DecorativeCloth);
+  // RaverieInitializeType(DecorativeRope);
+  // RaverieInitializeType(GjkDebug);
+  // RaverieInitializeType(MeshDebug);
+  // RaverieInitializeType(TimeOfImpactDebug);
+  // RaverieInitializeType(ColliderInspector);
 
   EngineLibraryExtensions::AddNativeExtensions(builder);
 }
@@ -240,4 +240,4 @@ void PhysicsLibrary::Shutdown()
   GetLibrary()->ClearComponents();
 }
 
-} // namespace Zero
+} // namespace Raverie

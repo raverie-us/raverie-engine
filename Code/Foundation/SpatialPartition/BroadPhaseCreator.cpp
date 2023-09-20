@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Z
@@ -9,11 +9,11 @@ namespace Z
 BroadPhaseLibrary* gBroadPhaseLibrary = nullptr;
 } // namespace Z
 
-ZilchDefineTemplateType(DynamicBroadphasePropertyExtension, builder, type)
+RaverieDefineTemplateType(DynamicBroadphasePropertyExtension, builder, type)
 {
 }
 
-ZilchDefineTemplateType(StaticBroadphasePropertyExtension, builder, type)
+RaverieDefineTemplateType(StaticBroadphasePropertyExtension, builder, type)
 {
 }
 
@@ -146,4 +146,4 @@ String BroadPhaseLibrary::RemoveBroadPhaseText(StringParam name)
   return String();
 }
 
-} // namespace Zero
+} // namespace Raverie

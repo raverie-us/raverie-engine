@@ -1,14 +1,14 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Viewport widget is a widget that displays a 3d scene.
 class Viewport : public Composite
 {
 public:
-  ZilchDeclareType(Viewport, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Viewport, TypeCopyMode::ReferenceType);
 
   Viewport(Composite* parent, Space* space, Camera* camera);
 
@@ -71,4 +71,4 @@ public:
   Viewport* mViewport;
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 struct JointNode;
@@ -15,7 +15,7 @@ DeclareBitField5(JointLimitState, Active, AtLowerLimit, WasAtLowerLimit, AtUpper
 /// to a limit.
 struct JointLimit : public Component
 {
-  ZilchDeclareType(JointLimit, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(JointLimit, TypeCopyMode::ReferenceType);
 
   JointLimit();
   virtual ~JointLimit();
@@ -71,4 +71,4 @@ struct JointLimit : public Component
   JointNode* mNode;
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 //                                 Replicator //
@@ -381,7 +381,7 @@ size_t Replicator::GetReplicaCount() const
 bool Replicator::EmplaceReplica(Replica* replica, const EmplaceContext& emplaceContext)
 {
   // Emplace single replica
-  ReplicaArray replicas(ZeroInit, replica);
+  ReplicaArray replicas(RaverieInit, replica);
   return EmplaceReplicas(replicas, emplaceContext) != 0;
 }
 bool Replicator::EmplaceReplicas(const ReplicaArray& replicas, const EmplaceContext& emplaceContext)
@@ -410,7 +410,7 @@ bool Replicator::EmplaceReplicas(const ReplicaArray& replicas, const EmplaceCont
 bool Replicator::SpawnReplica(Replica* replica, const Route& route)
 {
   // Spawn single replica
-  ReplicaArray replicas(ZeroInit, replica);
+  ReplicaArray replicas(RaverieInit, replica);
   return SpawnReplicas(replicas, route) != 0;
 }
 bool Replicator::SpawnReplicas(const ReplicaArray& replicas, const Route& route)
@@ -444,7 +444,7 @@ bool Replicator::SpawnReplicas(const ReplicaArray& replicas, const Route& route)
 bool Replicator::CloneReplica(Replica* replica, const Route& route)
 {
   // Clone single replica
-  ReplicaArray replicas(ZeroInit, replica);
+  ReplicaArray replicas(RaverieInit, replica);
   return CloneReplicas(replicas, route) != 0;
 }
 bool Replicator::CloneReplicas(const ReplicaArray& replicas, const Route& route)
@@ -477,7 +477,7 @@ bool Replicator::CloneAllReplicas(const Route& route)
 bool Replicator::ForgetReplica(Replica* replica, const Route& route)
 {
   // Forget single replica
-  ReplicaArray replicas(ZeroInit, replica);
+  ReplicaArray replicas(RaverieInit, replica);
   return ForgetReplicas(replicas, route) != 0;
 }
 bool Replicator::ForgetReplicas(const ReplicaArray& replicas, const Route& route)
@@ -521,7 +521,7 @@ bool Replicator::ForgetAllReplicas(const Route& route)
 bool Replicator::DestroyReplica(Replica* replica, const Route& route)
 {
   // Destroy single replica
-  ReplicaArray replicas(ZeroInit, replica);
+  ReplicaArray replicas(RaverieInit, replica);
   return DestroyReplicas(replicas, route) != 0;
 }
 bool Replicator::DestroyReplicas(const ReplicaArray& replicas, const Route& route)
@@ -1182,7 +1182,7 @@ bool Replicator::ShouldIncludeAccurateTimestampOnChange(ReplicaChannel* replicaC
 
 TimeMs Replicator::GetInitializationTimestamp(const ReplicaArray& replicas)
 {
-#ifdef ZeroDebug
+#ifdef RaverieDebug
 
   // Verify all replica timestamps are the same
   // (We only serialize a single timestamp for all replicas in the replication
@@ -1202,7 +1202,7 @@ TimeMs Replicator::GetInitializationTimestamp(const ReplicaArray& replicas)
 }
 TimeMs Replicator::GetUninitializationTimestamp(const ReplicaArray& replicas)
 {
-#ifdef ZeroDebug
+#ifdef RaverieDebug
 
   // Verify all replica timestamps are the same
   // (We only serialize a single timestamp for all replicas in the replication
@@ -2038,4 +2038,4 @@ String GetReplicatorDisplayName(const IpAddress& ipAddress, Role::Enum role, Rep
   }
 }
 
-} // Namespace Zero
+} // namespace Raverie

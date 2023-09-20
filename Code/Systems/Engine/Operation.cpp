@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 bool OperationQueue::sListeningForSideEffects = false;
@@ -20,10 +20,10 @@ DefineEvent(OperationUndo);
 DefineEvent(OperationRedo);
 } // namespace Events
 
-ZilchDefineType(OperationQueueEvent, builder, type)
+RaverieDefineType(OperationQueueEvent, builder, type)
 {
-  ZilchBindFieldProperty(mOperation);
-  ZeroBindDocumented();
+  RaverieBindFieldProperty(mOperation);
+  RaverieBindDocumented();
 }
 
 OperationCreationContext::~OperationCreationContext()
@@ -61,18 +61,18 @@ void OperationCreationContext::Finalize()
   mContexts.Clear();
 }
 
-ZilchDefineType(Operation, builder, type)
+RaverieDefineType(Operation, builder, type)
 {
-  ZilchBindFieldGetter(mParent);
-  ZilchBindField(mName);
-  ZilchBindField(mInvalidReason);
+  RaverieBindFieldGetter(mParent);
+  RaverieBindField(mName);
+  RaverieBindField(mInvalidReason);
 
-  ZilchBindGetter(Children);
-  ZilchBindMethod(FindRoot);
+  RaverieBindGetter(Children);
+  RaverieBindMethod(FindRoot);
 
-  ZeroBindEvent(Events::OperationQueued, OperationQueueEvent);
-  ZeroBindEvent(Events::OperationUndo, OperationQueueEvent);
-  ZeroBindEvent(Events::OperationRedo, OperationQueueEvent);
+  RaverieBindEvent(Events::OperationQueued, OperationQueueEvent);
+  RaverieBindEvent(Events::OperationUndo, OperationQueueEvent);
+  RaverieBindEvent(Events::OperationRedo, OperationQueueEvent);
 }
 
 Memory::Heap* Operation::sHeap = new Memory::Heap("Operations", NULL);
@@ -118,7 +118,7 @@ MetaProxy::~MetaProxy()
   DeleteObjectsInContainer(mChildren);
 }
 
-ZilchDefineType(OperationBatch, builder, type)
+RaverieDefineType(OperationBatch, builder, type)
 {
 }
 
@@ -151,38 +151,38 @@ void OperationBatch::Redo()
   }
 }
 
-ZilchDefineType(OperationQueue, builder, type)
+RaverieDefineType(OperationQueue, builder, type)
 {
-  ZilchBindOverloadedMethod(Undo, ZilchInstanceOverload(void));
-  ZilchBindOverloadedMethod(Undo, ZilchInstanceOverload(bool, Operation*));
-  ZilchBindOverloadedMethod(Redo, ZilchInstanceOverload(void));
-  ZilchBindOverloadedMethod(Redo, ZilchInstanceOverload(bool, Operation*));
-  ZilchBindMethod(ClearUndo);
-  ZilchBindMethod(ClearRedo);
-  ZilchBindMethod(ClearAll);
+  RaverieBindOverloadedMethod(Undo, RaverieInstanceOverload(void));
+  RaverieBindOverloadedMethod(Undo, RaverieInstanceOverload(bool, Operation*));
+  RaverieBindOverloadedMethod(Redo, RaverieInstanceOverload(void));
+  RaverieBindOverloadedMethod(Redo, RaverieInstanceOverload(bool, Operation*));
+  RaverieBindMethod(ClearUndo);
+  RaverieBindMethod(ClearRedo);
+  RaverieBindMethod(ClearAll);
 
-  ZilchBindGetterSetterProperty(ActiveBatchName);
-  ZilchBindGetterProperty(Commands);
-  ZilchBindGetterProperty(RedoCommands);
+  RaverieBindGetterSetterProperty(ActiveBatchName);
+  RaverieBindGetterProperty(Commands);
+  RaverieBindGetterProperty(RedoCommands);
 
-  ZilchBindOverloadedMethod(BeginBatch, ZilchInstanceOverload(void, StringParam));
-  ZilchBindOverloadedMethod(BeginBatch, ZilchInstanceOverload(void));
-  ZilchBindMethod(EndBatch);
+  RaverieBindOverloadedMethod(BeginBatch, RaverieInstanceOverload(void, StringParam));
+  RaverieBindOverloadedMethod(BeginBatch, RaverieInstanceOverload(void));
+  RaverieBindMethod(EndBatch);
 
-  ZilchBindMethod(SaveObjectState);
-  ZilchBindMethod(ObjectCreated);
-  ZilchBindMethod(DestroyObject);
+  RaverieBindMethod(SaveObjectState);
+  RaverieBindMethod(ObjectCreated);
+  RaverieBindMethod(DestroyObject);
 
-  ZilchBindDefaultDestructor();
+  RaverieBindDefaultDestructor();
 
   type->CreatableInScript = true;
 
-  ZilchBindMethod(StartListeningForSideEffects);
-  ZilchBindMethod(IsListeningForSideEffects);
-  ZilchBindMethodAs(RegisterSideEffectProperty, "RegisterSideEffect");
-  ZilchBindMethod(QueueRegisteredSideEffects);
-  ZilchBindMethod(PopSubPropertyContext);
-  ZilchBindMethod(MarkPropertyAsModified);
+  RaverieBindMethod(StartListeningForSideEffects);
+  RaverieBindMethod(IsListeningForSideEffects);
+  RaverieBindMethodAs(RegisterSideEffectProperty, "RegisterSideEffect");
+  RaverieBindMethod(QueueRegisteredSideEffects);
+  RaverieBindMethod(PopSubPropertyContext);
+  RaverieBindMethod(MarkPropertyAsModified);
 }
 
 OperationQueue::OperationQueue()
@@ -547,7 +547,7 @@ void OperationQueue::MarkPropertyAsModified(Component* component, StringParam pr
     return;
   }
 
-  BoundType* componentType = ZilchVirtualTypeId(component);
+  BoundType* componentType = RaverieVirtualTypeId(component);
   Property* property = componentType->GetProperty(propertyName);
   if (property == nullptr)
   {
@@ -576,7 +576,7 @@ void OperationQueue::ObjectCreated(Cog* object)
     return;
   }
 
-  Zero::ObjectCreated(this, object);
+  Raverie::ObjectCreated(this, object);
 }
 
 void RecordDestroyedObjects(Cog* object, HashSet<Cog*>& objectSet)
@@ -598,22 +598,22 @@ void OperationQueue::DestroyObject(Cog* object)
 
   RecordDestroyedObjects(object, mDestroyedObjects);
 
-  Zero::DestroyObject(this, object);
+  Raverie::DestroyObject(this, object);
 }
 
 void OperationQueue::DetachObject(Cog* object, bool relative)
 {
-  Zero::DetachObject(this, object, relative);
+  Raverie::DetachObject(this, object, relative);
 }
 
 void OperationQueue::AttachObject(Cog* object, Cog* parent, bool relative)
 {
-  Zero::AttachObject(this, object, parent, relative);
+  Raverie::AttachObject(this, object, parent, relative);
 }
 
 void AddProperties(MetaProxy* proxy, Object* object)
 {
-  forRange (Property* prop, ZilchVirtualTypeId(object)->GetProperties())
+  forRange (Property* prop, RaverieVirtualTypeId(object)->GetProperties())
   {
     if (prop->HasAttribute(PropertyAttributes::cProperty) == nullptr || prop->Set == nullptr)
       continue;
@@ -631,7 +631,7 @@ String SaveObjectToString(Object* object)
   TextSaver saver;
   saver.OpenBuffer();
 
-  saver.StartPolymorphic(ZilchVirtualTypeId(object));
+  saver.StartPolymorphic(RaverieVirtualTypeId(object));
   object->Serialize(saver);
   saver.EndPolymorphic();
 
@@ -641,7 +641,7 @@ String SaveObjectToString(Object* object)
 
 void OperationQueue::BuildMetaProxy(MetaProxy* proxy, Cog* object)
 {
-  proxy->mType = ZilchVirtualTypeId(object);
+  proxy->mType = RaverieVirtualTypeId(object);
   proxy->mObject = object;
   proxy->mParent = object->GetParent();
   proxy->mHierarchyIndex = object->GetHierarchyIndex();
@@ -654,7 +654,7 @@ void OperationQueue::BuildMetaProxy(MetaProxy* proxy, Cog* object)
   forRange (Component* component, object->GetComponents())
   {
     MetaProxy* componentProxy = new MetaProxy();
-    componentProxy->mType = ZilchVirtualTypeId(component);
+    componentProxy->mType = RaverieVirtualTypeId(component);
     componentProxy->mSerializedObject = SaveObjectToString(component);
 
     // Add all properties
@@ -721,7 +721,7 @@ void OperationQueue::QueueChanges(MetaProxy* proxy)
     // Check properties
     forRange (MetaProxy::PropertyState& propertyState, componentProxy->mProperties.All())
     {
-      Property* prop = ZilchVirtualTypeId(component)->GetProperty(propertyState.mName);
+      Property* prop = RaverieVirtualTypeId(component)->GetProperty(propertyState.mName);
 
       // Property removed / renamed?
       if (prop == nullptr)
@@ -773,7 +773,7 @@ void OperationQueue::QueueChanges(MetaProxy* proxy)
     bool found = false;
     forRange (MetaProxy* proxyComponent, proxy->mComponents.All())
     {
-      if (proxyComponent->mType == ZilchVirtualTypeId(component))
+      if (proxyComponent->mType == RaverieVirtualTypeId(component))
       {
         found = true;
         break;
@@ -1017,4 +1017,4 @@ u64 UndoMap::GetObjectId(HandleParam object)
   return (u64)-1;
 }
 
-} // namespace Zero
+} // namespace Raverie

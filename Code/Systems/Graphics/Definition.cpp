@@ -1,10 +1,10 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(DefinitionSet, builder, type)
+RaverieDefineType(DefinitionSet, builder, type)
 {
 }
 
@@ -127,4 +127,4 @@ DefinitionSetManager::~DefinitionSetManager()
   DeleteObjectsInContainer(CreatorMap);
 }
 
-} // namespace Zero
+} // namespace Raverie

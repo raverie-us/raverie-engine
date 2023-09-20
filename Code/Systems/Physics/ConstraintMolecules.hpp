@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 struct Joint;
@@ -80,4 +80,4 @@ struct MoleculeData
 
 } // namespace Physics
 
-} // namespace Zero
+} // namespace Raverie

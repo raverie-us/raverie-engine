@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 struct JointLimit;
@@ -62,4 +62,4 @@ real ComputeLambda(ConstraintMolecule& mol, JointVelocity& velocites);
 
 } // namespace Physics
 
-} // namespace Zero
+} // namespace Raverie

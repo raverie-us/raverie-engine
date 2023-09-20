@@ -1,6 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 
-namespace Zero
+namespace Raverie
 {
 
 namespace BaseDynamicTreeInternal
@@ -306,4 +306,4 @@ void BaseDynamicAabbTree<PolicyType>::Update(NodeType* leafNode, Aabb& aabb)
   PolicyType::InsertNode(mRoot, leafNode, mRoot);
 }
 
-} // namespace Zero
+} // namespace Raverie

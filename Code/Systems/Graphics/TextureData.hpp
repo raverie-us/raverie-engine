@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Modifiable texture data that can be used to upload to a runtime Texture
@@ -12,7 +12,7 @@ namespace Zero
 class TextureData
 {
 public:
-  ZilchDeclareType(TextureData, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(TextureData, TypeCopyMode::ReferenceType);
 
   TextureData(TextureFormat::Enum format, int width, int height);
   ~TextureData();
@@ -48,4 +48,4 @@ public:
   byte* mData;
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 template <typename ResourceList>
@@ -74,4 +74,4 @@ public:
   }
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Physics
@@ -24,4 +24,4 @@ void DrawHinge(Joint* joint, AnchorAtom& anchors, Mat3Param basis0, Mat3Param ba
 
 } // namespace Physics
 
-} // namespace Zero
+} // namespace Raverie

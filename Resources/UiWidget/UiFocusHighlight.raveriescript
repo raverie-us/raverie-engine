@@ -1,0 +1,30 @@
+// MIT Licensed (see LICENSE.md).
+
+class UiFocusHighlight : RaverieComponent
+{
+  [Dependency] var UiWidget : UiWidget;
+  
+  [Property] var HighlightObject = CogPath(".");
+  [Property] var FocusColor : Real4 = Real4(1);
+  
+  var InitialColor : Real4;
+  
+  function Initialize(init : CogInitializer)
+  {
+    Raverie.Connect(this.Owner, Events.UiFocusGainedHierarchy, this.OnUiFocusGained);
+    Raverie.Connect(this.Owner, Events.UiFocusLostHierarchy, this.OnUiFocusLost);
+    
+    if(this.HighlightObject.Cog != null)
+      this.InitialColor = this.HighlightObject.Cog.UiWidget.LocalColor;
+  }
+  
+  function OnUiFocusGained(event : UiFocusEvent)
+  {
+    this.HighlightObject.Cog.UiWidget.LocalColor = this.FocusColor;
+  }
+  
+  function OnUiFocusLost(event : UiFocusEvent)
+  {
+    this.HighlightObject.Cog.UiWidget.LocalColor = this.InitialColor;
+  }
+}

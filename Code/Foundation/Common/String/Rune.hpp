@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // ugly template magic to have implicit character constructors and
@@ -94,4 +94,4 @@ inline bool operator<=(uint left, RuneParam right)
   return left <= right.value;
 }
 
-} // namespace Zero
+} // namespace Raverie

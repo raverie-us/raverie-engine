@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 HeightMapImporter* CreateImporter(Editor* editor)
@@ -26,17 +26,17 @@ void ImportHeightMap(Editor* editor)
   Shell::sInstance->OpenFile(*config);
 }
 
-ZilchDefineType(HeightMapImporter, builder, type)
+RaverieDefineType(HeightMapImporter, builder, type)
 {
-  ZilchBindFieldProperty(mName);
-  ZilchBindFieldProperty(mBaseHeight);
-  ZilchBindFieldProperty(mMinHeightRange);
-  ZilchBindFieldProperty(mMaxHeightRange);
-  ZilchBindFieldProperty(mPatchSize);
+  RaverieBindFieldProperty(mName);
+  RaverieBindFieldProperty(mBaseHeight);
+  RaverieBindFieldProperty(mMinHeightRange);
+  RaverieBindFieldProperty(mMaxHeightRange);
+  RaverieBindFieldProperty(mPatchSize);
   // These variables must refresh the displayed texture when updated
-  ZilchBindGetterSetterProperty(ImportMode);
-  ZilchBindGetterSetterProperty(PatchColumns);
-  ZilchBindGetterSetterProperty(PatchRows);
+  RaverieBindGetterSetterProperty(ImportMode);
+  RaverieBindGetterSetterProperty(PatchColumns);
+  RaverieBindGetterSetterProperty(PatchRows);
 }
 
 HeightMapImporter::HeightMapImporter(Composite* parent, Editor* editor) : Composite(parent), mEditor(editor)
@@ -126,7 +126,7 @@ void HeightMapImporter::OnFileSelected(OsFileSelection* event)
 void HeightMapImporter::LoadImage(StringParam filename)
 {
   Status status;
-  Zero::LoadImage(status, filename, &mHeightMap);
+  Raverie::LoadImage(status, filename, &mHeightMap);
   if (!status)
   {
     DoNotifyStatus(status);
@@ -460,4 +460,4 @@ void DragSizeManipulator::OnMouseUp(MouseEvent* event)
   this->Destroy();
 }
 
-} // namespace Zero
+} // namespace Raverie

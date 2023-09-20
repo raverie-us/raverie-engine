@@ -2,13 +2,13 @@
 #pragma once
 
 // Forward Declarations
-namespace Zero
+namespace Raverie
 {
 class OperationQueue;
 class NetObject;
-} // namespace Zero
+} // namespace Raverie
 
-namespace Zero
+namespace Raverie
 {
 
 //
@@ -117,4 +117,4 @@ private:
   HandleOf<NetChannelConfig> mCurrentNetChannelConfig;
 };
 
-} // namespace Zero
+} // namespace Raverie

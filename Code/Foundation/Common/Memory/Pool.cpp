@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 namespace Memory
 {
@@ -60,7 +60,7 @@ void Pool::Deallocate(MemPtr ptr, size_t /*numberOfBytes*/)
   if (ptr == nullptr)
     return;
 
-#ifdef ZeroDebug
+#ifdef RaverieDebug
   // 0xFAFAFAFA is our own byte pattern used to show that we deallocated the
   // memory, but have not yet released it to the os
   memset(ptr, 0xFA, mBlockSize);
@@ -97,4 +97,4 @@ void Pool::Print(size_t tabs, size_t flags)
 }
 
 } // namespace Memory
-} // namespace Zero
+} // namespace Raverie

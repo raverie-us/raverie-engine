@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 struct HeightMapCell;
@@ -121,4 +121,4 @@ public:
   HashMap<int, YAxisPixels> mModifiedPixels;
 };
 
-} // namespace Zero
+} // namespace Raverie

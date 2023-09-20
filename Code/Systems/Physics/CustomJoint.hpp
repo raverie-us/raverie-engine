@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -19,7 +19,7 @@ struct CustomJoint;
 class CustomJointEvent : public Event
 {
 public:
-  ZilchDeclareType(CustomJointEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CustomJointEvent, TypeCopyMode::ReferenceType);
 
   /// The joint that sent this event.
   CustomJoint* mOwner;
@@ -33,7 +33,7 @@ public:
 /// (ignoring error correction or motors).
 struct CustomConstraintInfo : public ReferenceCountedEventObject
 {
-  ZilchDeclareType(CustomConstraintInfo, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CustomConstraintInfo, TypeCopyMode::ReferenceType);
 
   CustomConstraintInfo();
 
@@ -174,4 +174,4 @@ typedef Physics::CustomJoint CustomJoint;
 typedef Physics::CustomJointEvent CustomJointEvent;
 typedef Physics::CustomConstraintInfo CustomConstraintInfo;
 
-} // namespace Zero
+} // namespace Raverie

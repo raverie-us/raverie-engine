@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 struct TimeOfImpactData
@@ -32,4 +32,4 @@ struct TimeOfImpactData
 
 void TimeOfImpact(TimeOfImpactData* data);
 
-} // namespace Zero
+} // namespace Raverie

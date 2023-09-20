@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 ObjectPropertyNode::ObjectPropertyNode(ObjectPropertyNode* parent, HandleParam object, Property* objectProperty) :
@@ -407,4 +407,4 @@ void EventMetaArray::EraseIndex(HandleParam container, uint index)
   mPropertyInterface->SendComponentsModifiedOnGrid(container);
 }
 
-} // namespace Zero
+} // namespace Raverie

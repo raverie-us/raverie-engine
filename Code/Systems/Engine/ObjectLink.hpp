@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -18,7 +18,7 @@ class ObjectLinkRange;
 class ObjectLinkEdge
 {
 public:
-  ZilchDeclareType(ObjectLinkEdge, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ObjectLinkEdge, TypeCopyMode::ReferenceType);
 
   ObjectLinkEdge();
 
@@ -79,7 +79,7 @@ private:
 class ObjectLinkAnchor : public Component
 {
 public:
-  ZilchDeclareType(ObjectLinkAnchor, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ObjectLinkAnchor, TypeCopyMode::ReferenceType);
 
   // Component Interface
   void OnDestroy(uint flags) override;
@@ -104,7 +104,7 @@ public:
 class ObjectLink : public Component
 {
 public:
-  ZilchDeclareType(ObjectLink, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ObjectLink, TypeCopyMode::ReferenceType);
 
   ObjectLink();
 
@@ -193,7 +193,7 @@ public:
 class ObjectLinkEvent : public Event
 {
 public:
-  ZilchDeclareType(ObjectLinkEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ObjectLinkEvent, TypeCopyMode::ReferenceType);
 
   ObjectLinkEvent();
 
@@ -210,7 +210,7 @@ public:
 class ObjectLinkPointChangedEvent : public Event
 {
 public:
-  ZilchDeclareType(ObjectLinkPointChangedEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ObjectLinkPointChangedEvent, TypeCopyMode::ReferenceType);
 
   ObjectLinkPointChangedEvent();
 
@@ -222,4 +222,4 @@ public:
   uint mEdgeId;
 };
 
-} // namespace Zero
+} // namespace Raverie

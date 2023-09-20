@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 extern const real cAngularSleepEpsilon;
@@ -47,7 +47,7 @@ public:
 class RigidBody : public BaseRigidBody
 {
 public:
-  ZilchDeclareType(RigidBody, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(RigidBody, TypeCopyMode::ReferenceType);
   typedef InList<Collider, &Collider::mBodyLink> CompositeColliderList;
   typedef CompositeColliderList::range CompositeColliderRange;
   typedef BaseInList<BaseRigidBody, RigidBody, &BaseRigidBody::RigidBodyHierarchyLink> ChildBodyList;
@@ -397,4 +397,4 @@ public:
 
 typedef InList<RigidBody, &RigidBody::mSpaceLink> RigidBodyList;
 
-} // namespace Zero
+} // namespace Raverie

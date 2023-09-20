@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class Collider;
@@ -21,4 +21,4 @@ void ColliderOnDestroy(Collider* collider, bool dynamicallyDestroyed);
 void PhysicsAttachTo(PhysicsNode* node, AttachmentInfo& info);
 void PhysicsDetach(PhysicsNode* node, AttachmentInfo& info);
 
-} // namespace Zero
+} // namespace Raverie

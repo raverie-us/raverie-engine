@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Infinite plane defined by a normal and a distance to the origin.
@@ -47,4 +47,4 @@ public:
   Vec4 mData;
 };
 
-} // namespace Zero
+} // namespace Raverie

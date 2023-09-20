@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 typedef InList<Actions> ActiveListsType;
@@ -11,7 +11,7 @@ class UpdateEvent;
 class ActionSpace : public Component
 {
 public:
-  ZilchDeclareType(ActionSpace, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ActionSpace, TypeCopyMode::ReferenceType);
 
   ActionSpace();
   ~ActionSpace();
@@ -28,4 +28,4 @@ public:
   ActiveListsType ScheduledLists;
 };
 
-} // namespace Zero
+} // namespace Raverie

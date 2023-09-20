@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// A level is resource that stores a set of objects that can be loaded into
@@ -11,7 +11,7 @@ namespace Zero
 class Level : public Resource
 {
 public:
-  ZilchDeclareType(Level, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Level, TypeCopyMode::ReferenceType);
 
   Level();
   ~Level();
@@ -42,4 +42,4 @@ public:
   static void ClearCachedLevels();
 };
 
-} // namespace Zero
+} // namespace Raverie

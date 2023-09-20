@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Describes material properties of a collider mainly used during collision
@@ -9,7 +9,7 @@ namespace Zero
 class PhysicsMaterial : public DataResource
 {
 public:
-  ZilchDeclareType(PhysicsMaterial, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(PhysicsMaterial, TypeCopyMode::ReferenceType);
 
   PhysicsMaterial();
 
@@ -85,4 +85,4 @@ public:
   Array<PhysicsMaterialReference> mModifiedResources;
 };
 
-} // namespace Zero
+} // namespace Raverie

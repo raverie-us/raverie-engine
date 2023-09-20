@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class TreeView;
@@ -12,7 +12,7 @@ struct TreeFormatting;
 class WatchView : public Composite
 {
 public:
-  typedef SpriteFrame ZilchSelf;
+  typedef SpriteFrame RaverieSelf;
 
   WatchView(Composite* parent);
   ~WatchView();
@@ -24,4 +24,4 @@ private:
   WatchViewSource* mSource;
 };
 
-} // Namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 typedef Array<Vec3> VertexArray;
@@ -31,4 +31,4 @@ void CorrectInternalEdgeNormal(HeightMapCollider* heightMap,
                                uint objectIndex,
                                uint contactId);
 
-} // namespace Zero
+} // namespace Raverie

@@ -4,7 +4,7 @@
 #include "DataTreeNode.hpp"
 #include "Tokenizer.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 DataNode* ReadField(DataTreeContext& c, Tokenizer& tokenizer, TempToken token, DataNode* parent);
@@ -132,19 +132,19 @@ DataNode* ReadField(DataTreeContext& c, Tokenizer& tokenizer, TempToken token, D
 
   // Convert to new type names "Real2, Real3, ..."
   if (typeName == "float")
-    typeName = ZilchTypeId(float)->Name;
+    typeName = RaverieTypeId(float)->Name;
   else if (typeName == "bool")
-    typeName = ZilchTypeId(bool)->Name;
+    typeName = RaverieTypeId(bool)->Name;
   else if (typeName == "uint")
-    typeName = ZilchTypeId(int)->Name;
+    typeName = RaverieTypeId(int)->Name;
   else if (typeName == "Vec2")
-    typeName = ZilchTypeId(Vec2)->Name;
+    typeName = RaverieTypeId(Vec2)->Name;
   else if (typeName == "Vec3")
-    typeName = ZilchTypeId(Vec3)->Name;
+    typeName = RaverieTypeId(Vec3)->Name;
   else if (typeName == "Vec4")
-    typeName = ZilchTypeId(Vec4)->Name;
+    typeName = RaverieTypeId(Vec4)->Name;
   else if (typeName == "Quat")
-    typeName = ZilchTypeId(Quat)->Name;
+    typeName = RaverieTypeId(Quat)->Name;
 
   // Check for a child id next to the type name
   Guid childId = PolymorphicNode::cInvalidUniqueNodeId;
@@ -276,4 +276,4 @@ DataNode* ReadValue(DataTreeContext& c, Tokenizer& tokenizer, TempToken token, D
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

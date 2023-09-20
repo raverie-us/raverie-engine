@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Forward declarations
@@ -35,7 +35,7 @@ enum Enum
 class PropertyWidget : public Composite
 {
 public:
-  ZilchDeclareType(PropertyWidget, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(PropertyWidget, TypeCopyMode::ReferenceType);
 
   /// Constructor / Destructor.
   PropertyWidget(PropertyWidgetInitializer& i, StyleMode::Enum style = StyleMode::Regular);
@@ -96,7 +96,7 @@ typedef PropertyWidget* (*MakePropertyWidget)(PropertyWidgetInitializer& initial
 class MetaPropertyEditor : public ReferenceCountedEventObject
 {
 public:
-  ZilchDeclareType(MetaPropertyEditor, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MetaPropertyEditor, TypeCopyMode::ReferenceType);
 
   MetaPropertyEditor(MakePropertyWidget make)
   {
@@ -117,4 +117,4 @@ PropertyWidget* CreateProperty(PropertyWidgetInitializer& initializer)
   return new propEditorType(initializer);
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class PixelBuffer;
@@ -21,7 +21,7 @@ DeclareEvent(ColorPickCancelled);
 class ColorEvent : public Event
 {
 public:
-  ZilchDeclareType(ColorEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ColorEvent, TypeCopyMode::ReferenceType);
   ColorEvent(Vec4Param color)
   {
     Color = color;
@@ -33,7 +33,7 @@ public:
 class ColorEyeDropper : public MouseManipulation
 {
 public:
-  typedef ColorEyeDropper ZilchSelf;
+  typedef ColorEyeDropper RaverieSelf;
   Widget* mOwner;
   ColorEyeDropper(Mouse* mouse, Composite* parent);
   void SetColorEvent(StringParam eventName);
@@ -65,7 +65,7 @@ private:
 class ColorPicker : public Composite
 {
 public:
-  typedef ColorPicker ZilchSelf;
+  typedef ColorPicker RaverieSelf;
 
   ColorPicker(Composite* parent);
   ~ColorPicker();
@@ -267,4 +267,4 @@ private:
   bool mColorPicked;
 };
 
-} // namespace Zero
+} // namespace Raverie

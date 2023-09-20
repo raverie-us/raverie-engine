@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Bound Type Handle
@@ -56,4 +56,4 @@ Property* PropertyHandle::GetProperty() const
   return nullptr;
 }
 
-} // namespace Zero
+} // namespace Raverie

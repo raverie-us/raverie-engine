@@ -7,7 +7,7 @@
 #include "ContentUploader.hpp"
 #include "ContentPackageImporter.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Update the transforms of the object hierarchy with
@@ -35,4 +35,4 @@ void BindContentCommands(Cog* configCog, CommandManager* commands)
   commands->AddCommand("FixArchetypeTransforms", BindCommandFunction(FixArchetypeTransforms));
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class UpdateEvent;
@@ -12,7 +12,7 @@ class UpdateEvent;
 class RootWidget : public Composite
 {
 public:
-  ZilchDeclareType(RootWidget, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(RootWidget, TypeCopyMode::ReferenceType);
 
   RootWidget();
   ~RootWidget();
@@ -108,4 +108,4 @@ Widget* PreviousSibling(Widget* object, bool ignoreInactive);
 // Get the next sibling in the tree
 Widget* NextSibling(Widget* object, bool ignoreInactive);
 
-} // namespace Zero
+} // namespace Raverie

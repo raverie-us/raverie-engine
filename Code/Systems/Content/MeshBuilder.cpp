@@ -1,21 +1,21 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(MeshBuilder, builder, type)
+RaverieDefineType(MeshBuilder, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::CallSetDefaults);
-  ZeroBindDependency(GeometryContent);
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::CallSetDefaults);
+  RaverieBindDependency(GeometryContent);
 
-  ZilchBindFieldProperty(mGenerateSmoothNormals);
-  ZilchBindFieldProperty(mSmoothingAngleDegreesThreshold);
-  ZilchBindFieldProperty(mGenerateTangentSpace);
-  ZilchBindFieldProperty(mInvertUvYAxis);
-  ZilchBindFieldProperty(mFlipWindingOrder);
-  ZilchBindFieldProperty(mFlipNormals);
+  RaverieBindFieldProperty(mGenerateSmoothNormals);
+  RaverieBindFieldProperty(mSmoothingAngleDegreesThreshold);
+  RaverieBindFieldProperty(mGenerateTangentSpace);
+  RaverieBindFieldProperty(mInvertUvYAxis);
+  RaverieBindFieldProperty(mFlipWindingOrder);
+  RaverieBindFieldProperty(mFlipNormals);
 }
 
 MeshBuilder::MeshBuilder() :
@@ -73,4 +73,4 @@ VertexAttribute::VertexAttribute(VertexSemantic::Enum semantic, VertexElementTyp
 {
 }
 
-} // namespace Zero
+} // namespace Raverie

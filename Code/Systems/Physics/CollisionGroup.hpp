@@ -1,14 +1,14 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Represents a label for a Collider to be used with a CollisionTable.
 class CollisionGroup : public DataResource
 {
 public:
-  ZilchDeclareType(CollisionGroup, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CollisionGroup, TypeCopyMode::ReferenceType);
 
   CollisionGroup();
   ~CollisionGroup();
@@ -68,4 +68,4 @@ public:
   CollisionGroupManager(BoundType* resourceType);
 };
 
-} // namespace Zero
+} // namespace Raverie

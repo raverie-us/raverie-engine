@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Forward declarations
@@ -20,7 +20,7 @@ template <typename DataType>
 class EditorScriptObjects : public EventObject
 {
 public:
-  typedef EditorScriptObjects<DataType> ZilchSelf;
+  typedef EditorScriptObjects<DataType> RaverieSelf;
 
   /// Constructor.
   EditorScriptObjects(StringParam attributeName);
@@ -65,8 +65,8 @@ EditorScriptObjects<DataType>::EditorScriptObjects(StringParam attributeName) :
 {
   ConnectThisTo(Z::gEditor, Events::ProjectLoaded, OnProjectLoaded);
 
-  ConnectThisTo(ZilchManager::GetInstance(), Events::ScriptsCompiledPostPatch, OnScriptsCompiled);
-  ConnectThisTo(ZilchScriptManager::GetInstance(), Events::ResourceRemoved, OnScriptRemoved);
+  ConnectThisTo(RaverieManager::GetInstance(), Events::ScriptsCompiledPostPatch, OnScriptsCompiled);
+  ConnectThisTo(RaverieScriptManager::GetInstance(), Events::ResourceRemoved, OnScriptRemoved);
 }
 
 template <typename DataType>
@@ -225,7 +225,7 @@ template <typename DataType>
 void EditorScriptObjects<DataType>::OnScriptsCompiled(Event*)
 {
   Array<BoundType*> components;
-  MetaComposition* composition = ZilchTypeId(Cog)->HasInherited<MetaComposition>();
+  MetaComposition* composition = RaverieTypeId(Cog)->HasInherited<MetaComposition>();
   composition->Enumerate(components, EnumerateAction::All);
 
   forRange (BoundType* componentType, components.All())
@@ -267,7 +267,7 @@ template <typename DataType>
 void EditorScriptObjects<DataType>::OnScriptRemoved(ResourceEvent* e)
 {
   Array<BoundType*> components;
-  MetaComposition* composition = ZilchTypeId(Cog)->HasInherited<MetaComposition>();
+  MetaComposition* composition = RaverieTypeId(Cog)->HasInherited<MetaComposition>();
   composition->Enumerate(components, EnumerateAction::All);
 
   forRange (BoundType* componentType, components.All())
@@ -324,7 +324,7 @@ template <typename DataType>
 bool EditorScriptObjects<DataType>::IsAutoRegister(BoundType* componentType)
 {
   // We only care about scripted components
-  if (componentType->IsA(ZilchTypeId(ZilchComponent)) == false)
+  if (componentType->IsA(RaverieTypeId(RaverieComponent)) == false)
     return false;
 
   // It must have the correct attribute
@@ -355,4 +355,4 @@ bool EditorScriptObjects<DataType>::ArchetypeObjectExists(StringParam name)
   return false;
 }
 
-} // namespace Zero
+} // namespace Raverie

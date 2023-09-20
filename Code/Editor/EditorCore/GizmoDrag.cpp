@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -9,14 +9,14 @@ namespace Events
 DefineEvent(GizmoPreDrag);
 }
 
-ZilchDefineType(GizmoUpdateEvent, builder, type)
+RaverieDefineType(GizmoUpdateEvent, builder, type)
 {
-  ZilchBindFieldProperty(mConstrainedWorldMovement);
-  ZilchBindFieldProperty(mConstrainedWorldDelta);
-  ZilchBindFieldProperty(mInitialGrabPoint);
+  RaverieBindFieldProperty(mConstrainedWorldMovement);
+  RaverieBindFieldProperty(mConstrainedWorldDelta);
+  RaverieBindFieldProperty(mInitialGrabPoint);
 
-  ZilchBindFieldPropertyAs(mConstrainedWorldMovement, "MouseWorldMovement")->AddAttribute(DeprecatedAttribute);
-  ZilchBindFieldPropertyAs(mConstrainedWorldDelta, "MouseWorldDelta")->AddAttribute(DeprecatedAttribute);
+  RaverieBindFieldPropertyAs(mConstrainedWorldMovement, "MouseWorldMovement")->AddAttribute(DeprecatedAttribute);
+  RaverieBindFieldPropertyAs(mConstrainedWorldDelta, "MouseWorldDelta")->AddAttribute(DeprecatedAttribute);
 }
 
 GizmoUpdateEvent::GizmoUpdateEvent(Cog* gizmoCog, ViewportMouseEvent* e) : GizmoEvent(gizmoCog, e)
@@ -30,28 +30,28 @@ GizmoUpdateEvent::GizmoUpdateEvent(GizmoUpdateEvent* rhs) : GizmoEvent(rhs->mGiz
   mInitialGrabPoint = rhs->mInitialGrabPoint;
 }
 
-ZilchDefineType(GizmoDrag, builder, type)
+RaverieDefineType(GizmoDrag, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindTag(Tags::Gizmo);
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindTag(Tags::Gizmo);
 
-  ZeroBindDependency(Gizmo);
-  ZeroBindDependency(MouseCapture);
+  RaverieBindDependency(Gizmo);
+  RaverieBindDependency(MouseCapture);
 
-  ZeroBindEvent(Events::GizmoModified, GizmoUpdateEvent);
-  ZeroBindEvent(Events::GizmoPreDrag, GizmoEvent);
+  RaverieBindEvent(Events::GizmoModified, GizmoUpdateEvent);
+  RaverieBindEvent(Events::GizmoPreDrag, GizmoEvent);
 
-  ZilchBindFieldProperty(mDragMode)->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  ZilchBindFieldProperty(mLineDirection)->ZeroFilterEquality(mDragMode, GizmoDragMode::Enum, GizmoDragMode::Line);
-  ZilchBindFieldProperty(mPlaneNormal)->ZeroFilterEquality(mDragMode, GizmoDragMode::Enum, GizmoDragMode::Plane);
-  ZilchBindFieldProperty(mNormalInWorld)->ZeroFilterEquality(mDragMode, GizmoDragMode::Enum, GizmoDragMode::Plane);
-  ZilchBindGetter(GrabPoint);
-  ZilchBindFieldProperty(mGrabMode);
-  ZilchBindFieldProperty(mAutoDrag)->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  ZilchBindFieldProperty(mDragDistance)->ZeroFilterBool(mAutoDrag);
+  RaverieBindFieldProperty(mDragMode)->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  RaverieBindFieldProperty(mLineDirection)->RaverieFilterEquality(mDragMode, GizmoDragMode::Enum, GizmoDragMode::Line);
+  RaverieBindFieldProperty(mPlaneNormal)->RaverieFilterEquality(mDragMode, GizmoDragMode::Enum, GizmoDragMode::Plane);
+  RaverieBindFieldProperty(mNormalInWorld)->RaverieFilterEquality(mDragMode, GizmoDragMode::Enum, GizmoDragMode::Plane);
+  RaverieBindGetter(GrabPoint);
+  RaverieBindFieldProperty(mGrabMode);
+  RaverieBindFieldProperty(mAutoDrag)->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  RaverieBindFieldProperty(mDragDistance)->RaverieFilterBool(mAutoDrag);
 
-  ZilchBindGetter(DragActive);
+  RaverieBindGetter(DragActive);
 }
 
 void GizmoDrag::Serialize(Serializer& stream)
@@ -271,4 +271,4 @@ Vec3 GizmoDrag::CastRayAgainstDragPlane(const Ray& worldRay)
   return intersection.Points[0];
 }
 
-} // namespace Zero
+} // namespace Raverie

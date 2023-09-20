@@ -41,18 +41,18 @@ namespace Geometry
 
 DeclareEnum4(FillRule, NonZeroWinding, EvenOddWinding, All, PositiveWinding);
 
-bool Triangulate(const Zero::Array<Vec2>& vertices,
-                 const Zero::Array<uint>& contourSizes,
-                 Zero::Array<uint>* indices,
+bool Triangulate(const Raverie::Array<Vec2>& vertices,
+                 const Raverie::Array<uint>& contourSizes,
+                 Raverie::Array<uint>* indices,
                  FillRule::Type rule = FillRule::EvenOddWinding);
 
 // Wrapper for easy of use on single contour shapes
-bool Triangulate(const Zero::Array<Vec2>& vertices, Zero::Array<uint>* indices);
+bool Triangulate(const Raverie::Array<Vec2>& vertices, Raverie::Array<uint>* indices);
 
 //
 //  Internal (for debugging)
 //
 
-bool BuildSet(const Zero::TrapezoidMap& map, Zero::Array<uint>* indices, s32 seed, FillRule::Type rule);
+bool BuildSet(const Raverie::TrapezoidMap& map, Raverie::Array<uint>* indices, s32 seed, FillRule::Type rule);
 
 } // namespace Geometry

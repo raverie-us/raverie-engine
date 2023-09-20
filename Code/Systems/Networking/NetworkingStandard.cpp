@@ -1,171 +1,171 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-#define InitializePropertyFilterForType(typeName) ZilchInitializeType(PropertyFilter##typeName)
+#define InitializePropertyFilterForType(typeName) RaverieInitializeType(PropertyFilter##typeName)
 
 // Ranges
-ZilchDefineRange(EventRange);
-ZilchDefineRange(NetUserRange);
-ZilchDefineRange(NetHostRange);
-ZilchDefineRange(WebServerHeaderRange);
+RaverieDefineRange(EventRange);
+RaverieDefineRange(NetUserRange);
+RaverieDefineRange(NetHostRange);
+RaverieDefineRange(WebServerHeaderRange);
 
 // Enums
-ZilchDefineEnum(TcpSocketBind);
-ZilchDefineEnum(NetUserAddResponse);
-ZilchDefineEnum(Network);
-ZilchDefineEnum(NetRefreshResult);
-ZilchDefineEnum(Role);
-ZilchDefineEnum(Authority);
-ZilchDefineEnum(AuthorityMode);
-ZilchDefineEnum(DetectionMode);
-ZilchDefineEnum(ReliabilityMode);
-ZilchDefineEnum(SerializationMode);
-ZilchDefineEnum(RouteMode);
-ZilchDefineEnum(ReplicationPhase);
-ZilchDefineEnum(ConvergenceState);
-ZilchDefineEnum(BasicNetType);
-ZilchDefineEnum(TransportProtocol);
-ZilchDefineEnum(ConnectResponseMode);
-ZilchDefineEnum(TransmissionDirection);
-ZilchDefineEnum(LinkStatus);
-ZilchDefineEnum(LinkState);
-ZilchDefineEnum(ConnectResponse);
-ZilchDefineEnum(DisconnectReason);
-ZilchDefineEnum(UserConnectResponse);
-ZilchDefineEnum(TransferMode);
-ZilchDefineEnum(Receipt);
-ZilchDefineEnum(WebServerRequestMethod);
+RaverieDefineEnum(TcpSocketBind);
+RaverieDefineEnum(NetUserAddResponse);
+RaverieDefineEnum(Network);
+RaverieDefineEnum(NetRefreshResult);
+RaverieDefineEnum(Role);
+RaverieDefineEnum(Authority);
+RaverieDefineEnum(AuthorityMode);
+RaverieDefineEnum(DetectionMode);
+RaverieDefineEnum(ReliabilityMode);
+RaverieDefineEnum(SerializationMode);
+RaverieDefineEnum(RouteMode);
+RaverieDefineEnum(ReplicationPhase);
+RaverieDefineEnum(ConvergenceState);
+RaverieDefineEnum(BasicNetType);
+RaverieDefineEnum(TransportProtocol);
+RaverieDefineEnum(ConnectResponseMode);
+RaverieDefineEnum(TransmissionDirection);
+RaverieDefineEnum(LinkStatus);
+RaverieDefineEnum(LinkState);
+RaverieDefineEnum(ConnectResponse);
+RaverieDefineEnum(DisconnectReason);
+RaverieDefineEnum(UserConnectResponse);
+RaverieDefineEnum(TransferMode);
+RaverieDefineEnum(Receipt);
+RaverieDefineEnum(WebServerRequestMethod);
 
-ZilchDefineExternalBaseType(WebResponseCode::Enum, TypeCopyMode::ValueType, builder, type)
+RaverieDefineExternalBaseType(WebResponseCode::Enum, TypeCopyMode::ValueType, builder, type)
 {
-  ZilchFullBindEnum(builder, type, SpecialType::Enumeration);
-  ZilchFullBindEnumValue(builder, type, WebResponseCode::Invalid, "Invalid");
-  ZilchFullBindEnumValue(builder, type, WebResponseCode::NoServerResponse, "NoServerResponse");
-  ZilchFullBindEnumValue(builder, type, WebResponseCode::Continue, "Continue");
-  ZilchFullBindEnumValue(builder, type, WebResponseCode::SwitchingProtocols, "SwitchingProtocols");
-  ZilchFullBindEnumValue(builder, type, WebResponseCode::OK, "OK");
-  ZilchFullBindEnumValue(builder, type, WebResponseCode::Created, "Created");
-  ZilchFullBindEnumValue(builder, type, WebResponseCode::Accepted, "Accepted");
-  ZilchFullBindEnumValue(builder, type, WebResponseCode::NonauthoritativeInformation, "NonauthoritativeInformation");
-  ZilchFullBindEnumValue(builder, type, WebResponseCode::NoContent, "NoContent");
-  ZilchFullBindEnumValue(builder, type, WebResponseCode::ResetContent, "ResetContent");
-  ZilchFullBindEnumValue(builder, type, WebResponseCode::PartialContent, "PartialContent");
-  ZilchFullBindEnumValue(builder, type, WebResponseCode::MovedPermanently, "MovedPermanently");
-  ZilchFullBindEnumValue(builder, type, WebResponseCode::ObjectMovedTemporarily, "ObjectMovedTemporarily");
-  ZilchFullBindEnumValue(builder, type, WebResponseCode::SeeOther, "SeeOther");
-  ZilchFullBindEnumValue(builder, type, WebResponseCode::NotModified, "NotModified");
-  ZilchFullBindEnumValue(builder, type, WebResponseCode::TemporaryRedirect, "TemporaryRedirect");
-  ZilchFullBindEnumValue(builder, type, WebResponseCode::PermanentRedirect, "PermanentRedirect");
-  ZilchFullBindEnumValue(builder, type, WebResponseCode::BadRequest, "BadRequest");
-  ZilchFullBindEnumValue(builder, type, WebResponseCode::AccessDenied, "AccessDenied");
-  ZilchFullBindEnumValue(builder, type, WebResponseCode::Forbidden, "Forbidden");
-  ZilchFullBindEnumValue(builder, type, WebResponseCode::NotFound, "NotFound");
-  ZilchFullBindEnumValue(builder, type, WebResponseCode::HTTPVerbNotAllowed, "HTTPVerbNotAllowed");
-  ZilchFullBindEnumValue(builder, type, WebResponseCode::ClientBrowserRejectsMIME, "ClientBrowserRejectsMIME");
-  ZilchFullBindEnumValue(builder, type, WebResponseCode::ProxyAuthenticationRequired, "ProxyAuthenticationRequired");
-  ZilchFullBindEnumValue(builder, type, WebResponseCode::PreconditionFailed, "PreconditionFailed");
-  ZilchFullBindEnumValue(builder, type, WebResponseCode::RequestEntityTooLarge, "RequestEntityTooLarge");
-  ZilchFullBindEnumValue(builder, type, WebResponseCode::RequestURITooLarge, "RequestURITooLarge");
-  ZilchFullBindEnumValue(builder, type, WebResponseCode::UnsupportedMediaType, "UnsupportedMediaType");
-  ZilchFullBindEnumValue(builder, type, WebResponseCode::RequestedRangeNotSatisfiable, "RequestedRangeNotSatisfiable");
-  ZilchFullBindEnumValue(builder, type, WebResponseCode::ExecutionFailed, "ExecutionFailed");
-  ZilchFullBindEnumValue(builder, type, WebResponseCode::LockedError, "LockedError");
-  ZilchFullBindEnumValue(builder, type, WebResponseCode::InternalServerError, "InternalServerError");
-  ZilchFullBindEnumValue(builder, type, WebResponseCode::UnimplementedHeaderValueUsed, "UnimplementedHeaderValueUsed");
-  ZilchFullBindEnumValue(builder, type, WebResponseCode::GatewayProxyReceivedInvalid, "GatewayProxyReceivedInvalid");
-  ZilchFullBindEnumValue(builder, type, WebResponseCode::ServiceUnavailable, "ServiceUnavailable");
-  ZilchFullBindEnumValue(builder, type, WebResponseCode::GatewayTimedOut, "GatewayTimedOut");
-  ZilchFullBindEnumValue(builder, type, WebResponseCode::HTTPVersionNotSupported, "HTTPVersionNotSupported");
+  RaverieFullBindEnum(builder, type, SpecialType::Enumeration);
+  RaverieFullBindEnumValue(builder, type, WebResponseCode::Invalid, "Invalid");
+  RaverieFullBindEnumValue(builder, type, WebResponseCode::NoServerResponse, "NoServerResponse");
+  RaverieFullBindEnumValue(builder, type, WebResponseCode::Continue, "Continue");
+  RaverieFullBindEnumValue(builder, type, WebResponseCode::SwitchingProtocols, "SwitchingProtocols");
+  RaverieFullBindEnumValue(builder, type, WebResponseCode::OK, "OK");
+  RaverieFullBindEnumValue(builder, type, WebResponseCode::Created, "Created");
+  RaverieFullBindEnumValue(builder, type, WebResponseCode::Accepted, "Accepted");
+  RaverieFullBindEnumValue(builder, type, WebResponseCode::NonauthoritativeInformation, "NonauthoritativeInformation");
+  RaverieFullBindEnumValue(builder, type, WebResponseCode::NoContent, "NoContent");
+  RaverieFullBindEnumValue(builder, type, WebResponseCode::ResetContent, "ResetContent");
+  RaverieFullBindEnumValue(builder, type, WebResponseCode::PartialContent, "PartialContent");
+  RaverieFullBindEnumValue(builder, type, WebResponseCode::MovedPermanently, "MovedPermanently");
+  RaverieFullBindEnumValue(builder, type, WebResponseCode::ObjectMovedTemporarily, "ObjectMovedTemporarily");
+  RaverieFullBindEnumValue(builder, type, WebResponseCode::SeeOther, "SeeOther");
+  RaverieFullBindEnumValue(builder, type, WebResponseCode::NotModified, "NotModified");
+  RaverieFullBindEnumValue(builder, type, WebResponseCode::TemporaryRedirect, "TemporaryRedirect");
+  RaverieFullBindEnumValue(builder, type, WebResponseCode::PermanentRedirect, "PermanentRedirect");
+  RaverieFullBindEnumValue(builder, type, WebResponseCode::BadRequest, "BadRequest");
+  RaverieFullBindEnumValue(builder, type, WebResponseCode::AccessDenied, "AccessDenied");
+  RaverieFullBindEnumValue(builder, type, WebResponseCode::Forbidden, "Forbidden");
+  RaverieFullBindEnumValue(builder, type, WebResponseCode::NotFound, "NotFound");
+  RaverieFullBindEnumValue(builder, type, WebResponseCode::HTTPVerbNotAllowed, "HTTPVerbNotAllowed");
+  RaverieFullBindEnumValue(builder, type, WebResponseCode::ClientBrowserRejectsMIME, "ClientBrowserRejectsMIME");
+  RaverieFullBindEnumValue(builder, type, WebResponseCode::ProxyAuthenticationRequired, "ProxyAuthenticationRequired");
+  RaverieFullBindEnumValue(builder, type, WebResponseCode::PreconditionFailed, "PreconditionFailed");
+  RaverieFullBindEnumValue(builder, type, WebResponseCode::RequestEntityTooLarge, "RequestEntityTooLarge");
+  RaverieFullBindEnumValue(builder, type, WebResponseCode::RequestURITooLarge, "RequestURITooLarge");
+  RaverieFullBindEnumValue(builder, type, WebResponseCode::UnsupportedMediaType, "UnsupportedMediaType");
+  RaverieFullBindEnumValue(builder, type, WebResponseCode::RequestedRangeNotSatisfiable, "RequestedRangeNotSatisfiable");
+  RaverieFullBindEnumValue(builder, type, WebResponseCode::ExecutionFailed, "ExecutionFailed");
+  RaverieFullBindEnumValue(builder, type, WebResponseCode::LockedError, "LockedError");
+  RaverieFullBindEnumValue(builder, type, WebResponseCode::InternalServerError, "InternalServerError");
+  RaverieFullBindEnumValue(builder, type, WebResponseCode::UnimplementedHeaderValueUsed, "UnimplementedHeaderValueUsed");
+  RaverieFullBindEnumValue(builder, type, WebResponseCode::GatewayProxyReceivedInvalid, "GatewayProxyReceivedInvalid");
+  RaverieFullBindEnumValue(builder, type, WebResponseCode::ServiceUnavailable, "ServiceUnavailable");
+  RaverieFullBindEnumValue(builder, type, WebResponseCode::GatewayTimedOut, "GatewayTimedOut");
+  RaverieFullBindEnumValue(builder, type, WebResponseCode::HTTPVersionNotSupported, "HTTPVersionNotSupported");
 }
 
 // Arrays
-ZeroDefineArrayType(NetPropertyInfoArray);
+RaverieDefineArrayType(NetPropertyInfoArray);
 
-ZilchDefineStaticLibrary(NetworkingLibrary)
+RaverieDefineStaticLibrary(NetworkingLibrary)
 {
   builder.CreatableInScriptDefault = false;
 
   // Ranges
-  ZilchInitializeRange(EventRange);
-  ZilchInitializeRange(NetUserRange);
-  ZilchInitializeRange(NetHostRange);
-  ZilchInitializeRange(WebServerHeaderRange);
+  RaverieInitializeRange(EventRange);
+  RaverieInitializeRange(NetUserRange);
+  RaverieInitializeRange(NetHostRange);
+  RaverieInitializeRange(WebServerHeaderRange);
 
   // Enums
-  ZilchInitializeEnum(TcpSocketBind);
-  ZilchInitializeEnum(NetUserAddResponse);
-  ZilchInitializeEnum(Network);
-  ZilchInitializeEnum(NetRefreshResult);
-  ZilchInitializeEnumAs(Role, "NetRole");
-  ZilchInitializeEnum(Authority);
-  ZilchInitializeEnum(AuthorityMode);
-  ZilchInitializeEnum(DetectionMode);
-  ZilchInitializeEnum(ReliabilityMode);
-  ZilchInitializeEnum(SerializationMode);
-  ZilchInitializeEnum(RouteMode);
-  ZilchInitializeEnum(ReplicationPhase);
-  ZilchInitializeEnum(ConvergenceState);
-  ZilchInitializeEnum(BasicNetType);
-  ZilchInitializeEnum(TransportProtocol);
-  ZilchInitializeEnum(ConnectResponseMode);
-  ZilchInitializeEnum(TransmissionDirection);
-  ZilchInitializeEnum(LinkStatus);
-  ZilchInitializeEnum(LinkState);
-  ZilchInitializeEnum(ConnectResponse);
-  ZilchInitializeEnum(DisconnectReason);
-  ZilchInitializeEnum(UserConnectResponse);
-  ZilchInitializeEnum(TransferMode);
-  ZilchInitializeEnum(Receipt);
-  ZilchInitializeEnum(WebServerRequestMethod);
-  ZilchInitializeEnum(WebResponseCode);
+  RaverieInitializeEnum(TcpSocketBind);
+  RaverieInitializeEnum(NetUserAddResponse);
+  RaverieInitializeEnum(Network);
+  RaverieInitializeEnum(NetRefreshResult);
+  RaverieInitializeEnumAs(Role, "NetRole");
+  RaverieInitializeEnum(Authority);
+  RaverieInitializeEnum(AuthorityMode);
+  RaverieInitializeEnum(DetectionMode);
+  RaverieInitializeEnum(ReliabilityMode);
+  RaverieInitializeEnum(SerializationMode);
+  RaverieInitializeEnum(RouteMode);
+  RaverieInitializeEnum(ReplicationPhase);
+  RaverieInitializeEnum(ConvergenceState);
+  RaverieInitializeEnum(BasicNetType);
+  RaverieInitializeEnum(TransportProtocol);
+  RaverieInitializeEnum(ConnectResponseMode);
+  RaverieInitializeEnum(TransmissionDirection);
+  RaverieInitializeEnum(LinkStatus);
+  RaverieInitializeEnum(LinkState);
+  RaverieInitializeEnum(ConnectResponse);
+  RaverieInitializeEnum(DisconnectReason);
+  RaverieInitializeEnum(UserConnectResponse);
+  RaverieInitializeEnum(TransferMode);
+  RaverieInitializeEnum(Receipt);
+  RaverieInitializeEnum(WebServerRequestMethod);
+  RaverieInitializeEnum(WebResponseCode);
 
   // Meta Arrays
-  ZeroInitializeArrayTypeAs(NetPropertyInfoArray, "NetPropertyInfos");
+  RaverieInitializeArrayTypeAs(NetPropertyInfoArray, "NetPropertyInfos");
 
   // Events
-  ZilchInitializeType(ConnectionEvent);
-  ZilchInitializeType(ReceivedDataEvent);
-  ZilchInitializeType(SendableEvent);
-  ZilchInitializeType(WebResponseEvent);
-  ZilchInitializeType(WebServerRequestEvent);
-  ZilchInitializeType(AcquireNetHostInfo);
-  ZilchInitializeType(NetHostUpdate);
-  ZilchInitializeType(NetHostListUpdate);
-  ZilchInitializeType(NetPeerOpened);
-  ZilchInitializeType(NetPeerClosed);
-  ZilchInitializeType(NetGameStarted);
-  ZilchInitializeType(NetPeerSentConnectRequest);
-  ZilchInitializeType(NetPeerReceivedConnectRequest);
-  ZilchInitializeType(NetPeerSentConnectResponse);
-  ZilchInitializeType(NetPeerReceivedConnectResponse);
-  ZilchInitializeType(NetLinkConnected);
-  ZilchInitializeType(NetLinkDisconnected);
-  ZilchInitializeType(NetLevelStarted);
-  ZilchInitializeType(NetPeerSentUserAddRequest);
-  ZilchInitializeType(NetPeerReceivedUserAddRequest);
-  ZilchInitializeType(NetPeerSentUserAddResponse);
-  ZilchInitializeType(NetPeerReceivedUserAddResponse);
-  ZilchInitializeType(NetUserLostObjectOwnership);
-  ZilchInitializeType(NetUserAcquiredObjectOwnership);
-  ZilchInitializeType(RegisterCppNetProperties);
-  ZilchInitializeType(NetObjectOnline);
-  ZilchInitializeType(NetObjectOffline);
-  ZilchInitializeType(NetUserOwnerChanged);
-  ZilchInitializeType(NetChannelPropertyChange);
-  ZilchInitializeType(NetEventSent);
-  ZilchInitializeType(NetEventReceived);
-  ZilchInitializeType(NetHostRecordEvent);
+  RaverieInitializeType(ConnectionEvent);
+  RaverieInitializeType(ReceivedDataEvent);
+  RaverieInitializeType(SendableEvent);
+  RaverieInitializeType(WebResponseEvent);
+  RaverieInitializeType(WebServerRequestEvent);
+  RaverieInitializeType(AcquireNetHostInfo);
+  RaverieInitializeType(NetHostUpdate);
+  RaverieInitializeType(NetHostListUpdate);
+  RaverieInitializeType(NetPeerOpened);
+  RaverieInitializeType(NetPeerClosed);
+  RaverieInitializeType(NetGameStarted);
+  RaverieInitializeType(NetPeerSentConnectRequest);
+  RaverieInitializeType(NetPeerReceivedConnectRequest);
+  RaverieInitializeType(NetPeerSentConnectResponse);
+  RaverieInitializeType(NetPeerReceivedConnectResponse);
+  RaverieInitializeType(NetLinkConnected);
+  RaverieInitializeType(NetLinkDisconnected);
+  RaverieInitializeType(NetLevelStarted);
+  RaverieInitializeType(NetPeerSentUserAddRequest);
+  RaverieInitializeType(NetPeerReceivedUserAddRequest);
+  RaverieInitializeType(NetPeerSentUserAddResponse);
+  RaverieInitializeType(NetPeerReceivedUserAddResponse);
+  RaverieInitializeType(NetUserLostObjectOwnership);
+  RaverieInitializeType(NetUserAcquiredObjectOwnership);
+  RaverieInitializeType(RegisterCppNetProperties);
+  RaverieInitializeType(NetObjectOnline);
+  RaverieInitializeType(NetObjectOffline);
+  RaverieInitializeType(NetUserOwnerChanged);
+  RaverieInitializeType(NetChannelPropertyChange);
+  RaverieInitializeType(NetEventSent);
+  RaverieInitializeType(NetEventReceived);
+  RaverieInitializeType(NetHostRecordEvent);
 
   // Meta Components
-  ZilchInitializeType(EventBundleMetaComposition);
-  ZilchInitializeType(PropertyFilterMultiPrimitiveTypes);
-  ZilchInitializeType(PropertyFilterFloatingPointTypes);
-  ZilchInitializeType(PropertyFilterArithmeticTypes);
-  ZilchInitializeType(EditInGameFilter);
-  ZilchInitializeType(MetaNetProperty);
+  RaverieInitializeType(EventBundleMetaComposition);
+  RaverieInitializeType(PropertyFilterMultiPrimitiveTypes);
+  RaverieInitializeType(PropertyFilterFloatingPointTypes);
+  RaverieInitializeType(PropertyFilterArithmeticTypes);
+  RaverieInitializeType(EditInGameFilter);
+  RaverieInitializeType(MetaNetProperty);
 
   // Net property filters by type
   InitializePropertyFilterForType(Other);
@@ -184,29 +184,29 @@ ZilchDefineStaticLibrary(NetworkingLibrary)
   InitializePropertyFilterForType(String);
 
   // Other Networking Type Initialization
-  ZilchInitializeType(TcpSocket);
-  ZilchInitializeType(SimpleSocket);
-  ZilchInitializeType(ConnectionData);
-  ZilchInitializeType(WebServer);
-  ZilchInitializeType(AsyncWebRequest);
-  ZilchInitializeType(WebRequester);
+  RaverieInitializeType(TcpSocket);
+  RaverieInitializeType(SimpleSocket);
+  RaverieInitializeType(ConnectionData);
+  RaverieInitializeType(WebServer);
+  RaverieInitializeType(AsyncWebRequest);
+  RaverieInitializeType(WebRequester);
 
   // NetPeer Type Initialization
-  ZilchInitializeTypeAs(BitStreamExtended, "BitStream");
-  ZilchInitializeType(EventBundle);
-  ZilchInitializeType(NetPropertyInfo);
-  ZilchInitializeType(NetPropertyConfig);
-  ZilchInitializeType(NetPropertyType);
-  ZilchInitializeType(NetProperty);
-  ZilchInitializeType(NetChannelConfig);
-  ZilchInitializeType(NetChannelType);
-  ZilchInitializeType(NetChannel);
-  ZilchInitializeType(NetHost);
-  ZilchInitializeType(NetHostRecord);
-  ZilchInitializeType(NetObject);
-  ZilchInitializeType(NetSpace);
-  ZilchInitializeType(NetUser);
-  ZilchInitializeType(NetPeer);
+  RaverieInitializeTypeAs(BitStreamExtended, "BitStream");
+  RaverieInitializeType(EventBundle);
+  RaverieInitializeType(NetPropertyInfo);
+  RaverieInitializeType(NetPropertyConfig);
+  RaverieInitializeType(NetPropertyType);
+  RaverieInitializeType(NetProperty);
+  RaverieInitializeType(NetChannelConfig);
+  RaverieInitializeType(NetChannelType);
+  RaverieInitializeType(NetChannel);
+  RaverieInitializeType(NetHost);
+  RaverieInitializeType(NetHostRecord);
+  RaverieInitializeType(NetObject);
+  RaverieInitializeType(NetSpace);
+  RaverieInitializeType(NetUser);
+  RaverieInitializeType(NetPeer);
 
   EngineLibraryExtensions::AddNativeExtensions(builder);
 }
@@ -231,4 +231,4 @@ void NetworkingLibrary::Shutdown()
   GetLibrary()->ClearComponents();
 }
 
-} // namespace Zero
+} // namespace Raverie

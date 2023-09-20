@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Physics
@@ -202,4 +202,4 @@ Contact* ContactAlreadyExistsDebug(Manifold* manifold)
 
 } // namespace Physics
 
-} // namespace Zero
+} // namespace Raverie

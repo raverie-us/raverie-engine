@@ -1,13 +1,13 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class UiLegacyToolTip
 {
 public:
-  ZilchDeclareType(UiLegacyToolTip, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(UiLegacyToolTip, TypeCopyMode::ReferenceType);
 
   UiLegacyToolTip();
   ~UiLegacyToolTip();
@@ -40,4 +40,4 @@ public:
   HandleOf<ToolTip> mToolTip;
 };
 
-} // namespace Zero
+} // namespace Raverie

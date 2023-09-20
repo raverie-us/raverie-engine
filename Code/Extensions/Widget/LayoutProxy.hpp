@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Used to allow custom manipulation of widgets while still remaining in
@@ -32,4 +32,4 @@ LayoutProxy* CreateLayoutProxy(Widget* widget);
 /// Proxies and animates the given widget in.
 LayoutProxy* ProxyAndAnimateIn(Widget* widget, Vec3Param startPos, float translateTime, float fadeInTime, float delay);
 
-} // namespace Zero
+} // namespace Raverie

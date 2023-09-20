@@ -3,7 +3,7 @@
 
 static const bool sAllowBackfaces = false;
 
-namespace Zero
+namespace Raverie
 {
 
 // given a x-y basis, test what the angle of an axis is when projected onto this
@@ -936,4 +936,4 @@ void CorrectInternalEdgeNormal(HeightMapCollider* collider,
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

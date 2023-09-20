@@ -1,15 +1,15 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-// When importing Zero Engine resource files we strip the resource extension
+// When importing Raverie Engine resource files we strip the resource extension
 // from the filename to get the original resource name from the project it was
 // imported from if we do not do this then the file
-// ZeroEngineResource.ResourceType.data becomes
-// ZeroEngineResourceResourceType.ResourceType.data instead of
-// ZeroEngineResource.ResourceType.data
+// RaverieEngineResource.ResourceType.data becomes
+// RaverieEngineResourceResourceType.ResourceType.data instead of
+// RaverieEngineResource.ResourceType.data
 String StripResourceExtension(StringParam filename)
 {
   // Count the periods in the filename
@@ -19,8 +19,8 @@ String StripResourceExtension(StringParam filename)
     if (rune == '.')
       ++periodCount;
   }
-  // If it contains more than 2 periods this is not one of Zero Engine's data
-  // files as at most a file would be named ZeroEngineResource.ResourceType.data
+  // If it contains more than 2 periods this is not one of our data
+  // files as at most a file would be named RaverieEngineResource.ResourceType.data
   // so anymore than 2 is a way of identifying a user named external file
   // and not accidentally turning a user file like User.Custom.Font.ttf
   // into UserCustom as a font instead of UserCustomFont
@@ -35,19 +35,19 @@ String StripResourceExtension(StringParam filename)
     // Get the resource extension without including the beginning and end
     // periods
     String resourceExtension = filename.SubString(resourceExtensionStart.End(), resourceExtensionEnd.Begin());
-    // Check if the included middle extension is a Zero Engine resource
+    // Check if the included middle extension is a Raverie Engine resource
     MetaDatabase* metaDatabase = MetaDatabase::GetInstance();
     BoundType* type = metaDatabase->FindType(resourceExtension);
-    // If it is a Zero Engine resource strip it from the filename
-    if (type->IsA(ZilchTypeId(Resource)))
+    // If it is a Raverie Engine resource strip it from the filename
+    if (type->IsA(RaverieTypeId(Resource)))
     {
       // Replace the .ResourceType with nothing and return that filename to
-      // import Zero Engine created resources files from another project and get
+      // import Raverie Engine created resources files from another project and get
       // the same name
       return filename.Replace(BuildString(".", resourceExtension), "");
     }
   }
-  // This file is not a Zero Engine resource so return as is
+  // This file is not a Raverie Engine resource so return as is
   return filename;
 }
 
@@ -112,7 +112,7 @@ void RunGroupImport(ImportOptions& options)
   DoEditorSideImporting(package, &options);
 
   // Compile all scripts
-  ZilchManager::GetInstance()->TriggerCompileExternally();
+  RaverieManager::GetInstance()->TriggerCompileExternally();
 
   if (!contentToBuild.Empty() && status.Succeeded())
     DoNotify("Content Imported", "Content has been added to the project", "BigPlus");
@@ -161,7 +161,7 @@ void LoadDroppedFiles(Array<HandleOfString>& files)
     // Check for project file load and load if true
     String fileName = files[0];
     String extension = FilePath::GetExtension(fileName);
-    if (extension == "zeroproj")
+    if (extension == "raverieproj")
     {
       OpenProjectFile(fileName);
       return;
@@ -171,7 +171,7 @@ void LoadDroppedFiles(Array<HandleOfString>& files)
       Z::gEditor->OpenTextFile(fileName);
       return;
     }
-    else if (extension == "zeropack")
+    else if (extension == "raveriepack")
     {
       ContentImporter::OpenImportWindow(fileName);
       return;
@@ -257,13 +257,13 @@ float GroupImportWindow::GetPropertyGridHeight()
   // METAREFACTOR - Confirm AllProperties.Size() will have the same results as
   // the old Properties array Adding 1 to each for the
   if (mOptions->mImageOptions)
-    propertyCount += ZilchVirtualTypeId(mOptions->mImageOptions)->AllProperties.Size() + 1;
+    propertyCount += RaverieVirtualTypeId(mOptions->mImageOptions)->AllProperties.Size() + 1;
   if (mOptions->mGeometryOptions)
-    propertyCount += ZilchVirtualTypeId(mOptions->mGeometryOptions)->AllProperties.Size() + 1;
+    propertyCount += RaverieVirtualTypeId(mOptions->mGeometryOptions)->AllProperties.Size() + 1;
   if (mOptions->mAudioOptions)
-    propertyCount += ZilchVirtualTypeId(mOptions->mAudioOptions)->AllProperties.Size() + 1;
+    propertyCount += RaverieVirtualTypeId(mOptions->mAudioOptions)->AllProperties.Size() + 1;
   if (mOptions->mConflictOptions)
-    propertyCount += ZilchVirtualTypeId(mOptions->mConflictOptions)->AllProperties.Size() + 1;
+    propertyCount += RaverieVirtualTypeId(mOptions->mConflictOptions)->AllProperties.Size() + 1;
 
   return (float)propertyCount * 20.0f;
 }
@@ -354,4 +354,4 @@ void ImportCallback::OnFilesSelected(OsFileSelection* fileSelection)
   delete this;
 }
 
-} // namespace Zero
+} // namespace Raverie

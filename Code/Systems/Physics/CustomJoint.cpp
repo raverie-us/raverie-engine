@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -12,39 +12,39 @@ DefineEvent(ComputeCustomJointInfo);
 namespace Physics
 {
 
-ZilchDefineType(CustomJointEvent, builder, type)
+RaverieDefineType(CustomJointEvent, builder, type)
 {
-  ZeroBindDocumented();
-  ZilchBindFieldProperty(mOwner);
-  ZilchBindFieldProperty(mDt);
+  RaverieBindDocumented();
+  RaverieBindFieldProperty(mOwner);
+  RaverieBindFieldProperty(mDt);
 }
 
-ZilchDefineType(CustomConstraintInfo, builder, type)
+RaverieDefineType(CustomConstraintInfo, builder, type)
 {
-  ZeroBindDocumented();
-  ZilchBindFieldProperty(mLinear0);
-  ZilchBindFieldProperty(mAngular0);
-  ZilchBindFieldProperty(mLinear1);
-  ZilchBindFieldProperty(mAngular1);
+  RaverieBindDocumented();
+  RaverieBindFieldProperty(mLinear0);
+  RaverieBindFieldProperty(mAngular0);
+  RaverieBindFieldProperty(mLinear1);
+  RaverieBindFieldProperty(mAngular1);
 
-  ZilchBindGetterSetterProperty(EffectiveMass);
-  ZilchBindFieldProperty(mGamma);
-  ZilchBindFieldProperty(mBias);
-  ZilchBindFieldProperty(mMinImpulse);
-  ZilchBindFieldProperty(mMaxImpulse);
-  ZilchBindFieldProperty(mImpulse);
-  ZilchBindFieldProperty(mError);
-  ZilchBindFieldProperty(mBaumgarte);
-  ZilchBindFieldProperty(mActive);
-  ZilchBindFieldProperty(mSolvePosition);
+  RaverieBindGetterSetterProperty(EffectiveMass);
+  RaverieBindFieldProperty(mGamma);
+  RaverieBindFieldProperty(mBias);
+  RaverieBindFieldProperty(mMinImpulse);
+  RaverieBindFieldProperty(mMaxImpulse);
+  RaverieBindFieldProperty(mImpulse);
+  RaverieBindFieldProperty(mError);
+  RaverieBindFieldProperty(mBaumgarte);
+  RaverieBindFieldProperty(mActive);
+  RaverieBindFieldProperty(mSolvePosition);
 
-  ZilchBindMethod(SetJacobian);
-  ZilchBindMethod(SetErrorAndBias);
-  ZilchBindMethod(ComputeMotor);
-  ZilchBindMethod(ComputeSpring);
-  ZilchBindMethod(DetachFromOwner);
-  ZilchBindMethod(IsOwned);
-  ZilchBindGetterProperty(Owner);
+  RaverieBindMethod(SetJacobian);
+  RaverieBindMethod(SetErrorAndBias);
+  RaverieBindMethod(ComputeMotor);
+  RaverieBindMethod(ComputeSpring);
+  RaverieBindMethod(DetachFromOwner);
+  RaverieBindMethod(IsOwned);
+  RaverieBindGetterProperty(Owner);
 }
 
 CustomConstraintInfo::CustomConstraintInfo()
@@ -171,21 +171,21 @@ CustomJoint* CustomConstraintInfo::GetOwner()
 }
 
 ImplementJointType(CustomJoint);
-ZilchDefineType(CustomJoint, builder, type)
+RaverieDefineType(CustomJoint, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindInterface(Joint);
-  ZeroBindDocumented();
-  ZeroBindEvent(Events::ComputeCustomJointInfo, CustomJointEvent);
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindInterface(Joint);
+  RaverieBindDocumented();
+  RaverieBindEvent(Events::ComputeCustomJointInfo, CustomJointEvent);
 
-  ZilchBindMethod(CreateConstraint);
-  ZilchBindMethod(AddConstraint);
-  ZilchBindMethod(RemoveConstraint);
-  ZilchBindMethod(ClearConstraints);
+  RaverieBindMethod(CreateConstraint);
+  RaverieBindMethod(AddConstraint);
+  RaverieBindMethod(RemoveConstraint);
+  RaverieBindMethod(ClearConstraints);
 
-  ZilchBindGetter(ConstraintCount);
-  ZilchBindMethod(GetConstraint);
+  RaverieBindGetter(ConstraintCount);
+  RaverieBindMethod(GetConstraint);
 }
 
 CustomJoint::CustomJoint()
@@ -453,4 +453,4 @@ void CustomJoint::UpdateTransform(int colliderIndex)
 
 } // namespace Physics
 
-} // namespace Zero
+} // namespace Raverie

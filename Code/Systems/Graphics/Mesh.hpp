@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class VertexSemanticRange
@@ -30,7 +30,7 @@ public:
 class VertexBuffer : public SafeId32
 {
 public:
-  ZilchDeclareType(VertexBuffer, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(VertexBuffer, TypeCopyMode::ReferenceType);
 
   VertexBuffer();
   ~VertexBuffer();
@@ -164,7 +164,7 @@ T VertexBuffer::GetData(uint vertexIndex, VertexSemantic::Enum semantic)
 class IndexBuffer : public SafeId32
 {
 public:
-  ZilchDeclareType(IndexBuffer, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(IndexBuffer, TypeCopyMode::ReferenceType);
 
   IndexBuffer();
   ~IndexBuffer();
@@ -199,7 +199,7 @@ public:
 class Mesh : public Resource
 {
 public:
-  ZilchDeclareType(Mesh, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Mesh, TypeCopyMode::ReferenceType);
 
   /// Makes an anonymous Mesh resource that can be defined by script and
   /// uploaded to the gpu.
@@ -282,24 +282,24 @@ bool Mesh::GetPrimitiveData(
   {
     switch (mPrimitiveType)
     {
-    case Zero::PrimitiveType::Triangles:
+    case Raverie::PrimitiveType::Triangles:
       i2 = mIndices.mData[primitiveIndex * verticesPerPrimitive + 2];
-    case Zero::PrimitiveType::Lines:
+    case Raverie::PrimitiveType::Lines:
       i1 = mIndices.mData[primitiveIndex * verticesPerPrimitive + 1];
-    case Zero::PrimitiveType::Points:
+    case Raverie::PrimitiveType::Points:
       i0 = mIndices.mData[primitiveIndex * verticesPerPrimitive + 0];
     }
   }
 
   switch (mPrimitiveType)
   {
-  case Zero::PrimitiveType::Triangles:
+  case Raverie::PrimitiveType::Triangles:
     result = result && mVertices.IsValidVertexData(i2, semantic, type, count);
     data[2] = mVertices.GetData<T>(i2, semantic);
-  case Zero::PrimitiveType::Lines:
+  case Raverie::PrimitiveType::Lines:
     result = result && mVertices.IsValidVertexData(i1, semantic, type, count);
     data[1] = mVertices.GetData<T>(i1, semantic);
-  case Zero::PrimitiveType::Points:
+  case Raverie::PrimitiveType::Points:
     result = result && mVertices.IsValidVertexData(i0, semantic, type, count);
     data[0] = mVertices.GetData<T>(i0, semantic);
   }
@@ -316,4 +316,4 @@ public:
   MeshManager(BoundType* resourceType);
 };
 
-} // namespace Zero
+} // namespace Raverie

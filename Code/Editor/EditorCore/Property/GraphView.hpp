@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 struct RangeData
@@ -29,7 +29,7 @@ struct EntryLabel
 class DataSampler : public EventObject
 {
 public:
-  typedef DataSampler ZilchSelf;
+  typedef DataSampler RaverieSelf;
 
   virtual float Sample() = 0;
   virtual void Setup(RangeData& data, EntryLabel& label){};
@@ -99,7 +99,7 @@ public:
 class GraphView : public Widget
 {
 public:
-  typedef GraphView ZilchSelf;
+  typedef GraphView RaverieSelf;
 
   GraphView(Composite* parent);
 
@@ -143,4 +143,4 @@ private:
   RenderFont* mFont;
 };
 
-} // namespace Zero
+} // namespace Raverie

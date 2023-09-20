@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -15,11 +15,11 @@ DefineEvent(UiFocusReset);
 
 } // namespace Events
 
-ZilchDefineType(UiFocusEvent, builder, type)
+RaverieDefineType(UiFocusEvent, builder, type)
 {
-  ZeroBindDocumented();
-  ZilchBindFieldGetter(mReceivedFocus);
-  ZilchBindFieldGetter(mLostFocus);
+  RaverieBindDocumented();
+  RaverieBindFieldGetter(mReceivedFocus);
+  RaverieBindFieldGetter(mLostFocus);
 }
 
 UiFocusEvent::UiFocusEvent(UiWidget* focusGained, UiWidget* focusLost) :
@@ -28,4 +28,4 @@ UiFocusEvent::UiFocusEvent(UiWidget* focusGained, UiWidget* focusLost) :
 {
 }
 
-} // namespace Zero
+} // namespace Raverie

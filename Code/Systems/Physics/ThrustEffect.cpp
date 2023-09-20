@@ -1,19 +1,19 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(ThrustEffect, builder, type)
+RaverieDefineType(ThrustEffect, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetterProperty(LocalSpaceDirection)->ZeroSerialize(true);
-  ZilchBindGetterSetterProperty(ForceStrength)->ZeroSerialize(real(10));
-  ZilchBindGetterSetterProperty(ForceDirection)->ZeroSerialize(Vec3(0, 1, 0));
-  ZilchBindGetterProperty(WorldForceDirection);
+  RaverieBindGetterSetterProperty(LocalSpaceDirection)->RaverieSerialize(true);
+  RaverieBindGetterSetterProperty(ForceStrength)->RaverieSerialize(real(10));
+  RaverieBindGetterSetterProperty(ForceDirection)->RaverieSerialize(Vec3(0, 1, 0));
+  RaverieBindGetterProperty(WorldForceDirection);
 }
 
 ThrustEffect::ThrustEffect()
@@ -100,4 +100,4 @@ Vec3 ThrustEffect::GetWorldForceDirection() const
   return worldThrustDirection.AttemptNormalized();
 }
 
-} // namespace Zero
+} // namespace Raverie

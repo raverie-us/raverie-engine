@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace SearchViewUi
@@ -24,11 +24,11 @@ DefineEvent(SearchCompleted);
 DefineEvent(AlternateSearchCompleted);
 } // namespace Events
 
-ZilchDefineType(SearchViewEvent, builder, type)
+RaverieDefineType(SearchViewEvent, builder, type)
 {
 }
 
-ZilchDefineType(AlternateSearchCompletedEvent, builder, type)
+RaverieDefineType(AlternateSearchCompletedEvent, builder, type)
 {
 }
 
@@ -104,7 +104,7 @@ void SearchData::AddAvailableTagsToResults()
 
 void SearchData::Sort()
 {
-  Zero::Sort(Results.All(), SortByPriority());
+  Raverie::Sort(Results.All(), SortByPriority());
 }
 
 void SearchData::ClearSearchProviders()
@@ -112,7 +112,7 @@ void SearchData::ClearSearchProviders()
   DeleteObjectsInContainer(SearchProviders);
 }
 
-ZilchDefineType(SearchViewElement, builder, type)
+RaverieDefineType(SearchViewElement, builder, type)
 {
 }
 
@@ -185,7 +185,7 @@ void SearchViewElement::UpdateTransform()
 
 const float cPreviewSize = 130.0f;
 
-ZilchDefineType(SearchView, builder, type)
+RaverieDefineType(SearchView, builder, type)
 {
 }
 
@@ -720,4 +720,4 @@ Composite* CreateTextPreview(Composite* parent, StringParam text)
   return desc;
 };
 
-} // namespace Zero
+} // namespace Raverie

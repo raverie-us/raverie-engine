@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 void LoadResourcePackageRelative(StringParam baseDirectory, StringParam libraryName)
@@ -23,7 +23,7 @@ void LoadGamePackages(StringParam projectFile, Cog* projectCog)
   String projectDirectory = FilePath::GetDirectoryPath(projectFile);
   LoadResourcePackageRelative(projectDirectory, "FragmentCore");
   LoadResourcePackageRelative(projectDirectory, "Loading");
-  LoadResourcePackageRelative(projectDirectory, "ZeroCore");
+  LoadResourcePackageRelative(projectDirectory, "EngineCore");
   LoadResourcePackageRelative(projectDirectory, "UiWidget");
   LoadResourcePackageRelative(projectDirectory, "EditorUi");
   LoadResourcePackageRelative(projectDirectory, "Editor");
@@ -51,7 +51,7 @@ void CreateGame(StringParam projectFile, Cog* projectCog)
   ObjectStore::GetInstance()->SetStoreName(project->ProjectName);
 
   // Make sure scripts in the project are compiled
-  ZilchManager::GetInstance()->TriggerCompileExternally();
+  RaverieManager::GetInstance()->TriggerCompileExternally();
 
   // Send after compiling since graphics uses this event to know to stop
   // displaying the splash/loading screen
@@ -85,4 +85,4 @@ void CreateGame(StringParam projectFile, Cog* projectCog)
   commandManager->RunParsedCommandsDelayed();
 }
 
-} // namespace Zero
+} // namespace Raverie

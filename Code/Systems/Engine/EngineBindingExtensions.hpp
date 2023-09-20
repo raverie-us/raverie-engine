@@ -1,13 +1,13 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // All Components need to call this in their meta initialization
-#define ZeroBindComponent()                                                                                            \
-  ZilchBindDefaultConstructor();                                                                                       \
-  ZilchBindDestructor();
+#define RaverieBindComponent()                                                                                            \
+  RaverieBindDefaultConstructor();                                                                                       \
+  RaverieBindDestructor();
 
 // Meta Resource
 // If a Type was created from a Resource, the resource id will be available as a
@@ -15,7 +15,7 @@ namespace Zero
 class MetaResource : public ReferenceCountedEventObject
 {
 public:
-  ZilchDeclareType(MetaResource, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MetaResource, TypeCopyMode::ReferenceType);
 
   MetaResource()
   {
@@ -35,7 +35,7 @@ public:
 class MetaEditorScriptObject : public MetaAttribute
 {
 public:
-  ZilchDeclareType(MetaEditorScriptObject, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MetaEditorScriptObject, TypeCopyMode::ReferenceType);
   MetaEditorScriptObject();
 
   void PostProcess(Status& status, ReflectionObject* owner) override;
@@ -47,7 +47,7 @@ public:
 class MetaDependency : public MetaAttribute
 {
 public:
-  ZilchDeclareType(MetaDependency, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MetaDependency, TypeCopyMode::ReferenceType);
 
   void PostProcess(Status& status, ReflectionObject* owner) override;
 };
@@ -56,9 +56,9 @@ public:
 class MetaInterface : public MetaAttribute
 {
 public:
-  ZilchDeclareType(MetaInterface, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MetaInterface, TypeCopyMode::ReferenceType);
 
   void PostProcess(Status& status, ReflectionObject* owner) override;
 };
 
-} // namespace Zero
+} // namespace Raverie

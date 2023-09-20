@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Z
@@ -20,20 +20,20 @@ Mouse::Mouse()
   Z::gMouse = this;
 }
 
-ZilchDefineType(Mouse, builder, type)
+RaverieDefineType(Mouse, builder, type)
 {
-  type->HandleManager = ZilchManagerId(PointerManager);
+  type->HandleManager = RaverieManagerId(PointerManager);
 
-  ZeroBindDocumented();
-  ZilchBindGetterSetterProperty(Cursor);
-  ZilchBindMethod(IsButtonDown);
+  RaverieBindDocumented();
+  RaverieBindGetterSetterProperty(Cursor);
+  RaverieBindMethod(IsButtonDown);
 
-  ZilchBindGetterProperty(ClientPosition);
-  ZilchBindGetterProperty(CursorMovement);
-  ZilchBindGetterSetterProperty(Trapped);
-  ZilchBindMethod(ToggleTrapped);
+  RaverieBindGetterProperty(ClientPosition);
+  RaverieBindGetterProperty(CursorMovement);
+  RaverieBindGetterSetterProperty(Trapped);
+  RaverieBindMethod(ToggleTrapped);
 
-  ZilchBindFieldProperty(mRawMovement);
+  RaverieBindFieldProperty(mRawMovement);
 }
 
 bool Mouse::IsButtonDown(MouseButtons::Enum button)
@@ -66,4 +66,4 @@ void Mouse::ToggleTrapped()
   Shell::sInstance->SetMouseTrap(!Shell::sInstance->GetMouseTrap());
 }
 
-} // namespace Zero
+} // namespace Raverie

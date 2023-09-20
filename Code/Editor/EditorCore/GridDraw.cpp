@@ -1,29 +1,29 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Declare the meta
-ZilchDefineType(GridDraw, builder, type)
+RaverieDefineType(GridDraw, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
 
-  ZilchBindFieldProperty(mActive);
-  ZilchBindFieldProperty(mAxis);
-  ZilchBindFieldProperty(mCellSize);
-  ZilchBindFieldProperty(mLines);
-  ZilchBindFieldProperty(mHighlightInterval);
+  RaverieBindFieldProperty(mActive);
+  RaverieBindFieldProperty(mAxis);
+  RaverieBindFieldProperty(mCellSize);
+  RaverieBindFieldProperty(mLines);
+  RaverieBindFieldProperty(mHighlightInterval);
 
-  ZilchBindFieldProperty(mGridColor);
-  ZilchBindFieldProperty(mGridHighlight);
-  ZilchBindFieldProperty(mHalfCellOffset);
-  ZilchBindFieldProperty(mDrawAxisOrigins);
-  ZilchBindFieldProperty(mAlwaysDrawInEditor);
-  ZilchBindFieldProperty(mDrawInGame);
-  ZilchBindFieldProperty(mFollowEditorCamera);
+  RaverieBindFieldProperty(mGridColor);
+  RaverieBindFieldProperty(mGridHighlight);
+  RaverieBindFieldProperty(mHalfCellOffset);
+  RaverieBindFieldProperty(mDrawAxisOrigins);
+  RaverieBindFieldProperty(mAlwaysDrawInEditor);
+  RaverieBindFieldProperty(mDrawInGame);
+  RaverieBindFieldProperty(mFollowEditorCamera);
 }
 
 // Serialize the members
@@ -219,4 +219,4 @@ void GridDraw::Draw()
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

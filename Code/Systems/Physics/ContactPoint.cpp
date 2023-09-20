@@ -1,29 +1,29 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(ContactPoint, builder, type)
+RaverieDefineType(ContactPoint, builder, type)
 {
   // These should be changed later, but this is the closest behavior to how
   // proxy points worked previously. These are unsafe to store. Also I'm using
   // HeapManager instead of PointerManager since the control point is returned
   // by value.
-  type->HandleManager = ZilchManagerId(HeapManager);
-  ZilchBindDefaultCopyDestructor();
+  type->HandleManager = RaverieManagerId(HeapManager);
+  RaverieBindDefaultCopyDestructor();
 
-  ZeroBindDocumented();
-  ZilchBindGetterProperty(LocalPoint);
-  ZilchBindGetterProperty(OtherLocalPoint);
-  ZilchBindGetterProperty(WorldPoint);
-  ZilchBindGetterProperty(WorldNormalTowardsOther);
-  ZilchBindGetterProperty(NormalImpulse);
-  ZilchBindGetterProperty(FrictionImpulse);
-  ZilchBindGetterProperty(ComplexImpulse);
-  ZilchBindGetterProperty(Penetration);
-  ZilchBindGetterProperty(RelativeVelocity);
-  ZeroBindTag(Tags::Physics);
+  RaverieBindDocumented();
+  RaverieBindGetterProperty(LocalPoint);
+  RaverieBindGetterProperty(OtherLocalPoint);
+  RaverieBindGetterProperty(WorldPoint);
+  RaverieBindGetterProperty(WorldNormalTowardsOther);
+  RaverieBindGetterProperty(NormalImpulse);
+  RaverieBindGetterProperty(FrictionImpulse);
+  RaverieBindGetterProperty(ComplexImpulse);
+  RaverieBindGetterProperty(Penetration);
+  RaverieBindGetterProperty(RelativeVelocity);
+  RaverieBindTag(Tags::Physics);
 }
 
 ContactPoint::ContactPoint()
@@ -142,4 +142,4 @@ bool ContactPointRange::Empty()
   return mPointIndex >= mManifold->ContactCount;
 }
 
-} // namespace Zero
+} // namespace Raverie

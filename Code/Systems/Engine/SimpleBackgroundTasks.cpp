@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 DirectorySizeJob::DirectorySizeJob(StringParam directory)
@@ -48,4 +48,4 @@ void DirectorySizeJob::ComputeSizeRecursive(StringParam dir)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

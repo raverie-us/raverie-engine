@@ -2,7 +2,7 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -14,24 +14,24 @@ DefineEvent(CustomAudioNodeSamplesNeeded);
 
 // Custom Audio Node Event
 
-ZilchDefineType(CustomAudioNodeEvent, builder, type)
+RaverieDefineType(CustomAudioNodeEvent, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindField(SamplesNeeded);
+  RaverieBindField(SamplesNeeded);
 }
 
 // Sound Buffer
 
-ZilchDefineType(SoundBuffer, builder, type)
+RaverieDefineType(SoundBuffer, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindGetter(SampleCount);
-  ZilchBindMethod(AddSampleToBuffer);
-  ZilchBindMethod(GetSampleAtIndex);
-  ZilchBindMethod(Reset);
-  ZilchBindMethod(AddMicUncompressedData);
+  RaverieBindGetter(SampleCount);
+  RaverieBindMethod(AddSampleToBuffer);
+  RaverieBindMethod(GetSampleAtIndex);
+  RaverieBindMethod(Reset);
+  RaverieBindMethod(AddMicUncompressedData);
 }
 
 void SoundBuffer::AddSampleToBuffer(float value)
@@ -64,19 +64,19 @@ void SoundBuffer::AddMicUncompressedData(const HandleOf<ArrayClass<float>>& buff
 
 // Custom Audio Node
 
-ZilchDefineType(CustomAudioNode, builder, type)
+RaverieDefineType(CustomAudioNode, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetter(Channels);
-  ZilchBindGetter(MinimumBufferSize);
-  ZilchBindGetter(SystemSampleRate);
-  ZilchBindMethod(SendBuffer);
-  ZilchBindMethod(SendPartialBuffer);
-  ZilchBindMethod(SendMicUncompressedData);
-  ZilchBindMethod(SendMicCompressedData);
+  RaverieBindGetterSetter(Channels);
+  RaverieBindGetter(MinimumBufferSize);
+  RaverieBindGetter(SystemSampleRate);
+  RaverieBindMethod(SendBuffer);
+  RaverieBindMethod(SendPartialBuffer);
+  RaverieBindMethod(SendMicUncompressedData);
+  RaverieBindMethod(SendMicCompressedData);
 
-  ZeroBindEvent(Events::CustomAudioNodeSamplesNeeded, CustomAudioNodeEvent);
+  RaverieBindEvent(Events::CustomAudioNodeSamplesNeeded, CustomAudioNodeEvent);
 }
 
 CustomAudioNode::CustomAudioNode(StringParam name, unsigned ID) :
@@ -317,4 +317,4 @@ CustomAudioNode::SampleBuffer::~SampleBuffer()
   delete[] mBuffer;
 }
 
-} // namespace Zero
+} // namespace Raverie

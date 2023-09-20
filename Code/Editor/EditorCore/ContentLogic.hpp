@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class Editor;
@@ -15,4 +15,4 @@ bool LoadContentLibrary(StringParam name);
 void LoadContentConfig();
 void LoadCoreContent(Array<String>& coreLibs);
 
-} // namespace Zero
+} // namespace Raverie

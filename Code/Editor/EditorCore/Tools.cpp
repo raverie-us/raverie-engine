@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -11,13 +11,13 @@ DefineEvent(SelectToolFrustumCast);
 DefineEvent(SelectToolPreDraw);
 } // namespace Events
 
-ZilchDefineType(SelectToolFrustumEvent, builder, type)
+RaverieDefineType(SelectToolFrustumEvent, builder, type)
 {
-  ZilchBindFieldProperty(Handled);
-  ZilchBindFieldProperty(HandledEventScript);
+  RaverieBindFieldProperty(Handled);
+  RaverieBindFieldProperty(HandledEventScript);
 
-  ZilchBindGetterProperty(Space);
-  ZilchBindGetterProperty(Frustum);
+  RaverieBindGetterProperty(Space);
+  RaverieBindGetterProperty(Frustum);
 }
 
 Space* SelectToolFrustumEvent::GetSpace()
@@ -206,22 +206,22 @@ SelectionResult EditorRayCast(Viewport* viewport, Vec2 mousePosition)
   return Z::gEditor->Tools->mSelectTool->RayCastSelect(viewport, mousePosition);
 }
 
-ZilchDefineType(SelectTool, builder, type)
+RaverieDefineType(SelectTool, builder, type)
 {
-  ZeroBindDocumented();
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
 
-  ZilchBindFieldProperty(mArchetypeSelect);
-  ZilchBindFieldProperty(mRootSelect);
-  ZilchBindFieldProperty(mSmartGroupSelect);
+  RaverieBindFieldProperty(mArchetypeSelect);
+  RaverieBindFieldProperty(mRootSelect);
+  RaverieBindFieldProperty(mSmartGroupSelect);
   type->AddAttribute(ObjectAttributes::cTool);
-  ZilchBindMethod(RayCast);
-  ZilchBindMethod(SmartSelect);
+  RaverieBindMethod(RayCast);
+  RaverieBindMethod(SmartSelect);
 
-  ZeroBindEvent(Events::SelectToolPreSelect, ViewportMouseEvent);
+  RaverieBindEvent(Events::SelectToolPreSelect, ViewportMouseEvent);
 
-  ZilchBindFieldProperty(mRaycaster);
+  RaverieBindFieldProperty(mRaycaster);
 }
 
 SelectTool::SelectTool()
@@ -591,22 +591,22 @@ void BeginSelectDrag(EditorViewport* viewport, MouseEvent* event, SelectTool* to
   new GroupSelectDrag(viewport->GetParent(), event->GetMouse(), viewport, tool);
 }
 
-ZilchDefineType(CreationTool, builder, type)
+RaverieDefineType(CreationTool, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
 
-  ZilchBindFieldProperty(mPlacementMode);
-  ZilchBindGetterSetterProperty(ObjectToSpawn);
-  ZilchBindFieldProperty(mOffset);
-  ZilchBindFieldProperty(mSnapping);
-  ZilchBindFieldProperty(mSnapDistance);
-  ZilchBindFieldProperty(mDepth);
-  ZilchBindFieldProperty(mDepthPlane);
+  RaverieBindFieldProperty(mPlacementMode);
+  RaverieBindGetterSetterProperty(ObjectToSpawn);
+  RaverieBindFieldProperty(mOffset);
+  RaverieBindFieldProperty(mSnapping);
+  RaverieBindFieldProperty(mSnapDistance);
+  RaverieBindFieldProperty(mDepth);
+  RaverieBindFieldProperty(mDepthPlane);
 
   type->AddAttribute(ObjectAttributes::cTool);
 
-  ZilchBindFieldProperty(mRaycaster);
+  RaverieBindFieldProperty(mRaycaster);
 }
 
 CreationTool::CreationTool()
@@ -665,7 +665,7 @@ Cog* CreationTool::CreateAt(Viewport* viewport, Archetype* archetype, Vec3Param 
 {
   // Cannot create GameSession or Space
   BoundType* cogType = archetype->mStoredType;
-  if (cogType->IsA(ZilchTypeId(GameSession)) || cogType->IsA(ZilchTypeId(Space)))
+  if (cogType->IsA(RaverieTypeId(GameSession)) || cogType->IsA(RaverieTypeId(Space)))
   {
     String message = String::Format("Creation tool cannot create Cogs of type %s", cogType->Name.c_str());
     DoNotifyWarning("Cannot Create Cog", message);
@@ -812,10 +812,10 @@ void CreationTool::SetObjectToSpawn(Archetype* archetype)
   mObjectToSpawn = archetype;
 }
 
-ZilchDefineType(ObjectConnectingTool, builder, type)
+RaverieDefineType(ObjectConnectingTool, builder, type)
 {
-  ZeroBindDependency(MouseCapture);
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDependency(MouseCapture);
+  RaverieBindSetup(SetupMode::DefaultSerialization);
 
   type->AddAttribute(ObjectAttributes::cTool);
 }
@@ -899,13 +899,13 @@ void ObjectConnectingTool::OnToolDeactivate(Event*)
   ObjectB = cInvalidCogId;
 }
 
-ZilchDefineType(ParentingTool, builder, type)
+RaverieDefineType(ParentingTool, builder, type)
 {
-  ZeroBindComponent();
+  RaverieBindComponent();
   type->AddAttribute(ObjectAttributes::cTool);
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindSetup(SetupMode::DefaultSerialization);
 
-  ZilchBindFieldProperty(mMaintainPosition);
+  RaverieBindFieldProperty(mMaintainPosition);
 }
 
 ParentingTool::ParentingTool()
@@ -940,4 +940,4 @@ uint GenerateDirections(uint granularity, Vec3Ptr& directions)
   return vertexCount;
 }
 
-} // namespace Zero
+} // namespace Raverie

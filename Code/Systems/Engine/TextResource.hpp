@@ -1,14 +1,14 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// A Text resource is a generic resource for simple text data for game logic.
 class TextBlock : public DocumentResource
 {
 public:
-  ZilchDeclareType(TextBlock, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(TextBlock, TypeCopyMode::ReferenceType);
 
   TextBlock();
   ~TextBlock();
@@ -36,4 +36,4 @@ public:
   TextBlockManager(BoundType* resourceType);
 };
 
-} // namespace Zero
+} // namespace Raverie

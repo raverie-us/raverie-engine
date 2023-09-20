@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class Gamepad;
@@ -66,7 +66,7 @@ DeclareEnum3(FlickedStick, None, Left, Right);
 class GamepadEvent : public Event
 {
 public:
-  ZilchDeclareType(GamepadEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(GamepadEvent, TypeCopyMode::ReferenceType);
 
   GamepadEvent(Gamepad* gamepad, int buttonIndex = -1);
   /// Button that was just pressed down or released up.
@@ -86,7 +86,7 @@ public:
 class Gamepad : public EventObject
 {
 public:
-  ZilchDeclareType(Gamepad, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Gamepad, TypeCopyMode::ReferenceType);
 
   Gamepad();
 
@@ -150,7 +150,7 @@ const uint cMaxGamepads = 4;
 class Gamepads : public ExplicitSingleton<Gamepads, EventObject>
 {
 public:
-  ZilchDeclareType(Gamepads, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Gamepads, TypeCopyMode::ReferenceType);
 
   Gamepads();
   ~Gamepads();
@@ -174,4 +174,4 @@ namespace Z
 extern Gamepads* gGamepads;
 }
 
-} // namespace Zero
+} // namespace Raverie

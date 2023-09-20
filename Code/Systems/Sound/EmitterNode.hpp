@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Emitter Data Per Listener
@@ -31,7 +31,7 @@ public:
 class EmitterNode : public SoundNode
 {
 public:
-  ZilchDeclareType(EmitterNode, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(EmitterNode, TypeCopyMode::ReferenceType);
 
   EmitterNode(StringParam name, const unsigned ID, Vec3Param position, Vec3Param velocity);
 
@@ -78,7 +78,7 @@ private:
   VBAP PanningObject;
 
   // Stored data for each listener
-  Zero::HashMap<ListenerNode*, EmitterDataPerListener*> DataPerListener;
+  Raverie::HashMap<ListenerNode*, EmitterDataPerListener*> DataPerListener;
 
   // The minimum volume of audio applied to all channels
   const float cMinimumVolume = 0.2f;
@@ -93,4 +93,4 @@ private:
   const float cMaxLowPassDifference = 1000.0f;
 };
 
-} // namespace Zero
+} // namespace Raverie

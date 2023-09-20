@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // SceneGraphMaterial
@@ -18,7 +18,7 @@ void SceneGraphMaterial::Serialize(Serializer& stream)
 }
 
 // SceneGraphSource
-ZilchDefineType(SceneGraphSource, builder, type)
+RaverieDefineType(SceneGraphSource, builder, type)
 {
 }
 
@@ -74,4 +74,4 @@ void SceneGraphNode::Serialize(Serializer& stream)
   SerializeName(Children);
 }
 
-} // namespace Zero
+} // namespace Raverie

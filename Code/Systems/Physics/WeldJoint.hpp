@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class Collider;
@@ -66,4 +66,4 @@ struct WeldJoint : public Joint
 
 typedef Physics::WeldJoint WeldJoint;
 
-} // namespace Zero
+} // namespace Raverie

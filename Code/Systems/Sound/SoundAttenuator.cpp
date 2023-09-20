@@ -2,12 +2,12 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Sound Attenuator
 
-ZilchDefineType(SoundAttenuatorDisplay, builder, type)
+RaverieDefineType(SoundAttenuatorDisplay, builder, type)
 {
 }
 
@@ -28,20 +28,20 @@ String SoundAttenuationToString(const BoundType* meta, const byte* data)
   return BuildString("SoundAttenuator: ", soundAtten->Name);
 }
 
-ZilchDefineType(SoundAttenuator, builder, type)
+RaverieDefineType(SoundAttenuator, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
   type->ToStringFunction = SoundAttenuationToString;
 
-  ZilchBindGetterSetterProperty(StartDistance);
-  ZilchBindGetterSetterProperty(StopDistance);
-  ZilchBindGetterSetterProperty(MinAttenuatedVolume)->Add(new EditorSlider(0.0f, 1.0f, 0.01f));
-  ZilchBindGetterSetterProperty(UseLowPassFilter)->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  ZilchBindGetterSetterProperty(LowPassStartDistance)->ZeroFilterBool(mUseLowPassFilter);
-  ZilchBindGetterSetterProperty(LowPassCutoffFreq)->ZeroFilterBool(mUseLowPassFilter);
-  ZilchBindGetterSetterProperty(FalloffCurveType)->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  ZilchBindGetterSetterProperty(FalloffCurve)
-      ->ZeroFilterEquality(mFalloffCurveType, FalloffCurveType::Enum, FalloffCurveType::Custom);
+  RaverieBindGetterSetterProperty(StartDistance);
+  RaverieBindGetterSetterProperty(StopDistance);
+  RaverieBindGetterSetterProperty(MinAttenuatedVolume)->Add(new EditorSlider(0.0f, 1.0f, 0.01f));
+  RaverieBindGetterSetterProperty(UseLowPassFilter)->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  RaverieBindGetterSetterProperty(LowPassStartDistance)->RaverieFilterBool(mUseLowPassFilter);
+  RaverieBindGetterSetterProperty(LowPassCutoffFreq)->RaverieFilterBool(mUseLowPassFilter);
+  RaverieBindGetterSetterProperty(FalloffCurveType)->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  RaverieBindGetterSetterProperty(FalloffCurve)
+      ->RaverieFilterEquality(mFalloffCurveType, FalloffCurveType::Enum, FalloffCurveType::Custom);
 }
 
 SoundAttenuator::SoundAttenuator() :
@@ -315,4 +315,4 @@ SoundAttenuatorManager::SoundAttenuatorManager(BoundType* resourceType) : Resour
   mExtension = DataResourceExtension;
 }
 
-} // namespace Zero
+} // namespace Raverie

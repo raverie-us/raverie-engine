@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Forward Declarations
@@ -44,7 +44,7 @@ String GetObjectPath(Cog* object, Cog* root);
 class KeyFrameEvent : public Event
 {
 public:
-  ZilchDeclareType(KeyFrameEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(KeyFrameEvent, TypeCopyMode::ReferenceType);
   KeyFrame* mKeyFrame;
 };
 
@@ -52,7 +52,7 @@ public:
 class TrackEvent : public Event
 {
 public:
-  ZilchDeclareType(TrackEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(TrackEvent, TypeCopyMode::ReferenceType);
   TrackNode* mTrack;
 };
 
@@ -124,7 +124,7 @@ DeclareEnum5(TrackType, Object, Component, Property, SubProperty, Invalid);
 class TrackNode : public EventObject
 {
 public:
-  ZilchDeclareType(TrackNode, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(TrackNode, TypeCopyMode::ReferenceType);
   typedef ArrayMultiMap<float, KeyFrame*> KeyFrames;
 
   /// Constructors.
@@ -281,7 +281,7 @@ public:
 class RichAnimation : public EventObject
 {
 public:
-  ZilchDeclareType(RichAnimation, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(RichAnimation, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   RichAnimation();
@@ -397,7 +397,7 @@ private:
 class RichAnimationBuilder : public DirectBuilderComponent
 {
 public:
-  ZilchDeclareType(RichAnimationBuilder, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(RichAnimationBuilder, TypeCopyMode::ReferenceType);
 
   RichAnimationBuilder();
 
@@ -412,4 +412,4 @@ public:
   String mPreviewArchetype;
 };
 
-} // namespace Zero
+} // namespace Raverie

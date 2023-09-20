@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 void CodeTranslator::Translate(HashMap<String, String>& files)
@@ -53,4 +53,4 @@ void CodeSplitWindow::SetLexers(CodeTranslator* translator)
   mTranslatedText->SetLexer(translator->GetDestinationLexer());
 }
 
-} // namespace Zero
+} // namespace Raverie

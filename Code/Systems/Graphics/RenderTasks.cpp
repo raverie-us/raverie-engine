@@ -2,7 +2,7 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -11,15 +11,15 @@ DefineEvent(RenderTasksUpdate);
 DefineEvent(RenderTasksUpdateInternal);
 } // namespace Events
 
-ZilchDefineType(GraphicalRangeInterface, builder, type)
+RaverieDefineType(GraphicalRangeInterface, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindMethod(Add);
-  ZilchBindMethod(Clear);
-  ZilchBindGetterProperty(Count);
+  RaverieBindMethod(Add);
+  RaverieBindMethod(Clear);
+  RaverieBindGetterProperty(Count);
 
-  ZilchBindDefaultCopyDestructor();
+  RaverieBindDefaultCopyDestructor();
   type->CreatableInScript = true;
 }
 
@@ -39,13 +39,13 @@ uint GraphicalRangeInterface::GetCount()
   return mGraphicals.Size();
 }
 
-ZilchDefineType(SubRenderGroupPass, builder, type)
+RaverieDefineType(SubRenderGroupPass, builder, type)
 {
-  ZeroBindDocumented();
-  ZilchBindMethod(Reset);
-  ZilchBindMethod(SetDefaultSettings);
-  ZilchBindMethod(AddSubSettings);
-  ZilchBindMethod(ExcludeSubRenderGroup);
+  RaverieBindDocumented();
+  RaverieBindMethod(Reset);
+  RaverieBindMethod(SetDefaultSettings);
+  RaverieBindMethod(AddSubSettings);
+  RaverieBindMethod(ExcludeSubRenderGroup);
 }
 
 SubRenderGroupPass::SubRenderGroupPass(RenderTasksEvent* renderTasksEvent, RenderGroup& baseRenderGroup) :
@@ -95,8 +95,8 @@ void SubRenderGroupPass::AddSubSettings(GraphicsRenderSettings& subSettings,
   subData.mRender = true;
 
   // Allocate new MaterialBlock for copying properties to.
-  BoundType* derivedType = ZilchVirtualTypeId(&subPass);
-  subData.mRenderPass = ZilchAllocate(MaterialBlock, derivedType);
+  BoundType* derivedType = RaverieVirtualTypeId(&subPass);
+  subData.mRenderPass = RaverieAllocate(MaterialBlock, derivedType);
 
   // Copy data from derived type.
   byte* source = (byte*)&subPass + sizeof(MaterialBlock);
@@ -117,8 +117,8 @@ void SubRenderGroupPass::ExcludeSubRenderGroup(RenderGroup& subGroup)
 
 bool SubRenderGroupPass::ValidateSettings(GraphicsRenderSettings& renderSettings, MaterialBlock& renderPass)
 {
-  ZilchFragmentType::Enum fragmentType = Z::gEngine->has(GraphicsEngine)->GetFragmentType(&renderPass);
-  if (fragmentType != ZilchFragmentType::RenderPass)
+  RaverieFragmentType::Enum fragmentType = Z::gEngine->has(GraphicsEngine)->GetFragmentType(&renderPass);
+  if (fragmentType != RaverieFragmentType::RenderPass)
     return DoNotifyException("Error", "Fragment is not a [RenderPass]"), false;
 
   if (!RenderTaskHelper(mRenderTasksEvent->mRenderTasks->mRenderTaskBuffer).ValidateRenderTargets(renderSettings))
@@ -148,58 +148,58 @@ bool SubRenderGroupPass::ValidateRenderGroup(RenderGroup& renderGroup)
   return true;
 }
 
-ZilchDefineType(RenderTasksEvent, builder, type)
+RaverieDefineType(RenderTasksEvent, builder, type)
 {
-  ZeroBindDocumented();
-  ZeroBindEvent(Events::RenderTasksUpdate, RenderTasksEvent);
+  RaverieBindDocumented();
+  RaverieBindEvent(Events::RenderTasksUpdate, RenderTasksEvent);
 
-  ZilchBindGetter(ViewportSize);
-  ZilchBindGetter(CameraViewportCog);
+  RaverieBindGetter(ViewportSize);
+  RaverieBindGetter(CameraViewportCog);
 
-  ZilchBindOverloadedMethod(GetRenderTarget,
-                            ZilchInstanceOverload(HandleOf<RenderTarget>, IntVec2, TextureFormat::Enum));
-  ZilchBindOverloadedMethod(
-      GetRenderTarget, ZilchInstanceOverload(HandleOf<RenderTarget>, IntVec2, TextureFormat::Enum, SamplerSettings&));
-  ZilchBindOverloadedMethod(GetRenderTarget, ZilchInstanceOverload(HandleOf<RenderTarget>, HandleOf<Texture>));
+  RaverieBindOverloadedMethod(GetRenderTarget,
+                            RaverieInstanceOverload(HandleOf<RenderTarget>, IntVec2, TextureFormat::Enum));
+  RaverieBindOverloadedMethod(
+      GetRenderTarget, RaverieInstanceOverload(HandleOf<RenderTarget>, IntVec2, TextureFormat::Enum, SamplerSettings&));
+  RaverieBindOverloadedMethod(GetRenderTarget, RaverieInstanceOverload(HandleOf<RenderTarget>, HandleOf<Texture>));
 
-  ZilchBindMethod(CreateSubRenderGroupPass);
+  RaverieBindMethod(CreateSubRenderGroupPass);
 
-  ZilchBindOverloadedMethod(AddRenderTaskClearTarget, ZilchInstanceOverload(void, RenderTarget*, Vec4));
-  ZilchBindOverloadedMethod(AddRenderTaskClearTarget, ZilchInstanceOverload(void, RenderTarget*, float));
-  ZilchBindOverloadedMethod(AddRenderTaskClearTarget, ZilchInstanceOverload(void, RenderTarget*, float, uint));
-  ZilchBindOverloadedMethod(AddRenderTaskClearTarget, ZilchInstanceOverload(void, RenderTarget*, float, uint, uint));
-  ZilchBindOverloadedMethod(AddRenderTaskClearTarget,
-                            ZilchInstanceOverload(void, RenderTarget*, RenderTarget*, Vec4, float));
-  ZilchBindOverloadedMethod(AddRenderTaskClearTarget,
-                            ZilchInstanceOverload(void, RenderTarget*, RenderTarget*, Vec4, float, uint));
-  ZilchBindOverloadedMethod(AddRenderTaskClearTarget,
-                            ZilchInstanceOverload(void, RenderTarget*, RenderTarget*, Vec4, float, uint, uint));
-  ZilchBindOverloadedMethod(AddRenderTaskClearTarget, ZilchInstanceOverload(void, GraphicsRenderSettings&, Vec4));
-  ZilchBindOverloadedMethod(AddRenderTaskClearTarget,
-                            ZilchInstanceOverload(void, GraphicsRenderSettings&, Vec4, float));
-  ZilchBindOverloadedMethod(AddRenderTaskClearTarget,
-                            ZilchInstanceOverload(void, GraphicsRenderSettings&, Vec4, float, uint));
-  ZilchBindOverloadedMethod(AddRenderTaskClearTarget,
-                            ZilchInstanceOverload(void, GraphicsRenderSettings&, Vec4, float, uint, uint));
+  RaverieBindOverloadedMethod(AddRenderTaskClearTarget, RaverieInstanceOverload(void, RenderTarget*, Vec4));
+  RaverieBindOverloadedMethod(AddRenderTaskClearTarget, RaverieInstanceOverload(void, RenderTarget*, float));
+  RaverieBindOverloadedMethod(AddRenderTaskClearTarget, RaverieInstanceOverload(void, RenderTarget*, float, uint));
+  RaverieBindOverloadedMethod(AddRenderTaskClearTarget, RaverieInstanceOverload(void, RenderTarget*, float, uint, uint));
+  RaverieBindOverloadedMethod(AddRenderTaskClearTarget,
+                            RaverieInstanceOverload(void, RenderTarget*, RenderTarget*, Vec4, float));
+  RaverieBindOverloadedMethod(AddRenderTaskClearTarget,
+                            RaverieInstanceOverload(void, RenderTarget*, RenderTarget*, Vec4, float, uint));
+  RaverieBindOverloadedMethod(AddRenderTaskClearTarget,
+                            RaverieInstanceOverload(void, RenderTarget*, RenderTarget*, Vec4, float, uint, uint));
+  RaverieBindOverloadedMethod(AddRenderTaskClearTarget, RaverieInstanceOverload(void, GraphicsRenderSettings&, Vec4));
+  RaverieBindOverloadedMethod(AddRenderTaskClearTarget,
+                            RaverieInstanceOverload(void, GraphicsRenderSettings&, Vec4, float));
+  RaverieBindOverloadedMethod(AddRenderTaskClearTarget,
+                            RaverieInstanceOverload(void, GraphicsRenderSettings&, Vec4, float, uint));
+  RaverieBindOverloadedMethod(AddRenderTaskClearTarget,
+                            RaverieInstanceOverload(void, GraphicsRenderSettings&, Vec4, float, uint, uint));
 
-  ZilchBindOverloadedMethod(AddRenderTaskRenderPass,
-                            ZilchInstanceOverload(void, GraphicsRenderSettings&, RenderGroup&, MaterialBlock&));
-  ZilchBindOverloadedMethod(
+  RaverieBindOverloadedMethod(AddRenderTaskRenderPass,
+                            RaverieInstanceOverload(void, GraphicsRenderSettings&, RenderGroup&, MaterialBlock&));
+  RaverieBindOverloadedMethod(
       AddRenderTaskRenderPass,
-      ZilchInstanceOverload(void, GraphicsRenderSettings&, GraphicalRangeInterface&, MaterialBlock&));
+      RaverieInstanceOverload(void, GraphicsRenderSettings&, GraphicalRangeInterface&, MaterialBlock&));
 
-  ZilchBindMethod(AddRenderTaskSubRenderGroupPass);
+  RaverieBindMethod(AddRenderTaskSubRenderGroupPass);
 
-  ZilchBindOverloadedMethod(AddRenderTaskPostProcess, ZilchInstanceOverload(void, RenderTarget*, Material&));
-  ZilchBindOverloadedMethod(AddRenderTaskPostProcess, ZilchInstanceOverload(void, RenderTarget*, MaterialBlock&));
-  ZilchBindOverloadedMethod(AddRenderTaskPostProcess, ZilchInstanceOverload(void, GraphicsRenderSettings&, Material&));
-  ZilchBindOverloadedMethod(AddRenderTaskPostProcess,
-                            ZilchInstanceOverload(void, GraphicsRenderSettings&, MaterialBlock&));
+  RaverieBindOverloadedMethod(AddRenderTaskPostProcess, RaverieInstanceOverload(void, RenderTarget*, Material&));
+  RaverieBindOverloadedMethod(AddRenderTaskPostProcess, RaverieInstanceOverload(void, RenderTarget*, MaterialBlock&));
+  RaverieBindOverloadedMethod(AddRenderTaskPostProcess, RaverieInstanceOverload(void, GraphicsRenderSettings&, Material&));
+  RaverieBindOverloadedMethod(AddRenderTaskPostProcess,
+                            RaverieInstanceOverload(void, GraphicsRenderSettings&, MaterialBlock&));
 
-  ZilchBindOverloadedMethod(GetFinalTarget,
-                            ZilchInstanceOverload(HandleOf<RenderTarget>, IntVec2, TextureFormat::Enum));
-  ZilchBindOverloadedMethod(
-      GetFinalTarget, ZilchInstanceOverload(HandleOf<RenderTarget>, IntVec2, TextureFormat::Enum, SamplerSettings&));
+  RaverieBindOverloadedMethod(GetFinalTarget,
+                            RaverieInstanceOverload(HandleOf<RenderTarget>, IntVec2, TextureFormat::Enum));
+  RaverieBindOverloadedMethod(
+      GetFinalTarget, RaverieInstanceOverload(HandleOf<RenderTarget>, IntVec2, TextureFormat::Enum, SamplerSettings&));
 }
 
 RenderTasksEvent::RenderTasksEvent() :
@@ -343,8 +343,8 @@ void RenderTasksEvent::AddRenderTaskRenderPass(GraphicsRenderSettings& renderSet
                                                RenderGroup& renderGroup,
                                                MaterialBlock& renderPass)
 {
-  ZilchFragmentType::Enum fragmentType = Z::gEngine->has(GraphicsEngine)->GetFragmentType(&renderPass);
-  if (fragmentType != ZilchFragmentType::RenderPass)
+  RaverieFragmentType::Enum fragmentType = Z::gEngine->has(GraphicsEngine)->GetFragmentType(&renderPass);
+  if (fragmentType != RaverieFragmentType::RenderPass)
     return DoNotifyException("Error", "Fragment is not a [RenderPass]");
 
   HashSet<Material*> materials;
@@ -358,7 +358,7 @@ void RenderTasksEvent::AddRenderTaskRenderPass(GraphicsRenderSettings& renderSet
 
   AddShaderInputs(renderSettings.mGlobalShaderInputs, shaderInputsId);
 
-  String renderPassName = ZilchVirtualTypeId(&renderPass)->Name;
+  String renderPassName = RaverieVirtualTypeId(&renderPass)->Name;
   RenderTaskHelper(mRenderTasks->mRenderTaskBuffer)
       .AddRenderTaskRenderPass(renderSettings, renderGroup.mSortId, renderPassName, shaderInputsId);
 
@@ -395,7 +395,7 @@ void RenderTasksEvent::AddRenderTaskSubRenderGroupPass(SubRenderGroupPass& subRe
       AddShaderInputs(subData.mRenderSettings.mGlobalShaderInputs, shaderInputsId);
     }
 
-    String renderPassName = ZilchVirtualTypeId((MaterialBlock*)subData.mRenderPass)->Name;
+    String renderPassName = RaverieVirtualTypeId((MaterialBlock*)subData.mRenderPass)->Name;
     renderTaskHelper.AddRenderTaskRenderPass(subData.mRenderSettings,
                                              subData.mRenderGroup->mSortId,
                                              renderPassName,
@@ -416,8 +416,8 @@ void RenderTasksEvent::AddRenderTaskRenderPass(GraphicsRenderSettings& renderSet
                                                GraphicalRangeInterface& graphicalRange,
                                                MaterialBlock& renderPass)
 {
-  ZilchFragmentType::Enum fragmentType = Z::gEngine->has(GraphicsEngine)->GetFragmentType(&renderPass);
-  if (fragmentType != ZilchFragmentType::RenderPass)
+  RaverieFragmentType::Enum fragmentType = Z::gEngine->has(GraphicsEngine)->GetFragmentType(&renderPass);
+  if (fragmentType != RaverieFragmentType::RenderPass)
     return DoNotifyException("Error", "Fragment is not a [RenderPass]");
 
   HashSet<Material*> materials;
@@ -459,7 +459,7 @@ void RenderTasksEvent::AddRenderTaskRenderPass(GraphicsRenderSettings& renderSet
 
   AddShaderInputs(renderSettings.mGlobalShaderInputs, shaderInputsId);
 
-  String renderPassName = ZilchVirtualTypeId(&renderPass)->Name;
+  String renderPassName = RaverieVirtualTypeId(&renderPass)->Name;
   RenderTaskHelper(mRenderTasks->mRenderTaskBuffer)
       .AddRenderTaskRenderPass(renderSettings, groupId, renderPassName, shaderInputsId);
 
@@ -493,8 +493,8 @@ void RenderTasksEvent::AddRenderTaskPostProcess(GraphicsRenderSettings& renderSe
 
 void RenderTasksEvent::AddRenderTaskPostProcess(GraphicsRenderSettings& renderSettings, MaterialBlock& postProcess)
 {
-  ZilchFragmentType::Enum fragmentType = Z::gEngine->has(GraphicsEngine)->GetFragmentType(&postProcess);
-  if (fragmentType != ZilchFragmentType::PostProcess)
+  RaverieFragmentType::Enum fragmentType = Z::gEngine->has(GraphicsEngine)->GetFragmentType(&postProcess);
+  if (fragmentType != RaverieFragmentType::PostProcess)
     return DoNotifyException("Error", "Fragment is not a [PostProcess]");
 
   uint shaderInputsId = GetUniqueShaderInputsId();
@@ -502,7 +502,7 @@ void RenderTasksEvent::AddRenderTaskPostProcess(GraphicsRenderSettings& renderSe
 
   AddShaderInputs(renderSettings.mGlobalShaderInputs, shaderInputsId);
 
-  String postProcessName = ZilchVirtualTypeId(&postProcess)->Name;
+  String postProcessName = RaverieVirtualTypeId(&postProcess)->Name;
   RenderTaskHelper(mRenderTasks->mRenderTaskBuffer)
       .AddRenderTaskPostProcess(renderSettings, postProcessName, shaderInputsId);
 }
@@ -781,4 +781,4 @@ void RenderTasksUpdateHelper(RenderTasksUpdateData& update)
   update.mCamera->mRenderTaskRangeIndices.PushBack(rangeIndex);
 }
 
-} // namespace Zero
+} // namespace Raverie

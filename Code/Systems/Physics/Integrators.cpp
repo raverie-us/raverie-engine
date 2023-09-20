@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Physics
@@ -233,4 +233,4 @@ Vec3 Integration::AngularVelocityApproximation(Mat3Param startRotation, Mat3Para
 
 } // namespace Physics
 
-} // namespace Zero
+} // namespace Raverie

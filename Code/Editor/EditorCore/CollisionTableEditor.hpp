@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class CollisionTable;
@@ -15,7 +15,7 @@ class CollisionTableEditor;
 class CollisionMatrixItem : public Composite
 {
 public:
-  typedef CollisionMatrixItem ZilchSelf;
+  typedef CollisionMatrixItem RaverieSelf;
   CollisionMatrixItem(Composite* parent,
                       CollisionTableEditor* tableEditor,
                       CollisionFilter* filter,
@@ -65,7 +65,7 @@ public:
 class CollisionGroupLabel : public Composite
 {
 public:
-  typedef CollisionGroupLabel ZilchSelf;
+  typedef CollisionGroupLabel RaverieSelf;
   CollisionGroupLabel(Composite* parent,
                       CollisionTableEditor* tableEditor,
                       CollisionGroup* group,
@@ -95,7 +95,7 @@ public:
 class CollisionTableMatrix : public Composite
 {
 public:
-  typedef CollisionTableMatrix ZilchSelf;
+  typedef CollisionTableMatrix RaverieSelf;
   CollisionTableMatrix(Composite* parent, CollisionTableEditor* tableEditor);
 
   // public interface
@@ -144,7 +144,7 @@ public:
 class CollisionTableEditor : public Composite
 {
 public:
-  typedef CollisionTableEditor ZilchSelf;
+  typedef CollisionTableEditor RaverieSelf;
   CollisionTableEditor(Composite* parent, CollisionTable* table);
 
   /// Sets what filter to display in the property grid.
@@ -190,4 +190,4 @@ public:
   ScrollArea* mScrollArea;
 };
 
-} // namespace Zero
+} // namespace Raverie

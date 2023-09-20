@@ -2,7 +2,7 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 void SetThreadedValue(Functor* task, AudioThreads::Enum threadCalledOn)
 {
@@ -69,4 +69,4 @@ float AudioConstants::DecibelsToVolume(float decibels)
   return Math::Pow(10.0f, decibels / 20.0f);
 }
 
-} // namespace Zero
+} // namespace Raverie

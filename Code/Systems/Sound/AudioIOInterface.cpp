@@ -2,7 +2,7 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Audio IO Interface
@@ -288,4 +288,4 @@ void IOCallback(float* outputBuffer, float* inputBuffer, unsigned framesPerBuffe
     ((AudioIOInterface*)data)->SaveInputSamples(inputBuffer, framesPerBuffer);
 }
 
-} // namespace Zero
+} // namespace Raverie

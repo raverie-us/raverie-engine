@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 bool NeedsLayout(Widget& widget)
@@ -51,7 +51,7 @@ void FilterLayoutChildren::SkipInvalid()
   }
 }
 
-ZilchDefineType(Composite, builder, type)
+RaverieDefineType(Composite, builder, type)
 {
 }
 
@@ -441,4 +441,4 @@ void ColoredComposite::UpdateTransform()
   Composite::UpdateTransform();
 }
 
-} // namespace Zero
+} // namespace Raverie

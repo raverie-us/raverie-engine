@@ -10,7 +10,7 @@
 // For memmove, memcpy
 #include <string.h>
 
-namespace Zero
+namespace Raverie
 {
 
 // Returns an invalid type that is zeroed out (only used for not-crashing after
@@ -32,7 +32,7 @@ class ContainerInitializerDummy
 {
 public:
 };
-#define ZeroInit ((Zero::ContainerInitializerDummy*)nullptr)
+#define RaverieInit ((Raverie::ContainerInitializerDummy*)nullptr)
 
 /// Base class for containers that use allocators.
 template <typename AllocatorType>
@@ -80,7 +80,7 @@ struct Pair
   {
   }
 
-  Pair(const type0& value0, MoveReference<type1> value1) : first(value0), second(ZeroMove(value1))
+  Pair(const type0& value0, MoveReference<type1> value1) : first(value0), second(RaverieMove(value1))
   {
   }
 
@@ -220,7 +220,7 @@ template <typename type, typename initType>
 inline void ConstructWith(type* elem, MoveReference<initType> source)
 {
   // Move construct from source
-  new (elem) type(ZeroMove(source));
+  new (elem) type(RaverieMove(source));
 }
 
 template <typename type>
@@ -646,4 +646,4 @@ struct has_valid_compare_policy
 {
 };
 
-} // namespace Zero
+} // namespace Raverie

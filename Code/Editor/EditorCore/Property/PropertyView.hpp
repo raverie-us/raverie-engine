@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Forward declarations
@@ -27,7 +27,7 @@ typedef Widget* (*CustomIconCreatorFunction)(Composite* parent,
 class PropertyView : public Composite
 {
 public:
-  ZilchDeclareType(PropertyView, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(PropertyView, TypeCopyMode::ReferenceType);
 
   PropertyView(Composite* parent);
   virtual ~PropertyView();
@@ -132,4 +132,4 @@ DeclareTweakable(float, PropertySpacing);
 DeclareTweakable(float, IndentSize);
 } // namespace PropertyViewUi
 
-} // namespace Zero
+} // namespace Raverie

@@ -5,7 +5,7 @@
 // todo: wu - remove dependency
 #include "Editor/EditorCore/MessageBox.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace WindowUi
@@ -47,23 +47,23 @@ DefineEvent(NamedChanged);
 DefineEvent(HighlightBorder);
 } // namespace Events
 
-ZilchDefineType(WindowTabEvent, builder, type)
+RaverieDefineType(WindowTabEvent, builder, type)
 {
 }
 
-ZilchDefineType(HighlightBorderEvent, builder, type)
+RaverieDefineType(HighlightBorderEvent, builder, type)
 {
 }
 
-ZilchDefineType(TabModifiedEvent, builder, type)
+RaverieDefineType(TabModifiedEvent, builder, type)
 {
 }
 
-ZilchDefineType(TabRenamedEvent, builder, type)
+RaverieDefineType(TabRenamedEvent, builder, type)
 {
 }
 
-ZilchDefineType(QueryModifiedSaveEvent, builder, type)
+RaverieDefineType(QueryModifiedSaveEvent, builder, type)
 {
 }
 
@@ -320,7 +320,7 @@ void TabWidget::OnOwnedWidgetModified(TabModifiedEvent* e)
   MarkAsNeedsUpdate();
 }
 
-ZilchDefineType(TabArea, builder, type)
+RaverieDefineType(TabArea, builder, type)
 {
 }
 
@@ -803,7 +803,7 @@ void TabArea::ChangeSelectedTab(TabWidget* toSelect)
 
 const float cMinSizeSize = Pixels(24);
 
-ZilchDefineType(Window, builder, type)
+RaverieDefineType(Window, builder, type)
 {
 }
 
@@ -1277,11 +1277,11 @@ void CloseTabContaining(Widget* widget)
 Window* GetWindowContaining(Widget* widget)
 {
   // Walk up the tree until a widget of type window is found
-  BoundType* windowType = ZilchTypeId(Window);
+  BoundType* windowType = RaverieTypeId(Window);
 
   while (widget != nullptr)
   {
-    if (ZilchVirtualTypeId(widget) == windowType)
+    if (RaverieVirtualTypeId(widget) == windowType)
       return (Window*)widget;
     widget = widget->GetParent();
   }
@@ -1296,4 +1296,4 @@ void ShowWidget(Widget* widget)
   widget->DispatchBubble(Events::TabShow, &tabEvent);
 }
 
-} // namespace Zero
+} // namespace Raverie

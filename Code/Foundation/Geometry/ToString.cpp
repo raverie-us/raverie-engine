@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 String ToString(const Ray& value, bool shortFormat)
@@ -47,4 +47,4 @@ String ToString(const Frustum& value, bool shortFormat)
   return String::Format("(%s), (%s)", centerStr.c_str(), aabbStr.c_str());
 }
 
-} // namespace Zero
+} // namespace Raverie

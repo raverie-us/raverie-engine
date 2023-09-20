@@ -1,0 +1,9 @@
+[Version:1]
+TextContent 
+{
+	RaverieFragmentBuilder 
+	{
+		var Name = "LightPass"
+		var ResourceId = 0x581a43177a8e5b82
+	}
+}

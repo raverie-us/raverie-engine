@@ -1,12 +1,12 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(GeometryResourceEntry, builder, type)
+RaverieDefineType(GeometryResourceEntry, builder, type)
 {
-  type->HandleManager = ZilchManagerId(PointerManager);
+  type->HandleManager = RaverieManagerId(PointerManager);
 }
 
 void GeometryResourceEntry::Serialize(Serializer& stream)
@@ -188,7 +188,7 @@ ContentItem* UpdateGeometryContent(ContentItem* existingItem, ContentInitializer
   else if (!options->mGeometryOptions->mImportMeshes && geometryContent->has(MeshBuilder))
   {
     // we no longer have this option selected, delete it
-    geometryContent->RemoveComponent(ZilchTypeId(MeshBuilder));
+    geometryContent->RemoveComponent(RaverieTypeId(MeshBuilder));
   }
   else if (geometryContent->has(MeshBuilder))
   {
@@ -209,7 +209,7 @@ ContentItem* UpdateGeometryContent(ContentItem* existingItem, ContentInitializer
            geometryContent->has(PhysicsMeshBuilder))
   {
     // we no longer have this option selected, delete it
-    geometryContent->RemoveComponent(ZilchTypeId(PhysicsMeshBuilder));
+    geometryContent->RemoveComponent(RaverieTypeId(PhysicsMeshBuilder));
   }
   else if (geometryContent->has(PhysicsMeshBuilder))
   {
@@ -226,7 +226,7 @@ ContentItem* UpdateGeometryContent(ContentItem* existingItem, ContentInitializer
   else if (!options->mGeometryOptions->mImportAnimations && geometryContent->has(AnimationBuilder))
   {
     // we no longer have this option selected, delete it
-    geometryContent->RemoveComponent(ZilchTypeId(AnimationBuilder));
+    geometryContent->RemoveComponent(RaverieTypeId(AnimationBuilder));
   }
 
   if (options->mGeometryOptions->mCreateArchetype && !geometryContent->has(GeneratedArchetype))
@@ -238,7 +238,7 @@ ContentItem* UpdateGeometryContent(ContentItem* existingItem, ContentInitializer
   else if (!options->mGeometryOptions->mCreateArchetype && geometryContent->has(GeneratedArchetype))
   {
     // we no longer have this option selected, delete it;
-    geometryContent->RemoveComponent(ZilchTypeId(GeneratedArchetype));
+    geometryContent->RemoveComponent(RaverieTypeId(GeneratedArchetype));
   }
 
   if (options->mGeometryOptions->mImportTextures && !geometryContent->has(TextureContent))
@@ -250,13 +250,13 @@ ContentItem* UpdateGeometryContent(ContentItem* existingItem, ContentInitializer
   else if (!options->mGeometryOptions->mImportTextures && geometryContent->has(TextureContent))
   {
     // we no longer have this option selected, delete it
-    geometryContent->RemoveComponent(ZilchTypeId(TextureContent));
+    geometryContent->RemoveComponent(RaverieTypeId(TextureContent));
   }
 
   return geometryContent;
 }
 
-ZilchDefineType(GeometryContent, builder, type)
+RaverieDefineType(GeometryContent, builder, type)
 {
 }
 
@@ -271,19 +271,19 @@ GeometryContent::GeometryContent(StringParam inputFilename)
   Filename = FilePath::GetFileName(inputFilename);
 }
 
-ZilchDefineType(GeometryImport, builder, type)
+RaverieDefineType(GeometryImport, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::CallSetDefaults);
-  ZeroBindDependency(GeometryContent);
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::CallSetDefaults);
+  RaverieBindDependency(GeometryContent);
 
-  ZilchBindFieldProperty(mCollapsePivots);
-  ZilchBindFieldProperty(mOriginOffset);
-  ZilchBindFieldProperty(mScaleFactor);
-  ZilchBindFieldProperty(mChangeBasis)->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  ZilchBindFieldProperty(mXBasisTo)->ZeroFilterEquality(mChangeBasis, bool, true);
-  ZilchBindFieldProperty(mYBasisTo)->ZeroFilterEquality(mChangeBasis, bool, true);
-  ZilchBindFieldProperty(mZBasisTo)->ZeroFilterEquality(mChangeBasis, bool, true);
+  RaverieBindFieldProperty(mCollapsePivots);
+  RaverieBindFieldProperty(mOriginOffset);
+  RaverieBindFieldProperty(mScaleFactor);
+  RaverieBindFieldProperty(mChangeBasis)->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  RaverieBindFieldProperty(mXBasisTo)->RaverieFilterEquality(mChangeBasis, bool, true);
+  RaverieBindFieldProperty(mYBasisTo)->RaverieFilterEquality(mChangeBasis, bool, true);
+  RaverieBindFieldProperty(mZBasisTo)->RaverieFilterEquality(mChangeBasis, bool, true);
 }
 
 void GeometryImport::Serialize(Serializer& stream)
@@ -329,14 +329,14 @@ void GeometryImport::ComputeTransforms()
   mNormalTransform.BuildTransform(mChangeOfBasis, Vec3(1.0f / mScaleFactor));
 }
 
-ZilchDefineType(PhysicsMeshBuilder, builder, type)
+RaverieDefineType(PhysicsMeshBuilder, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::CallSetDefaults);
-  ZeroBindDependency(GeometryContent);
-  ZeroBindDependency(MeshBuilder);
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::CallSetDefaults);
+  RaverieBindDependency(GeometryContent);
+  RaverieBindDependency(MeshBuilder);
 
-  ZilchBindGetterSetterProperty(MeshBuilt);
+  RaverieBindGetterSetterProperty(MeshBuilt);
 
   type->CreatableInScript = false;
 }
@@ -416,13 +416,13 @@ void PhysicsMeshBuilder::BuildListing(ResourceListing& listing)
   }
 }
 
-ZilchDefineType(AnimationClip, builder, type)
+RaverieDefineType(AnimationClip, builder, type)
 {
-  type->HandleManager = ZilchManagerId(PointerManager);
-  ZilchBindFieldProperty(mName);
-  ZilchBindFieldProperty(mStartFrame);
-  ZilchBindFieldProperty(mEndFrame);
-  ZilchBindFieldProperty(mAnimationIndex);
+  type->HandleManager = RaverieManagerId(PointerManager);
+  RaverieBindFieldProperty(mName);
+  RaverieBindFieldProperty(mStartFrame);
+  RaverieBindFieldProperty(mEndFrame);
+  RaverieBindFieldProperty(mAnimationIndex);
 }
 
 void AnimationClip::Serialize(Serializer& stream)
@@ -441,13 +441,13 @@ void AnimationClip::SetDefaults()
   mAnimationIndex = 0;
 }
 
-ZilchDefineType(AnimationBuilder, builder, type)
+RaverieDefineType(AnimationBuilder, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::CallSetDefaults);
-  ZeroBindDependency(GeometryContent);
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::CallSetDefaults);
+  RaverieBindDependency(GeometryContent);
 
-  ZilchBindFieldProperty(mClips);
+  RaverieBindFieldProperty(mClips);
 }
 
 void AnimationBuilder::Serialize(Serializer& stream)
@@ -482,11 +482,11 @@ void AnimationBuilder::BuildListing(ResourceListing& listing)
 }
 
 // Texture Content
-ZilchDefineType(TextureContent, builder, type)
+RaverieDefineType(TextureContent, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::CallSetDefaults);
-  ZeroBindDependency(GeometryContent);
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::CallSetDefaults);
+  RaverieBindDependency(GeometryContent);
 }
 
 void TextureContent::Serialize(Serializer& stream)
@@ -519,7 +519,7 @@ void GeometryContent::BuildContentItem(BuildOptions& options)
     switch (result)
     {
     // no content was present in the file
-    case Zero::GeometryProcessorCodes::NoContent:
+    case Raverie::GeometryProcessorCodes::NoContent:
     {
       options.Failure = true;
       options.Message = String::Format("Failed to process Geometry. File '%s' "
@@ -532,11 +532,11 @@ void GeometryContent::BuildContentItem(BuildOptions& options)
       return;
     }
     // it worked
-    case Zero::GeometryProcessorCodes::Success:
+    case Raverie::GeometryProcessorCodes::Success:
       return;
     // something went wrong, abort processing imported file.
     // the geometry processor outputs its own error messages to the console.
-    case Zero::GeometryProcessorCodes::Failed:
+    case Raverie::GeometryProcessorCodes::Failed:
     {
       options.Failure = true;
       options.Message = String::Format("Failed to process Geometry. File '%s', "
@@ -566,9 +566,9 @@ void GeometryContent::BuildContentItem(BuildOptions& options)
     }
     // let editor side importing know we have to load/reload the scene graph or
     // textures
-    case Zero::GeometryProcessorCodes::LoadGraph:
-    case Zero::GeometryProcessorCodes::LoadTextures:
-    case Zero::GeometryProcessorCodes::LoadGraphAndTextures:
+    case Raverie::GeometryProcessorCodes::LoadGraph:
+    case Raverie::GeometryProcessorCodes::LoadTextures:
+    case Raverie::GeometryProcessorCodes::LoadGraphAndTextures:
       needsLoading = true;
       break;
     default:
@@ -589,11 +589,11 @@ void GeometryContent::BuildContentItem(BuildOptions& options)
   }
 }
 
-ZilchDefineType(GeneratedArchetype, builder, type)
+RaverieDefineType(GeneratedArchetype, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::CallSetDefaults);
-  ZeroBindDependency(GeometryContent);
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::CallSetDefaults);
+  RaverieBindDependency(GeometryContent);
 }
 
 void GeneratedArchetype::Generate(ContentInitializer& initializer)
@@ -633,67 +633,67 @@ void CreateGeometryContent(ContentSystem* system)
   // COMMON INTERCHANGE FORMATS
   // Autodesk
   system->CreatorsByExtension["fbx"] =
-      ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Wavefront Object
   system->CreatorsByExtension["obj"] =
-      ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Collada
   system->CreatorsByExtension["dae"] =
-      ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Global Module in Basic Program
   system->CreatorsByExtension["glb"] =
-      ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // 3ds Max 3DS
   system->CreatorsByExtension["3ds"] =
-      ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Blender 3D
   system->CreatorsByExtension["blend"] =
-      ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // 3ds Max ASE
   system->CreatorsByExtension["ase"] =
-      ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Industry Foundation Classes (IFC/Step) NEEDS ADDITIONAL TESTING TO FIGURE
   // OUT WHAT WENT WRONG
   system->CreatorsByExtension["ifc"] =
-      ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // XGL
   system->CreatorsByExtension["xgl"] =
-      ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   system->CreatorsByExtension["zgl"] =
-      ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Stanford Polygon Library
   system->CreatorsByExtension["ply"] =
-      ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // AutoCAD DXF
   system->CreatorsByExtension["dxf"] =
-      ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // LightWave
   system->CreatorsByExtension["lwo"] =
-      ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // LightWave Scene
   system->CreatorsByExtension["lws"] =
-      ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Modo
   system->CreatorsByExtension["lxo"] =
-      ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Stereolithography
   system->CreatorsByExtension["stl"] =
-      ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // DirectX X
   system->CreatorsByExtension["x"] =
-      ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // AC3D
   system->CreatorsByExtension["ac"] =
-      ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Milkshape 3D
   system->CreatorsByExtension["ms3d"] =
-      ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // TrueSpace
   system->CreatorsByExtension["cob"] =
-      ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // untested truespace format
   system->CreatorsByExtension["scn"] =
-      ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
 
   // MOTION CAPTURE FORMATS
   // Biovision BVH <- ASSIMP tokenizer does not properly handle nodes names with
@@ -701,12 +701,12 @@ void CreateGeometryContent(ContentSystem* system)
   // ContentTypeEntry(MetaTypeOf(GeometryContent), MakeGeometryContent);
   // CharacterStudio Motion
   system->CreatorsByExtension["csm"] =
-      ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
 
   // GRAPHICS ENGINE FORMATS
   // Ogre XML
   system->CreatorsByExtension["xml"] =
-      ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Irrlicht Mesh
   // system->CreatorsByExtension["irrmesh"] =
   // ContentTypeEntry(MetaTypeOf(GeometryContent), MakeGeometryContent);
@@ -717,61 +717,61 @@ void CreateGeometryContent(ContentSystem* system)
   // GAME FILE FORMATS
   // Quake I && (not game file) -> 3D GameStudio (3DGS)
   system->CreatorsByExtension["mdl"] =
-      ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Quake II
   system->CreatorsByExtension["md2"] =
-      ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Quake III Mesh
   system->CreatorsByExtension["md3"] =
-      ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Quake III Map/BSP, none of these files I found had models or textures
   // present in them
   // system->CreatorsByExtension["pk3"] =
   // ContentTypeEntry(MetaTypeOf(GeometryContent), MakeGeometryContent);
   // Doom 3
   system->CreatorsByExtension["md5mesh"] =
-      ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Valve Model
   system->CreatorsByExtension["smd"] =
-      ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Open Game Engine Exchange
   system->CreatorsByExtension["ogex"] =
-      ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
 
   // OTHER FILE FORMATS
   // BlitzBasic 3D
   system->CreatorsByExtension["b3d"] =
-      ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Quick3D
   system->CreatorsByExtension["q3o"] =
-      ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   system->CreatorsByExtension["q3s"] =
-      ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Neutral File Format && Sense8 WorldToolKit
   system->CreatorsByExtension["nff"] =
-      ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Object File Format
   system->CreatorsByExtension["off"] =
-      ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // PovRAY Raw
   system->CreatorsByExtension["raw"] =
-      ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Terragen Terrain
   system->CreatorsByExtension["ter"] =
-      ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // 3D GameStudio (3DGS) Terrain
   system->CreatorsByExtension["hmp"] =
-      ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   // Nevercenter Silo Object
   system->CreatorsByExtension["sib"] =
-      ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
 
   system->CreatorsByExtension["amf"] =
-      ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   system->CreatorsByExtension["x3d"] =
-      ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
   system->CreatorsByExtension["mmd"] =
-      ContentTypeEntry(ZilchTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
+      ContentTypeEntry(RaverieTypeId(GeometryContent), MakeGeometryContent, UpdateGeometryContent);
 
   // system->CreatorsByExtension["wrl"] =
   // ContentTypeEntry(MetaTypeOf(GeometryContent), MakeGeometryContent,
@@ -863,4 +863,4 @@ void AddGeometryFileFilters(ResourceManager* manager)
   allFilter.mFilter = filterBuilder.ToString();
 }
 
-} // namespace Zero
+} // namespace Raverie

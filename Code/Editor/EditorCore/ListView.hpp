@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class ListRow;
@@ -10,7 +10,7 @@ class ListColumnHeader;
 class ListView : public Composite
 {
 public:
-  typedef ListView ZilchSelf;
+  typedef ListView RaverieSelf;
 
   static const float cHeaderRowHeight;
   static const float cResizerWidth;
@@ -74,7 +74,7 @@ public:
 class ListRow : public TreeBase
 {
 public:
-  typedef ListRow ZilchSelf;
+  typedef ListRow RaverieSelf;
   typedef InListBaseLink<ListRow, TreeBase> RowList;
 
   static const float cRowColor[];
@@ -120,7 +120,7 @@ public:
 class ListColumnHeader : public Composite
 {
 public:
-  typedef ColumnHeader ZilchSelf;
+  typedef ColumnHeader RaverieSelf;
 
   static const float cHeaderColor;
   static const float cColumnSeparatorColor;
@@ -138,4 +138,4 @@ public:
   ListView* mList;
 };
 
-} // namespace Zero
+} // namespace Raverie

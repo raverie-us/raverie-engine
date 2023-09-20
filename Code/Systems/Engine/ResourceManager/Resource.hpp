@@ -1,6 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
-namespace Zero
+namespace Raverie
 {
 
 // Forward Declarations
@@ -80,7 +80,7 @@ public:
 class ResourceDisplayFunctions : public MetaDisplay
 {
 public:
-  ZilchDeclareType(ResourceDisplayFunctions, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ResourceDisplayFunctions, TypeCopyMode::ReferenceType);
 
   String GetName(HandleParam object) override;
   String GetDebugText(HandleParam object) override;
@@ -90,7 +90,7 @@ public:
 class Resource : public EventObject
 {
 public:
-  ZilchDeclareType(Resource, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Resource, TypeCopyMode::ReferenceType);
 
   /// Memory heap for all resources
   static Memory::Heap* sHeap;
@@ -118,7 +118,7 @@ public:
   /// Gets the name of the resource (or the contents file path if we have it)
   String GetNameOrFilePath();
 
-  /// Gets the origin (named specifically to be used with Zilch compilation).
+  /// Gets the origin (named specifically to be used with Raverie compilation).
   /// This is what gets set on the Origin member of all CodeLocations.
   /// It's also used for setting breakpoints and should be unique per file.
   String GetOrigin();
@@ -260,7 +260,7 @@ private:
 class ResourceMetaSerialization : public MetaSerialization
 {
 public:
-  ZilchDeclareType(ResourceMetaSerialization, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ResourceMetaSerialization, TypeCopyMode::ReferenceType);
   void SerializeProperty(HandleParam instance, Property* property, Serializer& serializer) override;
   void SetDefault(Type* type, Any& any) override;
 
@@ -277,7 +277,7 @@ class DataResource : public Resource
 {
 public:
   /// Meta Initialization
-  ZilchDeclareType(DataResource, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(DataResource, TypeCopyMode::ReferenceType);
 
   ResourceEditType::Type GetEditType() override
   {
@@ -296,7 +296,7 @@ public:
 class DataResourceInheritance : public MetaDataInheritanceRoot
 {
 public:
-  ZilchDeclareType(DataResourceInheritance, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(DataResourceInheritance, TypeCopyMode::ReferenceType);
   String GetInheritId(HandleParam object, InheritIdContext::Enum context) override;
   void SetInheritId(HandleParam object, StringParam inheritId) override;
   bool ShouldStoreLocalModifications(HandleParam object) override;
@@ -309,7 +309,7 @@ public:
 class ResourceMetaOperations : public MetaOperations
 {
 public:
-  ZilchDeclareType(ResourceMetaOperations, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ResourceMetaOperations, TypeCopyMode::ReferenceType);
 
   u64 GetUndoHandleId(HandleParam object) override;
   Any GetUndoData(HandleParam object);
@@ -340,4 +340,4 @@ public:
     m##name = newResource;                                                                                             \
   }
 
-} // namespace Zero
+} // namespace Raverie

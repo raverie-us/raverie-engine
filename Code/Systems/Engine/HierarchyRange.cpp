@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 bool NameCondition::operator()(const Cog& cog)
@@ -110,4 +110,4 @@ Cog* HierarchyRange::GetRoot(Cog* object)
   return object;
 }
 
-} // namespace Zero
+} // namespace Raverie

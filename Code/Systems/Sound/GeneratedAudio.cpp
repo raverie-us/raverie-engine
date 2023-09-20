@@ -2,27 +2,27 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 using namespace AudioConstants;
 
 // Generated Wave Node
 
-ZilchDefineType(GeneratedWaveNode, builder, type)
+RaverieDefineType(GeneratedWaveNode, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetter(WaveType);
-  ZilchBindGetterSetter(WaveFrequency);
-  ZilchBindGetterSetter(Volume);
-  ZilchBindGetterSetter(Decibels);
-  ZilchBindGetterSetter(SquareWavePulseValue);
-  ZilchBindMethod(Play);
-  ZilchBindMethod(Stop);
-  ZilchBindMethod(InterpolateVolume);
-  ZilchBindMethod(InterpolateDecibels);
-  ZilchBindMethod(InterpolateWaveFrequency);
+  RaverieBindGetterSetter(WaveType);
+  RaverieBindGetterSetter(WaveFrequency);
+  RaverieBindGetterSetter(Volume);
+  RaverieBindGetterSetter(Decibels);
+  RaverieBindGetterSetter(SquareWavePulseValue);
+  RaverieBindMethod(Play);
+  RaverieBindMethod(Stop);
+  RaverieBindMethod(InterpolateVolume);
+  RaverieBindMethod(InterpolateDecibels);
+  RaverieBindMethod(InterpolateWaveFrequency);
 }
 
 GeneratedWaveNode::GeneratedWaveNode(StringParam name, unsigned ID) :
@@ -191,18 +191,18 @@ void GeneratedWaveNode::InterpolateVolumeThreaded(float volume, float time)
 
 // ADSR Envelope
 
-ZilchDefineType(AdsrEnvelope, builder, type)
+RaverieDefineType(AdsrEnvelope, builder, type)
 {
-  ZilchBindDefaultConstructor();
-  ZeroBindDocumented();
+  RaverieBindDefaultConstructor();
+  RaverieBindDocumented();
   type->CreatableInScript = true;
 
-  ZilchBindField(mDelayTime);
-  ZilchBindField(mAttackTime);
-  ZilchBindField(mDecayTime);
-  ZilchBindField(mSustainTime);
-  ZilchBindField(mSustainLevel);
-  ZilchBindField(mReleaseTime);
+  RaverieBindField(mDelayTime);
+  RaverieBindField(mAttackTime);
+  RaverieBindField(mDecayTime);
+  RaverieBindField(mSustainTime);
+  RaverieBindField(mSustainLevel);
+  RaverieBindField(mReleaseTime);
 }
 
 // Note Harmonic
@@ -265,15 +265,15 @@ void AdditiveNote::Stop()
 
 // Additive Synth Node
 
-ZilchDefineType(AdditiveSynthNode, builder, type)
+RaverieDefineType(AdditiveSynthNode, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindMethod(AddHarmonic);
-  ZilchBindMethod(RemoveAllHarmonics);
-  ZilchBindMethod(NoteOn);
-  ZilchBindMethod(NoteOff);
-  ZilchBindMethod(StopAllNotes);
+  RaverieBindMethod(AddHarmonic);
+  RaverieBindMethod(RemoveAllHarmonics);
+  RaverieBindMethod(NoteOn);
+  RaverieBindMethod(NoteOff);
+  RaverieBindMethod(StopAllNotes);
 }
 
 AdditiveSynthNode::AdditiveSynthNode(StringParam name, unsigned ID) :
@@ -424,12 +424,12 @@ void AdditiveSynthNode::StopAllNotesThreaded()
 
 // Microphone Input Node
 
-ZilchDefineType(MicrophoneInputNode, builder, type)
+RaverieDefineType(MicrophoneInputNode, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetter(Volume);
-  ZilchBindGetterSetter(Active);
+  RaverieBindGetterSetter(Volume);
+  RaverieBindGetterSetter(Active);
 }
 
 MicrophoneInputNode::MicrophoneInputNode(StringParam name, unsigned ID) :
@@ -949,28 +949,28 @@ Grain& Grain::operator=(const Grain& otherGrain)
 
 // Granular Synth Node
 
-ZilchDefineType(GranularSynthNode, builder, type)
+RaverieDefineType(GranularSynthNode, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindMethod(SetSound);
-  ZilchBindMethod(Play);
-  ZilchBindMethod(Stop);
-  ZilchBindGetterSetterProperty(GrainVolume);
-  ZilchBindGetterSetterProperty(GrainVolumeVariance);
-  ZilchBindGetterSetterProperty(GrainDelay);
-  ZilchBindGetterSetterProperty(GrainDelayVariance);
-  ZilchBindGetterSetterProperty(GrainLength);
-  ZilchBindGetterSetterProperty(GrainLengthVariance);
-  ZilchBindGetterSetterProperty(GrainResampleRate);
-  ZilchBindGetterSetterProperty(GrainResampleRateVariance);
-  ZilchBindGetterSetterProperty(BufferScanRate);
-  ZilchBindGetterSetterProperty(GrainPanningValue);
-  ZilchBindGetterSetterProperty(GrainPanningVariance);
-  ZilchBindGetterSetterProperty(RandomLocationValue);
-  ZilchBindGetterSetterProperty(WindowType);
-  ZilchBindGetterSetterProperty(WindowAttack);
-  ZilchBindGetterSetterProperty(WindowRelease);
+  RaverieBindMethod(SetSound);
+  RaverieBindMethod(Play);
+  RaverieBindMethod(Stop);
+  RaverieBindGetterSetterProperty(GrainVolume);
+  RaverieBindGetterSetterProperty(GrainVolumeVariance);
+  RaverieBindGetterSetterProperty(GrainDelay);
+  RaverieBindGetterSetterProperty(GrainDelayVariance);
+  RaverieBindGetterSetterProperty(GrainLength);
+  RaverieBindGetterSetterProperty(GrainLengthVariance);
+  RaverieBindGetterSetterProperty(GrainResampleRate);
+  RaverieBindGetterSetterProperty(GrainResampleRateVariance);
+  RaverieBindGetterSetterProperty(BufferScanRate);
+  RaverieBindGetterSetterProperty(GrainPanningValue);
+  RaverieBindGetterSetterProperty(GrainPanningVariance);
+  RaverieBindGetterSetterProperty(RandomLocationValue);
+  RaverieBindGetterSetterProperty(WindowType);
+  RaverieBindGetterSetterProperty(WindowAttack);
+  RaverieBindGetterSetterProperty(WindowRelease);
 }
 
 GranularSynthNode::GranularSynthNode(StringParam name, unsigned ID) :
@@ -1339,4 +1339,4 @@ int GranularSynthNode::FramesToMs(unsigned frames)
   return (int)(frames / cSystemSampleRate * 1000.0f);
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 struct EdgeIndicies
@@ -119,4 +119,4 @@ private:
   static Vec3 Interpolate(float surfaceLevel, Vec3 p1, Vec3 p2, float val1, float val2);
 };
 
-} // namespace Zero
+} // namespace Raverie

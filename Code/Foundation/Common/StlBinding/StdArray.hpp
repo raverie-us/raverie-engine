@@ -5,7 +5,7 @@
 #include "ContainerCommon.hpp"
 #include <vector>
 
-namespace Zero
+namespace Raverie
 {
 
 template <typename type>
@@ -33,4 +33,4 @@ public:
   }
 };
 
-} // namespace Zero
+} // namespace Raverie

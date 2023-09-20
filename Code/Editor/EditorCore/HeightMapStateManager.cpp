@@ -2,13 +2,13 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(HeightMapBrushStroke, builder, type)
+RaverieDefineType(HeightMapBrushStroke, builder, type)
 {
-  ZilchBindConstructor();
-  ZilchBindMethod(AddPoint);
+  RaverieBindConstructor();
+  RaverieBindMethod(AddPoint);
 }
 
 HeightMapBrushStroke::HeightMapBrushStroke(float radius, float featherRadius) :
@@ -88,4 +88,4 @@ void HeightMapStateManager::InitializeHeightMapState()
   mCurrentFrame->CopyHeightMapData(mHeightMap);
 }
 
-} // namespace Zero
+} // namespace Raverie

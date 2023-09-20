@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 class EventReceiver;
 class EventDispatcher;
@@ -10,7 +10,7 @@ class EventDispatcher;
 class Event : public ThreadSafeId<u32, Object>
 {
 public:
-  ZilchDeclareType(Event, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Event, TypeCopyMode::ReferenceType);
 
   // Efficient memory pooling
   OverloadedNew();
@@ -36,7 +36,7 @@ public:
 class ObjectEvent : public Event
 {
 public:
-  ZilchDeclareType(ObjectEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ObjectEvent, TypeCopyMode::ReferenceType);
 
   Object* GetSource();
 
@@ -285,11 +285,11 @@ Connect(targetType* dispatcherObject, StringParam eventId, classType* receiver, 
 
   // For safety, we store the event's type on the connection so we can validate
   // it
-  BoundType* type = ZilchTypeId(eventType);
+  BoundType* type = RaverieTypeId(eventType);
   connection->EventType = type;
   ErrorIf(type->IsInitialized() == false,
-          "The event type was never initialized using ZilchDeclareType / "
-          "ZilchDefineType / ZilchInitializeType");
+          "The event type was never initialized using RaverieDeclareType / "
+          "RaverieDefineType / RaverieInitializeType");
 
   connection->ConnectToReceiverAndDispatcher(eventId, receiver->GetReceiver(), dispatcher);
 }
@@ -301,7 +301,7 @@ Connect(targetType* dispatcherObject, StringParam eventId, classType* receiver, 
 #define ConnectThisTo(target, eventname, handle)                                                                       \
   do                                                                                                                   \
   {                                                                                                                    \
-    ::Zero::Connect(target, eventname, this, &ZilchSelf::handle);                                                      \
+    ::Raverie::Connect(target, eventname, this, &RaverieSelf::handle);                                                      \
   } while (false)
 
 #define DisconnectAll(sender, receiver) sender->GetDispatcher()->Disconnect(receiver);
@@ -350,7 +350,7 @@ DeclareTag(Event);
 class EventObject : public Object
 {
 public:
-  ZilchDeclareType(EventObject, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(EventObject, TypeCopyMode::ReferenceType);
 
   // Object Interface
   EventDispatcher* GetDispatcherObject() override
@@ -380,4 +380,4 @@ protected:
   EventDispatcher mDispatcher;
 };
 
-} // namespace Zero
+} // namespace Raverie

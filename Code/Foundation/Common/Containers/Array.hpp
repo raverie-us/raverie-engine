@@ -5,7 +5,7 @@
 #include "ContainerCommon.hpp"
 #include "Memory/Allocator.hpp"
 
-namespace Zero
+namespace Raverie
 {
 /// Generic dynamic array class / Linear Sequence. Equivalent to std::vector.
 /// Stores objects in contiguous blocks of dynamically allocated
@@ -394,9 +394,9 @@ public:
   /// Swaps this array's internal data with another array
   void Swap(this_type& other)
   {
-    Zero::Swap(mData, other.mData);
-    Zero::Swap(mSize, other.mSize);
-    Zero::Swap(mCapacity, other.mCapacity);
+    Raverie::Swap(mData, other.mData);
+    Raverie::Swap(mSize, other.mSize);
+    Raverie::Swap(mCapacity, other.mCapacity);
   }
 
   /// Constructs an element at the back of the array
@@ -454,7 +454,7 @@ public:
         ExpandToNewSize(mSize + 1);
       }
     }
-    ConstructWith(mData + mSize, ZeroMove(*toBeAdded));
+    ConstructWith(mData + mSize, RaverieMove(*toBeAdded));
     ++mSize;
   }
 
@@ -594,7 +594,7 @@ public:
   void Assign(MoveReference<inputRangeType> range)
   {
     Clear();
-    Insert(0, ZeroMove(range));
+    Insert(0, RaverieMove(range));
   }
 
   /// Appends a range of elements to the end of the array
@@ -606,7 +606,7 @@ public:
   template <typename inputRangeType>
   void Append(MoveReference<inputRangeType> inputRange)
   {
-    Insert(mData + mSize, ZeroMove(inputRange));
+    Insert(mData + mSize, RaverieMove(inputRange));
   }
 
   /// Inserts a range of elements before the specified position in the array
@@ -659,7 +659,7 @@ public:
 
     for (; !inputRange->Empty(); inputRange->PopFront())
     {
-      ConstructWith(buffer, ZeroMove(inputRange->Front()));
+      ConstructWith(buffer, RaverieMove(inputRange->Front()));
       ++buffer;
     }
 
@@ -677,7 +677,7 @@ public:
   {
     // for insertion the index can be mSize
     ErrorIf(index > mSize, "Access array out of bounds.");
-    Insert(mData + index, ZeroMove(inputRange));
+    Insert(mData + index, RaverieMove(inputRange));
   }
 
   /// Inserts an element before the specified position in the array
@@ -691,7 +691,7 @@ public:
   {
     ErrorIf(where < mData || where > mData + mSize, "Access array out of bounds.");
     PointerRange<value_type> singleValue(&value, &value + 1);
-    Insert(where, ZeroMove(singleValue));
+    Insert(where, RaverieMove(singleValue));
   }
   void InsertAt(size_type index, const_reference value)
   {
@@ -707,9 +707,9 @@ public:
     // for insertion the index can be mSize
     ErrorIf(index > mSize, "Access array out of bounds.");
     if (index == mSize)
-      PushBack(ZeroMove(value));
+      PushBack(RaverieMove(value));
     else
-      Insert(mData + index, ZeroMove(value));
+      Insert(mData + index, RaverieMove(value));
   }
 
   //
@@ -1006,4 +1006,4 @@ Array<T> RangeToArray(Range& range)
   return array;
 }
 
-} // namespace Zero
+} // namespace Raverie

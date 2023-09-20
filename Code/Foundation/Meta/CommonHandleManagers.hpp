@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // These are commonly used handle types to fit most use cases. If your type
@@ -44,4 +44,4 @@ typedef ReferenceCountedThreadSafeId<u64, EventObject> ReferenceCountedThreadSaf
 
 void RegisterCommonHandleManagers();
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// DataContent item. Data content is a content item that is stored in
@@ -10,7 +10,7 @@ namespace Zero
 class DataContent : public ContentComposition
 {
 public:
-  ZilchDeclareType(DataContent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(DataContent, TypeCopyMode::ReferenceType);
 
   DataContent();
   DataContent(ContentInitializer& initializer);
@@ -22,7 +22,7 @@ public:
 class DataBuilder : public BuilderComponent
 {
 public:
-  ZilchDeclareType(DataBuilder, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(DataBuilder, TypeCopyMode::ReferenceType);
 
   String Name;
   ResourceId mResourceId;
@@ -41,4 +41,4 @@ public:
   void BuildListing(ResourceListing& listing) override;
 };
 
-} // namespace Zero
+} // namespace Raverie

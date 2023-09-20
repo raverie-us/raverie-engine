@@ -2,12 +2,12 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Sound Asset
 
-ZilchDefineType(SoundAsset, builder, Type)
+RaverieDefineType(SoundAsset, builder, Type)
 {
 }
 
@@ -41,7 +41,7 @@ void SoundAsset::RemoveInstance(unsigned instanceID)
 
 // Decompressed Sound Asset
 
-ZilchDefineType(DecompressedSoundAsset, builder, Type)
+RaverieDefineType(DecompressedSoundAsset, builder, Type)
 {
 }
 
@@ -168,7 +168,7 @@ void StreamingDataPerInstance::DecodingCallback(DecodedPacket* packet)
 
 // Streaming Sound Asset
 
-ZilchDefineType(StreamingSoundAsset, builder, Type)
+RaverieDefineType(StreamingSoundAsset, builder, Type)
 {
 }
 
@@ -260,7 +260,7 @@ void StreamingSoundAsset::ResetStreamingFile(unsigned instanceID)
 
 void StreamingSoundAsset::OnAddInstanceThreaded(unsigned instanceID)
 {
-  Zero::Status status;
+  Raverie::Status status;
   StreamingDataPerInstance* data = nullptr;
 
   // If there is data in the buffer, create the instance data for streaming from
@@ -275,7 +275,7 @@ void StreamingSoundAsset::OnAddInstanceThreaded(unsigned instanceID)
     // open it
     if (!mInputFile.IsOpen())
     {
-      mInputFile.Open(mFileName, Zero::FileMode::Read, Zero::FileAccessPattern::Sequential);
+      mInputFile.Open(mFileName, Raverie::FileMode::Read, Raverie::FileAccessPattern::Sequential);
       ErrorIf(!mInputFile.IsOpen(), "Could not open streaming audio file to play a new instance");
       if (!mInputFile.IsOpen())
         return;
@@ -311,7 +311,7 @@ void StreamingSoundAsset::OnRemoveInstanceThreaded(unsigned instanceID)
   }
 }
 
-Zero::StreamingDataPerInstance* StreamingSoundAsset::GetInstanceData(unsigned instanceID)
+Raverie::StreamingDataPerInstance* StreamingSoundAsset::GetInstanceData(unsigned instanceID)
 {
   forRange (StreamingDataPerInstance& data, mDataPerInstanceList.All())
   {
@@ -366,4 +366,4 @@ void StreamingSoundAsset::CopySamplesIntoBuffer(float* outputBuffer,
         outputBuffer + samplesCopied, sampleIndex + samplesCopied, samplesRequested - samplesCopied, data);
 }
 
-} // namespace Zero
+} // namespace Raverie

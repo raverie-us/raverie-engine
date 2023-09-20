@@ -1,27 +1,27 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
 {
 DefineEvent(PreScriptCompile);
-DefineEvent(CompileZilchFragments);
+DefineEvent(CompileRaverieFragments);
 DefineEvent(ResourceLibraryConstructed);
 } // namespace Events
 
-ZilchDefineType(ZilchCompiledEvent, builder, type)
+RaverieDefineType(RaverieCompiledEvent, builder, type)
 {
 }
 
-ZilchDefineType(ZilchCompileFragmentEvent, builder, type)
+RaverieDefineType(RaverieCompileFragmentEvent, builder, type)
 {
 }
 
 // Resource Entry
-ZilchCompileFragmentEvent::ZilchCompileFragmentEvent(Module& dependencies,
-                                                     Array<ZilchDocumentResource*>& fragments,
+RaverieCompileFragmentEvent::RaverieCompileFragmentEvent(Module& dependencies,
+                                                     Array<RaverieDocumentResource*>& fragments,
                                                      ResourceLibrary* owningLibrary) :
     mDependencies(dependencies),
     mFragments(fragments),
@@ -57,7 +57,7 @@ ResourceEntry::ResourceEntry(uint order,
 
 String ResourceEntry::ToString(bool shortFormat) const
 {
-  String idString = Zero::ToString(this->mResourceId, shortFormat);
+  String idString = Raverie::ToString(this->mResourceId, shortFormat);
   return String::Format("Resource %s:%s Loader '%s'", Name.c_str(), idString.c_str(), Type.c_str());
 }
 
@@ -69,7 +69,7 @@ void ResourceEntry::Serialize(Serializer& stream)
   SerializeName(Location);
 }
 
-Zero::ResourceTemplate* ResourceEntry::GetResourceTemplate()
+Raverie::ResourceTemplate* ResourceEntry::GetResourceTemplate()
 {
   if (mLibrarySource)
     return mLibrarySource->has(ResourceTemplate);
@@ -82,7 +82,7 @@ String ResourcePackageToString(const BoundType* type, const byte* value)
   return String::Format("Resource Package %s", resourcePackage->Name.c_str());
 }
 
-ZilchDefineType(ResourcePackageDisplay, builder, type)
+RaverieDefineType(ResourcePackageDisplay, builder, type)
 {
 }
 
@@ -97,11 +97,11 @@ String ResourcePackageDisplay::GetDebugText(HandleParam object)
   return GetName(object);
 }
 
-ZilchDefineType(ResourcePackage, builder, type)
+RaverieDefineType(ResourcePackage, builder, type)
 {
   type->ToStringFunction = ResourcePackageToString;
   type->Add(new ResourcePackageDisplay());
-  type->HandleManager = ZilchManagerId(PointerManager);
+  type->HandleManager = RaverieManagerId(PointerManager);
 }
 
 ResourcePackage::ResourcePackage()
@@ -125,7 +125,7 @@ void ResourcePackage::Serialize(Serializer& stream)
 }
 
 // Compiled Library
-SwapLibrary::SwapLibrary() : mCompileStatus(ZilchCompileStatus::Modified)
+SwapLibrary::SwapLibrary() : mCompileStatus(RaverieCompileStatus::Modified)
 {
 }
 
@@ -145,7 +145,7 @@ void SwapLibrary::Commit()
 {
   if (mPendingLibrary)
   {
-    ErrorIf(mCompileStatus != ZilchCompileStatus::Compiled,
+    ErrorIf(mCompileStatus != RaverieCompileStatus::Compiled,
             "When committing and we have a pending library the compile status "
             "should have already been set to Compiled");
 
@@ -176,7 +176,7 @@ BoundType* ResourceLibrary::sScriptType = nullptr;
 BoundType* ResourceLibrary::sFragmentType = nullptr;
 bool ResourceLibrary::sLibraryUnloading = false;
 
-ZilchDefineType(ResourceLibrary, builder, type)
+RaverieDefineType(ResourceLibrary, builder, type)
 {
 }
 
@@ -185,9 +185,9 @@ ResourceLibrary::ResourceLibrary()
   Resources.Reserve(256);
 
   // When the project is compiled, we want to add extensions to it
-  EventConnect(&mScriptProject, Zilch::Events::PreParser, &ResourceLibrary::OnScriptProjectPreParser, this);
-  EventConnect(&mScriptProject, Zilch::Events::PostSyntaxer, &ResourceLibrary::OnScriptProjectPostSyntaxer, this);
-  EventConnect(&mScriptProject, Zilch::Events::TypeParsed, &EngineLibraryExtensions::TypeParsedCallback);
+  EventConnect(&mScriptProject, Raverie::Events::PreParser, &ResourceLibrary::OnScriptProjectPreParser, this);
+  EventConnect(&mScriptProject, Raverie::Events::PostSyntaxer, &ResourceLibrary::OnScriptProjectPostSyntaxer, this);
+  EventConnect(&mScriptProject, Raverie::Events::TypeParsed, &EngineLibraryExtensions::TypeParsedCallback);
 
   ObjectEvent toSend(this);
   Z::gResources->DispatchEvent(Events::ResourceLibraryConstructed, &toSend);
@@ -202,22 +202,22 @@ void ResourceLibrary::Add(Resource* resource, bool isNew)
   resource->mResourceLibrary = this;
   Resources.PushBack(resource);
 
-  // Filter zilch resources into their appropriate containers
+  // Filter raverie resources into their appropriate containers
   ErrorIf(sScriptType == nullptr || sFragmentType == nullptr, "Script and Fragment types must be set");
-  BoundType* resourceType = ZilchVirtualTypeId(resource);
+  BoundType* resourceType = RaverieVirtualTypeId(resource);
   if (resourceType->IsA(sScriptType))
   {
-    mScripts.PushBack((ZilchDocumentResource*)resource);
+    mScripts.PushBack((RaverieDocumentResource*)resource);
     ScriptsModified();
   }
   else if (resourceType->IsA(sFragmentType))
   {
-    mFragments.PushBack((ZilchDocumentResource*)resource);
+    mFragments.PushBack((RaverieDocumentResource*)resource);
     FragmentsModified();
   }
-  else if (resourceType->IsA(ZilchTypeId(ZilchLibraryResource)))
+  else if (resourceType->IsA(RaverieTypeId(RaverieLibraryResource)))
   {
-    mPlugins.PushBack((ZilchLibraryResource*)resource);
+    mPlugins.PushBack((RaverieLibraryResource*)resource);
     PluginsModified();
   }
 
@@ -241,21 +241,21 @@ void ResourceLibrary::Remove(Resource* resource)
 
   Resources.EraseValueError(resourceHandle);
 
-  // Remove zilch resources from their containers
-  BoundType* resourceType = ZilchVirtualTypeId(resource);
+  // Remove raverie resources from their containers
+  BoundType* resourceType = RaverieVirtualTypeId(resource);
   if (resourceType->IsA(sScriptType))
   {
-    mScripts.EraseValue((ZilchDocumentResource*)resource);
+    mScripts.EraseValue((RaverieDocumentResource*)resource);
     ScriptsModified();
   }
   else if (resourceType->IsA(sFragmentType))
   {
-    mFragments.EraseValue((ZilchDocumentResource*)resource);
+    mFragments.EraseValue((RaverieDocumentResource*)resource);
     FragmentsModified();
   }
-  else if (resourceType->IsA(ZilchTypeId(ZilchLibraryResource)))
+  else if (resourceType->IsA(RaverieTypeId(RaverieLibraryResource)))
   {
-    ZilchLibraryResource* libraryResource = (ZilchLibraryResource*)resource;
+    RaverieLibraryResource* libraryResource = (RaverieLibraryResource*)resource;
     mPlugins.EraseValue(libraryResource);
     mSwapPlugins[libraryResource].Unload();
     mSwapPlugins.Erase(libraryResource);
@@ -355,7 +355,7 @@ void ResourceLibrary::Unload()
     if (resource != nullptr && resource->GetReferenceCount() != 1)
     {
       // Report error and manually delete the resource.
-      String resourceType = resource->ZilchGetDerivedType()->Name;
+      String resourceType = resource->RaverieGetDerivedType()->Name;
       String error = String::Format("%s resource '%s' is being referenced while unloading library '%s'.",
                                     resourceType.c_str(),
                                     resource->Name.c_str(),
@@ -396,8 +396,8 @@ void ResourceLibrary::Unload()
 
 void ResourceLibrary::ScriptsModified()
 {
-  mSwapScript.mCompileStatus = ZilchCompileStatus::Modified;
-  ZilchManager::GetInstance()->mShouldAttemptCompile = true;
+  mSwapScript.mCompileStatus = RaverieCompileStatus::Modified;
+  RaverieManager::GetInstance()->mShouldAttemptCompile = true;
 
   // All dependents must be recompiled, so mark them as modified
   forRange (ResourceLibrary* dependent, Dependents.All())
@@ -406,9 +406,9 @@ void ResourceLibrary::ScriptsModified()
 
 void ResourceLibrary::FragmentsModified()
 {
-  mSwapScript.mCompileStatus = ZilchCompileStatus::Modified;
-  mSwapFragment.mCompileStatus = ZilchCompileStatus::Modified;
-  ZilchManager::GetInstance()->mShouldAttemptCompile = true;
+  mSwapScript.mCompileStatus = RaverieCompileStatus::Modified;
+  mSwapFragment.mCompileStatus = RaverieCompileStatus::Modified;
+  RaverieManager::GetInstance()->mShouldAttemptCompile = true;
 
   // All dependents must be recompiled, so mark them as modified
   forRange (ResourceLibrary* dependent, Dependents.All())
@@ -487,12 +487,12 @@ bool ResourceLibrary::CompileScripts(HashSet<ResourceLibrary*>& modifiedLibrarie
 {
   // If we already compiled, then we know that all dependent libraries must have
   // been good This means that if we ever referenced
-  if (mSwapScript.mCompileStatus == ZilchCompileStatus::Compiled)
+  if (mSwapScript.mCompileStatus == RaverieCompileStatus::Compiled)
     return true;
 
   // Currently the version is used to detect duplicate errors
   // Since scripts are changing, we definitely want to show duplicate errors.
-  ++ZilchManager::GetInstance()->mVersion;
+  ++RaverieManager::GetInstance()->mVersion;
 
   // Scripts cannot compile if fragments do not compile
   if (CompileFragments(modifiedLibrariesOut) == false)
@@ -531,7 +531,7 @@ bool ResourceLibrary::CompileScripts(HashSet<ResourceLibrary*>& modifiedLibrarie
   mScriptProject.Clear();
 
   // Add all scripts
-  forRange (ZilchDocumentResource* script, mScripts)
+  forRange (RaverieDocumentResource* script, mScripts)
   {
     // Templates shouldn't be compiled. They contain potentially invalid code
     // and identifiers such as RESOURCE_NAME_ that are replaced when a new
@@ -545,7 +545,7 @@ bool ResourceLibrary::CompileScripts(HashSet<ResourceLibrary*>& modifiedLibrarie
   if (mSwapScript.mPendingLibrary != nullptr)
   {
     modifiedLibrariesOut.Insert(this);
-    mSwapScript.mCompileStatus = ZilchCompileStatus::Compiled;
+    mSwapScript.mCompileStatus = RaverieCompileStatus::Compiled;
     return true;
   }
 
@@ -556,7 +556,7 @@ bool ResourceLibrary::CompileFragments(HashSet<ResourceLibrary*>& modifiedLibrar
 {
   // If we already compiled, then we know that all dependent libraries must have
   // been good
-  if (mSwapFragment.mCompileStatus == ZilchCompileStatus::Compiled)
+  if (mSwapFragment.mCompileStatus == RaverieCompileStatus::Compiled)
     return true;
 
   Module dependencies;
@@ -569,15 +569,15 @@ bool ResourceLibrary::CompileFragments(HashSet<ResourceLibrary*>& modifiedLibrar
   // By this point, we've already compiled all our dependencies
   ZPrint("  Compiling %s Fragments\n", this->Name.c_str());
 
-  ZilchCompileFragmentEvent e(dependencies, mFragments, this);
-  ZilchManager::GetInstance()->DispatchEvent(Events::CompileZilchFragments, &e);
+  RaverieCompileFragmentEvent e(dependencies, mFragments, this);
+  RaverieManager::GetInstance()->DispatchEvent(Events::CompileRaverieFragments, &e);
   mSwapFragment.mPendingLibrary = e.mReturnedLibrary;
 
   if (mSwapFragment.mPendingLibrary != nullptr)
   {
     modifiedLibraries.Insert(this);
-    ZilchManager::GetInstance()->mPendingFragmentProjectLibrary = mSwapFragment.mPendingLibrary;
-    mSwapFragment.mCompileStatus = ZilchCompileStatus::Compiled;
+    RaverieManager::GetInstance()->mPendingFragmentProjectLibrary = mSwapFragment.mPendingLibrary;
+    mSwapFragment.mCompileStatus = RaverieCompileStatus::Compiled;
     return true;
   }
 
@@ -615,4 +615,4 @@ void ResourceLibrary::Commit()
   mSwapScript.Commit();
 }
 
-} // namespace Zero
+} // namespace Raverie

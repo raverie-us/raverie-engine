@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Proxy Objects
@@ -29,7 +29,7 @@ DeclareEnum4(SetupMode,
 class CogComponentMeta : public ReferenceCountedEventObject
 {
 public:
-  ZilchDeclareType(CogComponentMeta, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CogComponentMeta, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   CogComponentMeta(BoundType* owner);
@@ -78,7 +78,7 @@ struct MetaCreationContext
 class MetaComposition : public ReferenceCountedEventObject
 {
 public:
-  ZilchDeclareType(MetaComposition, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MetaComposition, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   MetaComposition(BoundType* componentType);
@@ -206,7 +206,7 @@ typedef Handle (*GetOwnerFunction)(HandleParam object);
 class MetaOwner : public ReferenceCountedEventObject
 {
 public:
-  ZilchDeclareType(MetaOwner, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MetaOwner, TypeCopyMode::ReferenceType);
   MetaOwner(GetOwnerFunction func) : mGetOwner(func)
   {
   }
@@ -216,4 +216,4 @@ public:
   GetOwnerFunction mGetOwner;
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 //                                  RawPacket //
@@ -39,7 +39,7 @@ struct MoveWithoutDestructionOperator<RawPacket>
 {
   static inline void MoveWithoutDestruction(RawPacket* dest, RawPacket* source)
   {
-    new (dest) RawPacket(ZeroMove(*source));
+    new (dest) RawPacket(RaverieMove(*source));
   }
 };
 
@@ -161,7 +161,7 @@ struct MoveWithoutDestructionOperator<OutPacket>
 {
   static inline void MoveWithoutDestruction(OutPacket* dest, OutPacket* source)
   {
-    new (dest) OutPacket(ZeroMove(*source));
+    new (dest) OutPacket(RaverieMove(*source));
   }
 };
 
@@ -218,7 +218,7 @@ struct MoveWithoutDestructionOperator<InPacket>
 {
   static inline void MoveWithoutDestruction(InPacket* dest, InPacket* source)
   {
-    new (dest) InPacket(ZeroMove(*source));
+    new (dest) InPacket(RaverieMove(*source));
   }
 };
 
@@ -254,4 +254,4 @@ static const Bytes TypicalPacketDataBytes = BITS_TO_BYTES(TypicalPacketDataBits)
 static const Bits MinPacketDataBits = MinPacketBits - MaxPacketHeaderBits;
 static const Bytes MinPacketDataBytes = BITS_TO_BYTES(MinPacketDataBits);
 
-} // namespace Zero
+} // namespace Raverie

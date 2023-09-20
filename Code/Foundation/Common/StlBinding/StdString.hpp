@@ -3,7 +3,7 @@
 
 #include "Hashing.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 class StdString : public std::basic_string<char, std::char_traits<char>, Zallocator<char>>
@@ -14,7 +14,7 @@ public:
   {
   }
 
-  StdString(Zero::StringRange r) : base_type(r.mBegin, r.mEnd)
+  StdString(Raverie::StringRange r) : base_type(r.mBegin, r.mEnd)
   {
   }
 
@@ -50,18 +50,18 @@ struct HashPolicy<StdString> : public ComparePolicy<StdString>
   }
 };
 
-} // namespace Zero
+} // namespace Raverie
 
 // Define a tr1::hash so the string class can be used with std::tr1::hash_map
 namespace std
 {
 template <>
-class hash<Zero::StdString>
+class hash<Raverie::StdString>
 {
 public:
-  inline size_t operator()(const Zero::StdString& str) const
+  inline size_t operator()(const Raverie::StdString& str) const
   {
-    return Zero::HashString(str.c_str(), str.size());
+    return Raverie::HashString(str.c_str(), str.size());
   }
 };
 } // namespace std

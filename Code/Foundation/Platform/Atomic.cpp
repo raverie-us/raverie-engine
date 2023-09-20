@@ -2,7 +2,7 @@
 #include "Precompiled.hpp"
 #include <atomic>
 
-namespace Zero
+namespace Raverie
 {
 
 static_assert(sizeof(s8) == sizeof(std::atomic<s8>),
@@ -258,4 +258,4 @@ s64 AtomicPostDecrement(volatile s64* target)
   return AtomicFetchSubtract(target, s64(1));
 }
 
-} // namespace Zero
+} // namespace Raverie

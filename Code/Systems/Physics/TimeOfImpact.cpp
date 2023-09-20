@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-using namespace Zero;
+using namespace Raverie;
 
 namespace
 {
@@ -526,7 +526,7 @@ InvokeTimeOfImpactInit sInvokeInit;
 
 } // unnamed namespace
 
-namespace Zero
+namespace Raverie
 {
 
 void TimeOfImpact(TimeOfImpactData* data)
@@ -542,4 +542,4 @@ void TimeOfImpact(TimeOfImpactData* data)
   function(data);
 }
 
-} // namespace Zero
+} // namespace Raverie

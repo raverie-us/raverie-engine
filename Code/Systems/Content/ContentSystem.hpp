@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class ContentComposition;
@@ -61,7 +61,7 @@ DeclareEvent(PackageBuilt);
 class ContentSystemEvent : public Event
 {
 public:
-  ZilchDeclareType(ContentSystemEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ContentSystemEvent, TypeCopyMode::ReferenceType);
 
   ContentLibrary* mLibrary;
   HandleOf<ResourcePackage> mPackage;
@@ -115,7 +115,7 @@ void ShutdownContentSystem();
 class ContentSystem : public ExplicitSingleton<ContentSystem, EventObject>
 {
 public:
-  ZilchDeclareType(ContentSystem, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ContentSystem, TypeCopyMode::ReferenceType);
 
   ContentSystem();
   ~ContentSystem();
@@ -206,4 +206,4 @@ namespace Z
 extern ContentSystem* gContentSystem;
 } // namespace Z
 
-} // namespace Zero
+} // namespace Raverie

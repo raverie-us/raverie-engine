@@ -1,12 +1,12 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Z
 {
-Array<NotificationCallback> gNotifyCallbackStack(ZeroInit, DefaultDoNotify);
+Array<NotificationCallback> gNotifyCallbackStack(RaverieInit, DefaultDoNotify);
 }
 
 namespace Events
@@ -14,7 +14,7 @@ namespace Events
 DefineEvent(Notify);
 }
 
-ZilchDefineType(NotifyEvent, builder, type)
+RaverieDefineType(NotifyEvent, builder, type)
 {
 }
 
@@ -89,4 +89,4 @@ void DoNotifyStatus(Status& status)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

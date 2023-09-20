@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 ArchetypeProcessor::ArchetypeProcessor(GeneratedArchetype* generatedArchetype, HierarchyDataMap& hierarchyData) :
@@ -69,4 +69,4 @@ void ArchetypeProcessor::ExportSceneGraph(String filename, String outputPath)
   SaveToDataFile(mSceneSource, graphFile);
 }
 
-} // namespace Zero
+} // namespace Raverie

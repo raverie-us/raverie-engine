@@ -1,12 +1,12 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-void AddPropertyRenamedAttribute(Zilch::ParseEvent* e, Property* property, Attribute* attribute);
+void AddPropertyRenamedAttribute(Raverie::ParseEvent* e, Property* property, Attribute* attribute);
 
-// Zero Library Extensions
+// Raverie Library Extensions
 void MetaLibraryExtensions::AddNativeExtensions(LibraryBuilder& builder)
 {
   return AddNativeExtensions(builder, builder.BoundTypes);
@@ -32,7 +32,7 @@ void MetaLibraryExtensions::AddExtensionsPostCompilation(LibraryBuilder& builder
 {
 }
 
-void MetaLibraryExtensions::TypeParsedCallback(Zilch::ParseEvent* e, void* userData)
+void MetaLibraryExtensions::TypeParsedCallback(Raverie::ParseEvent* e, void* userData)
 {
   BoundType* type = e->Type;
 
@@ -58,7 +58,7 @@ void MetaLibraryExtensions::TypeParsedCallback(Zilch::ParseEvent* e, void* userD
   }
 }
 
-// Get a component from a Zero Object in Zilch
+// Get a component from a Raverie Object in Raverie
 void GetComponent(Call& call, ExceptionReport& report)
 {
   Function* currentFunction = call.GetFunction();
@@ -108,7 +108,7 @@ void MetaLibraryExtensions::AddCompositionExtension(LibraryBuilder& builder,
   }
 }
 
-void AddPropertyRenamedAttribute(Zilch::ParseEvent* e, Property* property, Attribute* attribute)
+void AddPropertyRenamedAttribute(Raverie::ParseEvent* e, Property* property, Attribute* attribute)
 {
   cstr msg = "RenamedFrom attribute must have a string parameter of the old "
              "property name (i.e. \"[RenamedFrom(\"CurrentHealth\"]\"";
@@ -140,4 +140,4 @@ void AddPropertyRenamedAttribute(Zilch::ParseEvent* e, Property* property, Attri
   property->Add(new MetaPropertyRename(param.StringValue));
 }
 
-} // namespace Zero
+} // namespace Raverie

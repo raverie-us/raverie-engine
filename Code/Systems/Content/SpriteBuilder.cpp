@@ -1,26 +1,26 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(SpriteSourceBuilder, builder, type)
+RaverieDefineType(SpriteSourceBuilder, builder, type)
 {
-  ZeroBindDependency(ImageContent);
+  RaverieBindDependency(ImageContent);
 
-  ZilchBindFieldProperty(OriginX);
-  ZilchBindFieldProperty(OriginY);
+  RaverieBindFieldProperty(OriginX);
+  RaverieBindFieldProperty(OriginY);
 
-  ZilchBindFieldProperty(Looping);
+  RaverieBindFieldProperty(Looping);
 
-  ZilchBindFieldProperty(Sampling);
-  ZilchBindFieldProperty(PixelsPerUnit);
+  RaverieBindFieldProperty(Sampling);
+  RaverieBindFieldProperty(PixelsPerUnit);
 
-  ZilchBindGetterSetterProperty(Fill);
-  ZilchBindGetterSetterProperty(Left);
-  ZilchBindGetterSetterProperty(Right);
-  ZilchBindGetterSetterProperty(Top);
-  ZilchBindGetterSetterProperty(Bottom);
+  RaverieBindGetterSetterProperty(Fill);
+  RaverieBindGetterSetterProperty(Left);
+  RaverieBindGetterSetterProperty(Right);
+  RaverieBindGetterSetterProperty(Top);
+  RaverieBindGetterSetterProperty(Bottom);
 }
 
 SpriteSourceBuilder::SpriteSourceBuilder() : DirectBuilderComponent(6, ".png", "SpriteSource")
@@ -77,7 +77,7 @@ void SpriteSourceBuilder::SetBottom(int value)
   Slices[NineSlices::Bottom] = (float)value;
 }
 
-ZilchDefineType(SpriteData, builder, type)
+RaverieDefineType(SpriteData, builder, type)
 {
   type->AddAttribute(ObjectAttributes::cHidden);
 }
@@ -148,4 +148,4 @@ void SpriteData::Serialize(Serializer& stream)
   SerializeEnumName(SpriteFill, Fill);
 }
 
-} // namespace Zero
+} // namespace Raverie

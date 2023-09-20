@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // CallBack0
@@ -208,4 +208,4 @@ Callback3<ReturnType, P0, P1, P2>* CreateCallback(ReturnType (InstanceType::*fun
   return callback;
 }
 
-} // namespace Zero
+} // namespace Raverie

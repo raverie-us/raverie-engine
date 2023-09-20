@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 Plane::Plane()
@@ -87,4 +87,4 @@ const Vec4& Plane::GetData() const
   return mData;
 }
 
-} // namespace Zero
+} // namespace Raverie

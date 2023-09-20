@@ -1,14 +1,14 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Emits particles inside a sphere
 class SphericalParticleEmitter : public ParticleEmitterShared
 {
 public:
-  ZilchDeclareType(SphericalParticleEmitter, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SphericalParticleEmitter, TypeCopyMode::ReferenceType);
 
   SphericalParticleEmitter();
   ~SphericalParticleEmitter();
@@ -28,7 +28,7 @@ private:
 class BoxParticleEmitter : public ParticleEmitterShared
 {
 public:
-  ZilchDeclareType(BoxParticleEmitter, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(BoxParticleEmitter, TypeCopyMode::ReferenceType);
 
   BoxParticleEmitter();
   ~BoxParticleEmitter();
@@ -48,7 +48,7 @@ DeclareEnum3(MeshEmitMode, Vertex, Edge, Face);
 class MeshParticleEmitter : public ParticleEmitterShared
 {
 public:
-  ZilchDeclareType(MeshParticleEmitter, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MeshParticleEmitter, TypeCopyMode::ReferenceType);
 
   MeshParticleEmitter();
   ~MeshParticleEmitter();
@@ -87,4 +87,4 @@ private:
   Math::WeightedProbabilityTable<Edge> mEdgeTable;
 };
 
-} // namespace Zero
+} // namespace Raverie

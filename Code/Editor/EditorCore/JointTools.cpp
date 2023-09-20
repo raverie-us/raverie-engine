@@ -1,20 +1,20 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(JointTool, builder, type)
+RaverieDefineType(JointTool, builder, type)
 {
-  ZeroBindComponent();
-  ZilchBindGetterSetterProperty(OverrideLength);
-  ZilchBindGetterSetterProperty(Length);
-  ZilchBindGetterSetterProperty(MaxImpulse);
-  ZilchBindGetterSetterProperty(UseCenter);
-  ZilchBindGetterSetterProperty(AutoSnaps);
-  ZilchBindGetterSetterProperty(AttachToWorld);
-  ZilchBindGetterSetterProperty(AttachToCommonParent);
-  ZilchBindFieldProperty(mJointType);
+  RaverieBindComponent();
+  RaverieBindGetterSetterProperty(OverrideLength);
+  RaverieBindGetterSetterProperty(Length);
+  RaverieBindGetterSetterProperty(MaxImpulse);
+  RaverieBindGetterSetterProperty(UseCenter);
+  RaverieBindGetterSetterProperty(AutoSnaps);
+  RaverieBindGetterSetterProperty(AttachToWorld);
+  RaverieBindGetterSetterProperty(AttachToCommonParent);
+  RaverieBindFieldProperty(mJointType);
 }
 
 JointTool::JointTool()
@@ -57,4 +57,4 @@ cstr JointTool::GetJointName()
   return JointToolTypes::Names[mJointType];
 }
 
-} // namespace Zero
+} // namespace Raverie

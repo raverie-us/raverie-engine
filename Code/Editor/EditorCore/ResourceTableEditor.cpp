@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 ResourceTableEntryChangeOp::ResourceTableEntryChangeOp(ResourceTableEditor* editor,
@@ -722,9 +722,9 @@ void ResourceWeightedTableView::CreateItem(StringParam name, StringParam value, 
   entry.mProbability->HideBackground(true);
 
   // listen to when any of these items are changed
-  Zero::Connect(entry.mProbability, Events::TextBoxChanged, entry.mBar, &WeightedTableBar::OnProbabilityChanged);
-  Zero::Connect(entry.mNameTag, Events::TextBoxChanged, entry.mBar, &WeightedTableBar::OnNameChanged);
-  Zero::Connect(entry.mValueTag, Events::TextBoxChanged, entry.mBar, &WeightedTableBar::OnValueChanged);
+  Raverie::Connect(entry.mProbability, Events::TextBoxChanged, entry.mBar, &WeightedTableBar::OnProbabilityChanged);
+  Raverie::Connect(entry.mNameTag, Events::TextBoxChanged, entry.mBar, &WeightedTableBar::OnNameChanged);
+  Raverie::Connect(entry.mValueTag, Events::TextBoxChanged, entry.mBar, &WeightedTableBar::OnValueChanged);
 }
 
 void ResourceWeightedTableView::DuplicateItem(uint index)
@@ -1255,7 +1255,7 @@ public:
     Array<int> indices;
     for (size_t i = 0; i < mEntriesToMove.Size(); ++i)
       indices.PushBack(table->mEntryList.FindIndex(mEntriesToMove[i]));
-    Zero::Sort(indices.All());
+    Raverie::Sort(indices.All());
 
     // Now we can actually batch move all of the indices
     BatchMove(mDestinationEntry, indices, mInsertMode);
@@ -1829,4 +1829,4 @@ void ResourceTableEditor::RemapResources()
   Rebuild();
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -2,7 +2,7 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 void LoadTexture(StringParam filename, Texture* texture)
@@ -95,4 +95,4 @@ HandleOf<Resource> TextureLoader::LoadFromBlock(ResourceEntry& entry)
   return nullptr;
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -6,7 +6,7 @@
 #include "Foundation/Meta/MetaStandard.hpp"
 #include "Foundation/Support/SupportStandard.hpp"
 
-namespace Zero
+namespace Raverie
 {
 // Forward declarations
 class Cog;
@@ -30,10 +30,10 @@ class SavingEvent;
 class DocumentResource;
 
 // Engine library
-class EngineLibrary : public Zilch::StaticLibrary
+class EngineLibrary : public Raverie::StaticLibrary
 {
 public:
-  ZilchDeclareStaticLibraryInternals(EngineLibrary);
+  RaverieDeclareStaticLibraryInternals(EngineLibrary);
 
   static bool Initialize();
   static void Shutdown();
@@ -41,7 +41,7 @@ public:
 private:
 };
 
-} // namespace Zero
+} // namespace Raverie
 
 #include "Rectangle.hpp"
 #include "ResourceManager/Resource.hpp"
@@ -58,7 +58,7 @@ private:
 #include "CogMeta.hpp"
 #include "Space.hpp"
 #include "DocumentResource.hpp"
-#include "Scripting/ZilchResource.hpp"
+#include "Scripting/RaverieResource.hpp"
 #include "ResourceManager/ResourceLibrary.hpp"
 #include "JobSystem.hpp"
 #include "EngineEvents.hpp"
@@ -138,7 +138,7 @@ private:
 #include "ComponentHierarchy.hpp"
 #include "DataSource.hpp"
 #include "EngineLibraryExtensions.hpp"
-#include "Scripting/ZilchManager.hpp"
+#include "Scripting/RaverieManager.hpp"
 #include "Spline.hpp"
 #include "HierarchySpline.hpp"
 #include "BackgroundTask.hpp"

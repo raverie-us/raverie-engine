@@ -3,11 +3,11 @@
 #include "String/String.hpp"
 #include "Utility/Status.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 bool IsValidFilename(StringParam filename, Status& status);
 
 String ConvertToValidName(StringParam source);
 
-} // namespace Zero
+} // namespace Raverie

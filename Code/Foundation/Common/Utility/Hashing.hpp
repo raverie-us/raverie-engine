@@ -10,7 +10,7 @@
 // duplicate definition compiler error since a specialization of int already
 // exists.
 
-namespace Zero
+namespace Raverie
 {
 
 size_t HashString(const char* str, size_t size);
@@ -254,4 +254,4 @@ struct has_valid_hash_policy : public integral_constant<bool, has_valid_hash_pol
 {
 };
 
-} // namespace Zero
+} // namespace Raverie

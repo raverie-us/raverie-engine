@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// A random object that contains its own unique random state apart
@@ -9,7 +9,7 @@ namespace Zero
 class RandomContext : public Component
 {
 public:
-  ZilchDeclareType(RandomContext, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(RandomContext, TypeCopyMode::ReferenceType);
 
   void Serialize(Serializer& stream);
 
@@ -118,4 +118,4 @@ private:
   bool mRandomSeed;
 };
 
-} // namespace Zero
+} // namespace Raverie

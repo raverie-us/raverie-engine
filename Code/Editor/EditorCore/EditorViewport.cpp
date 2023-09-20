@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace ViewportMenuUi
@@ -17,7 +17,7 @@ Tweakable(bool, EditorViewportAutoTakeFocus, true, cLocation);
 Tweakable(float, DragSelectDistance, 5, cLocation);
 } // namespace EditorUiSettings
 
-ZilchDefineType(EditorViewport, builder, type)
+RaverieDefineType(EditorViewport, builder, type)
 {
 }
 
@@ -330,7 +330,7 @@ void EditorViewport::OnSpaceLevelLoaded(Event* event)
   if (levelSettings == NULL)
   {
     levelSettings = Z::gFactory->CreateCheckedType(
-        ZilchTypeId(Cog), editSpace, CoreArchetypes::LevelSettings, 0, editSpace->GetGameSession());
+        RaverieTypeId(Cog), editSpace, CoreArchetypes::LevelSettings, 0, editSpace->GetGameSession());
     levelSettings->ClearArchetype();
   }
 
@@ -785,46 +785,24 @@ void EditorViewport::OnKeyDown(KeyboardEvent* e)
   if (commands->TestCommandKeyboardShortcuts(e))
     return;
 
-  // Ctrl for standard commands
-  if (e->CtrlPressed)
+  if (e->Key == Keys::Tab)
   {
-    // if(event->Key == Keys::L)
-    //{
-    //  ToggleLighting();
-    //}
-  }
-  else
-  {
-    // if(e->Key == Keys::F12)
-    //{
-    //  String fileName = BuildString("ZeroScreenShot-", GetTimeAndDateStamp(),
-    //  ".png"); String filePath =
-    //  FilePath::Combine(GetUserDocumentsDirectory(), fileName);
-    //  this->ScreenCapture(filePath);
-
-    //  //Print to console only
-    //  ZPrint("Screen Shot Taken %s\n", filePath.c_str());
-    //}
-
-    if (e->Key == Keys::Tab)
+    if (Space* space = mEditSpace)
     {
-      if (Space* space = mEditSpace)
+      // Only unpause / pause the game if it is
+      // not the space that is being edited
+      // used for edit in game
+      if (!space->IsEditorMode())
       {
-        // Only unpause / pause the game if it is
-        // not the space that is being edited
-        // used for edit in game
-        if (!space->IsEditorMode())
-        {
-          if (TimeSpace* ts = mEditSpace.has(TimeSpace))
-            ts->TogglePause();
-        }
+        if (TimeSpace* ts = mEditSpace.has(TimeSpace))
+          ts->TogglePause();
       }
     }
+  }
 
-    if (e->Key == Keys::Space)
-    {
-      Z::gEditor->OpenSearchWindow(this);
-    }
+  if (e->Key == Keys::Space)
+  {
+    Z::gEditor->OpenSearchWindow(this);
   }
 
   if (EditorCameraController* controller = mEditorCamera.has(EditorCameraController))
@@ -987,4 +965,4 @@ void EditorViewport::OnSettingsChanged(Event* event)
   ConfigureViewCube(settings->mViewCube, settings->mViewCubeSize);
 }
 
-} // namespace Zero
+} // namespace Raverie

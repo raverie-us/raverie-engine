@@ -2,10 +2,10 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(Atlas, builder, type)
+RaverieDefineType(Atlas, builder, type)
 {
   type->AddAttribute(ObjectAttributes::cHidden);
 }
@@ -209,4 +209,4 @@ void AtlasManager::RemoveSpriteSource(SpriteSource* source)
   source->mAtlas = nullptr;
 }
 
-} // namespace Zero
+} // namespace Raverie

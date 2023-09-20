@@ -2,7 +2,7 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 // Sound
 
@@ -12,14 +12,14 @@ String SoundToString(const BoundType* type, const byte* instance)
   return BuildString("Sound: ", sound->Name);
 }
 
-ZilchDefineType(Sound, builder, type)
+RaverieDefineType(Sound, builder, type)
 {
   type->ToStringFunction = SoundToString;
   type->Add(new SoundDisplay());
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindGetterProperty(Length);
-  ZilchBindGetterProperty(Channels);
+  RaverieBindGetterProperty(Length);
+  RaverieBindGetterProperty(Channels);
 }
 
 void Sound::CreateAsset(Status& status, StringParam assetName, StringParam fileName, AudioFileLoadType::Enum loadType)
@@ -93,7 +93,7 @@ bool Sound::GetStreaming()
 
 // Sound Display
 
-ZilchDefineType(SoundDisplay, builder, type)
+RaverieDefineType(SoundDisplay, builder, type)
 {
 }
 
@@ -141,7 +141,7 @@ void SoundLoader::ReloadFromFile(Resource* resource, ResourceEntry& entry)
 
 bool SoundLoader::LoadSound(Sound* sound, ResourceEntry& entry)
 {
-  Zero::Status status;
+  Raverie::Status status;
   sound->CreateAsset(status, entry.Name, entry.FullPath.c_str(), mLoadType);
 
   if (status.Failed())
@@ -171,4 +171,4 @@ SoundManager::SoundManager(BoundType* resourceType) : ResourceManager(resourceTy
   DefaultResourceName = "DefaultSound";
 }
 
-} // namespace Zero
+} // namespace Raverie

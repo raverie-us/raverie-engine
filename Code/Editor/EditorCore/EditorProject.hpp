@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class Cog;
@@ -19,4 +19,4 @@ void OpenProject();
 void UnloadProject(Editor* editor, Cog* projectCog);
 void LoadProject(Editor* editor, Cog* projectCog, StringParam path, StringParam projectFile);
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 namespace Events
 {
@@ -137,7 +137,7 @@ DeclareEnum4(PathFinderStatus, Pending, Succeeded, Failed, Cancelled);
 class PathFinderRequest : public ReferenceCountedThreadSafeId32EventObject
 {
 public:
-  ZilchDeclareType(PathFinderRequest, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(PathFinderRequest, TypeCopyMode::ReferenceType);
 
   PathFinderRequest(PathFinder* owner, Job* job);
 
@@ -163,7 +163,7 @@ public:
 class PathFinder : public Component
 {
 public:
-  ZilchDeclareType(PathFinder, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(PathFinder, TypeCopyMode::ReferenceType);
 
   PathFinder();
 
@@ -189,7 +189,7 @@ public:
                                                const NodeKey& goal,
                                                size_t maxIterations)
   {
-    HandleOf<ArrayClass<NodeKey>> array = ZilchAllocate(ArrayClass<NodeKey>);
+    HandleOf<ArrayClass<NodeKey>> array = RaverieAllocate(ArrayClass<NodeKey>);
     algorithm->FindNodePath(start, goal, array->NativeArray, maxIterations);
     return array;
   }
@@ -261,7 +261,7 @@ public:
 class PathFinderBaseEvent : public Event
 {
 public:
-  ZilchDeclareType(PathFinderBaseEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(PathFinderBaseEvent, TypeCopyMode::ReferenceType);
 
   PathFinderBaseEvent() : mDuration(0)
   {
@@ -280,7 +280,7 @@ template <typename NodeKey>
 class PathFinderEvent : public PathFinderBaseEvent
 {
 public:
-  ZilchDeclareType(PathFinderEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(PathFinderEvent, TypeCopyMode::ReferenceType);
 
   // PathFinderBaseEvent Interface
   size_t GenericGetPathNodeCount() override
@@ -306,7 +306,7 @@ public:
 
   HandleOf<ArrayClass<NodeKey>> GetPath()
   {
-    HandleOf<ArrayClass<NodeKey>> array = ZilchAllocate(ArrayClass<NodeKey>);
+    HandleOf<ArrayClass<NodeKey>> array = RaverieAllocate(ArrayClass<NodeKey>);
     array->NativeArray = mPath;
     return array;
   }
@@ -317,11 +317,11 @@ public:
 };
 
 template <typename NodeKey>
-ZilchDefineType(PathFinderEvent<NodeKey>, builder, type)
+RaverieDefineType(PathFinderEvent<NodeKey>, builder, type)
 {
-  ZilchBindFieldGetter(mStart);
-  ZilchBindFieldGetter(mGoal);
-  ZilchBindGetter(Path);
+  RaverieBindFieldGetter(mStart);
+  RaverieBindFieldGetter(mGoal);
+  RaverieBindGetter(Path);
 }
 
 template <typename NodeKey, typename Algorithm>
@@ -369,4 +369,4 @@ public:
   bool mCancel;
 };
 
-} // namespace Zero
+} // namespace Raverie

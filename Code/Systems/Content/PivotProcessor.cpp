@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 PivotProcessor::PivotProcessor(HierarchyDataMap& hierarchyData,
@@ -206,4 +206,4 @@ Mat4 PivotProcessor::GetLocalTransfromFromAnimation(aiNodeAnim* animationNode)
   return BuildTransform(translation, rotation, scale);
 }
 
-} // namespace Zero
+} // namespace Raverie

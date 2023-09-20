@@ -1,10 +1,10 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(ImageContent, builder, type)
+RaverieDefineType(ImageContent, builder, type)
 {
 }
 
@@ -100,7 +100,7 @@ void CreateImageContent(ContentSystem* system)
 
   AddContent<ImageContent>(system);
 
-  ContentTypeEntry imageContent(ZilchTypeId(ImageContent), MakeImageContentItem);
+  ContentTypeEntry imageContent(RaverieTypeId(ImageContent), MakeImageContentItem);
 
   // The extensions returned are always without the '.', e.g. "png"
   forRange (StringParam extension, GetSupportedImageLoadExtensions())
@@ -123,4 +123,4 @@ void BuildImageFileDialogFilters(Array<FileDialogFilter>& filters)
     filters.PushBack(FileDialogFilter(BuildString("*.", extension)));
 }
 
-} // namespace Zero
+} // namespace Raverie

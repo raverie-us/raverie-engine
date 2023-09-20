@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 MeshProcessor::MeshProcessor(MeshBuilder* meshBuilder, MeshDataMap& meshDataMap) :
@@ -386,4 +386,4 @@ void MeshProcessor::WriteCombinedMesh(String outputPath)
 {
 }
 
-} // namespace Zero
+} // namespace Raverie

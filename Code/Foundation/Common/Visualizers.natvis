@@ -69,7 +69,7 @@
       </Synthetic>
     </Expand>
   </Type>
-  <Type Name="Zero::String">
+  <Type Name="Raverie::String">
     <DisplayString>{mNode->Data, s}</DisplayString>
     <Expand>
       <Item Name="Data">mNode->Data</Item>
@@ -88,30 +88,30 @@
       </Synthetic>
     </Expand>
   </Type>
-  <Type Name="Zero::Pair&lt;*&gt;">
+  <Type Name="Raverie::Pair&lt;*&gt;">
     <DisplayString>({first}, {second})</DisplayString>
   </Type>
-  <Type Name="Zero::StringRange">
+  <Type Name="Raverie::StringRange">
     <DisplayString>{mBegin,[mEnd - mBegin] }</DisplayString>
     <Expand>
       <Item Name="Size">mEnd - mBegin</Item>
     </Expand>
   </Type>
-  <Type Name="Zero::FixedString&lt;*&gt;">
+  <Type Name="Raverie::FixedString&lt;*&gt;">
     <DisplayString>{mData, s}</DisplayString>
     <Expand>
       <Item Name="Data">mData</Item>
       <Item Name="Size">mSize</Item>
     </Expand>
   </Type>
-  <Type Name="Zero::HashedContainer&lt;*&gt;::Node">
+  <Type Name="Raverie::HashedContainer&lt;*&gt;::Node">
     <DisplayString>{Value}</DisplayString>
     <Expand>
       <Item Name="Data">Value</Item>
     </Expand>
   </Type>
-  <Type Name="Zero::HashMap&lt;*&gt;">
-    <AlternativeType Name="Zero::HashSet&lt;*&gt;" />
+  <Type Name="Raverie::HashMap&lt;*&gt;">
+    <AlternativeType Name="Raverie::HashSet&lt;*&gt;" />
     <DisplayString>Map[{mSize}]</DisplayString>
     <Expand>
       <Item Name="Capacity">mTableSize</Item>
@@ -132,8 +132,8 @@
       </CustomListItems>
     </Expand>
   </Type>
-  <Type Name="Zero::Array&lt;*&gt;::range">
-    <AlternativeType Name="Zero::PodArray&lt;*&gt;::range" />
+  <Type Name="Raverie::Array&lt;*&gt;::range">
+    <AlternativeType Name="Raverie::PodArray&lt;*&gt;::range" />
     <DisplayString>ArrayRange[{mEnd - mBegin}]</DisplayString>
     <Expand>
       <ArrayItems>
@@ -142,8 +142,8 @@
       </ArrayItems>
     </Expand>
   </Type>
-  <Type Name="Zero::Array&lt;*&gt;">
-    <AlternativeType Name="Zero::PodArray&lt;*&gt;" />
+  <Type Name="Raverie::Array&lt;*&gt;">
+    <AlternativeType Name="Raverie::PodArray&lt;*&gt;" />
     <DisplayString>Array[{mSize}]</DisplayString>
     <Expand>
       <ArrayItems>
@@ -153,8 +153,8 @@
       <Item Name="Capacity">mCapacity</Item>
     </Expand>
   </Type>
-  <Type Name="Zero::FixedArray&lt;*,*&gt;">
-    <AlternativeType Name="Zero::PodArray&lt;*&gt;" />
+  <Type Name="Raverie::FixedArray&lt;*,*&gt;">
+    <AlternativeType Name="Raverie::PodArray&lt;*&gt;" />
     <DisplayString>Array[{mSize}]</DisplayString>
     <Expand>
       <ArrayItems>
@@ -164,8 +164,8 @@
       <Item Name="Capacity">$T2</Item>
     </Expand>
   </Type>
-  <Type Name="Zero::BlockArray&lt;*&gt;">
-    <AlternativeType Name="Zero::PodBlockArray&lt;*&gt;" />
+  <Type Name="Raverie::BlockArray&lt;*&gt;">
+    <AlternativeType Name="Raverie::PodBlockArray&lt;*&gt;" />
     <DisplayString>BlockArray[{mSize}]</DisplayString>
     <Expand>
       <IndexListItems>
@@ -175,12 +175,12 @@
       <Item Name="Capacity">mCapacity</Item>
     </Expand>
   </Type>
-  <Type Name="Zero::BlockArray&lt;*&gt;::iterator">
-    <AlternativeType Name="Zero::PodBlockArray&lt;*&gt;::iterator" />
+  <Type Name="Raverie::BlockArray&lt;*&gt;::iterator">
+    <AlternativeType Name="Raverie::PodBlockArray&lt;*&gt;::iterator" />
     <DisplayString>{mBlockArray->mData[mCurrentIndex >> mBlockArray->ShiftSize][mCurrentIndex &amp; mBlockArray->BucketMask]}</DisplayString>
   </Type>
-  <Type Name="Zero::BlockArray&lt;*&gt;::range">
-    <AlternativeType Name="Zero::PodBlockArray&lt;*&gt;::range" />
+  <Type Name="Raverie::BlockArray&lt;*&gt;::range">
+    <AlternativeType Name="Raverie::PodBlockArray&lt;*&gt;::range" />
     <DisplayString>BlockArrayRange[{mEndIndex - mCurrentIndex}]</DisplayString>
     <Expand>
       <IndexListItems>
@@ -191,10 +191,10 @@
   </Type>
   <!--Can't do any fancy visualization for the link because it doesn't
 	    know how to get back to the list or if it's a dummy and so on-->
-  <Type Name="Zero::Link&lt;*&gt;">
+  <Type Name="Raverie::Link&lt;*&gt;">
     <DisplayString>InListLink</DisplayString>
   </Type>
-  <Type Name="Zero::BaseInList&lt;*,*,*&gt;">
+  <Type Name="Raverie::BaseInList&lt;*,*,*&gt;">
     <DisplayString>BaseInList</DisplayString>
     <Expand>
       <CustomListItems>
@@ -210,35 +210,35 @@
     </Expand>
   </Type>
   <!-- Make the basic display string for all components their derived type names -->
-  <Type Name="Zero::Component">
+  <Type Name="Raverie::Component">
     <DisplayString>$(Type)</DisplayString>
   </Type>
   <!-- Make Cogs display their object name -->
-  <Type Name="Zero::Cog">
+  <Type Name="Raverie::Cog">
     <DisplayString>Name: {mName}</DisplayString>
   </Type>
   <!-- HandleOf<> for some common types -->
-  <Type Name="Zilch::HandleOf&lt;*&gt;">
+  <Type Name="Raverie::HandleOf&lt;*&gt;">
     <!-- Resource Display -->
-    <DisplayString Optional="true" Condition="static_cast&lt;Zero::Resource*&gt;(($T1*)0) == 0 &amp;&amp; HandlePointer != 0">{((Zero::Resource*)HandlePointer)->Name}</DisplayString>
-    <DisplayString Optional="true" Condition="static_cast&lt;Zero::Resource*&gt;(($T1*)0) == 0 &amp;&amp; HandlePointer == 0">null</DisplayString>
+    <DisplayString Optional="true" Condition="static_cast&lt;Raverie::Resource*&gt;(($T1*)0) == 0 &amp;&amp; HandlePointer != 0">{((Raverie::Resource*)HandlePointer)->Name}</DisplayString>
+    <DisplayString Optional="true" Condition="static_cast&lt;Raverie::Resource*&gt;(($T1*)0) == 0 &amp;&amp; HandlePointer == 0">null</DisplayString>
     <!-- Component Display -->
-    <!--<DisplayString Optional="true" Condition="static_cast&lt;Zero::Component*&gt;(($T1*)0) == 0 &amp;&amp; HandlePointer != 0">{((Zero::Component*)HandlePointer)->mOwner->mName}</DisplayString>-->
-    <!--<DisplayString Optional="true" Condition="static_cast&lt;Zero::Component*&gt;(($T1*)0) == 0 &amp;&amp; HandlePointer == 0">null</DisplayString>-->
+    <!--<DisplayString Optional="true" Condition="static_cast&lt;Raverie::Component*&gt;(($T1*)0) == 0 &amp;&amp; HandlePointer != 0">{((Raverie::Component*)HandlePointer)->mOwner->mName}</DisplayString>-->
+    <!--<DisplayString Optional="true" Condition="static_cast&lt;Raverie::Component*&gt;(($T1*)0) == 0 &amp;&amp; HandlePointer == 0">null</DisplayString>-->
     <!-- Cog Display -->
-    <!--<DisplayString Optional="true" Condition="static_cast&lt;Zero::Cog*&gt;(($T1*)0) == 0 &amp;&amp; HandlePointer != 0">{((Zero::Cog*)HandlePointer)->mName}</DisplayString>-->
-    <!--<DisplayString Optional="true" Condition="static_cast&lt;Zero::Cog*&gt;(($T1*)0) == 0 &amp;&amp; HandlePointer == 0">null</DisplayString>-->
+    <!--<DisplayString Optional="true" Condition="static_cast&lt;Raverie::Cog*&gt;(($T1*)0) == 0 &amp;&amp; HandlePointer != 0">{((Raverie::Cog*)HandlePointer)->mName}</DisplayString>-->
+    <!--<DisplayString Optional="true" Condition="static_cast&lt;Raverie::Cog*&gt;(($T1*)0) == 0 &amp;&amp; HandlePointer == 0">null</DisplayString>-->
     <Expand>
       <!-- Resource -->
-      <ExpandedItem Optional="true" Condition="static_cast&lt;Zero::Resource*&gt;(($T1*)0) == 0">(Zero::ResourceHandleData*)Data</ExpandedItem>
+      <ExpandedItem Optional="true" Condition="static_cast&lt;Raverie::Resource*&gt;(($T1*)0) == 0">(Raverie::ResourceHandleData*)Data</ExpandedItem>
       <!-- Component -->
-      <!--<ExpandedItem Optional="true" Condition="static_cast&lt;Zero::Component*&gt;(($T1*)0) == 0">(Zero::ComponentHandleData*)Data</ExpandedItem>-->
+      <!--<ExpandedItem Optional="true" Condition="static_cast&lt;Raverie::Component*&gt;(($T1*)0) == 0">(Raverie::ComponentHandleData*)Data</ExpandedItem>-->
       <!-- Cog -->
-      <!--<ExpandedItem Optional="true" Condition="static_cast&lt;Zero::Cog*&gt;(($T1*)0) == 0">(Zero::CogHandleData*)Data</ExpandedItem>-->
+      <!--<ExpandedItem Optional="true" Condition="static_cast&lt;Raverie::Cog*&gt;(($T1*)0) == 0">(Raverie::CogHandleData*)Data</ExpandedItem>-->
     </Expand>
   </Type>
-  <!-- Display Zilch property names by defaults -->
-  <Type Name="Zilch::Property">
+  <!-- Display Raverie property names by defaults -->
+  <Type Name="Raverie::Property">
     <DisplayString>PropertyName: {Name}</DisplayString>
   </Type>
 </AutoVisualizer>

@@ -1,14 +1,14 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Meta Net Property
-ZilchDefineType(MetaNetProperty, builder, type)
+RaverieDefineType(MetaNetProperty, builder, type)
 {
-  ZilchBindField(mNetPropertyConfig)->AddAttribute(PropertyAttributes::cOptional);
-  ZilchBindField(mNetChannelConfig)->AddAttribute(PropertyAttributes::cOptional);
+  RaverieBindField(mNetPropertyConfig)->AddAttribute(PropertyAttributes::cOptional);
+  RaverieBindField(mNetChannelConfig)->AddAttribute(PropertyAttributes::cOptional);
 }
 
-} // namespace Zero
+} // namespace Raverie

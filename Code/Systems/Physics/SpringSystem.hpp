@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class UpdateEvent;
@@ -61,7 +61,7 @@ DeclareEnum3(SpringSortOrder, None, TopDown, BottomUp);
 class SpringSystem : public Component
 {
 public:
-  ZilchDeclareType(SpringSystem, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SpringSystem, TypeCopyMode::ReferenceType);
 
   // Component Interface
   void Serialize(Serializer& stream) override;
@@ -272,7 +272,7 @@ public:
 class DecorativeCloth : public SpringSystem
 {
 public:
-  ZilchDeclareType(DecorativeCloth, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(DecorativeCloth, TypeCopyMode::ReferenceType);
 
   // Component interface
   void Serialize(Serializer& stream) override;
@@ -317,7 +317,7 @@ public:
 class DecorativeRope : public SpringSystem
 {
 public:
-  ZilchDeclareType(DecorativeRope, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(DecorativeRope, TypeCopyMode::ReferenceType);
 
   // Component Interface
   void Serialize(Serializer& stream) override;
@@ -373,4 +373,4 @@ public:
   SpringSystems mSystems;
 };
 
-} // namespace Zero
+} // namespace Raverie

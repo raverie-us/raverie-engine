@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 template <typename type>
@@ -609,9 +609,9 @@ public:
 
     Array<uint>::iterator folderEnd = indices.Begin() + folderCount;
     // Sort the folders
-    Zero::Sort(Array<uint>::range(indices.Begin(), folderEnd), DataSorter(strings));
+    Raverie::Sort(Array<uint>::range(indices.Begin(), folderEnd), DataSorter(strings));
     // Sort the items
-    Zero::Sort(Array<uint>::range(folderEnd, indices.End()), DataSorter(strings));
+    Raverie::Sort(Array<uint>::range(folderEnd, indices.End()), DataSorter(strings));
 
     // Rebuild
     for (uint i = 0; i < childCount; ++i)
@@ -657,4 +657,4 @@ struct ObjectTree
   }
 };
 
-} // namespace Zero
+} // namespace Raverie

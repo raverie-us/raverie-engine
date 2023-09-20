@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 typedef InList<Cog, &Cog::SpaceLink> SpaceCogList;
 typedef InList<Cog, &Cog::NameLink> NameCogList;
@@ -43,7 +43,7 @@ typedef ConditionalRange<CogNameRange, RootCondition> CogRootNameRange;
 class Space : public Cog
 {
 public:
-  ZilchDeclareType(Space, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Space, TypeCopyMode::ReferenceType);
 
   IntrusiveLink(Space, link);
   typedef SpaceCogList::range range;
@@ -224,4 +224,4 @@ public:
   friend class ArchetypeRebuilder;
 };
 
-} // namespace Zero
+} // namespace Raverie

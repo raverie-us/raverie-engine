@@ -1,14 +1,14 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 DefineThreadSafeReferenceCountedHandle(ThreadSafeReferenceCounted);
 
-ZilchDefineType(ThreadSafeReferenceCounted, builder, type)
+RaverieDefineType(ThreadSafeReferenceCounted, builder, type)
 {
-  ZeroBindThreadSafeReferenceCountedHandle();
+  RaverieBindThreadSafeReferenceCountedHandle();
 }
 
 ThreadSafeReferenceCounted::ThreadSafeReferenceCounted()
@@ -26,4 +26,4 @@ ThreadSafeReferenceCounted::~ThreadSafeReferenceCounted()
   DestructThreadSafeReferenceCountedHandle();
 }
 
-} // namespace Zero
+} // namespace Raverie

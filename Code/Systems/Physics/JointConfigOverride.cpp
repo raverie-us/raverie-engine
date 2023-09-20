@@ -1,25 +1,25 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(JointConfigOverride, builder, type)
+RaverieDefineType(JointConfigOverride, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDocumented();
-  ZeroBindDependency(Joint);
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
+  RaverieBindDependency(Joint);
 
-  ZilchBindGetterSetterProperty(Slop)->ZeroSerialize(real(0.0));
-  ZilchBindGetterSetterProperty(LinearBaumgarte)->ZeroSerialize(real(4.5));
-  ZilchBindGetterSetterProperty(AngularBaumgarte)->ZeroSerialize(real(4.5));
-  ZilchBindGetterSetterProperty(LinearErrorCorrection)->ZeroSerialize(real(0.2));
-  ZilchBindGetterSetterProperty(AngularErrorCorrection)->ZeroSerialize(real(0.2));
-  ZilchBindGetterSetterProperty(PositionCorrectionType)->ZeroSerialize(ConstraintPositionCorrection::Inherit);
+  RaverieBindGetterSetterProperty(Slop)->RaverieSerialize(real(0.0));
+  RaverieBindGetterSetterProperty(LinearBaumgarte)->RaverieSerialize(real(4.5));
+  RaverieBindGetterSetterProperty(AngularBaumgarte)->RaverieSerialize(real(4.5));
+  RaverieBindGetterSetterProperty(LinearErrorCorrection)->RaverieSerialize(real(0.2));
+  RaverieBindGetterSetterProperty(AngularErrorCorrection)->RaverieSerialize(real(0.2));
+  RaverieBindGetterSetterProperty(PositionCorrectionType)->RaverieSerialize(ConstraintPositionCorrection::Inherit);
 
-  ZeroBindTag(Tags::Physics);
-  ZeroBindTag(Tags::Joint);
+  RaverieBindTag(Tags::Physics);
+  RaverieBindTag(Tags::Joint);
 }
 
 JointConfigOverride::JointConfigOverride()
@@ -137,4 +137,4 @@ void JointConfigOverride::SetPositionCorrectionType(ConstraintPositionCorrection
   mPositionCorrectionType = correctionType;
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 const uint CharacterTableSize = 128;
@@ -110,4 +110,4 @@ bool IsHex(Rune r)
 {
   return IsNumber(r) || (r.value >= 'a' && r.value <= 'f') || (r.value >= 'A' && r.value <= 'F');
 };
-}; // namespace Zero
+}; // namespace Raverie

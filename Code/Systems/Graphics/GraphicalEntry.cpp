@@ -2,7 +2,7 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -10,10 +10,10 @@ namespace Events
 DefineEvent(GraphicalSort);
 }
 
-ZilchDefineType(GraphicalEntry, builder, type)
+RaverieDefineType(GraphicalEntry, builder, type)
 {
-  ZilchBindGetter(Cog);
-  ZilchBindMethod(SetGraphicalSortValue);
+  RaverieBindGetter(Cog);
+  RaverieBindMethod(SetGraphicalSortValue);
 }
 
 bool GraphicalEntry::operator<(const GraphicalEntry& other) const
@@ -41,12 +41,12 @@ void GraphicalEntry::SetRenderGroupSortValue(s32 sortValue)
   mSort |= (u64)sortValue << 32;
 }
 
-ZilchDefineType(GraphicalSortEvent, builder, type)
+RaverieDefineType(GraphicalSortEvent, builder, type)
 {
-  ZilchBindGetterProperty(GraphicalEntries);
-  ZilchBindGetterProperty(RenderGroup);
+  RaverieBindGetterProperty(GraphicalEntries);
+  RaverieBindGetterProperty(RenderGroup);
 
-  ZeroBindEvent(Events::GraphicalSort, GraphicalSortEvent);
+  RaverieBindEvent(Events::GraphicalSort, GraphicalSortEvent);
 }
 
 s32 GetGraphicalSortValue(
@@ -92,4 +92,4 @@ s32 GetGraphicalSortValue(
   return value;
 }
 
-} // namespace Zero
+} // namespace Raverie

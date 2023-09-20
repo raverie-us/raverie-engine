@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 const String cInvalidTypeName = "void";
@@ -92,7 +92,7 @@ DefineEvent(ObjectModified);
 void PropertyModifiedDefault(
     HandleParam object, PropertyPathParam property, AnyParam oldValue, AnyParam newValue, bool intermediateChange)
 {
-  if (Object* zeroObject = object.Get<Object*>())
+  if (Object* raverieObject = object.Get<Object*>())
   {
     // Get the correct event
     String eventId = Events::PropertyModified;
@@ -101,27 +101,27 @@ void PropertyModifiedDefault(
 
     // Send the event to the object
     PropertyEvent eventToSend(object, property, oldValue, newValue);
-    if (EventDispatcher* dispatcher = zeroObject->GetDispatcher())
+    if (EventDispatcher* dispatcher = raverieObject->GetDispatcher())
       dispatcher->Dispatch(eventId, &eventToSend);
   }
 }
 
 void ComponentsChangedDefault(HandleParam object)
 {
-  if (Object* zeroObject = object.Get<Object*>())
+  if (Object* raverieObject = object.Get<Object*>())
   {
-    ObjectEvent e(zeroObject);
-    if (EventDispatcher* dispatcher = zeroObject->GetDispatcher())
+    ObjectEvent e(raverieObject);
+    if (EventDispatcher* dispatcher = raverieObject->GetDispatcher())
       dispatcher->Dispatch(Events::ComponentsModified, &e);
   }
 }
 
 void ObjectModifiedDefault(HandleParam object)
 {
-  if (Object* zeroObject = object.Get<Object*>())
+  if (Object* raverieObject = object.Get<Object*>())
   {
-    ObjectEvent e(zeroObject);
-    if (EventDispatcher* dispatcher = zeroObject->GetDispatcher())
+    ObjectEvent e(raverieObject);
+    if (EventDispatcher* dispatcher = raverieObject->GetDispatcher())
       dispatcher->Dispatch(Events::ObjectModified, &e);
   }
 }
@@ -212,10 +212,10 @@ void MetaOperations::ObjectModified(HandleParam object, bool intermediateChange)
 }
 
 // Property Event
-ZilchDefineType(PropertyEvent, builder, type)
+RaverieDefineType(PropertyEvent, builder, type)
 {
-  ZeroBindEvent(Events::PropertyModified, PropertyEvent);
-  ZeroBindEvent(Events::PropertyModifiedIntermediate, PropertyEvent);
+  RaverieBindEvent(Events::PropertyModified, PropertyEvent);
+  RaverieBindEvent(Events::PropertyModifiedIntermediate, PropertyEvent);
 }
 
 PropertyEvent::PropertyEvent(HandleParam object, PropertyPathParam property, AnyParam oldValue, AnyParam newValue) :
@@ -227,7 +227,7 @@ PropertyEvent::PropertyEvent(HandleParam object, PropertyPathParam property, Any
 }
 
 // Type Event
-ZilchDefineType(TypeEvent, builder, type)
+RaverieDefineType(TypeEvent, builder, type)
 {
 }
 
@@ -246,7 +246,7 @@ void BindEventSent(LibraryBuilder& builder, BoundType* boundType, StringParam ev
 {
   ErrorIf(eventType == nullptr, "Event type must be provided");
 
-  ErrorIf(!eventType->IsA(ZilchTypeId(Event)),
+  ErrorIf(!eventType->IsA(RaverieTypeId(Event)),
           "Attempting to bind '%s' as an event that isn't an Event type: "
           "BindBase(Event)",
           eventType->Name.c_str());
@@ -254,23 +254,23 @@ void BindEventSent(LibraryBuilder& builder, BoundType* boundType, StringParam ev
   builder.AddSendsEvent(boundType, eventName, eventType);
 }
 
-ZilchDefineType(MetaOperations, builder, type)
+RaverieDefineType(MetaOperations, builder, type)
 {
 }
 
-ZilchDefineType(MetaDisplay, builder, type)
+RaverieDefineType(MetaDisplay, builder, type)
 {
 }
 
-ZilchDefineType(TypeNameDisplay, builder, type)
+RaverieDefineType(TypeNameDisplay, builder, type)
 {
 }
 
-ZilchDefineType(StringNameDisplay, builder, type)
+RaverieDefineType(StringNameDisplay, builder, type)
 {
 }
 
-ZilchDefineType(MetaTransform, builder, type)
+RaverieDefineType(MetaTransform, builder, type)
 {
 }
 
@@ -393,8 +393,8 @@ Vec3 MetaTransformInstance::ToParent(Vec3Param local)
 }
 
 // Meta Attribute
-ZilchDefineType(MetaAttribute, builder, type)
+RaverieDefineType(MetaAttribute, builder, type)
 {
 }
 
-} // namespace Zero
+} // namespace Raverie

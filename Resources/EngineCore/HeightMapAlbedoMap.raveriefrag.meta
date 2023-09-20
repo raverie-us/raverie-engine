@@ -1,0 +1,9 @@
+[Version:1]
+TextContent 
+{
+	RaverieFragmentBuilder 
+	{
+		var Name = "HeightMapAlbedoMap"
+		var ResourceId = 0x58f4fb32013d6ba7
+	}
+}

@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// How Materials are categorized, determines which graphicals are drawn in a
@@ -10,7 +10,7 @@ namespace Zero
 class RenderGroup : public DataResource
 {
 public:
-  ZilchDeclareType(RenderGroup, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(RenderGroup, TypeCopyMode::ReferenceType);
 
   RenderGroup();
 
@@ -88,4 +88,4 @@ bool ParentRenderGroupFilter(HandleParam object, Property* property, HandleParam
 // Callback for resource list property editor.
 void ListItemValidChild(GraphicsResourceList* resourceList, String entryIdName, Status& status);
 
-} // namespace Zero
+} // namespace Raverie

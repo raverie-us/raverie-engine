@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -25,12 +25,12 @@ System* CreateTimeSystem()
   return new TimeSystem();
 }
 
-ZilchDefineType(UpdateEvent, builder, type)
+RaverieDefineType(UpdateEvent, builder, type)
 {
-  ZeroBindDocumented();
-  ZilchBindFieldProperty(Dt);
-  ZilchBindFieldProperty(TimePassed);
-  ZilchBindFieldProperty(RealTimePassed);
+  RaverieBindDocumented();
+  RaverieBindFieldProperty(Dt);
+  RaverieBindFieldProperty(TimePassed);
+  RaverieBindFieldProperty(RealTimePassed);
 }
 
 UpdateEvent::UpdateEvent(float dt, float realDt, float timePassed, float realTimePassed) :
@@ -41,34 +41,34 @@ UpdateEvent::UpdateEvent(float dt, float realDt, float timePassed, float realTim
 {
 }
 
-ZilchDefineType(TimeSpace, builder, type)
+RaverieDefineType(TimeSpace, builder, type)
 {
-  ZeroBindComponent();
+  RaverieBindComponent();
   type->AddAttribute(ObjectAttributes::cCore);
-  ZeroBindDocumented();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
 
-  ZeroBindEvent(Events::LogicUpdate, UpdateEvent);
-  ZeroBindEvent(Events::FrameUpdate, UpdateEvent);
-  ZeroBindEvent(Events::PreviewUpdate, UpdateEvent);
+  RaverieBindEvent(Events::LogicUpdate, UpdateEvent);
+  RaverieBindEvent(Events::FrameUpdate, UpdateEvent);
+  RaverieBindEvent(Events::PreviewUpdate, UpdateEvent);
 
-  ZeroBindDependency(Space);
+  RaverieBindDependency(Space);
 
-  ZilchBindMethod(TogglePause);
-  ZilchBindMethod(Step);
-  ZilchBindGetter(GloballyPaused);
-  ZilchBindGetter(DtOrZero);
-  ZilchBindGetterSetterProperty(TimeMode);
-  ZilchBindFieldProperty(mMinDt);
-  ZilchBindFieldProperty(mMaxDt);
-  ZilchBindGetterSetterProperty(TimeScale);
-  ZilchBindFieldProperty(mPaused);
-  ZilchBindFieldGetterAs(mScaledClampedDt, "Dt");
-  ZilchBindFieldGetter(mRealDt);
-  ZilchBindFieldAs(mScaledClampedTimePassed, "TimePassed");
-  ZilchBindField(mRealTimePassed);
-  ZilchBindField(mFrame);
-  ZilchBindFieldProperty(mStepCount);
+  RaverieBindMethod(TogglePause);
+  RaverieBindMethod(Step);
+  RaverieBindGetter(GloballyPaused);
+  RaverieBindGetter(DtOrZero);
+  RaverieBindGetterSetterProperty(TimeMode);
+  RaverieBindFieldProperty(mMinDt);
+  RaverieBindFieldProperty(mMaxDt);
+  RaverieBindGetterSetterProperty(TimeScale);
+  RaverieBindFieldProperty(mPaused);
+  RaverieBindFieldGetterAs(mScaledClampedDt, "Dt");
+  RaverieBindFieldGetter(mRealDt);
+  RaverieBindFieldAs(mScaledClampedTimePassed, "TimePassed");
+  RaverieBindField(mRealTimePassed);
+  RaverieBindField(mFrame);
+  RaverieBindFieldProperty(mStepCount);
 }
 
 TimeSpace::TimeSpace()
@@ -247,7 +247,7 @@ void TimeSpace::SetTimeMode(TimeMode::Enum value)
   mTimeMode = value;
 }
 
-ZilchDefineType(TimeSystem, builder, type)
+RaverieDefineType(TimeSystem, builder, type)
 {
 }
 
@@ -348,4 +348,4 @@ void TimeSystem::OnProjectCogModified(Event* event)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

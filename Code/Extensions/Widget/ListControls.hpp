@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 class ScrollArea;
 class KeyboardEvent;
@@ -20,7 +20,7 @@ const int cNoItemSelected = -1;
 class ListBox : public Composite
 {
 public:
-  ZilchDeclareType(ListBox, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ListBox, TypeCopyMode::ReferenceType);
 
   ListBox(Composite* parent);
   ~ListBox();
@@ -91,7 +91,7 @@ public:
 class ComboBox : public Composite
 {
 public:
-  ZilchDeclareType(ComboBox, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ComboBox, TypeCopyMode::ReferenceType);
 
   ComboBox(Composite* parent);
   ~ComboBox();
@@ -151,7 +151,7 @@ public:
 class StringComboBox : public ComboBox
 {
 public:
-  ZilchDeclareType(StringComboBox, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(StringComboBox, TypeCopyMode::ReferenceType);
 
   StringComboBox(Composite* parent);
   ~StringComboBox();
@@ -171,4 +171,4 @@ private:
   StringSource* mStrings;
 };
 
-} // namespace Zero
+} // namespace Raverie

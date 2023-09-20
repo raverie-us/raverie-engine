@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace ConvexDecomposition
@@ -33,4 +33,4 @@ bool Create2dMeshes(const Array<Vec2>& vertices,
 
 } // namespace ConvexDecomposition
 
-} // namespace Zero
+} // namespace Raverie

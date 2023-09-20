@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class Collider;
@@ -71,4 +71,4 @@ struct PrismaticJoint2d : public Joint
 
 typedef Physics::PrismaticJoint2d PrismaticJoint2d;
 
-} // namespace Zero
+} // namespace Raverie

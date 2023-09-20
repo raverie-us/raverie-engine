@@ -1,14 +1,14 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Basic Particle Animation Effects
 class LinearParticleAnimator : public ParticleAnimator
 {
 public:
-  ZilchDeclareType(LinearParticleAnimator, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(LinearParticleAnimator, TypeCopyMode::ReferenceType);
 
   LinearParticleAnimator();
   ~LinearParticleAnimator();
@@ -45,7 +45,7 @@ private:
 class ParticleWander : public ParticleAnimator
 {
 public:
-  ZilchDeclareType(ParticleWander, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ParticleWander, TypeCopyMode::ReferenceType);
 
   ParticleWander();
   ~ParticleWander();
@@ -67,7 +67,7 @@ private:
 class ParticleColorAnimator : public ParticleAnimator
 {
 public:
-  ZilchDeclareType(ParticleColorAnimator, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ParticleColorAnimator, TypeCopyMode::ReferenceType);
 
   ~ParticleColorAnimator();
 
@@ -89,7 +89,7 @@ private:
 class ParticleAttractor : public ParticleAnimator
 {
 public:
-  ZilchDeclareType(ParticleAttractor, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ParticleAttractor, TypeCopyMode::ReferenceType);
 
   ~ParticleAttractor();
 
@@ -112,7 +112,7 @@ private:
 class ParticleTwister : public ParticleAnimator
 {
 public:
-  ZilchDeclareType(ParticleTwister, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ParticleTwister, TypeCopyMode::ReferenceType);
 
   ParticleTwister();
   ~ParticleTwister();
@@ -134,7 +134,7 @@ private:
 class ParticleCollisionPlane : public ParticleAnimator
 {
 public:
-  ZilchDeclareType(ParticleCollisionPlane, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ParticleCollisionPlane, TypeCopyMode::ReferenceType);
 
   ~ParticleCollisionPlane();
 
@@ -170,7 +170,7 @@ private:
 class ParticleCollisionHeightmap : public ParticleAnimator
 {
 public:
-  ZilchDeclareType(ParticleCollisionHeightmap, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ParticleCollisionHeightmap, TypeCopyMode::ReferenceType);
 
   ~ParticleCollisionHeightmap();
 
@@ -201,4 +201,4 @@ private:
   float mFriction;
 };
 
-} // namespace Zero
+} // namespace Raverie

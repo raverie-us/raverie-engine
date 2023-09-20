@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 // Sound Listener
 
@@ -10,7 +10,7 @@ namespace Zero
 class SoundListener : public Component
 {
 public:
-  ZilchDeclareType(SoundListener, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SoundListener, TypeCopyMode::ReferenceType);
 
   SoundListener();
   ~SoundListener();
@@ -51,4 +51,4 @@ private:
   friend class SoundNode;
 };
 
-} // namespace Zero
+} // namespace Raverie

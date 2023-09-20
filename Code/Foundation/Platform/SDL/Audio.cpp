@@ -1,10 +1,10 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-inline static void LogAudioIoError(Zero::StringParam message, Zero::String* savedMessage = nullptr)
+inline static void LogAudioIoError(Raverie::StringParam message, Raverie::String* savedMessage = nullptr)
 {
   ZPrint(message.c_str());
   if (savedMessage)
@@ -29,7 +29,7 @@ public:
   unsigned mChannels;
   IOCallbackType* mCallback;
   void* mCallbackData;
-  Zero::String mStreamTypeName;
+  Raverie::String mStreamTypeName;
   StreamTypes::Enum mType;
 };
 
@@ -71,13 +71,13 @@ AudioInputOutput::~AudioInputOutput()
   delete (AudioIoSdlData*)PlatformData;
 }
 
-StreamStatus::Enum AudioInputOutput::InitializeAPI(Zero::String* resultMessage)
+StreamStatus::Enum AudioInputOutput::InitializeAPI(Raverie::String* resultMessage)
 {
   ZPrint("Initializing SDL Audio\n");
   return StreamStatus::Initialized;
 }
 
-StreamStatus::Enum AudioInputOutput::InitializeStream(StreamTypes::Enum whichStream, Zero::String* resultMessage)
+StreamStatus::Enum AudioInputOutput::InitializeStream(StreamTypes::Enum whichStream, Raverie::String* resultMessage)
 {
   SDLAudioDevice& data = ((AudioIoSdlData*)PlatformData)->Streams[whichStream];
   if (whichStream == StreamTypes::Output)
@@ -136,7 +136,7 @@ StreamStatus::Enum AudioInputOutput::InitializeStream(StreamTypes::Enum whichStr
 }
 
 StreamStatus::Enum AudioInputOutput::StartStream(StreamTypes::Enum whichStream,
-                                                 Zero::String* resultMessage,
+                                                 Raverie::String* resultMessage,
                                                  IOCallbackType* callback,
                                                  void* callbackData)
 {
@@ -161,7 +161,7 @@ StreamStatus::Enum AudioInputOutput::StartStream(StreamTypes::Enum whichStream,
   }
 }
 
-StreamStatus::Enum AudioInputOutput::StopStream(StreamTypes::Enum whichStream, Zero::String* resultMessage)
+StreamStatus::Enum AudioInputOutput::StopStream(StreamTypes::Enum whichStream, Raverie::String* resultMessage)
 {
   SDLAudioDevice& data = ((AudioIoSdlData*)PlatformData)->Streams[whichStream];
 
@@ -200,4 +200,4 @@ float AudioInputOutput::GetBufferSizeMultiplier()
   return 0.04f;
 }
 
-} // namespace Zero
+} // namespace Raverie

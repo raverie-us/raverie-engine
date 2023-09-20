@@ -1,22 +1,22 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(Region, builder, type)
+RaverieDefineType(Region, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
 
-  ZeroBindDependency(Cog);
-  ZeroBindDependency(Collider);
+  RaverieBindDependency(Cog);
+  RaverieBindDependency(Collider);
 
-  ZilchBindFieldProperty(mWakeUpOnEffectChange)->ZeroSerialize(true);
+  RaverieBindFieldProperty(mWakeUpOnEffectChange)->RaverieSerialize(true);
 
-  ZilchBindMethod(DispatchEvent);
-  ZeroBindTag(Tags::Physics);
+  RaverieBindMethod(DispatchEvent);
+  RaverieBindTag(Tags::Physics);
 }
 
 Region::Region()
@@ -153,4 +153,4 @@ Region::RegionContactRange Region::All()
   return RegionContactRange(FilterContactRange(mCollider));
 }
 
-} // namespace Zero
+} // namespace Raverie

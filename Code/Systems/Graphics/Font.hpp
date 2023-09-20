@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 // Forward declaration
 struct FontRasterizerData;
@@ -91,7 +91,7 @@ public:
 class Font : public Resource
 {
 public:
-  ZilchDeclareType(Font, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Font, TypeCopyMode::ReferenceType);
 
   Font();
   ~Font();
@@ -158,4 +158,4 @@ public:
   FontRasterizerData* mData;
 };
 
-} // namespace Zero
+} // namespace Raverie

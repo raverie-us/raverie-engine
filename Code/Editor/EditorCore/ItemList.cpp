@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Used to sort the widget hierarchy
@@ -37,7 +37,7 @@ struct SortItem
 };
 
 // Item Selector
-ZilchDefineType(ItemList, builder, type)
+RaverieDefineType(ItemList, builder, type)
 {
 }
 
@@ -214,7 +214,7 @@ void ItemList::Sort()
   groupParent->mChildren.Sort(SortGroup());
   mScrollArea->mBackground->MoveToBack();
 
-  Zero::Sort(mSortedItems.All(), SortItem());
+  Raverie::Sort(mSortedItems.All(), SortItem());
 
   forRange (ItemGroup* group, mGroups.Values())
     group->Sort();
@@ -234,7 +234,7 @@ void ItemList::OnItemSelected(ObjectEvent* e)
 }
 
 // Weighted Composite
-ZilchDefineType(WeightedComposite, builder, type)
+RaverieDefineType(WeightedComposite, builder, type)
 {
 }
 
@@ -253,7 +253,7 @@ bool WeightedComposite::operator<(const WeightedComposite& rhs)
 }
 
 // Item Group
-ZilchDefineType(ItemGroup, builder, type)
+RaverieDefineType(ItemGroup, builder, type)
 {
 }
 
@@ -291,7 +291,7 @@ void ItemGroup::Sort()
   mItemsParent->mChildren.Sort(SortGroup());
 
   // Sort our array
-  Zero::Sort(mItems.All(), SortGroup());
+  Raverie::Sort(mItems.All(), SortGroup());
 
   uint column = 0;
   forRange (Item* item, mItems.All())
@@ -302,7 +302,7 @@ void ItemGroup::Sort()
 }
 
 // Item
-ZilchDefineType(Item, builder, type)
+RaverieDefineType(Item, builder, type)
 {
 }
 
@@ -436,4 +436,4 @@ Vec2 ItemGridLayout::DoLayout(Composite* widget, LayoutArea data)
   return data.Size;
 }
 
-} // namespace Zero
+} // namespace Raverie

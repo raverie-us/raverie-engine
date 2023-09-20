@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -9,13 +9,13 @@ namespace Events
 DefineEvent(TextureLoaded);
 }
 
-ZilchDefineType(ContentPackage, builder, type)
+RaverieDefineType(ContentPackage, builder, type)
 {
-  type->HandleManager = ZilchManagerId(PointerManager);
-  ZilchBindFieldProperty(mName);
-  ZilchBindFieldProperty(mAuthor);
-  ZilchBindFieldProperty(mTags);
-  ZilchBindFieldProperty(mDescription);
+  type->HandleManager = RaverieManagerId(PointerManager);
+  RaverieBindFieldProperty(mName);
+  RaverieBindFieldProperty(mAuthor);
+  RaverieBindFieldProperty(mTags);
+  RaverieBindFieldProperty(mDescription);
 }
 
 ContentPackage::ContentPackage()
@@ -90,4 +90,4 @@ void ContentPackage::OnWebResponse(WebResponseEvent* e)
   GetDispatcher()->Dispatch(Events::TextureLoaded, &eventToSend);
 }
 
-} // namespace Zero
+} // namespace Raverie

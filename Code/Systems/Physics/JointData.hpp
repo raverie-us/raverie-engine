@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class Collider;
@@ -122,4 +122,4 @@ struct JointInfo
   uint mOnAtomMask;
 };
 
-} // namespace Zero
+} // namespace Raverie

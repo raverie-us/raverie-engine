@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 //                                  RawPacket //
@@ -20,7 +20,7 @@ RawPacket::RawPacket(const RawPacket& rhs) :
 RawPacket::RawPacket(MoveReference<RawPacket> rhs) :
     mContainsEventMessage(rhs->mContainsEventMessage),
     mIpAddress(rhs->mIpAddress),
-    mData(ZeroMove(rhs->mData))
+    mData(RaverieMove(rhs->mData))
 {
 }
 
@@ -37,7 +37,7 @@ RawPacket& RawPacket::operator=(MoveReference<RawPacket> rhs)
 {
   mContainsEventMessage = rhs->mContainsEventMessage;
   mIpAddress = rhs->mIpAddress;
-  mData = ZeroMove(rhs->mData);
+  mData = RaverieMove(rhs->mData);
 
   return *this;
 }
@@ -137,7 +137,7 @@ OutPacket::OutPacket(const OutPacket& rhs) : Packet(rhs), mMessages(rhs.mMessage
 
 OutPacket::OutPacket(MoveReference<OutPacket> rhs) :
     Packet(*rhs),
-    mMessages(ZeroMove(rhs->mMessages)),
+    mMessages(RaverieMove(rhs->mMessages)),
     mSendTime(rhs->mSendTime)
 {
 }
@@ -154,7 +154,7 @@ OutPacket& OutPacket::operator=(const OutPacket& rhs)
 OutPacket& OutPacket::operator=(MoveReference<OutPacket> rhs)
 {
   Packet::operator=(*rhs);
-  mMessages = ZeroMove(rhs->mMessages);
+  mMessages = RaverieMove(rhs->mMessages);
   mSendTime = rhs->mSendTime;
 
   return *this;
@@ -263,7 +263,7 @@ InPacket::InPacket(const InPacket& rhs) : Packet(rhs), mMessages(rhs.mMessages)
 {
 }
 
-InPacket::InPacket(MoveReference<InPacket> rhs) : Packet(*rhs), mMessages(ZeroMove(rhs->mMessages))
+InPacket::InPacket(MoveReference<InPacket> rhs) : Packet(*rhs), mMessages(RaverieMove(rhs->mMessages))
 {
 }
 
@@ -278,7 +278,7 @@ InPacket& InPacket::operator=(const InPacket& rhs)
 InPacket& InPacket::operator=(MoveReference<InPacket> rhs)
 {
   Packet::operator=(*rhs);
-  mMessages = ZeroMove(rhs->mMessages);
+  mMessages = RaverieMove(rhs->mMessages);
 
   return *this;
 }
@@ -358,11 +358,11 @@ Bits Serialize<InPacket>(SerializeDirection::Enum direction, BitStream& bitStrea
     }
 
     // Push message
-    inPacket.mMessages.PushBack(ZeroMove(message));
+    inPacket.mMessages.PushBack(RaverieMove(message));
   }
 
   // Success
   return bitStream.GetBitsRead() - bitsReadStart;
 }
 
-} // namespace Zero
+} // namespace Raverie

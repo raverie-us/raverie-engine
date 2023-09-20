@@ -1,15 +1,15 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(SimpleSocket, builder, type)
+RaverieDefineType(SimpleSocket, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
 
-  ZilchBindGetterProperty(Socket);
+  RaverieBindGetterProperty(Socket);
 }
 
 SimpleSocket::SimpleSocket() : mSocket(Protocol::Chunks | Protocol::Events, "SimpleSocket")
@@ -21,4 +21,4 @@ TcpSocket* SimpleSocket::GetSocket()
   return &mSocket;
 }
 
-} // namespace Zero
+} // namespace Raverie

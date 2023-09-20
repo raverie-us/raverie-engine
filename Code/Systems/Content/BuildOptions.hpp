@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Options
@@ -25,4 +25,4 @@ public:
   String Message;
 };
 
-} // namespace Zero
+} // namespace Raverie

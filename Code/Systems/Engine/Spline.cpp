@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -10,12 +10,12 @@ DefineEvent(SplineModified);
 DefineEvent(QuerySpline);
 } // namespace Events
 
-ZilchDefineType(SplineEvent, builder, type)
+RaverieDefineType(SplineEvent, builder, type)
 {
-  ZeroBindDocumented();
-  ZilchBindGetterSetterProperty(Spline);
-  ZilchBindDefaultCopyDestructor();
-  ZilchFullBindConstructor(builder, type, ZilchSelf, "spline", Spline*);
+  RaverieBindDocumented();
+  RaverieBindGetterSetterProperty(Spline);
+  RaverieBindDefaultCopyDestructor();
+  RaverieFullBindConstructor(builder, type, RaverieSelf, "spline", Spline*);
 
   type->CreatableInScript = true;
 }
@@ -39,17 +39,17 @@ void SplineEvent::SetSpline(Spline* spline)
   mSpline = spline;
 }
 
-ZilchDefineType(SplineControlPoint, builder, type)
+RaverieDefineType(SplineControlPoint, builder, type)
 {
-  ZeroBindDocumented();
-  ZilchBindDestructor();
-  ZilchBindDefaultConstructor();
-  ZilchBindConstructor(Vec3Param);
+  RaverieBindDocumented();
+  RaverieBindDestructor();
+  RaverieBindDefaultConstructor();
+  RaverieBindConstructor(Vec3Param);
 
-  ZilchBindMember(mPosition);
+  RaverieBindMember(mPosition);
   type->CreatableInScript = true;
 
-  Field* worldPosition = ZilchBindMemberAs(mPosition, "WorldPosition");
+  Field* worldPosition = RaverieBindMemberAs(mPosition, "WorldPosition");
   worldPosition->AddAttribute(DeprecatedAttribute);
   worldPosition->Description = "This field is deprecated. Use Position instead.";
 }
@@ -64,15 +64,15 @@ SplineControlPoint::SplineControlPoint(Vec3Param position)
   mPosition = position;
 }
 
-ZilchDefineType(SplineControlPoints, builder, type)
+RaverieDefineType(SplineControlPoints, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindMethod(Get);
-  ZilchBindMethod(Set);
-  ZilchBindMethod(Add);
-  ZilchBindMethod(Clear);
-  ZilchBindGetterProperty(Count);
+  RaverieBindMethod(Get);
+  RaverieBindMethod(Set);
+  RaverieBindMethod(Add);
+  RaverieBindMethod(Clear);
+  RaverieBindGetterProperty(Count);
 }
 
 SplineControlPoints::SplineControlPoints()
@@ -155,17 +155,17 @@ int SplineControlPoints::GetCount() const
   return mControlPoints.Size();
 }
 
-ZilchDefineType(SplineBakedPoint, builder, type)
+RaverieDefineType(SplineBakedPoint, builder, type)
 {
-  ZeroBindDocumented();
-  ZilchBindDestructor();
-  ZilchBindDefaultConstructor();
-  ZilchBindConstructor(Vec3Param);
+  RaverieBindDocumented();
+  RaverieBindDestructor();
+  RaverieBindDefaultConstructor();
+  RaverieBindConstructor(Vec3Param);
   type->CreatableInScript = true;
 
-  ZilchBindMember(mPosition);
+  RaverieBindMember(mPosition);
 
-  Field* worldPosition = ZilchBindMemberAs(mPosition, "WorldPosition");
+  Field* worldPosition = RaverieBindMemberAs(mPosition, "WorldPosition");
   worldPosition->AddAttribute(DeprecatedAttribute);
   worldPosition->Description = "This field is deprecated. Use Position instead.";
 }
@@ -180,12 +180,12 @@ SplineBakedPoint::SplineBakedPoint(Vec3Param position)
   mPosition = position;
 }
 
-ZilchDefineType(SplineBakedPoints, builder, type)
+RaverieDefineType(SplineBakedPoints, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindMethod(Get);
-  ZilchBindGetterProperty(Count);
+  RaverieBindMethod(Get);
+  RaverieBindGetterProperty(Count);
 }
 
 SplineBakedPoints::SplineBakedPoints()
@@ -217,20 +217,20 @@ SplineBakedPoint SplineBakedPoints::Get(uint index) const
   return SplineBakedPoint(position);
 }
 
-ZilchDefineType(SplineSampleData, builder, type)
+RaverieDefineType(SplineSampleData, builder, type)
 {
-  ZeroBindDocumented();
-  ZilchBindDestructor();
-  ZilchBindDefaultConstructor();
+  RaverieBindDocumented();
+  RaverieBindDestructor();
+  RaverieBindDefaultConstructor();
   type->CreatableInScript = true;
-  ZilchBindMember(mPoint);
-  ZilchBindMember(mTangent);
+  RaverieBindMember(mPoint);
+  RaverieBindMember(mTangent);
 
-  Field* worldPoint = ZilchBindMemberAs(mPoint, "WorldPoint");
+  Field* worldPoint = RaverieBindMemberAs(mPoint, "WorldPoint");
   worldPoint->AddAttribute(DeprecatedAttribute);
   worldPoint->Description = "This field is deprecated. Use Point instead.";
 
-  Field* worldTangent = ZilchBindMemberAs(mTangent, "WorldTangent");
+  Field* worldTangent = RaverieBindMemberAs(mTangent, "WorldTangent");
   worldTangent->AddAttribute(DeprecatedAttribute);
   worldTangent->Description = "This field is deprecated. Use Tangent instead.";
 }
@@ -240,27 +240,27 @@ SplineSampleData::SplineSampleData()
   mTangent = mTangent = Vec3::cZero;
 }
 
-ZilchDefineType(Spline, builder, type)
+RaverieDefineType(Spline, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindMethod(Create);
-  ZilchBindMethod(Clone);
+  RaverieBindMethod(Create);
+  RaverieBindMethod(Clone);
 
-  ZilchBindGetterSetterProperty(SplineType);
-  ZilchBindGetterSetterProperty(Closed);
-  ZilchBindGetterSetterProperty(Error);
+  RaverieBindGetterSetterProperty(SplineType);
+  RaverieBindGetterSetterProperty(Closed);
+  RaverieBindGetterSetterProperty(Error);
 
-  ZilchBindGetterProperty(TotalDistance);
-  ZilchBindMethod(SampleDistance);
-  ZilchBindMethod(SampleNormalized);
+  RaverieBindGetterProperty(TotalDistance);
+  RaverieBindMethod(SampleDistance);
+  RaverieBindMethod(SampleNormalized);
 
-  ZilchBindMethod(RebuildIfModified);
-  ZilchBindMethod(ForceRebuild);
-  ZilchBindMethod(DebugDraw);
+  RaverieBindMethod(RebuildIfModified);
+  RaverieBindMethod(ForceRebuild);
+  RaverieBindMethod(DebugDraw);
 
-  ZilchBindGetterProperty(ControlPoints);
-  ZilchBindGetterProperty(BakedPoints);
+  RaverieBindGetterProperty(ControlPoints);
+  RaverieBindGetterProperty(BakedPoints);
 }
 
 Spline::Spline()
@@ -402,4 +402,4 @@ SplineBakedPoints* Spline::GetBakedPoints()
   return &mBakedPoints;
 }
 
-} // namespace Zero
+} // namespace Raverie

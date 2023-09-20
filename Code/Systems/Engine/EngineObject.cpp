@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 Memory::Heap* EngineObject::sEngineHeap = nullptr;
@@ -20,4 +20,4 @@ EngineObject::~EngineObject()
 {
 }
 
-} // namespace Zero
+} // namespace Raverie

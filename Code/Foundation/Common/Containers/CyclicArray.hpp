@@ -2,7 +2,7 @@
 #pragma once
 #include "Array.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 /// Stores objects similar to a stack (always push to the front), but unlike a
@@ -278,4 +278,4 @@ private:
   ArrayType mArray;
 };
 
-} // namespace Zero
+} // namespace Raverie

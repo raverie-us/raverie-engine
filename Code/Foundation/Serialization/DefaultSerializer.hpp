@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// A Serializer does not serialize any values. So all values
@@ -67,4 +67,4 @@ public:
 #undef FUNDAMENTAL
 };
 
-} // namespace Zero
+} // namespace Raverie

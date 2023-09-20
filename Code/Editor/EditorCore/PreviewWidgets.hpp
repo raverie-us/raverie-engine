@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class IconPreview : public PreviewWidget
@@ -52,7 +52,7 @@ public:
 class SoundCuePreview : public IconPreview
 {
 public:
-  typedef SoundCuePreview ZilchSelf;
+  typedef SoundCuePreview RaverieSelf;
 
   SoundCuePreview(PreviewWidgetInitializer& initializer);
   void OnLeftClick(MouseEvent* event);
@@ -102,7 +102,7 @@ public:
 class SpacePreview : public PreviewWidget
 {
 public:
-  typedef SpacePreview ZilchSelf;
+  typedef SpacePreview RaverieSelf;
 
   SpacePreview(PreviewWidgetInitializer& initializer,
                StringParam objectArchetype = CoreArchetypes::Default,
@@ -171,7 +171,7 @@ public:
 class ArchetypePreview : public SpacePreview
 {
 public:
-  typedef ArchetypePreview ZilchSelf;
+  typedef ArchetypePreview RaverieSelf;
 
   ArchetypePreview(PreviewWidgetInitializer& initializer);
   Handle GetEditObject() override;
@@ -188,7 +188,7 @@ public:
 class AnimationPreview : public SpacePreview
 {
 public:
-  typedef AnimationPreview ZilchSelf;
+  typedef AnimationPreview RaverieSelf;
 
   AnimationPreview(PreviewWidgetInitializer& initializer);
 
@@ -303,4 +303,4 @@ public:
   bool UsingEditorGameSession;
 };
 
-} // namespace Zero
+} // namespace Raverie

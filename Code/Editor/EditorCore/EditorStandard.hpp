@@ -6,23 +6,23 @@
 #include "Extensions/Gameplay/GameplayStandard.hpp"
 #include "Foundation/Geometry/GeometryStandard.hpp"
 #include "Systems/Sound/SoundStandard.hpp"
-#include "Systems/ZilchScript/ZilchScriptStandard.hpp"
+#include "Systems/RaverieScript/RaverieScriptStandard.hpp"
 #include "Extensions/UiWidget/UiWidgetStandard.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Editor library
-class EditorLibrary : public Zilch::StaticLibrary
+class EditorLibrary : public Raverie::StaticLibrary
 {
 public:
-  ZilchDeclareStaticLibraryInternals(EditorLibrary);
+  RaverieDeclareStaticLibraryInternals(EditorLibrary);
 
   static void Initialize();
   static void Shutdown();
 };
 
-} // namespace Zero
+} // namespace Raverie
 
 // Misc.
 #include "NetOperations.hpp"

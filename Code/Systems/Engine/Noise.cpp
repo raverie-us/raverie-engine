@@ -3,7 +3,7 @@
 
 // Perlin Noise Functions from Perlin's website
 
-namespace Zero
+namespace Raverie
 {
 
 // 1d Noise [-1, 1]
@@ -166,4 +166,4 @@ float PerlinNoise(float x, float y)
 //  return total;
 //}
 
-} // namespace Zero
+} // namespace Raverie

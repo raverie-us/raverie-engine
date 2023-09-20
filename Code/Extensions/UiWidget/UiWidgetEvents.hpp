@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -23,7 +23,7 @@ class UiFocusEvent : public Event
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(UiFocusEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(UiFocusEvent, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   UiFocusEvent(UiWidget* focusGained, UiWidget* focusLost);
@@ -39,4 +39,4 @@ public:
   bool mCancelFocus;
 };
 
-} // namespace Zero
+} // namespace Raverie

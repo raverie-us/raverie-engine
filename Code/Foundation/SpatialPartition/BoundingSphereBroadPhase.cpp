@@ -1,9 +1,9 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
-ZilchDefineType(BoundingSphereBroadPhase, builder, type)
+RaverieDefineType(BoundingSphereBroadPhase, builder, type)
 {
 }
 
@@ -136,4 +136,4 @@ void BoundingSphereBroadPhase::GetCollisions(BroadPhaseData& data, ClientPairArr
     results.PushBack(ClientPair(data.mClientData, range.Front()));
 }
 
-} // namespace Zero
+} // namespace Raverie

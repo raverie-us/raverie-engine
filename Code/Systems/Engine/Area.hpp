@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class Area;
@@ -15,7 +15,7 @@ DeclareEvent(AreaChanged);
 class AreaEvent : public Event
 {
 public:
-  ZilchDeclareType(AreaEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(AreaEvent, TypeCopyMode::ReferenceType);
 
   /// The area component that triggered this event.
   Area* mArea;
@@ -24,7 +24,7 @@ public:
 class Area : public Component
 {
 public:
-  ZilchDeclareType(Area, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Area, TypeCopyMode::ReferenceType);
 
   // Component Interface
   void Serialize(Serializer& stream) override;
@@ -126,4 +126,4 @@ public:
   Transform* mTransform;
 };
 
-} // namespace Zero
+} // namespace Raverie

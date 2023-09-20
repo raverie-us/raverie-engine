@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 Resource* AddResourceFromFile(StringParam filePath, StringParam resourceType)
@@ -494,7 +494,7 @@ void RemoveResource(Resource* resource)
   {
     ZPrintFilter(Filter::ResourceFilter,
                  "Removed Resource %s %s.%s.\n",
-                 ZilchVirtualTypeId(deletingResource)->Name.c_str(),
+                 RaverieVirtualTypeId(deletingResource)->Name.c_str(),
                  library->Name.c_str(),
                  deletingResource->Name.c_str());
 
@@ -772,4 +772,4 @@ Resource* NewResourceOnWrite(ResourceManager* resourceManager,
   return resource;
 }
 
-} // namespace Zero
+} // namespace Raverie

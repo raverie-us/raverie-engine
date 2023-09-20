@@ -15,7 +15,7 @@
 //   = invMass1 + invI1 * cross(r1, u1)^2 + ratio^2 * (invMass2 + invI2 *
 //   cross(r2, u2)^2)
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Physics
@@ -44,19 +44,19 @@ struct PulleyPolicy : public DefaultFragmentPolicy<PulleyJoint>
 
 ImplementJointType(PulleyJoint);
 
-ZilchDefineType(PulleyJoint, builder, type)
+RaverieDefineType(PulleyJoint, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindInterface(Joint);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindInterface(Joint);
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetterProperty(Ratio);
+  RaverieBindGetterSetterProperty(Ratio);
 
-  ZilchBindGetterSetterProperty(JointAPath);
-  ZilchBindGetterSetterProperty(JointBPath);
-  ZilchBindGetterSetter(JointA);
-  ZilchBindGetterSetter(JointB);
+  RaverieBindGetterSetterProperty(JointAPath);
+  RaverieBindGetterSetterProperty(JointBPath);
+  RaverieBindGetterSetter(JointA);
+  RaverieBindGetterSetter(JointB);
 }
 
 PulleyJoint::PulleyJoint()
@@ -423,4 +423,4 @@ void PulleyJoint::ValidateJoints()
 
 } // namespace Physics
 
-} // namespace Zero
+} // namespace Raverie

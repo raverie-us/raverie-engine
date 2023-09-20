@@ -2,7 +2,7 @@
 #pragma once
 #include "DataSource.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Forward Declarations.
@@ -20,7 +20,7 @@ DeclareEvent(CogReplaced);
 class CogReplaceEvent : public DataReplaceEvent
 {
 public:
-  ZilchDeclareType(CogReplaceEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CogReplaceEvent, TypeCopyMode::ReferenceType);
   CogReplaceEvent(Cog* oldCog, Cog* newCog);
   Cog* mOldCog;
   Cog* mNewCog;
@@ -42,4 +42,4 @@ public:
   static Cog* RebuildCog(Cog* cog, HashSet<MetaSelection*>* modifiedSelections);
 };
 
-} // namespace Zero
+} // namespace Raverie

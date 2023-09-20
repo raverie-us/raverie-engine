@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Forward Declarations
@@ -29,7 +29,7 @@ class KeyFrameIcon : public Composite
 {
 public:
   /// Typedefs.
-  typedef KeyFrameIcon ZilchSelf;
+  typedef KeyFrameIcon RaverieSelf;
 
   /// Constructor.
   KeyFrameIcon(AnimationScrubber* scrubber, float time);
@@ -88,7 +88,7 @@ class AnimationScrubber : public Composite
 {
 public:
   /// Typedefs.
-  typedef AnimationScrubber ZilchSelf;
+  typedef AnimationScrubber RaverieSelf;
 
   /// Constructor.
   AnimationScrubber(Composite* parent, AnimationEditor* editor, ScrollingGraph* graphData);
@@ -206,4 +206,4 @@ DeclareTweakable(Vec4, PlayHeadColor);
 DeclareTweakable(Vec4, GhostPlayHeadColor);
 } // namespace AnimScrubberUi
 
-} // namespace Zero
+} // namespace Raverie

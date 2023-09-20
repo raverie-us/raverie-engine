@@ -1,80 +1,80 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-NativeType* ZilchTypeToBasicNativeType(Zilch::Type* zilchType)
+NativeType* RaverieTypeToBasicNativeType(Raverie::Type* raverieType)
 {
   // Empty type?
-  if (zilchType == nullptr)
+  if (raverieType == nullptr)
     return nullptr;
 
   // Boolean type?
-  else if (zilchType == ZilchTypeId(BasicNativeTypeFromEnum<BasicNativeType::Bool>::Type))
+  else if (raverieType == RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::Bool>::Type))
     return NativeTypeOf(BasicNativeTypeFromEnum<BasicNativeType::Bool>::Type);
 
   // Integer type?
-  else if (zilchType == ZilchTypeId(BasicNativeTypeFromEnum<BasicNativeType::Int32>::Type))
+  else if (raverieType == RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::Int32>::Type))
     return NativeTypeOf(BasicNativeTypeFromEnum<BasicNativeType::Int32>::Type);
   // DoubleInteger type?
-  else if (zilchType == ZilchTypeId(BasicNativeTypeFromEnum<BasicNativeType::Int64>::Type))
+  else if (raverieType == RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::Int64>::Type))
     return NativeTypeOf(BasicNativeTypeFromEnum<BasicNativeType::Int64>::Type);
 
   // Byte type?
-  else if (zilchType == ZilchTypeId(BasicNativeTypeFromEnum<BasicNativeType::Uint8>::Type))
+  else if (raverieType == RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::Uint8>::Type))
     return NativeTypeOf(BasicNativeTypeFromEnum<BasicNativeType::Uint8>::Type);
 
   // Real type?
-  else if (zilchType == ZilchTypeId(BasicNativeTypeFromEnum<BasicNativeType::Float>::Type))
+  else if (raverieType == RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::Float>::Type))
     return NativeTypeOf(BasicNativeTypeFromEnum<BasicNativeType::Float>::Type);
   // DoubleReal type?
-  else if (zilchType == ZilchTypeId(BasicNativeTypeFromEnum<BasicNativeType::Double>::Type))
+  else if (raverieType == RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::Double>::Type))
     return NativeTypeOf(BasicNativeTypeFromEnum<BasicNativeType::Double>::Type);
 
   // Boolean2 type?
-  else if (zilchType == ZilchTypeId(BasicNativeTypeFromEnum<BasicNativeType::BoolVector2>::Type))
+  else if (raverieType == RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::BoolVector2>::Type))
     return NativeTypeOf(BasicNativeTypeFromEnum<BasicNativeType::BoolVector2>::Type);
   // Boolean3 type?
-  else if (zilchType == ZilchTypeId(BasicNativeTypeFromEnum<BasicNativeType::BoolVector3>::Type))
+  else if (raverieType == RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::BoolVector3>::Type))
     return NativeTypeOf(BasicNativeTypeFromEnum<BasicNativeType::BoolVector3>::Type);
   // Boolean4 type?
-  else if (zilchType == ZilchTypeId(BasicNativeTypeFromEnum<BasicNativeType::BoolVector4>::Type))
+  else if (raverieType == RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::BoolVector4>::Type))
     return NativeTypeOf(BasicNativeTypeFromEnum<BasicNativeType::BoolVector4>::Type);
 
   // Integer2 type?
-  else if (zilchType == ZilchTypeId(BasicNativeTypeFromEnum<BasicNativeType::IntVector2>::Type))
+  else if (raverieType == RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::IntVector2>::Type))
     return NativeTypeOf(BasicNativeTypeFromEnum<BasicNativeType::IntVector2>::Type);
   // Integer3 type?
-  else if (zilchType == ZilchTypeId(BasicNativeTypeFromEnum<BasicNativeType::IntVector3>::Type))
+  else if (raverieType == RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::IntVector3>::Type))
     return NativeTypeOf(BasicNativeTypeFromEnum<BasicNativeType::IntVector3>::Type);
   // Integer4 type?
-  else if (zilchType == ZilchTypeId(BasicNativeTypeFromEnum<BasicNativeType::IntVector4>::Type))
+  else if (raverieType == RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::IntVector4>::Type))
     return NativeTypeOf(BasicNativeTypeFromEnum<BasicNativeType::IntVector4>::Type);
 
   // Real2 type?
-  else if (zilchType == ZilchTypeId(BasicNativeTypeFromEnum<BasicNativeType::Vector2>::Type))
+  else if (raverieType == RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::Vector2>::Type))
     return NativeTypeOf(BasicNativeTypeFromEnum<BasicNativeType::Vector2>::Type);
   // Real3 type?
-  else if (zilchType == ZilchTypeId(BasicNativeTypeFromEnum<BasicNativeType::Vector3>::Type))
+  else if (raverieType == RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::Vector3>::Type))
     return NativeTypeOf(BasicNativeTypeFromEnum<BasicNativeType::Vector3>::Type);
   // Real4 type?
-  else if (zilchType == ZilchTypeId(BasicNativeTypeFromEnum<BasicNativeType::Vector4>::Type))
+  else if (raverieType == RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::Vector4>::Type))
     return NativeTypeOf(BasicNativeTypeFromEnum<BasicNativeType::Vector4>::Type);
 
   // Quaternion type?
-  else if (zilchType == ZilchTypeId(BasicNativeTypeFromEnum<BasicNativeType::Quaternion>::Type))
+  else if (raverieType == RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::Quaternion>::Type))
     return NativeTypeOf(BasicNativeTypeFromEnum<BasicNativeType::Quaternion>::Type);
 
   // Real3x3 type?
-  else if (zilchType == ZilchTypeId(BasicNativeTypeFromEnum<BasicNativeType::Matrix3>::Type))
+  else if (raverieType == RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::Matrix3>::Type))
     return NativeTypeOf(BasicNativeTypeFromEnum<BasicNativeType::Matrix3>::Type);
   // Real4x4 type?
-  else if (zilchType == ZilchTypeId(BasicNativeTypeFromEnum<BasicNativeType::Matrix4>::Type))
+  else if (raverieType == RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::Matrix4>::Type))
     return NativeTypeOf(BasicNativeTypeFromEnum<BasicNativeType::Matrix4>::Type);
 
   // String type?
-  else if (zilchType == ZilchTypeId(BasicNativeTypeFromEnum<BasicNativeType::String>::Type))
+  else if (raverieType == RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::String>::Type))
     return NativeTypeOf(BasicNativeTypeFromEnum<BasicNativeType::String>::Type);
 
   // Other type?
@@ -82,15 +82,15 @@ NativeType* ZilchTypeToBasicNativeType(Zilch::Type* zilchType)
     return nullptr;
 }
 
-Zilch::Type* BasicNativeTypeToZilchType(NativeType* nativeType)
+Raverie::Type* BasicNativeTypeToRaverieType(NativeType* nativeType)
 {
   // Get native type ID
   NativeTypeId nativeTypeId = nativeType ? nativeType->mTypeId : cInvalidNativeTypeId;
 
-  // Get zilch type via native type ID
-  return BasicNativeTypeToZilchType(nativeTypeId);
+  // Get raverie type via native type ID
+  return BasicNativeTypeToRaverieType(nativeTypeId);
 }
-Zilch::Type* BasicNativeTypeToZilchType(NativeTypeId nativeTypeId)
+Raverie::Type* BasicNativeTypeToRaverieType(NativeTypeId nativeTypeId)
 {
   // Switch on native type ID
   switch (nativeTypeId)
@@ -101,78 +101,78 @@ Zilch::Type* BasicNativeTypeToZilchType(NativeTypeId nativeTypeId)
 
   // Bool Type
   case BasicNativeType::Bool:
-    return ZilchTypeId(BasicNativeTypeFromEnum<BasicNativeType::Bool>::Type); // Boolean type
+    return RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::Bool>::Type); // Boolean type
 
   // Char Type
   case BasicNativeType::Char:
-    return nullptr; // (Not bound to Zilch)
+    return nullptr; // (Not bound to Raverie)
 
   // Fixed-Width Signed Integral Types
   case BasicNativeType::Int8:
-    return nullptr; // (Not bound to Zilch)
+    return nullptr; // (Not bound to Raverie)
   case BasicNativeType::Int16:
-    return nullptr; // (Not bound to Zilch)
+    return nullptr; // (Not bound to Raverie)
   case BasicNativeType::Int32:
-    return ZilchTypeId(BasicNativeTypeFromEnum<BasicNativeType::Int32>::Type); // Integer type
+    return RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::Int32>::Type); // Integer type
   case BasicNativeType::Int64:
-    return ZilchTypeId(BasicNativeTypeFromEnum<BasicNativeType::Int64>::Type); // DoubleInteger
+    return RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::Int64>::Type); // DoubleInteger
                                                                                // type
 
   // Fixed-Width Unsigned Integral Types
   case BasicNativeType::Uint8:
-    return ZilchTypeId(BasicNativeTypeFromEnum<BasicNativeType::Uint8>::Type); // Byte type
+    return RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::Uint8>::Type); // Byte type
   case BasicNativeType::Uint16:
-    return nullptr; // (Not bound to Zilch)
+    return nullptr; // (Not bound to Raverie)
   case BasicNativeType::Uint32:
-    return nullptr; // (Not bound to Zilch)
+    return nullptr; // (Not bound to Raverie)
   case BasicNativeType::Uint64:
-    return nullptr; // (Not bound to Zilch)
+    return nullptr; // (Not bound to Raverie)
 
   // Floating Point Types
   case BasicNativeType::Float:
-    return ZilchTypeId(BasicNativeTypeFromEnum<BasicNativeType::Float>::Type); // Real type
+    return RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::Float>::Type); // Real type
   case BasicNativeType::Double:
-    return ZilchTypeId(BasicNativeTypeFromEnum<BasicNativeType::Double>::Type); // DoubleReal
+    return RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::Double>::Type); // DoubleReal
                                                                                 // type
 
   // Multi-Primitive Math Types
   case BasicNativeType::BoolVector2:
-    return ZilchTypeId(BasicNativeTypeFromEnum<BasicNativeType::BoolVector2>::Type); // Boolean2
+    return RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::BoolVector2>::Type); // Boolean2
                                                                                      // type
   case BasicNativeType::BoolVector3:
-    return ZilchTypeId(BasicNativeTypeFromEnum<BasicNativeType::BoolVector3>::Type); // Boolean3
+    return RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::BoolVector3>::Type); // Boolean3
                                                                                      // type
   case BasicNativeType::BoolVector4:
-    return ZilchTypeId(BasicNativeTypeFromEnum<BasicNativeType::BoolVector4>::Type); // Boolean4
+    return RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::BoolVector4>::Type); // Boolean4
                                                                                      // type
   case BasicNativeType::IntVector2:
-    return ZilchTypeId(BasicNativeTypeFromEnum<BasicNativeType::IntVector2>::Type); // Integer2
+    return RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::IntVector2>::Type); // Integer2
                                                                                     // type
   case BasicNativeType::IntVector3:
-    return ZilchTypeId(BasicNativeTypeFromEnum<BasicNativeType::IntVector3>::Type); // Integer3
+    return RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::IntVector3>::Type); // Integer3
                                                                                     // type
   case BasicNativeType::IntVector4:
-    return ZilchTypeId(BasicNativeTypeFromEnum<BasicNativeType::IntVector4>::Type); // Integer4
+    return RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::IntVector4>::Type); // Integer4
                                                                                     // type
   case BasicNativeType::Vector2:
-    return ZilchTypeId(BasicNativeTypeFromEnum<BasicNativeType::Vector2>::Type); // Real2 type
+    return RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::Vector2>::Type); // Real2 type
   case BasicNativeType::Vector3:
-    return ZilchTypeId(BasicNativeTypeFromEnum<BasicNativeType::Vector3>::Type); // Real3 type
+    return RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::Vector3>::Type); // Real3 type
   case BasicNativeType::Vector4:
-    return ZilchTypeId(BasicNativeTypeFromEnum<BasicNativeType::Vector4>::Type); // Real4 type
+    return RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::Vector4>::Type); // Real4 type
   case BasicNativeType::Quaternion:
-    return ZilchTypeId(BasicNativeTypeFromEnum<BasicNativeType::Quaternion>::Type); // Quaternion
+    return RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::Quaternion>::Type); // Quaternion
                                                                                     // type
   case BasicNativeType::Matrix3:
-    return ZilchTypeId(BasicNativeTypeFromEnum<BasicNativeType::Matrix3>::Type); // Real3x3
+    return RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::Matrix3>::Type); // Real3x3
                                                                                  // type
   case BasicNativeType::Matrix4:
-    return ZilchTypeId(BasicNativeTypeFromEnum<BasicNativeType::Matrix4>::Type); // Real4x4
+    return RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::Matrix4>::Type); // Real4x4
                                                                                  // type
 
   // String Type
   case BasicNativeType::String:
-    return ZilchTypeId(BasicNativeTypeFromEnum<BasicNativeType::String>::Type); // String type
+    return RaverieTypeId(BasicNativeTypeFromEnum<BasicNativeType::String>::Type); // String type
   }
 }
 
@@ -183,7 +183,7 @@ Variant ConvertBasicAnyToVariant(const Any& anyValue)
     return Variant();
 
   // Get basic native type from the any's stored type
-  NativeType* nativeType = ZilchTypeToBasicNativeType(anyValue.StoredType);
+  NativeType* nativeType = RaverieTypeToBasicNativeType(anyValue.StoredType);
   if (!nativeType) // Unable? (The any's stored type is not a basic native
                    // type?)
     return Variant();
@@ -203,9 +203,9 @@ Any ConvertBasicVariantToAny(const Variant& variantValue)
   if (variantValue.IsEmpty())
     return Any();
 
-  // Get zilch type from the variant's stored type
-  Type* zilchType = BasicNativeTypeToZilchType(variantValue.GetNativeType());
-  if (!zilchType) // Unable? (The variant's stored type is not a basic native
+  // Get raverie type from the variant's stored type
+  Type* raverieType = BasicNativeTypeToRaverieType(variantValue.GetNativeType());
+  if (!raverieType) // Unable? (The variant's stored type is not a basic native
                   // type?)
     return Any();
 
@@ -213,11 +213,11 @@ Any ConvertBasicVariantToAny(const Variant& variantValue)
   const void* variantData = variantValue.GetData();
   Assert(variantData);
 
-  // This zilch type is meant to be passed by handle?
-  if (zilchType->IsHandle())
+  // This raverie type is meant to be passed by handle?
+  if (raverieType->IsHandle())
   {
     // Create a handle containing our value data
-    Handle handle((const byte*)variantData, Type::GetBoundType(zilchType));
+    Handle handle((const byte*)variantData, Type::GetBoundType(raverieType));
 
     // Copy handle to new any
     Any result(handle);
@@ -226,9 +226,9 @@ Any ConvertBasicVariantToAny(const Variant& variantValue)
   else
   {
     // Copy value to new any
-    Any result((const byte*)variantData, zilchType);
+    Any result((const byte*)variantData, raverieType);
     return result;
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

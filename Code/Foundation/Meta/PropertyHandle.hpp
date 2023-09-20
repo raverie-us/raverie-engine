@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Forward Declarations.
@@ -35,7 +35,7 @@ DeclareEnum3(PropertyPathType, Component, Property, Index);
 class PropertyPath
 {
 public:
-  ZilchDeclareType(PropertyPath, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(PropertyPath, TypeCopyMode::ReferenceType);
 
   /// Common constructors. For longer paths, use the Add functions.
   PropertyPath()
@@ -133,4 +133,4 @@ public:
   PropertyPath mPath;
 };
 
-} // namespace Zero
+} // namespace Raverie

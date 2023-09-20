@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// The BroadPhase interface for the DynamicAabbTree. Unlike the tree itself,
@@ -15,7 +15,7 @@ public:
   AvlDynamicAabbTreeBroadPhase();
   ~AvlDynamicAabbTreeBroadPhase();
 
-  ZilchDeclareType(AvlDynamicAabbTreeBroadPhase, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(AvlDynamicAabbTreeBroadPhase, TypeCopyMode::ReferenceType);
 };
 
-} // namespace Zero
+} // namespace Raverie

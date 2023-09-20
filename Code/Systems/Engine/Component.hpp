@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Tags
@@ -37,7 +37,7 @@ class Component : public Object
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(Component, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Component, TypeCopyMode::ReferenceType);
 
   /// Component memory management.
   static Memory::Heap* sHeap;
@@ -75,7 +75,7 @@ public:
   /// composition).
   Cog* GetOwner() const;
 
-  /// This is to guard from Zilch Components accessing the owner inside property
+  /// This is to guard from Raverie Components accessing the owner inside property
   /// setters during serialization. The owner used to be null, but had to be set
   /// for something in CogPath. This getter is bound to script (as 'Owner'), and
   /// it only returns the owner if the Cog is initialized. Get the Cog this
@@ -214,4 +214,4 @@ public:
   using Handle::operator=;
 };
 
-} // namespace Zero
+} // namespace Raverie

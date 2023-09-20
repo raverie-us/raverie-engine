@@ -24,7 +24,7 @@ struct BlockVector3
   real Dot(const BlockVector3& rhs) const;
   void Scale(const BlockVector3& rhs, BlockVector3& out) const;
 
-  Zero::Array<Vector3> mBlocks;
+  Raverie::Array<Vector3> mBlocks;
 };
 
 struct BlockMatrix3
@@ -41,8 +41,8 @@ struct BlockMatrix3
   BlockMatrix3 Transform(const BlockMatrix3& rhs) const;
   void Transform(const BlockVector3& rhs, BlockVector3& out) const;
 
-  typedef Zero::Array<Matrix3> Cells;
-  typedef Zero::Array<Cells> Rows;
+  typedef Raverie::Array<Matrix3> Cells;
+  typedef Raverie::Array<Cells> Rows;
   Rows mBlocks;
 };
 

@@ -3,7 +3,7 @@
 #include "ObjectSaver.hpp"
 #include "CogRestoreState.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Cog Replace Event
@@ -12,7 +12,7 @@ namespace Events
 DefineEvent(CogReplaced);
 }
 
-ZilchDefineType(CogReplaceEvent, builder, type)
+RaverieDefineType(CogReplaceEvent, builder, type)
 {
 }
 
@@ -156,7 +156,7 @@ void RestoreUndoHandles(Cog* oldCog, Cog* newCog)
   // Update Component handles
   forRange (Component* newComponent, newCog->GetComponents())
   {
-    BoundType* componentType = ZilchVirtualTypeId(newComponent);
+    BoundType* componentType = RaverieVirtualTypeId(newComponent);
     if (Component* oldComponent = oldCog->QueryComponentType(componentType))
       Z::gUndoMap->UpdateHandleIfExists(oldComponent, newComponent);
   }
@@ -285,4 +285,4 @@ void ReplaceInSelection(Cog* oldCog, Cog* newCog, HashSet<MetaSelection*>* modif
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

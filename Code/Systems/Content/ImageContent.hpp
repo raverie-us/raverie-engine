@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Image content is 2d image data loaded from
@@ -9,7 +9,7 @@ namespace Zero
 class ImageContent : public ContentComposition
 {
 public:
-  ZilchDeclareType(ImageContent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ImageContent, TypeCopyMode::ReferenceType);
   ImageContent();
 
   void BuildContentItem(BuildOptions& options) override;
@@ -19,4 +19,4 @@ public:
 
 void BuildImageFileDialogFilters(Array<FileDialogFilter>& filters);
 
-} // namespace Zero
+} // namespace Raverie

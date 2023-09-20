@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 String PhysicsRaycastProviderDisplayText(const BoundType* type, const byte* data)
@@ -10,17 +10,17 @@ String PhysicsRaycastProviderDisplayText(const BoundType* type, const byte* data
   return Name;
 }
 
-ZilchDefineType(PhysicsRaycastProvider, builder, type)
+RaverieDefineType(PhysicsRaycastProvider, builder, type)
 {
-  ZeroBindDocumented();
-  ZeroBindExpanded();
-  ZilchBindConstructor();
+  RaverieBindDocumented();
+  RaverieBindExpanded();
+  RaverieBindConstructor();
 
-  ZilchBindFieldProperty(mDynamicColliders);
-  ZilchBindFieldProperty(mSelectGhosts);
-  ZilchBindFieldProperty(mStaticColliders);
-  ZilchBindFieldProperty(mMultiSelectStatic);
-  ZilchBindFieldProperty(mMultiSelectKinematic);
+  RaverieBindFieldProperty(mDynamicColliders);
+  RaverieBindFieldProperty(mSelectGhosts);
+  RaverieBindFieldProperty(mStaticColliders);
+  RaverieBindFieldProperty(mMultiSelectStatic);
+  RaverieBindFieldProperty(mMultiSelectKinematic);
 
   type->ToStringFunction = PhysicsRaycastProviderDisplayText;
   type->Add(new StringNameDisplay("Physics"));
@@ -99,4 +99,4 @@ void PhysicsRaycastProvider::FrustumCast(Frustum& frustum, CastInfo& castInfo, R
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

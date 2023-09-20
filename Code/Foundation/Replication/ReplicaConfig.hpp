@@ -85,7 +85,7 @@ StaticAssertWithinRange(Range15, EMPLACE_CONTEXT_ID_BITS, 1, UINTMAX_BITS);
 #  define REPLICA_PROPERTY_TYPE_VIRTUAL
 #endif
 
-namespace Zero
+namespace Raverie
 {
 
 //                               Replicator ID //
@@ -304,7 +304,7 @@ DeclareEnum3(ConvergenceState,
 
 //                                 Macros //
 
-#if ZERO_ENABLE_ERROR
+#if RaverieEnableError
 
 /// Test the specified condition on all replicas provided
 #  define AssertReplicas(replicas, condition, ...)                                                                     \
@@ -652,4 +652,4 @@ void SetDataValue(const Variant& value, Variant& propertyData)
   *dataPointer = value.GetOrError<T>();
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Physics
@@ -66,21 +66,21 @@ struct RelativeVelocityPolicy : public DefaultFragmentPolicy<RelativeVelocityJoi
 
 ImplementJointType(RelativeVelocityJoint);
 
-ZilchDefineType(RelativeVelocityJoint, builder, type)
+RaverieDefineType(RelativeVelocityJoint, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindInterface(Joint);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindInterface(Joint);
+  RaverieBindDocumented();
 
-  ZilchBindMethod(GetAxis);
-  ZilchBindMethod(SetAxis);
-  ZilchBindMethod(GetSpeed);
-  ZilchBindMethod(SetSpeed);
-  ZilchBindMethod(GetMaxImpulse);
-  ZilchBindMethod(SetMaxImpulse);
-  ZilchBindMethod(GetAxisActive);
-  ZilchBindMethod(SetAxisActive);
+  RaverieBindMethod(GetAxis);
+  RaverieBindMethod(SetAxis);
+  RaverieBindMethod(GetSpeed);
+  RaverieBindMethod(SetSpeed);
+  RaverieBindMethod(GetMaxImpulse);
+  RaverieBindMethod(SetMaxImpulse);
+  RaverieBindMethod(GetAxisActive);
+  RaverieBindMethod(SetAxisActive);
 }
 
 RelativeVelocityJoint::RelativeVelocityJoint()
@@ -232,4 +232,4 @@ void RelativeVelocityJoint::SetAxisActive(uint index, bool active)
 
 } // namespace Physics
 
-} // namespace Zero
+} // namespace Raverie

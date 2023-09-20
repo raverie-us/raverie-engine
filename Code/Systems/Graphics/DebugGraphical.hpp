@@ -2,13 +2,13 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class DebugGraphical : public Graphical
 {
 public:
-  ZilchDeclareType(DebugGraphical, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(DebugGraphical, TypeCopyMode::ReferenceType);
 
   void Initialize(CogInitializer& initializer) override;
 
@@ -32,7 +32,7 @@ public:
 class DebugGraphicalPrimitive : public DebugGraphical
 {
 public:
-  ZilchDeclareType(DebugGraphicalPrimitive, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(DebugGraphicalPrimitive, TypeCopyMode::ReferenceType);
 
   void ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBlock& frameBlock) override;
 };
@@ -40,7 +40,7 @@ public:
 class DebugGraphicalThickLine : public DebugGraphicalPrimitive
 {
 public:
-  ZilchDeclareType(DebugGraphicalThickLine, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(DebugGraphicalThickLine, TypeCopyMode::ReferenceType);
 
   void ExtractFrameData(FrameNode& frameNode, FrameBlock& frameBlock) override;
 };
@@ -48,9 +48,9 @@ public:
 class DebugGraphicalText : public DebugGraphical
 {
 public:
-  ZilchDeclareType(DebugGraphicalText, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(DebugGraphicalText, TypeCopyMode::ReferenceType);
 
   void ExtractViewData(ViewNode& viewNode, ViewBlock& viewBlock, FrameBlock& frameBlock) override;
 };
 
-} // namespace Zero
+} // namespace Raverie

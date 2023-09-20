@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 namespace Events
 {
@@ -126,7 +126,7 @@ public:
 class CogPath : public Object
 {
 public:
-  ZilchDeclareType(CogPath, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CogPath, TypeCopyMode::ReferenceType);
 
   CogPath();
   CogPath(StringParam path);
@@ -246,13 +246,13 @@ public:
 template <typename type>
 inline type* CogPath::Has()
 {
-  return (type*)QueryComponentId(ZilchTypeId(type));
+  return (type*)QueryComponentId(RaverieTypeId(type));
 }
 
 class CogPathEvent : public Event
 {
 public:
-  ZilchDeclareType(CogPathEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CogPathEvent, TypeCopyMode::ReferenceType);
 
   CogPathEvent();
   CogPathEvent(CogPath& path);
@@ -264,7 +264,7 @@ public:
 class CogPathMetaComposition : public MetaComposition
 {
 public:
-  ZilchDeclareType(CogPathMetaComposition, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CogPathMetaComposition, TypeCopyMode::ReferenceType);
   CogPathMetaComposition();
 
   virtual Handle GetComponent(HandleParam owner, BoundType* componentType);
@@ -274,7 +274,7 @@ public:
 class CogPathMetaSerialization : public MetaSerialization
 {
 public:
-  ZilchDeclareType(CogPathMetaSerialization, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CogPathMetaSerialization, TypeCopyMode::ReferenceType);
 
   bool SerializeReferenceProperty(BoundType* meta, cstr fieldName, Any& value, Serializer& serializer) override;
   void SetDefault(Type* type, Any& any) override;
@@ -289,4 +289,4 @@ struct Policy<CogPath>
   static bool Serialize(Serializer& stream, cstr fieldName, CogPath& value);
 };
 } // namespace Serialization
-} // namespace Zero
+} // namespace Raverie

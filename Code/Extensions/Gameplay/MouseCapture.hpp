@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -19,7 +19,7 @@ class MouseCapture : public Component
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(MouseCapture, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MouseCapture, TypeCopyMode::ReferenceType);
 
   /// Component Interface.
   void Initialize(CogInitializer& initializer) override;
@@ -50,4 +50,4 @@ private:
   HandleOf<MouseManipulation> mManipulation;
 };
 
-} // namespace Zero
+} // namespace Raverie

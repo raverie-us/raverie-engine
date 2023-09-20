@@ -1,24 +1,24 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(JointSpring, builder, type)
+RaverieDefineType(JointSpring, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDocumented();
-  ZeroBindDependency(Joint);
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
+  RaverieBindDependency(Joint);
 
-  ZilchBindGetterSetterProperty(Active)->ZeroSerialize(true);
-  ZilchBindGetterSetterProperty(FrequencyHz)->ZeroSerialize(real(2.0));
-  ZilchBindGetterSetterProperty(DampingRatio)->ZeroSerialize(real(0.7));
+  RaverieBindGetterSetterProperty(Active)->RaverieSerialize(true);
+  RaverieBindGetterSetterProperty(FrequencyHz)->RaverieSerialize(real(2.0));
+  RaverieBindGetterSetterProperty(DampingRatio)->RaverieSerialize(real(0.7));
 
-  ZilchBindGetterSetter(AtomIds)->ZeroSerialize(255u);
+  RaverieBindGetterSetter(AtomIds)->RaverieSerialize(255u);
 
-  ZeroBindTag(Tags::Physics);
-  ZeroBindTag(Tags::Joint);
+  RaverieBindTag(Tags::Physics);
+  RaverieBindTag(Tags::Joint);
 }
 
 JointSpring::JointSpring()
@@ -121,4 +121,4 @@ void JointSpring::SetDampingRatio(real dampRatio)
   Physics::JointHelpers::ForceAwakeJoint(mNode->mJoint);
 }
 
-} // namespace Zero
+} // namespace Raverie

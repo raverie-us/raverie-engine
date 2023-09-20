@@ -29,7 +29,7 @@ Verify(): Runs the function and generates an error if the function returns non
           error code will be removed.
 */
 
-namespace Zero
+namespace Raverie
 {
 
 // Signaler
@@ -71,13 +71,13 @@ private:
   static ErrorHandler sActiveErrorHandler;
 };
 
-} // namespace Zero
+} // namespace Raverie
 
-#if !defined(ZERO_ENABLE_ERROR)
-#  if defined(ZeroDebug)
-#    define ZERO_ENABLE_ERROR 1
+#if !defined(RaverieEnableError)
+#  if defined(RaverieDebug)
+#    define RaverieEnableError 1
 #  else
-#    define ZERO_ENABLE_ERROR 0
+#    define RaverieEnableError 0
 #  endif
 #endif
 
@@ -87,12 +87,12 @@ static int gConditionalFalseConstant = 0;
   do                                                                                                                   \
   {                                                                                                                    \
     static bool __ignore = false;                                                                                      \
-    if ((Expression) && ::Zero::ErrorSignaler::SignalError(                                                            \
-                            ::Zero::ErrorSignaler::Error, #Expression, __FILE__, __LINE__, __ignore, ##__VA_ARGS__))   \
-      ZeroDebugBreak();                                                                                                \
+    if ((Expression) && ::Raverie::ErrorSignaler::SignalError(                                                            \
+                            ::Raverie::ErrorSignaler::Error, #Expression, __FILE__, __LINE__, __ignore, ##__VA_ARGS__))   \
+      RaverieDebugBreak();                                                                                                \
   } while (gConditionalFalseConstant)
 
-#if ZERO_ENABLE_ERROR
+#if RaverieEnableError
 
 #  define UnusedParameter(param) (void)param
 
@@ -101,18 +101,18 @@ static int gConditionalFalseConstant = 0;
     {                                                                                                                  \
       static bool __ignore = false;                                                                                    \
       if ((Expression) &&                                                                                              \
-          ::Zero::ErrorSignaler::SignalError(                                                                          \
-              ::Zero::ErrorSignaler::Warning, #Expression, __FILE__, __LINE__, __ignore, ##__VA_ARGS__))               \
-        ZeroDebugBreak();                                                                                              \
+          ::Raverie::ErrorSignaler::SignalError(                                                                          \
+              ::Raverie::ErrorSignaler::Warning, #Expression, __FILE__, __LINE__, __ignore, ##__VA_ARGS__))               \
+        RaverieDebugBreak();                                                                                              \
     } while (gConditionalFalseConstant)
 
 #  define ErrorIf(Expression, ...)                                                                                     \
     do                                                                                                                 \
     {                                                                                                                  \
       static bool __ignore = false;                                                                                    \
-      if ((Expression) && ::Zero::ErrorSignaler::SignalError(                                                          \
-                              ::Zero::ErrorSignaler::Error, #Expression, __FILE__, __LINE__, __ignore, ##__VA_ARGS__)) \
-        ZeroDebugBreak();                                                                                              \
+      if ((Expression) && ::Raverie::ErrorSignaler::SignalError(                                                          \
+                              ::Raverie::ErrorSignaler::Error, #Expression, __FILE__, __LINE__, __ignore, ##__VA_ARGS__)) \
+        RaverieDebugBreak();                                                                                              \
     } while (gConditionalFalseConstant)
 
 #  define Assert(Expression, ...)                                                                                      \
@@ -120,36 +120,36 @@ static int gConditionalFalseConstant = 0;
     {                                                                                                                  \
       static bool __ignore = false;                                                                                    \
       if (!(Expression) &&                                                                                             \
-          ::Zero::ErrorSignaler::SignalError(                                                                          \
-              ::Zero::ErrorSignaler::Error, #Expression, __FILE__, __LINE__, __ignore, ##__VA_ARGS__))                 \
-        ZeroDebugBreak();                                                                                              \
+          ::Raverie::ErrorSignaler::SignalError(                                                                          \
+              ::Raverie::ErrorSignaler::Error, #Expression, __FILE__, __LINE__, __ignore, ##__VA_ARGS__))                 \
+        RaverieDebugBreak();                                                                                              \
     } while (gConditionalFalseConstant)
 
 #  define Error(...)                                                                                                   \
     do                                                                                                                 \
     {                                                                                                                  \
       static bool __ignore = false;                                                                                    \
-      if (::Zero::ErrorSignaler::SignalError(                                                                          \
-              ::Zero::ErrorSignaler::Error, "", __FILE__, __LINE__, __ignore, ##__VA_ARGS__))                          \
-        ZeroDebugBreak();                                                                                              \
+      if (::Raverie::ErrorSignaler::SignalError(                                                                          \
+              ::Raverie::ErrorSignaler::Error, "", __FILE__, __LINE__, __ignore, ##__VA_ARGS__))                          \
+        RaverieDebugBreak();                                                                                              \
     } while (gConditionalFalseConstant)
 
 #  define Warn(...)                                                                                                    \
     do                                                                                                                 \
     {                                                                                                                  \
       static bool __ignore = false;                                                                                    \
-      if (::Zero::ErrorSignaler::SignalError(                                                                          \
-              ::Zero::ErrorSignaler::Warning, "", __FILE__, __LINE__, __ignore, ##__VA_ARGS__))                        \
-        ZeroDebugBreak();                                                                                              \
+      if (::Raverie::ErrorSignaler::SignalError(                                                                          \
+              ::Raverie::ErrorSignaler::Warning, "", __FILE__, __LINE__, __ignore, ##__VA_ARGS__))                        \
+        RaverieDebugBreak();                                                                                              \
     } while (gConditionalFalseConstant)
 
 #  define FileErrorIf(Expression, file, Line, ...)                                                                     \
     do                                                                                                                 \
     {                                                                                                                  \
       static bool __ignore = false;                                                                                    \
-      if ((Expression) && ::Zero::ErrorSignaler::SignalError(                                                          \
-                              ::Zero::ErrorSignaler::FileError, #Expression, file, Line, __ignore, ##__VA_ARGS__))     \
-        ZeroDebugBreak();                                                                                              \
+      if ((Expression) && ::Raverie::ErrorSignaler::SignalError(                                                          \
+                              ::Raverie::ErrorSignaler::FileError, #Expression, file, Line, __ignore, ##__VA_ARGS__))     \
+        RaverieDebugBreak();                                                                                              \
     } while (gConditionalConstant)
 
 #  define Verify(funccall) ErrorIf(funcall != 0);

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Saving Serializer for simple test file format.
@@ -77,4 +77,4 @@ public:
   void SetFlags();
 };
 
-} // namespace Zero
+} // namespace Raverie

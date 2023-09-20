@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Meta Creation Context
@@ -20,7 +20,7 @@ struct CogMetaCreationContext : public MetaCreationContext
 class CogMetaComposition : public MetaComposition
 {
 public:
-  ZilchDeclareType(CogMetaComposition, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CogMetaComposition, TypeCopyMode::ReferenceType);
   CogMetaComposition();
 
   /// MetaComposition Interface.
@@ -44,4 +44,4 @@ public:
   void MoveComponent(HandleParam owner, HandleParam component, uint destination) override;
 };
 
-} // namespace Zero
+} // namespace Raverie

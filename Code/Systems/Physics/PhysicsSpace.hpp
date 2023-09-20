@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class BroadPhasePackage;
@@ -17,7 +17,7 @@ DeclareTag(Physics);
 /// Cast result from performing a sweep test.
 struct SweepResult
 {
-  ZilchDeclareType(SweepResult, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SweepResult, TypeCopyMode::ReferenceType);
 
   friend bool operator<(const SweepResult& lhs, const SweepResult& rhs)
   {
@@ -80,7 +80,7 @@ struct SweepResultRange
 class PhysicsSpace : public Component
 {
 public:
-  ZilchDeclareType(PhysicsSpace, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(PhysicsSpace, TypeCopyMode::ReferenceType);
   friend class RigidBody;
 
   PhysicsSpace();
@@ -474,4 +474,4 @@ public:
   Collider* mWorldCollider;
 };
 
-} // namespace Zero
+} // namespace Raverie

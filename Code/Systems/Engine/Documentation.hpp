@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 namespace Events
 {
@@ -22,9 +22,9 @@ typedef ArrayMap<String, String> TypeReplacementMap;
 
 /// Find the method doc in a list that has the same parameters as the meta
 /// method passed in
-MethodDoc* MethodDocWithSameParams(Array<MethodDoc*>& methodList, Zilch::Function* metaMeth);
+MethodDoc* MethodDocWithSameParams(Array<MethodDoc*>& methodList, Raverie::Function* metaMeth);
 
-/// Loads from zilch, saves to data file, then safe deletes
+/// Loads from raverie, saves to data file, then safe deletes
 /// Note: Ignoring save unbound for now until feature re-added that used it
 void SaveInfoFromMetaToFile(StringParam fileName, bool saveUnbound);
 
@@ -207,7 +207,7 @@ class ParameterDoc : public Object
 public:
   void Serialize(Serializer& stream);
 
-  /// Allows comparison of a zilch typeId with a documentation type
+  /// Allows comparison of a raverie typeId with a documentation type
   bool IsSameType(DelegateType* type);
 
   String mType;
@@ -261,13 +261,13 @@ public:
   void FillDocumentation(BoundType* classType);
 
   PropertyDoc* GetPropertyDoc(StringParam propertyName);
-  MethodDoc* GetMethodDoc(Zilch::Function* function);
+  MethodDoc* GetMethodDoc(Raverie::Function* function);
 
   /// Helper for CreateClassDocFromBoundType to load events
   void CreateEventDocFromBoundType(SendsEvent* eventSent);
 
   /// Helper for CreateClassDocFromBoundType to load methods
-  void CreateMethodDocFromBoundType(Zilch::Function* method, TypeReplacementMap* replacements, bool exportDoc);
+  void CreateMethodDocFromBoundType(Raverie::Function* method, TypeReplacementMap* replacements, bool exportDoc);
 
   /// Helper for CreateClassDocFromBoundType to load properties
   void CreatePropertyDocFromBoundType(Property* metaProperty, TypeReplacementMap* replacements, bool exportDoc);
@@ -323,7 +323,7 @@ public:
 class DocumentationLibrary : public LazySingleton<DocumentationLibrary, EventObject>
 {
 public:
-  ZilchDeclareType(DocumentationLibrary, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(DocumentationLibrary, TypeCopyMode::ReferenceType);
 
   ~DocumentationLibrary();
 
@@ -371,4 +371,4 @@ namespace Z
 extern DocumentationLibrary* gDocumentation;
 }
 
-} // namespace Zero
+} // namespace Raverie

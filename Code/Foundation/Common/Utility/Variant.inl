@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 //                                  Variant //
@@ -16,7 +16,7 @@ template <typename T>
 Variant::Variant(MoveReference<T> rhs) : mNativeType(nullptr)
 {
   InternalZeroLocalBuffer();
-  Assign<T>(ZeroMove(rhs));
+  Assign<T>(RaverieMove(rhs));
 }
 
 //
@@ -32,7 +32,7 @@ Variant& Variant::operator=(const T& rhs)
 template <typename T>
 Variant& Variant::operator=(MoveReference<T> rhs)
 {
-  Assign<T>(ZeroMove(rhs));
+  Assign<T>(RaverieMove(rhs));
   return *this;
 }
 
@@ -299,4 +299,4 @@ inline void ToValue(StringRange range, Variant& value)
   return value.ToValue(range);
 }
 
-} // namespace Zero
+} // namespace Raverie

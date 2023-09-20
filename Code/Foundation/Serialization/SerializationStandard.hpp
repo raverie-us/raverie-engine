@@ -4,26 +4,26 @@
 #include "Foundation/Support/SupportStandard.hpp"
 #include "Foundation/Meta/MetaStandard.hpp"
 
-#include "Foundation/Zilch/Precompiled.hpp"
-using namespace Zilch;
+#include "Foundation/RaverieLanguage/Precompiled.hpp"
+using namespace Raverie;
 
-namespace Zero
+namespace Raverie
 {
 
 // Serialization library
-class SerializationLibrary : public Zilch::StaticLibrary
+class SerializationLibrary : public Raverie::StaticLibrary
 {
 public:
-  ZilchDeclareStaticLibraryInternals(SerializationLibrary);
+  RaverieDeclareStaticLibraryInternals(SerializationLibrary);
 
   static void Initialize();
   static void Shutdown();
 };
 
-} // namespace Zero
+} // namespace Raverie
 
 #include "Serialization.hpp"
-#include "ZeroContainers.hpp"
+#include "Containers.hpp"
 #include "SerializationBuilder.hpp"
 #include "Tokenizer.hpp"
 #include "SerializationUtility.hpp"

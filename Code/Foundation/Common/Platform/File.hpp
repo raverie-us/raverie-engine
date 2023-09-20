@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 // File Read Write Mode
 DeclareEnum4(FileMode,
@@ -103,7 +103,7 @@ public:
   void Duplicate(Status& status, File& destinationFile);
 
 private:
-  ZeroDeclarePrivateData(File, 50);
+  RaverieDeclarePrivateData(File, 50);
 
   String mFilePath;
   FileMode::Enum mFileMode;
@@ -127,4 +127,4 @@ private:
   File* mFile;
 };
 
-} // namespace Zero
+} // namespace Raverie

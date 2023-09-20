@@ -1,14 +1,14 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Serialization Filter
 class CogSerializationFilter : public SerializationFilter
 {
 public:
-  ZilchDeclareType(CogSerializationFilter, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CogSerializationFilter, TypeCopyMode::ReferenceType);
   bool ShouldSerialize(Object* object) override;
 };
 
@@ -16,7 +16,7 @@ public:
 class CogMetaOperations : public MetaOperations
 {
 public:
-  ZilchDeclareType(CogMetaOperations, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CogMetaOperations, TypeCopyMode::ReferenceType);
 
   u64 GetUndoHandleId(HandleParam object) override;
 
@@ -32,7 +32,7 @@ public:
 class CogMetaDataInheritance : public MetaDataInheritanceRoot
 {
 public:
-  ZilchDeclareType(CogMetaDataInheritance, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CogMetaDataInheritance, TypeCopyMode::ReferenceType);
   CogMetaDataInheritance()
   {
   }
@@ -56,7 +56,7 @@ public:
 class CogMetaTransform : public MetaTransform
 {
 public:
-  ZilchDeclareType(CogMetaTransform, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CogMetaTransform, TypeCopyMode::ReferenceType);
 
   MetaTransformInstance GetInstance(HandleParam object) override;
 };
@@ -67,14 +67,14 @@ public:
 class CogArchetypeExtension : public EditorPropertyExtension
 {
 public:
-  ZilchDeclareType(CogArchetypeExtension, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CogArchetypeExtension, TypeCopyMode::ReferenceType);
 };
 
 // Cog Meta Display
 class CogMetaDisplay : public MetaDisplay
 {
 public:
-  ZilchDeclareType(CogMetaDisplay, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CogMetaDisplay, TypeCopyMode::ReferenceType);
 
   String GetName(HandleParam object) override;
   String GetDebugText(HandleParam object) override;
@@ -86,7 +86,7 @@ public:
 class CogMetaSerialization : public MetaSerialization
 {
 public:
-  ZilchDeclareType(CogMetaSerialization, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CogMetaSerialization, TypeCopyMode::ReferenceType);
 
   bool SerializeReferenceProperty(BoundType* propertyType, cstr fieldName, Any& value, Serializer& serializer) override;
   void AddCustomAttributes(HandleParam object, TextSaver* saver) override;
@@ -100,9 +100,9 @@ public:
 class CogArchetypePropertyFilter : public MetaPropertyFilter
 {
 public:
-  ZilchDeclareType(CogArchetypePropertyFilter, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CogArchetypePropertyFilter, TypeCopyMode::ReferenceType);
 
   bool Filter(Member* prop, HandleParam instance) override;
 };
 
-} // namespace Zero
+} // namespace Raverie

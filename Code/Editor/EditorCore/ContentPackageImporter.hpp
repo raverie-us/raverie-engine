@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Forward declarations
@@ -13,7 +13,7 @@ struct ContentImporterSource;
 class ContentImporter : public Composite
 {
 public:
-  typedef ContentImporter ZilchSelf;
+  typedef ContentImporter RaverieSelf;
 
   /// Constructor / Destructor
   ContentImporter(Composite* parent);
@@ -59,4 +59,4 @@ private:
 
 void ImportContentPackage();
 
-} // namespace Zero
+} // namespace Raverie

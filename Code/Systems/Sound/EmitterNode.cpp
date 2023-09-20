@@ -2,7 +2,7 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 using namespace AudioConstants;
@@ -19,7 +19,7 @@ EmitterDataPerListener::EmitterDataPerListener() :
 
 // Emitter Node
 
-ZilchDefineType(EmitterNode, builder, type)
+RaverieDefineType(EmitterNode, builder, type)
 {
 }
 
@@ -264,4 +264,4 @@ void EmitterNode::CalculateData(EmitterDataPerListener* data,
   PanningObject.ComputeGains(relativePosition2D, 0.0f, listenerData.mGainValues);
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Physics
@@ -100,4 +100,4 @@ void DrawJointsFragmentList(ListType& jointList)
 
 } // namespace Physics
 
-} // namespace Zero
+} // namespace Raverie

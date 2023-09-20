@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Manages multiple broad phases and any queries to the broad phases.
@@ -10,7 +10,7 @@ namespace Zero
 class BroadPhasePackage
 {
 public:
-  ZilchDeclareType(BroadPhasePackage, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(BroadPhasePackage, TypeCopyMode::ReferenceType);
   BroadPhasePackage();
   virtual ~BroadPhasePackage();
 
@@ -111,4 +111,4 @@ protected:
   IBroadPhase* mBroadPhases[BroadPhase::Size];
 };
 
-} // namespace Zero
+} // namespace Raverie

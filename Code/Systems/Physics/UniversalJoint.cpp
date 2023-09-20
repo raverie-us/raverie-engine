@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Physics
@@ -101,18 +101,18 @@ JointInfo UniversalJoint::sInfo = JointInfo(6, 0x18);
 ImplementJointType(UniversalJoint);
 ImplementAnchorAccessors(UniversalJoint, mAnchors);
 
-ZilchDefineType(UniversalJoint, builder, type)
+RaverieDefineType(UniversalJoint, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindInterface(Joint);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindInterface(Joint);
+  RaverieBindDocumented();
 
   BindAnchorAccessors(Vec3(1));
-  ZilchBindGetterSetterProperty(LocalAxis0OfBodyA);
-  ZilchBindGetterSetterProperty(LocalAxis1OfBodyA);
-  ZilchBindGetterSetterProperty(LocalAxis0OfBodyB);
-  ZilchBindGetterSetterProperty(LocalAxis1OfBodyB);
+  RaverieBindGetterSetterProperty(LocalAxis0OfBodyA);
+  RaverieBindGetterSetterProperty(LocalAxis1OfBodyA);
+  RaverieBindGetterSetterProperty(LocalAxis0OfBodyB);
+  RaverieBindGetterSetterProperty(LocalAxis1OfBodyB);
 }
 
 UniversalJoint::UniversalJoint()
@@ -322,4 +322,4 @@ void UniversalJoint::SetLocalAxis1OfBodyB(Vec3Param axis)
 
 } // namespace Physics
 
-} // namespace Zero
+} // namespace Raverie

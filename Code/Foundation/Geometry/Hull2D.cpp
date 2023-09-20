@@ -28,7 +28,7 @@ void DrawPoint(Vec2Param point, const ByteColor& color)
   Vec3 p = Vec3(point.x, point.y, real(0.0));
   // Circle drawn around target point.
   const Vec3 cCircleAxis = cWorldPlaneNormal;
-  Zero::gDebugDraw->Add(Zero::Debug::Circle(p, cCircleAxis, cPointRadius).Color(color).OnTop(true));
+  Raverie::gDebugDraw->Add(Raverie::Debug::Circle(p, cCircleAxis, cPointRadius).Color(color).OnTop(true));
 
   // Plus sign drawn with intersection at target point.
   const Vec3 cUpDown = Vec3::cYAxis * cPointRadius;
@@ -39,15 +39,15 @@ void DrawPoint(Vec2Param point, const ByteColor& color)
       p - cLeftRight, // Left
       p + cLeftRight, // Right
   };
-  Zero::gDebugDraw->Add(Zero::Debug::Line(circlePoints[0], circlePoints[1]).Color(color).OnTop(true));
-  Zero::gDebugDraw->Add(Zero::Debug::Line(circlePoints[2], circlePoints[3]).Color(color).OnTop(true));
+  Raverie::gDebugDraw->Add(Raverie::Debug::Line(circlePoints[0], circlePoints[1]).Color(color).OnTop(true));
+  Raverie::gDebugDraw->Add(Raverie::Debug::Line(circlePoints[2], circlePoints[3]).Color(color).OnTop(true));
 }
 
 void DrawLine(Vec2Param start, Vec2Param end, const ByteColor& color)
 {
   Vec3 a = Vec3(start.x, start.y, real(0.0));
   Vec3 b = Vec3(end.x, end.y, real(0.0));
-  Zero::gDebugDraw->Add(Zero::Debug::Line(a, b).Color(color).OnTop(true));
+  Raverie::gDebugDraw->Add(Raverie::Debug::Line(a, b).Color(color).OnTop(true));
 }
 
 } // namespace
@@ -158,7 +158,7 @@ void Hull2D::DebugBuildStep(void)
   {
   case 0:
   {
-    Zero::Sort(mPoints.All(), LessThanX);
+    Raverie::Sort(mPoints.All(), LessThanX);
     ++mDebugStep;
 
     mDebugCounter = 1; // This is set for the next state
@@ -306,7 +306,7 @@ void Hull2D::Draw(void) const
     Vec3 nextPoint = Vec3(mPoints[j].x, mPoints[j].y, real(0.0));
 
     const ByteColor color = Color::Red;
-    Zero::gDebugDraw->Add(Zero::Debug::Line(thisPoint, nextPoint).Color(color).OnTop(true));
+    Raverie::gDebugDraw->Add(Raverie::Debug::Line(thisPoint, nextPoint).Color(color).OnTop(true));
   }
 
   if (mUsingDebug)
@@ -318,7 +318,7 @@ void Hull2D::Draw(void) const
     uint pointCount = uint(mPoints.Size()) - 1;
     Vec3 start = Vec3(mPoints[0].x, mPoints[0].y, real(0.0));
     Vec3 end = Vec3(mPoints[pointCount].x, mPoints[pointCount].y, real(0.0));
-    Zero::gDebugDraw->Add(Zero::Debug::Line(start, end).Color(Color::Yellow).OnTop(true));
+    Raverie::gDebugDraw->Add(Raverie::Debug::Line(start, end).Color(Color::Yellow).OnTop(true));
 
     pointCount = uint(mNegativePoints.Size());
     for (uint i = 0; i < pointCount; ++i)
@@ -373,7 +373,7 @@ void Hull2D::CopyPoints(const Vec3Ptr points, uint count)
 void Hull2D::SortPoints(void)
 {
   // Sort the data based on the x-axis value of all the points.
-  Zero::Sort(mPoints.All(), LessThanX);
+  Raverie::Sort(mPoints.All(), LessThanX);
 }
 
 void Hull2D::ClassifyPoints(void)

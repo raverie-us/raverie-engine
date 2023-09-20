@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Sound Attenuator Node
@@ -26,7 +26,7 @@ public:
 class SoundAttenuator : public DataResource
 {
 public:
-  ZilchDeclareType(SoundAttenuator, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SoundAttenuator, TypeCopyMode::ReferenceType);
 
   SoundAttenuator();
   ~SoundAttenuator();
@@ -101,7 +101,7 @@ private:
 
 class SoundAttenuatorDisplay : public MetaDisplay
 {
-  ZilchDeclareType(SoundAttenuatorDisplay, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SoundAttenuatorDisplay, TypeCopyMode::ReferenceType);
 
   String GetName(HandleParam object) override;
   String GetDebugText(HandleParam object) override;
@@ -116,4 +116,4 @@ public:
   SoundAttenuatorManager(BoundType* resourceType);
 };
 
-} // namespace Zero
+} // namespace Raverie

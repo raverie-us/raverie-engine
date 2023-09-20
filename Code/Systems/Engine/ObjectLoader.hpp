@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Forward declarations
@@ -28,7 +28,7 @@ class PropertyPath;
 */
 
 // Object Loader
-/// This loader handles loading data tree patches specific to Zero Objects
+/// This loader handles loading data tree patches specific to Raverie Objects
 /// (i.e. Cogs and Resources). It resolves both data inheritance and
 /// dependency checking when patching the data tree.
 class ObjectLoader : public DataTreeLoader
@@ -108,4 +108,4 @@ private:
   ObjectNode* mRootObjectNode;
 };
 
-} // namespace Zero
+} // namespace Raverie

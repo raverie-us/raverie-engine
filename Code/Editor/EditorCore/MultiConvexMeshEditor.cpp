@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace ConvexMeshEditorUi
@@ -301,7 +301,7 @@ public:
   Vec3 mStartPosition;
 };
 
-ZilchDefineType(MultiConvexMeshPoint, builder, type)
+RaverieDefineType(MultiConvexMeshPoint, builder, type)
 {
 }
 
@@ -595,22 +595,22 @@ public:
   Vec2 mViewportStartPosition;
 };
 
-ZilchDefineType(MultiConvexMeshPropertyViewInfo, builder, type)
+RaverieDefineType(MultiConvexMeshPropertyViewInfo, builder, type)
 {
-  ZilchBindDefaultConstructor();
-  ZeroBindDocumented();
-  type->HandleManager = ZilchManagerId(PointerManager);
+  RaverieBindDefaultConstructor();
+  RaverieBindDocumented();
+  type->HandleManager = RaverieManagerId(PointerManager);
 
-  ZilchBindGetterSetterProperty(MeshThickness);
-  ZilchBindGetterSetterProperty(SpriteSource);
-  ZilchBindGetterSetterProperty(ClearColor);
-  ZilchBindGetterSetterProperty(OuterContourColor);
-  ZilchBindFieldProperty(mDrawMode);
-  ZilchBindMethodProperty(AutoCompute);
-  ZilchBindFieldProperty(mAutoComputeMode);
-  ZilchBindFieldProperty(mSurfaceLevelThreshold)->Add(new EditorSlider(0, 1, 0.05f));
-  ZilchBindFieldProperty(mAutoComputeMethod);
-  ZilchBindFieldProperty(mSimplificationThreshold);
+  RaverieBindGetterSetterProperty(MeshThickness);
+  RaverieBindGetterSetterProperty(SpriteSource);
+  RaverieBindGetterSetterProperty(ClearColor);
+  RaverieBindGetterSetterProperty(OuterContourColor);
+  RaverieBindFieldProperty(mDrawMode);
+  RaverieBindMethodProperty(AutoCompute);
+  RaverieBindFieldProperty(mAutoComputeMode);
+  RaverieBindFieldProperty(mSurfaceLevelThreshold)->Add(new EditorSlider(0, 1, 0.05f));
+  RaverieBindFieldProperty(mAutoComputeMethod);
+  RaverieBindFieldProperty(mSimplificationThreshold);
 }
 
 MultiConvexMeshPropertyViewInfo::MultiConvexMeshPropertyViewInfo()
@@ -677,7 +677,7 @@ void MultiConvexMeshPropertyViewInfo::AutoCompute()
   mEditor->AutoCompute();
 }
 
-ZilchDefineType(MultiConvexMeshEditor, builder, type)
+RaverieDefineType(MultiConvexMeshEditor, builder, type)
 {
 }
 
@@ -785,8 +785,8 @@ void MultiConvexMeshEditor::SetupPreviewSpace()
     mCameraController->mMaxCameraSize = 50.0f;
 
     // have the camera controller listed for keyboard events on the viewport
-    Zero::Connect(mViewport, Events::KeyDown, mCameraController, &EditorCameraController::ProcessKeyboardEvent);
-    Zero::Connect(mViewport, Events::KeyUp, mCameraController, &EditorCameraController::ProcessKeyboardEvent);
+    Raverie::Connect(mViewport, Events::KeyDown, mCameraController, &EditorCameraController::ProcessKeyboardEvent);
+    Raverie::Connect(mViewport, Events::KeyUp, mCameraController, &EditorCameraController::ProcessKeyboardEvent);
   }
 
   // Set the renderer's clear color
@@ -798,7 +798,7 @@ void MultiConvexMeshEditor::SetupPreviewSpace()
   // create the preview mesh cog, this is the one that we
   // put the multi-convex mesh collider on to render the mesh
   Cog* previewMeshCog = mPreviewSpace->CreateAt(CoreArchetypes::Transform, Vec3::cZero);
-  previewMeshCog->AddComponentByName(ZilchTypeId(MultiConvexMeshCollider)->Name);
+  previewMeshCog->AddComponentByName(RaverieTypeId(MultiConvexMeshCollider)->Name);
   mPreviewMesh = previewMeshCog->has(MultiConvexMeshCollider);
   SetMultiConvexMesh(mMesh);
 
@@ -1850,4 +1850,4 @@ void MultiConvexMeshEditor::DrawMesh()
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

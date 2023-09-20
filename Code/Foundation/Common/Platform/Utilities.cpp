@@ -1,11 +1,11 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 namespace Os
 {
 // A public symbol to avoid any warnings.
 int gCommonUtility;
 } // namespace Os
-} // namespace Zero
+} // namespace Raverie

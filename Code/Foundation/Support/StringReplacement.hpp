@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Replacement Entry
@@ -46,4 +46,4 @@ void Replace(StringBuilder& output, Replacements& replacements, StringParam sour
 String Replace(Replacements& replacements, StringParam source);
 String Replace(StringParam replaceThis, StringParam withThis, StringParam source);
 
-} // namespace Zero
+} // namespace Raverie

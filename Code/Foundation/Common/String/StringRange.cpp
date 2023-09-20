@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 const Rune StringRange::InvalidRune = Rune();
@@ -79,7 +79,7 @@ StringRange::StringRange(StringParam orginalStr, cstr currentByte, cstr endByte)
 {
 }
 
-Zero::StringRange& StringRange::operator=(StringRangeParam rhs)
+Raverie::StringRange& StringRange::operator=(StringRangeParam rhs)
 {
   if (this == &rhs)
     return *this;
@@ -718,7 +718,7 @@ StringIterator::~StringIterator()
 {
 }
 
-Zero::StringIterator& StringIterator::operator=(StringIteratorParam rhs)
+Raverie::StringIterator& StringIterator::operator=(StringIteratorParam rhs)
 {
   if (this == &rhs)
     return *this;
@@ -932,4 +932,4 @@ StringTokenRange& StringTokenRange::All()
   return *this;
 }
 
-} // namespace Zero
+} // namespace Raverie

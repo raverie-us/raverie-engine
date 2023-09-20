@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 Handle GetActingObject(HandleParam componentOrSelection, HandleParam object)
@@ -112,7 +112,7 @@ void MultiPropertyInterface::ChangeProperty(HandleParam object,
     // Rotations may be given to use as a Vec4 (in Euler Angles format), so we
     // have to check the HashId of the property. If the property is expecting
     // a quaternion, we have to resolve conflicts, and convert back to a quat
-    if (metaProp->PropertyType == ZilchTypeId(Quat))
+    if (metaProp->PropertyType == RaverieTypeId(Quat))
       ChangeRotationValue(mOperationQueue, actingObject, property, state, action);
     else if (state.Value.Is<Vec2>())
       ChangeVectorValue<Vec2, 2>(mOperationQueue, actingObject, property, state, action);
@@ -407,7 +407,7 @@ BoundType* MultiPropertyInterface::GetTargetType()
 
   forRange (Object* object, mSelection->AllOfType<Object>())
   {
-    if (targetMeta != ZilchVirtualTypeId(object))
+    if (targetMeta != RaverieVirtualTypeId(object))
       return NULL;
   }
 
@@ -663,4 +663,4 @@ void MultiMetaComposition::GetSharedComponents(MetaSelection* selection, Array<B
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

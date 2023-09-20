@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 //                                    Route //
@@ -10,7 +10,7 @@ namespace Zero
 const Route Route::All(RouteMode::Exclude);  // Exclude no links (Specifies all links)
 const Route Route::None(RouteMode::Include); // Include no links (Specifies no links)
 
-Route::Route(RouteMode::Enum mode, ReplicatorIdSet targets) : mMode(mode), mTargets(ZeroMove(targets))
+Route::Route(RouteMode::Enum mode, ReplicatorIdSet targets) : mMode(mode), mTargets(RaverieMove(targets))
 {
 }
 Route::Route(RouteMode::Enum mode, ReplicatorId replicatorId) : mMode(mode), mTargets()
@@ -39,4 +39,4 @@ Route::Route(PeerLink* link) : mMode(RouteMode::Include), mTargets()
   mTargets.Insert(replicatorLink->GetReplicatorId());
 }
 
-} // namespace Zero
+} // namespace Raverie

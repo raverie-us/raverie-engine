@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class MouseEvent;
@@ -14,7 +14,7 @@ class Reactive : public Component
 {
 public:
   // Meta Initialization
-  ZilchDeclareType(Reactive, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Reactive, TypeCopyMode::ReferenceType);
 
   Reactive();
   ~Reactive();
@@ -40,7 +40,7 @@ class ReactiveSpace : public Component
 {
 public:
   // Meta Initialization
-  ZilchDeclareType(ReactiveSpace, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ReactiveSpace, TypeCopyMode::ReferenceType);
 
   // Component Interface
   void Serialize(Serializer& stream) override;
@@ -54,4 +54,4 @@ public:
   Raycaster mRaycaster;
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Needed for an intrusive link
@@ -20,7 +20,7 @@ template <typename ComponentType>
 class ComponentHierarchy : public ComponentHierarchyBase<ComponentType>
 {
 public:
-  ZilchDeclareType(ComponentHierarchy, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ComponentHierarchy, TypeCopyMode::ReferenceType);
 
   // Typedefs.
   typedef ComponentHierarchy<ComponentType> self_type;
@@ -76,22 +76,22 @@ public:
 };
 
 template <typename ComponentType>
-ZilchDefineType(ComponentHierarchy<ComponentType>, builder, type)
+RaverieDefineType(ComponentHierarchy<ComponentType>, builder, type)
 {
-  ZeroBindDocumented();
-  ZilchBindGetter(PreviousSibling);
-  ZilchBindGetter(NextSibling);
-  ZilchBindGetter(LastDirectChild);
-  ZilchBindGetter(LastDeepestChild);
-  ZilchBindGetter(NextInHierarchyOrder);
-  ZilchBindGetter(PreviousInHierarchyOrder);
-  ZilchBindFieldGetter(mParent);
-  ZilchBindGetter(Root);
-  ZilchBindGetter(ChildCount);
+  RaverieBindDocumented();
+  RaverieBindGetter(PreviousSibling);
+  RaverieBindGetter(NextSibling);
+  RaverieBindGetter(LastDirectChild);
+  RaverieBindGetter(LastDeepestChild);
+  RaverieBindGetter(NextInHierarchyOrder);
+  RaverieBindGetter(PreviousInHierarchyOrder);
+  RaverieBindFieldGetter(mParent);
+  RaverieBindGetter(Root);
+  RaverieBindGetter(ChildCount);
 
-  ZilchBindMethod(GetChildren);
-  ZilchBindMethod(IsDescendantOf);
-  ZilchBindMethod(IsAncestorOf);
+  RaverieBindMethod(GetChildren);
+  RaverieBindMethod(IsDescendantOf);
+  RaverieBindMethod(IsAncestorOf);
 }
 
 template <typename ComponentType>
@@ -303,4 +303,4 @@ uint ComponentHierarchy<ComponentType>::GetChildCount()
   return count;
 }
 
-} // namespace Zero
+} // namespace Raverie

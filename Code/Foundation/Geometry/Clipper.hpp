@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Public API
@@ -109,4 +109,4 @@ void Convert(const ContourArray& input, HighPrecisionContourArray* output);
 
 } // namespace Csg
 
-} // namespace Zero
+} // namespace Raverie

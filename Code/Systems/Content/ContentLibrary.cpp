@@ -1,11 +1,11 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
-ZilchDefineType(ContentLibrary, builder, type)
+RaverieDefineType(ContentLibrary, builder, type)
 {
-  type->HandleManager = ZilchManagerId(PointerManager);
+  type->HandleManager = RaverieManagerId(PointerManager);
 }
 
 ContentLibrary::ContentLibrary()
@@ -80,4 +80,4 @@ void ContentLibrary::BuildListing(ResourceListing& listing)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

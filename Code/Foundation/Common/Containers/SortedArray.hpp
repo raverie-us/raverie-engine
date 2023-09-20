@@ -6,7 +6,7 @@
 #include "Algorithm.hpp"
 #include "Array.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 /// Policy for how values are sorted
@@ -109,7 +109,7 @@ public:
   }
 
   /// Move Constructor
-  SortedArray(MoveReference<this_type> rhs) : base_type(ZeroMove(static_cast<base_type&>(*rhs))), mSorter(rhs->mSorter)
+  SortedArray(MoveReference<this_type> rhs) : base_type(RaverieMove(static_cast<base_type&>(*rhs))), mSorter(rhs->mSorter)
   {
   }
 
@@ -124,7 +124,7 @@ public:
   /// Move Assignment Operator
   SortedArray& operator=(MoveReference<this_type> rhs)
   {
-    base_type::operator=(ZeroMove(static_cast<base_type&>(*rhs)));
+    base_type::operator=(RaverieMove(static_cast<base_type&>(*rhs)));
     mSorter = rhs->mSorter;
     return *this;
   }
@@ -235,7 +235,7 @@ public:
     // Get lower bound
     iterator position = LowerBound(base_type::All(), *value, mSorter).Begin();
     size_type index = position - base_type::mData;
-    base_type::Insert(position, ZeroMove(value));
+    base_type::Insert(position, RaverieMove(value));
     return base_type::mData + index;
   }
 
@@ -257,7 +257,7 @@ public:
   {
     // Insert all elements in range
     for (; inputRange.Empty(); inputRange.PopFront())
-      Insert(ZeroMove(inputRange.Front()));
+      Insert(RaverieMove(inputRange.Front()));
   }
 
   /// Clears the array and inserts a range of elements at their sorted positions
@@ -278,7 +278,7 @@ public:
   void Assign(MoveReference<inputRangeType> range)
   {
     base_type::Clear();
-    Insert(ZeroMove(range));
+    Insert(RaverieMove(range));
   }
 
   //
@@ -317,4 +317,4 @@ protected:
   Sorter mSorter;
 };
 
-} // namespace Zero
+} // namespace Raverie

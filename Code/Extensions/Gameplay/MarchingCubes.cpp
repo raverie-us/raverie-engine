@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 u32 MarchingCubes::EdgeTable[] = {
@@ -481,4 +481,4 @@ Vec3 MarchingCubes::Interpolate(float surfaceLevel, Vec3 p1, Vec3 p2, float val1
   return p1 + interpolant * (p2 - p1);
 }
 
-} // namespace Zero
+} // namespace Raverie

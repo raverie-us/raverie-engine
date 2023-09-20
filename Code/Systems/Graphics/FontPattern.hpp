@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 inline Vec2 Align(TextAlign::Enum textAlignement, Vec2& cur, float textOnLineSize, float lineSize, float scale)
@@ -216,4 +216,4 @@ public:
   }
 };
 
-} // namespace Zero
+} // namespace Raverie

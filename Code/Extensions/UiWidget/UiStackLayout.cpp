@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 Axis::Enum GetAxis(UiStackLayoutDirection::Enum direction)
@@ -36,13 +36,13 @@ int GetSign(UiStackLayoutDirection::Enum direction)
   }
 }
 
-ZilchDefineType(UiStackLayout, builder, type)
+RaverieDefineType(UiStackLayout, builder, type)
 {
-  ZeroBindDocumented();
-  ZeroBindComponent();
-  ZeroBindInterface(UiLayout);
-  ZilchBindGetterSetterProperty(StackDirection);
-  ZilchBindGetterSetterProperty(Spacing);
+  RaverieBindDocumented();
+  RaverieBindComponent();
+  RaverieBindInterface(UiLayout);
+  RaverieBindGetterSetterProperty(StackDirection);
+  RaverieBindGetterSetterProperty(Spacing);
 }
 
 void UiStackLayout::Serialize(Serializer& stream)
@@ -93,7 +93,7 @@ void UiStackLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
   // Debug break if set
   if (mDebug)
   {
-    ZeroDebugBreak();
+    RaverieDebugBreak();
     mDebug = false;
   }
 
@@ -306,4 +306,4 @@ void UiStackLayout::SetSpacing(Vec2Param spacing)
   mWidget->MarkAsNeedsUpdate();
 }
 
-} // namespace Zero
+} // namespace Raverie

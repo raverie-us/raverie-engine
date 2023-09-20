@@ -8,7 +8,7 @@ class SurfaceImpl;
 struct SelectionRange;
 } // namespace Scintilla
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -17,7 +17,7 @@ DeclareEvent(CharacterAdded);
 DeclareEvent(TextEditorModified);
 } // namespace Events
 
-class ScintillaZero;
+class ScintillaEngine;
 class KeyboardTextEvent;
 class KeyboardEvent;
 class UpdateEvent;
@@ -29,14 +29,14 @@ class ScintillaWidget;
 class TextEditorEvent : public Event
 {
 public:
-  ZilchDeclareType(TextEditorEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(TextEditorEvent, TypeCopyMode::ReferenceType);
   char Added;
 };
 
 DeclareEnum3(LinePosition, Beginning, Middle, End);
 
 // CustomIndicator is always last.
-DeclareEnum7(Lexer, Text, Cpp, Python, Console, Shader, Zilch, SpirV);
+DeclareEnum7(Lexer, Text, Cpp, Python, Console, Shader, Raverie, SpirV);
 
 DeclareEnum13(IndicatorStyle,
               Plain,
@@ -57,7 +57,7 @@ DeclareEnum13(IndicatorStyle,
 class TextEditor : public BaseScrollArea
 {
 public:
-  ZilchDeclareType(TextEditor, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(TextEditor, TypeCopyMode::ReferenceType);
 
   TextEditor(Composite* parent);
   ~TextEditor();
@@ -313,9 +313,9 @@ public:
 
 public:
   friend class ScintillaWidget;
-  friend class ScintillaZero;
+  friend class ScintillaEngine;
 
-  ScintillaZero* mScintilla;
+  ScintillaEngine* mScintilla;
   ScintillaWidget* mScinWidget;
 
   HashMap<int, String> AnnotationLines;
@@ -361,4 +361,4 @@ protected:
   virtual void OnKeyDown(KeyboardEvent* event);
 };
 
-} // namespace Zero
+} // namespace Raverie

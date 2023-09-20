@@ -1,0 +1,9 @@
+[Version:1]
+TextContent 
+{
+	RaverieScriptBuilder 
+	{
+		var Name = "UiScaleOnEnter"
+		var ResourceId = 0x59b17cd6fa120623
+	}
+}

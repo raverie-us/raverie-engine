@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// What kind of events this collision block should out.
@@ -17,7 +17,7 @@ DeclareEnum4(
 /// what event name is sent out.
 struct CollisionFilterBlock : public SafeId32Object
 {
-  ZilchDeclareType(CollisionFilterBlock, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CollisionFilterBlock, TypeCopyMode::ReferenceType);
 
   CollisionFilterBlock();
 
@@ -48,7 +48,7 @@ struct CollisionFilterBlock : public SafeId32Object
 /// CollisionFilterBlock for CollisionStarted events.
 struct CollisionStartBlock : public CollisionFilterBlock
 {
-  ZilchDeclareType(CollisionStartBlock, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CollisionStartBlock, TypeCopyMode::ReferenceType);
 
   CollisionStartBlock();
 };
@@ -56,7 +56,7 @@ struct CollisionStartBlock : public CollisionFilterBlock
 /// CollisionFilterBlock for CollisionPersisted events.
 struct CollisionPersistedBlock : public CollisionFilterBlock
 {
-  ZilchDeclareType(CollisionPersistedBlock, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CollisionPersistedBlock, TypeCopyMode::ReferenceType);
 
   CollisionPersistedBlock();
 };
@@ -64,7 +64,7 @@ struct CollisionPersistedBlock : public CollisionFilterBlock
 /// CollisionFilterBlock for CollisionEnded events.
 struct CollisionEndBlock : public CollisionFilterBlock
 {
-  ZilchDeclareType(CollisionEndBlock, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CollisionEndBlock, TypeCopyMode::ReferenceType);
 
   CollisionEndBlock();
 };
@@ -74,11 +74,11 @@ struct CollisionEndBlock : public CollisionFilterBlock
 /// calculated.
 struct PreSolveBlock : public CollisionFilterBlock
 {
-  ZilchDeclareType(PreSolveBlock, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(PreSolveBlock, TypeCopyMode::ReferenceType);
 
   PreSolveBlock();
 };
 
 typedef SimpleResourceFactory<CollisionFilter, CollisionFilterBlock> CollisionFilterMetaComposition;
 
-} // namespace Zero
+} // namespace Raverie

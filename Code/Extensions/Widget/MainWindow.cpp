@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace MainWindowUi
@@ -24,11 +24,11 @@ namespace Events
 DefineEvent(MainWindowTransformUpdated);
 }
 
-ZilchDefineType(MainWindowTransformEvent, builder, type)
+RaverieDefineType(MainWindowTransformEvent, builder, type)
 {
-  ZilchBindGetter(TargetWindow);
-  ZilchBindFieldGetter(mOldScreenSize);
-  ZilchBindFieldGetter(mNewScreenSize);
+  RaverieBindGetter(TargetWindow);
+  RaverieBindFieldGetter(mOldScreenSize);
+  RaverieBindFieldGetter(mNewScreenSize);
 }
 
 MainWindowTransformEvent::MainWindowTransformEvent(Vec2Param oldScreenSize,
@@ -42,9 +42,9 @@ OsWindow* MainWindowTransformEvent::GetTargetWindow() {
   return OsWindow::sInstance;
 }
 
-ZilchDefineType(MainWindow, builder, type)
+RaverieDefineType(MainWindow, builder, type)
 {
-  ZeroBindEvent(Events::MainWindowTransformUpdated, MainWindowTransformEvent);
+  RaverieBindEvent(Events::MainWindowTransformUpdated, MainWindowTransformEvent);
 }
 
 MainWindow::MainWindow() : RootWidget()
@@ -214,4 +214,4 @@ void MainDocker::WidgetDestroyed(Widget* widget)
   root->Destroy();
 }
 
-} // namespace Zero
+} // namespace Raverie

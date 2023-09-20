@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 RayCastEntry::RayCastEntry()
@@ -187,10 +187,10 @@ void CastInfo::SetInfo(Space* targetSpace, Cog* cameraCog, Vec2Param dragStart, 
   mMouseDragStart = dragStart;
 }
 
-ZilchDefineType(RaycastProvider, builder, type)
+RaverieDefineType(RaycastProvider, builder, type)
 {
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZilchBindFieldProperty(mActive);
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindFieldProperty(mActive);
 
   type->Add(new MetaSerialization());
 }
@@ -200,9 +200,9 @@ void RaycastProvider::Serialize(Serializer& stream)
   SerializeNameDefault(mActive, true);
 }
 
-ZilchDefineType(Raycaster, builder, type)
+RaverieDefineType(Raycaster, builder, type)
 {
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindSetup(SetupMode::DefaultSerialization);
 
   // Set meta composition
   type->Add(new RaycasterMetaComposition());
@@ -241,7 +241,7 @@ void SetupBlock(Handle& handle, BoundType* blockMeta)
 
 Handle AllocateBlock(BoundType* blockMeta, bool runSetup)
 {
-  Handle handle = ZilchAllocate(RaycastProvider, blockMeta);
+  Handle handle = RaverieAllocate(RaycastProvider, blockMeta);
 
   // Run default serialization if necessary
   if (runSetup)
@@ -327,11 +327,11 @@ void Raycaster::FrustumCast(Frustum& frustum, CastInfo& castInfo, RaycastResultL
   }
 }
 
-ZilchDefineType(RaycasterMetaComposition, builder, type)
+RaverieDefineType(RaycasterMetaComposition, builder, type)
 {
 }
 
-RaycasterMetaComposition::RaycasterMetaComposition() : MetaComposition(ZilchTypeId(RaycastProvider))
+RaycasterMetaComposition::RaycasterMetaComposition() : MetaComposition(RaverieTypeId(RaycastProvider))
 {
   mSupportsComponentAddition = false;
   mSupportsComponentRemoval = false;
@@ -355,10 +355,10 @@ Handle RaycasterMetaComposition::GetComponent(HandleParam owner, BoundType* comp
   Raycaster* raycaster = owner.Get<Raycaster*>();
   forRange (RaycastProvider* provider, raycaster->mProviders.All())
   {
-    if (ZilchVirtualTypeId(provider)->IsA(componentType))
+    if (RaverieVirtualTypeId(provider)->IsA(componentType))
       return provider;
   }
   return Handle();
 }
 
-} // namespace Zero
+} // namespace Raverie

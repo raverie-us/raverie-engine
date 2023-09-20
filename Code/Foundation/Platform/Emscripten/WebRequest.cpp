@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 class WebRequestPrivateData
@@ -68,17 +68,17 @@ WebRequest::WebRequest() :
     mOnComplete(nullptr),
     mUserData(nullptr)
 {
-  ZeroConstructPrivateData(WebRequestPrivateData);
+  RaverieConstructPrivateData(WebRequestPrivateData);
 }
 
 WebRequest::~WebRequest()
 {
-  ZeroDestructPrivateData(WebRequestPrivateData);
+  RaverieDestructPrivateData(WebRequestPrivateData);
 }
 
 void WebRequest::Run()
 {
-  ZeroGetPrivateData(WebRequestPrivateData);
+  RaverieGetPrivateData(WebRequestPrivateData);
 
   Cancel();
 
@@ -91,7 +91,7 @@ void WebRequest::Run()
 
 void WebRequest::Cancel()
 {
-  ZeroGetPrivateData(WebRequestPrivateData);
+  RaverieGetPrivateData(WebRequestPrivateData);
 
   if (!self->mIsRunning)
     return;
@@ -102,7 +102,7 @@ void WebRequest::Cancel()
 
 bool WebRequest::IsRunning()
 {
-  ZeroGetPrivateData(WebRequestPrivateData);
+  RaverieGetPrivateData(WebRequestPrivateData);
 
   return self->mIsRunning;
 }
@@ -115,4 +115,4 @@ void WebRequest::Shutdown()
 {
 }
 
-} // namespace Zero
+} // namespace Raverie

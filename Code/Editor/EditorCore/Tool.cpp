@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -11,12 +11,12 @@ DefineEvent(ToolDeactivate);
 DefineEvent(ToolDraw);
 } // namespace Events
 
-ZilchDefineType(Tool, builder, type)
+RaverieDefineType(Tool, builder, type)
 {
-  ZilchBindMethod(BeginDrag);
+  RaverieBindMethod(BeginDrag);
 }
 
-ZilchDefineType(ViewportTextWidget, builder, type)
+RaverieDefineType(ViewportTextWidget, builder, type)
 {
 }
 
@@ -265,4 +265,4 @@ void Tool::BeginDrag(Viewport* viewport)
   new ToolMouseDrag(viewport->GetParent(), mouse, this, viewport);
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class AttributeExtension;
@@ -99,7 +99,7 @@ public:
   using AttributeExtension::AttributeExtension;
   BoundType* GetMetaComponentType() override
   {
-    return ZilchTypeId(T);
+    return RaverieTypeId(T);
   }
   HandleOf<MetaAttribute> AllocateMetaComponent(ReflectionObject* object) override
   {
@@ -121,6 +121,6 @@ public:
   AttributeExtensions::GetInstance()->RegisterFunctionExtension(new AttributeExtension(name))
 #define RegisterFunctionAttributeType(name, type)                                                                      \
   AttributeExtensions::GetInstance()->RegisterFunctionExtension(new AttributeExtensionType<type>(name))
-#define TypeMustBe(type) MustBeType(ZilchTypeId(type))
+#define TypeMustBe(type) MustBeType(RaverieTypeId(type))
 
-} // namespace Zero
+} // namespace Raverie

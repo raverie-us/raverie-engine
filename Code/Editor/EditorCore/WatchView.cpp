@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Column
@@ -42,7 +42,7 @@ public:
     WatchEntry* nullPtr = NULL;
     // Root
     AddEntry(rootEntry, "root", "", "", nullPtr);
-    AddEntry(thisEntry, "this", "0x0cb4ca38 {Position={...} }", "Zero::PlayerController* const", rootEntry);
+    AddEntry(thisEntry, "this", "0x0cb4ca38 {Position={...} }", "Raverie::PlayerController* const", rootEntry);
     AddEntry(pos, "Position", "{x=5.0999999, y=16.000000, z=7.5000000 ...}", "Math::Vector3", thisEntry);
     AddEntry(posX, "x", "5.0999999", "float", pos);
     AddEntry(posY, "y", "16.000000", "float", pos);
@@ -210,4 +210,4 @@ void WatchView::BuildFormat(TreeFormatting& formatting)
   format->Editable = false;
 }
 
-} // namespace Zero
+} // namespace Raverie

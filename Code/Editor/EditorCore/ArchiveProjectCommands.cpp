@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 void DownloadProjectFolder(ProjectSettings* project)
@@ -20,4 +20,4 @@ void BindArchiveCommands(Cog* config, CommandManager* commands)
   commands->AddCommand("DownloadContentOutput", BindCommandFunction(DownloadContentOutput), true);
 }
 
-} // namespace Zero
+} // namespace Raverie

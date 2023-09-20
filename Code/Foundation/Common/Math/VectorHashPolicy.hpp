@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Hashing for an integer vector2
@@ -37,4 +37,4 @@ struct HashPolicy<Math::IntVec3>
   }
 };
 
-} // namespace Zero
+} // namespace Raverie

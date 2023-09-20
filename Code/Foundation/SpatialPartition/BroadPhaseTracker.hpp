@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 DeclareEnum8(BPStats, Insertion, Removal, Update, Collision, Construction, RayCast, VolumeCast, Cleanup);
@@ -59,7 +59,7 @@ typedef uint BroadPhaseId;
 class BroadPhaseTracker : public BroadPhasePackage
 {
 public:
-  ZilchDeclareType(BroadPhaseTracker, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(BroadPhaseTracker, TypeCopyMode::ReferenceType);
   typedef Array<BroadPhaseHandle*> BroadPhaseVec;
   BroadPhaseTracker();
   ~BroadPhaseTracker();
@@ -164,4 +164,4 @@ private:
   IndexArray mProxyFreeIndices[BroadPhase::Size];
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Location
@@ -105,26 +105,26 @@ Location::Enum GetOpposite(Location::Enum location)
 // Thickness
 const Thickness Thickness::cZero(0, 0, 0, 0);
 
-ZilchDefineType(Thickness, builder, type)
+RaverieDefineType(Thickness, builder, type)
 {
   type->CreatableInScript = true;
 
-  ZilchBindDestructor();
-  ZilchBindConstructor(float, float, float, float);
-  ZilchBindConstructor(Vec4);
-  ZilchBindConstructor(float, float);
-  ZilchBindConstructor(Vec2);
+  RaverieBindDestructor();
+  RaverieBindConstructor(float, float, float, float);
+  RaverieBindConstructor(Vec4);
+  RaverieBindConstructor(float, float);
+  RaverieBindConstructor(Vec2);
 
-  ZilchBindMethod(All);
+  RaverieBindMethod(All);
 
-  ZilchBindFieldProperty(Left);
-  ZilchBindFieldProperty(Top);
-  ZilchBindFieldProperty(Right);
-  ZilchBindFieldProperty(Bottom);
-  ZilchBindFieldGetter(cZero);
+  RaverieBindFieldProperty(Left);
+  RaverieBindFieldProperty(Top);
+  RaverieBindFieldProperty(Right);
+  RaverieBindFieldProperty(Bottom);
+  RaverieBindFieldGetter(cZero);
 
-  ZilchBindMethod(Size);
-  ZilchBindMethod(TopLeft);
+  RaverieBindMethod(Size);
+  RaverieBindMethod(TopLeft);
 }
 
 Thickness::Thickness() : Left(0), Top(0), Right(0), Bottom(0)
@@ -172,53 +172,53 @@ Thickness Thickness::operator+(const Thickness& rhs)
 // Ui Rect
 const Rectangle Rectangle::cZero = Rectangle::CenterAndSize(Vec2(0, 0), Vec2(0, 0));
 
-ZilchDefineType(Rectangle, builder, type)
+RaverieDefineType(Rectangle, builder, type)
 {
   type->CreatableInScript = true;
 
-  ZilchBindFieldProperty(Min);
-  ZilchBindFieldProperty(Max);
-  ZilchBindGetterProperty(Size);
-  ZilchBindMethod(SetSize);
-  ZilchBindOverloadedMethod(ResizeToPoint, ZilchInstanceOverload(void, Location::Enum, float));
-  ZilchBindOverloadedMethod(ResizeToPoint, ZilchInstanceOverload(void, Location::Enum, Vec2Param));
-  ZilchBindOverloadedMethod(ResizeToPoint, ZilchInstanceOverload(void, Location::Enum, Vec2Param, Vec2Param));
-  ZilchBindMethod(Expand);
+  RaverieBindFieldProperty(Min);
+  RaverieBindFieldProperty(Max);
+  RaverieBindGetterProperty(Size);
+  RaverieBindMethod(SetSize);
+  RaverieBindOverloadedMethod(ResizeToPoint, RaverieInstanceOverload(void, Location::Enum, float));
+  RaverieBindOverloadedMethod(ResizeToPoint, RaverieInstanceOverload(void, Location::Enum, Vec2Param));
+  RaverieBindOverloadedMethod(ResizeToPoint, RaverieInstanceOverload(void, Location::Enum, Vec2Param, Vec2Param));
+  RaverieBindMethod(Expand);
 
-  ZilchBindOverloadedMethod(Transform, ZilchInstanceOverload(void, Mat2Param));
-  ZilchBindOverloadedMethod(Transform, ZilchInstanceOverload(void, Mat3Param));
-  ZilchBindOverloadedMethod(Transform, ZilchInstanceOverload(void, Mat4Param));
-  ZilchBindOverloadedMethod(Transformed, ZilchConstInstanceOverload(Rectangle, Mat2Param));
-  ZilchBindOverloadedMethod(Transformed, ZilchConstInstanceOverload(Rectangle, Mat3Param));
-  ZilchBindOverloadedMethod(Transformed, ZilchConstInstanceOverload(Rectangle, Mat4Param));
+  RaverieBindOverloadedMethod(Transform, RaverieInstanceOverload(void, Mat2Param));
+  RaverieBindOverloadedMethod(Transform, RaverieInstanceOverload(void, Mat3Param));
+  RaverieBindOverloadedMethod(Transform, RaverieInstanceOverload(void, Mat4Param));
+  RaverieBindOverloadedMethod(Transformed, RaverieConstInstanceOverload(Rectangle, Mat2Param));
+  RaverieBindOverloadedMethod(Transformed, RaverieConstInstanceOverload(Rectangle, Mat3Param));
+  RaverieBindOverloadedMethod(Transformed, RaverieConstInstanceOverload(Rectangle, Mat4Param));
 
-  ZilchBindGetterSetterProperty(TopLeft);
-  ZilchBindGetterSetterProperty(TopRight);
-  ZilchBindGetterSetterProperty(BottomLeft);
-  ZilchBindGetterSetterProperty(BottomRight);
-  ZilchBindGetterSetterProperty(Center);
+  RaverieBindGetterSetterProperty(TopLeft);
+  RaverieBindGetterSetterProperty(TopRight);
+  RaverieBindGetterSetterProperty(BottomLeft);
+  RaverieBindGetterSetterProperty(BottomRight);
+  RaverieBindGetterSetterProperty(Center);
 
-  ZilchBindGetterSetterProperty(Left);
-  ZilchBindGetterSetterProperty(Right);
-  ZilchBindGetterSetterProperty(Top);
-  ZilchBindGetterSetterProperty(Bottom);
+  RaverieBindGetterSetterProperty(Left);
+  RaverieBindGetterSetterProperty(Right);
+  RaverieBindGetterSetterProperty(Top);
+  RaverieBindGetterSetterProperty(Bottom);
 
-  ZilchBindOverloadedMethod(Contains, ZilchConstInstanceOverload(bool, Vec2Param));
-  ZilchBindOverloadedMethod(Contains, ZilchConstInstanceOverload(bool, RectangleParam));
-  ZilchBindMethodAs(Overlap, "Overlaps");
+  RaverieBindOverloadedMethod(Contains, RaverieConstInstanceOverload(bool, Vec2Param));
+  RaverieBindOverloadedMethod(Contains, RaverieConstInstanceOverload(bool, RectangleParam));
+  RaverieBindMethodAs(Overlap, "Overlaps");
 
-  Zilch::Function* overlapFn = ZilchBindMethodAs(Overlap, "Overlap");
+  Raverie::Function* overlapFn = RaverieBindMethodAs(Overlap, "Overlap");
   overlapFn->Description = "This function is deprecated. Use Overlaps instead";
   overlapFn->AddAttribute(DeprecatedAttribute);
 
-  ZilchBindMethod(RemoveThickness);
+  RaverieBindMethod(RemoveThickness);
 
-  ZilchBindMethod(GetCardinalLocation);
-  ZilchBindOverloadedMethod(SetLocation, ZilchInstanceOverload(void, Location::Enum, float));
-  ZilchBindMethod(GetLocation);
-  ZilchBindOverloadedMethod(SetLocation, ZilchInstanceOverload(void, Location::Enum, Vec2Param));
+  RaverieBindMethod(GetCardinalLocation);
+  RaverieBindOverloadedMethod(SetLocation, RaverieInstanceOverload(void, Location::Enum, float));
+  RaverieBindMethod(GetLocation);
+  RaverieBindOverloadedMethod(SetLocation, RaverieInstanceOverload(void, Location::Enum, Vec2Param));
 
-  type->ToStringFunction = Zilch::BoundTypeToGlobalToString<Rectangle>;
+  type->ToStringFunction = Raverie::BoundTypeToGlobalToString<Rectangle>;
 }
 
 Rectangle Rectangle::PointAndSize(Vec2Param point, Vec2Param size)
@@ -687,4 +687,4 @@ String ToString(const Rectangle& value, bool shortFormat)
   return String::Format("(%s), (%s)", minStr.c_str(), maxStr.c_str());
 }
 
-} // namespace Zero
+} // namespace Raverie

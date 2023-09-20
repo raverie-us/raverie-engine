@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Helper class for implementing Drag, and other mouse manipulations.
@@ -9,7 +9,7 @@ namespace Zero
 class MouseManipulation : public Widget
 {
 public:
-  ZilchDeclareType(MouseManipulation, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MouseManipulation, TypeCopyMode::ReferenceType);
 
   MouseManipulation(Mouse* mouse, Composite* parent);
   ~MouseManipulation();
@@ -78,7 +78,7 @@ public:
 class Gripper : public Widget
 {
 public:
-  typedef Gripper ZilchSelf;
+  typedef Gripper RaverieSelf;
   Gripper(Composite* parent, Widget* sizeTarget, DockMode::Enum gripDirection);
   ~Gripper();
 
@@ -112,4 +112,4 @@ public:
   void UpdateTransform() override;
 };
 
-} // namespace Zero
+} // namespace Raverie

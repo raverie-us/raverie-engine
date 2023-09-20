@@ -5,7 +5,7 @@
 #include "Containers/ArrayMap.hpp"
 #include "IdStore.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 /// Maps unique IDs to unique items (where 0 is an invalid ID)
@@ -43,9 +43,9 @@ public:
   }
   /// Move Constructor
   ItemCache(MoveReference<ItemCache> rhs) :
-      mIdStore(ZeroMove(rhs->mIdStore)),
-      mItemIdMap(ZeroMove(rhs->mItemIdMap)),
-      mIdItemMap(ZeroMove(rhs->mIdItemMap))
+      mIdStore(RaverieMove(rhs->mIdStore)),
+      mItemIdMap(RaverieMove(rhs->mItemIdMap)),
+      mIdItemMap(RaverieMove(rhs->mIdItemMap))
   {
   }
 
@@ -71,9 +71,9 @@ public:
   {
     Reset();
 
-    mIdStore = ZeroMove(rhs->mIdStore);
-    mItemIdMap = ZeroMove(rhs->mItemIdMap);
-    mIdItemMap = ZeroMove(rhs->mIdItemMap);
+    mIdStore = RaverieMove(rhs->mIdStore);
+    mItemIdMap = RaverieMove(rhs->mItemIdMap);
+    mIdItemMap = RaverieMove(rhs->mIdItemMap);
 
     return *this;
   }
@@ -241,8 +241,8 @@ struct MoveWithoutDestructionOperator<ItemCache<Item, Id>>
 {
   static inline void MoveWithoutDestruction(ItemCache<Item, Id>* dest, ItemCache<Item, Id>* source)
   {
-    new (dest) ItemCache<Item, Id>(ZeroMove(*source));
+    new (dest) ItemCache<Item, Id>(RaverieMove(*source));
   }
 };
 
-} // namespace Zero
+} // namespace Raverie

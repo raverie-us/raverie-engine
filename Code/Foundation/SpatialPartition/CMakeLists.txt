@@ -63,5 +63,5 @@ target_sources(SpatialPartition
 
 raverie_target_includes(SpatialPartition
   PUBLIC
-    Zilch
+    Raverie
 )

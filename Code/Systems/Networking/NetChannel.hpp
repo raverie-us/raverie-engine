@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 //                                 NetChannel //
@@ -11,7 +11,7 @@ namespace Zero
 class NetChannel : public SafeId32Object, public ReplicaChannel
 {
 public:
-  ZilchDeclareType(NetChannel, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(NetChannel, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetChannel(const String& name, NetChannelType* netChannelType);
@@ -142,7 +142,7 @@ public:
 class NetChannelType : public SafeId32Object, public ReplicaChannelType
 {
 public:
-  ZilchDeclareType(NetChannelType, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(NetChannelType, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetChannelType(const String& name);
@@ -304,7 +304,7 @@ public:
 class NetChannelConfig : public DataResource
 {
 public:
-  ZilchDeclareType(NetChannelConfig, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(NetChannelConfig, TypeCopyMode::ReferenceType);
 
   //
   // Data Resource Interface
@@ -444,4 +444,4 @@ public:
   NetChannelConfigManager(BoundType* resourceType);
 };
 
-} // namespace Zero
+} // namespace Raverie

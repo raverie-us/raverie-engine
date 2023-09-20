@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 void Stream::ReadMemoryBlock(Status& status, ByteBufferBlock& block, size_t sizeInBytes)
 {
@@ -391,4 +391,4 @@ void ArrayByteMemoryStream::ReadMemoryBlock(Status& status, ByteBufferBlock& blo
   mCurrent += sizeInBytes;
 }
 
-} // namespace Zero
+} // namespace Raverie

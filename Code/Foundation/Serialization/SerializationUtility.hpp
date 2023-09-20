@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Used to validate values we serialize
@@ -33,4 +33,4 @@ bool CorrectNonFiniteValues<float>(float& value);
 template <>
 bool CorrectNonFiniteValues<double>(double& value);
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 //                              ReplicaProperty //
@@ -472,4 +472,4 @@ public:
 typedef UniquePointer<ReplicaPropertyType> ReplicaPropertyTypePtr;
 typedef ArraySet<ReplicaPropertyTypePtr, PointerSortPolicy<ReplicaPropertyTypePtr>> ReplicaPropertyTypeSet;
 
-} // namespace Zero
+} // namespace Raverie

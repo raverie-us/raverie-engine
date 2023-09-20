@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -24,7 +24,7 @@ class WebResponseEvent;
 class AsyncWebRequest : public ReferenceCountedThreadSafeId32EventObject
 {
 public:
-  ZilchDeclareType(AsyncWebRequest, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(AsyncWebRequest, TypeCopyMode::ReferenceType);
 
   /// Constructs the AsyncWebRequest.
   static AsyncWebRequest* Create();
@@ -175,7 +175,7 @@ class WebResponseEvent : public Event
 {
 public:
   friend class AsyncWebRequest;
-  ZilchDeclareType(WebResponseEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(WebResponseEvent, TypeCopyMode::ReferenceType);
 
   WebResponseEvent();
 
@@ -233,7 +233,7 @@ private:
 class WebRequester : public Component
 {
 public:
-  ZilchDeclareType(WebRequester, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(WebRequester, TypeCopyMode::ReferenceType);
 
   WebRequester();
   ~WebRequester();
@@ -297,4 +297,4 @@ private:
   bool mCancelOnDestruction;
 };
 
-} // namespace Zero
+} // namespace Raverie

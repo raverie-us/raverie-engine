@@ -22,7 +22,7 @@
   Ji   : [0, -i, 0, i]
 */
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Physics
@@ -64,12 +64,12 @@ ImplementAnchorAccessors(PrismaticJoint2d, mAnchors);
 ImplementAxisAccessors(PrismaticJoint2d, mAxes);
 ImplementAngleAccessors(PrismaticJoint2d, mReferenceAngle);
 
-ZilchDefineType(PrismaticJoint2d, builder, type)
+RaverieDefineType(PrismaticJoint2d, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindInterface(Joint);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindInterface(Joint);
+  RaverieBindDocumented();
 
   BindAnchorAccessors(Vec3(1));
   BindAngleAccessors();
@@ -227,4 +227,4 @@ real PrismaticJoint2d::GetJointTranslation() const
 
 } // namespace Physics
 
-} // namespace Zero
+} // namespace Raverie

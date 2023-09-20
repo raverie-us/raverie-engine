@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 void AddToSelection(Space* space, MetaSelection* selection, BoundType* boundType, SelectComponentMode::Enum mode)
@@ -508,7 +508,7 @@ void GroupSelected(Editor* editor, Space* space)
   forRange (Cog* cog, selection->AllOfType<Cog>())
     orderedSelection.PushBack(cog);
 
-  Zero::Sort(orderedSelection.All(), CogHierarchyIndexCompareFn);
+  Raverie::Sort(orderedSelection.All(), CogHierarchyIndexCompareFn);
 
   forRange (Cog* child, orderedSelection)
     AttachObject(queue, child, rootObject);
@@ -556,7 +556,7 @@ void SelectSibling(Editor* editor, Space* space)
 void SelectAll(Editor* editor, Space* space)
 {
   MetaSelection* active = editor->GetSelection();
-  AddToSelection(space, active, ZilchTypeId(Transform), SelectComponentMode::WithComponent);
+  AddToSelection(space, active, RaverieTypeId(Transform), SelectComponentMode::WithComponent);
 }
 
 /// Parents all selected objects to the primary selected object
@@ -686,7 +686,7 @@ void MoveToLookPoint(Editor* editor, Space* space)
 
   if (EditorCameraController* controller = camera->has(EditorCameraController))
   {
-    BoundType* transformMeta = ZilchTypeId(Transform);
+    BoundType* transformMeta = RaverieTypeId(Transform);
     OperationQueue* opQueue = editor->GetOperationQueue();
     opQueue->BeginBatch();
     opQueue->SetActiveBatchName("Move objects to LookPoint");
@@ -713,7 +713,7 @@ void ResetTransform(Editor* editor, Space* space)
   MetaSelection* activeSelection = Z::gEditor->GetSelection();
   MetaSelection::rangeType<Cog> r = activeSelection->AllOfType<Cog>();
 
-  BoundType* transformMeta = ZilchTypeId(Transform);
+  BoundType* transformMeta = RaverieTypeId(Transform);
   OperationQueue* opQueue = editor->GetOperationQueue();
   opQueue->BeginBatch();
   opQueue->SetActiveBatchName("Reset objects' Transforms");
@@ -1059,7 +1059,7 @@ void AlignCogs(Editor* editor, Cog* fromCog, Cog* toCog)
 
   opQueue->SetActiveBatchName(batchName);
 
-  BoundType* transformMeta = ZilchTypeId(Transform);
+  BoundType* transformMeta = RaverieTypeId(Transform);
 
   // Queue the translation change
   Property* translationProp = transformMeta->GetProperty("Translation");
@@ -1143,8 +1143,8 @@ void GoToDefinition(Editor* editor)
 
   forRange (DocumentEditor* docEditor, docManager->Instances.All())
   {
-    ZilchDocumentResource* docResource = Type::DynamicCast<ZilchDocumentResource*>(docEditor->GetResource());
-    if (docResource != nullptr && ZilchVirtualTypeId(docResource) == ZilchVirtualTypeId(resource))
+    RaverieDocumentResource* docResource = Type::DynamicCast<RaverieDocumentResource*>(docEditor->GetResource());
+    if (docResource != nullptr && RaverieVirtualTypeId(docResource) == RaverieVirtualTypeId(resource))
     {
       // Saves the current text from the document editor to the Document (which
       // may just set a resource or other thing underlying) This should only
@@ -1307,4 +1307,4 @@ void BindEditorCommands(Cog* configCog, CommandManager* commands)
   editInGameCommand->Shortcut = "F9";
 }
 
-} // namespace Zero
+} // namespace Raverie

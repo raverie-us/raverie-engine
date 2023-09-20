@@ -129,7 +129,7 @@ struct PointInfo
   }
 };
 
-typedef Zero::PodArray<PointInfo> PointInfoArray;
+typedef Raverie::PodArray<PointInfo> PointInfoArray;
 
 /// Calculate the min and the max of two values and store them in the input
 /// parameters in the respective order
@@ -873,20 +873,20 @@ Type ObbObb(Vec3Param obbOneCenter,
       Vec3 lineStart = obbOneCenter + obbOneAxes[i] * obbOneHalfExtents[i];
       Vec3 lineEnd = lineStart + obbOneAxes[i];
 
-      Zero::gDebugDraw->Add(Zero::Debug::Line(lineStart, lineEnd).Color(axes[i]).HeadSize(headSize));
+      Raverie::gDebugDraw->Add(Raverie::Debug::Line(lineStart, lineEnd).Color(axes[i]).HeadSize(headSize));
     }
     for (uint i = 0; i < 3; ++i)
     {
       Vec3 lineStart = obbTwoCenter + obbTwoAxes[i] * obbTwoHalfExtents[i];
       Vec3 lineEnd = lineStart + obbTwoAxes[i];
 
-      Zero::gDebugDraw->Add(Zero::Debug::Line(lineStart, lineEnd).Color(axes[i]).HeadSize(headSize));
+      Raverie::gDebugDraw->Add(Raverie::Debug::Line(lineStart, lineEnd).Color(axes[i]).HeadSize(headSize));
     }
 #  define MultiColoredLine(start, end, colorA, colorB)                                                                 \
     {                                                                                                                  \
       Vec3 halfway = ((start) + (end)) / real(2.0);                                                                    \
-      Zero::gDebugDraw->Add(Zero::Debug::Line((start), halfway).Color((colorA)));                                      \
-      Zero::gDebugDraw->Add(Zero::Debug::Line(halfway, (end)).Color((colorB)).HeadSize(headSize));                     \
+      Raverie::gDebugDraw->Add(Raverie::Debug::Line((start), halfway).Color((colorA)));                                      \
+      Raverie::gDebugDraw->Add(Raverie::Debug::Line(halfway, (end)).Color((colorB)).HeadSize(headSize));                     \
     }
 
     for (uint i = 0; i < 3; ++i)
@@ -1232,7 +1232,7 @@ Type ObbPlane(Vec3Param obbCenter,
     if (maxCount < 4)
     {
       // Can't add all the points so put the most negative ones first
-      Zero::Sort(points.All());
+      Raverie::Sort(points.All());
     }
     for (uint i = 0; i < maxCount; ++i)
     {
@@ -1279,7 +1279,7 @@ Type ObbPlane(Vec3Param obbCenter,
   if (maxCount < points.Size())
   {
     // Can't add all the points so put the most negative ones first
-    Zero::Sort(points.All());
+    Raverie::Sort(points.All());
   }
   for (uint i = 0; i < maxCount; ++i)
   {

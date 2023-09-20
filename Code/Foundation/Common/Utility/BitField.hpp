@@ -4,7 +4,7 @@
 
 //*NOTE - Includes a library dependency and should be moved.
 
-namespace Zero
+namespace Raverie
 {
 class Serializer;
 
@@ -67,4 +67,4 @@ public:
   };
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 DeclareBitField1(BasicForceFlags, LocalSpaceDirection);
@@ -11,7 +11,7 @@ DeclareBitField1(BasicForceFlags, LocalSpaceDirection);
 class BasicDirectionEffect : public PhysicsEffect
 {
 public:
-  ZilchDeclareType(BasicDirectionEffect, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(BasicDirectionEffect, TypeCopyMode::ReferenceType);
 
   BasicDirectionEffect();
 
@@ -58,7 +58,7 @@ protected:
 class ForceEffect : public BasicDirectionEffect
 {
 public:
-  ZilchDeclareType(ForceEffect, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ForceEffect, TypeCopyMode::ReferenceType);
 
   ForceEffect();
 
@@ -73,7 +73,7 @@ public:
 class GravityEffect : public BasicDirectionEffect
 {
 public:
-  ZilchDeclareType(GravityEffect, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(GravityEffect, TypeCopyMode::ReferenceType);
 
   GravityEffect();
 
@@ -82,4 +82,4 @@ public:
   void ApplyEffect(SpringSystem* obj, real dt) override;
 };
 
-} // namespace Zero
+} // namespace Raverie

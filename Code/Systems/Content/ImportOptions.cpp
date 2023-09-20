@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -15,14 +15,14 @@ String SanitizeContentFilename(StringParam filename)
   return BuildString(sanitizedName, ".", FilePath::GetExtension(filename));
 }
 
-ZilchDefineType(ImageOptions, builder, type)
+RaverieDefineType(ImageOptions, builder, type)
 {
   // These options are referred to directly by pointer on the import options
   // (unsafe for script)
-  type->HandleManager = ZilchManagerId(PointerManager);
+  type->HandleManager = RaverieManagerId(PointerManager);
 
-  ZeroBindExpanded();
-  ZilchBindFieldProperty(mImportImages)->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  RaverieBindExpanded();
+  RaverieBindFieldProperty(mImportImages)->AddAttribute(PropertyAttributes::cInvalidatesObject);
 }
 
 ImageOptions::ImageOptions(ImportOptions* owner) : mOwner(owner)
@@ -30,38 +30,38 @@ ImageOptions::ImageOptions(ImportOptions* owner) : mOwner(owner)
   mImportImages = ImageImport::Textures;
 }
 
-ZilchDefineType(GeometryOptions, builder, type)
+RaverieDefineType(GeometryOptions, builder, type)
 {
   // These options are referred to directly by pointer on the import options
   // (unsafe for script)
-  type->HandleManager = ZilchManagerId(PointerManager);
+  type->HandleManager = RaverieManagerId(PointerManager);
 
-  ZeroBindExpanded();
+  RaverieBindExpanded();
 
-  ZilchBindFieldProperty(mImportMeshes)->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  ZilchBindFieldProperty(mGenerateSmoothNormals)
+  RaverieBindFieldProperty(mImportMeshes)->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  RaverieBindFieldProperty(mGenerateSmoothNormals)
       ->AddAttributeChainable(PropertyAttributes::cInvalidatesObject)
-      ->ZeroFilterBool(mImportMeshes);
-  ZilchBindFieldProperty(mSmoothingAngleDegreesThreshold)->Add(new ShowNormalGenerationOptionsFilter());
-  ZilchBindFieldProperty(mGenerateTangentSpace)->ZeroFilterBool(mImportMeshes);
-  ZilchBindFieldProperty(mInvertUvYAxis)->ZeroFilterBool(mImportMeshes);
-  ZilchBindFieldProperty(mFlipWindingOrder)->ZeroFilterBool(mImportMeshes);
-  ZilchBindFieldProperty(mPhysicsImport)->ZeroFilterBool(mImportMeshes);
+      ->RaverieFilterBool(mImportMeshes);
+  RaverieBindFieldProperty(mSmoothingAngleDegreesThreshold)->Add(new ShowNormalGenerationOptionsFilter());
+  RaverieBindFieldProperty(mGenerateTangentSpace)->RaverieFilterBool(mImportMeshes);
+  RaverieBindFieldProperty(mInvertUvYAxis)->RaverieFilterBool(mImportMeshes);
+  RaverieBindFieldProperty(mFlipWindingOrder)->RaverieFilterBool(mImportMeshes);
+  RaverieBindFieldProperty(mPhysicsImport)->RaverieFilterBool(mImportMeshes);
 
-  ZilchBindFieldProperty(mCollapsePivots);
-  ZilchBindFieldProperty(mImportAnimations);
-  ZilchBindFieldProperty(mCreateArchetype);
-  ZilchBindFieldProperty(mImportTextures);
+  RaverieBindFieldProperty(mCollapsePivots);
+  RaverieBindFieldProperty(mImportAnimations);
+  RaverieBindFieldProperty(mCreateArchetype);
+  RaverieBindFieldProperty(mImportTextures);
 
-  ZilchBindFieldProperty(mOriginOffset);
-  ZilchBindFieldProperty(mScaleConversion)->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  ZilchBindFieldProperty(mScaleFactor)
-      ->ZeroFilterEquality(mScaleConversion, ScaleConversion::Enum, ScaleConversion::Custom);
-  ZilchBindFieldProperty(mChangeBasis)->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  RaverieBindFieldProperty(mOriginOffset);
+  RaverieBindFieldProperty(mScaleConversion)->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  RaverieBindFieldProperty(mScaleFactor)
+      ->RaverieFilterEquality(mScaleConversion, ScaleConversion::Enum, ScaleConversion::Custom);
+  RaverieBindFieldProperty(mChangeBasis)->AddAttribute(PropertyAttributes::cInvalidatesObject);
 
-  ZilchBindFieldProperty(mXBasisTo)->ZeroFilterBool(mChangeBasis);
-  ZilchBindFieldProperty(mYBasisTo)->ZeroFilterBool(mChangeBasis);
-  ZilchBindFieldProperty(mZBasisTo)->ZeroFilterBool(mChangeBasis);
+  RaverieBindFieldProperty(mXBasisTo)->RaverieFilterBool(mChangeBasis);
+  RaverieBindFieldProperty(mYBasisTo)->RaverieFilterBool(mChangeBasis);
+  RaverieBindFieldProperty(mZBasisTo)->RaverieFilterBool(mChangeBasis);
 }
 
 GeometryOptions::GeometryOptions(ImportOptions* owner) :
@@ -89,7 +89,7 @@ GeometryOptions::GeometryOptions(ImportOptions* owner) :
 }
 
 // ShowNormalGenerationOptionsFilter
-ZilchDefineType(ShowNormalGenerationOptionsFilter, builder, type)
+RaverieDefineType(ShowNormalGenerationOptionsFilter, builder, type)
 {
 }
 
@@ -99,16 +99,16 @@ bool ShowNormalGenerationOptionsFilter::Filter(Member* prop, HandleParam instanc
   return options->mImportMeshes && options->mGenerateSmoothNormals;
 }
 
-ZilchDefineType(AudioOptions, builder, type)
+RaverieDefineType(AudioOptions, builder, type)
 {
   // These options are referred to directly by pointer on the import options
   // (unsafe for script)
-  type->HandleManager = ZilchManagerId(PointerManager);
+  type->HandleManager = RaverieManagerId(PointerManager);
 
-  ZeroBindExpanded();
-  ZilchBindFieldProperty(mGenerateCue);
-  ZilchBindFieldProperty(mGroupCueName);
-  ZilchBindFieldProperty(mStreamingMode);
+  RaverieBindExpanded();
+  RaverieBindFieldProperty(mGenerateCue);
+  RaverieBindFieldProperty(mGroupCueName);
+  RaverieBindFieldProperty(mStreamingMode);
 }
 
 AudioOptions::AudioOptions(ImportOptions* owner) : mOwner(owner)
@@ -118,14 +118,14 @@ AudioOptions::AudioOptions(ImportOptions* owner) : mOwner(owner)
   mStreamingMode = AudioFileLoadType::Auto;
 }
 
-ZilchDefineType(ConflictOptions, builder, type)
+RaverieDefineType(ConflictOptions, builder, type)
 {
   // These options are referred to directly by pointer on the import options
   // (unsafe for script)
-  type->HandleManager = ZilchManagerId(PointerManager);
+  type->HandleManager = RaverieManagerId(PointerManager);
 
-  ZeroBindExpanded();
-  ZilchBindGetterSetterProperty(Action);
+  RaverieBindExpanded();
+  RaverieBindGetterSetterProperty(Action);
 }
 
 ConflictOptions::ConflictOptions(ImportOptions* owner) : mOwner(owner)
@@ -146,17 +146,17 @@ ConflictAction::Enum ConflictOptions::GetAction()
   return mAction;
 }
 
-ZilchDefineType(ImportOptions, builder, type)
+RaverieDefineType(ImportOptions, builder, type)
 {
   // These options are referred to directly by pointer on the import options
   // (unsafe for script)
-  type->HandleManager = ZilchManagerId(PointerManager);
+  type->HandleManager = RaverieManagerId(PointerManager);
 
-  ZilchBindFieldProperty(mImageOptions);
-  ZilchBindFieldProperty(mGeometryOptions);
-  ZilchBindFieldProperty(mAudioOptions);
-  ZilchBindFieldProperty(mConflictOptions);
-  ZeroBindExpanded();
+  RaverieBindFieldProperty(mImageOptions);
+  RaverieBindFieldProperty(mGeometryOptions);
+  RaverieBindFieldProperty(mAudioOptions);
+  RaverieBindFieldProperty(mConflictOptions);
+  RaverieBindExpanded();
 }
 
 ImportOptions::ImportOptions()
@@ -190,7 +190,7 @@ void ImportOptions::Initialize(Array<String>& files, ContentLibrary* library)
     String fileName = SanitizeContentFilename(originalFilename);
 
     // Check to see if the filename contained any valid characters
-    if (fileName == Zilch::EmptyUpperIdentifier && !originalFilename.Contains(Zilch::EmptyUpperIdentifier))
+    if (fileName == Raverie::EmptyUpperIdentifier && !originalFilename.Contains(Raverie::EmptyUpperIdentifier))
     {
       invalidFiles.PushBack(originalFilename);
       continue;
@@ -273,4 +273,4 @@ bool ImportOptions::ShouldAutoImport()
   return !(mImageOptions || mGeometryOptions || mAudioOptions || mConflictOptions);
 }
 
-} // namespace Zero
+} // namespace Raverie

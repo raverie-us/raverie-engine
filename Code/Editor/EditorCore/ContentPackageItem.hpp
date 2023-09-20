@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -12,7 +12,7 @@ DeclareEvent(TextureLoaded);
 class ContentPackage : public EventObject
 {
 public:
-  ZilchDeclareType(ContentPackage, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ContentPackage, TypeCopyMode::ReferenceType);
 
   ContentPackage();
   ~ContentPackage();
@@ -55,4 +55,4 @@ private:
   HandleOf<AsyncWebRequest> mRequest;
 };
 
-} // namespace Zero
+} // namespace Raverie

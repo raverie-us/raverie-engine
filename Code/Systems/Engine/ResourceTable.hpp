@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class RandomContext;
@@ -13,7 +13,7 @@ class RandomContext;
 class ResourceTableEntry
 {
 public:
-  ZilchDeclareType(ResourceTableEntry, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ResourceTableEntry, TypeCopyMode::ReferenceType);
 
   ResourceTableEntry();
 
@@ -54,7 +54,7 @@ typedef Array<ResourceTableEntry*> ResourceTableEntryList;
 class ResourceTable : public DataResource
 {
 public:
-  ZilchDeclareType(ResourceTable, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ResourceTable, TypeCopyMode::ReferenceType);
   static String mStringType;
 
   typedef String ValueType;
@@ -200,4 +200,4 @@ public:
   void OnValidateTables(ResourceEvent* e);
 };
 
-} // namespace Zero
+} // namespace Raverie

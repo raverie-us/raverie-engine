@@ -17,7 +17,7 @@
   Ji   : [0, -i, 0, i]
 */
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Physics
@@ -27,18 +27,18 @@ JointInfo PhyGunJoint::sInfo = JointInfo(6, 0);
 
 ImplementJointType(PhyGunJoint);
 
-ZilchDefineType(PhyGunJoint, builder, type)
+RaverieDefineType(PhyGunJoint, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindInterface(Joint);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindInterface(Joint);
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetter(TargetPoint);
-  ZilchBindGetterSetter(LocalPoint);
-  ZilchBindGetterSetter(WorldPoint);
-  ZilchBindGetterSetter(TargetRotation);
-  ZilchBindGetterSetter(WorldRotation);
+  RaverieBindGetterSetter(TargetPoint);
+  RaverieBindGetterSetter(LocalPoint);
+  RaverieBindGetterSetter(WorldPoint);
+  RaverieBindGetterSetter(TargetRotation);
+  RaverieBindGetterSetter(WorldRotation);
 }
 
 PhyGunJoint::PhyGunJoint()
@@ -204,4 +204,4 @@ void PhyGunJoint::SetWorldRotation(QuatParam worldRotation)
 
 } // namespace Physics
 
-} // namespace Zero
+} // namespace Raverie

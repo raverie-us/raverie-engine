@@ -2,7 +2,7 @@
 #include "Precompiled.hpp"
 #include "Platform/Timer.hpp"
 #include <inttypes.h>
-namespace Zero
+namespace Raverie
 {
 
 u64 SecondToNanosecond = 1000000000;
@@ -39,7 +39,7 @@ struct TimerPrivateData
 
 void Timer::Reset()
 {
-  ZeroGetPrivateData(TimerPrivateData);
+  RaverieGetPrivateData(TimerPrivateData);
   self->mStart = GetTimeNanosecond();
   self->mCurrent = self->mStart;
   self->mLast = self->mStart;
@@ -47,20 +47,20 @@ void Timer::Reset()
 
 void Timer::Update()
 {
-  ZeroGetPrivateData(TimerPrivateData);
+  RaverieGetPrivateData(TimerPrivateData);
   self->mLast = self->mCurrent;
   self->mCurrent = GetTimeNanosecond();
 }
 
 double Timer::Time() const
 {
-  ZeroGetPrivateData(TimerPrivateData);
+  RaverieGetPrivateData(TimerPrivateData);
   return double(self->mCurrent - self->mStart) * NanosecondToSecond;
 }
 
 double Timer::TimeDelta() const
 {
-  ZeroGetPrivateData(TimerPrivateData);
+  RaverieGetPrivateData(TimerPrivateData);
   return double(self->mCurrent - self->mLast) * NanosecondToSecond;
 }
 
@@ -87,14 +87,14 @@ TimeMs Timer::UpdateAndGetTimeMilliseconds()
 
 double Timer::TimeNoUpdate() const
 {
-  ZeroGetPrivateData(TimerPrivateData);
+  RaverieGetPrivateData(TimerPrivateData);
   u64 current = GetTimeNanosecond();
   return double(current - self->mStart) * NanosecondToSecond;
 }
 
 Timer::TickType Timer::GetTickTime() const
 {
-  ZeroGetPrivateData(TimerPrivateData);
+  RaverieGetPrivateData(TimerPrivateData);
   return self->mCurrent;
 }
 
@@ -103,4 +103,4 @@ double Timer::TicksToSeconds(TickType ticks) const
   return double(ticks) * NanosecondToSecond;
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 Array<String> gCommandLineArguments;
 String gCommandLine;
@@ -65,4 +65,4 @@ bool ParseCommandLineStringArray(StringMap& parsedCommandLineArguments, Array<St
   return true;
 }
 
-} // namespace Zero
+} // namespace Raverie

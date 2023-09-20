@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 template <typename TokenType>
 GrammarNode<TokenType>::GrammarNode() :
@@ -1379,4 +1379,4 @@ void TokenStream<ParseHandlerType>::Replace(StringParam text, size_t startInclus
   // after the start Getting a token will rebuild the token stream
   this->mTokens.Resize(startInclusive);
 }
-} // namespace Zero
+} // namespace Raverie

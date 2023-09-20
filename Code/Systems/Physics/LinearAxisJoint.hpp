@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class Collider;
@@ -61,4 +61,4 @@ struct LinearAxisJoint : public Joint
 
 typedef Physics::LinearAxisJoint LinearAxisJoint;
 
-} // namespace Zero
+} // namespace Raverie

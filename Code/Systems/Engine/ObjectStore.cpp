@@ -1,26 +1,26 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(ObjectStore, builder, type)
+RaverieDefineType(ObjectStore, builder, type)
 {
-  type->HandleManager = ZilchManagerId(PointerManager);
+  type->HandleManager = RaverieManagerId(PointerManager);
 
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindGetter(EntryCount);
+  RaverieBindGetter(EntryCount);
 
-  ZilchBindMethodAs(IsEntryStored, "IsStored")->AddAttribute(DeprecatedAttribute);
-  ZilchBindMethod(IsEntryStored);
-  ZilchBindMethod(GetEntryAt);
-  ZilchBindMethod(Store);
-  ZilchBindMethod(Restore);
-  ZilchBindMethod(RestoreOrArchetype);
-  ZilchBindMethod(Erase);
-  ZilchBindMethod(ClearStore);
-  ZilchBindMethod(GetDirectoryPath);
+  RaverieBindMethodAs(IsEntryStored, "IsStored")->AddAttribute(DeprecatedAttribute);
+  RaverieBindMethod(IsEntryStored);
+  RaverieBindMethod(GetEntryAt);
+  RaverieBindMethod(Store);
+  RaverieBindMethod(Restore);
+  RaverieBindMethod(RestoreOrArchetype);
+  RaverieBindMethod(Erase);
+  RaverieBindMethod(ClearStore);
+  RaverieBindMethod(GetDirectoryPath);
 }
 
 void ObjectStore::SetStoreName(StringParam storeName)
@@ -39,7 +39,7 @@ void ObjectStore::SetupDirectory()
   {
     // Build the paths and create the directory to contain stored objects.
 
-    // In User documents create a folder call Zero.
+    // In User documents create a folder call Raverie.
     String storePath = FilePath::Combine(GetUserDocumentsApplicationDirectory(), "Store", mStoreName);
 
     CreateDirectoryAndParents(storePath);
@@ -226,4 +226,4 @@ void ObjectStore::ClearStore()
   MoveFolderContents(trashDirectory, mStorePath);
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -23,7 +23,7 @@ StaticAssertWithinRange(StaticAssertRange1, BYTES_TO_BITS(BITSTREAM_DEFAULT_RESE
 #define BITSTREAM_MAX_BYTES POW2(BITSTREAM_MAX_SIZE_BITS)
 StaticAssertWithinRange(StaticAssertRange2, BYTES_TO_BITS(BITSTREAM_MAX_BYTES), 1, Bits(-1));
 
-namespace Zero
+namespace Raverie
 {
 
 /// Bit alignment
@@ -549,7 +549,7 @@ String GetBinaryString(const T& value);
 /// Note: Resets the read cursor
 String GetBinaryString(const BitStream& bitStream, Bytes bytesPerLine = 8);
 
-} // namespace Zero
+} // namespace Raverie
 
 // Includes
 #include "BitStream.inl"

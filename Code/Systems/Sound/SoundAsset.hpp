@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Sound Asset
@@ -10,7 +10,7 @@ namespace Zero
 class SoundAsset : public ReferenceCountedObject
 {
 public:
-  ZilchDeclareType(SoundAsset, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SoundAsset, TypeCopyMode::ReferenceType);
 
   SoundAsset(const String& assetName, bool streaming);
   virtual ~SoundAsset();
@@ -60,7 +60,7 @@ private:
 class DecompressedSoundAsset : public SoundAsset
 {
 public:
-  ZilchDeclareType(DecompressedSoundAsset, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(DecompressedSoundAsset, TypeCopyMode::ReferenceType);
 
   DecompressedSoundAsset(Status& status, const String& fileName, const String& assetName);
 
@@ -120,7 +120,7 @@ public:
 class StreamingSoundAsset : public SoundAsset
 {
 public:
-  ZilchDeclareType(StreamingSoundAsset, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(StreamingSoundAsset, TypeCopyMode::ReferenceType);
 
   StreamingSoundAsset(Status& status,
                       const String& fileName,
@@ -163,4 +163,4 @@ private:
   ThreadLock mLock;
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 void PointNode::AddNeighbor(uint adjacentPoint)
@@ -67,16 +67,16 @@ void PointGraph::Build()
   }
 }
 
-ZilchDefineType(SpringSystem, builder, type)
+RaverieDefineType(SpringSystem, builder, type)
 {
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDependency(Cog);
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDependency(Cog);
 
-  ZilchBindFieldProperty(mCorrectionPercent);
-  ZilchBindFieldProperty(mPointInvMass);
-  ZilchBindGetterSetterProperty(SortOrder);
-  ZilchBindGetterSetterProperty(DebugDrawMode);
-  ZilchBindGetterSetterProperty(DebugDrawType);
+  RaverieBindFieldProperty(mCorrectionPercent);
+  RaverieBindFieldProperty(mPointInvMass);
+  RaverieBindGetterSetterProperty(SortOrder);
+  RaverieBindGetterSetterProperty(DebugDrawMode);
+  RaverieBindGetterSetterProperty(DebugDrawType);
 }
 
 void SpringSystem::Serialize(Serializer& stream)
@@ -792,23 +792,23 @@ void SpringSystem::SystemConnection::OnAllObjectsCreated(CogInitializer& initial
   mOtherSystemId.OnAllObjectsCreated(initializer);
 }
 
-ZilchDefineType(DecorativeCloth, builder, type)
+RaverieDefineType(DecorativeCloth, builder, type)
 {
-  ZeroBindInterface(SpringSystem);
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindComponent();
+  RaverieBindInterface(SpringSystem);
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindComponent();
 
-  ZilchBindMethod(LoadFromMesh);
-  ZilchBindGetterSetterProperty(Mesh);
+  RaverieBindMethod(LoadFromMesh);
+  RaverieBindGetterSetterProperty(Mesh);
 
-  ZilchBindFieldProperty(mJakobsen);
-  ZilchBindGetterSetterProperty(SpringStiffness);
-  ZilchBindGetterSetterProperty(SpringDamping);
-  ZilchBindGetterSetterProperty(ConnectivityCounter);
+  RaverieBindFieldProperty(mJakobsen);
+  RaverieBindGetterSetterProperty(SpringStiffness);
+  RaverieBindGetterSetterProperty(SpringDamping);
+  RaverieBindGetterSetterProperty(ConnectivityCounter);
 
-  ZilchBindMethodProperty(ResetMeshPositions);
+  RaverieBindMethodProperty(ResetMeshPositions);
 
-  type->AddAttribute(::Zero::ObjectAttributes::cDoNotDocument);
+  type->AddAttribute(::Raverie::ObjectAttributes::cDoNotDocument);
 }
 
 void DecorativeCloth::Serialize(Serializer& stream)
@@ -1047,18 +1047,18 @@ void DecorativeCloth::SetSpringDamping(real damping)
   mSpringDamping = damping;
 }
 
-ZilchDefineType(DecorativeRope, builder, type)
+RaverieDefineType(DecorativeRope, builder, type)
 {
-  ZeroBindInterface(SpringSystem);
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindComponent();
+  RaverieBindInterface(SpringSystem);
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindComponent();
 
-  ZilchBindGetterSetterProperty(NumberOfLinks);
-  ZilchBindFieldProperty(mErrorCorrection);
-  ZilchBindFieldProperty(mAnchorA);
-  ZilchBindFieldProperty(mAnchorB);
+  RaverieBindGetterSetterProperty(NumberOfLinks);
+  RaverieBindFieldProperty(mErrorCorrection);
+  RaverieBindFieldProperty(mAnchorA);
+  RaverieBindFieldProperty(mAnchorB);
 
-  type->AddAttribute(::Zero::ObjectAttributes::cDoNotDocument);
+  type->AddAttribute(::Raverie::ObjectAttributes::cDoNotDocument);
 }
 
 void DecorativeRope::Serialize(Serializer& stream)
@@ -1314,4 +1314,4 @@ void SpringGroup::ApplyGlobalEffects(PhysicsSpace* space, SpringSystem* system)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

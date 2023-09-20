@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Renders a mesh using the transform hierarchy of a Skeleton to apply
@@ -10,7 +10,7 @@ namespace Zero
 class SkinnedModel : public Graphical
 {
 public:
-  ZilchDeclareType(SkinnedModel, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SkinnedModel, TypeCopyMode::ReferenceType);
 
   // Component Interface
   void Serialize(Serializer& stream) override;
@@ -56,4 +56,4 @@ public:
   Array<uint> mBoneIndexRemap;
 };
 
-} // namespace Zero
+} // namespace Raverie

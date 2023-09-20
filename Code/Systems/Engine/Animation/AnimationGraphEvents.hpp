@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -18,7 +18,7 @@ class AnimationNode;
 class AnimationGraphEvent : public Event
 {
 public:
-  ZilchDeclareType(AnimationGraphEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(AnimationGraphEvent, TypeCopyMode::ReferenceType);
 
   /// Only set when the animation node has a single animation.
   HandleOf<Animation> mAnimation;
@@ -26,6 +26,6 @@ public:
   HandleOf<AnimationNode> mNode;
 };
 
-} // namespace Zero
+} // namespace Raverie
 
 #include "AnimationNode.inl"

@@ -36,7 +36,7 @@
 
 using namespace std;
 
-namespace Zero
+namespace Raverie
 {
 
 class CommonLibrary
@@ -46,13 +46,13 @@ public:
   static void Shutdown();
 };
 
-} // namespace Zero
+} // namespace Raverie
 
 #include "Utility/MaxSizeof.hpp"
 
 static const constexpr size_t MaxPrimtiveSize = MaxSizeof4(void*, uintptr_t, uintmax_t, double);
 typedef double MaxAlignmentType;
-#define ZeroAlignCount(SizeBytes) ((SizeBytes + sizeof(::MaxAlignmentType) - 1) / sizeof(::MaxAlignmentType))
+#define RaverieAlignCount(SizeBytes) ((SizeBytes + sizeof(::MaxAlignmentType) - 1) / sizeof(::MaxAlignmentType))
 
 #include "Utility/Standard.hpp"
 #include "Utility/Typedefs.hpp"
@@ -194,11 +194,11 @@ namespace Math
 #  include /**/ "SimConversion.hpp"
 #endif
 
-namespace Zero
+namespace Raverie
 {
 #include "Math/BasicNativeTypesMath.inl"
 #include "Math/MathImports.hpp"
-} // namespace Zero
+} // namespace Raverie
 
 #include "Math/Rect.hpp"
 #include "Utility/Image.hpp"

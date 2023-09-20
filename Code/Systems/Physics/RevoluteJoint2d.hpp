@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class Collider;
@@ -69,4 +69,4 @@ struct RevoluteJoint2d : public Joint
 
 typedef Physics::RevoluteJoint2d RevoluteJoint2d;
 
-} // namespace Zero
+} // namespace Raverie

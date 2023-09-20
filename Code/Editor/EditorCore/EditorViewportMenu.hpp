@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Forward Declarations
@@ -27,7 +27,7 @@ public:
 class EditorViewportMenu : public Composite
 {
 public:
-  typedef EditorViewportMenu ZilchSelf;
+  typedef EditorViewportMenu RaverieSelf;
 
   EditorViewportMenu(EditorViewport* viewport);
 
@@ -75,4 +75,4 @@ public:
   Element* mBackground;
 };
 
-} // namespace Zero
+} // namespace Raverie

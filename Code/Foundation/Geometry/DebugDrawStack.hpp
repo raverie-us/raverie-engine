@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// A debug step is a collection of debug drawing shapes that should all
@@ -9,14 +9,14 @@ namespace Zero
 class DebugDrawStep
 {
 public:
-#define ZeroDebugPrimitive(DebugType)                                                                                  \
+#define RaverieDebugPrimitive(DebugType)                                                                                  \
   Array<Debug::DebugType> m##DebugType##List;                                                                          \
   void Add(const Debug::DebugType& value)                                                                              \
   {                                                                                                                    \
     m##DebugType##List.PushBack(value);                                                                                \
   }
 #include "DebugPrimitives.inl"
-#undef ZeroDebugPrimitive
+#undef RaverieDebugPrimitive
 
   void Draw();
 };
@@ -41,9 +41,9 @@ public:
   // that can be modified by the top level of the algorithm. Any sub-step should
   // clone a debug shape and only set the relevant properties, this leaves all
   // pre-establish properties the same.
-#define ZeroDebugPrimitive(DebugType) Debug::DebugType mBase##DebugType;
+#define RaverieDebugPrimitive(DebugType) Debug::DebugType mBase##DebugType;
 #include "DebugPrimitives.inl"
-#undef ZeroDebugPrimitive
+#undef RaverieDebugPrimitive
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 const float cMinSpriteImporterZoom = 0.1f;
@@ -43,7 +43,7 @@ public:
 class SpriteSheetImporter : public Composite
 {
 public:
-  ZilchDeclareType(SpriteSheetImporter, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SpriteSheetImporter, TypeCopyMode::ReferenceType);
 
   SpriteSheetImporter(Composite* parent);
 
@@ -218,4 +218,4 @@ public:
   int FrameSelected;
   IntVec2 PixelCursor;
 };
-} // namespace Zero
+} // namespace Raverie

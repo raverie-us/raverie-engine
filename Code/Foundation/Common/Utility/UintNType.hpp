@@ -4,7 +4,7 @@
 // Includes
 #include "BitMath.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 /// Unsigned integer of N bits
@@ -263,4 +263,4 @@ private:
   value_type mValue;
 };
 
-} // namespace Zero
+} // namespace Raverie

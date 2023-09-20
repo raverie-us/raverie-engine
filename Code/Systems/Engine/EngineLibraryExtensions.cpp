@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 void FindResource(Call& call, ExceptionReport& report);
@@ -12,7 +12,7 @@ void FindNamedResource(Call& call, ExceptionReport& report);
 void ProcessResourceProperties(BoundType* type);
 void ProcessComponentInterfaces(BoundType* type);
 
-// Zero Library Extensions
+// Raverie Library Extensions
 void EngineLibraryExtensions::AddNativeExtensions(LibraryBuilder& builder)
 {
   return AddNativeExtensions(builder, builder.BoundTypes);
@@ -20,7 +20,7 @@ void EngineLibraryExtensions::AddNativeExtensions(LibraryBuilder& builder)
 
 void EngineLibraryExtensions::AddNativeExtensions(LibraryBuilder& builder, BoundTypeMap& boundTypes)
 {
-  BoundType* resourceType = ZilchTypeId(Resource);
+  BoundType* resourceType = RaverieTypeId(Resource);
 
   forRange (BoundType* type, boundTypes.Values())
   {
@@ -50,11 +50,11 @@ void EngineLibraryExtensions::AddExtensionsPostCompilation(LibraryBuilder& build
   MetaLibraryExtensions::AddExtensionsPostCompilation(builder);
 }
 
-void EngineLibraryExtensions::TypeParsedCallback(Zilch::ParseEvent* e, void* userData)
+void EngineLibraryExtensions::TypeParsedCallback(Raverie::ParseEvent* e, void* userData)
 {
   MetaLibraryExtensions::TypeParsedCallback(e, userData);
 
-  BoundType* componentType = ZilchTypeId(Component);
+  BoundType* componentType = RaverieTypeId(Component);
 
   BoundType* boundType = e->Type;
 
@@ -68,7 +68,7 @@ void EngineLibraryExtensions::TypeParsedCallback(Zilch::ParseEvent* e, void* use
 
   // Get the location of the resource so we can take the user to where the type
   // is defined
-  ZilchDocumentResource* resource = (ZilchDocumentResource*)e->Location->CodeUserData;
+  RaverieDocumentResource* resource = (RaverieDocumentResource*)e->Location->CodeUserData;
   ReturnIf(resource == nullptr, , "Type parsed not from a Resource?");
   boundType->Add(new MetaResource(resource));
 
@@ -98,7 +98,7 @@ void EngineLibraryExtensions::AddResourceExtensions(LibraryBuilder& builder, Res
   forRange (HandleOf<Resource> resourceHandle, resources->Resources.All())
   {
     Resource* resource = resourceHandle;
-    BoundType* resourceType = ZilchVirtualTypeId(resource);
+    BoundType* resourceType = RaverieVirtualTypeId(resource);
 
     String resourceName = resource->Name;
 
@@ -177,7 +177,7 @@ void AddResourceFind(LibraryBuilder& builder, BoundType* resourceType)
   // resource of that type by name
   ParameterArray params;
   DelegateParameter& p0 = params.PushBack();
-  p0.ParameterType = ZilchTypeId(String);
+  p0.ParameterType = RaverieTypeId(String);
   p0.Name = "name";
 
   // Find
@@ -231,4 +231,4 @@ void ProcessComponentInterfaces(BoundType* type)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

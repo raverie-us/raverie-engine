@@ -2,7 +2,7 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Tags
@@ -41,91 +41,91 @@ System* CreateSoundSystem()
 
 // Sound Event
 
-ZilchDefineType(SoundEvent, builder, type)
+RaverieDefineType(SoundEvent, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 }
 
 // MIDI Event
 
-ZilchDefineType(MidiEvent, builder, type)
+RaverieDefineType(MidiEvent, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindField(Channel);
-  ZilchBindField(MIDINumber);
-  ZilchBindField(Value);
+  RaverieBindField(Channel);
+  RaverieBindField(MIDINumber);
+  RaverieBindField(Value);
 }
 
 // Audio Float Data Event
 
-ZilchDefineType(AudioFloatDataEvent, builder, type)
+RaverieDefineType(AudioFloatDataEvent, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindField(Channels);
-  ZilchBindMember(AudioData);
+  RaverieBindField(Channels);
+  RaverieBindMember(AudioData);
 }
 
 // Audio Byte Data Event
 
-ZilchDefineType(AudioByteDataEvent, builder, type)
+RaverieDefineType(AudioByteDataEvent, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindMember(AudioData);
+  RaverieBindMember(AudioData);
 }
 
 // Sound System
 
-ZilchDefineType(SoundSystem, builder, type)
+RaverieDefineType(SoundSystem, builder, type)
 {
-  type->HandleManager = ZilchManagerId(PointerManager);
+  type->HandleManager = RaverieManagerId(PointerManager);
 
-  ZilchBindGetterSetter(SystemVolume);
-  ZilchBindGetter(PeakOutputLevel);
-  ZilchBindGetter(RMSOutputLevel);
-  ZilchBindGetter(PeakInputLevel);
-  ZilchBindMethod(GetNodeGraphInfo);
-  ZilchBindGetterSetter(LatencySetting);
-  ZilchBindGetterSetter(DispatchMicrophoneUncompressedFloatData);
-  ZilchBindGetterSetter(DispatchMicrophoneCompressedByteData);
-  ZilchBindGetter(OutputChannels);
-  ZilchBindGetterSetter(MuteAllAudio);
+  RaverieBindGetterSetter(SystemVolume);
+  RaverieBindGetter(PeakOutputLevel);
+  RaverieBindGetter(RMSOutputLevel);
+  RaverieBindGetter(PeakInputLevel);
+  RaverieBindMethod(GetNodeGraphInfo);
+  RaverieBindGetterSetter(LatencySetting);
+  RaverieBindGetterSetter(DispatchMicrophoneUncompressedFloatData);
+  RaverieBindGetterSetter(DispatchMicrophoneCompressedByteData);
+  RaverieBindGetter(OutputChannels);
+  RaverieBindGetterSetter(MuteAllAudio);
 
-  ZilchBindMethod(VolumeNode);
-  ZilchBindMethod(PanningNode);
-  ZilchBindMethod(PitchNode);
-  ZilchBindMethod(LowPassNode);
-  ZilchBindMethod(HighPassNode);
-  ZilchBindMethod(BandPassNode);
-  ZilchBindMethod(EqualizerNode);
-  ZilchBindMethod(ReverbNode);
-  ZilchBindMethod(DelayNode);
-  ZilchBindMethod(CustomAudioNode);
-  ZilchBindMethod(SoundBuffer);
-  ZilchBindMethod(FlangerNode);
-  ZilchBindMethod(ChorusNode);
-  ZilchBindMethod(CompressorNode);
-  ZilchBindMethod(ExpanderNode);
-  ZilchBindMethod(GeneratedWaveNode);
-  ZilchBindMethod(RecordingNode);
-  ZilchBindMethod(AddNoiseNode);
-  ZilchBindMethod(AdditiveSynthNode);
-  ZilchBindMethod(GranularSynthNode);
-  ZilchBindMethod(ModulationNode);
-  ZilchBindMethod(MicrophoneInputNode);
-  ZilchBindMethod(SaveAudioNode);
+  RaverieBindMethod(VolumeNode);
+  RaverieBindMethod(PanningNode);
+  RaverieBindMethod(PitchNode);
+  RaverieBindMethod(LowPassNode);
+  RaverieBindMethod(HighPassNode);
+  RaverieBindMethod(BandPassNode);
+  RaverieBindMethod(EqualizerNode);
+  RaverieBindMethod(ReverbNode);
+  RaverieBindMethod(DelayNode);
+  RaverieBindMethod(CustomAudioNode);
+  RaverieBindMethod(SoundBuffer);
+  RaverieBindMethod(FlangerNode);
+  RaverieBindMethod(ChorusNode);
+  RaverieBindMethod(CompressorNode);
+  RaverieBindMethod(ExpanderNode);
+  RaverieBindMethod(GeneratedWaveNode);
+  RaverieBindMethod(RecordingNode);
+  RaverieBindMethod(AddNoiseNode);
+  RaverieBindMethod(AdditiveSynthNode);
+  RaverieBindMethod(GranularSynthNode);
+  RaverieBindMethod(ModulationNode);
+  RaverieBindMethod(MicrophoneInputNode);
+  RaverieBindMethod(SaveAudioNode);
 
-  ZeroBindEvent(Events::MIDINoteOn, MidiEvent);
-  ZeroBindEvent(Events::MIDINoteOff, MidiEvent);
-  ZeroBindEvent(Events::MIDIPitchWheel, MidiEvent);
-  ZeroBindEvent(Events::MIDIVolume, MidiEvent);
-  ZeroBindEvent(Events::MIDIModWheel, MidiEvent);
-  ZeroBindEvent(Events::MIDIOtherControl, MidiEvent);
-  ZeroBindEvent(Events::SoundInstancePlayed, SoundInstanceEvent);
-  ZeroBindEvent(Events::MicrophoneUncompressedFloatData, AudioFloatDataEvent);
-  ZeroBindEvent(Events::MicrophoneCompressedByteData, AudioByteDataEvent);
+  RaverieBindEvent(Events::MIDINoteOn, MidiEvent);
+  RaverieBindEvent(Events::MIDINoteOff, MidiEvent);
+  RaverieBindEvent(Events::MIDIPitchWheel, MidiEvent);
+  RaverieBindEvent(Events::MIDIVolume, MidiEvent);
+  RaverieBindEvent(Events::MIDIModWheel, MidiEvent);
+  RaverieBindEvent(Events::MIDIOtherControl, MidiEvent);
+  RaverieBindEvent(Events::SoundInstancePlayed, SoundInstanceEvent);
+  RaverieBindEvent(Events::MicrophoneUncompressedFloatData, AudioFloatDataEvent);
+  RaverieBindEvent(Events::MicrophoneCompressedByteData, AudioByteDataEvent);
 }
 
 SoundSystem::SoundSystem() :
@@ -157,7 +157,7 @@ void SoundSystem::Initialize(SystemInitializer& initializer)
   Z::gSound = this;
 
   // Create a System object and initialize.
-  Zero::Status status;
+  Raverie::Status status;
   Mixer.StartMixing(status);
   if (status.Failed())
     DoNotifyWarning("Audio Initialization Unsuccessful", status.Message);
@@ -255,139 +255,139 @@ int SoundSystem::GetOutputChannels()
 
 VolumeNode* SoundSystem::VolumeNode()
 {
-  Zero::VolumeNode* node = new Zero::VolumeNode("VolumeNode", Z::gSound->mCounter++);
+  Raverie::VolumeNode* node = new Raverie::VolumeNode("VolumeNode", Z::gSound->mCounter++);
   return node;
 }
 
 PanningNode* SoundSystem::PanningNode()
 {
-  Zero::PanningNode* node = new Zero::PanningNode("PanningNode", Z::gSound->mCounter++);
+  Raverie::PanningNode* node = new Raverie::PanningNode("PanningNode", Z::gSound->mCounter++);
   return node;
 }
 
 PitchNode* SoundSystem::PitchNode()
 {
-  Zero::PitchNode* node = new Zero::PitchNode("PitchNode", Z::gSound->mCounter++);
+  Raverie::PitchNode* node = new Raverie::PitchNode("PitchNode", Z::gSound->mCounter++);
   return node;
 }
 
 LowPassNode* SoundSystem::LowPassNode()
 {
-  Zero::LowPassNode* node = new Zero::LowPassNode("LowPassNode", Z::gSound->mCounter++);
+  Raverie::LowPassNode* node = new Raverie::LowPassNode("LowPassNode", Z::gSound->mCounter++);
   return node;
 }
 
 HighPassNode* SoundSystem::HighPassNode()
 {
-  Zero::HighPassNode* node = new Zero::HighPassNode("HighPassNode", Z::gSound->mCounter++);
+  Raverie::HighPassNode* node = new Raverie::HighPassNode("HighPassNode", Z::gSound->mCounter++);
   return node;
 }
 
 BandPassNode* SoundSystem::BandPassNode()
 {
-  Zero::BandPassNode* node = new Zero::BandPassNode("BandPassNode", Z::gSound->mCounter++);
+  Raverie::BandPassNode* node = new Raverie::BandPassNode("BandPassNode", Z::gSound->mCounter++);
   return node;
 }
 
 EqualizerNode* SoundSystem::EqualizerNode()
 {
-  Zero::EqualizerNode* node = new Zero::EqualizerNode("EqualizerNode", Z::gSound->mCounter++);
+  Raverie::EqualizerNode* node = new Raverie::EqualizerNode("EqualizerNode", Z::gSound->mCounter++);
   return node;
 }
 
 ReverbNode* SoundSystem::ReverbNode()
 {
-  Zero::ReverbNode* node = new Zero::ReverbNode("ReverbNode", Z::gSound->mCounter++);
+  Raverie::ReverbNode* node = new Raverie::ReverbNode("ReverbNode", Z::gSound->mCounter++);
   return node;
 }
 
 DelayNode* SoundSystem::DelayNode()
 {
-  Zero::DelayNode* node = new Zero::DelayNode("DelayNode", Z::gSound->mCounter++);
+  Raverie::DelayNode* node = new Raverie::DelayNode("DelayNode", Z::gSound->mCounter++);
   return node;
 }
 
 FlangerNode* SoundSystem::FlangerNode()
 {
-  Zero::FlangerNode* node = new Zero::FlangerNode("FlangerNode", Z::gSound->mCounter++);
+  Raverie::FlangerNode* node = new Raverie::FlangerNode("FlangerNode", Z::gSound->mCounter++);
   return node;
 }
 
 ChorusNode* SoundSystem::ChorusNode()
 {
-  Zero::ChorusNode* node = new Zero::ChorusNode("ChorusNode", Z::gSound->mCounter++);
+  Raverie::ChorusNode* node = new Raverie::ChorusNode("ChorusNode", Z::gSound->mCounter++);
   return node;
 }
 
 CompressorNode* SoundSystem::CompressorNode()
 {
-  Zero::CompressorNode* node = new Zero::CompressorNode("CompressorNode", Z::gSound->mCounter++);
+  Raverie::CompressorNode* node = new Raverie::CompressorNode("CompressorNode", Z::gSound->mCounter++);
   return node;
 }
 
 ExpanderNode* SoundSystem::ExpanderNode()
 {
-  Zero::ExpanderNode* node = new Zero::ExpanderNode("ExpanderNode", Z::gSound->mCounter++);
+  Raverie::ExpanderNode* node = new Raverie::ExpanderNode("ExpanderNode", Z::gSound->mCounter++);
   return node;
 }
 
 CustomAudioNode* SoundSystem::CustomAudioNode()
 {
-  Zero::CustomAudioNode* node = new Zero::CustomAudioNode("CustomAudioNode", Z::gSound->mCounter++);
+  Raverie::CustomAudioNode* node = new Raverie::CustomAudioNode("CustomAudioNode", Z::gSound->mCounter++);
   return node;
 }
 
 SoundBuffer* SoundSystem::SoundBuffer()
 {
-  Zero::SoundBuffer* buffer = new Zero::SoundBuffer();
+  Raverie::SoundBuffer* buffer = new Raverie::SoundBuffer();
   return buffer;
 }
 
 GeneratedWaveNode* SoundSystem::GeneratedWaveNode()
 {
-  Zero::GeneratedWaveNode* node = new Zero::GeneratedWaveNode("GeneratedWaveNode", Z::gSound->mCounter++);
+  Raverie::GeneratedWaveNode* node = new Raverie::GeneratedWaveNode("GeneratedWaveNode", Z::gSound->mCounter++);
   return node;
 }
 
 RecordingNode* SoundSystem::RecordingNode()
 {
-  Zero::RecordingNode* node = new Zero::RecordingNode("RecordingNode", Z::gSound->mCounter++);
+  Raverie::RecordingNode* node = new Raverie::RecordingNode("RecordingNode", Z::gSound->mCounter++);
   return node;
 }
 
 AddNoiseNode* SoundSystem::AddNoiseNode()
 {
-  Zero::AddNoiseNode* node = new Zero::AddNoiseNode("AddNoiseNode", Z::gSound->mCounter++);
+  Raverie::AddNoiseNode* node = new Raverie::AddNoiseNode("AddNoiseNode", Z::gSound->mCounter++);
   return node;
 }
 
 AdditiveSynthNode* SoundSystem::AdditiveSynthNode()
 {
-  Zero::AdditiveSynthNode* node = new Zero::AdditiveSynthNode("AdditiveSynthNode", Z::gSound->mCounter++);
+  Raverie::AdditiveSynthNode* node = new Raverie::AdditiveSynthNode("AdditiveSynthNode", Z::gSound->mCounter++);
   return node;
 }
 
 ModulationNode* SoundSystem::ModulationNode()
 {
-  Zero::ModulationNode* node = new Zero::ModulationNode("ModulationNode", Z::gSound->mCounter++);
+  Raverie::ModulationNode* node = new Raverie::ModulationNode("ModulationNode", Z::gSound->mCounter++);
   return node;
 }
 
 MicrophoneInputNode* SoundSystem::MicrophoneInputNode()
 {
-  Zero::MicrophoneInputNode* node = new Zero::MicrophoneInputNode("MicrophoneInputNode", Z::gSound->mCounter++);
+  Raverie::MicrophoneInputNode* node = new Raverie::MicrophoneInputNode("MicrophoneInputNode", Z::gSound->mCounter++);
   return node;
 }
 
 SaveAudioNode* SoundSystem::SaveAudioNode()
 {
-  Zero::SaveAudioNode* node = new Zero::SaveAudioNode("SaveAudioNode", Z::gSound->mCounter++);
+  Raverie::SaveAudioNode* node = new Raverie::SaveAudioNode("SaveAudioNode", Z::gSound->mCounter++);
   return node;
 }
 
 GranularSynthNode* SoundSystem::GranularSynthNode()
 {
-  Zero::GranularSynthNode* node = new Zero::GranularSynthNode("GranularSynthNode", Z::gSound->mCounter++);
+  Raverie::GranularSynthNode* node = new Raverie::GranularSynthNode("GranularSynthNode", Z::gSound->mCounter++);
   return node;
 }
 
@@ -452,20 +452,20 @@ void SoundSystem::RemoveSoundSpace(SoundSpace* space, bool isEditor)
 
 // Audio Settings
 
-ZilchDefineType(AudioSettings, builder, type)
+RaverieDefineType(AudioSettings, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindTag(Tags::Sound);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindTag(Tags::Sound);
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetterProperty(SystemVolume)->Add(new EditorSlider(0.0f, 2.0f, 0.01f));
-  ZilchBindGetterSetterProperty(MuteAllAudio);
-  ZilchBindGetterSetterProperty(UseRandomSeed)->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  ZilchBindGetterSetterProperty(Seed)->ZeroFilterEquality(mUseRandomSeed, bool, false);
-  ZilchBindGetterSetterProperty(MixType);
-  ZilchBindGetterSetterProperty(MinVolumeThreshold)->Add(new EditorSlider(0.0f, 0.2f, 0.001f));
-  ZilchBindGetterSetterProperty(LatencySetting);
+  RaverieBindGetterSetterProperty(SystemVolume)->Add(new EditorSlider(0.0f, 2.0f, 0.01f));
+  RaverieBindGetterSetterProperty(MuteAllAudio);
+  RaverieBindGetterSetterProperty(UseRandomSeed)->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  RaverieBindGetterSetterProperty(Seed)->RaverieFilterEquality(mUseRandomSeed, bool, false);
+  RaverieBindGetterSetterProperty(MixType);
+  RaverieBindGetterSetterProperty(MinVolumeThreshold)->Add(new EditorSlider(0.0f, 0.2f, 0.001f));
+  RaverieBindGetterSetterProperty(LatencySetting);
 }
 
 AudioSettings::AudioSettings() :
@@ -569,7 +569,7 @@ void AudioSettings::SetMinVolumeThreshold(float volume)
   Z::gSound->Mixer.SetMinimumVolumeThreshold(mMinVolumeThreshold);
 }
 
-Zero::AudioLatency::Enum AudioSettings::GetLatencySetting()
+Raverie::AudioLatency::Enum AudioSettings::GetLatencySetting()
 {
   return mLatency;
 }
@@ -614,4 +614,4 @@ void AudioSettings::SetSeed(uint seed)
   Z::gSound->mSeed = seed;
 }
 
-} // namespace Zero
+} // namespace Raverie

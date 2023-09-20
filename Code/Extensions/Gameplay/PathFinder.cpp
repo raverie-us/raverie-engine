@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -10,16 +10,16 @@ DefineEvent(PathFinderFinishedGeneric);
 DefineEvent(PathFinderFinished);
 } // namespace Events
 
-ZilchDefineType(PathFinder, builder, type)
+RaverieDefineType(PathFinder, builder, type)
 {
-  ZeroBindDocumented();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindEvent(Events::PathFinderFinished, PathFinderEvent<Vec3>);
+  RaverieBindDocumented();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindEvent(Events::PathFinderFinished, PathFinderEvent<Vec3>);
 
-  ZilchBindMethod(FindPath);
-  ZilchBindMethod(FindPathThreaded);
+  RaverieBindMethod(FindPath);
+  RaverieBindMethod(FindPathThreaded);
 
-  ZilchBindField(mMaxIterations);
+  RaverieBindField(mMaxIterations);
 }
 
 const int cDefaultMaxIterations = 100000;
@@ -43,7 +43,7 @@ HandleOf<ArrayClass<Vec3>> PathFinder::FindPath(Vec3Param worldStart, Vec3Param 
   Variant nodeKeyGoal = WorldPositionToNodeKey(worldGoal);
   FindPathGeneric(nodeKeyStart, nodeKeyGoal, path);
 
-  HandleOf<ArrayClass<Vec3>> array = ZilchAllocate(ArrayClass<Vec3>);
+  HandleOf<ArrayClass<Vec3>> array = RaverieAllocate(ArrayClass<Vec3>);
   ArrayClass<Vec3>& arrayRef = array;
 
   for (size_t i = 0; i < path.Size(); ++i)
@@ -60,12 +60,12 @@ HandleOf<PathFinderRequest> PathFinder::FindPathThreaded(Vec3Param worldStart, V
   return FindPathGenericThreaded(nodeKeyStart, nodeKeyGoal);
 }
 
-ZilchDefineType(PathFinderRequest, builder, type)
+RaverieDefineType(PathFinderRequest, builder, type)
 {
-  ZeroBindDocumented();
-  ZilchBindMethod(Cancel);
-  ZilchBindFieldGetter(mPathFinderComponent);
-  ZilchBindFieldGetter(mStatus);
+  RaverieBindDocumented();
+  RaverieBindMethod(Cancel);
+  RaverieBindFieldGetter(mPathFinderComponent);
+  RaverieBindFieldGetter(mStatus);
 }
 
 PathFinderRequest::PathFinderRequest(PathFinder* owner, Job* job) :
@@ -141,11 +141,11 @@ void PathFinderRequest::OnJobFinished(PathFinderBaseEvent* event)
   mJob = nullptr;
 }
 
-ZilchDefineType(PathFinderBaseEvent, builder, type)
+RaverieDefineType(PathFinderBaseEvent, builder, type)
 {
-  ZeroBindDocumented();
-  ZilchBindFieldGetter(mRequest);
-  ZilchBindFieldGetter(mDuration);
+  RaverieBindDocumented();
+  RaverieBindFieldGetter(mRequest);
+  RaverieBindFieldGetter(mDuration);
 }
 
-} // namespace Zero
+} // namespace Raverie

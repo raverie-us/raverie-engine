@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Constants
@@ -54,11 +54,11 @@ DefineEvent(MouseExitRow);
 DefineEvent(TreeViewHeaderAdded);
 } // namespace Events
 
-ZilchDefineType(TreeEvent, builder, type)
+RaverieDefineType(TreeEvent, builder, type)
 {
 }
 
-ZilchDefineType(TreeViewHeaderAddedEvent, builder, type)
+RaverieDefineType(TreeViewHeaderAddedEvent, builder, type)
 {
 }
 
@@ -158,7 +158,7 @@ ColumnFormat::ColumnFormat()
   Flags = 0;
 }
 
-ZilchDefineType(TreeRow, builder, type)
+RaverieDefineType(TreeRow, builder, type)
 {
 }
 
@@ -1031,7 +1031,7 @@ void TreeRow::OnMetaDrop(MetaDropEvent* event)
   mTree->mMouseOver.Id = (u64)-1;
 
   // Dropped on the Row
-  if (event->Instance.StoredType->IsA(ZilchTypeId(TreeRow)))
+  if (event->Instance.StoredType->IsA(RaverieTypeId(TreeRow)))
   {
     // Do not drop on self
     TreeRow* sourceRow = event->Instance.Get<TreeRow*>();
@@ -1370,7 +1370,7 @@ void ColumnResizer::OnMouseExit(MouseEvent* event)
   event->GetMouse()->SetCursor(Cursor::Arrow);
 }
 
-ZilchDefineType(TreeView, builder, type)
+RaverieDefineType(TreeView, builder, type)
 {
 }
 
@@ -1558,7 +1558,7 @@ void TreeView::ShowRow(DataIndex& index)
   UpdateTransform();
 
   // Scroll to this object
-  Zero::TreeRow* dataRow = FindRowByIndex(index);
+  Raverie::TreeRow* dataRow = FindRowByIndex(index);
 
   if (dataRow)
   {
@@ -2307,4 +2307,4 @@ void TreeView::UpdateColumnSeparators()
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

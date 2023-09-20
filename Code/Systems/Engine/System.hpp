@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class Engine;
@@ -17,7 +17,7 @@ struct SystemInitializer
 class System : public EngineObject
 {
 public:
-  ZilchDeclareType(System, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(System, TypeCopyMode::ReferenceType);
 
   /// All systems need a virtual destructor to have their destructor called.
   virtual ~System()
@@ -38,4 +38,4 @@ public:
   }
 };
 
-} // namespace Zero
+} // namespace Raverie

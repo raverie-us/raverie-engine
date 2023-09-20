@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 JointCreator::ConnectionInfo::ConnectionInfo(Cog* obj0, Cog* obj1, bool worldConnect)
@@ -55,35 +55,35 @@ JointCreator::JointCreator()
   mMaxImpulse = 0.0f;
 }
 
-ZilchDefineType(JointCreator, builder, type)
+RaverieDefineType(JointCreator, builder, type)
 {
   type->CreatableInScript = true;
-  ZilchBindDestructor();
-  ZilchBindDefaultConstructor();
-  ZeroBindDocumented();
+  RaverieBindDestructor();
+  RaverieBindDefaultConstructor();
+  RaverieBindDocumented();
 
-  ZilchBindOverloadedMethod(Create, ZilchInstanceOverload(Cog*, Cog*, Cog*, StringParam));
-  ZilchBindOverloadedMethod(CreateWorldPoints, ZilchInstanceOverload(Cog*, Cog*, Cog*, StringParam, Vec3Param));
-  ZilchBindOverloadedMethod(CreateWorldPoints,
-                            ZilchInstanceOverload(Cog*, Cog*, Cog*, StringParam, Vec3Param, Vec3Param));
-  ZilchBindOverloadedMethod(CreateLocalPoints,
-                            ZilchInstanceOverload(Cog*, Cog*, Cog*, StringParam, Vec3Param, Vec3Param));
-  ZilchBindOverloadedMethod(Create, ZilchInstanceOverload(Cog*, Cog*, Cog*, Archetype*));
-  ZilchBindOverloadedMethod(CreateWorldPoints, ZilchInstanceOverload(Cog*, Cog*, Cog*, Archetype*, Vec3Param));
-  ZilchBindOverloadedMethod(CreateWorldPoints,
-                            ZilchInstanceOverload(Cog*, Cog*, Cog*, Archetype*, Vec3Param, Vec3Param));
-  ZilchBindOverloadedMethod(CreateLocalPoints,
-                            ZilchInstanceOverload(Cog*, Cog*, Cog*, Archetype*, Vec3Param, Vec3Param));
+  RaverieBindOverloadedMethod(Create, RaverieInstanceOverload(Cog*, Cog*, Cog*, StringParam));
+  RaverieBindOverloadedMethod(CreateWorldPoints, RaverieInstanceOverload(Cog*, Cog*, Cog*, StringParam, Vec3Param));
+  RaverieBindOverloadedMethod(CreateWorldPoints,
+                            RaverieInstanceOverload(Cog*, Cog*, Cog*, StringParam, Vec3Param, Vec3Param));
+  RaverieBindOverloadedMethod(CreateLocalPoints,
+                            RaverieInstanceOverload(Cog*, Cog*, Cog*, StringParam, Vec3Param, Vec3Param));
+  RaverieBindOverloadedMethod(Create, RaverieInstanceOverload(Cog*, Cog*, Cog*, Archetype*));
+  RaverieBindOverloadedMethod(CreateWorldPoints, RaverieInstanceOverload(Cog*, Cog*, Cog*, Archetype*, Vec3Param));
+  RaverieBindOverloadedMethod(CreateWorldPoints,
+                            RaverieInstanceOverload(Cog*, Cog*, Cog*, Archetype*, Vec3Param, Vec3Param));
+  RaverieBindOverloadedMethod(CreateLocalPoints,
+                            RaverieInstanceOverload(Cog*, Cog*, Cog*, Archetype*, Vec3Param, Vec3Param));
 
-  ZilchBindMethod(AddJointLimit);
-  ZilchBindMethod(AddJointMotor);
-  ZilchBindMethod(AddJointSpring);
+  RaverieBindMethod(AddJointLimit);
+  RaverieBindMethod(AddJointMotor);
+  RaverieBindMethod(AddJointSpring);
 
-  ZilchBindGetterSetterProperty(OverrideLength);
-  ZilchBindGetterSetterProperty(UseCenter);
-  ZilchBindGetterSetterProperty(AutoSnaps);
-  ZilchBindGetterSetterProperty(AttachToWorld);
-  ZilchBindGetterSetterProperty(AttachToCommonParent);
+  RaverieBindGetterSetterProperty(OverrideLength);
+  RaverieBindGetterSetterProperty(UseCenter);
+  RaverieBindGetterSetterProperty(AutoSnaps);
+  RaverieBindGetterSetterProperty(AttachToWorld);
+  RaverieBindGetterSetterProperty(AttachToCommonParent);
 }
 
 Cog* JointCreator::Create(Cog* objectA, Cog* objectB, StringParam jointName)
@@ -562,4 +562,4 @@ void JointCreator::SpecificSetup(WeldJoint* joint, ConnectionInfo& info)
   joint->SetLocalBasisB(info.b->has(Transform)->GetWorldRotation().Inverted());
 }
 
-} // namespace Zero
+} // namespace Raverie

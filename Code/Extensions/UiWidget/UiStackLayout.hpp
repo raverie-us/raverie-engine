@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Direction of
@@ -11,7 +11,7 @@ class UiStackLayout : public UiLayout
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(UiStackLayout, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(UiStackLayout, TypeCopyMode::ReferenceType);
 
   /// Component Interface.
   void Serialize(Serializer& stream) override;
@@ -36,4 +36,4 @@ private:
   Vec2 mSpacing;
 };
 
-} // namespace Zero
+} // namespace Raverie

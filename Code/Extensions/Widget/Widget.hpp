@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 typedef Widget Element;
@@ -77,7 +77,7 @@ DeclareEnum3(SizePolicy, Auto, Fixed, Flex);
 class SizePolicies
 {
 public:
-  ZilchDeclareType(SizePolicies, TypeCopyMode::ValueType);
+  RaverieDeclareType(SizePolicies, TypeCopyMode::ValueType);
 
   SizePolicies()
   {
@@ -140,7 +140,7 @@ public:
 class Widget : public EventObject
 {
 public:
-  ZilchDeclareType(Widget, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Widget, TypeCopyMode::ReferenceType);
 
   static bool sDisableDeletes;
 
@@ -409,4 +409,4 @@ private:
   virtual bool TakeFocusOverride();
 };
 
-} // namespace Zero
+} // namespace Raverie

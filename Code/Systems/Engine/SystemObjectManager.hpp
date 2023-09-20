@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 DeclareEnum2(ObjectCleanup, AutoDelete, None);
@@ -27,7 +27,7 @@ public:
   template <typename type>
   type* FindOrCreate(cstr name)
   {
-    BoundType* metaType = ZilchTypeId(type);
+    BoundType* metaType = RaverieTypeId(type);
 
     // Does the object exist?
     HashMap<String, ObjectInstance>::range r = Objects.Find(metaType->Name);
@@ -66,7 +66,7 @@ extern SystemObjectManager* gSystemObjects;
 }
 
 #define CreateSystemObjectFrom(Type, Value)                                                                            \
-  ZilchInitializeType(Type);                                                                                           \
-  Z::gSystemObjects->Add(Value, ZilchTypeId(Type), ObjectCleanup::AutoDelete);
+  RaverieInitializeType(Type);                                                                                           \
+  Z::gSystemObjects->Add(Value, RaverieTypeId(Type), ObjectCleanup::AutoDelete);
 
-} // namespace Zero
+} // namespace Raverie

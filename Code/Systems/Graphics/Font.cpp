@@ -4,7 +4,7 @@
 #include "ft2build.h"
 #include FT_FREETYPE_H
 
-namespace Zero
+namespace Raverie
 {
 
 bool AnyNewLine(Rune rune)
@@ -173,9 +173,9 @@ int FtToPixels(int a)
   return a >> 6;
 }
 
-ZilchDefineType(Font, builder, type)
+RaverieDefineType(Font, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 }
 
 Font::Font()
@@ -333,7 +333,7 @@ RenderFont* FontRasterizer::UpdateRasteredFont(RenderFont* existingFont, Array<i
 }
 
 // For ease of use when adding just one new rune code
-Zero::RenderFont* FontRasterizer::UpdateRasteredFont(RenderFont* existingFont, Rune newRuneCode)
+Raverie::RenderFont* FontRasterizer::UpdateRasteredFont(RenderFont* existingFont, Rune newRuneCode)
 {
   Array<int> runeCodes;
   runeCodes.PushBack(newRuneCode.value);
@@ -695,4 +695,4 @@ bool FontRasterizer::RoomOnTextureForRunes(int xPos, int yPos)
   return runeSlotsLeft >= mGlyphInfo.Size();
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,0 +1,152 @@
+// MIT Licensed (see LICENSE.md).
+
+[RunInEditor]
+class UiRenderer : RaverieComponent
+{
+  [Dependency] var UiRootWidget : UiRootWidget;
+  [Dependency] var Sprite : Sprite;
+  
+  [Property] var ClearColor : Real4 = Real4(0);
+  
+  // If DebugDraw RenderGroups are drawn in edit mode.
+  [Property] var EditorDebugDraw : Boolean = true;
+  
+  // If DebugDraw RenderGroups are drawn in play mode.
+  [Property] var GameDebugDraw : Boolean = true;
+  
+  // This is used to resize the root widget to the game camera if it's fixed.
+  // The reason is to preview what the game will look like at a specific resolution.
+  [Property] var GameCamera = CogPath(":/GameCamera");
+  
+  var PreviousResolutionY : Integer;
+  
+  function Initialize(init : CogInitializer)
+  {
+    Raverie.Connect(this.Owner, Events.RenderTasksUpdate, this.OnRenderTasksUpdate);
+  }
+  
+  function OnRenderTasksUpdate(event : RenderTasksEvent)
+  {
+    // The Sprite must be visible for Reactive. This could be removed and
+    // the Reactive system could be extended to directly find the root widget
+    this.Sprite.Visible = true;
+    
+    var size = event.ViewportSize;
+    
+    this.ResizeToViewport(size, event.CameraViewportCog.CameraViewport);
+    
+    var final = event.GetFinalTarget(size, TextureFormat.RGBA8);
+    var depthStencil = event.GetRenderTarget(size, TextureFormat.Depth24Stencil8);
+    
+    event.AddRenderTaskClearTarget(final, depthStencil, this.ClearColor, 1.0, 0);
+    
+    // Update layouts before rendering
+    this.UiRootWidget.Update();
+    this.UiRootWidget.Render(event, final, depthStencil, ColorOutput());
+    
+    this.DrawDebugObjects(event, final, depthStencil);
+  }
+  
+  function ResizeToViewport(viewportSize : Integer2, cameraViewport : CameraViewport)
+  {
+    var cameraCog = cameraViewport.CameraPath.Cog;
+    var cameraTransform = cameraCog.Transform;
+    var camera = cameraCog.Camera;
+    
+    var cameraPos = cameraTransform.Translation;
+    
+    // Root widget should always be at the origin
+    this.UiRootWidget.LocalTranslation = Real2(0);
+    
+    // Set these to nice clean values so the user can't ever mess them up
+    camera.NearPlane = 0.1;
+    camera.FarPlane = 100;
+    cameraTransform.WorldScale = Real3(1);
+    cameraTransform.WorldRotation = Quaternion.Identity;
+    cameraPos.Z = 10;
+    
+    if(cameraCog.EditorCameraController == null)
+    {
+      // Size ourself to the viewport size
+      this.UiRootWidget.Size = viewportSize as Real2;
+      
+      cameraPos.XY = this.UiRootWidget.WorldCenter;
+      camera.Size = viewportSize.Y;
+    }
+    else
+    {
+      // In the editor, if the game camera has a fixed resolution, resize ourself to that resolution
+      var gameCameraViewport = this.GameCamera.CameraViewport;
+      if(gameCameraViewport != null && gameCameraViewport.ViewportScaling == ViewportScaling.Exact)
+        this.ResizeToGameCamera(gameCameraViewport);
+      
+      var firstRender = (this.PreviousResolutionY == 0);
+      var zoomOneToOneHotkey = Raverie.Keyboard.KeyIsDown(Keys.Zero) && Raverie.Keyboard.KeyIsDown(Keys.Control);
+      
+      // Make the camera zoom level 1 to 1 with the viewport (pixel perfect)
+      if(firstRender || zoomOneToOneHotkey)
+        cameraCog.Camera.Size = viewportSize.Y;
+      
+      // When the viewport is resized, we want to adjust our camera size to keep the zoom the same
+      if(!firstRender && this.PreviousResolutionY != viewportSize.Y)
+        camera.Size *= (viewportSize.Y as Real / this.PreviousResolutionY);
+      
+      this.PreviousResolutionY = viewportSize.Y;
+      
+      // The editor camera controller zoom can make it non-integral
+      camera.Size = Math.Round(camera.Size);
+    }
+    
+    // Camera's position should always be snapped because the
+    // EditorCameraController can make it non-integral (and the 0.5 multiplication above)
+    cameraPos = Math.Floor(cameraPos);
+    
+    // If the viewport size is an odd number then we would have removed the half offset
+    // in the above floor, so we need to add it back. Note we cannot just remove the Floor
+    // due to the EditorCameraController adding in non-integral offsets
+    cameraPos.XY += (viewportSize % 2) * 0.5;
+    cameraTransform.Translation = cameraPos;
+  }
+  
+  function ResizeToGameCamera(gameCameraViewport : CameraViewport)
+  {
+    // Root widget should be the exact size specified on the game CameraViewport
+    this.UiRootWidget.Size = gameCameraViewport.ResolutionOrAspect as Real2;
+    
+    // Size the camera to the same
+    var gameCameraViewportCog = gameCameraViewport.Owner;
+    gameCameraViewportCog.Camera.Size = this.UiRootWidget.Size.Y;
+    
+    // Move the camera to the center of the root widget
+    var gameCameraLocalPos = gameCameraViewportCog.Transform.LocalTranslation;
+    gameCameraLocalPos.XY = this.UiRootWidget.WorldCenter;
+    gameCameraViewportCog.Transform.LocalTranslation = gameCameraLocalPos;
+  }
+  
+  function DrawDebugObjects(event : RenderTasksEvent, color : RenderTarget, depth : RenderTarget)
+  {
+    if (!this.EditorDebugDraw && this.Space.IsEditorMode || !this.GameDebugDraw && !this.Space.IsEditorMode)
+      return;
+      
+    var debugSettings = RenderSettings();
+    debugSettings.ColorTarget = color;
+    debugSettings.DepthTarget = depth;
+    
+    debugSettings.CullMode = CullMode.Disabled;
+    
+    debugSettings.BlendSettings.BlendMode = BlendMode.Separate;
+    debugSettings.BlendSettings.BlendEquation = BlendEquation.Add;
+    debugSettings.BlendSettings.SourceFactor = BlendFactor.SourceAlpha;
+    debugSettings.BlendSettings.DestFactor = BlendFactor.InvSourceAlpha;
+    debugSettings.BlendSettings.SourceFactorAlpha = BlendFactor.One;
+    debugSettings.BlendSettings.DestFactorAlpha = BlendFactor.One;
+    
+    debugSettings.DepthSettings.DepthMode = DepthMode.Read;
+    debugSettings.DepthSettings.DepthCompareFunc = TextureCompareFunc.LessEqual;
+    
+    event.AddRenderTaskRenderPass(debugSettings, RenderGroup.DebugDraw, ColorOutput());
+    
+    debugSettings.DepthSettings.DepthMode = DepthMode.Disabled;
+    event.AddRenderTaskRenderPass(debugSettings, RenderGroup.DebugDrawOnTop, ColorOutput());
+  }
+}

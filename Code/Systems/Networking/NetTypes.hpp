@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Editor Tags
@@ -32,7 +32,7 @@ bool IsValidNetPeerIdPropertyType(Type* propertyType);
 /// Otherwise we will use ResourceId u64 as ReplicaType (much more efficient).
 /// This impacts bandwidth performance when first spawning/cloning new NetObject
 /// types to remote peers.
-#ifdef ZeroDebug
+#ifdef RaverieDebug
 #  define NETOBJECT_USE_RESOURCE_ID_NAME_STRING
 #endif
 
@@ -859,7 +859,7 @@ inline Bits Serialize<NetHostRecordListData>(SerializeDirection::Enum direction,
       // bit data into it)
       tempBitStream.SetBitsWritten(bitsToRead);
       // move the bitstream
-      record.mBasicHostInfo = ZeroMove(tempBitStream);
+      record.mBasicHostInfo = RaverieMove(tempBitStream);
       // Move the record into the array.
       netHostRecordList.mNetHostRecords.PushBack(record);
     }
@@ -974,4 +974,4 @@ inline Bits Serialize<NetHostRefreshData>(SerializeDirection::Enum direction,
   }
 };
 
-} // namespace Zero
+} // namespace Raverie

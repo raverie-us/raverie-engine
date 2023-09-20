@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 struct JointNode;
@@ -14,7 +14,7 @@ DeclareBitField2(JointMotorFlags, Active, Reverse);
 /// See each joint for a description of how it reacts to a motor.
 struct JointMotor : public Component
 {
-  ZilchDeclareType(JointMotor, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(JointMotor, TypeCopyMode::ReferenceType);
   JointMotor();
   virtual ~JointMotor();
 
@@ -59,4 +59,4 @@ struct JointMotor : public Component
   JointNode* mNode;
 };
 
-} // namespace Zero
+} // namespace Raverie

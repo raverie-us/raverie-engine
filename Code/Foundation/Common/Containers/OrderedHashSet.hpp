@@ -4,7 +4,7 @@
 #include "HashMap.hpp"
 #include "InList.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 /// A hashset that preserving insertion order, typically for displaying data in
@@ -218,4 +218,4 @@ public:
   ListType mList;
 };
 
-} // namespace Zero
+} // namespace Raverie

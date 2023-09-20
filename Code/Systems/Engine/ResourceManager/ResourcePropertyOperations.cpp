@@ -1,15 +1,15 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 void GetResourcesFromProperties(HandleParam object, HashSet<Resource*>& resources)
 {
   // METAREFACTOR We should optimize all these cases by making a special range
   // class that does not allocate
-  // Originally the range class allocated to store values safely for Zilch...
-  // (does it actually matter for Zilch, since all types are safe?)
+  // Originally the range class allocated to store values safely for Raverie...
+  // (does it actually matter for Raverie, since all types are safe?)
   BoundType* objectType = object.StoredType;
   forRange (Property* metaProperty, objectType->GetProperties())
   {
@@ -23,7 +23,7 @@ void GetResourcesFromProperties(HandleParam object, HashSet<Resource*>& resource
     Type* propType = metaProperty->PropertyType;
 
     // Can't do anything if it isn't a resource
-    if (propType->IsA(ZilchTypeId(Resource)) == false)
+    if (propType->IsA(RaverieTypeId(Resource)) == false)
       continue;
 
     // Grab the current value
@@ -60,4 +60,4 @@ void GetResourcesFromProperties(HandleParam object, HashSet<Resource*>& resource
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

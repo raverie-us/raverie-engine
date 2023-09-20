@@ -1,11 +1,11 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Meta Data Inheritance
-ZilchDefineType(ComponentMetaDataInheritance, builder, type)
+RaverieDefineType(ComponentMetaDataInheritance, builder, type)
 {
 }
 
@@ -63,11 +63,11 @@ void ComponentMetaDataInheritance::RebuildObject(HandleParam object)
 {
   Component* component = object.Get<Component*>();
   Cog* cog = component->GetOwner();
-  ZilchTypeId(Cog)->HasInherited<MetaDataInheritance>()->RebuildObject(cog);
+  RaverieTypeId(Cog)->HasInherited<MetaDataInheritance>()->RebuildObject(cog);
 }
 
 // Component Meta Operations
-ZilchDefineType(ComponentMetaOperations, builder, type)
+RaverieDefineType(ComponentMetaOperations, builder, type)
 {
 }
 
@@ -75,7 +75,7 @@ u64 ComponentMetaOperations::GetUndoHandleId(HandleParam object)
 {
   Component* component = object.Get<Component*>();
   u64 cogId = component->GetOwner()->mObjectId.Id;
-  u64 componentHash = ZilchVirtualTypeId(component)->Name.Hash();
+  u64 componentHash = RaverieVirtualTypeId(component)->Name.Hash();
   return (cogId << 32) | componentHash;
 }
 
@@ -84,7 +84,7 @@ Any ComponentMetaOperations::GetUndoData(HandleParam object)
   Component* component = object.Get<Component*>();
   ReturnIf(component == nullptr, Any(), "Invalid Component given.");
 
-  MetaOperations* cogOperations = ZilchTypeId(Cog)->HasInherited<MetaOperations>();
+  MetaOperations* cogOperations = RaverieTypeId(Cog)->HasInherited<MetaOperations>();
   return cogOperations->GetUndoData(component->GetOwner());
 }
 
@@ -121,7 +121,7 @@ void ComponentMetaOperations::RestoreUndoData(HandleParam object, AnyParam undoD
   Component* component = object.Get<Component*>();
   ReturnIf(component == nullptr, , "Invalid Component given.");
 
-  MetaOperations* cogOperations = ZilchTypeId(Cog)->HasInherited<MetaOperations>();
+  MetaOperations* cogOperations = RaverieTypeId(Cog)->HasInherited<MetaOperations>();
   cogOperations->RestoreUndoData(component->GetOwner(), undoData);
 }
 
@@ -130,8 +130,8 @@ ObjectRestoreState* ComponentMetaOperations::GetRestoreState(HandleParam object)
   Component* component = object.Get<Component*>();
   ReturnIf(component == nullptr, nullptr, "Invalid Component given.");
 
-  MetaOperations* cogOperations = ZilchTypeId(Cog)->HasInherited<MetaOperations>();
+  MetaOperations* cogOperations = RaverieTypeId(Cog)->HasInherited<MetaOperations>();
   return cogOperations->GetRestoreState(component->GetOwner());
 }
 
-} // namespace Zero
+} // namespace Raverie

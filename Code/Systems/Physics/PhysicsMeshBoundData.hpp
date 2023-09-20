@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class GenericPhysicsMesh;
@@ -187,26 +187,26 @@ private:
 class PhysicsMeshVertexData : public BoundMeshData<GenericPhysicsMesh, Vec3>
 {
 public:
-  ZilchDeclareType(PhysicsMeshVertexData, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(PhysicsMeshVertexData, TypeCopyMode::ReferenceType);
 };
 
 class PhysicsMeshIndexData : public BoundMeshData<GenericPhysicsMesh, uint>
 {
 public:
-  ZilchDeclareType(PhysicsMeshIndexData, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(PhysicsMeshIndexData, TypeCopyMode::ReferenceType);
 };
 
 #define PhysicsDefineArrayType(arrayType)                                                                              \
-  ZilchDefineType(arrayType, builder, type)                                                                            \
+  RaverieDefineType(arrayType, builder, type)                                                                            \
   {                                                                                                                    \
-    ZeroBindDocumented();                                                                                              \
+    RaverieBindDocumented();                                                                                              \
                                                                                                                        \
-    ZilchBindMethod(Get);                                                                                              \
-    ZilchBindMethod(Set);                                                                                              \
-    ZilchBindMethod(Add);                                                                                              \
-    ZilchBindMethod(Clear);                                                                                            \
-    ZilchBindGetter(All);                                                                                              \
-    ZilchBindGetterProperty(Count);                                                                                    \
+    RaverieBindMethod(Get);                                                                                              \
+    RaverieBindMethod(Set);                                                                                              \
+    RaverieBindMethod(Add);                                                                                              \
+    RaverieBindMethod(Clear);                                                                                            \
+    RaverieBindGetter(All);                                                                                              \
+    RaverieBindGetterProperty(Count);                                                                                    \
   }
 
-} // namespace Zero
+} // namespace Raverie

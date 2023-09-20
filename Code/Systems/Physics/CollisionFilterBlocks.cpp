@@ -1,18 +1,18 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(CollisionFilterBlock, builder, type)
+RaverieDefineType(CollisionFilterBlock, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindGetter(BlockType);
-  ZilchBindGetterSetterProperty(SendEventsToA);
-  ZilchBindGetterSetterProperty(SendEventsToB);
-  ZilchBindGetterSetterProperty(SendEventsToSpace);
-  ZilchBindFieldProperty(mEventOverride);
+  RaverieBindGetter(BlockType);
+  RaverieBindGetterSetterProperty(SendEventsToA);
+  RaverieBindGetterSetterProperty(SendEventsToB);
+  RaverieBindGetterSetterProperty(SendEventsToSpace);
+  RaverieBindFieldProperty(mEventOverride);
 }
 
 CollisionFilterBlock::CollisionFilterBlock()
@@ -70,13 +70,13 @@ CollisionFilterBlockType::Enum CollisionFilterBlock::GetBlockType() const
   return CollisionFilterBlockType::CollisionStartedBlock;
 }
 
-ZilchDefineType(CollisionStartBlock, builder, type)
+RaverieDefineType(CollisionStartBlock, builder, type)
 {
-  ZeroBindComponent();
-  type->HasOrAdd<::Zero::CogComponentMeta>(type);
+  RaverieBindComponent();
+  type->HasOrAdd<::Raverie::CogComponentMeta>(type);
   type->Add(new MetaSerialization());
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDocumented();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
 }
 
 CollisionStartBlock::CollisionStartBlock()
@@ -84,13 +84,13 @@ CollisionStartBlock::CollisionStartBlock()
   mBlockType = FilterFlags::StartEvent;
 }
 
-ZilchDefineType(CollisionPersistedBlock, builder, type)
+RaverieDefineType(CollisionPersistedBlock, builder, type)
 {
-  ZeroBindComponent();
-  type->HasOrAdd<::Zero::CogComponentMeta>(type);
+  RaverieBindComponent();
+  type->HasOrAdd<::Raverie::CogComponentMeta>(type);
   type->Add(new MetaSerialization());
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDocumented();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
 }
 
 CollisionPersistedBlock::CollisionPersistedBlock()
@@ -98,13 +98,13 @@ CollisionPersistedBlock::CollisionPersistedBlock()
   mBlockType = FilterFlags::PersistedEvent;
 }
 
-ZilchDefineType(CollisionEndBlock, builder, type)
+RaverieDefineType(CollisionEndBlock, builder, type)
 {
-  ZeroBindComponent();
-  type->HasOrAdd<::Zero::CogComponentMeta>(type);
+  RaverieBindComponent();
+  type->HasOrAdd<::Raverie::CogComponentMeta>(type);
   type->Add(new MetaSerialization());
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDocumented();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
 }
 
 CollisionEndBlock::CollisionEndBlock()
@@ -112,13 +112,13 @@ CollisionEndBlock::CollisionEndBlock()
   mBlockType = FilterFlags::EndEvent;
 }
 
-ZilchDefineType(PreSolveBlock, builder, type)
+RaverieDefineType(PreSolveBlock, builder, type)
 {
-  ZeroBindComponent();
-  type->HasOrAdd<::Zero::CogComponentMeta>(type);
+  RaverieBindComponent();
+  type->HasOrAdd<::Raverie::CogComponentMeta>(type);
   type->Add(new MetaSerialization());
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDocumented();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
 }
 
 PreSolveBlock::PreSolveBlock()
@@ -126,8 +126,8 @@ PreSolveBlock::PreSolveBlock()
   mBlockType = FilterFlags::PreSolveEvent;
 }
 
-ZilchDefineTemplateType(CollisionFilterMetaComposition, builder, type)
+RaverieDefineTemplateType(CollisionFilterMetaComposition, builder, type)
 {
 }
 
-} // namespace Zero
+} // namespace Raverie

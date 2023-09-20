@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Declarations
@@ -80,7 +80,7 @@ public:
 template <typename type>
 inline type* CogId::Has()
 {
-  return (type*)QueryComponentId(ZilchTypeId(type));
+  return (type*)QueryComponentId(RaverieTypeId(type));
 }
 
 namespace Serialization
@@ -100,4 +100,4 @@ Cog* RestoreLink(CogId* id,
                  StringParam propertyName = String(),
                  bool isError = true);
 
-} // namespace Zero
+} // namespace Raverie

@@ -7,23 +7,23 @@
 #include "Foundation/Meta/MetaStandard.hpp"
 #include "Foundation/Support/SupportStandard.hpp"
 
-// Zilch Library Dependencies
-#include "Foundation/Zilch/Precompiled.hpp"
-using namespace Zilch;
+// Raverie Library Dependencies
+#include "Foundation/RaverieLanguage/Precompiled.hpp"
+using namespace Raverie;
 
-namespace Zero
+namespace Raverie
 {
 
 // Gameplay Library
-class GameplayLibrary : public Zilch::StaticLibrary
+class GameplayLibrary : public Raverie::StaticLibrary
 {
 public:
-  ZilchDeclareStaticLibraryInternals(GameplayLibrary);
+  RaverieDeclareStaticLibraryInternals(GameplayLibrary);
 
   static void Initialize();
   static void Shutdown();
 };
-} // namespace Zero
+} // namespace Raverie
 
 // Core Library Dependencies
 #include "Systems/Engine/EngineStandard.hpp"
@@ -58,4 +58,4 @@ public:
 #include "SplineParticles.hpp"
 
 #include "TileMapSourceLoadPattern.hpp"
-#include "Zero.hpp"
+#include "RaverieStatic.hpp"

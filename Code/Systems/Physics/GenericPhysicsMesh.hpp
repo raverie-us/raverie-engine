@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 DeclareBitField3(TriangleInfoFlags, V0V1Convex, V2V0Convex, V1V2Convex);
@@ -29,7 +29,7 @@ typedef HashMap<uint, MeshTriangleInfo> TriangleInfoMap;
 class GenericPhysicsMesh : public Resource
 {
 public:
-  ZilchDeclareType(GenericPhysicsMesh, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(GenericPhysicsMesh, TypeCopyMode::ReferenceType);
   typedef Array<Vec3> VertexArray;
   typedef Array<uint> IndexArray;
 
@@ -154,4 +154,4 @@ public:
   PhysicsMeshIndexData mIndexData;
 };
 
-} // namespace Zero
+} // namespace Raverie

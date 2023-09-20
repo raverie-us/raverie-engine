@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 /// Generates an orthonormal basis from the facing vector.
 Mat3 GenerateRotationMatrix(Vec3Param facing);
@@ -21,4 +21,4 @@ void GenerateRotationMatrix(Math::real x, Math::real y, Math::real z, Mat3Ptr ma
 Mat3 GenerateRotationMatrix(EulerAnglesParam eulerAngles);
 void GenerateRotationMatrix(EulerAnglesParam eulerAngles, Mat3Ptr matrix);
 
-} // namespace Zero
+} // namespace Raverie

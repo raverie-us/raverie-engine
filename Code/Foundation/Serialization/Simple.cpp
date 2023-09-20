@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 String GetTypeInFile(StringParam fileName)
@@ -125,4 +125,4 @@ Serializer* GetDefaultStream()
   return new DefaultSerializer();
 }
 
-} // namespace Zero
+} // namespace Raverie

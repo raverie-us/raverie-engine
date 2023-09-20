@@ -1,11 +1,11 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Defines
 PhysicsDefineArrayType(PhysicsMeshVertexData);
 PhysicsDefineArrayType(PhysicsMeshIndexData);
 
-} // namespace Zero
+} // namespace Raverie

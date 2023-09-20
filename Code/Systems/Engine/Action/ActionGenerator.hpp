@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 #define EaseFunc float (*EaseType)(float)
@@ -186,4 +186,4 @@ public:
   }
 };
 
-} // namespace Zero
+} // namespace Raverie

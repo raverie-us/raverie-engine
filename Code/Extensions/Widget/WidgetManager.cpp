@@ -1,10 +1,10 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(WidgetManager, builder, type)
+RaverieDefineType(WidgetManager, builder, type)
 {
 }
 
@@ -69,4 +69,4 @@ namespace Z
 WidgetManager* gWidgetManager = nullptr;
 }
 
-} // namespace Zero
+} // namespace Raverie

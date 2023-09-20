@@ -1,16 +1,16 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Editor Property Extension
-ZilchDefineType(EditorPropertyExtension, builder, type)
+RaverieDefineType(EditorPropertyExtension, builder, type)
 {
 }
 
 // Indexed String Array
-ZilchDefineType(EditorIndexedStringArray, builder, type)
+RaverieDefineType(EditorIndexedStringArray, builder, type)
 {
 }
 
@@ -25,11 +25,11 @@ void EditorIndexedStringArray::Enumerate(HandleParam instance, Property* propert
 }
 
 // Editor Range
-ZilchDefineType(EditorRange, builder, type)
+RaverieDefineType(EditorRange, builder, type)
 {
-  ZilchBindFieldProperty(Min);
-  ZilchBindFieldProperty(Max);
-  ZilchBindFieldProperty(Increment)->AddAttribute(PropertyAttributes::cOptional);
+  RaverieBindFieldProperty(Min);
+  RaverieBindFieldProperty(Max);
+  RaverieBindFieldProperty(Increment)->AddAttribute(PropertyAttributes::cOptional);
 }
 
 EditorRange::EditorRange() : Min(-Math::PositiveMax()), Max(Math::PositiveMax()), Increment(0.01f)
@@ -58,7 +58,7 @@ void EditorRange::PostProcess(Status& status, ReflectionObject* owner)
 }
 
 // Editor Slider
-ZilchDefineType(EditorSlider, builder, type)
+RaverieDefineType(EditorSlider, builder, type)
 {
 }
 
@@ -70,7 +70,7 @@ EditorSlider::EditorSlider()
 }
 
 // EditorRotationBasis
-ZilchDefineType(EditorRotationBasis, builder, type)
+RaverieDefineType(EditorRotationBasis, builder, type)
 {
 }
 
@@ -93,12 +93,12 @@ EditorRotationBasis::EditorRotationBasis(StringParam archetypeName, StringParam 
 }
 
 // Editor Resource
-ZilchDefineType(MetaEditorResource, builder, type)
+RaverieDefineType(MetaEditorResource, builder, type)
 {
-  ZilchBindField(FilterTag)->AddAttribute(PropertyAttributes::cOptional);
-  ZilchBindField(AllowAdd)->AddAttribute(PropertyAttributes::cOptional);
-  ZilchBindField(AllowNone)->AddAttribute(PropertyAttributes::cOptional);
-  ZilchBindField(SearchPreview)->AddAttribute(PropertyAttributes::cOptional);
+  RaverieBindField(FilterTag)->AddAttribute(PropertyAttributes::cOptional);
+  RaverieBindField(AllowAdd)->AddAttribute(PropertyAttributes::cOptional);
+  RaverieBindField(AllowNone)->AddAttribute(PropertyAttributes::cOptional);
+  RaverieBindField(SearchPreview)->AddAttribute(PropertyAttributes::cOptional);
 }
 
 MetaEditorResource::MetaEditorResource(
@@ -133,32 +133,32 @@ bool MetaEditorResource::FilterPropertySearchResult(HandleParam object,
 }
 
 // Meta Property Filter
-ZilchDefineType(MetaPropertyFilter, builder, type)
+RaverieDefineType(MetaPropertyFilter, builder, type)
 {
 }
 
 // Property Basic Filter
-ZilchDefineType(MetaPropertyBasicFilter, builder, type)
+RaverieDefineType(MetaPropertyBasicFilter, builder, type)
 {
 }
 
 // Meta Editor Gizmo
-ZilchDefineType(MetaEditorGizmo, builder, type)
+RaverieDefineType(MetaEditorGizmo, builder, type)
 {
-  ZilchBindFieldProperty(mGizmoArchetype);
+  RaverieBindFieldProperty(mGizmoArchetype);
 }
 
 // Meta Shader Input
-ZilchDefineType(MetaShaderInput, builder, type)
+RaverieDefineType(MetaShaderInput, builder, type)
 {
-  ZilchBindFieldProperty(mFragmentName)->AddAttribute(PropertyAttributes::cOptional);
-  ZilchBindFieldProperty(mInputName)->AddAttribute(PropertyAttributes::cOptional);
+  RaverieBindFieldProperty(mFragmentName)->AddAttribute(PropertyAttributes::cOptional);
+  RaverieBindFieldProperty(mInputName)->AddAttribute(PropertyAttributes::cOptional);
 }
 
 // Meta Group
-ZilchDefineType(MetaGroup, builder, type)
+RaverieDefineType(MetaGroup, builder, type)
 {
-  ZilchBindFieldProperty(mName);
+  RaverieBindFieldProperty(mName);
 }
 
 MetaGroup::MetaGroup(StringParam name) : mName(name)
@@ -166,12 +166,12 @@ MetaGroup::MetaGroup(StringParam name) : mName(name)
 }
 
 // Meta Custom Ui
-ZilchDefineType(MetaCustomUi, builder, type)
+RaverieDefineType(MetaCustomUi, builder, type)
 {
 }
 
 // Property Rename
-ZilchDefineType(MetaPropertyRename, builder, type)
+RaverieDefineType(MetaPropertyRename, builder, type)
 {
 }
 
@@ -179,4 +179,4 @@ MetaPropertyRename::MetaPropertyRename(StringParam oldName) : mOldName(oldName)
 {
 }
 
-} // namespace Zero
+} // namespace Raverie

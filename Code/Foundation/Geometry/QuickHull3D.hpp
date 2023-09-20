@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Helper class for an inlist to iterate over a range, skipping the sentinel
@@ -297,4 +297,4 @@ private:
   Memory::Pool* mFacePool;
 };
 
-} // namespace Zero
+} // namespace Raverie

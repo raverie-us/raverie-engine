@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 DeclareEnum2(Centering, UpperLeft, Middle);
@@ -11,7 +11,7 @@ DeclareEnum2(TextureUvMode, Normal, RenderTarget);
 class TextureView : public Widget
 {
 public:
-  ZilchDeclareType(TextureView, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(TextureView, TypeCopyMode::ReferenceType);
 
   TextureView(Composite* composite);
 
@@ -43,4 +43,4 @@ public:
   Vec4 mSkyboxInput;
 };
 
-} // namespace Zero
+} // namespace Raverie

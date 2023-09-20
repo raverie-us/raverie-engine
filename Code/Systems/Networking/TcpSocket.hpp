@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // The events we use or send out
@@ -25,7 +25,7 @@ struct ConnectionData
 {
   // Connection data requires a meta so it can be attached as a component to
   // events
-  ZilchDeclareType(ConnectionData, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ConnectionData, TypeCopyMode::ReferenceType);
 
   // A constant that is set when a connection index is not initialized
   static const uint InvalidIndex = (uint)-1;
@@ -47,7 +47,7 @@ struct ConnectionData
 class ConnectionEvent : public Event
 {
 public:
-  ZilchDeclareType(ConnectionEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ConnectionEvent, TypeCopyMode::ReferenceType);
 
   // Constructor
   ConnectionEvent(const ConnectionData* connectionInfo);
@@ -64,7 +64,7 @@ public:
 class ReceivedDataEvent : public ConnectionEvent
 {
 public:
-  ZilchDeclareType(ReceivedDataEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ReceivedDataEvent, TypeCopyMode::ReferenceType);
 
   // Constructor
   ReceivedDataEvent(const ConnectionData* connectionInfo, const byte* data, size_t size);
@@ -161,7 +161,7 @@ DeclareEnum2(TcpSocketBind, Any, Loopback);
 class TcpSocket : public EventObject
 {
 public:
-  ZilchDeclareType(TcpSocket, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(TcpSocket, TypeCopyMode::ReferenceType);
 
   /// Constants.
   static const uint MaxPossibleConnections = (uint)-1;
@@ -373,4 +373,4 @@ private:
   int mReceieveSize;
 };
 
-} // namespace Zero
+} // namespace Raverie

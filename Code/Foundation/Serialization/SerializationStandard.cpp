@@ -1,47 +1,47 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineStaticLibrary(SerializationLibrary)
+RaverieDefineStaticLibrary(SerializationLibrary)
 {
   builder.CreatableInScriptDefault = false;
 
-  ZilchInitializeType(MetaSerialization);
-  ZilchInitializeType(SerializationFilter);
-  ZilchInitializeType(PrimitiveMetaSerialization<Integer>);
-  ZilchInitializeType(PrimitiveMetaSerialization<Integer2>);
-  ZilchInitializeType(PrimitiveMetaSerialization<Integer3>);
-  ZilchInitializeType(PrimitiveMetaSerialization<Integer4>);
-  ZilchInitializeType(PrimitiveMetaSerialization<String>);
-  ZilchInitializeType(PrimitiveMetaSerialization<Boolean>);
-  ZilchInitializeType(PrimitiveMetaSerialization<Real>);
-  ZilchInitializeType(PrimitiveMetaSerialization<Real2>);
-  ZilchInitializeType(PrimitiveMetaSerialization<Real3>);
-  ZilchInitializeType(PrimitiveMetaSerialization<Real4>);
-  ZilchInitializeType(PrimitiveMetaSerialization<Mat2>);
-  ZilchInitializeType(PrimitiveMetaSerialization<Mat3>);
-  ZilchInitializeType(PrimitiveMetaSerialization<Mat4>);
-  ZilchInitializeType(PrimitiveMetaSerialization<Quat>);
-  ZilchInitializeType(MetaStringSerialization);
-  ZilchInitializeType(EnumMetaSerialization);
+  RaverieInitializeType(MetaSerialization);
+  RaverieInitializeType(SerializationFilter);
+  RaverieInitializeType(PrimitiveMetaSerialization<Integer>);
+  RaverieInitializeType(PrimitiveMetaSerialization<Integer2>);
+  RaverieInitializeType(PrimitiveMetaSerialization<Integer3>);
+  RaverieInitializeType(PrimitiveMetaSerialization<Integer4>);
+  RaverieInitializeType(PrimitiveMetaSerialization<String>);
+  RaverieInitializeType(PrimitiveMetaSerialization<Boolean>);
+  RaverieInitializeType(PrimitiveMetaSerialization<Real>);
+  RaverieInitializeType(PrimitiveMetaSerialization<Real2>);
+  RaverieInitializeType(PrimitiveMetaSerialization<Real3>);
+  RaverieInitializeType(PrimitiveMetaSerialization<Real4>);
+  RaverieInitializeType(PrimitiveMetaSerialization<Mat2>);
+  RaverieInitializeType(PrimitiveMetaSerialization<Mat3>);
+  RaverieInitializeType(PrimitiveMetaSerialization<Mat4>);
+  RaverieInitializeType(PrimitiveMetaSerialization<Quat>);
+  RaverieInitializeType(MetaStringSerialization);
+  RaverieInitializeType(EnumMetaSerialization);
 
-  ZeroBindSerializationPrimitiveExternal(Integer);
-  ZeroBindSerializationPrimitiveExternal(Integer2);
-  ZeroBindSerializationPrimitiveExternal(Integer3);
-  ZeroBindSerializationPrimitiveExternal(Integer4);
-  ZeroBindSerializationPrimitiveExternal(String);
-  ZeroBindSerializationPrimitiveExternal(Boolean);
-  ZeroBindSerializationPrimitiveExternal(Real);
-  ZeroBindSerializationPrimitiveExternal(Real2);
-  ZeroBindSerializationPrimitiveExternal(Real3);
-  ZeroBindSerializationPrimitiveExternal(Real4);
-  ZeroBindSerializationPrimitiveExternal(Mat2);
-  ZeroBindSerializationPrimitiveExternal(Mat3);
-  ZeroBindSerializationPrimitiveExternal(Mat4);
-  ZeroBindSerializationPrimitiveExternal(Quat);
-  ZeroBindSerializationPrimitiveExternal(Enum);
+  RaverieBindSerializationPrimitiveExternal(Integer);
+  RaverieBindSerializationPrimitiveExternal(Integer2);
+  RaverieBindSerializationPrimitiveExternal(Integer3);
+  RaverieBindSerializationPrimitiveExternal(Integer4);
+  RaverieBindSerializationPrimitiveExternal(String);
+  RaverieBindSerializationPrimitiveExternal(Boolean);
+  RaverieBindSerializationPrimitiveExternal(Real);
+  RaverieBindSerializationPrimitiveExternal(Real2);
+  RaverieBindSerializationPrimitiveExternal(Real3);
+  RaverieBindSerializationPrimitiveExternal(Real4);
+  RaverieBindSerializationPrimitiveExternal(Mat2);
+  RaverieBindSerializationPrimitiveExternal(Mat3);
+  RaverieBindSerializationPrimitiveExternal(Mat4);
+  RaverieBindSerializationPrimitiveExternal(Quat);
+  RaverieBindSerializationPrimitiveExternal(Enum);
 
   MetaLibraryExtensions::AddNativeExtensions(builder);
 }
@@ -51,20 +51,20 @@ void SerializationLibrary::Initialize()
   BuildStaticLibrary();
   MetaDatabase::GetInstance()->AddNativeLibrary(GetLibrary());
 
-  ZilchTypeId(Integer)->Add(new PrimitiveMetaSerialization<Integer>());
-  ZilchTypeId(Integer2)->Add(new PrimitiveMetaSerialization<Integer2>());
-  ZilchTypeId(Integer3)->Add(new PrimitiveMetaSerialization<Integer3>());
-  ZilchTypeId(Integer4)->Add(new PrimitiveMetaSerialization<Integer4>());
-  ZilchTypeId(String)->Add(new MetaStringSerialization);
-  ZilchTypeId(Boolean)->Add(new PrimitiveMetaSerialization<Boolean>());
-  ZilchTypeId(Real)->Add(new PrimitiveMetaSerialization<Real>());
-  ZilchTypeId(Real2)->Add(new PrimitiveMetaSerialization<Real2>());
-  ZilchTypeId(Real3)->Add(new PrimitiveMetaSerialization<Real3>());
-  ZilchTypeId(Real4)->Add(new PrimitiveMetaSerialization<Real4>());
-  ZilchTypeId(Mat2)->Add(new PrimitiveMetaSerialization<Mat2>());
-  ZilchTypeId(Mat3)->Add(new PrimitiveMetaSerialization<Mat3>());
-  ZilchTypeId(Mat4)->Add(new PrimitiveMetaSerialization<Mat4>());
-  ZilchTypeId(Quat)->Add(new PrimitiveMetaSerialization<Quat>());
+  RaverieTypeId(Integer)->Add(new PrimitiveMetaSerialization<Integer>());
+  RaverieTypeId(Integer2)->Add(new PrimitiveMetaSerialization<Integer2>());
+  RaverieTypeId(Integer3)->Add(new PrimitiveMetaSerialization<Integer3>());
+  RaverieTypeId(Integer4)->Add(new PrimitiveMetaSerialization<Integer4>());
+  RaverieTypeId(String)->Add(new MetaStringSerialization);
+  RaverieTypeId(Boolean)->Add(new PrimitiveMetaSerialization<Boolean>());
+  RaverieTypeId(Real)->Add(new PrimitiveMetaSerialization<Real>());
+  RaverieTypeId(Real2)->Add(new PrimitiveMetaSerialization<Real2>());
+  RaverieTypeId(Real3)->Add(new PrimitiveMetaSerialization<Real3>());
+  RaverieTypeId(Real4)->Add(new PrimitiveMetaSerialization<Real4>());
+  RaverieTypeId(Mat2)->Add(new PrimitiveMetaSerialization<Mat2>());
+  RaverieTypeId(Mat3)->Add(new PrimitiveMetaSerialization<Mat3>());
+  RaverieTypeId(Mat4)->Add(new PrimitiveMetaSerialization<Mat4>());
+  RaverieTypeId(Quat)->Add(new PrimitiveMetaSerialization<Quat>());
 }
 
 void SerializationLibrary::Shutdown()
@@ -72,4 +72,4 @@ void SerializationLibrary::Shutdown()
   GetLibrary()->ClearComponents();
 }
 
-} // namespace Zero
+} // namespace Raverie

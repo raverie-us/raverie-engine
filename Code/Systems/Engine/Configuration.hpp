@@ -1,14 +1,14 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Main configuration component
 class MainConfig : public Component
 {
 public:
-  ZilchDeclareType(MainConfig, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MainConfig, TypeCopyMode::ReferenceType);
 
   void Serialize(Serializer& stream) override;
   void Initialize(CogInitializer& initializer) override;
@@ -33,7 +33,7 @@ public:
 class EditorConfig : public Component
 {
 public:
-  ZilchDeclareType(EditorConfig, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(EditorConfig, TypeCopyMode::ReferenceType);
 
   void Serialize(Serializer& stream) override;
 
@@ -51,7 +51,7 @@ public:
 class UserConfig : public Component
 {
 public:
-  ZilchDeclareType(UserConfig, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(UserConfig, TypeCopyMode::ReferenceType);
 
   UserConfig();
 
@@ -83,7 +83,7 @@ public:
 class ContentConfig : public Component
 {
 public:
-  ZilchDeclareType(ContentConfig, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ContentConfig, TypeCopyMode::ReferenceType);
   void Serialize(Serializer& stream) override;
 
   /// Content output directory.
@@ -102,7 +102,7 @@ public:
 class DeveloperConfig : public Component
 {
 public:
-  ZilchDeclareType(DeveloperConfig, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(DeveloperConfig, TypeCopyMode::ReferenceType);
 
   DeveloperConfig();
 
@@ -128,7 +128,7 @@ DeclareEnum2(TabWidth, TwoSpaces, FourSpaces);
 class TextEditorConfig : public Component
 {
 public:
-  ZilchDeclareType(TextEditorConfig, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(TextEditorConfig, TypeCopyMode::ReferenceType);
   void Serialize(Serializer& stream) override;
 
   /// Default Font Size
@@ -187,4 +187,4 @@ void RemoveConfig();
 // '.raverie'. If it is not found, it returns the application directory.
 String FindSourceDirectory();
 
-} // namespace Zero
+} // namespace Raverie

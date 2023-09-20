@@ -1,13 +1,13 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(ColorGradient, builder, type)
+RaverieDefineType(ColorGradient, builder, type)
 {
-  ZeroBindDocumented();
-  ZilchBindMethod(Sample);
+  RaverieBindDocumented();
+  RaverieBindMethod(Sample);
 }
 
 /// Constructor.
@@ -74,4 +74,4 @@ ColorGradient* ColorGradientManager::CreateNewResourceInternal(StringParam name)
   return gradient;
 }
 
-} // namespace Zero
+} // namespace Raverie

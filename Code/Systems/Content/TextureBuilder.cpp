@@ -2,20 +2,20 @@
 #include "Precompiled.hpp"
 #include "ContentEnumerations.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(TextureInfo, builder, type)
+RaverieDefineType(TextureInfo, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::CallSetDefaults);
-  ZeroBindDependency(ImageContent);
-  ZeroBindExpanded();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::CallSetDefaults);
+  RaverieBindDependency(ImageContent);
+  RaverieBindExpanded();
 
-  ZilchBindGetterProperty(FileType);
-  ZilchBindGetterProperty(LoadFormat);
-  ZilchBindGetterProperty(Dimensions);
-  ZilchBindGetterProperty(Size);
+  RaverieBindGetterProperty(FileType);
+  RaverieBindGetterProperty(LoadFormat);
+  RaverieBindGetterProperty(Dimensions);
+  RaverieBindGetterProperty(Size);
 }
 
 void TextureInfo::Serialize(Serializer& stream)
@@ -50,7 +50,7 @@ String TextureInfo::GetSize()
   return mSize;
 }
 
-ZilchDefineType(ShowPremultipliedAlphaFilter, builder, type)
+RaverieDefineType(ShowPremultipliedAlphaFilter, builder, type)
 {
   type->AddAttribute(ObjectAttributes::cHidden);
 }
@@ -66,7 +66,7 @@ bool ShowPremultipliedAlphaFilter::Filter(Member* prop, HandleParam instance)
   return info->mLoadFormat == "RGBA8" || info->mLoadFormat == "RGBA16" || info->mLoadFormat == "SRGB8A8";
 }
 
-ZilchDefineType(ShowGammaCorrectionFilter, builder, type)
+RaverieDefineType(ShowGammaCorrectionFilter, builder, type)
 {
   type->AddAttribute(ObjectAttributes::cHidden);
 }
@@ -82,24 +82,24 @@ bool ShowGammaCorrectionFilter::Filter(Member* prop, HandleParam instance)
   return info->mLoadFormat != "RGB32f";
 }
 
-ZilchDefineType(TextureBuilder, builder, type)
+RaverieDefineType(TextureBuilder, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDependency(ImageContent);
-  ZeroBindExpanded();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDependency(ImageContent);
+  RaverieBindExpanded();
 
-  ZilchBindFieldProperty(Name);
-  ZilchBindFieldProperty(mType);
-  ZilchBindFieldProperty(mCompression);
-  ZilchBindFieldProperty(mAddressingX);
-  ZilchBindFieldProperty(mAddressingY);
-  ZilchBindFieldProperty(mFiltering);
-  ZilchBindFieldProperty(mAnisotropy);
-  ZilchBindFieldProperty(mMipMapping);
-  ZilchBindGetterSetterProperty(HalfScaleCount);
-  ZilchBindFieldProperty(mPremultipliedAlpha)->Add(new ShowPremultipliedAlphaFilter());
-  ZilchBindFieldProperty(mGammaCorrection)->Add(new ShowGammaCorrectionFilter());
+  RaverieBindFieldProperty(Name);
+  RaverieBindFieldProperty(mType);
+  RaverieBindFieldProperty(mCompression);
+  RaverieBindFieldProperty(mAddressingX);
+  RaverieBindFieldProperty(mAddressingY);
+  RaverieBindFieldProperty(mFiltering);
+  RaverieBindFieldProperty(mAnisotropy);
+  RaverieBindFieldProperty(mMipMapping);
+  RaverieBindGetterSetterProperty(HalfScaleCount);
+  RaverieBindFieldProperty(mPremultipliedAlpha)->Add(new ShowPremultipliedAlphaFilter());
+  RaverieBindFieldProperty(mGammaCorrection)->Add(new ShowGammaCorrectionFilter());
 }
 
 void TextureBuilder::Serialize(Serializer& stream)
@@ -240,8 +240,8 @@ String TextureBuilder::GetOutputFile()
 //
 // void HeightToNormalBuilder::InitializeMeta(MetaType* meta)
 //{
-//  ZeroBindDependency(ImageContent);
-//  ZeroBindDependency(TextureBuilder);
+//  RaverieBindDependency(ImageContent);
+//  RaverieBindDependency(TextureBuilder);
 //}
 
-} // namespace Zero
+} // namespace Raverie

@@ -2,17 +2,15 @@
 #pragma once
 
 // Detect debug or release settings.
-#ifdef NDEBUG
-#  define ZeroRelease 1
-#else
-#  define ZeroDebug 1
+#ifndef NDEBUG
+#  define RaverieDebug 1
 #endif
 
 // Ignore unknown pragma warnings...
 #pragma clang diagnostic ignored "-Wunknown-pragmas"
 #pragma clang diagnostic ignored "-Wpragmas"
-// ZilchDeclareType is used on classes that sometimes derive from a base class
-// with ZilchGetDerivedType() creating a discrepancy we can't avoid
+// RaverieDeclareType is used on classes that sometimes derive from a base class
+// with RaverieGetDerivedType() creating a discrepancy we can't avoid
 #pragma clang diagnostic ignored "-Winconsistent-missing-override"
 // Many event handlers take an event and do not utilize the parameter or
 // variable
@@ -38,21 +36,17 @@
 
 #undef __STDC__
 
-// Helper macros
-#define ZeroStringDeref(text) #text
-#define ZeroStringize(text) ZeroStringDeref(text)
-
-#define ZeroOffsetOfHelper(structure, op, member)                                                                      \
+#define RaverieOffsetOfHelper(structure, op, member)                                                                      \
   (((::size_t) & reinterpret_cast<char const volatile&>((((structure*)(::uintptr_t)1)op member))) - 1)
-#define ZeroOffsetOf(structure, member) ZeroOffsetOfHelper(structure, ->, member)
+#define RaverieOffsetOf(structure, member) RaverieOffsetOfHelper(structure, ->, member)
 
-#define ZeroThreadLocal __thread
-#define ZeroImportNamed(Name) __attribute__((used)) __attribute__((noinline)) __attribute__((visibility("default"))) __attribute__((__import_name__(#Name))) Name
-#define ZeroExportNamed(Name) __attribute__((used)) __attribute__((noinline)) __attribute__((visibility("default"))) __attribute__((__export_name__(#Name))) Name
-#define ZeroNoReturn __attribute__((noreturn))
+#define RaverieThreadLocal __thread
+#define RaverieImportNamed(Name) __attribute__((used)) __attribute__((noinline)) __attribute__((visibility("default"))) __attribute__((__import_name__(#Name))) Name
+#define RaverieExportNamed(Name) __attribute__((used)) __attribute__((noinline)) __attribute__((visibility("default"))) __attribute__((__export_name__(#Name))) Name
+#define RaverieNoReturn __attribute__((noreturn))
 
-#define ZeroTodo(text)
-#define ZeroForceInline inline __attribute__((always_inline))
-#define ZeroDebugBreak()
+#define RaverieTodo(text)
+#define RaverieForceInline inline __attribute__((always_inline))
+#define RaverieDebugBreak()
 
 #include <alloca.h>

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Physics
@@ -86,4 +86,4 @@ private:
 
 } // namespace Physics
 
-} // namespace Zero
+} // namespace Raverie

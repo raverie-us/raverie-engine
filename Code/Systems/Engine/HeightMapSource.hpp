@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 struct PatchLayer;
@@ -46,7 +46,7 @@ struct PatchLayer
 class HeightMapSource : public Resource
 {
 public:
-  ZilchDeclareType(HeightMapSource, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(HeightMapSource, TypeCopyMode::ReferenceType);
 
   HeightMapSource();
   ~HeightMapSource();
@@ -73,4 +73,4 @@ public:
   HeightMapSourceManager(BoundType* resourceType);
 };
 
-} // namespace Zero
+} // namespace Raverie

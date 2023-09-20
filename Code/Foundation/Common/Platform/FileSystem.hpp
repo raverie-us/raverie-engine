@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 DeclareEnum4(FileSystemErrors, FileNotFound, FileNotAccessible, FileNotWritable, FileLocked);
@@ -184,7 +184,7 @@ public:
 
 private:
   String mPath;
-  ZeroDeclarePrivateData(FileRange, 720);
+  RaverieDeclarePrivateData(FileRange, 720);
 };
 
-} // namespace Zero
+} // namespace Raverie

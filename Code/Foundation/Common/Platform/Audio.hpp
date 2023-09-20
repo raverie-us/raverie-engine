@@ -1,5 +1,5 @@
 // MIT Licensed (see LICENSE.md).
-namespace Zero
+namespace Raverie
 {
 
 DeclareEnum2(StreamTypes, Output, Input);
@@ -18,15 +18,15 @@ public:
   ~AudioInputOutput();
 
   // Initializes the underlying audio API
-  StreamStatus::Enum InitializeAPI(Zero::String* resultMessage);
+  StreamStatus::Enum InitializeAPI(Raverie::String* resultMessage);
   // Initializes the specified audio stream
-  StreamStatus::Enum InitializeStream(StreamTypes::Enum whichStream, Zero::String* resultMessage);
+  StreamStatus::Enum InitializeStream(StreamTypes::Enum whichStream, Raverie::String* resultMessage);
   // Starts the specified audio stream, which will use the provided callback
   // function to either request or provide audio data.
   StreamStatus::Enum
-  StartStream(StreamTypes::Enum whichStream, Zero::String* resultMessage, IOCallbackType* callback, void* callbackData);
+  StartStream(StreamTypes::Enum whichStream, Raverie::String* resultMessage, IOCallbackType* callback, void* callbackData);
   // Stops the specified audio stream
-  StreamStatus::Enum StopStream(StreamTypes::Enum whichStream, Zero::String* resultMessage);
+  StreamStatus::Enum StopStream(StreamTypes::Enum whichStream, Raverie::String* resultMessage);
   // Shuts down the underlying audio API
   void ShutDownAPI();
   // Returns the number of channels in the specified audio stream
@@ -40,4 +40,4 @@ private:
   OsHandle PlatformData;
 };
 
-} // namespace Zero
+} // namespace Raverie

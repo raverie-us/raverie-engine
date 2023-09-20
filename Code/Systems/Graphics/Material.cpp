@@ -2,27 +2,27 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 bool Material::sNotifyModified = true;
 
-ZilchDefineType(CompositionLabelExtension, builder, type)
+RaverieDefineType(CompositionLabelExtension, builder, type)
 {
 }
 
-ZilchDefineType(Material, builder, type)
+RaverieDefineType(Material, builder, type)
 {
   type->Add(new MaterialFactory());
 
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindMethod(RuntimeClone);
+  RaverieBindMethod(RuntimeClone);
 
-  ZilchBindFieldGetterPropertyAs(mSerializedList, "RenderGroups");
-  ZilchBindFieldGetterProperty(mReferencedByList);
+  RaverieBindFieldGetterPropertyAs(mSerializedList, "RenderGroups");
+  RaverieBindFieldGetterProperty(mReferencedByList);
 
-  ZilchBindGetterProperty(CompositionLabel)->Add(new CompositionLabelExtension());
+  RaverieBindGetterProperty(CompositionLabel)->Add(new CompositionLabelExtension());
 }
 
 Material::Material() :
@@ -67,7 +67,7 @@ void Material::SerializeMaterialBlocks(Serializer& stream)
   else
   {
     PolymorphicNode materialNode;
-    BoundType* materialBlockType = ZilchTypeId(MaterialBlock);
+    BoundType* materialBlockType = RaverieTypeId(MaterialBlock);
     while (stream.GetPolymorphic(materialNode))
     {
       MaterialBlockHandle block;
@@ -88,14 +88,14 @@ void Material::SerializeMaterialBlocks(Serializer& stream)
       }
 
       // If the block couldn't be created then we need to create a proxy meta
-      // for it (for zilch fragments that fail to compile and because resources
+      // for it (for raverie fragments that fail to compile and because resources
       // can be loaded before compiling)
       if (materialNodeType == nullptr)
       {
         // Create a proxy component
         BoundType* proxyType =
             ProxyObject<MaterialBlock>::CreateProxyType(materialNode.TypeName, ProxyReason::TypeDidntExist);
-        block = ZilchAllocate(MaterialBlock, proxyType);
+        block = RaverieAllocate(MaterialBlock, proxyType);
 
         EngineLibraryExtensions::FindProxiedTypeOrigin(proxyType);
       }
@@ -314,7 +314,7 @@ MaterialManager::MaterialManager(BoundType* resourceType) : ResourceManager(reso
   mCanAddFile = true;
   mOpenFileFilters.PushBack(FileDialogFilter("*.Material.data"));
 
-  DefaultResourceName = "ZeroMaterial";
+  DefaultResourceName = "RaverieMaterial";
   mCanCreateNew = true;
   mCanDuplicate = true;
   mCanReload = false;
@@ -369,7 +369,7 @@ void MaterialManager::ReInitializeRemoveComponents()
     while (!range.Empty())
     {
       MaterialBlock* materialBlock = range.Back();
-      BoundType* blockType = ZilchVirtualTypeId(materialBlock);
+      BoundType* blockType = RaverieVirtualTypeId(materialBlock);
 
       AddRemoveComponentOperation* op =
           new AddRemoveComponentOperation(material, blockType, ComponentOperation::Remove);
@@ -391,4 +391,4 @@ void MaterialManager::ReInitializeAddComponents()
   Material::sNotifyModified = true;
 }
 
-} // namespace Zero
+} // namespace Raverie

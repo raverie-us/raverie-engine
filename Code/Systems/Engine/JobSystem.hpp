@@ -4,14 +4,14 @@
 // Because windows...
 #undef AddJob
 
-namespace Zero
+namespace Raverie
 {
 
 class Job : public ReferenceCountedEventObject
 {
 public:
   friend class JobSystem;
-  ZilchDeclareType(Job, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Job, TypeCopyMode::ReferenceType);
   Job();
   virtual ~Job();
 
@@ -50,7 +50,7 @@ class JobSystem : public EventObject
 {
 public:
   friend class Job;
-  typedef JobSystem ZilchSelf;
+  typedef JobSystem RaverieSelf;
   JobSystem();
   ~JobSystem();
 
@@ -89,4 +89,4 @@ namespace Z
 extern JobSystem* gJobs;
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 DeclareBitField8(BaseCastFilterFlags,
@@ -23,7 +23,7 @@ DeclareBitField8(BaseCastFilterFlags,
 /// Used to filter objects during cast operations.
 struct BaseCastFilter
 {
-  ZilchDeclareType(BaseCastFilter, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(BaseCastFilter, TypeCopyMode::ReferenceType);
 
   BaseCastFilter();
   BaseCastFilter(const BaseCastFilter& rhs);
@@ -211,4 +211,4 @@ private:
   bool IsValid(void* mObjectHit);
 };
 
-} // namespace Zero
+} // namespace Raverie

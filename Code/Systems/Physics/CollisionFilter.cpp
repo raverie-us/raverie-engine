@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 String GroupFilterDisplay(CollisionFilter* filter)
@@ -11,14 +11,14 @@ String GroupFilterDisplay(CollisionFilter* filter)
   return String::Format("Filter: (%s / %s)", typeAName.c_str(), typeBName.c_str());
 }
 
-ZilchDefineType(CollisionFilter, builder, type)
+RaverieDefineType(CollisionFilter, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetterProperty(CollisionFlag);
-  ZilchBindGetterProperty(CollisionGroupA);
-  ZilchBindGetterProperty(CollisionGroupB);
+  RaverieBindGetterSetterProperty(CollisionFlag);
+  RaverieBindGetterProperty(CollisionGroupA);
+  RaverieBindGetterProperty(CollisionGroupB);
   type->Add(new CollisionFilterMetaComposition(true));
 }
 
@@ -72,7 +72,7 @@ void CollisionFilter::Serialize(Serializer& stream)
   SerializeBits(stream, mFilterFlags, FilterFlags::Names, 0, 0);
 
   // Serialize our composition of constraint config blocks
-  BoundType* selfBoundType = this->ZilchGetDerivedType();
+  BoundType* selfBoundType = this->RaverieGetDerivedType();
   CollisionFilterMetaComposition* factory = selfBoundType->Has<CollisionFilterMetaComposition>();
   factory->SerializeArray(stream, mBlocks);
 }
@@ -171,7 +171,7 @@ CollisionFilter* CollisionFilter::Clone() const
   {
     // Create a new copy of the same block type by getting the bound type then
     // going through the meta composition to allocate the block type
-    BoundType* boundType = mBlocks[i]->ZilchGetDerivedType();
+    BoundType* boundType = mBlocks[i]->RaverieGetDerivedType();
     CollisionFilterMetaComposition* metaComposition = boundType->HasInherited<CollisionFilterMetaComposition>();
     HandleOf<CollisionFilterBlock> newBlockHandle = metaComposition->AllocateBlock(boundType, false);
     CollisionFilterBlock* newBlock = newBlockHandle;
@@ -203,7 +203,7 @@ HandleOf<CollisionFilterBlock> CollisionFilter::GetById(BoundType* typeId)
   {
     // See if this block has the type id we want
     CollisionFilterBlock* block = mBlocks[i];
-    if (ZilchVirtualTypeId(block) == typeId)
+    if (RaverieVirtualTypeId(block) == typeId)
       return block;
   }
 
@@ -247,4 +247,4 @@ bool CollisionFilter::operator==(const CollisionFilter& rhs) const
   return mPair == rhs.mPair;
 }
 
-} // namespace Zero
+} // namespace Raverie

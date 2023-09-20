@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 struct ContentPackageEntry
@@ -48,4 +48,4 @@ void ImportContentPackageListing(ContentPackageListing& listing,
                                  ContentLibrary* library,
                                  StringParam sourcePackageFile);
 
-} // namespace Zero
+} // namespace Raverie

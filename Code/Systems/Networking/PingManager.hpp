@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Ping Manager.
@@ -100,4 +100,4 @@ public:
                                               ///< ping messages.
 };
 
-} // namespace Zero
+} // namespace Raverie

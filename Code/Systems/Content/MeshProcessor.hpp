@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class MeshProcessor
@@ -22,4 +22,4 @@ public:
   MeshDataMap& mMeshDataMap;
 };
 
-} // namespace Zero
+} // namespace Raverie

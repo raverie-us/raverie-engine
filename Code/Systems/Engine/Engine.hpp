@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 namespace Events
 {
@@ -19,7 +19,7 @@ DeclareEvent(BlockingTaskFinish);
 class Engine : public EngineObject
 {
 public:
-  ZilchDeclareType(Engine, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Engine, TypeCopyMode::ReferenceType);
 
   Engine();
   ~Engine();
@@ -126,7 +126,7 @@ private:
 class EngineMetaComposition : public MetaComposition
 {
 public:
-  ZilchDeclareType(EngineMetaComposition, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(EngineMetaComposition, TypeCopyMode::ReferenceType);
 
   EngineMetaComposition();
 
@@ -139,12 +139,12 @@ public:
 template <typename type>
 type* Engine::Has()
 {
-  return static_cast<type*>(QueryComponentId(ZilchTypeId(type)));
+  return static_cast<type*>(QueryComponentId(RaverieTypeId(type)));
 }
 
 /// A core element of the engine has encountered a unrecoverable error.
 /// the engine will display a message box and terminate.
-ZeroNoReturn void FatalEngineError(cstr format, ...);
+RaverieNoReturn void FatalEngineError(cstr format, ...);
 
 // Global Access
 namespace Z
@@ -152,4 +152,4 @@ namespace Z
 extern Engine* gEngine;
 }
 
-} // namespace Zero
+} // namespace Raverie

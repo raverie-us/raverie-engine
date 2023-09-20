@@ -1,22 +1,22 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 const String cDefaultCollisionGroup = "DefaultGroup";
 const String cDefaultCollisionTable = "DefaultCollisionTable";
 
-ZilchDefineType(CollisionTable, builder, type)
+RaverieDefineType(CollisionTable, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZeroBindTag(Tags::Physics);
+  RaverieBindTag(Tags::Physics);
 
-  ZilchBindMethod(CreateRuntime);
-  ZilchBindMethod(RuntimeClone);
+  RaverieBindMethod(CreateRuntime);
+  RaverieBindMethod(RuntimeClone);
 
-  ZilchBindOverloadedMethod(FindFilter, (CollisionFilter * (CollisionTable::*)(CollisionGroup*, CollisionGroup*)));
+  RaverieBindOverloadedMethod(FindFilter, (CollisionFilter * (CollisionTable::*)(CollisionGroup*, CollisionGroup*)));
 }
 
 CollisionTable::CollisionTable()
@@ -528,4 +528,4 @@ void CollisionTableManager::OnCollisionGroupRemoved(ResourceEvent* event)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

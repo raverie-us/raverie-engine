@@ -2,14 +2,14 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 using namespace AudioConstants;
 
 // Sound Entry
 
-ZilchDefineType(SoundEntryDisplay, builder, type)
+RaverieDefineType(SoundEntryDisplay, builder, type)
 {
 }
 
@@ -30,23 +30,23 @@ String SoundEntryDisplayText(const BoundType* type, const byte* data)
   return BuildString("Sound: ", soundEntry->GetSound()->Name);
 }
 
-ZilchDefineType(SoundEntry, builder, type)
+RaverieDefineType(SoundEntry, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
   type->ToStringFunction = &SoundEntryDisplayText;
   type->Add(new SoundEntryDisplay());
-  type->HandleManager = ZilchManagerId(PointerManager);
+  type->HandleManager = RaverieManagerId(PointerManager);
 
-  ZilchBindGetterSetterProperty(Sound);
-  ZilchBindGetterSetterProperty(Weight);
-  ZilchBindGetterSetterProperty(StartTime);
-  ZilchBindGetterSetterProperty(EndTime);
-  ZilchBindGetterSetterProperty(LoopStartTime);
-  ZilchBindGetterSetterProperty(LoopEndTime);
-  ZilchBindGetterSetterProperty(LoopTailLength);
-  ZilchBindFieldProperty(mCrossFadeLoopTail);
-  ZilchBindMethodProperty(Preview);
-  ZilchBindMethodProperty(StopPreview);
+  RaverieBindGetterSetterProperty(Sound);
+  RaverieBindGetterSetterProperty(Weight);
+  RaverieBindGetterSetterProperty(StartTime);
+  RaverieBindGetterSetterProperty(EndTime);
+  RaverieBindGetterSetterProperty(LoopStartTime);
+  RaverieBindGetterSetterProperty(LoopEndTime);
+  RaverieBindGetterSetterProperty(LoopTailLength);
+  RaverieBindFieldProperty(mCrossFadeLoopTail);
+  RaverieBindMethodProperty(Preview);
+  RaverieBindMethodProperty(StopPreview);
 }
 
 SoundEntry::SoundEntry() :
@@ -197,7 +197,7 @@ void SoundEntry::SetLoopTailLength(float time)
 
 // Sound Tag Entry
 
-ZilchDefineType(SoundTagEntryDisplay, builder, type)
+RaverieDefineType(SoundTagEntryDisplay, builder, type)
 {
 }
 
@@ -219,14 +219,14 @@ String SoundTagEntryDisplayText(const BoundType* type, const byte* data)
   return BuildString("Tag: ", soundEntry->GetSoundTag()->Name);
 }
 
-ZilchDefineType(SoundTagEntry, builder, type)
+RaverieDefineType(SoundTagEntry, builder, type)
 {
-  ZeroBindDocumented();
-  type->HandleManager = ZilchManagerId(PointerManager);
+  RaverieBindDocumented();
+  type->HandleManager = RaverieManagerId(PointerManager);
   type->ToStringFunction = &SoundTagEntryDisplayText;
   type->Add(new SoundTagEntryDisplay());
 
-  ZilchBindGetterSetterProperty(SoundTag);
+  RaverieBindGetterSetterProperty(SoundTag);
 }
 
 SoundTagEntry::SoundTagEntry() : mSoundTag(SoundTagManager::GetDefault())
@@ -251,7 +251,7 @@ SoundTag* SoundTagEntry::GetSoundTag()
 
 // Sound Cue
 
-ZilchDefineType(SoundCueDisplay, builder, type)
+RaverieDefineType(SoundCueDisplay, builder, type)
 {
 }
 
@@ -265,48 +265,48 @@ String SoundCueDisplay::GetDebugText(HandleParam object)
   return "SoundCue";
 }
 
-ZilchDefineType(SoundCue, builder, type)
+RaverieDefineType(SoundCue, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetterProperty(PlayMode);
-  ZilchBindGetterSetterProperty(SelectMode);
-  ZilchBindGetterSetterProperty(Volume)->Add(new EditorSlider(0.0f, 2.0f, 0.01f));
-  ZilchBindGetterSetterProperty(Decibels)->Add(new EditorSlider(-32.0f, 6.0f, 0.1f));
-  ZilchBindFieldProperty(mUseDecibelVariation)->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  ZilchBindGetterSetterProperty(VolumeVariation)
+  RaverieBindGetterSetterProperty(PlayMode);
+  RaverieBindGetterSetterProperty(SelectMode);
+  RaverieBindGetterSetterProperty(Volume)->Add(new EditorSlider(0.0f, 2.0f, 0.01f));
+  RaverieBindGetterSetterProperty(Decibels)->Add(new EditorSlider(-32.0f, 6.0f, 0.1f));
+  RaverieBindFieldProperty(mUseDecibelVariation)->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  RaverieBindGetterSetterProperty(VolumeVariation)
       ->Add(new EditorSlider(0.0f, 1.0f, 0.01f))
-      ->ZeroFilterNotBool(mUseDecibelVariation);
-  ZilchBindGetterSetterProperty(DecibelVariation)
+      ->RaverieFilterNotBool(mUseDecibelVariation);
+  RaverieBindGetterSetterProperty(DecibelVariation)
       ->Add(new EditorSlider(0.0f, 6.0f, 0.1f))
-      ->ZeroFilterBool(mUseDecibelVariation);
-  ZilchBindGetterSetterProperty(Pitch)->Add(new EditorSlider(-2.0f, 2.0f, 0.1f));
-  ZilchBindGetterSetterProperty(Semitones)->Add(new EditorSlider(-24.0f, 24.0f, 0.1f));
-  ZilchBindFieldProperty(mUseSemitoneVariation)->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  ZilchBindGetterSetterProperty(PitchVariation)
+      ->RaverieFilterBool(mUseDecibelVariation);
+  RaverieBindGetterSetterProperty(Pitch)->Add(new EditorSlider(-2.0f, 2.0f, 0.1f));
+  RaverieBindGetterSetterProperty(Semitones)->Add(new EditorSlider(-24.0f, 24.0f, 0.1f));
+  RaverieBindFieldProperty(mUseSemitoneVariation)->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  RaverieBindGetterSetterProperty(PitchVariation)
       ->Add(new EditorSlider(0.0f, 1.0f, 0.1f))
-      ->ZeroFilterNotBool(mUseSemitoneVariation);
-  ZilchBindGetterSetterProperty(SemitoneVariation)
+      ->RaverieFilterNotBool(mUseSemitoneVariation);
+  RaverieBindGetterSetterProperty(SemitoneVariation)
       ->Add(new EditorSlider(0.0f, 12.0f, 0.1f))
-      ->ZeroFilterBool(mUseSemitoneVariation);
-  ZilchBindGetterSetterProperty(Attenuator);
-  ZilchBindFieldProperty(mShowMusicOptions)->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  ZilchBindGetterSetterProperty(BeatsPerMinute)->ZeroFilterBool(mShowMusicOptions);
-  ZilchBindGetterSetterProperty(TimeSigBeats)->ZeroFilterBool(mShowMusicOptions);
-  ZilchBindGetterSetterProperty(TimeSigValue)->ZeroFilterBool(mShowMusicOptions);
+      ->RaverieFilterBool(mUseSemitoneVariation);
+  RaverieBindGetterSetterProperty(Attenuator);
+  RaverieBindFieldProperty(mShowMusicOptions)->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  RaverieBindGetterSetterProperty(BeatsPerMinute)->RaverieFilterBool(mShowMusicOptions);
+  RaverieBindGetterSetterProperty(TimeSigBeats)->RaverieFilterBool(mShowMusicOptions);
+  RaverieBindGetterSetterProperty(TimeSigValue)->RaverieFilterBool(mShowMusicOptions);
 
-  ZilchBindMethodProperty(Preview);
-  ZilchBindMethodProperty(StopPreview);
+  RaverieBindMethodProperty(Preview);
+  RaverieBindMethodProperty(StopPreview);
 
-  ZilchBindFieldProperty(Sounds);
-  ZilchBindFieldProperty(SoundTags);
+  RaverieBindFieldProperty(Sounds);
+  RaverieBindFieldProperty(SoundTags);
 
-  ZilchBindMethod(AddSoundTagEntry);
-  ZilchBindMethod(AddSoundEntry);
-  ZilchBindMethod(PlayCueOnNode);
+  RaverieBindMethod(AddSoundTagEntry);
+  RaverieBindMethod(AddSoundEntry);
+  RaverieBindMethod(PlayCueOnNode);
 
-  ZeroBindEvent(Events::SoundCuePostPlay, SoundInstanceEvent);
-  ZeroBindEvent(Events::SoundCuePrePlay, SoundInstanceEvent);
+  RaverieBindEvent(Events::SoundCuePostPlay, SoundInstanceEvent);
+  RaverieBindEvent(Events::SoundCuePrePlay, SoundInstanceEvent);
 
   type->Add(new SoundCueDisplay());
 }
@@ -668,4 +668,4 @@ SoundCueManager::SoundCueManager(BoundType* resourceType) : ResourceManager(reso
   mExtension = DataResourceExtension;
 }
 
-} // namespace Zero
+} // namespace Raverie

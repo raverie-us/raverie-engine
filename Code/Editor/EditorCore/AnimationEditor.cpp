@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace AnimEditorUi
@@ -42,11 +42,11 @@ Animation* FindFirstAnimationOnCog(Cog* cog)
   // Check all properties on all components of the object
   forRange (Component* component, cog->GetComponents())
   {
-    BoundType* componentType = ZilchVirtualTypeId(component);
+    BoundType* componentType = RaverieVirtualTypeId(component);
     forRange (Property* metaProperty, componentType->GetProperties())
     {
       // If it's an Animation, return it
-      if (metaProperty->PropertyType == ZilchTypeId(Animation))
+      if (metaProperty->PropertyType == RaverieTypeId(Animation))
       {
         // Look up the animation by its name and id
         String animName = metaProperty->GetValue(component).ToString();
@@ -142,7 +142,7 @@ void PropertyKeyIcon::OnMouseExit(Event* e)
   MarkAsNeedsUpdate();
 }
 
-ZilchDefineType(AnimationEditor, builder, type)
+RaverieDefineType(AnimationEditor, builder, type)
 {
 }
 
@@ -275,7 +275,7 @@ void AnimationEditor::SetAnimation(Animation* animation)
     if (simpleAnim == nullptr)
     {
       OperationQueue* opQueue = Z::gEditor->GetOperationQueue();
-      if (QueueAddComponent(opQueue, animGraphObject, ZilchTypeId(SimpleAnimation)))
+      if (QueueAddComponent(opQueue, animGraphObject, RaverieTypeId(SimpleAnimation)))
         simpleAnim = animGraphObject->has(SimpleAnimation);
     }
     ReturnIf(simpleAnim == nullptr, , "Could not add SimpleAnimation");
@@ -945,7 +945,7 @@ void AnimationEditor::OnPropertyContextMenu(ContextMenuEvent* e)
     mContextMenuProperty = property->mProperty;
     mContextMenuInstance = property->mInstance;
     ContextMenuEntry* keyFrameCreate = e->RootEntry->AddEntry("Key Frame");
-    ConnectThisTo(keyFrameCreate, Zero::Events::MenuItemSelected, OnCreateKeyFrame);
+    ConnectThisTo(keyFrameCreate, Raverie::Events::MenuItemSelected, OnCreateKeyFrame);
   }
 }
 
@@ -994,7 +994,7 @@ void AnimationEditor::OnMouseDownErrorText(MouseEvent* event)
     Cog* cog = mSelectedObject;
 
     OperationQueue* opQueue = Z::gEditor->GetOperationQueue();
-    QueueAddComponent(opQueue, cog, ZilchTypeId(AnimationGraph));
+    QueueAddComponent(opQueue, cog, RaverieTypeId(AnimationGraph));
 
     // We need to tell the property grid that something changed on the object
     mPropertyView->GetPropertyView()->Invalidate();
@@ -1047,7 +1047,7 @@ void AnimationEditor::OnMouseDownErrorText(MouseEvent* event)
     if (autoPlay == nullptr)
     {
       OperationQueue* opQueue = Z::gEditor->GetOperationQueue();
-      if (QueueAddComponent(opQueue, cog, ZilchTypeId(SimpleAnimation)))
+      if (QueueAddComponent(opQueue, cog, RaverieTypeId(SimpleAnimation)))
         autoPlay = cog->has(SimpleAnimation);
     }
 
@@ -1070,7 +1070,7 @@ void AnimationEditor::OnMouseDownNegativeX(MouseEvent* event)
 
 void AnimationEditor::OpenAnimationAddWindow()
 {
-  AddResourceWindow* addWidget = OpenAddWindow(ZilchTypeId(Animation));
+  AddResourceWindow* addWidget = OpenAddWindow(RaverieTypeId(Animation));
   addWidget->ShowResourceTypeSearch(false);
 
   // We want events back to know what happened with the Add dialog
@@ -1083,14 +1083,14 @@ void AnimationEditor::OnAnimationAdded(ResourceEvent* e)
   Z::gResources->GetReceiver()->Disconnect(this);
 
   Cog* cog = mAnimGraphObject;
-  if (cog && (ZilchVirtualTypeId(e->EventResource) == ZilchTypeId(Animation)))
+  if (cog && (RaverieVirtualTypeId(e->EventResource) == RaverieTypeId(Animation)))
   {
     // Set the new animation on the AutoPlayAnimation and refresh
     SimpleAnimation* autoPlay = cog->has(SimpleAnimation);
     if (autoPlay == nullptr)
     {
       OperationQueue* opQueue = Z::gEditor->GetOperationQueue();
-      if (QueueAddComponent(opQueue, cog, ZilchTypeId(SimpleAnimation)))
+      if (QueueAddComponent(opQueue, cog, RaverieTypeId(SimpleAnimation)))
         autoPlay = cog->has(SimpleAnimation);
     }
     if (autoPlay)
@@ -1132,7 +1132,7 @@ void AnimationEditor::CreateKeyFrameAtPlayHead(Property* property, HandleParam c
   else
     val = property->GetValue(component);
 
-  BoundType* componentTypeId = ZilchVirtualTypeId(component);
+  BoundType* componentTypeId = RaverieVirtualTypeId(component);
 
   // Attempt to find the property track
   TrackNode* propertyTrack = richAnimation->GetPropertyTrack(object, mAnimGraphObject, componentTypeId, property->Name);
@@ -1197,4 +1197,4 @@ Cog* CreateAnimationPreview(Space* space, Animation* animation, Archetype* arche
   return nullptr;
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 class Image;
 
@@ -120,4 +120,4 @@ void SaveImage(Status& status,
 // ArrayByteMemoryStream, or FixedMemoryStream with a computed size from
 // ReadImageInfo.
 
-} // namespace Zero
+} // namespace Raverie

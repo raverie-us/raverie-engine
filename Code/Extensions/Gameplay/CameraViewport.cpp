@@ -1,54 +1,54 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(CameraViewport, builder, type)
+RaverieDefineType(CameraViewport, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetterProperty(RenderInEditor);
-  ZilchBindGetterSetterProperty(RenderInGame);
-  ZilchBindFieldProperty(mRenderOrder);
-  ZilchBindFieldProperty(mCameraPath)->ZeroBindPropertyRename("Camera");
-  ZilchBindFieldProperty(mRendererPath)->ZeroBindPropertyRename("Renderer");
-  ZilchBindGetterSetterProperty(ResolutionOrAspect);
-  ZilchBindGetterSetterProperty(RenderToViewport)->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  ZilchBindFieldProperty(mForwardViewportEvents)->ZeroFilterEquality(mRenderToViewport, bool, true);
+  RaverieBindGetterSetterProperty(RenderInEditor);
+  RaverieBindGetterSetterProperty(RenderInGame);
+  RaverieBindFieldProperty(mRenderOrder);
+  RaverieBindFieldProperty(mCameraPath)->RaverieBindPropertyRename("Camera");
+  RaverieBindFieldProperty(mRendererPath)->RaverieBindPropertyRename("Renderer");
+  RaverieBindGetterSetterProperty(ResolutionOrAspect);
+  RaverieBindGetterSetterProperty(RenderToViewport)->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  RaverieBindFieldProperty(mForwardViewportEvents)->RaverieFilterEquality(mRenderToViewport, bool, true);
 
-  ZilchBindFieldProperty(mViewportScaling)->ZeroFilterEquality(mRenderToViewport, bool, true);
-  ZilchBindFieldProperty(mMarginColor)->ZeroFilterEquality(mRenderToViewport, bool, true);
-  ZilchBindFieldProperty(mNormalizedSize)->ZeroFilterEquality(mRenderToViewport, bool, true);
-  ZilchBindFieldProperty(mNormalizedOffset)->ZeroFilterEquality(mRenderToViewport, bool, true);
+  RaverieBindFieldProperty(mViewportScaling)->RaverieFilterEquality(mRenderToViewport, bool, true);
+  RaverieBindFieldProperty(mMarginColor)->RaverieFilterEquality(mRenderToViewport, bool, true);
+  RaverieBindFieldProperty(mNormalizedSize)->RaverieFilterEquality(mRenderToViewport, bool, true);
+  RaverieBindFieldProperty(mNormalizedOffset)->RaverieFilterEquality(mRenderToViewport, bool, true);
 
-  ZilchBindMethod(ViewportTakeFocus);
-  ZilchBindGetter(ViewportHasFocus);
+  RaverieBindMethod(ViewportTakeFocus);
+  RaverieBindGetter(ViewportHasFocus);
 
-  ZilchBindGetter(WorldToView);
-  ZilchBindGetter(ViewToPerspective);
-  ZilchBindGetter(WorldToPerspective);
-  ZilchBindGetter(FinalTexture);
+  RaverieBindGetter(WorldToView);
+  RaverieBindGetter(ViewToPerspective);
+  RaverieBindGetter(WorldToPerspective);
+  RaverieBindGetter(FinalTexture);
 
-  ZilchBindGetter(MouseWorldRay);
-  ZilchBindMethod(ScreenToWorldRay);
-  ZilchBindMethod(ScreenToWorldZPlane);
-  ZilchBindMethod(ScreenToWorldViewPlane);
-  ZilchBindMethod(ScreenToWorldPlane);
-  ZilchBindMethod(WorldToScreen);
-  ZilchBindMethod(ScreenToViewport);
-  ZilchBindMethod(ViewportToScreen);
-  ZilchBindMethod(ViewPlaneSize);
+  RaverieBindGetter(MouseWorldRay);
+  RaverieBindMethod(ScreenToWorldRay);
+  RaverieBindMethod(ScreenToWorldZPlane);
+  RaverieBindMethod(ScreenToWorldViewPlane);
+  RaverieBindMethod(ScreenToWorldPlane);
+  RaverieBindMethod(WorldToScreen);
+  RaverieBindMethod(ScreenToViewport);
+  RaverieBindMethod(ViewportToScreen);
+  RaverieBindMethod(ViewPlaneSize);
 
-  ZilchBindGetter(ViewportResolution);
-  ZilchBindGetter(ViewportResolutionWithMargin);
-  ZilchBindGetter(ViewportOffset);
-  ZilchBindGetter(ViewportOffsetWithMargin);
+  RaverieBindGetter(ViewportResolution);
+  RaverieBindGetter(ViewportResolutionWithMargin);
+  RaverieBindGetter(ViewportOffset);
+  RaverieBindGetter(ViewportOffsetWithMargin);
 
-  ZilchBindGetter(Camera);
-  ZilchBindGetter(Frustum);
+  RaverieBindGetter(Camera);
+  RaverieBindGetter(Frustum);
 }
 
 void CameraViewport::Serialize(Serializer& stream)
@@ -641,4 +641,4 @@ GameWidget* CameraViewport::GetGameWidget()
   return gameWidget;
 }
 
-} // namespace Zero
+} // namespace Raverie

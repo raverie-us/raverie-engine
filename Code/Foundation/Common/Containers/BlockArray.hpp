@@ -5,7 +5,7 @@
 #include "Memory/Allocator.hpp"
 #include "Algorithm.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 /// Generic front deque array class. Store objects in buckets of a 1 <<
@@ -477,4 +477,4 @@ public:
   pointer* mData;
 };
 
-} // namespace Zero
+} // namespace Raverie

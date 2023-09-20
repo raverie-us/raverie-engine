@@ -4,7 +4,7 @@
 
 struct OpusEncoder;
 
-namespace Zero
+namespace Raverie
 {
 
 // Audio File Data
@@ -97,7 +97,7 @@ public:
   void InitializeEncoder();
   // Encodes a single packet of data and allocates a buffer for the encoded
   // data. Number of samples must be the same as PacketFrames
-  void EncodePacket(const float* dataBuffer, const unsigned samples, Zero::Array<byte>& encodedData);
+  void EncodePacket(const float* dataBuffer, const unsigned samples, Raverie::Array<byte>& encodedData);
 
   static const unsigned cChannels = 1;
 
@@ -106,4 +106,4 @@ private:
   OpusEncoder* Encoder;
 };
 
-} // namespace Zero
+} // namespace Raverie

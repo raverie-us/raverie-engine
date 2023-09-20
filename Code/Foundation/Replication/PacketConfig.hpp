@@ -14,7 +14,7 @@
 #define PACKET_SEQUENCE_ID_BITS 32
 StaticAssertWithinRange(Range0, PACKET_SEQUENCE_ID_BITS, 1, UINTMAX_BITS);
 
-namespace Zero
+namespace Raverie
 {
 
 //                                Protocol ID //
@@ -41,4 +41,4 @@ static const Bits MinPacketHeaderBits = ProtocolIdBits /// Packet protocol ID
 
 /// Maximum packet header size
 static const Bits MaxPacketHeaderBits = MinPacketHeaderBits + PacketSequenceIdBits; /// Packet sequence ID
-} // namespace Zero
+} // namespace Raverie

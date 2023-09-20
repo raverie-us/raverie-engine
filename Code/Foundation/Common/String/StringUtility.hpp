@@ -3,7 +3,7 @@
 #include "String.hpp"
 #include "Containers/Array.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 bool CaseInsensitiveStringLess(StringParam a, StringParam b);
@@ -38,7 +38,7 @@ String TransformString(StringRange string, transformFunc f)
   uint size = string.SizeInBytes();
   uint bufferSize = size + 1;
   char* buffer = (char*)alloca(bufferSize);
-  ZeroStrCpy(buffer, bufferSize, string.Data());
+  RaverieStrCpy(buffer, bufferSize, string.Data());
   for (size_t i = 0; i < size; ++i)
     buffer[i] = f(buffer[i]);
   buffer[size] = '\0';
@@ -58,4 +58,4 @@ StringRange RangeUntilFirst(StringParam string, Predicate predicate)
   return string.All();
 }
 
-} // namespace Zero
+} // namespace Raverie

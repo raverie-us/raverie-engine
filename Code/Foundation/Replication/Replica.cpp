@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 //                                  Replica //
@@ -463,4 +463,4 @@ void Replica::ReactToChannelPropertyChanges(TimeMs timestamp,
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

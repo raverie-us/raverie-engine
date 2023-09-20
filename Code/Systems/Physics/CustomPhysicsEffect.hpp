@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -17,7 +17,7 @@ class RigidBody;
 class CustomPhysicsEffectEvent : public Event
 {
 public:
-  ZilchDeclareType(CustomPhysicsEffectEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CustomPhysicsEffectEvent, TypeCopyMode::ReferenceType);
 
   CustomPhysicsEffectEvent();
 
@@ -34,7 +34,7 @@ public:
 class CustomPhysicsEffect : public PhysicsEffect
 {
 public:
-  ZilchDeclareType(CustomPhysicsEffect, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CustomPhysicsEffect, TypeCopyMode::ReferenceType);
 
   CustomPhysicsEffect();
 
@@ -46,4 +46,4 @@ public:
   void ApplyEffect(RigidBody* obj, real dt) override;
 };
 
-} // namespace Zero
+} // namespace Raverie

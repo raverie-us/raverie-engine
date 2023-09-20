@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 PropertyState TilePaletteProperty::GetValue(HandleParam object, PropertyPathParam propertyPath)
@@ -24,4 +24,4 @@ PropertyState TilePaletteProperty::GetValue(HandleParam object, PropertyPathPara
     return PropertyState();
 }
 
-} // namespace Zero
+} // namespace Raverie

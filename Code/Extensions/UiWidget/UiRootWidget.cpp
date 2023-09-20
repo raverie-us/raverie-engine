@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 void WidgetFlagCallback(Cog* cog, uint flag, FlagOperation::Enum operation)
@@ -15,45 +15,45 @@ void WidgetFlagCallback(Cog* cog, uint flag, FlagOperation::Enum operation)
   }
 }
 
-ZilchDefineType(UiRootWidget, builder, type)
+RaverieDefineType(UiRootWidget, builder, type)
 {
-  ZeroBindDocumented();
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindInterface(UiWidget);
+  RaverieBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindInterface(UiWidget);
 
   // Events
-  ZeroBindEvent(Events::UiFocusGainedPreview, UiFocusEvent);
-  ZeroBindEvent(Events::UiFocusGained, UiFocusEvent);
-  ZeroBindEvent(Events::UiFocusLost, UiFocusEvent);
-  ZeroBindEvent(Events::UiFocusLostHierarchy, UiFocusEvent);
-  ZeroBindEvent(Events::UiFocusGainedHierarchy, UiFocusEvent);
-  ZeroBindEvent(Events::UiFocusReset, UiFocusEvent);
+  RaverieBindEvent(Events::UiFocusGainedPreview, UiFocusEvent);
+  RaverieBindEvent(Events::UiFocusGained, UiFocusEvent);
+  RaverieBindEvent(Events::UiFocusLost, UiFocusEvent);
+  RaverieBindEvent(Events::UiFocusLostHierarchy, UiFocusEvent);
+  RaverieBindEvent(Events::UiFocusGainedHierarchy, UiFocusEvent);
+  RaverieBindEvent(Events::UiFocusReset, UiFocusEvent);
 
   // Keyboard events
-  ZeroBindEvent(Events::HoverKeyPreview, KeyboardEvent);
-  ZeroBindEvent(Events::HoverKeyDown, KeyboardEvent);
-  ZeroBindEvent(Events::HoverKeyUp, KeyboardEvent);
-  ZeroBindEvent(Events::HoverKeyRepeated, KeyboardEvent);
+  RaverieBindEvent(Events::HoverKeyPreview, KeyboardEvent);
+  RaverieBindEvent(Events::HoverKeyDown, KeyboardEvent);
+  RaverieBindEvent(Events::HoverKeyUp, KeyboardEvent);
+  RaverieBindEvent(Events::HoverKeyRepeated, KeyboardEvent);
 
-  // ZilchBindFieldProperty(mSnapSize);
+  // RaverieBindFieldProperty(mSnapSize);
 
-  ZilchBindFieldProperty(mMouseHoverTime);
-  ZilchBindFieldProperty(mMouseHoldTime);
-  ZilchBindFieldProperty(mDepthSeparation);
+  RaverieBindFieldProperty(mMouseHoverTime);
+  RaverieBindFieldProperty(mMouseHoldTime);
+  RaverieBindFieldProperty(mDepthSeparation);
 
-  ZilchBindGetterSetterProperty(DebugSelected);
+  RaverieBindGetterSetterProperty(DebugSelected);
 
-  ZilchBindFieldProperty(mDebugMouseInteraction);
+  RaverieBindFieldProperty(mDebugMouseInteraction);
 
-  ZilchBindGetterSetter(FocusWidget);
-  ZilchBindGetter(MouseOverWidget);
-  ZilchBindGetter(MouseDownWidget);
+  RaverieBindGetterSetter(FocusWidget);
+  RaverieBindGetter(MouseOverWidget);
+  RaverieBindGetter(MouseDownWidget);
 
   // Methods
-  ZilchBindMethod(Update);
-  ZilchBindMethod(Render);
-  // ZilchBindMethod(DispatchAt);
+  RaverieBindMethod(Update);
+  RaverieBindMethod(Render);
+  // RaverieBindMethod(DispatchAt);
 }
 
 UiRootWidget::UiRootWidget()
@@ -769,4 +769,4 @@ Cog* UiRootWidget::GetDebugSelected()
   return mDebugSelectedWidget.GetOwner();
 }
 
-} // namespace Zero
+} // namespace Raverie

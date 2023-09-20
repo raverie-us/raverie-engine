@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -9,17 +9,17 @@ namespace Events
 DefineEvent(ScriptInitialize);
 } // namespace Events
 
-ZilchDefineType(TextEvent, builder, type)
+RaverieDefineType(TextEvent, builder, type)
 {
-  ZilchBindFieldProperty(Text);
+  RaverieBindFieldProperty(Text);
 }
 
-ZilchDefineType(TextErrorEvent, builder, type)
-{
-}
-
-ZilchDefineType(BlockingTaskEvent, builder, type)
+RaverieDefineType(TextErrorEvent, builder, type)
 {
 }
 
-} // namespace Zero
+RaverieDefineType(BlockingTaskEvent, builder, type)
+{
+}
+
+} // namespace Raverie

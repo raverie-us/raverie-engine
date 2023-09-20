@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Forward declarations
@@ -26,7 +26,7 @@ public:
   void MarkPropertyModified(HandleParam object, PropertyPathParam property) override;
   void RevertProperty(HandleParam object, PropertyPathParam property) override;
   PropertyState GetValue(HandleParam object, PropertyPathParam property) override;
-  void InvokeFunction(HandleParam object, Zilch::Function* method) override;
+  void InvokeFunction(HandleParam object, Raverie::Function* method) override;
   HandleOf<MetaComposition> GetMetaComposition(BoundType* objectType) override;
   ObjectPropertyNode* BuildObjectTree(ObjectPropertyNode* parent,
                                       HandleParam instance,
@@ -75,4 +75,4 @@ private:
   void GetSharedComponents(MetaSelection* selection, Array<BoundType*>& sharedComponents);
 };
 
-} // namespace Zero
+} // namespace Raverie

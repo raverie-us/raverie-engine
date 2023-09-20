@@ -1,14 +1,14 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 namespace Events
 {
 DefineEvent(ClearAllAnnotations);
 }
 
-ZilchDefineType(SavingEvent, builder, type)
+RaverieDefineType(SavingEvent, builder, type)
 {
 }
 
@@ -178,7 +178,7 @@ bool ICodeInspector::CanStartLocalWordCompletion(ICodeEditor* editor)
   return true;
 }
 
-bool ICodeInspector::SupportsZeroConnect()
+bool ICodeInspector::SupportsRaverieConnect()
 {
   return false;
 }
@@ -422,11 +422,11 @@ void ICodeInspector::AddCallTipFromMetaMethod(Array<CallTip>& tips, BoundType* o
 
 HashMap<String, ResourceId> DocumentResource::mPossibleProxiedClasses;
 
-ZilchDefineType(DocumentResource, builder, type)
+RaverieDefineType(DocumentResource, builder, type)
 {
   type->AddAttribute(ObjectAttributes::cResourceInterface);
 
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 }
 
 DocumentResource::DocumentResource()
@@ -459,13 +459,13 @@ void DocumentResource::DocumentSetup(ResourceEntry& entry, bool searchable)
 
 void DocumentResource::UpdatePossibleProxiedClasses()
 {
-  // This should probably look through only ZilchScripts for "class" and
-  // ZilchFragments for "struct" This can possibly point a proxied fragment to a
-  // ZilchScript
+  // This should probably look through only RaverieScripts for "class" and
+  // RaverieFragments for "struct" This can possibly point a proxied fragment to a
+  // RaverieScript
   static Regex sClassStructRegex("(class|struct)\\s+([A-Z][a-zA-Z0-9_]*)");
 
   Matches matches;
-  Zero::StringRange unparsedContent = LoadTextData();
+  Raverie::StringRange unparsedContent = LoadTextData();
 
   for (;;)
   {
@@ -510,4 +510,4 @@ DefineEvent(Save);
 DefineEvent(SaveCheck);
 } // namespace Events
 
-} // namespace Zero
+} // namespace Raverie

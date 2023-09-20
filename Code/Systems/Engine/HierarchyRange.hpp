@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class Cog;
@@ -57,4 +57,4 @@ private:
   Cog* mStarting;
 };
 
-} // namespace Zero
+} // namespace Raverie

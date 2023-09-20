@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // float GizmoGetViewScale(Camera* camera, Vec3Param location)
@@ -29,9 +29,9 @@ DefineEvent(ScaleGizmoModified);
 DefineEvent(RotateGizmoModified);
 } // namespace Events
 
-ZilchDefineType(TranslateGizmoUpdateEvent, builder, type)
+RaverieDefineType(TranslateGizmoUpdateEvent, builder, type)
 {
-  ZilchBindFieldProperty(mGizmoWorldTranslation);
+  RaverieBindFieldProperty(mGizmoWorldTranslation);
 }
 
 TranslateGizmoUpdateEvent::TranslateGizmoUpdateEvent(GizmoUpdateEvent* e) : GizmoUpdateEvent(e)
@@ -39,9 +39,9 @@ TranslateGizmoUpdateEvent::TranslateGizmoUpdateEvent(GizmoUpdateEvent* e) : Gizm
   mGizmoWorldTranslation = Vec3::cZero;
 }
 
-ZilchDefineType(ScaleGizmoUpdateEvent, builder, type)
+RaverieDefineType(ScaleGizmoUpdateEvent, builder, type)
 {
-  ZilchBindFieldProperty(mGizmoWorldScale);
+  RaverieBindFieldProperty(mGizmoWorldScale);
 }
 
 ScaleGizmoUpdateEvent::ScaleGizmoUpdateEvent(GizmoUpdateEvent* e) : GizmoUpdateEvent(e)
@@ -49,10 +49,10 @@ ScaleGizmoUpdateEvent::ScaleGizmoUpdateEvent(GizmoUpdateEvent* e) : GizmoUpdateE
   mGizmoWorldScale = Vec3::cZero;
 }
 
-ZilchDefineType(RotateGizmoUpdateEvent, builder, type)
+RaverieDefineType(RotateGizmoUpdateEvent, builder, type)
 {
-  ZilchBindFieldProperty(mGizmoRotation);
-  ZilchBindFieldProperty(mGizmoWorldRotationAxis);
+  RaverieBindFieldProperty(mGizmoRotation);
+  RaverieBindFieldProperty(mGizmoWorldRotationAxis);
 }
 
 RotateGizmoUpdateEvent::RotateGizmoUpdateEvent(GizmoUpdateEvent* e) : GizmoUpdateEvent(e)
@@ -292,23 +292,23 @@ Vec3 GetSnappedScale(Vec3Param startPosition,
 
 } // namespace GizmoSnapping
 
-ZilchDefineType(SimpleGizmoBase, builder, type)
+RaverieDefineType(SimpleGizmoBase, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindTag(Tags::Gizmo);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindTag(Tags::Gizmo);
+  RaverieBindDocumented();
 
-  ZeroBindDependency(Transform);
-  ZeroBindDependency(Gizmo);
+  RaverieBindDependency(Transform);
+  RaverieBindDependency(Gizmo);
 
-  ZilchBindFieldProperty(mMouseInput);
-  ZilchBindFieldProperty(mPickingPriority);
-  ZilchBindFieldProperty(mColor);
-  ZilchBindFieldProperty(mHoverColor);
-  ZilchBindFieldProperty(mViewScaled);
-  ZilchBindFieldProperty(mUseParentAsViewScaleOrigin);
-  ZilchBindFieldProperty(mDrawOnTop);
+  RaverieBindFieldProperty(mMouseInput);
+  RaverieBindFieldProperty(mPickingPriority);
+  RaverieBindFieldProperty(mColor);
+  RaverieBindFieldProperty(mHoverColor);
+  RaverieBindFieldProperty(mViewScaled);
+  RaverieBindFieldProperty(mUseParentAsViewScaleOrigin);
+  RaverieBindFieldProperty(mDrawOnTop);
 }
 
 SimpleGizmoBase::SimpleGizmoBase()
@@ -340,14 +340,14 @@ ByteColor SimpleGizmoBase::GetColor()
   return ToByteColor(mColor);
 }
 
-ZilchDefineType(SquareGizmo, builder, type)
+RaverieDefineType(SquareGizmo, builder, type)
 {
-  ZeroBindComponent();
-  ZilchBindFieldProperty(mSize);
-  ZilchBindFieldProperty(mSnapDistance);
-  ZilchBindFieldProperty(mViewAligned);
-  ZilchBindFieldProperty(mBordered);
-  ZilchBindFieldProperty(mFilled);
+  RaverieBindComponent();
+  RaverieBindFieldProperty(mSize);
+  RaverieBindFieldProperty(mSnapDistance);
+  RaverieBindFieldProperty(mViewAligned);
+  RaverieBindFieldProperty(mBordered);
+  RaverieBindFieldProperty(mFilled);
 }
 
 void SquareGizmo::Serialize(Serializer& stream)
@@ -448,19 +448,19 @@ void SquareGizmo::OnFrameUpdate(Event*)
                       .ViewScaleOffset(viewScaleOffset));
 }
 
-ZilchDefineType(ArrowGizmo, builder, type)
+RaverieDefineType(ArrowGizmo, builder, type)
 {
-  ZeroBindComponent();
+  RaverieBindComponent();
   // Used for defining the drag direction
-  ZeroBindDependency(Orientation);
+  RaverieBindDependency(Orientation);
 
-  ZilchBindFieldProperty(mHeadSize);
-  ZilchBindFieldProperty(mLength);
-  ZilchBindFieldProperty(mSelectRadius);
-  ZilchBindFieldProperty(mHeadType);
-  ZilchBindFieldProperty(mDualHeads);
-  ZilchBindFieldProperty(mFilledHeads);
-  ZilchBindFieldProperty(mLineDrawWidth);
+  RaverieBindFieldProperty(mHeadSize);
+  RaverieBindFieldProperty(mLength);
+  RaverieBindFieldProperty(mSelectRadius);
+  RaverieBindFieldProperty(mHeadType);
+  RaverieBindFieldProperty(mDualHeads);
+  RaverieBindFieldProperty(mFilledHeads);
+  RaverieBindFieldProperty(mLineDrawWidth);
 }
 
 void ArrowGizmo::Serialize(Serializer& stream)
@@ -563,40 +563,40 @@ void ArrowGizmo::OnFrameUpdate(Event*)
                       .Filled(mFilledHeads) /*.BackShade(true)*/);
 }
 
-ZilchDefineType(RingGizmoEvent, builder, type)
+RaverieDefineType(RingGizmoEvent, builder, type)
 {
-  ZilchBindFieldProperty(mWorldRotation);
-  ZilchBindFieldProperty(mWorldRotationAxis);
-  ZilchBindFieldProperty(mRadiansAroundAxis);
-  ZilchBindFieldProperty(mDeltaRadiansAroundAxis);
+  RaverieBindFieldProperty(mWorldRotation);
+  RaverieBindFieldProperty(mWorldRotationAxis);
+  RaverieBindFieldProperty(mRadiansAroundAxis);
+  RaverieBindFieldProperty(mDeltaRadiansAroundAxis);
 
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 }
 
 RingGizmoEvent::RingGizmoEvent(GizmoUpdateEvent* e) : GizmoUpdateEvent(*e)
 {
 }
 
-ZilchDefineType(RingGizmo, builder, type)
+RaverieDefineType(RingGizmo, builder, type)
 {
-  ZeroBindComponent();
+  RaverieBindComponent();
   // Used for defining the axis the ring is around
-  ZeroBindDependency(Orientation);
+  RaverieBindDependency(Orientation);
 
-  ZilchBindFieldProperty(mRadius);
-  ZilchBindFieldProperty(mSelectRadius);
-  ZilchBindFieldProperty(mDragRadiansPerPixel);
+  RaverieBindFieldProperty(mRadius);
+  RaverieBindFieldProperty(mSelectRadius);
+  RaverieBindFieldProperty(mDragRadiansPerPixel);
 
-  ZilchBindFieldProperty(mBackShade);
-  ZilchBindFieldProperty(mViewAligned);
+  RaverieBindFieldProperty(mBackShade);
+  RaverieBindFieldProperty(mViewAligned);
 
-  ZilchBindFieldProperty(mGrabArrowColor);
-  ZilchBindFieldProperty(mGrabArrowLength);
-  ZilchBindFieldProperty(mGrabArrowHeadSize);
-  ZilchBindFieldProperty(mGrabArrowViewScaled);
-  ZilchBindFieldProperty(mGrabArrowOnTop);
+  RaverieBindFieldProperty(mGrabArrowColor);
+  RaverieBindFieldProperty(mGrabArrowLength);
+  RaverieBindFieldProperty(mGrabArrowHeadSize);
+  RaverieBindFieldProperty(mGrabArrowViewScaled);
+  RaverieBindFieldProperty(mGrabArrowOnTop);
 
-  ZeroBindEvent(Events::RingGizmoModified, RingGizmoEvent);
+  RaverieBindEvent(Events::RingGizmoModified, RingGizmoEvent);
 }
 
 void RingGizmo::Serialize(Serializer& stream)
@@ -828,21 +828,21 @@ void RingGizmo::OnFrameUpdate(Event*)
   }
 }
 
-ZilchDefineType(TranslateGizmo, builder, type)
+RaverieDefineType(TranslateGizmo, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindTag(Tags::Gizmo);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindTag(Tags::Gizmo);
+  RaverieBindDocumented();
 
-  ZeroBindDependency(Transform);
+  RaverieBindDependency(Transform);
 
-  ZeroBindEvent(Events::TranslateGizmoModified, TranslateGizmoUpdateEvent);
+  RaverieBindEvent(Events::TranslateGizmoModified, TranslateGizmoUpdateEvent);
 
-  ZilchBindFieldProperty(mUpdateMode);
-  ZilchBindGetterSetterProperty(Snapping);
-  ZilchBindFieldProperty(mSnapMode);
-  ZilchBindFieldProperty(mSnapDistance);
+  RaverieBindFieldProperty(mUpdateMode);
+  RaverieBindGetterSetterProperty(Snapping);
+  RaverieBindFieldProperty(mSnapMode);
+  RaverieBindFieldProperty(mSnapDistance);
 }
 
 void TranslateGizmo::Serialize(Serializer& stream)
@@ -939,20 +939,20 @@ Vec3 TranslateGizmo::GetStartPosition()
   return mStartPosition;
 }
 
-ZilchDefineType(ScaleGizmo, builder, type)
+RaverieDefineType(ScaleGizmo, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindTag(Tags::Gizmo);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindTag(Tags::Gizmo);
+  RaverieBindDocumented();
 
-  ZeroBindDependency(Transform);
+  RaverieBindDependency(Transform);
 
-  ZeroBindEvent(Events::ScaleGizmoModified, ScaleGizmoUpdateEvent);
+  RaverieBindEvent(Events::ScaleGizmoModified, ScaleGizmoUpdateEvent);
 
-  ZilchBindGetterSetterProperty(Snapping);
-  ZilchBindFieldProperty(mSnapMode);
-  ZilchBindFieldProperty(mSnapDistance);
+  RaverieBindGetterSetterProperty(Snapping);
+  RaverieBindFieldProperty(mSnapMode);
+  RaverieBindFieldProperty(mSnapDistance);
 }
 
 void ScaleGizmo::Serialize(Serializer& stream)
@@ -1173,19 +1173,19 @@ Vec3 ScaleGizmo::ScaleFromDrag(GizmoBasis::Enum basis,
   return newScale;
 }
 
-ZilchDefineType(RotateGizmo, builder, type)
+RaverieDefineType(RotateGizmo, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindTag(Tags::Gizmo);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindTag(Tags::Gizmo);
+  RaverieBindDocumented();
 
-  ZeroBindDependency(Transform);
+  RaverieBindDependency(Transform);
 
-  ZeroBindEvent(Events::RotateGizmoModified, RotateGizmoUpdateEvent);
+  RaverieBindEvent(Events::RotateGizmoModified, RotateGizmoUpdateEvent);
 
-  ZilchBindGetterSetterProperty(Snapping);
-  ZilchBindFieldProperty(mSnapAngle);
+  RaverieBindGetterSetterProperty(Snapping);
+  RaverieBindFieldProperty(mSnapAngle);
 }
 
 void RotateGizmo::Serialize(Serializer& stream)
@@ -1260,4 +1260,4 @@ void RotateGizmo::OnGizmoModified(RingGizmoEvent* e)
   DispatchEvent(Events::RotateGizmoModified, &eventToSend);
 }
 
-} // namespace Zero
+} // namespace Raverie

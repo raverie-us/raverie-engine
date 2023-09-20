@@ -1,19 +1,19 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(HeightMapCollider, builder, type)
+RaverieDefineType(HeightMapCollider, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindInterface(Collider);
-  ZeroBindDependency(HeightMap);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindInterface(Collider);
+  RaverieBindDependency(HeightMap);
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetterProperty(Thickness);
-  ZilchBindMethod(ClearCachedEdgeAdjacency);
+  RaverieBindGetterSetterProperty(Thickness);
+  RaverieBindMethod(ClearCachedEdgeAdjacency);
 }
 
 HeightMapCollider::HeightMapCollider()
@@ -316,4 +316,4 @@ void HeightMapCollider::OnHeightMapPatchModified(HeightMapEvent* hEvent)
   InternalSizeChanged();
 }
 
-} // namespace Zero
+} // namespace Raverie

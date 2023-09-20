@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 //                               CogHashSetRange //
@@ -18,4 +18,4 @@ Cog* CogHashSetRange::Front()
   return CogHashSet::range::Front();
 }
 
-} // namespace Zero
+} // namespace Raverie

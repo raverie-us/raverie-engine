@@ -1,0 +1,24 @@
+// MIT Licensed (see LICENSE.md).
+
+class UiChangeCursor : RaverieComponent
+{
+  [Property] var Cursor : Cursor = Cursor.Arrow;
+  var OldCursor : Cursor;
+  
+  function Initialize(init : CogInitializer)
+  {
+    Raverie.Connect(this.Owner, Events.MouseEnterHierarchy, this.OnMouseEnter);
+    Raverie.Connect(this.Owner, Events.MouseExitHierarchy, this.OnMouseExit);
+  }
+
+  function OnMouseExit(event : ViewportMouseEvent)
+  {
+    Raverie.Mouse.Cursor = this.OldCursor;
+  }
+
+  function OnMouseEnter(event : ViewportMouseEvent)
+  {
+    this.OldCursor = Raverie.Mouse.Cursor;
+    Raverie.Mouse.Cursor = this.Cursor;
+  }
+}

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 JointEdge::JointEdge()
@@ -158,4 +158,4 @@ bool JointNode::SpringIndexActive(uint atomIndex)
   return mSpring != nullptr && mSpring->GetAtomIndexActive(flag);
 }
 
-} // namespace Zero
+} // namespace Raverie

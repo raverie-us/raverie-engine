@@ -1,20 +1,20 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 DefinePhysicsRuntimeClone(PhysicsMesh);
 
-ZilchDefineType(PhysicsMesh, builder, type)
+RaverieDefineType(PhysicsMesh, builder, type)
 {
-  ZeroBindDocumented();
-  ZilchBindDefaultConstructor();
-  ZilchBindDestructor();
-  ZeroBindTag(Tags::Physics);
+  RaverieBindDocumented();
+  RaverieBindDefaultConstructor();
+  RaverieBindDestructor();
+  RaverieBindTag(Tags::Physics);
 
-  ZilchBindMethod(CreateRuntime);
-  ZilchBindMethod(RuntimeClone);
+  RaverieBindMethod(CreateRuntime);
+  RaverieBindMethod(RuntimeClone);
 }
 
 void PhysicsMesh::Serialize(Serializer& stream)
@@ -154,4 +154,4 @@ void PhysicsMeshManager::UpdateAndNotifyModifiedResources()
   mModifiedMeshes.Clear();
 }
 
-} // namespace Zero
+} // namespace Raverie

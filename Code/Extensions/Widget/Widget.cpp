@@ -1,17 +1,17 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 //#define WIDGET_DEBUGGING
 
-ZilchDefineType(SizePolicies, builder, type)
+RaverieDefineType(SizePolicies, builder, type)
 {
 }
 
-ZilchDefineType(Widget, builder, type)
+RaverieDefineType(Widget, builder, type)
 {
-  type->HandleManager = ZilchManagerId(WidgetHandleManager);
+  type->HandleManager = RaverieManagerId(WidgetHandleManager);
 }
 
 void WidgetHandleManager::ObjectToHandle(const byte* object, BoundType* type, Handle& handleToInitialize)
@@ -49,7 +49,7 @@ u64 WidgetHandleManager::HandleToId(const Handle& handle)
   if (handle.StoredType == nullptr)
     return 0;
 
-  ReturnIf(!Type::BoundIsA(handle.StoredType, ZilchTypeId(Widget)), 0, "A handle to a non widget was passed in.");
+  ReturnIf(!Type::BoundIsA(handle.StoredType, RaverieTypeId(Widget)), 0, "A handle to a non widget was passed in.");
 
   return handle.HandleU64;
 }
@@ -67,7 +67,7 @@ void WidgetBreak(const char* message, const Widget* widget)
   Error("%s %p\n", message, widget);
   printf("%s %p\n", message, widget);
   fflush(stdout);
-  ZeroDebugBreak();
+  RaverieDebugBreak();
 }
 bool Widget::sDisableDeletes = false;
 
@@ -160,7 +160,7 @@ String Widget::GetDebugName() const
   if (!mName.Empty())
     return mName;
 
-  return ZilchVirtualTypeId(this)->Name;
+  return RaverieVirtualTypeId(this)->Name;
 }
 
 void Widget::InternalDestroy()
@@ -888,4 +888,4 @@ Thickness Widget::GetBorderThickness()
   return Thickness::cZero;
 }
 
-} // namespace Zero
+} // namespace Raverie

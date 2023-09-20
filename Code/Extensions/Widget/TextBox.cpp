@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace TextBoxUi
@@ -37,7 +37,7 @@ Tweakable(Vec4, BackgroundClicked, Vec4(1, 1, 1, 1), cLocation);
 Tweakable(float, ButtonWidth, 34.0f, cLocation);
 } // namespace TextBoxButtonUi
 
-ZilchDefineType(TextBox, builder, type)
+RaverieDefineType(TextBox, builder, type)
 {
 }
 
@@ -317,7 +317,7 @@ void TextBoxButton::UpdateTransform()
 const float MultiLineText::cDefaultLineWidth = 300.0f;
 const Thickness MultiLineText::cDefaultPadding = Thickness(2, 2, 2, 2);
 
-ZilchDefineType(MultiLineText, builder, type)
+RaverieDefineType(MultiLineText, builder, type)
 {
 }
 
@@ -406,4 +406,4 @@ void MultiLineText::Initialize(Text* textObject)
   mMaxLineWidth = cDefaultLineWidth;
 }
 
-} // namespace Zero
+} // namespace Raverie

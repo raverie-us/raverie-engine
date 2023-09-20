@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 const uint cMinFrameSize = 1;
@@ -34,7 +34,7 @@ DeclareEnum3(SpriteFill, Stretch, NineSlice, Tiled);
 class SpriteData
 {
 public:
-  ZilchDeclareType(SpriteData, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SpriteData, TypeCopyMode::ReferenceType);
 
   void Serialize(Serializer& stream);
   SpriteDataMembers();
@@ -45,7 +45,7 @@ public:
 class SpriteSourceBuilder : public DirectBuilderComponent
 {
 public:
-  ZilchDeclareType(SpriteSourceBuilder, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SpriteSourceBuilder, TypeCopyMode::ReferenceType);
   SpriteDataMembers();
 
   void Serialize(Serializer& stream) override;
@@ -75,4 +75,4 @@ public:
   void SetDefaults();
 };
 
-} // namespace Zero
+} // namespace Raverie

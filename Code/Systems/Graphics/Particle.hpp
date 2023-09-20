@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Tags
@@ -14,7 +14,7 @@ DeclareTag(Particle);
 class Particle
 {
 public:
-  ZilchDeclareType(Particle, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Particle, TypeCopyMode::ReferenceType);
 
   Particle* Next;
   float Time;
@@ -90,4 +90,4 @@ public:
 
 typedef ParticleList::range ParticleListRange;
 
-} // namespace Zero
+} // namespace Raverie

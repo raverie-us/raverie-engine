@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -22,7 +22,7 @@ DeclareEnum5(BackgroundTaskState, NotStarted, Running, Completed, Failed, Cancel
 class BackgroundTaskEvent : public Event
 {
 public:
-  ZilchDeclareType(BackgroundTaskEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(BackgroundTaskEvent, TypeCopyMode::ReferenceType);
   BackgroundTaskEvent(BackgroundTask* task) : mTask(task)
   {
   }
@@ -79,7 +79,7 @@ typedef void (*BackgroundTaskActivatedCallback)(BackgroundTask*, Job*);
 class BackgroundTask : public EventObject
 {
 public:
-  typedef BackgroundTask ZilchSelf;
+  typedef BackgroundTask RaverieSelf;
   /// Constructor.
   BackgroundTask(BackgroundTaskJob* job);
   ~BackgroundTask();
@@ -151,7 +151,7 @@ class BackgroundTasks : public ExplicitSingleton<BackgroundTasks, EventObject>
 {
 public:
   // Meta Initialization
-  ZilchDeclareType(BackgroundTasks, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(BackgroundTasks, TypeCopyMode::ReferenceType);
 
   BackgroundTasks();
   ~BackgroundTasks();
@@ -177,4 +177,4 @@ namespace Z
 extern BackgroundTasks* gBackgroundTasks;
 } // namespace Z
 
-} // namespace Zero
+} // namespace Raverie

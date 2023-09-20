@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 template <typename T>
@@ -119,4 +119,4 @@ private:
   CopyOnWriteData<T>* mData;
 };
 
-} // namespace Zero
+} // namespace Raverie

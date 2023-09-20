@@ -1,21 +1,21 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(MeshCollider, builder, type)
+RaverieDefineType(MeshCollider, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
 
-  ZeroBindInterface(Collider);
-  ZeroBindDocumented();
+  RaverieBindInterface(Collider);
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetterProperty(PhysicsMesh);
-  ZilchBindFieldProperty(mDrawEdges);
-  ZilchBindFieldProperty(mDrawFaces);
-  ZilchBindFieldProperty(mDrawFaceNormals);
+  RaverieBindGetterSetterProperty(PhysicsMesh);
+  RaverieBindFieldProperty(mDrawEdges);
+  RaverieBindFieldProperty(mDrawFaces);
+  RaverieBindFieldProperty(mDrawFaceNormals);
 }
 
 MeshCollider::MeshCollider()
@@ -146,4 +146,4 @@ bool MeshCollider::Cast(const Ray& localRay, ProxyResult& result, BaseCastFilter
   return mesh->CastRay(localRay, result, filter);
 }
 
-} // namespace Zero
+} // namespace Raverie

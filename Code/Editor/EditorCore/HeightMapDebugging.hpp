@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class HeightMap;
@@ -12,7 +12,7 @@ class UpdateEvent;
 class HeightMapDebugDrawer : public Component
 {
 public:
-  ZilchDeclareType(HeightMapDebugDrawer, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(HeightMapDebugDrawer, TypeCopyMode::ReferenceType);
 
   HeightMapDebugDrawer();
 
@@ -38,7 +38,7 @@ public:
 class HeightMapAabbChecker : public Component
 {
 public:
-  ZilchDeclareType(HeightMapAabbChecker, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(HeightMapAabbChecker, TypeCopyMode::ReferenceType);
 
   HeightMapAabbChecker();
 
@@ -54,4 +54,4 @@ public:
   bool mSkipNonCollidingCells;
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -9,76 +9,76 @@ namespace Events
 DefineEvent(AreaChanged);
 }
 
-ZilchDefineType(AreaEvent, builder, type)
+RaverieDefineType(AreaEvent, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindField(mArea);
+  RaverieBindField(mArea);
 }
 
 static const float cAreaEpsilon = 0.001f;
 // Thickness used for converting an Area to an Aabb
 static const float cAreaThickness = 0.001f;
 
-ZilchDefineType(Area, builder, type)
+RaverieDefineType(Area, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindDocumented();
-  ZeroBindSetup(SetupMode::CallSetDefaults);
-  ZeroBindEvent(Events::AreaChanged, AreaEvent);
-  ZeroBindDependency(Transform);
+  RaverieBindComponent();
+  RaverieBindDocumented();
+  RaverieBindSetup(SetupMode::CallSetDefaults);
+  RaverieBindEvent(Events::AreaChanged, AreaEvent);
+  RaverieBindDependency(Transform);
 
-  ZilchBindGetterSetterProperty(Origin)->ZeroLocalModificationOverride();
-  ZilchBindGetterSetterProperty(Size)->ZeroLocalModificationOverride();
+  RaverieBindGetterSetterProperty(Origin)->RaverieLocalModificationOverride();
+  RaverieBindGetterSetterProperty(Size)->RaverieLocalModificationOverride();
 
-  ZilchBindGetterSetter(LocalRectangle);
-  ZilchBindGetterSetter(WorldRectangle);
+  RaverieBindGetterSetter(LocalRectangle);
+  RaverieBindGetterSetter(WorldRectangle);
 
-  ZilchBindMethod(GetLocalLocation);
-  ZilchBindMethod(SetLocalLocation);
-  ZilchBindMethod(GetWorldLocation);
-  ZilchBindMethod(SetWorldLocation);
+  RaverieBindMethod(GetLocalLocation);
+  RaverieBindMethod(SetLocalLocation);
+  RaverieBindMethod(GetWorldLocation);
+  RaverieBindMethod(SetWorldLocation);
 
-  ZilchBindGetter(TopLeft)->AddAttribute(DeprecatedAttribute);
-  ZilchBindGetter(TopCenter)->AddAttribute(DeprecatedAttribute);
-  ZilchBindGetter(TopRight)->AddAttribute(DeprecatedAttribute);
-  ZilchBindGetter(CenterLeft)->AddAttribute(DeprecatedAttribute);
-  ZilchBindGetter(Center)->AddAttribute(DeprecatedAttribute);
-  ZilchBindGetter(CenterRight)->AddAttribute(DeprecatedAttribute);
-  ZilchBindGetter(BottomLeft)->AddAttribute(DeprecatedAttribute);
-  ZilchBindGetter(BottomCenter)->AddAttribute(DeprecatedAttribute);
-  ZilchBindGetter(BottomRight)->AddAttribute(DeprecatedAttribute);
+  RaverieBindGetter(TopLeft)->AddAttribute(DeprecatedAttribute);
+  RaverieBindGetter(TopCenter)->AddAttribute(DeprecatedAttribute);
+  RaverieBindGetter(TopRight)->AddAttribute(DeprecatedAttribute);
+  RaverieBindGetter(CenterLeft)->AddAttribute(DeprecatedAttribute);
+  RaverieBindGetter(Center)->AddAttribute(DeprecatedAttribute);
+  RaverieBindGetter(CenterRight)->AddAttribute(DeprecatedAttribute);
+  RaverieBindGetter(BottomLeft)->AddAttribute(DeprecatedAttribute);
+  RaverieBindGetter(BottomCenter)->AddAttribute(DeprecatedAttribute);
+  RaverieBindGetter(BottomRight)->AddAttribute(DeprecatedAttribute);
 
-  ZilchBindGetter(LocalTopLeft);
-  ZilchBindGetter(LocalTopCenter);
-  ZilchBindGetter(LocalTopRight);
-  ZilchBindGetter(LocalCenterLeft);
-  ZilchBindGetter(LocalCenter);
-  ZilchBindGetter(LocalCenterRight);
-  ZilchBindGetter(LocalBottomLeft);
-  ZilchBindGetter(LocalBottomCenter);
-  ZilchBindGetter(LocalBottomRight);
+  RaverieBindGetter(LocalTopLeft);
+  RaverieBindGetter(LocalTopCenter);
+  RaverieBindGetter(LocalTopRight);
+  RaverieBindGetter(LocalCenterLeft);
+  RaverieBindGetter(LocalCenter);
+  RaverieBindGetter(LocalCenterRight);
+  RaverieBindGetter(LocalBottomLeft);
+  RaverieBindGetter(LocalBottomCenter);
+  RaverieBindGetter(LocalBottomRight);
 
-  ZilchBindGetter(WorldTopLeft);
-  ZilchBindGetter(WorldTopCenter);
-  ZilchBindGetter(WorldTopRight);
-  ZilchBindGetter(WorldCenterLeft);
-  ZilchBindGetter(WorldCenter);
-  ZilchBindGetter(WorldCenterRight);
-  ZilchBindGetter(WorldBottomLeft);
-  ZilchBindGetter(WorldBottomCenter);
-  ZilchBindGetter(WorldBottomRight);
+  RaverieBindGetter(WorldTopLeft);
+  RaverieBindGetter(WorldTopCenter);
+  RaverieBindGetter(WorldTopRight);
+  RaverieBindGetter(WorldCenterLeft);
+  RaverieBindGetter(WorldCenter);
+  RaverieBindGetter(WorldCenterRight);
+  RaverieBindGetter(WorldBottomLeft);
+  RaverieBindGetter(WorldBottomCenter);
+  RaverieBindGetter(WorldBottomRight);
 
-  ZilchBindGetterSetter(LocalTop);
-  ZilchBindGetterSetter(WorldTop);
-  ZilchBindGetterSetter(LocalRight);
-  ZilchBindGetterSetter(WorldRight);
-  ZilchBindGetterSetter(LocalBottom);
-  ZilchBindGetterSetter(WorldBottom);
-  ZilchBindGetterSetter(LocalLeft);
-  ZilchBindGetterSetter(WorldLeft);
+  RaverieBindGetterSetter(LocalTop);
+  RaverieBindGetterSetter(WorldTop);
+  RaverieBindGetterSetter(LocalRight);
+  RaverieBindGetterSetter(WorldRight);
+  RaverieBindGetterSetter(LocalBottom);
+  RaverieBindGetterSetter(WorldBottom);
+  RaverieBindGetterSetter(LocalLeft);
+  RaverieBindGetterSetter(WorldLeft);
 
-  ZilchBindMethod(LocalOffsetOf);
+  RaverieBindMethod(LocalOffsetOf);
 }
 
 void Area::SetDefaults()
@@ -363,4 +363,4 @@ void Area::DebugDraw()
 {
 }
 
-} // namespace Zero
+} // namespace Raverie

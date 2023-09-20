@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Interface for tree view to edit RenderGroup hierarchies.
@@ -39,7 +39,7 @@ public:
 class RenderGroupHierarchies : public Composite
 {
 public:
-  ZilchDeclareType(RenderGroupHierarchies, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(RenderGroupHierarchies, TypeCopyMode::ReferenceType);
 
   RenderGroupHierarchies(Composite* parent);
   ~RenderGroupHierarchies();
@@ -50,4 +50,4 @@ public:
   RenderGroupSource* mSource;
 };
 
-} // namespace Zero
+} // namespace Raverie

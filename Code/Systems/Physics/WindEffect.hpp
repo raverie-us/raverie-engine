@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Applies a wind force in a given direction. The wind force is calculated from
@@ -10,7 +10,7 @@ namespace Zero
 class WindEffect : public PhysicsEffect
 {
 public:
-  ZilchDeclareType(WindEffect, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(WindEffect, TypeCopyMode::ReferenceType);
 
   WindEffect();
 
@@ -49,4 +49,4 @@ private:
   bool mLocalSpaceDirection;
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,0 +1,21 @@
+Cog =
+{
+	Transform =
+	{
+		float[] Translation = [ 0, 0, 0 ] ,
+		float[] Scale = [ 1, 1, 1 ] ,
+		float[] Rotation = [ 0, 0, 0, 1 ] ,	
+	},
+	
+	BoxCollider = 
+	{
+		bool Ghost = false,
+		bool SendsEvents = true,
+		string Material = "4de020863e872da8:DefaultPhysicsMaterial",
+		string CollisionGroup = "4e740859314e5515:DefaultGroup",
+		Vec3 Offset = [0, 0, 0],
+		Vec3 HalfSize = [0.5, 0.5, 0.5],
+	},
+	
+}
+

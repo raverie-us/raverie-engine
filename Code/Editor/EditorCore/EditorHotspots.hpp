@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 class MouseEvent;
 class TextEditor;
@@ -48,7 +48,7 @@ public:
 
 // File Hotspot
 // Opens file on click
-// Matches: File "C:\File.z", line 33, message
+// Matches: File "C:\File.raveriescript", line 33, message
 class FileHotspot : public TextEditorHotspot
 {
 public:
@@ -56,4 +56,4 @@ public:
   void OnClick(Matches& matches) override;
 };
 
-} // namespace Zero
+} // namespace Raverie

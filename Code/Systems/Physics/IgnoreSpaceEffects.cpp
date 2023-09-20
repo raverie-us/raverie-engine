@@ -1,32 +1,32 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(IgnoreSpaceEffects, builder, type)
+RaverieDefineType(IgnoreSpaceEffects, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
 
-  ZeroBindDependency(RigidBody);
+  RaverieBindDependency(RigidBody);
 
-  ZilchBindGetterSetterProperty(IgnoreDrag)->ZeroSerialize(true);
-  ZilchBindGetterSetterProperty(IgnoreFlow)->ZeroSerialize(true);
-  ZilchBindGetterSetterProperty(IgnoreForce)->ZeroSerialize(true);
-  ZilchBindGetterSetterProperty(IgnoreGravity)->ZeroSerialize(true);
-  ZilchBindGetterSetterProperty(IgnorePointForce)->ZeroSerialize(true);
-  ZilchBindGetterSetterProperty(IgnorePointGravity)->ZeroSerialize(true);
-  ZilchBindGetterSetterProperty(IgnoreThrust)->ZeroSerialize(true);
-  ZilchBindGetterSetterProperty(IgnoreVortex)->ZeroSerialize(true);
-  ZilchBindGetterSetterProperty(IgnoreWind)->ZeroSerialize(true);
-  ZilchBindGetterSetterProperty(IgnoreTorque)->ZeroSerialize(true);
-  ZilchBindGetterSetterProperty(IgnoreBuoyancy)->ZeroSerialize(true);
-  ZilchBindGetterSetterProperty(IgnoreCustom)->ZeroSerialize(true);
+  RaverieBindGetterSetterProperty(IgnoreDrag)->RaverieSerialize(true);
+  RaverieBindGetterSetterProperty(IgnoreFlow)->RaverieSerialize(true);
+  RaverieBindGetterSetterProperty(IgnoreForce)->RaverieSerialize(true);
+  RaverieBindGetterSetterProperty(IgnoreGravity)->RaverieSerialize(true);
+  RaverieBindGetterSetterProperty(IgnorePointForce)->RaverieSerialize(true);
+  RaverieBindGetterSetterProperty(IgnorePointGravity)->RaverieSerialize(true);
+  RaverieBindGetterSetterProperty(IgnoreThrust)->RaverieSerialize(true);
+  RaverieBindGetterSetterProperty(IgnoreVortex)->RaverieSerialize(true);
+  RaverieBindGetterSetterProperty(IgnoreWind)->RaverieSerialize(true);
+  RaverieBindGetterSetterProperty(IgnoreTorque)->RaverieSerialize(true);
+  RaverieBindGetterSetterProperty(IgnoreBuoyancy)->RaverieSerialize(true);
+  RaverieBindGetterSetterProperty(IgnoreCustom)->RaverieSerialize(true);
 
-  ZilchBindMethod(GetIgnoreState);
-  ZilchBindMethod(SetIgnoreState);
+  RaverieBindMethod(GetIgnoreState);
+  RaverieBindMethod(SetIgnoreState);
 }
 
 void IgnoreSpaceEffects::Serialize(Serializer& stream)
@@ -184,4 +184,4 @@ void IgnoreSpaceEffects::SetIgnoreState(PhysicsEffectType::Enum effectType, bool
   mFlags.SetState(effectType, ignore);
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Globally unique identifier
@@ -96,4 +96,4 @@ struct Guid
   u64 mValue;
 };
 
-} // namespace Zero
+} // namespace Raverie

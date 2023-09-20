@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 DataNode* FindMatchingChildNode(DataNode* parent, DataNode* nodeToMatch, uint childIndex);
@@ -508,8 +508,8 @@ bool IsVectorType(StringParam typeName)
 {
   BoundType* propertyType = MetaDatabase::FindType(typeName);
 
-  return (propertyType == ZilchTypeId(Vec2) || propertyType == ZilchTypeId(Vec3) || propertyType == ZilchTypeId(Vec4) ||
-          propertyType == ZilchTypeId(Quat));
+  return (propertyType == RaverieTypeId(Vec2) || propertyType == RaverieTypeId(Vec3) || propertyType == RaverieTypeId(Vec4) ||
+          propertyType == RaverieTypeId(Quat));
 }
 
 void DataNode::SaveToStream(Serializer& stream)
@@ -809,7 +809,7 @@ bool PatchDataTree(DataNode*& node, DataTreeLoader* loader, DataTreeContext& c, 
 }
 
 // Version 0 is legacy for before we added file versions. After version 0, the
-// file version is the same as the zero engine version
+// file version is the same as the engine version
 uint GetFileVersion(StringRange fileData)
 {
   // Skip whitespace
@@ -916,4 +916,4 @@ bool ReadDataSet(
   return true;
 }
 
-} // namespace Zero
+} // namespace Raverie

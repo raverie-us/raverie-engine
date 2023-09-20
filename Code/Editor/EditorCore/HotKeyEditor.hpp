@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -40,7 +40,7 @@ struct CommandEntry
 
   unsigned mIndex;
 
-  Command* mZeroCommand;
+  Command* mCommand;
 
   String mName;
   String mDescription;
@@ -61,7 +61,7 @@ typedef Array<CommandEntry> CommandSet;
 class HotKeyCommands : public ExplicitSingleton<HotKeyCommands, DataSource>
 {
 public:
-  ZilchDeclareType(HotKeyCommands, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(HotKeyCommands, TypeCopyMode::ReferenceType);
 
   HotKeyCommands();
 
@@ -95,7 +95,7 @@ public:
 class HotKeyEditor : public Composite
 {
 public:
-  ZilchDeclareType(HotKeyEditor, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(HotKeyEditor, TypeCopyMode::ReferenceType);
 
   typedef void (HotKeyEditor::*MouseEventHandler)(MouseEvent*);
 
@@ -183,7 +183,7 @@ public:
 class HotKeyBinding : public Object
 {
 public:
-  ZilchDeclareType(HotKeyBinding, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(HotKeyBinding, TypeCopyMode::ReferenceType);
 
   unsigned mModifier1;
   unsigned mModifier2;
@@ -202,4 +202,4 @@ public:
 
 void RegisterHotKeyEditors();
 
-} // namespace Zero
+} // namespace Raverie

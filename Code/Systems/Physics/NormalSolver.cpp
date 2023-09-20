@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Physics
@@ -199,4 +199,4 @@ void NormalSolver::BatchEvents()
 
 } // namespace Physics
 
-} // namespace Zero
+} // namespace Raverie

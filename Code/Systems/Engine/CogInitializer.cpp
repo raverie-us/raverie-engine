@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -9,22 +9,22 @@ namespace Events
 DefineEvent(AllObjectsInitialized);
 }
 
-ZilchDefineType(CogInitializerEvent, builder, type)
+RaverieDefineType(CogInitializerEvent, builder, type)
 {
-  ZeroBindDocumented();
-  ZilchBindFieldProperty(mCogInitializer);
+  RaverieBindDocumented();
+  RaverieBindFieldProperty(mCogInitializer);
 }
 
-ZilchDefineType(CogInitializer, builder, type)
+RaverieDefineType(CogInitializer, builder, type)
 {
-  ZilchBindGetterProperty(Space);
-  ZilchBindGetterProperty(Parent);
-  ZilchBindGetterProperty(GameSession);
-  ZilchBindMethod(DispatchEvent);
-  ZeroBindEvent(Events::AllObjectsInitialized, CogInitializerEvent);
+  RaverieBindGetterProperty(Space);
+  RaverieBindGetterProperty(Parent);
+  RaverieBindGetterProperty(GameSession);
+  RaverieBindMethod(DispatchEvent);
+  RaverieBindEvent(Events::AllObjectsInitialized, CogInitializerEvent);
 }
 
-CogInitializer::CogInitializer(Zero::Space* space, Zero::GameSession* gameSession)
+CogInitializer::CogInitializer(Raverie::Space* space, Raverie::GameSession* gameSession)
 {
   mSpace = space;
   mGameSession = gameSession;
@@ -114,4 +114,4 @@ void CogInitializer::SendAllObjectsInitialized()
   this->DispatchEvent(Events::AllObjectsInitialized, &toSend);
 }
 
-} // namespace Zero
+} // namespace Raverie

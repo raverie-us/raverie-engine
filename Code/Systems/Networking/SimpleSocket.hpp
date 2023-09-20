@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class TcpSocket;
@@ -9,7 +9,7 @@ class TcpSocket;
 class SimpleSocket : public Component
 {
 public:
-  ZilchDeclareType(SimpleSocket, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SimpleSocket, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   SimpleSocket();
@@ -22,4 +22,4 @@ private:
   TcpSocket mSocket;
 };
 
-} // namespace Zero
+} // namespace Raverie

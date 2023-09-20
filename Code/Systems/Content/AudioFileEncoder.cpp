@@ -5,7 +5,7 @@
 #include "opus.h"
 #include "../Sound/Definitions.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 struct WavRiffHeader
@@ -501,4 +501,4 @@ void PacketEncoder::EncodePacket(const float* dataBuffer, const unsigned samples
   encodedData.Resize(encodedDataSize);
 }
 
-} // namespace Zero
+} // namespace Raverie

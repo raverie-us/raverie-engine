@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class TweakableProperty
@@ -38,7 +38,7 @@ public:
   virtual ~TweakableNode();
 
   /// Object Interface
-  BoundType* ZilchGetDerivedType() const override;
+  BoundType* RaverieGetDerivedType() const override;
   void Serialize(Serializer& stream) override;
 
   /// All child nodes.
@@ -57,7 +57,7 @@ public:
 class Tweakables : public TweakableNode
 {
 public:
-  ZilchDeclareType(Tweakables, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Tweakables, TypeCopyMode::ReferenceType);
   /// Constructor.
   Tweakables();
 
@@ -117,4 +117,4 @@ extern Tweakables* gTweakables;
 
 #include "Tweakables.inl"
 
-} // namespace Zero
+} // namespace Raverie

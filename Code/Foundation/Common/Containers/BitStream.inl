@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Forward Declarations
@@ -188,7 +188,7 @@ template <typename T>
 inline R_ENABLE_IF(!is_scalar<T>::value, Bits) BitStream::Measure(const T& value)
 {
   // Invoke user-defined function
-  return Zero::Measure(const_cast<T&>(value));
+  return Raverie::Measure(const_cast<T&>(value));
 }
 
 template <typename R>
@@ -284,7 +284,7 @@ inline R_ENABLE_IF(!is_scalar<R>::value,
                    Bits) BitStream::MeasureQuantized(const R& minValue_, const R& maxValue_, const R& quantum_)
 {
   // Invoke user-defined function
-  return Zero::MeasureQuantized(minValue_, maxValue_, quantum_);
+  return Raverie::MeasureQuantized(minValue_, maxValue_, quantum_);
 }
 
 //
@@ -359,7 +359,7 @@ template <typename T>
 inline R_ENABLE_IF(!is_scalar<T>::value, Bits) BitStream::Serialize(SerializeDirection::Enum direction, T& value)
 {
   // Invoke user-defined function
-  return Zero::Serialize(direction, *this, value);
+  return Raverie::Serialize(direction, *this, value);
 }
 
 template <typename T, typename R>
@@ -390,7 +390,7 @@ BitStream::SerializeQuantized(
     SerializeDirection::Enum direction, T& value_, const R& minValue_, const R& maxValue_, const R& quantum_)
 {
   // Invoke user-defined function
-  return Zero::SerializeQuantized(direction, *this, value_, minValue_, maxValue_, quantum_);
+  return Raverie::SerializeQuantized(direction, *this, value_, minValue_, maxValue_, quantum_);
 }
 
 //
@@ -523,7 +523,7 @@ template <typename T>
 inline R_ENABLE_IF(!is_scalar<T>::value, Bits) BitStream::Write(const T& value)
 {
   // Invoke user-defined function
-  return Zero::Serialize(SerializeDirection::Write, *this, const_cast<T&>(value));
+  return Raverie::Serialize(SerializeDirection::Write, *this, const_cast<T&>(value));
 }
 
 template <typename T, typename R>
@@ -669,7 +669,7 @@ inline R_ENABLE_IF(!is_scalar<T>::value, Bits) BitStream::WriteQuantized(const T
                                                                          const R& quantum_)
 {
   // Invoke user-defined function
-  return Zero::SerializeQuantized(
+  return Raverie::SerializeQuantized(
       SerializeDirection::Write, *this, const_cast<T&>(value_), minValue_, maxValue_, quantum_);
 }
 
@@ -851,7 +851,7 @@ template <typename T>
 inline R_ENABLE_IF(!is_scalar<T>::value, Bits) BitStream::Read(T& value) const
 {
   // Invoke user-defined function
-  return Zero::Serialize(SerializeDirection::Read, *const_cast<BitStream*>(this), value);
+  return Raverie::Serialize(SerializeDirection::Read, *const_cast<BitStream*>(this), value);
 }
 
 template <typename T, typename R>
@@ -1003,7 +1003,7 @@ R_ENABLE_IF(!is_scalar<T>::value, Bits)
 BitStream::ReadQuantized(T& value_, const R& minValue_, const R& maxValue_, const R& quantum_) const
 {
   // Invoke user-defined function
-  return Zero::SerializeQuantized(
+  return Raverie::SerializeQuantized(
       SerializeDirection::Read, *const_cast<BitStream*>(this), value_, minValue_, maxValue_, quantum_);
 }
 
@@ -1025,4 +1025,4 @@ inline void BitStream::ClearBitsRead() const
   mBitsRead = 0;
 }
 
-} // namespace Zero
+} // namespace Raverie

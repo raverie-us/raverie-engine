@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Physics
@@ -102,4 +102,4 @@ ImpulseLimitAtom::ImpulseLimitAtom(real maxImpulse, real minImpulse)
 
 } // namespace Physics
 
-} // namespace Zero
+} // namespace Raverie

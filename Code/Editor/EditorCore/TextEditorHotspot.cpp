@@ -3,7 +3,7 @@
 #include "TextEditorHotspot.hpp"
 #include "TextEditor.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 TextEditorHotspot::TextEditorHotspot(StringRange regex) : mSearchRegex(regex, RegexFlavor::EcmaScript, true)
@@ -87,4 +87,4 @@ void TextEditorHotspot::ClickHotspotsAt(TextEditor* textEditor, int position)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

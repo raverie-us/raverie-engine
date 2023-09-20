@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Axis aligned bounding box structure. An Aabb is used to get a quick
@@ -128,4 +128,4 @@ struct Aabb
   Vec3 mMin, mMax;
 };
 
-} // namespace Zero
+} // namespace Raverie

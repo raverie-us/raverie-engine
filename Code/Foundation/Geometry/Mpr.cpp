@@ -638,16 +638,16 @@ bool Mpr::PortalFaceCheck(uint pointA, uint pointB, uint offPoint, bool& originR
 void Mpr::DrawDebug(uint debugFlag) const
 {
   //   //whether or not to draw everything on top
-  //  bool onTop = (debugFlag & Zero::Physics::DebugFlags::DrawOnTop) == 1;
+  //  bool onTop = (debugFlag & Raverie::Physics::DebugFlags::DrawOnTop) == 1;
   //
   //   //draw the contact points if the flag is set.
-  //  if((debugFlag & Zero::Physics::DebugFlags::DrawMpr) == 0)
+  //  if((debugFlag & Raverie::Physics::DebugFlags::DrawMpr) == 0)
   //   {
   //     return;
   //   }
   //
   // #define DrawSphere(p, r, c, d)                             \
-//   Zero::gDebugDraw->Add(Zero::Debug::Sphere(p, r).Color(c) \
+//   Raverie::gDebugDraw->Add(Raverie::Debug::Sphere(p, r).Color(c) \
 //                                               .OnTop(true) \
 //                                               .Duration(d))
   //
@@ -673,7 +673,7 @@ void Mpr::DrawDebug(uint debugFlag) const
   //
   //
   // #define DrawLine(a, b, color)\
-//   Zero::gDebugDraw->Add(Zero::Debug::Line((a),
+//   Raverie::gDebugDraw->Add(Raverie::Debug::Line((a),
   //   (b)).Color((color)).OnTop(true));
   //
   //   DrawLine(mCsoCenter, mCsoSupport[0], Color::White);

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class KeyboardEvent;
@@ -24,7 +24,7 @@ void SetUpKeyNames();
 class Keyboard : public ExplicitSingleton<Keyboard, EventObject>
 {
 public:
-  ZilchDeclareType(Keyboard, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Keyboard, TypeCopyMode::ReferenceType);
 
   Keyboard();
 
@@ -91,7 +91,7 @@ public:
 class KeyboardEvent : public Event
 {
 public:
-  ZilchDeclareType(KeyboardEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(KeyboardEvent, TypeCopyMode::ReferenceType);
 
   KeyboardEvent();
 
@@ -132,7 +132,7 @@ public:
 class KeyboardTextEvent : public Event
 {
 public:
-  ZilchDeclareType(KeyboardTextEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(KeyboardTextEvent, TypeCopyMode::ReferenceType);
 
   KeyboardTextEvent();
 
@@ -144,4 +144,4 @@ public:
   bool mHandled;
 };
 
-} // namespace Zero
+} // namespace Raverie

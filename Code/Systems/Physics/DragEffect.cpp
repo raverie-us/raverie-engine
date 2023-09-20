@@ -1,19 +1,19 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(DragEffect, builder, type)
+RaverieDefineType(DragEffect, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetterProperty(LinearDamping)->ZeroSerialize(real(0.2));
-  ZilchBindGetterSetterProperty(AngularDamping)->ZeroSerialize(real(0.1));
-  ZilchBindGetterSetterProperty(LinearDrag)->ZeroSerialize(real(0));
-  ZilchBindGetterSetterProperty(AngularDrag)->ZeroSerialize(real(0));
+  RaverieBindGetterSetterProperty(LinearDamping)->RaverieSerialize(real(0.2));
+  RaverieBindGetterSetterProperty(AngularDamping)->RaverieSerialize(real(0.1));
+  RaverieBindGetterSetterProperty(LinearDrag)->RaverieSerialize(real(0));
+  RaverieBindGetterSetterProperty(AngularDrag)->RaverieSerialize(real(0));
 }
 
 DragEffect::DragEffect()
@@ -109,4 +109,4 @@ void DragEffect::SetAngularDrag(real angularDrag)
   CheckWakeUp();
 }
 
-} // namespace Zero
+} // namespace Raverie

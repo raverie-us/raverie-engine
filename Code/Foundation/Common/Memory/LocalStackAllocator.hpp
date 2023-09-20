@@ -3,7 +3,7 @@
 
 #include "Graph.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 /// Allocator to be used with stack memory (memory from alloca). The problem
@@ -42,4 +42,4 @@ public:
   bool mHasAllocated;
 };
 
-} // namespace Zero
+} // namespace Raverie

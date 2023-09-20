@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 ThreadableLoop::ThreadableLoop(StringParam threadName) : mResult(0), mCompleted(false)
@@ -55,4 +55,4 @@ OsInt ThreadableLoop::ThreadFunction(void* userData)
   return self->mResult;
 }
 
-} // namespace Zero
+} // namespace Raverie

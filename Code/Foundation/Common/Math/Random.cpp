@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-using Zero::String;
+using Raverie::String;
 
 namespace Math
 {
@@ -13,7 +13,7 @@ Random::Random(void)
   // we need something with higher precision than seconds (such as time(0)),
   // so use clock which is the number of clock ticks since the program was
   // executed.
-  mSeed = (uint)Zero::Time::GenerateSeed();
+  mSeed = (uint)Raverie::Time::GenerateSeed();
   mSeed ^= mGlobalSeed;
 
   // Call next once just to jumble it up a bit

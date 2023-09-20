@@ -2,7 +2,7 @@
 #pragma once
 #include "Foundation/Platform/PlatformCommunication.hpp"
 
-namespace Zero
+namespace Raverie
 {
 // These functions must be defined by the platform (as well as CreateRenderer)
 // These could be virtual functions on the OpenglRenderer, however there should
@@ -189,4 +189,4 @@ public:
   HashSet<u32> mUnusedSamplers;
 };
 
-} // namespace Zero
+} // namespace Raverie

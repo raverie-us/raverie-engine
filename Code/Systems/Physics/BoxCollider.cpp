@@ -1,23 +1,23 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 const Vec3 BoxCollider::mMinAllowedSize = Vec3(0.0001f);
 const Vec3 BoxCollider::mMaxAllowedSize = Vec3(1000000.0f);
 
-ZilchDefineType(BoxCollider, builder, type)
+RaverieDefineType(BoxCollider, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindInterface(Collider);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindInterface(Collider);
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetter(HalfSize)->ZeroSerialize(Vec3(0.5f));
+  RaverieBindGetterSetter(HalfSize)->RaverieSerialize(Vec3(0.5f));
   // @MetaSerialization: Property needs to cause rescans
-  ZilchBindGetterSetterProperty(Size);
-  ZilchBindGetter(WorldSize);
+  RaverieBindGetterSetterProperty(Size);
+  RaverieBindGetter(WorldSize);
 }
 
 BoxCollider::BoxCollider()
@@ -110,4 +110,4 @@ Vec3 BoxCollider::GetWorldSize() const
   return real(2) * mWorldHalfSize;
 }
 
-} // namespace Zero
+} // namespace Raverie

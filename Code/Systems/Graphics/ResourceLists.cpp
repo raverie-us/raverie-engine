@@ -2,7 +2,7 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -11,7 +11,7 @@ DefineEvent(ResourceListItemAdded);
 DefineEvent(ResourceListItemRemoved);
 } // namespace Events
 
-ZilchDefineType(ResourceListEvent, builder, type)
+RaverieDefineType(ResourceListEvent, builder, type)
 {
   type->AddAttribute(ObjectAttributes::cHidden);
 }
@@ -80,13 +80,13 @@ void GraphicsResourceList::RemoveResource(StringParam resourceIdName)
   }
 }
 
-ZilchDefineType(RenderGroupList, builder, type)
+RaverieDefineType(RenderGroupList, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindMethod(Add);
-  ZilchBindMethod(Remove);
-  ZilchBindMethod(All);
+  RaverieBindMethod(Add);
+  RaverieBindMethod(Remove);
+  RaverieBindMethod(All);
 }
 
 RenderGroupList::RenderGroupList(Resource* owner) : GraphicsResourceList(owner)
@@ -141,7 +141,7 @@ Array<HandleOf<RenderGroup>> RenderGroupList::All()
   return resources;
 }
 
-ZilchDefineType(ChildRenderGroupList, builder, type)
+RaverieDefineType(ChildRenderGroupList, builder, type)
 {
 }
 
@@ -180,13 +180,13 @@ void ChildRenderGroupList::CheckForAddition(Status& status, Resource* resource)
   }
 }
 
-ZilchDefineType(MaterialList, builder, type)
+RaverieDefineType(MaterialList, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindMethod(Add);
-  ZilchBindMethod(Remove);
-  ZilchBindMethod(All);
+  RaverieBindMethod(Add);
+  RaverieBindMethod(Remove);
+  RaverieBindMethod(All);
 }
 
 MaterialList::MaterialList(Resource* owner) : GraphicsResourceList(owner)
@@ -351,4 +351,4 @@ void ResolveRenderGroupHierarchies()
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

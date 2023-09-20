@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 const cstr cLocation = "EditorUi/Controls/ScrollBar";
@@ -187,7 +187,7 @@ void ScrollBar::OnRightMouseUp(MouseEvent* event)
   event->Handled = true;
 }
 
-ZilchDefineType(BaseScrollArea, builder, type)
+RaverieDefineType(BaseScrollArea, builder, type)
 {
 }
 
@@ -556,7 +556,7 @@ void BaseScrollArea::SetScrolledOffsetInternal(Vec2Param clientOffset,
   UpdateArea(updateType);
 }
 
-ZilchDefineType(ScrollArea, builder, type)
+RaverieDefineType(ScrollArea, builder, type)
 {
 }
 
@@ -649,4 +649,4 @@ float ScrollArea::GetScrollBarSize()
   return GetScrollBarWidth();
 }
 
-} // namespace Zero
+} // namespace Raverie

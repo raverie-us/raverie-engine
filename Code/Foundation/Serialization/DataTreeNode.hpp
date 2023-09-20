@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Memory
@@ -217,4 +217,4 @@ bool ReadDataSet(Status& status,
                  uint* fileVersion,
                  DataNode* fileRoot);
 
-} // namespace Zero
+} // namespace Raverie

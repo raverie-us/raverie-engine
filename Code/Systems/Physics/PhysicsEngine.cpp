@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 System* CreatePhysicsSystem()
@@ -9,7 +9,7 @@ System* CreatePhysicsSystem()
   return new PhysicsEngine();
 }
 
-ZilchDefineType(PhysicsEngine, builder, type)
+RaverieDefineType(PhysicsEngine, builder, type)
 {
 }
 
@@ -80,4 +80,4 @@ void PhysicsEngine::RemoveSpace(PhysicsSpace* space)
   mSpaces.Erase(space);
 }
 
-} // namespace Zero
+} // namespace Raverie

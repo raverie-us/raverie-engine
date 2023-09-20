@@ -2,7 +2,7 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 using namespace AudioConstants;
@@ -230,4 +230,4 @@ PitchChangeHandler::Data& PitchChangeHandler::Data::operator=(const Data& other)
   return *this;
 }
 
-} // namespace Zero
+} // namespace Raverie

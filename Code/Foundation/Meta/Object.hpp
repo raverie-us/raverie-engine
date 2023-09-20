@@ -1,17 +1,17 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 class EventReceiver;
 class EventDispatcher;
 class Actions;
 
 /// Core Object class every engine and game object inherits from this class.
-class Object : public IZilchObject
+class Object : public IRaverieObject
 {
 public:
-  ZilchDeclareType(Object, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Object, TypeCopyMode::ReferenceType);
 
   OverloadedNew();
 
@@ -56,4 +56,4 @@ public:
 
 typedef void* ObjPtr;
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Time in milliseconds
@@ -76,7 +76,7 @@ public:
   double TicksToSeconds(TickType ticks) const;
 
 private:
-  ZeroDeclarePrivateDataBytes(50);
+  RaverieDeclarePrivateDataBytes(50);
 };
 
-} // namespace Zero
+} // namespace Raverie

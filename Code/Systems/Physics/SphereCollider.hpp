@@ -1,14 +1,14 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Defines the collision volume for a sphere defined by a radius.
 class SphereCollider : public Collider
 {
 public:
-  ZilchDeclareType(SphereCollider, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SphereCollider, TypeCopyMode::ReferenceType);
 
   SphereCollider();
 
@@ -41,4 +41,4 @@ private:
   real mWorldRadius;
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 // Instance Attenuation
 
@@ -29,7 +29,7 @@ struct InstanceAttenuation
 class SoundEmitterDisplay : public MetaDisplay
 {
 public:
-  ZilchDeclareType(SoundEmitterDisplay, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SoundEmitterDisplay, TypeCopyMode::ReferenceType);
 
   String GetName(HandleParam object) override;
   String GetDebugText(HandleParam object) override;
@@ -41,7 +41,7 @@ public:
 class SoundEmitter : public Component
 {
 public:
-  ZilchDeclareType(SoundEmitter, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SoundEmitter, TypeCopyMode::ReferenceType);
 
   SoundEmitter();
   ~SoundEmitter();
@@ -181,4 +181,4 @@ private:
   SoundAttenuatorNode* IsAttenuatorInList(SoundAttenuator* attenuator);
 };
 
-} // namespace Zero
+} // namespace Raverie

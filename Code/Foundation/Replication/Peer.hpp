@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Typedefs
@@ -515,4 +515,4 @@ private:
 // effectively operate within a peer's open-close period on update.
 //
 
-} // namespace Zero
+} // namespace Raverie

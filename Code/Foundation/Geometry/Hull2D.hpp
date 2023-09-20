@@ -7,8 +7,8 @@ namespace Geometry
 class Hull2D
 {
 
-  typedef Zero::Array<Vec2> Vec2Array;
-  typedef Zero::Array<uint> IndexArray;
+  typedef Raverie::Array<Vec2> Vec2Array;
+  typedef Raverie::Array<uint> IndexArray;
 
 public:
   Hull2D(void);

@@ -1,17 +1,17 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(ConvexMeshCollider, builder, type)
+RaverieDefineType(ConvexMeshCollider, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindInterface(Collider);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindInterface(Collider);
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetterProperty(ConvexMesh);
+  RaverieBindGetterSetterProperty(ConvexMesh);
 }
 
 ConvexMeshCollider::ConvexMeshCollider(void)
@@ -153,4 +153,4 @@ ConvexMeshCollider::RangeType ConvexMeshCollider::GetOverlapRange(Aabb& localAab
   return RangeType(&mesh->GetVertexArray(), &mesh->GetIndexArray(), localAabb);
 }
 
-} // namespace Zero
+} // namespace Raverie

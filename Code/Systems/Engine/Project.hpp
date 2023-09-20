@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -15,7 +15,7 @@ DeclareEvent(NoProjectLoaded);
 class ProjectSettings : public Component
 {
 public:
-  ZilchDeclareType(ProjectSettings, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ProjectSettings, TypeCopyMode::ReferenceType);
 
   /// Constructor / Destructor.
   ProjectSettings();
@@ -103,7 +103,7 @@ private:
 class ContentLibraryReference : public SafeId32Object
 {
 public:
-  ZilchDeclareType(ContentLibraryReference, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ContentLibraryReference, TypeCopyMode::ReferenceType);
 
   void Serialize(Serializer& stream);
   void SetDefaults()
@@ -117,7 +117,7 @@ public:
 class SharedContent : public Component
 {
 public:
-  ZilchDeclareType(SharedContent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SharedContent, TypeCopyMode::ReferenceType);
 
   void Serialize(Serializer& stream) override;
 
@@ -128,7 +128,7 @@ public:
 class ProjectDescription : public Component
 {
 public:
-  ZilchDeclareType(ProjectDescription, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ProjectDescription, TypeCopyMode::ReferenceType);
 
   void Serialize(Serializer& stream) override;
 
@@ -148,7 +148,7 @@ public:
 class FrameRateSettings : public Component
 {
 public:
-  ZilchDeclareType(FrameRateSettings, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(FrameRateSettings, TypeCopyMode::ReferenceType);
 
   void Serialize(Serializer& stream) override;
   void Initialize(CogInitializer& initializer) override;
@@ -164,7 +164,7 @@ public:
 class DebugSettings : public Component
 {
 public:
-  ZilchDeclareType(DebugSettings, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(DebugSettings, TypeCopyMode::ReferenceType);
 
   void Serialize(Serializer& stream) override;
   void Initialize(CogInitializer& initializer) override;
@@ -179,7 +179,7 @@ public:
 class ExportSettings : public Component
 {
 public:
-  ZilchDeclareType(ExportSettings, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ExportSettings, TypeCopyMode::ReferenceType);
 
   void Serialize(Serializer& stream) override;
 
@@ -187,4 +187,4 @@ public:
   HashSet<String> mActiveTargets;
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -14,7 +14,7 @@ struct ExtendableVector
   uint GetSize() const;
 
   uint mSize;
-  Zero::Array<real> mData;
+  Raverie::Array<real> mData;
 };
 
 struct ExtendableMatrix
@@ -26,7 +26,7 @@ struct ExtendableMatrix
 
   uint mSizeX;
   uint mSizeY;
-  Zero::Array<real> mData;
+  Raverie::Array<real> mData;
 };
 
 // A vector who's max size is compile-time but who's

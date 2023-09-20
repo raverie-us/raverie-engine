@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Z
@@ -9,7 +9,7 @@ namespace Z
 Tracker* gTracker = nullptr;
 }
 
-ZilchDefineType(Tracker, builder, type)
+RaverieDefineType(Tracker, builder, type)
 {
 }
 
@@ -174,4 +174,4 @@ void Tracker::DestroyAllObjects()
   mObjectMap.Clear();
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -12,12 +12,12 @@ DefineEvent(AnimationLooped);
 DefineEvent(AnimationPostUpdate);
 } // namespace Events
 
-ZilchDefineType(AnimationGraphEvent, builder, type)
+RaverieDefineType(AnimationGraphEvent, builder, type)
 {
-  ZeroBindDocumented();
-  ZilchBindFieldGetter(mAnimation);
-  ZilchBindFieldGetter(mNode);
-  ZilchBindFieldGetter(mPlayMode);
+  RaverieBindDocumented();
+  RaverieBindFieldGetter(mAnimation);
+  RaverieBindFieldGetter(mNode);
+  RaverieBindFieldGetter(mPlayMode);
 }
 
-} // namespace Zero
+} // namespace Raverie

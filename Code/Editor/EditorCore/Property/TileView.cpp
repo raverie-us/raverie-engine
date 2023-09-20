@@ -1,18 +1,18 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(TileViewWidget, builder, type)
-{
-}
-
-ZilchDefineType(TileView, builder, type)
+RaverieDefineType(TileViewWidget, builder, type)
 {
 }
 
-ZilchDefineType(TileViewEvent, builder, type)
+RaverieDefineType(TileView, builder, type)
+{
+}
+
+RaverieDefineType(TileViewEvent, builder, type)
 {
 }
 
@@ -475,7 +475,7 @@ void TileView::SelectFirstTile()
   }
 }
 
-Zero::TileViewWidget* TileView::FindTileByIndex(DataIndex& index)
+Raverie::TileViewWidget* TileView::FindTileByIndex(DataIndex& index)
 {
   return mTileWidgetMap.FindValue(index.Id, nullptr);
 }
@@ -852,4 +852,4 @@ void TileView::OnDataModified(Event*)
   ReloadData();
 }
 
-} // namespace Zero
+} // namespace Raverie

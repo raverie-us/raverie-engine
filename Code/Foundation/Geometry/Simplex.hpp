@@ -32,7 +32,7 @@ public:
   void AddPoint(const CSOVertex& point);
   void Update(void);
 
-  Zero::Array<CSOVertex> GetPoints(void);
+  Raverie::Array<CSOVertex> GetPoints(void);
 
 private:
   void HandleLineSegment(void);

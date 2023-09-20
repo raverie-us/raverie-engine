@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// PeerLink helper class
@@ -81,4 +81,4 @@ class LinkInbox
   friend class PeerLink;
 };
 
-} // namespace Zero
+} // namespace Raverie

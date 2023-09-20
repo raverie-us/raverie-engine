@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Lock Free Queue
@@ -164,4 +164,4 @@ private:
   s32 WriteLock;
 };
 
-} // namespace Zero
+} // namespace Raverie

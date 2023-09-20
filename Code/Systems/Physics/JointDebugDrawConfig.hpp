@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 DeclareBitField3(JointDebugDrawConfigFlags, ObjectAPerspective, ObjectBPerspective, Active);
@@ -11,7 +11,7 @@ DeclareBitField3(JointDebugDrawConfigFlags, ObjectAPerspective, ObjectBPerspecti
 /// change the size of drawn data.
 struct JointDebugDrawConfig : public Component
 {
-  ZilchDeclareType(JointDebugDrawConfig, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(JointDebugDrawConfig, TypeCopyMode::ReferenceType);
 
   JointDebugDrawConfig();
   virtual ~JointDebugDrawConfig();
@@ -42,4 +42,4 @@ struct JointDebugDrawConfig : public Component
   BitField<JointDebugDrawConfigFlags::Enum> mPerspective;
 };
 
-} // namespace Zero
+} // namespace Raverie

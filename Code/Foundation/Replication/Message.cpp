@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 //                                   Message //
@@ -31,7 +31,7 @@ Message::Message(MessageType type, const BitStream& data) :
 }
 Message::Message(MessageType type, MoveReference<BitStream> data) :
     mType(type),
-    mData(ZeroMove(data)),
+    mData(RaverieMove(data)),
     mChannelId(0),
     mSequenceId(0),
     mTimestamp(cInvalidMessageTimestamp),
@@ -66,7 +66,7 @@ Message::Message(const BitStream& data) :
 }
 Message::Message(MoveReference<BitStream> data) :
     mType(0),
-    mData(ZeroMove(data)),
+    mData(RaverieMove(data)),
     mChannelId(0),
     mSequenceId(0),
     mTimestamp(cInvalidMessageTimestamp),
@@ -102,7 +102,7 @@ Message::Message(const Message& rhs) :
 
 Message::Message(MoveReference<Message> rhs) :
     mType(rhs->mType),
-    mData(ZeroMove(rhs->mData)),
+    mData(RaverieMove(rhs->mData)),
     mChannelId(rhs->mChannelId),
     mSequenceId(rhs->mSequenceId),
     mTimestamp(rhs->mTimestamp),
@@ -128,7 +128,7 @@ Message& Message::operator=(const Message& rhs)
 Message& Message::operator=(MoveReference<Message> rhs)
 {
   mType = rhs->mType;
-  mData = ZeroMove(rhs->mData);
+  mData = RaverieMove(rhs->mData);
   mChannelId = rhs->mChannelId;
   mSequenceId = rhs->mSequenceId;
   mTimestamp = rhs->mTimestamp;
@@ -188,7 +188,7 @@ void Message::SetData(const BitStream& data)
 }
 void Message::SetData(MoveReference<BitStream> data)
 {
-  mData = ZeroMove(data);
+  mData = RaverieMove(data);
 }
 const BitStream& Message::GetData() const
 {
@@ -286,7 +286,7 @@ Bits Serialize<Message>(SerializeDirection::Enum direction, BitStream& bitStream
   // Write operation?
   if (direction == SerializeDirection::Write)
   {
-#if ZeroDebug
+#if RaverieDebug
     // Get predicted write size
     const Bits predictedBitsWritten = message.GetTotalBits();
 #endif
@@ -357,7 +357,7 @@ Bits Serialize<Message>(SerializeDirection::Enum direction, BitStream& bitStream
       Assert(bitsAppended == message.mData.GetBitsWritten());
     }
 
-#if ZeroDebug
+#if RaverieDebug
     // Verify predicted write size was correct
     const Bits bitsWrittenEnd = bitStream.GetBitsWritten();
     Assert((bitsWrittenEnd - bitsWrittenStart) == predictedBitsWritten);
@@ -456,7 +456,7 @@ OutMessage::OutMessage(MoveReference<Message> message,
                        MessagePriority priority,
                        TimeMs lifetime,
                        TimeMs creationTime) :
-    Message(ZeroMove(message)),
+    Message(RaverieMove(message)),
     mReliable(reliable),
     mTransferMode(transferMode),
     mReceiptID(receiptId),
@@ -469,7 +469,7 @@ OutMessage::OutMessage(MoveReference<Message> message,
 }
 
 OutMessage::OutMessage(const OutMessage& rhs, MoveReference<Message> takeThisMessageInstead) :
-    Message(ZeroMove(takeThisMessageInstead)),
+    Message(RaverieMove(takeThisMessageInstead)),
     mReliable(rhs.mReliable),
     mTransferMode(rhs.mTransferMode),
     mReceiptID(rhs.mReceiptID),
@@ -490,7 +490,7 @@ OutMessage::OutMessage(const OutMessage& rhs) :
 }
 
 OutMessage::OutMessage(MoveReference<OutMessage> rhs) :
-    Message(ZeroMove(static_cast<Message&>(*rhs))),
+    Message(RaverieMove(static_cast<Message&>(*rhs))),
     mReliable(rhs->mReliable),
     mTransferMode(rhs->mTransferMode),
     mReceiptID(rhs->mReceiptID),
@@ -502,7 +502,7 @@ OutMessage::OutMessage(MoveReference<OutMessage> rhs) :
 
 OutMessage& OutMessage::operator=(MoveReference<OutMessage> rhs)
 {
-  Message::operator=(ZeroMove(static_cast<Message&>(*rhs)));
+  Message::operator=(RaverieMove(static_cast<Message&>(*rhs)));
   mReliable = rhs->mReliable;
   mTransferMode = rhs->mTransferMode;
   mReceiptID = rhs->mReceiptID;
@@ -598,7 +598,7 @@ OutMessage OutMessage::TakeFragment(Bits dataSize)
   ++mFragmentIndex;
 
   // Return the new fragment
-  return OutMessage(*this, ZeroMove(fragment));
+  return OutMessage(*this, RaverieMove(fragment));
 }
 
 //                              FragmentedMessage //
@@ -609,11 +609,11 @@ FragmentedMessage::FragmentedMessage() : mFragments(), mFinalFragmentIndex(0)
 FragmentedMessage::FragmentedMessage(MoveReference<Message> fragment) : mFragments(), mFinalFragmentIndex(0)
 {
   // Add first fragment
-  AddInternal(ZeroMove(fragment));
+  AddInternal(RaverieMove(fragment));
 }
 
 FragmentedMessage::FragmentedMessage(MoveReference<FragmentedMessage> rhs) :
-    mFragments(ZeroMove(rhs->mFragments)),
+    mFragments(RaverieMove(rhs->mFragments)),
     mFinalFragmentIndex(rhs->mFinalFragmentIndex)
 {
 }
@@ -666,7 +666,7 @@ void FragmentedMessage::Add(MoveReference<Message> fragment)
               : true));
 
   // Add fragment
-  AddInternal(ZeroMove(fragment));
+  AddInternal(RaverieMove(fragment));
 }
 
 bool FragmentedMessage::IsComplete() const
@@ -705,7 +705,7 @@ void FragmentedMessage::AddInternal(MoveReference<Message> fragment)
   // Add fragment at it's sort (fragment index) position
   if (fragment->IsFinalFragment())
     mFinalFragmentIndex = fragment->GetFragmentIndex();
-  mFragments.Insert(ZeroMove(fragment));
+  mFragments.Insert(RaverieMove(fragment));
 }
 
-} // namespace Zero
+} // namespace Raverie

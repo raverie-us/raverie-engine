@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 // Speaker Info
 
@@ -55,4 +55,4 @@ private:
   Array<SpeakerInfo*> mSpeakers;
 };
 
-} // namespace Zero
+} // namespace Raverie

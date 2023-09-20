@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class Serializer;
@@ -35,6 +35,6 @@ typedef AabbNode<void*> AabbNodeDefault;
 template <typename ClientDataType>
 void SerializeNode(Serializer& stream, AabbNode<ClientDataType>& node);
 
-} // namespace Zero
+} // namespace Raverie
 
 #include "Foundation/SpatialPartition/AabbTreeNode.inl"

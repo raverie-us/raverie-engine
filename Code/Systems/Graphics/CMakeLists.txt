@@ -104,19 +104,19 @@ target_sources(Graphics
     ${CMAKE_CURRENT_LIST_DIR}/ViewportInterface.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ViewportInterface.hpp
     ${CMAKE_CURRENT_LIST_DIR}/VisibilityFlag.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/ZeroZilchShaderGlslBackend.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/ZeroZilchShaderGlslBackend.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/ZilchFragment.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/ZilchFragment.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderGenerator.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/ZilchShaderGenerator.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/RaverieShaderGlslBackend.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/RaverieShaderGlslBackend.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/RaverieFragment.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/RaverieFragment.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/RaverieShaderGenerator.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/RaverieShaderGenerator.hpp
 )
 
 raverie_target_includes(Graphics
   PUBLIC
     Common
     Geometry
-    ZilchShaders
+    RaverieShaders
     FreeType
     RendererBase
 )

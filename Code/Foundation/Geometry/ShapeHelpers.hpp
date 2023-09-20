@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 Ray ToRay(const Segment& segment);
@@ -28,4 +28,4 @@ Obb ToObb(const Capsule& capsule);
 Cylinder ToCylinder(const Capsule& capsule);
 Capsule ToCapsule(const Cylinder& cylinder);
 
-} // namespace Zero
+} // namespace Raverie

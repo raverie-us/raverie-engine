@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Events sent by the DebugEngine.
@@ -18,7 +18,7 @@ class DocumentResource;
 class ScriptEvent : public Event
 {
 public:
-  ZilchDeclareType(ScriptEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ScriptEvent, TypeCopyMode::ReferenceType);
 
   ScriptEvent()
   {
@@ -30,4 +30,4 @@ public:
   DocumentResource* Script;
 };
 
-} // namespace Zero
+} // namespace Raverie

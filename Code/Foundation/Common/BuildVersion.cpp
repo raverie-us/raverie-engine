@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 #define Stringify(s) InnerStringify(s)
@@ -135,4 +135,4 @@ String GetBuildVersionName()
   return result;
 }
 
-} // namespace Zero
+} // namespace Raverie

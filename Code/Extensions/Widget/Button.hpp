@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -14,7 +14,7 @@ class Command;
 class ButtonBase : public Composite
 {
 public:
-  ZilchDeclareType(ButtonBase, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ButtonBase, TypeCopyMode::ReferenceType);
 
   ButtonBase(Composite* parent, StringParam styleClass);
 
@@ -68,7 +68,7 @@ DeclareEnum2(TextButtonStyle, Classic, Modern);
 class TextButton : public ButtonBase
 {
 public:
-  ZilchDeclareType(TextButton, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(TextButton, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   TextButton(Composite* parent, StringParam textStyle = cText);
@@ -100,7 +100,7 @@ public:
 class IconButton : public ButtonBase
 {
 public:
-  ZilchDeclareType(IconButton, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(IconButton, TypeCopyMode::ReferenceType);
 
   IconButton(Composite* parent);
 
@@ -133,7 +133,7 @@ protected:
 class ToggleIconButton : public IconButton
 {
 public:
-  ZilchDeclareType(ToggleIconButton, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ToggleIconButton, TypeCopyMode::ReferenceType);
 
   ToggleIconButton(Composite* parent);
 
@@ -165,4 +165,4 @@ namespace IconButtonUi
 DeclareTweakable(Vec4, DefaultColor);
 }
 
-} // namespace Zero
+} // namespace Raverie

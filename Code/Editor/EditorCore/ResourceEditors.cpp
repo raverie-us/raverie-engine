@@ -1,13 +1,13 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 const bool allowArchetypeEditing = true;
 const bool allowMultiLevelEditing = false;
 
-ZilchDefineType(ResourceEditors, builder, type)
+RaverieDefineType(ResourceEditors, builder, type)
 {
 }
 
@@ -49,7 +49,7 @@ void EditArchetype(Editor* editor, Resource* resource)
   }
 
   // Can only edit cog archetypes
-  if (archetype->mStoredType != ZilchTypeId(Cog))
+  if (archetype->mStoredType != RaverieTypeId(Cog))
     return;
 
   Space* space = editor->CreateNewSpace(CreationFlags::Editing);
@@ -215,22 +215,22 @@ void EditSpriteSource(Editor* editor, Resource* resource)
 
 ResourceEditors::ResourceEditors()
 {
-  Editors[ZilchTypeId(Archetype)] = EditArchetype;
-  Editors[ZilchTypeId(Level)] = EditLevel;
-  Editors[ZilchTypeId(DocumentResource)] = EditDocumentResource;
-  Editors[ZilchTypeId(SampleCurve)] = EditSampleCurve;
-  Editors[ZilchTypeId(ColorGradient)] = EditColorGradient;
-  Editors[ZilchTypeId(CollisionTable)] = EditCollisionTable;
-  Editors[ZilchTypeId(ResourceTable)] = EditResourceTable;
-  Editors[ZilchTypeId(MultiConvexMesh)] = EditMultiConvexMesh;
-  Editors[ZilchTypeId(Animation)] = EditAnimation;
-  Editors[ZilchTypeId(SpriteSource)] = EditSpriteSource;
+  Editors[RaverieTypeId(Archetype)] = EditArchetype;
+  Editors[RaverieTypeId(Level)] = EditLevel;
+  Editors[RaverieTypeId(DocumentResource)] = EditDocumentResource;
+  Editors[RaverieTypeId(SampleCurve)] = EditSampleCurve;
+  Editors[RaverieTypeId(ColorGradient)] = EditColorGradient;
+  Editors[RaverieTypeId(CollisionTable)] = EditCollisionTable;
+  Editors[RaverieTypeId(ResourceTable)] = EditResourceTable;
+  Editors[RaverieTypeId(MultiConvexMesh)] = EditMultiConvexMesh;
+  Editors[RaverieTypeId(Animation)] = EditAnimation;
+  Editors[RaverieTypeId(SpriteSource)] = EditSpriteSource;
 }
 
 void ResourceEditors::FindResourceEditor(Resource* resource)
 {
   // Get the type of the resource
-  BoundType* resourceType = ZilchVirtualTypeId(resource);
+  BoundType* resourceType = RaverieVirtualTypeId(resource);
   Editor* editor = Z::gEditor;
 
   // Try to find a resource editor for this resource type
@@ -257,4 +257,4 @@ void ResourceEditors::FindResourceEditor(Resource* resource)
   selection->FinalSelectionChanged();
 }
 
-} // namespace Zero
+} // namespace Raverie

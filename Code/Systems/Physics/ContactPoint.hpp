@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Physics
@@ -15,7 +15,7 @@ struct ManifoldPoint;
 /// objects hit. WARNING: Do not hold onto this after an event is sent out.
 struct ContactPoint
 {
-  ZilchDeclareType(ContactPoint, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ContactPoint, TypeCopyMode::ReferenceType);
 
   ContactPoint();
 
@@ -83,4 +83,4 @@ struct ContactPointRange
   ContactPoint mPoint;
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 typedef Array<HandleOf<SoundInstance>> InstanceListType;
 
@@ -19,7 +19,7 @@ DeclareEvent(TagHasNoInstances);
 class TagObject : public ReferenceCountedObject
 {
 public:
-  ZilchDeclareType(TagObject, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(TagObject, TypeCopyMode::ReferenceType);
 
   TagObject();
   ~TagObject();
@@ -117,7 +117,7 @@ private:
   };
 
   // Map of instance pointers to data objects
-  typedef Zero::HashMap<SoundInstance*, InstanceData*> InstanceDataMapType;
+  typedef Raverie::HashMap<SoundInstance*, InstanceData*> InstanceDataMapType;
   InstanceDataMapType DataPerInstanceThreaded;
 
   Link<TagObject> link;
@@ -127,7 +127,7 @@ private:
 
 class SoundTagDisplay : public MetaDisplay
 {
-  ZilchDeclareType(SoundTagDisplay, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SoundTagDisplay, TypeCopyMode::ReferenceType);
 
   String GetName(HandleParam object) override;
   String GetDebugText(HandleParam object) override;
@@ -139,7 +139,7 @@ class SoundTagDisplay : public MetaDisplay
 class SoundTag : public DataResource
 {
 public:
-  ZilchDeclareType(SoundTag, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SoundTag, TypeCopyMode::ReferenceType);
   SoundTag();
   ~SoundTag();
 
@@ -262,4 +262,4 @@ public:
   SoundTagManager(BoundType* resourceType);
 };
 
-} // namespace Zero
+} // namespace Raverie

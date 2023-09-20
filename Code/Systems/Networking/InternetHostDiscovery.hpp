@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class InternetHostDiscovery : public NetDiscoveryInterface
@@ -77,7 +77,7 @@ public:
   //
 
   /// Handles a NetHostRecordList Message.
-  void ReceiveNetHostRecordList(IpAddress const& theirIpAddress, Zero::Message const& message);
+  void ReceiveNetHostRecordList(IpAddress const& theirIpAddress, Raverie::Message const& message);
   bool TryMasterServerConnection();
 
   //
@@ -94,4 +94,4 @@ public:
                                           ///< list request was requested.
 };
 
-} // namespace Zero
+} // namespace Raverie

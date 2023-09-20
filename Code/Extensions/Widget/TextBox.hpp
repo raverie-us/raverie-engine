@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class Text;
@@ -13,7 +13,7 @@ DeclareEnum2(TextBoxStyle, Classic, Modern);
 class TextBox : public Composite
 {
 public:
-  ZilchDeclareType(TextBox, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(TextBox, TypeCopyMode::ReferenceType);
 
   TextBox(Composite* parent, StringParam style = String());
   ~TextBox();
@@ -93,7 +93,7 @@ public:
 class MultiLineText : public Composite
 {
 public:
-  ZilchDeclareType(MultiLineText, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MultiLineText, TypeCopyMode::ReferenceType);
 
   MultiLineText(Composite* parent, StringParam textClass = String());
   MultiLineText(Composite* parent, StringParam font, uint fontSize);
@@ -131,4 +131,4 @@ DeclareTweakable(Vec4, BackgroundColor);
 DeclareTweakable(Vec4, FocusBorderColor);
 } // namespace ModernTextBoxUi
 
-} // namespace Zero
+} // namespace Raverie

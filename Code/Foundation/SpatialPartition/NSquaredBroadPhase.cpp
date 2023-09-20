@@ -1,9 +1,9 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
-ZilchDefineType(NSquaredBroadPhase, builder, type)
+RaverieDefineType(NSquaredBroadPhase, builder, type)
 {
 }
 
@@ -131,4 +131,4 @@ void NSquaredBroadPhase::GetCollisions(BroadPhaseData& data, ClientPairArray& re
     results.PushBack(ClientPair(data.mClientData, r.Front()));
 }
 
-} // namespace Zero
+} // namespace Raverie

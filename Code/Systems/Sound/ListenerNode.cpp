@@ -2,18 +2,18 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 using namespace AudioConstants;
 
 // Listener Node
 
-ZilchDefineType(ListenerNode, builder, type)
+RaverieDefineType(ListenerNode, builder, type)
 {
 }
 
-ListenerNode::ListenerNode(Zero::StringParam name, unsigned ID, ListenerWorldPositionInfo positionInfo) :
+ListenerNode::ListenerNode(Raverie::StringParam name, unsigned ID, ListenerWorldPositionInfo positionInfo) :
     SoundNode(name, ID, false, false),
     mActive(true),
     mAttenuationScale(1.0f),
@@ -169,4 +169,4 @@ void ListenerNode::SetActiveThreaded(bool active)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

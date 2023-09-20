@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -10,16 +10,16 @@ DefineEvent(ToolCreateGizmoEvent);
 DefineEvent(DuplicateFirstChance);
 } // namespace Events
 
-ZilchDefineType(ToolGizmoEvent, builder, type)
+RaverieDefineType(ToolGizmoEvent, builder, type)
 {
 }
 
-ZilchDefineType(GizmoCreator, builder, type)
+RaverieDefineType(GizmoCreator, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
 
-  ZilchBindGetterSetterProperty(GizmoArchetype);
+  RaverieBindGetterSetterProperty(GizmoArchetype);
 }
 
 GizmoCreator::GizmoCreator()
@@ -89,16 +89,16 @@ Cog* GizmoCreator::GetGizmo(Space* space)
   return mGizmo;
 }
 
-ZilchDefineType(ObjectTransformTool, builder, type)
+RaverieDefineType(ObjectTransformTool, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
 
-  ZeroBindDependency(GizmoCreator);
+  RaverieBindDependency(GizmoCreator);
 
-  ZilchBindGetterSetterProperty(Grab);
-  ZilchBindGetterSetterProperty(Basis);
-  ZilchBindGetterSetterProperty(Pivot);
+  RaverieBindGetterSetterProperty(Grab);
+  RaverieBindGetterSetterProperty(Basis);
+  RaverieBindGetterSetterProperty(Pivot);
 
   type->AddAttribute(ObjectAttributes::cTool);
 }
@@ -388,15 +388,15 @@ Space* ObjectTransformTool::GetSpaceFromSelection(MetaSelection* selection)
   return nullptr;
 }
 
-ZilchDefineType(ObjectTranslateTool, builder, type)
+RaverieDefineType(ObjectTranslateTool, builder, type)
 {
-  ZeroBindComponent();
+  RaverieBindComponent();
   type->AddAttribute(ObjectAttributes::cTool);
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetterProperty(Snapping);
-  ZilchBindGetterSetterProperty(SnapDistance);
-  ZilchBindGetterSetterProperty(SnapMode);
+  RaverieBindGetterSetterProperty(Snapping);
+  RaverieBindGetterSetterProperty(SnapDistance);
+  RaverieBindGetterSetterProperty(SnapMode);
 }
 
 ObjectTranslateTool::ObjectTranslateTool()
@@ -510,18 +510,18 @@ void ObjectTranslateTool::CopyPropertiesToGizmo()
   objectTranslateGizmo->SetPivot(mPivot);
 }
 
-ZilchDefineType(ObjectScaleTool, builder, type)
+RaverieDefineType(ObjectScaleTool, builder, type)
 {
-  ZeroBindComponent();
+  RaverieBindComponent();
   type->AddAttribute(ObjectAttributes::cTool);
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetterProperty(Snapping);
-  ZilchBindGetterSetterProperty(SnapDistance);
-  ZilchBindGetterSetterProperty(SnapMode);
+  RaverieBindGetterSetterProperty(Snapping);
+  RaverieBindGetterSetterProperty(SnapDistance);
+  RaverieBindGetterSetterProperty(SnapMode);
 
-  ZilchBindGetterSetterProperty(AffectTranslation);
-  ZilchBindGetterSetterProperty(AffectScale);
+  RaverieBindGetterSetterProperty(AffectTranslation);
+  RaverieBindGetterSetterProperty(AffectScale);
 }
 
 ObjectScaleTool::ObjectScaleTool()
@@ -641,16 +641,16 @@ void ObjectScaleTool::CopyPropertiesToGizmo()
   objectGizmo->mAffectScale = mAffectScale;
 }
 
-ZilchDefineType(ObjectRotateTool, builder, type)
+RaverieDefineType(ObjectRotateTool, builder, type)
 {
-  ZeroBindComponent();
+  RaverieBindComponent();
   type->AddAttribute(ObjectAttributes::cTool);
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetterProperty(Snapping);
-  ZilchBindGetterSetterProperty(SnapAngle);
-  ZilchBindGetterSetterProperty(AffectTranslation);
-  ZilchBindGetterSetterProperty(AffectRotation);
+  RaverieBindGetterSetterProperty(Snapping);
+  RaverieBindGetterSetterProperty(SnapAngle);
+  RaverieBindGetterSetterProperty(AffectTranslation);
+  RaverieBindGetterSetterProperty(AffectRotation);
 }
 
 ObjectRotateTool::ObjectRotateTool()
@@ -743,4 +743,4 @@ void ObjectRotateTool::CopyPropertiesToGizmo()
   objectRotateGizmo->mAffectRotation = mAffectRotation;
 }
 
-} // end namespace Zero
+} // end namespace Raverie

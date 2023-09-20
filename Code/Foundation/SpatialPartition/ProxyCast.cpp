@@ -1,17 +1,17 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
-ZilchDefineType(BaseCastFilter, builder, type)
+RaverieDefineType(BaseCastFilter, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetterProperty(IgnoreStatic);
-  ZilchBindGetterSetterProperty(IgnoreDynamic);
-  ZilchBindGetterSetterProperty(IgnoreKinematic);
-  ZilchBindGetterSetterProperty(IgnoreGhost);
-  ZilchBindGetterSetterProperty(IgnoreChildren);
+  RaverieBindGetterSetterProperty(IgnoreStatic);
+  RaverieBindGetterSetterProperty(IgnoreDynamic);
+  RaverieBindGetterSetterProperty(IgnoreKinematic);
+  RaverieBindGetterSetterProperty(IgnoreGhost);
+  RaverieBindGetterSetterProperty(IgnoreChildren);
 }
 
 BaseCastFilter::BaseCastFilter()
@@ -342,4 +342,4 @@ bool ProxyCastResults::IsValid(void* mObjectHit)
   return Filter.IsValid(mObjectHit);
 }
 
-} // namespace Zero
+} // namespace Raverie

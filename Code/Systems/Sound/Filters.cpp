@@ -2,7 +2,7 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 using namespace AudioConstants;
@@ -1209,7 +1209,7 @@ Equalizer::Equalizer(float* values)
 
 void Equalizer::ProcessBuffer(const float* input, float* output, const unsigned numChannels, const unsigned bufferSize)
 {
-  Zero::Array<float> resultSamples(numChannels);
+  Raverie::Array<float> resultSamples(numChannels);
 
   for (unsigned i = 0; i < bufferSize; i += numChannels)
   {
@@ -1927,4 +1927,4 @@ float FMOperator::operator()(const float phi)
   return value;
 }
 
-} // namespace Zero
+} // namespace Raverie

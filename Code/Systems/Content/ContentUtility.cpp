@@ -5,7 +5,7 @@
 #include "Platform/FileSystem.hpp"
 #include "Platform/FilePath.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 bool NeedToBuild(StringParam source, StringParam destination)
@@ -62,4 +62,4 @@ bool CheckFileMetaAndSize(BuildOptions& options, StringParam sourceFile, StringP
   return false;
 }
 
-} // namespace Zero
+} // namespace Raverie

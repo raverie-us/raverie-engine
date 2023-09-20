@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 SelectionHistory::SelectionHistory()
@@ -130,4 +130,4 @@ void SelectionHistory::Previous()
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// What kind of position correction should be applied for any constraint that
@@ -26,7 +26,7 @@ DeclareEnum3(PhysicsContactTangentTypes, OrthonormalTangents, VelocityTangents, 
 /// joint.
 struct ConstraintConfigBlock : public SafeId32Object
 {
-  ZilchDeclareType(ConstraintConfigBlock, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ConstraintConfigBlock, TypeCopyMode::ReferenceType);
 
   ConstraintConfigBlock();
 
@@ -79,10 +79,10 @@ struct ConstraintConfigBlock : public SafeId32Object
 /// The block type for a contact constraint
 struct ContactBlock : public ConstraintConfigBlock
 {
-  ZilchDeclareType(ContactBlock, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ContactBlock, TypeCopyMode::ReferenceType);
   ContactBlock()
   {
-    mJointId = Zero::JointEnums::JointCount;
+    mJointId = Raverie::JointEnums::JointCount;
   }
 };
 
@@ -90,10 +90,10 @@ struct ContactBlock : public ConstraintConfigBlock
 #define JointType(jointType)                                                                                           \
   struct jointType##Block : public ConstraintConfigBlock                                                               \
   {                                                                                                                    \
-    ZilchDeclareType(jointType##Block, TypeCopyMode::ReferenceType);                                                   \
+    RaverieDeclareType(jointType##Block, TypeCopyMode::ReferenceType);                                                   \
     jointType##Block()                                                                                                 \
     {                                                                                                                  \
-      mJointId = Zero::JointEnums::jointType##Type;                                                                    \
+      mJointId = Raverie::JointEnums::jointType##Type;                                                                    \
     }                                                                                                                  \
   };
 #include "JointList.hpp"
@@ -105,7 +105,7 @@ struct ContactBlock : public ConstraintConfigBlock
 class PhysicsSolverConfig : public DataResource
 {
 public:
-  ZilchDeclareType(PhysicsSolverConfig, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(PhysicsSolverConfig, TypeCopyMode::ReferenceType);
 
   PhysicsSolverConfig();
   ~PhysicsSolverConfig();
@@ -185,4 +185,4 @@ public:
   PhysicsSolverConfigManager(BoundType* resourceType);
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Editor Tags
@@ -29,12 +29,12 @@ bool IsValidNetPropertyType(Type* propertyType)
   // OR This is a cog path type?
   // (We allow NetObject net properties to serialize these types, but not
   // NetEvents, for now)
-  return BitStreamCanSerializeType(propertyType) || propertyType == ZilchTypeId(Cog) ||
-         propertyType == ZilchTypeId(CogPath);
+  return BitStreamCanSerializeType(propertyType) || propertyType == RaverieTypeId(Cog) ||
+         propertyType == RaverieTypeId(CogPath);
 }
 bool IsValidNetPeerIdPropertyType(Type* propertyType)
 {
-  return propertyType == ZilchTypeId(int);
+  return propertyType == RaverieTypeId(int);
 }
 
 //                                 Network Types //
@@ -55,7 +55,7 @@ Variant GetNetChannelAuthorityProperty(const Variant& propertyData)
   ReplicaChannel* replicaChannel = propertyData.GetOrError<ReplicaChannel*>();
 
   // Success
-  // (We wrap the enum in an Any to take advantage of Zilch meta later during
+  // (We wrap the enum in an Any to take advantage of Raverie meta later during
   // serialization to serialize the enum quantized, using only the bits
   // necessary to represent all enum values)
   return Variant(Any(replicaChannel->GetAuthority()));
@@ -205,7 +205,7 @@ Variant GetComponentCogProperty(const Variant& propertyData)
   // Get associated property instance data
   String propertyName = propertyData.GetOrError<ComponentPropertyInstanceData>().mPropertyName;
   Component* component = propertyData.GetOrError<ComponentPropertyInstanceData>().mComponent;
-  BoundType* componentBoundType = ZilchVirtualTypeId(component);
+  BoundType* componentBoundType = RaverieVirtualTypeId(component);
 
   // Get property instance
   Property* property = componentBoundType->GetProperty(propertyName);
@@ -220,7 +220,7 @@ void SetComponentCogProperty(const Variant& value, Variant& propertyData)
   // Get associated property instance data
   String propertyName = propertyData.GetOrError<ComponentPropertyInstanceData>().mPropertyName;
   Component* component = propertyData.GetOrError<ComponentPropertyInstanceData>().mComponent;
-  BoundType* componentBoundType = ZilchVirtualTypeId(component);
+  BoundType* componentBoundType = RaverieVirtualTypeId(component);
   NetObject* netObject = component->GetOwner()->has(NetObject);
 
   // Get property instance
@@ -241,7 +241,7 @@ Variant GetComponentCogPathProperty(const Variant& propertyData)
   // Get associated property instance data
   String propertyName = propertyData.GetOrError<ComponentPropertyInstanceData>().mPropertyName;
   Component* component = propertyData.GetOrError<ComponentPropertyInstanceData>().mComponent;
-  BoundType* componentBoundType = ZilchVirtualTypeId(component);
+  BoundType* componentBoundType = RaverieVirtualTypeId(component);
 
   // Get property instance
   Property* property = componentBoundType->GetProperty(propertyName);
@@ -269,7 +269,7 @@ void SetComponentCogPathProperty(const Variant& value, Variant& propertyData)
   // Get associated property instance data
   String propertyName = propertyData.GetOrError<ComponentPropertyInstanceData>().mPropertyName;
   Component* component = propertyData.GetOrError<ComponentPropertyInstanceData>().mComponent;
-  BoundType* componentBoundType = ZilchVirtualTypeId(component);
+  BoundType* componentBoundType = RaverieVirtualTypeId(component);
 
   // Get property instance
   Property* property = componentBoundType->GetProperty(propertyName);
@@ -302,7 +302,7 @@ Variant GetComponentAnyProperty(const Variant& propertyData)
   // Get associated property instance data
   String propertyName = propertyData.GetOrError<ComponentPropertyInstanceData>().mPropertyName;
   Component* component = propertyData.GetOrError<ComponentPropertyInstanceData>().mComponent;
-  BoundType* componentBoundType = ZilchVirtualTypeId(component);
+  BoundType* componentBoundType = RaverieVirtualTypeId(component);
 
   // Get property instance
   Property* property = componentBoundType->GetProperty(propertyName);
@@ -331,7 +331,7 @@ void SetComponentAnyProperty(const Variant& value, Variant& propertyData)
   // Get associated property instance data
   String propertyName = propertyData.GetOrError<ComponentPropertyInstanceData>().mPropertyName;
   Component* component = propertyData.GetOrError<ComponentPropertyInstanceData>().mComponent;
-  BoundType* componentBoundType = ZilchVirtualTypeId(component);
+  BoundType* componentBoundType = RaverieVirtualTypeId(component);
 
   // Get property instance
   Property* property = componentBoundType->GetProperty(propertyName);
@@ -478,7 +478,7 @@ BasicNetType::Enum BasicNativeToNetworkTypeEnum(BasicNativeType::Enum value)
 bool HasNetPeerIdProperty(Event* event)
 {
   // Get event type
-  BoundType* eventType = ZilchVirtualTypeId(event);
+  BoundType* eventType = RaverieVirtualTypeId(event);
   if (!eventType)
   {
     Assert(false);
@@ -500,7 +500,7 @@ bool HasNetPeerIdProperty(Event* event)
 void SetNetPeerIdProperties(Event* event, NetPeerId netPeerId)
 {
   // Get event type
-  BoundType* eventType = ZilchVirtualTypeId(event);
+  BoundType* eventType = RaverieVirtualTypeId(event);
   if (!eventType)
   {
     Assert(false);
@@ -687,4 +687,4 @@ bool FamilyTree::IsEmpty() const
   return true;
 }
 
-} // namespace Zero
+} // namespace Raverie

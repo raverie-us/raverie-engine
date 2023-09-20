@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 ScrollingGraph::ScrollingGraph(Vec2Param hashSize)
@@ -350,4 +350,4 @@ bool ScrollingGraph::range::Empty()
   return mCurrentHash == (mHashCount + 1);
 }
 
-} // namespace Zero
+} // namespace Raverie

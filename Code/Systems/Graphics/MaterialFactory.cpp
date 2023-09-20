@@ -2,12 +2,12 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 MaterialFactory* MaterialFactory::sInstance = nullptr;
 
-ZilchDefineType(MaterialFactory, builder, type)
+RaverieDefineType(MaterialFactory, builder, type)
 {
   type->AddAttribute(ObjectAttributes::cHidden);
 }
@@ -17,18 +17,18 @@ MaterialFactory::MaterialFactory()
   sInstance = this;
 
   MaterialFactory::ShaderInputTypeMap& shaderInputTypes = MaterialFactory::sInstance->mShaderInputTypes;
-  shaderInputTypes[ZilchTypeId(bool)] = ShaderInputType::Bool;
-  shaderInputTypes[ZilchTypeId(int)] = ShaderInputType::Int;
-  shaderInputTypes[ZilchTypeId(IntVec2)] = ShaderInputType::IntVec2;
-  shaderInputTypes[ZilchTypeId(IntVec3)] = ShaderInputType::IntVec3;
-  shaderInputTypes[ZilchTypeId(IntVec4)] = ShaderInputType::IntVec4;
-  shaderInputTypes[ZilchTypeId(float)] = ShaderInputType::Float;
-  shaderInputTypes[ZilchTypeId(Vec2)] = ShaderInputType::Vec2;
-  shaderInputTypes[ZilchTypeId(Vec3)] = ShaderInputType::Vec3;
-  shaderInputTypes[ZilchTypeId(Vec4)] = ShaderInputType::Vec4;
-  shaderInputTypes[ZilchTypeId(Mat3)] = ShaderInputType::Mat3;
-  shaderInputTypes[ZilchTypeId(Mat4)] = ShaderInputType::Mat4;
-  shaderInputTypes[ZilchTypeId(Texture)] = ShaderInputType::Texture;
+  shaderInputTypes[RaverieTypeId(bool)] = ShaderInputType::Bool;
+  shaderInputTypes[RaverieTypeId(int)] = ShaderInputType::Int;
+  shaderInputTypes[RaverieTypeId(IntVec2)] = ShaderInputType::IntVec2;
+  shaderInputTypes[RaverieTypeId(IntVec3)] = ShaderInputType::IntVec3;
+  shaderInputTypes[RaverieTypeId(IntVec4)] = ShaderInputType::IntVec4;
+  shaderInputTypes[RaverieTypeId(float)] = ShaderInputType::Float;
+  shaderInputTypes[RaverieTypeId(Vec2)] = ShaderInputType::Vec2;
+  shaderInputTypes[RaverieTypeId(Vec3)] = ShaderInputType::Vec3;
+  shaderInputTypes[RaverieTypeId(Vec4)] = ShaderInputType::Vec4;
+  shaderInputTypes[RaverieTypeId(Mat3)] = ShaderInputType::Mat3;
+  shaderInputTypes[RaverieTypeId(Mat4)] = ShaderInputType::Mat4;
+  shaderInputTypes[RaverieTypeId(Texture)] = ShaderInputType::Texture;
 
   ErrorIf(shaderInputTypes.FindPointer(nullptr) != nullptr, "A MetaType was not found.");
 }
@@ -90,8 +90,8 @@ bool MaterialFactory::CanAddComponent(HandleParam owner, BoundType* typeToAdd, A
   return MetaComposition::CanAddComponent(owner, typeToAdd, info);
 }
 
-void MaterialFactory::UpdateRestrictedComponents(HashMap<LibraryRef, ZilchShaderIRLibraryRef>& libraries,
-                                                 ZilchFragmentTypeMap& fragmentTypes)
+void MaterialFactory::UpdateRestrictedComponents(HashMap<LibraryRef, RaverieShaderIRLibraryRef>& libraries,
+                                                 RaverieFragmentTypeMap& fragmentTypes)
 {
   mRestrictedComponents.Clear();
   mGeometryComponents.Clear();
@@ -100,9 +100,9 @@ void MaterialFactory::UpdateRestrictedComponents(HashMap<LibraryRef, ZilchShader
   {
     forRange (BoundType* boundType, wrapperLibrary->BoundTypes.Values())
     {
-      ZilchFragmentType::Enum fragmentType = fragmentTypes.FindValue(boundType->Name, ZilchFragmentType::Fragment);
+      RaverieFragmentType::Enum fragmentType = fragmentTypes.FindValue(boundType->Name, RaverieFragmentType::Fragment);
 
-      if (fragmentType != ZilchFragmentType::Fragment)
+      if (fragmentType != RaverieFragmentType::Fragment)
         mRestrictedComponents.Insert(boundType);
 
       if (boundType->HasAttribute("Geometry") != nullptr)
@@ -116,4 +116,4 @@ ShaderInputType::Enum MaterialFactory::GetShaderInputType(Type* type)
   return mShaderInputTypes.FindValue(type, ShaderInputType::Invalid);
 }
 
-} // namespace Zero
+} // namespace Raverie

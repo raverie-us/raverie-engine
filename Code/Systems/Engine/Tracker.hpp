@@ -1,14 +1,14 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Creates and manages object CogIds
 class Tracker : public System
 {
 public:
-  ZilchDeclareType(Tracker, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Tracker, TypeCopyMode::ReferenceType);
 
   Tracker();
   ~Tracker();
@@ -69,4 +69,4 @@ namespace Z
 extern Tracker* gTracker;
 }
 
-} // namespace Zero
+} // namespace Raverie

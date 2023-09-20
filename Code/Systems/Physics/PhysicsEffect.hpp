@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Most of these flags are internally used to store what the effect is
@@ -46,7 +46,7 @@ DeclareEnum3(PhysicsEffectEndCondition, ClampToMax, ContinueFalloff, NoEffect);
 class PhysicsEffect : public Component
 {
 public:
-  ZilchDeclareType(PhysicsEffect, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(PhysicsEffect, TypeCopyMode::ReferenceType);
 
   PhysicsEffect();
 
@@ -123,4 +123,4 @@ protected:
 typedef InList<PhysicsEffect> PhysicsEffectList;
 typedef InList<PhysicsEffect, &PhysicsEffect::SpaceLink> SpaceEffectList;
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,26 +1,26 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Defines
 PhysicsDefineArrayType(MultiConvexMeshVertexData);
 PhysicsDefineArrayType(MultiConvexMeshIndexData);
 
-ZilchDefineType(MultiConvexMeshSubMeshData, builder, type)
+RaverieDefineType(MultiConvexMeshSubMeshData, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
   // Explicitly bind the derived type versions of these functions
   // (auto-binding can do weird things with the base class overloads)
-  ZilchFullBindGetterSetter(
-      builder, type, &ZilchSelf::All, ZilchInstanceOverload(RangeType), nullptr, ZilchNoOverload, "All");
-  ZilchFullBindMethod(builder, type, &ZilchSelf::Add, ZilchInstanceOverload(SubConvexMesh*), "Add", ZilchNoNames);
-  ZilchFullBindMethod(builder, type, &ZilchSelf::RemoveAt, ZilchInstanceOverload(void, int), "RemoveAt", "arrayIndex");
-  ZilchBindMethod(Get);
-  ZilchBindMethod(Clear);
-  ZilchBindGetterProperty(Count);
+  RaverieFullBindGetterSetter(
+      builder, type, &RaverieSelf::All, RaverieInstanceOverload(RangeType), nullptr, RaverieNoOverload, "All");
+  RaverieFullBindMethod(builder, type, &RaverieSelf::Add, RaverieInstanceOverload(SubConvexMesh*), "Add", RaverieNoNames);
+  RaverieFullBindMethod(builder, type, &RaverieSelf::RemoveAt, RaverieInstanceOverload(void, int), "RemoveAt", "arrayIndex");
+  RaverieBindMethod(Get);
+  RaverieBindMethod(Clear);
+  RaverieBindGetterProperty(Count);
 }
 
 SubConvexMesh* MultiConvexMeshSubMeshData::Add()
@@ -52,16 +52,16 @@ MultiConvexMeshSubMeshData::RangeType MultiConvexMeshSubMeshData::All()
   return RangeType(this);
 }
 
-ZilchDefineType(SubConvexMesh, builder, type)
+RaverieDefineType(SubConvexMesh, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZeroBindTag(Tags::Physics);
-  ZilchBindGetter(Indices);
-  ZilchBindGetter(TriangleIndices);
+  RaverieBindTag(Tags::Physics);
+  RaverieBindGetter(Indices);
+  RaverieBindGetter(TriangleIndices);
 
-  ZilchBindField(mMesh);
-  ZilchBindFieldGetter(mValid);
+  RaverieBindField(mMesh);
+  RaverieBindFieldGetter(mValid);
 }
 
 SubConvexMesh::SubConvexMesh()
@@ -343,21 +343,21 @@ MultiConvexMeshIndexData* SubConvexMesh::GetTriangleIndices()
 
 DefinePhysicsRuntimeClone(MultiConvexMesh);
 
-ZilchDefineType(MultiConvexMesh, builder, type)
+RaverieDefineType(MultiConvexMesh, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZeroBindTag(Tags::Physics);
+  RaverieBindTag(Tags::Physics);
 
-  ZilchBindMethod(CreateRuntime);
-  ZilchBindMethod(RuntimeClone);
+  RaverieBindMethod(CreateRuntime);
+  RaverieBindMethod(RuntimeClone);
 
-  ZilchBindGetter(Modified);
-  ZilchBindGetter(Valid);
-  ZilchBindMethod(Validate);
-  ZilchBindMethod(UpdateAndNotifyIfModified);
-  ZilchBindGetter(Vertices);
-  ZilchBindGetter(SubMeshes);
+  RaverieBindGetter(Modified);
+  RaverieBindGetter(Valid);
+  RaverieBindMethod(Validate);
+  RaverieBindMethod(UpdateAndNotifyIfModified);
+  RaverieBindGetter(Vertices);
+  RaverieBindGetter(SubMeshes);
   // Expose volume/center of mass/inertia tensor later
 }
 
@@ -682,4 +682,4 @@ void MultiConvexMeshManager::UpdateAndNotifyModifiedResources()
   mModifiedMeshes.Clear();
 }
 
-} // namespace Zero
+} // namespace Raverie

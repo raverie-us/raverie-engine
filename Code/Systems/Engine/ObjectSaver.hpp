@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Forward declarations
@@ -61,4 +61,4 @@ private:
   // HashSet<Object*> mChildModified;
 };
 
-} // namespace Zero
+} // namespace Raverie

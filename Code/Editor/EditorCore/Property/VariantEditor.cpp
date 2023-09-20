@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -10,22 +10,22 @@ DefineEvent(TextUpdated);
 } // namespace Events
 
 // Initialization
-ZilchDefineType(TextUpdatedEvent, builder, type)
+RaverieDefineType(TextUpdatedEvent, builder, type)
 {
-  ZilchBindField(mChangeAccepted);
+  RaverieBindField(mChangeAccepted);
 }
 
-Zero::Object* TextUpdatedEvent::GetSource()
+Raverie::Object* TextUpdatedEvent::GetSource()
 {
   return mSource;
 }
 
-ZilchDefineType(FormattedInPlaceText, builder, type)
+RaverieDefineType(FormattedInPlaceText, builder, type)
 {
-  ZilchBindDefaultCopyDestructor();
+  RaverieBindDefaultCopyDestructor();
 }
 
-ZilchDefineType(InPlaceTextEditor, builder, type)
+RaverieDefineType(InPlaceTextEditor, builder, type)
 {
 }
 
@@ -102,7 +102,7 @@ void InPlaceTextEditor::Edit()
 
 void InPlaceTextEditor::SetVariant(AnyParam variant)
 {
-  if (variant.StoredType == ZilchTypeId(FormattedInPlaceText))
+  if (variant.StoredType == RaverieTypeId(FormattedInPlaceText))
   {
     FormattedInPlaceText formatting = variant.Get<FormattedInPlaceText>();
     mText->SetText(formatting.mText);
@@ -251,7 +251,7 @@ ValueEditor* CreateInPlaceTextEditor(Composite* composite, AnyParam data, u32 fl
 class ResourceDisplay : public ValueEditor
 {
 public:
-  typedef ResourceDisplay ZilchSelf;
+  typedef ResourceDisplay RaverieSelf;
 
   String mResourceIdName;
   String mResourceType;
@@ -350,7 +350,7 @@ const String cDefaultIcon = "ItemIcon";
 class IconDisplay : public ValueEditor
 {
 public:
-  typedef IconDisplay ZilchSelf;
+  typedef IconDisplay RaverieSelf;
 
   Element* mIcon;
 
@@ -400,7 +400,7 @@ ValueEditor* CreateIconDisplay(Composite* composite, AnyParam data, u32 flags)
 class BooleanEditor : public ValueEditor
 {
 public:
-  typedef BooleanEditor ZilchSelf;
+  typedef BooleanEditor RaverieSelf;
 
   CheckBox* mCheckBox;
 
@@ -441,7 +441,7 @@ ValueEditor* CreateBooleanEditor(Composite* composite, AnyParam data, u32 flags)
   return new BooleanEditor(composite);
 }
 
-ZilchDefineType(ValueEditorFactory, builder, type)
+RaverieDefineType(ValueEditorFactory, builder, type)
 {
 }
 
@@ -466,4 +466,4 @@ ValueEditor* ValueEditorFactory::GetEditor(StringParam type, Composite* parent, 
   return nullptr;
 }
 
-} // namespace Zero
+} // namespace Raverie

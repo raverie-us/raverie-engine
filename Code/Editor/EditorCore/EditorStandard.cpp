@@ -1,280 +1,280 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Enums
-ZilchDefineEnum(GizmoGrab);
-ZilchDefineEnum(GizmoBasis);
-ZilchDefineEnum(GizmoPivot);
-ZilchDefineEnum(UpdateMode);
-ZilchDefineEnum(IncludeMode);
-ZilchDefineEnum(GizmoDragMode);
-ZilchDefineEnum(GizmoGrabMode);
-ZilchDefineEnum(GizmoSnapMode);
-ZilchDefineEnum(DockArea);
-ZilchDefineEnum(EditorMode);
-ZilchDefineEnum(MultiConvexMeshDrawMode);
-ZilchDefineEnum(MultiConvexMeshSnappingMode);
-ZilchDefineEnum(MultiConvexMeshAutoComputeMode);
-ZilchDefineEnum(MultiConvexMeshAutoComputeMethod);
-ZilchDefineEnum(ControlMode);
-ZilchDefineEnum(CameraDragMode);
-ZilchDefineEnum(Placement);
-ZilchDefineEnum(ArrowHeadType);
-ZilchDefineEnum(JointToolTypes);
-ZilchDefineEnum(TimeDisplay);
-ZilchDefineEnum(HeightTool);
-ZilchDefineEnum(HeightTextureSelect);
-ZilchDefineEnum(CellIndexType);
-ZilchDefineEnum(SpriteOrigin);
-ZilchDefineEnum(TileEditor2DSubToolType);
-ZilchDefineEnum(SpringSubTools);
-ZilchDefineEnum(ImportMode);
-ZilchDefineEnum(PlayGameOptions);
-ZilchDefineEnum(ImportFrames);
+RaverieDefineEnum(GizmoGrab);
+RaverieDefineEnum(GizmoBasis);
+RaverieDefineEnum(GizmoPivot);
+RaverieDefineEnum(UpdateMode);
+RaverieDefineEnum(IncludeMode);
+RaverieDefineEnum(GizmoDragMode);
+RaverieDefineEnum(GizmoGrabMode);
+RaverieDefineEnum(GizmoSnapMode);
+RaverieDefineEnum(DockArea);
+RaverieDefineEnum(EditorMode);
+RaverieDefineEnum(MultiConvexMeshDrawMode);
+RaverieDefineEnum(MultiConvexMeshSnappingMode);
+RaverieDefineEnum(MultiConvexMeshAutoComputeMode);
+RaverieDefineEnum(MultiConvexMeshAutoComputeMethod);
+RaverieDefineEnum(ControlMode);
+RaverieDefineEnum(CameraDragMode);
+RaverieDefineEnum(Placement);
+RaverieDefineEnum(ArrowHeadType);
+RaverieDefineEnum(JointToolTypes);
+RaverieDefineEnum(TimeDisplay);
+RaverieDefineEnum(HeightTool);
+RaverieDefineEnum(HeightTextureSelect);
+RaverieDefineEnum(CellIndexType);
+RaverieDefineEnum(SpriteOrigin);
+RaverieDefineEnum(TileEditor2DSubToolType);
+RaverieDefineEnum(SpringSubTools);
+RaverieDefineEnum(ImportMode);
+RaverieDefineEnum(PlayGameOptions);
+RaverieDefineEnum(ImportFrames);
 
-ZilchDefineType(MetaCompositionWrapper, builder, type)
+RaverieDefineType(MetaCompositionWrapper, builder, type)
 {
 }
 
-ZilchDefineStaticLibrary(EditorLibrary)
+RaverieDefineStaticLibrary(EditorLibrary)
 {
   builder.CreatableInScriptDefault = false;
 
   // External Event Bindings
-  ZeroBindExternalEvent(Events::ToolActivate, Event, Cog);
-  ZeroBindExternalEvent(Events::ToolDeactivate, Event, Cog);
-  ZeroBindExternalEvent(Events::ToolDraw, Event, Cog);
+  RaverieBindExternalEvent(Events::ToolActivate, Event, Cog);
+  RaverieBindExternalEvent(Events::ToolDeactivate, Event, Cog);
+  RaverieBindExternalEvent(Events::ToolDraw, Event, Cog);
 
   // Enums
-  ZilchInitializeEnum(GizmoGrab);
-  ZilchInitializeEnum(GizmoBasis);
-  ZilchInitializeEnum(GizmoPivot);
-  ZilchInitializeEnum(UpdateMode);
-  ZilchInitializeEnum(IncludeMode);
-  ZilchInitializeEnum(GizmoDragMode);
-  ZilchInitializeEnum(GizmoGrabMode);
-  ZilchInitializeEnum(GizmoSnapMode);
-  ZilchInitializeEnum(DockArea);
-  ZilchInitializeEnum(EditorMode);
-  ZilchInitializeEnum(MultiConvexMeshDrawMode);
-  ZilchInitializeEnum(MultiConvexMeshSnappingMode);
-  ZilchInitializeEnum(MultiConvexMeshAutoComputeMode);
-  ZilchInitializeEnum(MultiConvexMeshAutoComputeMethod);
-  ZilchInitializeEnum(ControlMode);
-  ZilchInitializeEnum(CameraDragMode);
-  ZilchInitializeEnum(Placement);
-  ZilchInitializeEnum(ArrowHeadType);
-  ZilchInitializeEnum(JointToolTypes);
-  ZilchInitializeEnum(TimeDisplay);
-  ZilchInitializeEnum(HeightTool);
-  ZilchInitializeEnum(HeightTextureSelect);
-  ZilchInitializeEnum(CellIndexType);
-  ZilchInitializeEnum(SpriteOrigin);
-  ZilchInitializeEnum(TileEditor2DSubToolType);
-  ZilchInitializeEnum(SpringSubTools);
-  ZilchInitializeEnum(ImportMode);
-  ZilchInitializeEnum(PlayGameOptions);
-  ZilchInitializeEnum(ImportFrames);
+  RaverieInitializeEnum(GizmoGrab);
+  RaverieInitializeEnum(GizmoBasis);
+  RaverieInitializeEnum(GizmoPivot);
+  RaverieInitializeEnum(UpdateMode);
+  RaverieInitializeEnum(IncludeMode);
+  RaverieInitializeEnum(GizmoDragMode);
+  RaverieInitializeEnum(GizmoGrabMode);
+  RaverieInitializeEnum(GizmoSnapMode);
+  RaverieInitializeEnum(DockArea);
+  RaverieInitializeEnum(EditorMode);
+  RaverieInitializeEnum(MultiConvexMeshDrawMode);
+  RaverieInitializeEnum(MultiConvexMeshSnappingMode);
+  RaverieInitializeEnum(MultiConvexMeshAutoComputeMode);
+  RaverieInitializeEnum(MultiConvexMeshAutoComputeMethod);
+  RaverieInitializeEnum(ControlMode);
+  RaverieInitializeEnum(CameraDragMode);
+  RaverieInitializeEnum(Placement);
+  RaverieInitializeEnum(ArrowHeadType);
+  RaverieInitializeEnum(JointToolTypes);
+  RaverieInitializeEnum(TimeDisplay);
+  RaverieInitializeEnum(HeightTool);
+  RaverieInitializeEnum(HeightTextureSelect);
+  RaverieInitializeEnum(CellIndexType);
+  RaverieInitializeEnum(SpriteOrigin);
+  RaverieInitializeEnum(TileEditor2DSubToolType);
+  RaverieInitializeEnum(SpringSubTools);
+  RaverieInitializeEnum(ImportMode);
+  RaverieInitializeEnum(PlayGameOptions);
+  RaverieInitializeEnum(ImportFrames);
 
   // Events
-  ZilchInitializeType(BackgroundTaskEvent);
-  ZilchInitializeType(EditorEvent);
-  ZilchInitializeType(MetaDropEvent);
-  ZilchInitializeType(PostAddResourceEvent);
-  ZilchInitializeType(TreeEvent);
-  ZilchInitializeType(TreeViewHeaderAddedEvent);
-  ZilchInitializeType(ValueEvent);
-  ZilchInitializeType(ContextMenuEvent);
-  ZilchInitializeType(TileViewEvent);
-  ZilchInitializeType(CurveEvent);
-  ZilchInitializeType(TextUpdatedEvent);
-  ZilchInitializeType(ConsoleTextEvent);
-  ZilchInitializeType(MessageBoxEvent);
-  ZilchInitializeType(ColorEvent);
-  ZilchInitializeType(TextEditorEvent);
-  ZilchInitializeType(ObjectPollEvent);
-  ZilchInitializeType(GizmoEvent);
-  ZilchInitializeType(GizmoUpdateEvent);
-  ZilchInitializeType(GizmoRayTestEvent);
-  ZilchInitializeType(RingGizmoEvent);
-  ZilchInitializeType(TranslateGizmoUpdateEvent);
-  ZilchInitializeType(ScaleGizmoUpdateEvent);
-  ZilchInitializeType(RotateGizmoUpdateEvent);
-  ZilchInitializeType(ObjectTransformGizmoEvent);
-  ZilchInitializeType(RotationBasisGizmoAabbQueryEvent);
-  ZilchInitializeType(ToolGizmoEvent);
-  ZilchInitializeType(ManipulatorToolEvent);
-  ZilchInitializeType(SelectToolFrustumEvent);
+  RaverieInitializeType(BackgroundTaskEvent);
+  RaverieInitializeType(EditorEvent);
+  RaverieInitializeType(MetaDropEvent);
+  RaverieInitializeType(PostAddResourceEvent);
+  RaverieInitializeType(TreeEvent);
+  RaverieInitializeType(TreeViewHeaderAddedEvent);
+  RaverieInitializeType(ValueEvent);
+  RaverieInitializeType(ContextMenuEvent);
+  RaverieInitializeType(TileViewEvent);
+  RaverieInitializeType(CurveEvent);
+  RaverieInitializeType(TextUpdatedEvent);
+  RaverieInitializeType(ConsoleTextEvent);
+  RaverieInitializeType(MessageBoxEvent);
+  RaverieInitializeType(ColorEvent);
+  RaverieInitializeType(TextEditorEvent);
+  RaverieInitializeType(ObjectPollEvent);
+  RaverieInitializeType(GizmoEvent);
+  RaverieInitializeType(GizmoUpdateEvent);
+  RaverieInitializeType(GizmoRayTestEvent);
+  RaverieInitializeType(RingGizmoEvent);
+  RaverieInitializeType(TranslateGizmoUpdateEvent);
+  RaverieInitializeType(ScaleGizmoUpdateEvent);
+  RaverieInitializeType(RotateGizmoUpdateEvent);
+  RaverieInitializeType(ObjectTransformGizmoEvent);
+  RaverieInitializeType(RotationBasisGizmoAabbQueryEvent);
+  RaverieInitializeType(ToolGizmoEvent);
+  RaverieInitializeType(ManipulatorToolEvent);
+  RaverieInitializeType(SelectToolFrustumEvent);
 
-  ZilchInitializeType(MetaPropertyEditor);
-  ZilchInitializeType(MetaCompositionWrapper);
-  ZilchInitializeType(BackgroundTasks);
-  ZilchInitializeType(GeneralSearchView);
-  ZilchInitializeTypeAs(CurveEditing::Draggable, "CurveDraggable");
-  ZilchInitializeTypeAs(CurveEditing::ControlPoint, "CurveControlPoint");
-  ZilchInitializeTypeAs(CurveEditing::Tangent, "CurveTangent");
-  ZilchInitializeType(Document);
-  ZilchInitializeType(DocumentManager);
+  RaverieInitializeType(MetaPropertyEditor);
+  RaverieInitializeType(MetaCompositionWrapper);
+  RaverieInitializeType(BackgroundTasks);
+  RaverieInitializeType(GeneralSearchView);
+  RaverieInitializeTypeAs(CurveEditing::Draggable, "CurveDraggable");
+  RaverieInitializeTypeAs(CurveEditing::ControlPoint, "CurveControlPoint");
+  RaverieInitializeTypeAs(CurveEditing::Tangent, "CurveTangent");
+  RaverieInitializeType(Document);
+  RaverieInitializeType(DocumentManager);
 
   // Commands
-  ZilchInitializeType(Command);
-  ZilchInitializeType(CogCommand);
-  ZilchInitializeTypeAs(EditorScriptObjects<CogCommand>, "EditorScriptObjectsCogCommand");
-  ZilchInitializeType(CogCommandManager);
+  RaverieInitializeType(Command);
+  RaverieInitializeType(CogCommand);
+  RaverieInitializeTypeAs(EditorScriptObjects<CogCommand>, "EditorScriptObjectsCogCommand");
+  RaverieInitializeType(CogCommandManager);
 
   // Data Editors
-  ZilchInitializeType(PropertyView);
-  ZilchInitializeType(FormattedInPlaceText);
-  ZilchInitializeType(InPlaceTextEditor);
-  ZilchInitializeType(ValueEditorFactory);
-  ZilchInitializeType(PreviewWidget);
-  ZilchInitializeType(PreviewWidgetFactory);
-  ZilchInitializeType(TileViewWidget);
-  ZilchInitializeType(TileView);
-  ZilchInitializeType(ItemList);
-  ZilchInitializeType(WeightedComposite);
-  ZilchInitializeType(ItemGroup);
-  ZilchInitializeType(Item);
-  ZilchInitializeType(ImportButton);
+  RaverieInitializeType(PropertyView);
+  RaverieInitializeType(FormattedInPlaceText);
+  RaverieInitializeType(InPlaceTextEditor);
+  RaverieInitializeType(ValueEditorFactory);
+  RaverieInitializeType(PreviewWidget);
+  RaverieInitializeType(PreviewWidgetFactory);
+  RaverieInitializeType(TileViewWidget);
+  RaverieInitializeType(TileView);
+  RaverieInitializeType(ItemList);
+  RaverieInitializeType(WeightedComposite);
+  RaverieInitializeType(ItemGroup);
+  RaverieInitializeType(Item);
+  RaverieInitializeType(ImportButton);
 
   // Content Importing
-  ZilchInitializeType(ContentPackage);
+  RaverieInitializeType(ContentPackage);
 
   // Editor Core
-  ZilchInitializeType(Editor);
-  ZilchInitializeType(EditorMain);
-  ZilchInitializeType(MainPropertyView);
+  RaverieInitializeType(Editor);
+  RaverieInitializeType(EditorMain);
+  RaverieInitializeType(MainPropertyView);
 
   // Editor Core
-  ZilchInitializeType(ColorScheme);
-  ZilchInitializeType(TextEditor);
+  RaverieInitializeType(ColorScheme);
+  RaverieInitializeType(TextEditor);
 
   // Editor3D
-  ZilchInitializeType(GridDraw);
-  ZilchInitializeType(EditorCameraController);
-  ZilchInitializeType(EditorViewport);
+  RaverieInitializeType(GridDraw);
+  RaverieInitializeType(EditorCameraController);
+  RaverieInitializeType(EditorViewport);
 
   // Gizmos
-  ZilchInitializeType(Gizmo);
-  ZilchInitializeType(GizmoSpace);
-  ZilchInitializeType(GizmoDrag);
-  ZilchInitializeType(SimpleGizmoBase);
-  ZilchInitializeType(SquareGizmo);
-  ZilchInitializeType(ArrowGizmo);
-  ZilchInitializeType(RingGizmo);
-  ZilchInitializeType(TranslateGizmo);
-  ZilchInitializeType(ScaleGizmo);
-  ZilchInitializeType(RotateGizmo);
-  ZilchInitializeType(ObjectTransformGizmo);
-  ZilchInitializeType(ObjectTranslateGizmo);
-  ZilchInitializeType(ObjectScaleGizmo);
-  ZilchInitializeType(ObjectRotateGizmo);
-  // ZilchInitializeType(CogSizerGizmo);
-  // ZilchInitializeType(SizerGizmoEvent);
-  // ZilchInitializeType(SizerGizmo);
-  ZilchInitializeType(RotationBasisGizmoMetaTransform);
-  ZilchInitializeType(RotationBasisGizmoInitializationEvent);
-  ZilchInitializeType(RotationBasisGizmo);
-  ZilchInitializeType(OrientationBasisGizmo);
-  ZilchInitializeType(PhysicsCarWheelBasisGizmo);
-  ZilchInitializeType(RevoluteBasisGizmo);
+  RaverieInitializeType(Gizmo);
+  RaverieInitializeType(GizmoSpace);
+  RaverieInitializeType(GizmoDrag);
+  RaverieInitializeType(SimpleGizmoBase);
+  RaverieInitializeType(SquareGizmo);
+  RaverieInitializeType(ArrowGizmo);
+  RaverieInitializeType(RingGizmo);
+  RaverieInitializeType(TranslateGizmo);
+  RaverieInitializeType(ScaleGizmo);
+  RaverieInitializeType(RotateGizmo);
+  RaverieInitializeType(ObjectTransformGizmo);
+  RaverieInitializeType(ObjectTranslateGizmo);
+  RaverieInitializeType(ObjectScaleGizmo);
+  RaverieInitializeType(ObjectRotateGizmo);
+  // RaverieInitializeType(CogSizerGizmo);
+  // RaverieInitializeType(SizerGizmoEvent);
+  // RaverieInitializeType(SizerGizmo);
+  RaverieInitializeType(RotationBasisGizmoMetaTransform);
+  RaverieInitializeType(RotationBasisGizmoInitializationEvent);
+  RaverieInitializeType(RotationBasisGizmo);
+  RaverieInitializeType(OrientationBasisGizmo);
+  RaverieInitializeType(PhysicsCarWheelBasisGizmo);
+  RaverieInitializeType(RevoluteBasisGizmo);
 
   // Resource Editors
-  ZilchInitializeType(ResourceEditors);
-  ZilchInitializeType(SpritePreview);
-  ZilchInitializeType(SpriteSourceEditor);
-  ZilchInitializeType(MultiConvexMeshPoint);
-  ZilchInitializeType(MultiConvexMeshPropertyViewInfo);
-  ZilchInitializeType(MultiConvexMeshEditor);
+  RaverieInitializeType(ResourceEditors);
+  RaverieInitializeType(SpritePreview);
+  RaverieInitializeType(SpriteSourceEditor);
+  RaverieInitializeType(MultiConvexMeshPoint);
+  RaverieInitializeType(MultiConvexMeshPropertyViewInfo);
+  RaverieInitializeType(MultiConvexMeshEditor);
 
-  ZilchInitializeType(HeightMapDebugDrawer);
-  ZilchInitializeType(HeightMapAabbChecker);
+  RaverieInitializeType(HeightMapDebugDrawer);
+  RaverieInitializeType(HeightMapAabbChecker);
 
-  ZilchInitializeType(SpriteSheetImporter);
-  ZilchInitializeType(HeightMapImporter);
+  RaverieInitializeType(SpriteSheetImporter);
+  RaverieInitializeType(HeightMapImporter);
 
   // Tools
-  ZilchInitializeType(Tool);
-  ZilchInitializeType(SelectTool);
-  ZilchInitializeType(CreationTool);
-  ZilchInitializeType(ObjectConnectingTool);
-  ZilchInitializeType(ParentingTool);
-  ZilchInitializeType(ToolUiEvent);
-  ZilchInitializeType(ToolControl);
-  ZilchInitializeType(ManipulatorTool);
-  ZilchInitializeType(GizmoCreator);
-  ZilchInitializeType(ObjectTransformTool);
-  ZilchInitializeType(ObjectTranslateTool);
-  ZilchInitializeType(ObjectScaleTool);
-  ZilchInitializeType(ObjectRotateTool);
-  ZilchInitializeType(JointTool);
-  ZilchInitializeType(SpringSubTool);
-  ZilchInitializeType(DragSelectSubTool);
-  ZilchInitializeType(SelectorSpringSubTool);
-  ZilchInitializeType(PointMassSelectorSubTool);
-  ZilchInitializeType(AnchoringSubTool);
-  ZilchInitializeType(PointSelectorSubTool);
-  ZilchInitializeType(SpringSelectorSubTool);
-  ZilchInitializeType(SpringCreatorSubTool);
-  ZilchInitializeType(RopeCreatorSubTool);
-  ZilchInitializeType(SpringPointProxy);
-  ZilchInitializeType(SpringPointProxyProperty);
-  ZilchInitializeType(SpringTools);
+  RaverieInitializeType(Tool);
+  RaverieInitializeType(SelectTool);
+  RaverieInitializeType(CreationTool);
+  RaverieInitializeType(ObjectConnectingTool);
+  RaverieInitializeType(ParentingTool);
+  RaverieInitializeType(ToolUiEvent);
+  RaverieInitializeType(ToolControl);
+  RaverieInitializeType(ManipulatorTool);
+  RaverieInitializeType(GizmoCreator);
+  RaverieInitializeType(ObjectTransformTool);
+  RaverieInitializeType(ObjectTranslateTool);
+  RaverieInitializeType(ObjectScaleTool);
+  RaverieInitializeType(ObjectRotateTool);
+  RaverieInitializeType(JointTool);
+  RaverieInitializeType(SpringSubTool);
+  RaverieInitializeType(DragSelectSubTool);
+  RaverieInitializeType(SelectorSpringSubTool);
+  RaverieInitializeType(PointMassSelectorSubTool);
+  RaverieInitializeType(AnchoringSubTool);
+  RaverieInitializeType(PointSelectorSubTool);
+  RaverieInitializeType(SpringSelectorSubTool);
+  RaverieInitializeType(SpringCreatorSubTool);
+  RaverieInitializeType(RopeCreatorSubTool);
+  RaverieInitializeType(SpringPointProxy);
+  RaverieInitializeType(SpringPointProxyProperty);
+  RaverieInitializeType(SpringTools);
 
-  ZilchInitializeType(HeightMapSubTool);
-  ZilchInitializeType(HeightManipulationTool);
-  ZilchInitializeType(RaiseLowerTool);
-  ZilchInitializeType(SmoothSharpenTool);
-  ZilchInitializeType(FlattenTool);
-  ZilchInitializeType(CreateDestroyTool);
-  ZilchInitializeType(WeightPainterTool);
-  ZilchInitializeType(HeightMapTool);
-  ZilchInitializeType(ViewportTextWidget);
+  RaverieInitializeType(HeightMapSubTool);
+  RaverieInitializeType(HeightManipulationTool);
+  RaverieInitializeType(RaiseLowerTool);
+  RaverieInitializeType(SmoothSharpenTool);
+  RaverieInitializeType(FlattenTool);
+  RaverieInitializeType(CreateDestroyTool);
+  RaverieInitializeType(WeightPainterTool);
+  RaverieInitializeType(HeightMapTool);
+  RaverieInitializeType(ViewportTextWidget);
 
-  ZilchInitializeType(SpriteFrame);
+  RaverieInitializeType(SpriteFrame);
 
   // TileMap
-  ZilchInitializeType(TileEditor2DSubTool);
-  ZilchInitializeType(TileEditor2DDrawTool);
-  ZilchInitializeType(TileEditor2DSelectTool);
-  ZilchInitializeType(TileEditor2D);
-  ZilchInitializeType(TilePaletteSource);
-  ZilchInitializeType(TilePaletteView);
-  ZilchInitializeType(TilePaletteSprite);
+  RaverieInitializeType(TileEditor2DSubTool);
+  RaverieInitializeType(TileEditor2DDrawTool);
+  RaverieInitializeType(TileEditor2DSelectTool);
+  RaverieInitializeType(TileEditor2D);
+  RaverieInitializeType(TilePaletteSource);
+  RaverieInitializeType(TilePaletteView);
+  RaverieInitializeType(TilePaletteSprite);
 
   // Editor Ui
-  ZilchInitializeType(ObjectView);
-  ZilchInitializeType(HotKeyEditor);
-  ZilchInitializeType(LibraryView);
-  ZilchInitializeType(FloatingComposite);
-  ZilchInitializeType(PopUp);
-  ZilchInitializeType(AutoCompletePopUp);
-  ZilchInitializeType(CallTipPopUp);
-  ZilchInitializeType(RemovedEntry);
-  ZilchInitializeType(ConsoleUi);
-  ZilchInitializeType(DocumentEditor);
-  ZilchInitializeType(AddResourceWindow);
-  ZilchInitializeType(ResourceTypeSearch);
-  ZilchInitializeType(ResourceTemplateSearch);
-  ZilchInitializeType(ResourceTemplateDisplay);
-  ZilchInitializeType(TreeView);
-  ZilchInitializeType(TreeRow);
-  ZilchInitializeType(PropertyWidget);
-  ZilchInitializeType(PropertyWidgetObject);
-  ZilchInitializeType(AddObjectWidget);
-  ZilchInitializeType(UiLegacyToolTip);
-  ZilchInitializeType(RenderGroupHierarchies);
+  RaverieInitializeType(ObjectView);
+  RaverieInitializeType(HotKeyEditor);
+  RaverieInitializeType(LibraryView);
+  RaverieInitializeType(FloatingComposite);
+  RaverieInitializeType(PopUp);
+  RaverieInitializeType(AutoCompletePopUp);
+  RaverieInitializeType(CallTipPopUp);
+  RaverieInitializeType(RemovedEntry);
+  RaverieInitializeType(ConsoleUi);
+  RaverieInitializeType(DocumentEditor);
+  RaverieInitializeType(AddResourceWindow);
+  RaverieInitializeType(ResourceTypeSearch);
+  RaverieInitializeType(ResourceTemplateSearch);
+  RaverieInitializeType(ResourceTemplateDisplay);
+  RaverieInitializeType(TreeView);
+  RaverieInitializeType(TreeRow);
+  RaverieInitializeType(PropertyWidget);
+  RaverieInitializeType(PropertyWidgetObject);
+  RaverieInitializeType(AddObjectWidget);
+  RaverieInitializeType(UiLegacyToolTip);
+  RaverieInitializeType(RenderGroupHierarchies);
 
-  ZilchInitializeType(DirectProperty);
+  RaverieInitializeType(DirectProperty);
 
   // Animator
-  ZilchInitializeType(AnimationEditorData);
-  ZilchInitializeType(AnimationSettings);
-  ZilchInitializeType(AnimationTrackView);
-  ZilchInitializeType(AnimationEditor);
+  RaverieInitializeType(AnimationEditorData);
+  RaverieInitializeType(AnimationSettings);
+  RaverieInitializeType(AnimationTrackView);
+  RaverieInitializeType(AnimationEditor);
 
   EngineLibraryExtensions::AddNativeExtensions(builder);
 }
@@ -318,4 +318,4 @@ void EditorLibrary::Shutdown()
   GetLibrary()->ClearComponents();
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,18 +1,18 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
-ZilchDefineType(WindEffect, builder, type)
+RaverieDefineType(WindEffect, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
 
-  ZilchBindMemberProperty(mLocalSpaceDirection)->ZeroSerialize(true);
-  ZilchBindGetterSetterProperty(WindSpeed)->ZeroSerialize(real(10));
-  ZilchBindGetterSetterProperty(WindDirection)->ZeroSerialize(Vec3(1, 0, 0));
-  ZilchBindGetterProperty(WorldWindDirection);
+  RaverieBindMemberProperty(mLocalSpaceDirection)->RaverieSerialize(true);
+  RaverieBindGetterSetterProperty(WindSpeed)->RaverieSerialize(real(10));
+  RaverieBindGetterSetterProperty(WindDirection)->RaverieSerialize(Vec3(1, 0, 0));
+  RaverieBindGetterProperty(WorldWindDirection);
 }
 
 WindEffect::WindEffect()
@@ -167,4 +167,4 @@ Vec3 WindEffect::GetWindVelocity()
   return mWorldWindDirection * mWindSpeed;
 }
 
-} // namespace Zero
+} // namespace Raverie

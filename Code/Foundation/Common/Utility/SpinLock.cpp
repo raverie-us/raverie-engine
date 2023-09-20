@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 void SpinLock::Lock()
 {
@@ -13,4 +13,4 @@ void SpinLock::Unlock()
 {
   mLocked = false;
 }
-} // namespace Zero
+} // namespace Raverie

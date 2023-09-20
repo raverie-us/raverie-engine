@@ -1,14 +1,14 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 template <typename DerivedType>
-ZilchDefineType(DualBlend<DerivedType>, builder, type)
+RaverieDefineType(DualBlend<DerivedType>, builder, type)
 {
-  ZilchBindGetterSetterProperty(From);
-  ZilchBindGetterSetterProperty(To);
+  RaverieBindGetterSetterProperty(From);
+  RaverieBindGetterSetterProperty(To);
 }
 
 template <typename DerivedType>
@@ -108,4 +108,4 @@ AnimationNode* DualBlend<DerivedType>::GetTo()
   return mB;
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -213,7 +213,7 @@ public:
 class AcquireNetHostInfo : public Event
 {
 public:
-  ZilchDeclareType(AcquireNetHostInfo, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(AcquireNetHostInfo, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   AcquireNetHostInfo(GameSession* gameSession);
@@ -232,7 +232,7 @@ public:
 class NetHostUpdate : public Event
 {
 public:
-  ZilchDeclareType(NetHostUpdate, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(NetHostUpdate, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetHostUpdate();
@@ -251,7 +251,7 @@ public:
 class NetHostListUpdate : public Event
 {
 public:
-  ZilchDeclareType(NetHostListUpdate, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(NetHostListUpdate, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetHostListUpdate();
@@ -271,7 +271,7 @@ public:
 class NetPeerOpened : public Event
 {
 public:
-  ZilchDeclareType(NetPeerOpened, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(NetPeerOpened, TypeCopyMode::ReferenceType);
 };
 
 //                                 NetPeerClosed //
@@ -280,7 +280,7 @@ public:
 class NetPeerClosed : public Event
 {
 public:
-  ZilchDeclareType(NetPeerClosed, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(NetPeerClosed, TypeCopyMode::ReferenceType);
 };
 
 ////////////////
@@ -293,7 +293,7 @@ public:
 class NetGameStarted : public Event
 {
 public:
-  ZilchDeclareType(NetGameStarted, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(NetGameStarted, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetGameStarted();
@@ -314,7 +314,7 @@ public:
 class NetPeerSentConnectRequest : public Event
 {
 public:
-  ZilchDeclareType(NetPeerSentConnectRequest, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(NetPeerSentConnectRequest, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetPeerSentConnectRequest(GameSession* gameSession);
@@ -335,7 +335,7 @@ public:
 class NetPeerReceivedConnectRequest : public Event
 {
 public:
-  ZilchDeclareType(NetPeerReceivedConnectRequest, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(NetPeerReceivedConnectRequest, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetPeerReceivedConnectRequest(GameSession* gameSession);
@@ -360,7 +360,7 @@ public:
 class NetPeerSentConnectResponse : public Event
 {
 public:
-  ZilchDeclareType(NetPeerSentConnectResponse, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(NetPeerSentConnectResponse, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetPeerSentConnectResponse(GameSession* gameSession);
@@ -386,7 +386,7 @@ public:
 class NetPeerReceivedConnectResponse : public Event
 {
 public:
-  ZilchDeclareType(NetPeerReceivedConnectResponse, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(NetPeerReceivedConnectResponse, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetPeerReceivedConnectResponse(GameSession* gameSession);
@@ -413,7 +413,7 @@ public:
 class NetLinkConnected : public Event
 {
 public:
-  ZilchDeclareType(NetLinkConnected, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(NetLinkConnected, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetLinkConnected();
@@ -431,7 +431,7 @@ public:
 class NetLinkDisconnected : public Event
 {
 public:
-  ZilchDeclareType(NetLinkDisconnected, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(NetLinkDisconnected, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetLinkDisconnected(GameSession* gameSession);
@@ -456,7 +456,7 @@ public:
 class NetLevelStarted : public Event
 {
 public:
-  ZilchDeclareType(NetLevelStarted, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(NetLevelStarted, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetLevelStarted();
@@ -479,7 +479,7 @@ public:
 class NetPeerSentUserAddRequest : public Event
 {
 public:
-  ZilchDeclareType(NetPeerSentUserAddRequest, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(NetPeerSentUserAddRequest, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetPeerSentUserAddRequest(GameSession* gameSession);
@@ -496,7 +496,7 @@ public:
 class NetPeerReceivedUserAddRequest : public Event
 {
 public:
-  ZilchDeclareType(NetPeerReceivedUserAddRequest, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(NetPeerReceivedUserAddRequest, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetPeerReceivedUserAddRequest(GameSession* gameSession);
@@ -520,7 +520,7 @@ public:
 class NetPeerSentUserAddResponse : public Event
 {
 public:
-  ZilchDeclareType(NetPeerSentUserAddResponse, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(NetPeerSentUserAddResponse, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetPeerSentUserAddResponse(GameSession* gameSession);
@@ -542,7 +542,7 @@ public:
 class NetPeerReceivedUserAddResponse : public Event
 {
 public:
-  ZilchDeclareType(NetPeerReceivedUserAddResponse, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(NetPeerReceivedUserAddResponse, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetPeerReceivedUserAddResponse(GameSession* gameSession);
@@ -566,7 +566,7 @@ public:
 class NetUserLostObjectOwnership : public Event
 {
 public:
-  ZilchDeclareType(NetUserLostObjectOwnership, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(NetUserLostObjectOwnership, TypeCopyMode::ReferenceType);
 
   // Data
   Cog* mLostObject;          ///< The object this user just lost network ownership of.
@@ -579,7 +579,7 @@ public:
 class NetUserAcquiredObjectOwnership : public Event
 {
 public:
-  ZilchDeclareType(NetUserAcquiredObjectOwnership, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(NetUserAcquiredObjectOwnership, TypeCopyMode::ReferenceType);
 
   // Data
   Cog* mAcquiredObject;       ///< The object this user just acquired network
@@ -599,7 +599,7 @@ public:
 class RegisterCppNetProperties : public Event
 {
 public:
-  ZilchDeclareType(RegisterCppNetProperties, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(RegisterCppNetProperties, TypeCopyMode::ReferenceType);
 };
 
 //////////////////
@@ -612,7 +612,7 @@ public:
 class NetObjectOnline : public Event
 {
 public:
-  ZilchDeclareType(NetObjectOnline, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(NetObjectOnline, TypeCopyMode::ReferenceType);
 
   // Data
   GameSession* mGameSession; ///< Network game session.
@@ -627,7 +627,7 @@ public:
 class NetObjectOffline : public Event
 {
 public:
-  ZilchDeclareType(NetObjectOffline, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(NetObjectOffline, TypeCopyMode::ReferenceType);
 
   // Data
   GameSession* mGameSession; ///< Network game session.
@@ -646,7 +646,7 @@ public:
 class NetUserOwnerChanged : public Event
 {
 public:
-  ZilchDeclareType(NetUserOwnerChanged, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(NetUserOwnerChanged, TypeCopyMode::ReferenceType);
 
   // Data
   Cog* mPreviousNetUserOwner; ///< The object's previous network user owner.
@@ -664,7 +664,7 @@ public:
 class NetChannelPropertyChange : public Event
 {
 public:
-  ZilchDeclareType(NetChannelPropertyChange, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(NetChannelPropertyChange, TypeCopyMode::ReferenceType);
 
   // Data
   float mTimestamp;                         ///< The time this change occurred.
@@ -689,7 +689,7 @@ public:
 class NetEventSent : public Event
 {
 public:
-  ZilchDeclareType(NetEventSent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(NetEventSent, TypeCopyMode::ReferenceType);
 
   // Data
   NetPeerId mTheirNetPeerId; ///< Their net peer ID.
@@ -703,7 +703,7 @@ public:
 class NetEventReceived : public Event
 {
 public:
-  ZilchDeclareType(NetEventReceived, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(NetEventReceived, TypeCopyMode::ReferenceType);
 
   // Data
   NetPeerId mTheirNetPeerId; ///< Their net peer ID.
@@ -720,7 +720,7 @@ public:
 class NetHostRecordEvent : public Event
 {
 public:
-  ZilchDeclareType(NetHostRecordEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(NetHostRecordEvent, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetHostRecordEvent();
@@ -730,4 +730,4 @@ public:
                               ///< host updated if this is a list update).
 };
 
-} // namespace Zero
+} // namespace Raverie

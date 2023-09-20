@@ -2,7 +2,7 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 Resampler::Resampler() :
@@ -83,4 +83,4 @@ bool Resampler::GetNextFrame(float* output)
     return true;
 }
 
-} // namespace Zero
+} // namespace Raverie

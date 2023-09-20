@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace
@@ -328,15 +328,15 @@ void CompletePhysicsMesh(Array<Vec3>& vertices, Array<uint>& indices, const Arra
 
 } // namespace
 
-ZilchDefineType(TileMap, builder, type)
+RaverieDefineType(TileMap, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDependency(Transform);
-  ZeroBindDependency(MultiSprite);
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDependency(Transform);
+  RaverieBindDependency(MultiSprite);
 
-  ZilchBindCustomGetterPropertyAs(GetSource, "Source");
-  ZilchBindFieldProperty(mMeshThickness);
+  RaverieBindCustomGetterPropertyAs(GetSource, "Source");
+  RaverieBindFieldProperty(mMeshThickness);
 }
 
 TileMap::TileMap() :
@@ -381,19 +381,19 @@ size_t TileMap::Tile::Hash() const
 
 Archetype* TileMap::Tile::GetArchetypeResource() const
 {
-  return (Archetype*)Z::gResources->GetResourceManager(ZilchTypeId(Archetype))
+  return (Archetype*)Z::gResources->GetResourceManager(RaverieTypeId(Archetype))
       ->GetResource(ArchetypeResource, ResourceNotFound::ReturnNull);
 }
 
 SpriteSource* TileMap::Tile::GetSpriteResource() const
 {
-  return (SpriteSource*)Z::gResources->GetResourceManager(ZilchTypeId(SpriteSource))
+  return (SpriteSource*)Z::gResources->GetResourceManager(RaverieTypeId(SpriteSource))
       ->GetResource(SpriteResource, ResourceNotFound::ReturnNull);
 }
 
 PhysicsMesh* TileMap::Tile::GetCollisionResource() const
 {
-  return (PhysicsMesh*)Z::gResources->GetResourceManager(ZilchTypeId(PhysicsMesh))
+  return (PhysicsMesh*)Z::gResources->GetResourceManager(RaverieTypeId(PhysicsMesh))
       ->GetResource(CollisionResource, ResourceNotFound::ReturnNull);
 }
 
@@ -568,7 +568,7 @@ void TileMap::SaveToTileMapSource(Serializer& stream)
   // Will return a new resource if it needs to be copied for any reason
   if (Z::gRuntimeEditor)
     mSource = (TileMapSource*)Z::gRuntimeEditor->NewResourceOnWrite(
-        TileMapSourceManager::GetInstance(), ZilchTypeId(TileMap), "Source", GetSpace(), mSource, archetype, mModified);
+        TileMapSourceManager::GetInstance(), RaverieTypeId(TileMap), "Source", GetSpace(), mSource, archetype, mModified);
 
   if (mSource)
   {
@@ -777,21 +777,21 @@ TileStatus::Enum TileMap::ValidConfiguration(Cog* cog, bool tilemapCollision, bo
 {
   forRange (Component* component, cog->GetComponents())
   {
-    BoundType* componentType = ZilchVirtualTypeId(component);
+    BoundType* componentType = RaverieVirtualTypeId(component);
 
-    if (componentType->IsA(ZilchTypeId(Collider)))
+    if (componentType->IsA(RaverieTypeId(Collider)))
     {
       // Using tilemap collision and archetype has wrong component.
-      if (tilemapCollision && !componentType->IsA(ZilchTypeId(MeshCollider)))
+      if (tilemapCollision && !componentType->IsA(RaverieTypeId(MeshCollider)))
         return TileStatus::ConflictMeshCollider;
       // Using collision from archetype and sprite from tilemap.
       else if (!tilemapCollision && tilemapSprites)
         return TileStatus::ConflictColliderGraphical;
     }
-    else if (componentType->IsA(ZilchTypeId(Graphical)))
+    else if (componentType->IsA(RaverieTypeId(Graphical)))
     {
       // Using tilemap sprite and archetype has wrong component.
-      if (tilemapSprites && !componentType->IsA(ZilchTypeId(MultiSprite)))
+      if (tilemapSprites && !componentType->IsA(RaverieTypeId(MultiSprite)))
         return TileStatus::ConflictMultiSprite;
       // Using graphical from archetype and collision from tilemap.
       else if (!tilemapSprites && tilemapCollision)
@@ -1033,4 +1033,4 @@ String TileMap::FormatTileError(TileStatus::Enum status, IntVec2 pos, Tile tile)
   return String::Format("Invalid tile at position (%d, %d) - %s", pos.x, pos.y, error.c_str());
 }
 
-} // namespace Zero
+} // namespace Raverie

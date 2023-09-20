@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 //                              FragmentedReceipt //
@@ -18,7 +18,7 @@ FragmentedReceipt::FragmentedReceipt(MessageReceiptId receiptId) :
 
 FragmentedReceipt::FragmentedReceipt(MoveReference<FragmentedReceipt> rhs) :
     mReceiptId(rhs->mReceiptId),
-    mPacketRecords(ZeroMove(rhs->mPacketRecords)),
+    mPacketRecords(RaverieMove(rhs->mPacketRecords)),
     mIsComplete(rhs->mIsComplete)
 {
 }
@@ -80,19 +80,19 @@ LinkOutbox::LinkOutbox(MoveReference<LinkOutbox> rhs)
 
     /// Channel Data
     mDefaultChannel(rhs->mDefaultChannel),
-    mChannels(ZeroMove(rhs->mChannels)),
-    mChannelIdStore(ZeroMove(rhs->mChannelIdStore)),
+    mChannels(RaverieMove(rhs->mChannels)),
+    mChannelIdStore(RaverieMove(rhs->mChannelIdStore)),
 
     /// Message Data
     mNextReceiptID(rhs->mNextReceiptID),
-    mOutMessages(ZeroMove(rhs->mOutMessages)),
+    mOutMessages(RaverieMove(rhs->mOutMessages)),
 
     /// Packet Data
     mNextSequenceId(rhs->mNextSequenceId),
     mLastSendTime(rhs->mLastSendTime),
-    mSentPackets(ZeroMove(rhs->mSentPackets)),
-    mResendPackets(ZeroMove(rhs->mResendPackets)),
-    mFragmentedReceipts(ZeroMove(rhs->mFragmentedReceipts))
+    mSentPackets(RaverieMove(rhs->mSentPackets)),
+    mResendPackets(RaverieMove(rhs->mResendPackets)),
+    mFragmentedReceipts(RaverieMove(rhs->mFragmentedReceipts))
 {
 }
 
@@ -103,19 +103,19 @@ LinkOutbox& LinkOutbox::operator=(MoveReference<LinkOutbox> rhs)
 
   /// Channel Data
   mDefaultChannel = rhs->mDefaultChannel;
-  mChannels = ZeroMove(rhs->mChannels);
-  mChannelIdStore = ZeroMove(rhs->mChannelIdStore);
+  mChannels = RaverieMove(rhs->mChannels);
+  mChannelIdStore = RaverieMove(rhs->mChannelIdStore);
 
   /// Message Data
   mNextReceiptID = rhs->mNextReceiptID;
-  mOutMessages = ZeroMove(rhs->mOutMessages);
+  mOutMessages = RaverieMove(rhs->mOutMessages);
 
   /// Packet Data
   mNextSequenceId = rhs->mNextSequenceId;
   mLastSendTime = rhs->mLastSendTime;
-  mSentPackets = ZeroMove(rhs->mSentPackets);
-  mResendPackets = ZeroMove(rhs->mResendPackets);
-  mFragmentedReceipts = ZeroMove(rhs->mFragmentedReceipts);
+  mSentPackets = RaverieMove(rhs->mSentPackets);
+  mResendPackets = RaverieMove(rhs->mResendPackets);
+  mFragmentedReceipts = RaverieMove(rhs->mFragmentedReceipts);
 
   return *this;
 }
@@ -150,7 +150,7 @@ OutMessageChannel* LinkOutbox::OpenOutgoingChannel(TransferMode::Enum transferMo
 
   // Send channel opened message
   Status status;
-  mLink->SendInternal(status, ZeroMove(message), true, channelId);
+  mLink->SendInternal(status, RaverieMove(message), true, channelId);
   Assert(status.Succeeded()); // (Send should have succeeded)
 
   // Success
@@ -189,7 +189,7 @@ void LinkOutbox::CloseOutgoingChannel(MessageChannelId channelId)
 
     // Send channel closed message
     Status status;
-    mLink->SendInternal(status, ZeroMove(message), true, channelId);
+    mLink->SendInternal(status, RaverieMove(message), true, channelId);
     Assert(status.Succeeded()); // (Send should have succeeded)
   }
 
@@ -225,7 +225,7 @@ void LinkOutbox::RecordFragmentReceipt(const OutPacket& packet, const OutMessage
   {
     // Add new fragmented receipt
     FragmentedReceipt newFragmentedReceipt(message.GetReceiptID());
-    ArraySet<FragmentedReceipt>::pointer_bool_pair result = mFragmentedReceipts.Insert(ZeroMove(newFragmentedReceipt));
+    ArraySet<FragmentedReceipt>::pointer_bool_pair result = mFragmentedReceipts.Insert(RaverieMove(newFragmentedReceipt));
     Assert(result.second); // (Insert should have succeeded)
     fragmentedReceiptIter = result.first;
   }
@@ -333,12 +333,12 @@ void LinkOutbox::AcknowledgePacket(OutPacket& packet, ACKState::Enum packetACKSt
         Assert(false);
       case TransferMode::Immediate:
       case TransferMode::Ordered:
-        ReceiptMessage(ZeroMove(message), Receipt::ACK);
+        ReceiptMessage(RaverieMove(message), Receipt::ACK);
         break;
 
       // MAYBE
       case TransferMode::Sequenced:
-        ReceiptMessage(ZeroMove(message), Receipt::MAYBE);
+        ReceiptMessage(RaverieMove(message), Receipt::MAYBE);
         break;
       }
       break;
@@ -346,7 +346,7 @@ void LinkOutbox::AcknowledgePacket(OutPacket& packet, ACKState::Enum packetACKSt
     case ACKState::NAKd:
       // NAK
       Assert(!message.IsReliable());
-      ReceiptMessage(ZeroMove(message), Receipt::NAK);
+      ReceiptMessage(RaverieMove(message), Receipt::NAK);
       break;
     } // (Receipt message based on ACK state)
   }   // (For all receipted messages in the given packet)
@@ -376,7 +376,7 @@ void LinkOutbox::NAKSentPacket(ArraySet<OutPacket>::iterator& sentPacketIter)
 
   // Still has messages?
   if (sentPacketIter->HasMessages())
-    mResendPackets.PushBack(ZeroMove(*sentPacketIter)); // Move to resend packets
+    mResendPackets.PushBack(RaverieMove(*sentPacketIter)); // Move to resend packets
 
   // Remove packet
   sentPacketIter = mSentPackets.Erase(sentPacketIter);
@@ -390,7 +390,7 @@ void LinkOutbox::SendPacket(MoveReference<OutPacket> packet)
   packet->SetSendTime(mLastSendTime);
 
   // Store sent packet for later acknowledgement
-  mSentPackets.Insert(ZeroMove(packet));
+  mSentPackets.Insert(RaverieMove(packet));
 }
 
 MessageReceiptId LinkOutbox::AcquireNextReceiptID()
@@ -477,7 +477,7 @@ MessageReceiptId LinkOutbox::PushMessage(Status& status,
   message->GetData().ClearBitsRead();
 
   // Push new outgoing message to be sent later
-  mOutMessages.Insert(OutMessagePtr(new OutMessage(ZeroMove(message),
+  mOutMessages.Insert(OutMessagePtr(new OutMessage(RaverieMove(message),
                                                    reliable,
                                                    channelId,
                                                    sequenceId,
@@ -501,7 +501,7 @@ bool LinkOutbox::WriteMessageToPacket(OutPacket& packet, Bits& remBits, OutMessa
   {
     // Receipt expired message
     if (message.IsReceipted())
-      ReceiptMessage(ZeroMove(message), Receipt::EXPIRED);
+      ReceiptMessage(RaverieMove(message), Receipt::EXPIRED);
 
     // Done with this message
     return true;
@@ -543,7 +543,7 @@ LinkOutbox::WriteMessage(OutPacket& packet, OutMessage& message, Bits& remBits, 
       remBits -= messageSize;
 
       // Write fragment message
-      packet.mMessages.PushBack(ZeroMove(message));
+      packet.mMessages.PushBack(RaverieMove(message));
       return PacketWriteResult::Done_Fragment;
     }
     // Whole fragment message does not fit?
@@ -564,7 +564,7 @@ LinkOutbox::WriteMessage(OutPacket& packet, OutMessage& message, Bits& remBits, 
                      // solution! See note above.)
 
         // Write fragment message
-        packet.mMessages.PushBack(ZeroMove(message));
+        packet.mMessages.PushBack(RaverieMove(message));
         return PacketWriteResult::Done_Fragment;
       }
       else
@@ -593,13 +593,13 @@ LinkOutbox::WriteMessage(OutPacket& packet, OutMessage& message, Bits& remBits, 
       message.mIsFinalFragment = true;
 
       // Write final fragment message
-      packet.mMessages.PushBack(ZeroMove(message));
+      packet.mMessages.PushBack(RaverieMove(message));
       return PacketWriteResult::Done_Fragment;
     }
     else
     {
       // Write whole message
-      packet.mMessages.PushBack(ZeroMove(message));
+      packet.mMessages.PushBack(RaverieMove(message));
       return PacketWriteResult::Done_Whole;
     }
   }
@@ -629,7 +629,7 @@ LinkOutbox::WriteMessage(OutPacket& packet, OutMessage& message, Bits& remBits, 
       Assert(remBits == 0);
 
       // Write fragment message
-      packet.mMessages.PushBack(ZeroMove(fragment));
+      packet.mMessages.PushBack(RaverieMove(fragment));
       return PacketWriteResult::NotDone_Fragment;
     }
     else
@@ -759,7 +759,7 @@ void LinkOutbox::Update(const ACKArray& remoteACKs, const NAKArray& remoteNAKs)
 
     // Packet has messages or it's time to send a heartbeat packet?
     if (newPacket.HasMessages() || GetDuration(mLastSendTime, now) > RATE_TO_INTERVAL(mLink->GetHeartbeatPacketRate()))
-      SendPacket(ZeroMove(newPacket)); // Send new Packet
+      SendPacket(RaverieMove(newPacket)); // Send new Packet
     else
       --mNextSequenceId; // Nothing to send, revert unused sequence ID
 
@@ -797,7 +797,7 @@ void LinkOutbox::RemoveExpiredMessages(OutPacket& packet)
     {
       // Receipt expired message
       if (iter->IsReceipted())
-        ReceiptMessage(ZeroMove(*iter), Receipt::EXPIRED);
+        ReceiptMessage(RaverieMove(*iter), Receipt::EXPIRED);
 
       // Erase and advance
       iter = messages.Erase(iter);
@@ -816,7 +816,7 @@ void LinkOutbox::ReceiptMessage(MoveReference<OutMessage> message, Receipt::Enum
     return;
 
   // Attempt to receipt the message as a plugin message
-  if (mLink->AttemptPluginMessageReceipt(ZeroMove(message),
+  if (mLink->AttemptPluginMessageReceipt(RaverieMove(message),
                                          receipt)) // Successful?
     return;
 
@@ -838,4 +838,4 @@ bool LinkOutbox::ShouldSendMessage(OutMessage& message)
   return true;
 }
 
-} // namespace Zero
+} // namespace Raverie

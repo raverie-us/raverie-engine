@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace UTF8
@@ -32,4 +32,4 @@ Rune ReadUtf8Rune(byte* firstByte);
 size_t EncodedCodepointLength(byte utf8FirstByte);
 } // namespace UTF8
 
-} // namespace Zero
+} // namespace Raverie

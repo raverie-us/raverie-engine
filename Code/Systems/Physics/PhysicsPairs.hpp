@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Physics
@@ -71,4 +71,4 @@ struct ColliderPair
 
 typedef Physics::ColliderPair ColliderPair;
 
-} // namespace Zero
+} // namespace Raverie

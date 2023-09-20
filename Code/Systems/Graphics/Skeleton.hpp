@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -33,7 +33,7 @@ public:
 class Bone : public Component
 {
 public:
-  ZilchDeclareType(Bone, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Bone, TypeCopyMode::ReferenceType);
 
   // Component Interface
   void Serialize(Serializer& stream) override;
@@ -63,7 +63,7 @@ public:
 class Skeleton : public Component
 {
 public:
-  ZilchDeclareType(Skeleton, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Skeleton, TypeCopyMode::ReferenceType);
 
   // Component Interface
   void Serialize(Serializer& stream) override;
@@ -94,4 +94,4 @@ public:
   IndexRange mCachedTransformRange;
 };
 
-} // namespace Zero
+} // namespace Raverie

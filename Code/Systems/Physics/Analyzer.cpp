@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Physics
@@ -116,4 +116,4 @@ void Analyzer::PrintResults()
 
 } // namespace Physics
 
-} // namespace Zero
+} // namespace Raverie

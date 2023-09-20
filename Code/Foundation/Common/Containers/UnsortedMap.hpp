@@ -6,7 +6,7 @@
 #include "Array.hpp"
 #include "Utility/Hashing.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 /// Array map is an associative container (like a hash-map) however the key type
@@ -95,4 +95,4 @@ public:
   }
 };
 
-} // namespace Zero
+} // namespace Raverie

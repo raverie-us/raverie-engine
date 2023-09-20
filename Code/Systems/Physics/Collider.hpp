@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 DeclareBitField8(ColliderFlags,
@@ -22,7 +22,7 @@ DeclareBitField8(ColliderFlags,
 class Collider : public Component
 {
 public:
-  ZilchDeclareType(Collider, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Collider, TypeCopyMode::ReferenceType);
   /// All possible collider types. Needed mostly for collision detection.
   /// The order is somewhat important as collision detection currently assumes
   /// that all simple shapes (primitive types) are before the complex shapes.
@@ -345,4 +345,4 @@ public:
 
 typedef InList<Collider, &Collider::mSpaceLink> ColliderList;
 
-} // namespace Zero
+} // namespace Raverie

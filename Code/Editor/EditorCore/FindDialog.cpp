@@ -25,7 +25,7 @@
 // around since search in selection may rely on it to work. Search in
 // selection is currently disabled for this exact reason.
 
-namespace Zero
+namespace Raverie
 {
 // A pointer to the only instance of the find dialog
 FindTextDialog* FindTextDialog::Instance = NULL;
@@ -1148,7 +1148,7 @@ void FindTextDialog::SubmitSearchOnReplaceReturn(KeyboardEvent* event)
   SubmitTextBox(event, mReplace);
 }
 
-void Zero::FindTextDialog::CheckForInvalidInput(ObjectEvent* event)
+void Raverie::FindTextDialog::CheckForInvalidInput(ObjectEvent* event)
 {
   String text = mFind->GetText();
 
@@ -1458,4 +1458,4 @@ void FindTextDialog::DoReplacements(DocumentEditor* documentEditor, SearchResult
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

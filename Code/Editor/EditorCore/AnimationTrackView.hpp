@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Typedefs
@@ -23,7 +23,7 @@ class AnimationTrackView : public Composite
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(AnimationTrackView, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(AnimationTrackView, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   AnimationTrackView(Composite* parent, AnimationEditor* editor);
@@ -93,4 +93,4 @@ private:
   AnimationEditorData* mEditorData;
 };
 
-} // namespace Zero
+} // namespace Raverie

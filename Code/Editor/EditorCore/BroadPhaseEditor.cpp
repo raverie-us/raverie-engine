@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 class RecordSampler : public DataSampler
@@ -117,7 +117,7 @@ BroadPhaseEditor::BroadPhaseEditor(Editor* parent) : Composite(parent)
   for (uint i = 0; i < BPStats::Size; ++i)
   {
     mCheckBoxes[i] = new TextCheckBox(this);
-    mCheckBoxes[i]->SetText(Zero::BuildString("Track ", BPStats::Names[i]));
+    mCheckBoxes[i]->SetText(Raverie::BuildString("Track ", BPStats::Names[i]));
   }
 
   TextButton* button1 = new TextButton(this);
@@ -432,4 +432,4 @@ void BroadPhaseEditor::GameSpaceDestroyed(ObjectEvent* event)
     mActiveWindows[i].SafeDestroy();
 }
 
-} // namespace Zero
+} // namespace Raverie

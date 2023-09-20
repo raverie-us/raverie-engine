@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 int EmitParticles(ParticleSystem* main,
@@ -56,10 +56,10 @@ namespace Events
 DefineEvent(ParticlesSpawned);
 }
 
-ZilchDefineType(ParticleEvent, builder, type)
+RaverieDefineType(ParticleEvent, builder, type)
 {
-  ZilchBindGetterProperty(NewParticles);
-  ZilchBindGetterProperty(NewParticleCount);
+  RaverieBindGetterProperty(NewParticles);
+  RaverieBindGetterProperty(NewParticleCount);
 }
 
 uint ParticleEvent::GetNewParticleCount()
@@ -72,23 +72,23 @@ ParticleListRange ParticleEvent::GetNewParticles()
   return mNewParticles;
 }
 
-ZilchDefineType(ParticleSystem, builder, type)
+RaverieDefineType(ParticleSystem, builder, type)
 {
-  ZeroBindDocumented();
-  ZeroBindInterface(Graphical);
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
+  RaverieBindInterface(Graphical);
+  RaverieBindSetup(SetupMode::DefaultSerialization);
 
-  ZilchBindGetterSetterProperty(BoundingBoxSize);
-  ZilchBindGetterSetterProperty(ChildSystem);
-  ZilchBindFieldProperty(mSystemSpace);
-  ZilchBindGetterSetterProperty(WarmUpTime);
-  ZilchBindGetterSetterProperty(PreviewInEditor);
+  RaverieBindGetterSetterProperty(BoundingBoxSize);
+  RaverieBindGetterSetterProperty(ChildSystem);
+  RaverieBindFieldProperty(mSystemSpace);
+  RaverieBindGetterSetterProperty(WarmUpTime);
+  RaverieBindGetterSetterProperty(PreviewInEditor);
 
-  ZilchBindMethod(AllParticles);
-  ZilchBindMethod(Clear);
+  RaverieBindMethod(AllParticles);
+  RaverieBindMethod(Clear);
 
-  ZeroBindTag(Tags::Particle);
-  ZeroBindEvent(Events::ParticlesSpawned, ParticleEvent);
+  RaverieBindTag(Tags::Particle);
+  RaverieBindEvent(Events::ParticlesSpawned, ParticleEvent);
 }
 
 void ParticleSystem::Serialize(Serializer& stream)
@@ -467,4 +467,4 @@ bool ParticleSystem::IsSelectedInEditor()
   return Z::gRuntimeEditor->GetActiveSelection()->Contains(GetOwner());
 }
 
-} // namespace Zero
+} // namespace Raverie

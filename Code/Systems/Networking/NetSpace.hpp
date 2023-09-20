@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 //                                  NetSpace //
@@ -11,7 +11,7 @@ namespace Zero
 class NetSpace : public NetObject
 {
 public:
-  ZilchDeclareType(NetSpace, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(NetSpace, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetSpace();
@@ -87,4 +87,4 @@ public:
   ArrayMap<NetObjectId, ArraySet<NetObjectId>> mDelayedParentMap; ///< Maps a delayed parent to ready children.
 };
 
-} // namespace Zero
+} // namespace Raverie

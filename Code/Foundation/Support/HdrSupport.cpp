@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 static const String cHdrSignature("#?RADIANCE");
 
@@ -267,7 +267,7 @@ void ParseHdrHeader(Status& status, Stream* stream, uint& width, uint& height)
 
   // Seek back to the beginning and create a String out of the header data
   size_t headerSize = (size_t)stream->Tell();
-  Zero::StringNode* node = Zero::String::AllocateNode(headerSize);
+  Raverie::StringNode* node = Raverie::String::AllocateNode(headerSize);
   stream->Seek(0);
   stream->Read((byte*)node->Data, headerSize);
   String header(node);
@@ -526,4 +526,4 @@ void Rgb32fToRgbe(float* rgb32f, byte* rgbe)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

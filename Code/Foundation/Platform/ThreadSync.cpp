@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 struct ThreadLockPrivateData
 {
@@ -108,4 +108,4 @@ void CountdownEvent::Wait()
 {
 }
 
-} // namespace Zero
+} // namespace Raverie

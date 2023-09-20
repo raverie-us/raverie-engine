@@ -2,22 +2,22 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 using namespace AudioConstants;
 
 // Recording Node
 
-ZilchDefineType(RecordingNode, builder, type)
+RaverieDefineType(RecordingNode, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetter(FileName);
-  ZilchBindMethod(StartRecording);
-  ZilchBindMethod(StopRecording);
-  ZilchBindGetterSetter(Paused);
-  ZilchBindGetterSetter(StreamToDisk);
+  RaverieBindGetterSetter(FileName);
+  RaverieBindMethod(StartRecording);
+  RaverieBindMethod(StopRecording);
+  RaverieBindGetterSetter(Paused);
+  RaverieBindGetterSetter(StreamToDisk);
 }
 
 RecordingNode::RecordingNode(StringParam name, unsigned ID) :
@@ -152,14 +152,14 @@ bool RecordingNode::GetOutputSamples(BufferType* outputBuffer,
     if (!isThereOutput)
       memset(outputBuffer->Data(), 0, sizeof(float) * outputBuffer->Size());
 
-    Zero::Array<float>* buffer = new Zero::Array<float>(*outputBuffer);
+    Raverie::Array<float>* buffer = new Raverie::Array<float>(*outputBuffer);
     Z::gSound->Mixer.AddTaskThreaded(CreateFunctor(&RecordingNode::WriteBuffer, this, buffer, numberOfChannels), this);
   }
 
   return isThereOutput;
 }
 
-void RecordingNode::WriteBuffer(Zero::Array<float>* buffer, unsigned numberOfChannels)
+void RecordingNode::WriteBuffer(Raverie::Array<float>* buffer, unsigned numberOfChannels)
 {
   if (mRecording.Get() == cFalse || !mFileStream.IsOpen())
   {
@@ -191,14 +191,14 @@ void RecordingNode::WriteBuffer(Zero::Array<float>* buffer, unsigned numberOfCha
 
 // Save Audio Node
 
-ZilchDefineType(SaveAudioNode, builder, type)
+RaverieDefineType(SaveAudioNode, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetterProperty(SaveAudio);
-  ZilchBindMethod(PlaySavedAudio);
-  ZilchBindMethod(StopPlaying);
-  ZilchBindMethod(ClearSavedAudio);
+  RaverieBindGetterSetterProperty(SaveAudio);
+  RaverieBindMethod(PlaySavedAudio);
+  RaverieBindMethod(StopPlaying);
+  RaverieBindMethod(ClearSavedAudio);
 }
 
 SaveAudioNode::SaveAudioNode(StringParam name, unsigned ID) :
@@ -303,4 +303,4 @@ void SaveAudioNode::ClearSavedAudioThreaded()
   mPlaybackIndexThreaded = 0;
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 struct PhysicsCarWheel;
@@ -17,7 +17,7 @@ DeclareBitField3(CarFlags, DebugDraw, InEditor, OnAllObjectsCreatedCalled);
 /// to propel the car.
 struct PhysicsCar : public Component
 {
-  ZilchDeclareType(PhysicsCar, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(PhysicsCar, TypeCopyMode::ReferenceType);
 
   PhysicsCar();
 
@@ -74,7 +74,7 @@ struct PhysicsCar : public Component
   /// disabled).
   struct CarWheelRef : public Object
   {
-    ZilchDeclareType(CarWheelRef, TypeCopyMode::ReferenceType);
+    RaverieDeclareType(CarWheelRef, TypeCopyMode::ReferenceType);
 
     Cog* GetCog();
     PhysicsCarWheel* GetCarWheel();
@@ -86,7 +86,7 @@ struct PhysicsCar : public Component
   /// array is read-only.
   struct CarWheelArray : public SafeId32Object
   {
-    ZilchDeclareType(CarWheelArray, TypeCopyMode::ReferenceType);
+    RaverieDeclareType(CarWheelArray, TypeCopyMode::ReferenceType);
 
     CarWheelArray();
     /// Get the cog for a wheel by index.
@@ -147,4 +147,4 @@ struct PhysicsCar : public Component
   bool mActive;
 };
 
-} // namespace Zero
+} // namespace Raverie

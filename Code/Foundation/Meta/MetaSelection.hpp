@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 /// Events
 namespace Events
@@ -13,7 +13,7 @@ DeclareEvent(SelectionFinal);
 /// Sent with the SelectionChanged event
 struct SelectionChangedEvent : public Event
 {
-  ZilchDeclareType(SelectionChangedEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SelectionChangedEvent, TypeCopyMode::ReferenceType);
   SelectionChangedEvent() : Updated(false)
   {
   }
@@ -34,7 +34,7 @@ DeclareEnum2(SendsEvents, False, True);
 class MetaSelection : public ReferenceCountedEventObject
 {
 public:
-  ZilchDeclareType(MetaSelection, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MetaSelection, TypeCopyMode::ReferenceType);
 
   typedef Array<MetaSelection*> MetaSelectionArray;
 
@@ -208,7 +208,7 @@ void MetaSelection::FilterComponentType(Array<type*>& destination)
   destination.Reserve(mSelectedObjects.Size());
 
   // The type of the component we're looking for
-  BoundType* componentType = ZilchTypeId(Type);
+  BoundType* componentType = RaverieTypeId(Type);
 
   // Walk all objects in the selection
   forRange (Handle object, All())
@@ -291,4 +291,4 @@ MetaSelection::rangeType<type> MetaSelection::AllOfType()
   return rangeType<type>(mSelectedObjects.All());
 }
 
-} // namespace Zero
+} // namespace Raverie

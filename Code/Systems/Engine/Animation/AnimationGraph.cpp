@@ -1,41 +1,41 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 AnimationGraph::DebugPreviewFunction AnimationGraph::mOnPreviewPressed = NULL;
 AnimationGraph::DebugPreviewFunction AnimationGraph::mOnGraphCreated = NULL;
 
-ZilchDefineType(AnimationGraph, builder, type)
+RaverieDefineType(AnimationGraph, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindDocumented();
-  ZeroBindSetup(SetupMode::CallSetDefaults);
+  RaverieBindComponent();
+  RaverieBindDocumented();
+  RaverieBindSetup(SetupMode::CallSetDefaults);
 
-  ZilchBindGetterSetter(ActiveNode);
-  ZilchBindMethod(IsPlayingInGraph);
-  ZilchBindMethod(PrintGraph);
-  ZilchBindMethod(Update);
+  RaverieBindGetterSetter(ActiveNode);
+  RaverieBindMethod(IsPlayingInGraph);
+  RaverieBindMethod(PrintGraph);
+  RaverieBindMethod(Update);
 
-  ZilchBindGetterSetterProperty(Active);
-  ZilchBindFieldProperty(mTimeScale);
+  RaverieBindGetterSetterProperty(Active);
+  RaverieBindFieldProperty(mTimeScale);
 
-  ZeroBindEvent(Events::AnimationBlendEnded, AnimationGraphEvent);
-  ZeroBindEvent(Events::AnimationEnded, AnimationGraphEvent);
-  ZeroBindEvent(Events::AnimationLooped, AnimationGraphEvent);
-  ZeroBindEvent(Events::AnimationPostUpdate, Event);
+  RaverieBindEvent(Events::AnimationBlendEnded, AnimationGraphEvent);
+  RaverieBindEvent(Events::AnimationEnded, AnimationGraphEvent);
+  RaverieBindEvent(Events::AnimationLooped, AnimationGraphEvent);
+  RaverieBindEvent(Events::AnimationPostUpdate, Event);
 
   // Node creation functions
-  ZilchBindMethod(CreateBasicNode);
-  ZilchBindMethod(CreateDirectBlendNode);
-  ZilchBindMethod(CreateCrossBlendNode);
-  ZilchBindMethod(CreateSelectiveNode);
-  ZilchBindMethod(CreateChainNode);
+  RaverieBindMethod(CreateBasicNode);
+  RaverieBindMethod(CreateDirectBlendNode);
+  RaverieBindMethod(CreateCrossBlendNode);
+  RaverieBindMethod(CreateSelectiveNode);
+  RaverieBindMethod(CreateChainNode);
 
-  ZeroBindTag(Tags::Core);
+  RaverieBindTag(Tags::Core);
 
-  // ZilchBindMethodProperty(PreviewGraph);
+  // RaverieBindMethodProperty(PreviewGraph);
 }
 
 AnimationGraph::AnimationGraph()
@@ -322,20 +322,20 @@ ChainNode* AnimationGraph::CreateChainNode()
   return new ChainNode();
 }
 
-ZilchDefineType(SimpleAnimation, builder, type)
+RaverieDefineType(SimpleAnimation, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindDocumented();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDependency(AnimationGraph);
-  ZilchBindFieldProperty(mPlayMode);
-  ZilchBindGetterSetterProperty(Animation)->Add(new MetaEditorResource());
+  RaverieBindComponent();
+  RaverieBindDocumented();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDependency(AnimationGraph);
+  RaverieBindFieldProperty(mPlayMode);
+  RaverieBindGetterSetterProperty(Animation)->Add(new MetaEditorResource());
 
-  ZilchBindMethod(PlaySingle);
-  ZilchBindMethod(DirectBlend);
-  ZilchBindMethod(CrossBlend);
-  ZilchBindMethod(PlayIsolatedAnimation);
-  ZilchBindMethod(ChainAnimation);
+  RaverieBindMethod(PlaySingle);
+  RaverieBindMethod(DirectBlend);
+  RaverieBindMethod(CrossBlend);
+  RaverieBindMethod(PlayIsolatedAnimation);
+  RaverieBindMethod(ChainAnimation);
 }
 
 void SimpleAnimation::Serialize(Serializer& stream)
@@ -448,4 +448,4 @@ AnimationNode* SimpleAnimation::ChainAnimation(Animation* animation, AnimationPl
   return NULL;
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Constructor.
@@ -487,7 +487,7 @@ void Polygon::DebugDraw(ByteColor color, Mat4Param transform, bool windingOrder,
 {
   forRange (Edge edge, GetEdges())
   {
-    using namespace Zero;
+    using namespace Raverie;
     Vec3 p0 = Math::ToVector3(edge.p0, depth);
     Vec3 p1 = Math::ToVector3(edge.p1, depth);
 
@@ -682,4 +682,4 @@ void TransformPolygon(Mat4Param matrix, Polygon* polygon)
     polygon->mData[i] = Math::ToVector2(Math::TransformPoint(matrix, Math::ToVector3(polygon->mData[i])));
 }
 
-} // namespace Zero
+} // namespace Raverie

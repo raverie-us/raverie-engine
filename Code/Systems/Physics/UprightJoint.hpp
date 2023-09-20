@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Physics
@@ -56,4 +56,4 @@ public:
 
 typedef Physics::UprightJoint UprightJoint;
 
-} // namespace Zero
+} // namespace Raverie

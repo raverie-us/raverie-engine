@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class ComboBox;
@@ -121,7 +121,7 @@ public:
 class SearchableResourceTextBox : public Composite
 {
 public:
-  typedef SearchableResourceTextBox ZilchSelf;
+  typedef SearchableResourceTextBox RaverieSelf;
 
   SearchableResourceTextBox(Composite* parent, StringParam resourceType, StringParam resourceIdName);
 
@@ -149,7 +149,7 @@ public:
 class WeightedTableBar : public Composite
 {
 public:
-  typedef WeightedTableBar ZilchSelf;
+  typedef WeightedTableBar RaverieSelf;
 
   WeightedTableBar(Composite* parent, ResourceWeightedTableView* weightedTableView);
 
@@ -191,7 +191,7 @@ public:
 class ResourceWeightedTableView : public Composite
 {
 public:
-  typedef ResourceWeightedTableView ZilchSelf;
+  typedef ResourceWeightedTableView RaverieSelf;
 
   ResourceWeightedTableView(Composite* parent, ResourceTableEditor* editor);
 
@@ -272,7 +272,7 @@ public:
 class ResourceTableTreeView : public Composite
 {
 public:
-  typedef ResourceTableTreeView ZilchSelf;
+  typedef ResourceTableTreeView RaverieSelf;
 
   ResourceTableTreeView(Composite* parent, ResourceTableEditor* editor);
   ~ResourceTableTreeView();
@@ -305,7 +305,7 @@ public:
 class ResourceTableEditor : public Composite
 {
 public:
-  typedef ResourceTableEditor ZilchSelf;
+  typedef ResourceTableEditor RaverieSelf;
 
   ResourceTableEditor(Composite* parent, ResourceTable* table);
   ~ResourceTableEditor();
@@ -356,4 +356,4 @@ public:
   OperationQueue mQueue;
 };
 
-} // namespace Zero
+} // namespace Raverie

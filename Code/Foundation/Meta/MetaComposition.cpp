@@ -1,15 +1,15 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(MetaOwner, builder, type)
+RaverieDefineType(MetaOwner, builder, type)
 {
 }
 
 // Meta Component
-ZilchDefineType(CogComponentMeta, builder, type)
+RaverieDefineType(CogComponentMeta, builder, type)
 {
 }
 
@@ -92,7 +92,7 @@ bool CogComponentMeta::IsDependentOn(BoundType* componentType, BoundType* depend
 }
 
 // Meta Composition
-ZilchDefineType(MetaComposition, builder, type)
+RaverieDefineType(MetaComposition, builder, type)
 {
 }
 
@@ -501,4 +501,4 @@ Handle MetaOwner::GetOwner(HandleParam object)
   return mGetOwner(object);
 }
 
-} // namespace Zero
+} // namespace Raverie

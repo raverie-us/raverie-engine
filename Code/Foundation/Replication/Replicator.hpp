@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 //                                 Replicator //
@@ -801,4 +801,4 @@ String GetReplicatorDisplayName(Replicator* replicator);
 String GetReplicatorDisplayName(ReplicatorLink* replicatorLink);
 String GetReplicatorDisplayName(const IpAddress& ipAddress, Role::Enum role, ReplicatorId replicatorId);
 
-} // namespace Zero
+} // namespace Raverie

@@ -23,7 +23,7 @@ Linear Constraint:
   present, or is just not solved at all
 */
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Physics
@@ -36,26 +36,26 @@ ImplementJointType(RevoluteJoint);
 ImplementAnchorAccessors(RevoluteJoint, mAnchors);
 ImplementAngleAccessors(RevoluteJoint, mReferenceAngle);
 
-ZilchDefineType(RevoluteJoint, builder, type)
+RaverieDefineType(RevoluteJoint, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindInterface(Joint);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindInterface(Joint);
+  RaverieBindDocumented();
 
   BindAnchorAccessors(Vec3(1));
   // Instead of binding the angles as usual, bind them with basis editors for
   // cleaner updating with gizmos
   // BindAngleAccessors();
-  ZilchBindGetterSetterProperty(LocalBasisA)
+  RaverieBindGetterSetterProperty(LocalBasisA)
       ->Add(new EditorRotationBasis("RevoluteJointBasisGizmo", "EditorRevoluteGizmoName", 0b01));
-  ZilchBindGetterSetterProperty(LocalBasisB)
+  RaverieBindGetterSetterProperty(LocalBasisB)
       ->Add(new EditorRotationBasis("RevoluteJointBasisGizmo", "EditorRevoluteGizmoName", 0b10));
-  ZilchBindGetterSetterProperty(WorldBasis)
+  RaverieBindGetterSetterProperty(WorldBasis)
       ->Add(new EditorRotationBasis("RevoluteJointBasisGizmo", "EditorRevoluteGizmoName", 0b11));
-  ZilchBindGetterSetterProperty(FrameOfReference);
+  RaverieBindGetterSetterProperty(FrameOfReference);
 
-  ZilchBindMethod(SetWorldFrame);
+  RaverieBindMethod(SetWorldFrame);
 }
 
 RevoluteJoint::RevoluteJoint()
@@ -108,7 +108,7 @@ void RevoluteJoint::ComputeInitialConfiguration()
 void RevoluteJoint::ComponentAdded(BoundType* typeId, Component* component)
 {
   Joint::ComponentAdded(typeId, component);
-  if (typeId == ZilchTypeId(JointLimit))
+  if (typeId == RaverieTypeId(JointLimit))
   {
     JointLimit* limit = static_cast<JointLimit*>(component);
     limit->mMinErr = -Math::cPi * real(0.25);
@@ -388,4 +388,4 @@ void RevoluteJoint::SetBodyAxisInternal(uint objIndex, Vec3Param axis)
 
 } // namespace Physics
 
-} // namespace Zero
+} // namespace Raverie

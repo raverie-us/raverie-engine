@@ -1,9 +1,9 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
-ZilchDefineType(DynamicAabbTreeBroadPhase, builder, type)
+RaverieDefineType(DynamicAabbTreeBroadPhase, builder, type)
 {
 }
 
@@ -15,4 +15,4 @@ DynamicAabbTreeBroadPhase::~DynamicAabbTreeBroadPhase()
 {
 }
 
-} // namespace Zero
+} // namespace Raverie

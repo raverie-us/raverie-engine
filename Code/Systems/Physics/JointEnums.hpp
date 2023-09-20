@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace JointEnums
@@ -47,4 +47,4 @@ static const cstr Names[] = {
 
 } // namespace JointTypes
 
-} // namespace Zero
+} // namespace Raverie

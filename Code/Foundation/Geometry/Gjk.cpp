@@ -72,7 +72,7 @@ Type Gjk::TestDebug(const SupportShape* shapeA, const SupportShape* shapeB, Mani
       float proj = mSupportVector.Dot(support.cso - mSimplex.mPoints[0].cso);
       if (proj <= sEpsilon)
       {
-        // Zero::gDebugDraw->Add(Zero::Debug::Sphere(support.cso,
+        // Raverie::gDebugDraw->Add(Raverie::Debug::Sphere(support.cso,
         // 0.02).Color(Color::Black));
         return Intersection::None;
       }
@@ -122,30 +122,30 @@ void Gjk::DrawDebug(uint debugFlag)
   for (uint i = 0; i < mSimplex.mCount; ++i)
   {
     float radius = 0.05f - 0.01f * i;
-    Zero::gDebugDraw->Add(Zero::Debug::Sphere(mSimplex.mPoints[i].cso, radius).Color(colors[i]));
-    Zero::gDebugDraw->Add(Zero::Debug::Sphere(mSimplex.mPoints[i].objA, radius).Color(colors[i]));
-    Zero::gDebugDraw->Add(Zero::Debug::Sphere(mSimplex.mPoints[i].objB, radius).Color(colors[i]));
+    Raverie::gDebugDraw->Add(Raverie::Debug::Sphere(mSimplex.mPoints[i].cso, radius).Color(colors[i]));
+    Raverie::gDebugDraw->Add(Raverie::Debug::Sphere(mSimplex.mPoints[i].objA, radius).Color(colors[i]));
+    Raverie::gDebugDraw->Add(Raverie::Debug::Sphere(mSimplex.mPoints[i].objB, radius).Color(colors[i]));
   }
 
-  Zero::gDebugDraw->Add(Zero::Debug::Line(Vec3(0, 0, 0), mSupportVector).Color(Color::White));
+  Raverie::gDebugDraw->Add(Raverie::Debug::Line(Vec3(0, 0, 0), mSupportVector).Color(Color::White));
 
   // mSupportVector = mSimplex.GetSupportVector();
 
   // for (unsigned i = 0; i < mCSO.Size(); ++i)
-  //   Zero::gDebugDraw->Add(Zero::Debug::Sphere(mCSO[i],
+  //   Raverie::gDebugDraw->Add(Raverie::Debug::Sphere(mCSO[i],
   //   0.01f).Color(Color::PapayaWhip));
 
   // for (unsigned i = 0; i < mSimplex.mCount; ++i)
   // {
-  //   Zero::gDebugDraw->Add(Zero::Debug::Sphere(mSimplex.mPoints[i].cso,
+  //   Raverie::gDebugDraw->Add(Raverie::Debug::Sphere(mSimplex.mPoints[i].cso,
   //   0.01f).Color(Color::Blue));
-  //   Zero::gDebugDraw->Add(Zero::Debug::Line(mSimplex.mPoints[i].cso,
+  //   Raverie::gDebugDraw->Add(Raverie::Debug::Line(mSimplex.mPoints[i].cso,
   //   mSimplex.mPoints[(i + 1) % mSimplex.mCount].cso).Color(Color::Blue)); if
   //   (mSimplex.mCount == 4)
   //   {
-  //     Zero::gDebugDraw->Add(Zero::Debug::Line(mSimplex.mPoints[i].cso,
+  //     Raverie::gDebugDraw->Add(Raverie::Debug::Line(mSimplex.mPoints[i].cso,
   //     mSimplex.mPoints[(i + 2) % mSimplex.mCount].cso).Color(Color::Blue));
-  //     Zero::gDebugDraw->Add(Zero::Debug::Line(mSimplex.mPoints[i].cso,
+  //     Raverie::gDebugDraw->Add(Raverie::Debug::Line(mSimplex.mPoints[i].cso,
   //     mSimplex.mPoints[(i + 3) % mSimplex.mCount].cso).Color(Color::Blue));
   //   }
   // }
@@ -155,7 +155,7 @@ void Gjk::DrawDebug(uint debugFlag)
   //   average += mSimplex.mPoints[i].cso;
   // if (mSimplex.mCount)
   //   average /= (float)mSimplex.mCount;
-  // Zero::gDebugDraw->Add(Zero::Debug::Line(average, average +
+  // Raverie::gDebugDraw->Add(Raverie::Debug::Line(average, average +
   // mSupportVector).Color(Color::Red));
 }
 
@@ -188,12 +188,12 @@ CSOVertex Gjk::ComputeSupport(Vec3 supportVector)
 
 void Gjk::DrawTriangle(Vec3 p0, Vec3 p1, Vec3 p2)
 {
-  Zero::gDebugDraw->Add(Zero::Debug::Triangle(p0, p1, p2).Color(Color::Orange).Border(true).Alpha(50));
+  Raverie::gDebugDraw->Add(Raverie::Debug::Triangle(p0, p1, p2).Color(Color::Orange).Border(true).Alpha(50));
 }
 
 void Gjk::DrawCSO(void)
 {
-  Zero::Array<CSOVertex> supports;
+  Raverie::Array<CSOVertex> supports;
 
   unsigned subdivisions = 24;
   float alphaLimit = Math::cPi - sEpsilon;
@@ -258,7 +258,7 @@ void Gjk::DrawCSO(void)
   supports.PushBack(bottom);
 
   // for (unsigned i = 0; i < supports.Size(); ++i)
-  //   Zero::gDebugDraw->Add(Zero::Debug::Sphere(supports[i].cso,
+  //   Raverie::gDebugDraw->Add(Raverie::Debug::Sphere(supports[i].cso,
   //   0.01f).Color(Color::Green));
 }
 

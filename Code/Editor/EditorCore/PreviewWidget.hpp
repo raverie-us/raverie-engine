@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -28,7 +28,7 @@ DeclareEnum3(PreviewAnimate, None, MouseOver, Always);
 class PreviewWidget : public Composite
 {
 public:
-  ZilchDeclareType(PreviewWidget, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(PreviewWidget, TypeCopyMode::ReferenceType);
 
   PreviewWidget(Composite* parent);
   PreviewWidget(PreviewWidgetInitializer& initializer);
@@ -102,7 +102,7 @@ struct PreviewWidgetCreator
 class PreviewWidgetFactory : public ExplicitSingleton<PreviewWidgetFactory, Object>
 {
 public:
-  ZilchDeclareType(PreviewWidgetFactory, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(PreviewWidgetFactory, TypeCopyMode::ReferenceType);
 
   typedef HashMap<String, PreviewWidgetCreator> CellEditorMapType;
   CellEditorMapType Creators;
@@ -123,4 +123,4 @@ public:
   static PreviewImportance::Enum GetPreviewImportance(BoundType* resourceType);
 };
 
-} // namespace Zero
+} // namespace Raverie

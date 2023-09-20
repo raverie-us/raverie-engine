@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 namespace Events
 {
@@ -11,12 +11,12 @@ DefineEvent(FileDeleted);
 DefineEvent(FileRenamed);
 } // namespace Events
 
-ZilchDefineType(EventDirectoryWatcher, builder, type)
+RaverieDefineType(EventDirectoryWatcher, builder, type)
 {
-  type->HandleManager = ZilchManagerId(PointerManager);
+  type->HandleManager = RaverieManagerId(PointerManager);
 }
 
-ZilchDefineType(FileEditEvent, builder, type)
+RaverieDefineType(FileEditEvent, builder, type)
 {
 }
 
@@ -46,4 +46,4 @@ OsInt EventDirectoryWatcher::FileCallBack(DirectoryWatcher::FileOperationInfo& i
   return 0;
 }
 
-} // namespace Zero
+} // namespace Raverie

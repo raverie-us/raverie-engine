@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 // Forward declarations
 class HeightMap;
@@ -29,7 +29,7 @@ DeclareEvent(HeightMapSave);
 /// Used by any height map event
 struct HeightMapEvent : public Event
 {
-  ZilchDeclareType(HeightMapEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(HeightMapEvent, TypeCopyMode::ReferenceType);
 
   /// The height map
   HeightMap* Map;
@@ -46,7 +46,7 @@ struct HeightMapEvent : public Event
 /// A large 2d block of height data
 struct HeightPatch
 {
-  ZilchDeclareType(HeightPatch, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(HeightPatch, TypeCopyMode::ReferenceType);
 
   /// The size of each patch (in height cells)
   static const size_t Size = 32;
@@ -158,7 +158,7 @@ public:
 class HeightMap : public Component
 {
 public:
-  ZilchDeclareType(HeightMap, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(HeightMap, TypeCopyMode::ReferenceType);
 
   // Friends
   template <typename T>
@@ -538,4 +538,4 @@ struct HeightMapAabbRange
 
 float FeatherInfluence(float distance, float radius, float featherRadius);
 
-} // namespace Zero
+} // namespace Raverie

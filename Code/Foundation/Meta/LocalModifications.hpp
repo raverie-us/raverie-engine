@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace ObjectContext
@@ -152,7 +152,7 @@ DeclareEnum2(InheritIdContext,
 class MetaDataInheritance : public ReferenceCountedEventObject
 {
 public:
-  ZilchDeclareType(MetaDataInheritance, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MetaDataInheritance, TypeCopyMode::ReferenceType);
 
   /// A unique identifier for this object. This will be used
   virtual Guid GetUniqueId(HandleParam object);
@@ -186,11 +186,11 @@ public:
 class MetaDataInheritanceRoot : public MetaDataInheritance
 {
 public:
-  ZilchDeclareType(MetaDataInheritanceRoot, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MetaDataInheritanceRoot, TypeCopyMode::ReferenceType);
 
   /// The id this object inherits from.
   virtual String GetInheritId(HandleParam object, InheritIdContext::Enum context) = 0;
   virtual void SetInheritId(HandleParam object, StringParam inheritId) = 0;
 };
 
-} // namespace Zero
+} // namespace Raverie

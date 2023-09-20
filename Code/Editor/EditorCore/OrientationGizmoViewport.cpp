@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 OrientationGizmoViewport::OrientationGizmoViewport(EditorViewport* editorViewport) : Widget(editorViewport)
@@ -232,4 +232,4 @@ void OrientationGizmoViewport::SetFaces(Vec3 direction)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

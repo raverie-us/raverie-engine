@@ -2,17 +2,17 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(BaseSprite, builder, type)
+RaverieDefineType(BaseSprite, builder, type)
 {
-  ZeroBindDocumented();
-  ZeroBindInterface(Graphical);
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
+  RaverieBindInterface(Graphical);
+  RaverieBindSetup(SetupMode::DefaultSerialization);
 
-  ZilchBindFieldProperty(mVertexColor);
-  ZilchBindFieldProperty(mGeometryMode);
+  RaverieBindFieldProperty(mVertexColor);
+  RaverieBindFieldProperty(mGeometryMode);
 }
 
 void BaseSprite::Serialize(Serializer& stream)
@@ -30,14 +30,14 @@ void BaseSprite::Initialize(CogInitializer& initializer)
 void BaseSprite::ComponentAdded(BoundType* typeId, Component* component)
 {
   Graphical::ComponentAdded(typeId, component);
-  if (typeId == ZilchTypeId(Area))
+  if (typeId == RaverieTypeId(Area))
     UpdateBroadPhaseAabb();
 }
 
 void BaseSprite::ComponentRemoved(BoundType* typeId, Component* component)
 {
   Graphical::ComponentRemoved(typeId, component);
-  if (typeId == ZilchTypeId(Area))
+  if (typeId == RaverieTypeId(Area))
     UpdateBroadPhaseAabb();
 }
 
@@ -65,20 +65,20 @@ void BaseSprite::ComputeLocalToViewMatrix(Mat4& localToView, Mat4& localToWorld,
     localToView = worldToView * localToWorld;
 }
 
-ZilchDefineType(Sprite, builder, type)
+RaverieDefineType(Sprite, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindDocumented();
-  ZeroBindInterface(BaseSprite);
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindComponent();
+  RaverieBindDocumented();
+  RaverieBindInterface(BaseSprite);
+  RaverieBindSetup(SetupMode::DefaultSerialization);
 
-  ZilchBindGetterSetterProperty(SpriteSource);
-  ZilchBindFieldProperty(mFlipX);
-  ZilchBindFieldProperty(mFlipY);
-  ZilchBindFieldProperty(mAnimationActive);
-  ZilchBindFieldProperty(mAnimationSpeed);
-  ZilchBindGetterSetterProperty(StartFrame);
-  ZilchBindGetterSetterProperty(CurrentFrame);
+  RaverieBindGetterSetterProperty(SpriteSource);
+  RaverieBindFieldProperty(mFlipX);
+  RaverieBindFieldProperty(mFlipY);
+  RaverieBindFieldProperty(mAnimationActive);
+  RaverieBindFieldProperty(mAnimationSpeed);
+  RaverieBindGetterSetterProperty(StartFrame);
+  RaverieBindGetterSetterProperty(CurrentFrame);
 }
 
 void Sprite::Serialize(Serializer& stream)
@@ -319,22 +319,22 @@ uint Sprite::WrapIndex(uint index)
   return index % mSpriteSource->FrameCount;
 }
 
-ZilchDefineType(SpriteText, builder, type)
+RaverieDefineType(SpriteText, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindDocumented();
-  ZeroBindInterface(BaseSprite);
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindComponent();
+  RaverieBindDocumented();
+  RaverieBindInterface(BaseSprite);
+  RaverieBindSetup(SetupMode::DefaultSerialization);
 
-  ZilchBindGetterSetterProperty(Text)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
-  ZilchBindGetterSetterProperty(Font);
-  ZilchBindGetterSetterProperty(FontSize);
-  ZilchBindGetterSetterProperty(PixelsPerUnit);
-  ZilchBindGetterSetterProperty(TextAlign);
+  RaverieBindGetterSetterProperty(Text)->AddAttribute(PropertyAttributes::cLocalModificationOverride);
+  RaverieBindGetterSetterProperty(Font);
+  RaverieBindGetterSetterProperty(FontSize);
+  RaverieBindGetterSetterProperty(PixelsPerUnit);
+  RaverieBindGetterSetterProperty(TextAlign);
 
-  ZilchBindMethod(MeasureText);
-  ZilchBindMethod(MeasureGivenText);
-  ZilchBindMethod(GetCharacterPosition);
+  RaverieBindMethod(MeasureText);
+  RaverieBindMethod(MeasureGivenText);
+  RaverieBindMethod(GetCharacterPosition);
 }
 
 void SpriteText::Serialize(Serializer& stream)
@@ -543,13 +543,13 @@ Vec2 SpriteText::GetLocalWidths()
     return MeasureText() * 0.5f;
 }
 
-ZilchDefineType(MultiSpriteEntry, builder, type)
+RaverieDefineType(MultiSpriteEntry, builder, type)
 {
-  ZilchBindCopyConstructor();
-  ZilchBindDestructor();
+  RaverieBindCopyConstructor();
+  RaverieBindDestructor();
 
-  ZilchBindGetterProperty(Index);
-  ZilchBindGetterProperty(SpriteSource);
+  RaverieBindGetterProperty(Index);
+  RaverieBindGetterProperty(SpriteSource);
 }
 
 IntVec2 MultiSpriteEntry::GetIndex()
@@ -562,18 +562,18 @@ SpriteSource* MultiSpriteEntry::GetSpriteSource()
   return mSource;
 }
 
-ZilchDefineType(MultiSprite, builder, type)
+RaverieDefineType(MultiSprite, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
 
-  ZilchBindFieldProperty(mAnimationActive);
-  ZilchBindFieldProperty(mAnimationSpeed);
+  RaverieBindFieldProperty(mAnimationActive);
+  RaverieBindFieldProperty(mAnimationSpeed);
 
-  ZilchBindMethod(Get);
-  ZilchBindMethod(Set);
-  ZilchBindMethod(Clear);
-  ZilchBindMethod(All);
+  RaverieBindMethod(Get);
+  RaverieBindMethod(Set);
+  RaverieBindMethod(Clear);
+  RaverieBindMethod(All);
 }
 
 void MultiSprite::Serialize(Serializer& stream)
@@ -907,4 +907,4 @@ void MultiSprite::AddCellEntries(MultiSpriteCell& cell, GroupMap& groupMap)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

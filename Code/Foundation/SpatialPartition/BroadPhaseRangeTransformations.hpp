@@ -1,6 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 
-namespace Zero
+namespace Raverie
 {
 
 /// A range that takes a range from broadphase and a functor to retrieve the
@@ -185,4 +185,4 @@ struct FullRangeSorter
   Array<Item> mItems;
 };
 
-} // namespace Zero
+} // namespace Raverie

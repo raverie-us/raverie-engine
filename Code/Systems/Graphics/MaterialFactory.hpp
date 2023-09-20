@@ -2,13 +2,13 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class MaterialFactory : public SimpleResourceFactory<Material, MaterialBlock>
 {
 public:
-  ZilchDeclareDerivedTypeExplicit(MaterialFactory, MetaComposition, TypeCopyMode::ReferenceType);
+  RaverieDeclareDerivedTypeExplicit(MaterialFactory, MetaComposition, TypeCopyMode::ReferenceType);
   static MaterialFactory* sInstance;
   static MaterialFactory* GetInstance()
   {
@@ -21,8 +21,8 @@ public:
 
   bool CanAddComponent(HandleParam owner, BoundType* typeToAdd, AddInfo* info = nullptr) override;
 
-  void UpdateRestrictedComponents(HashMap<LibraryRef, ZilchShaderIRLibraryRef>& libraries,
-                                  ZilchFragmentTypeMap& fragmentTypes);
+  void UpdateRestrictedComponents(HashMap<LibraryRef, RaverieShaderIRLibraryRef>& libraries,
+                                  RaverieFragmentTypeMap& fragmentTypes);
 
   ShaderInputType::Enum GetShaderInputType(Type* type);
   typedef HashMap<Type*, ShaderInputType::Enum> ShaderInputTypeMap;
@@ -37,4 +37,4 @@ public:
   HashSet<BoundType*> mGeometryComponents;
 };
 
-} // namespace Zero
+} // namespace Raverie

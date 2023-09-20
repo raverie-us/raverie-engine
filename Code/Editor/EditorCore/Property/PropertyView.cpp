@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace PropertyViewUi
@@ -21,12 +21,12 @@ DefineEvent(NameActivated);
 DefineEvent(OpenAdd);
 } // namespace Events
 
-ZilchDefineType(PropertyView, builder, type)
+RaverieDefineType(PropertyView, builder, type)
 {
-  ZilchBindOverloadedMethod(SetObject, ZilchInstanceOverload(void, Object*));
-  ZilchBindMethod(Refresh);
-  ZilchBindMethod(Invalidate);
-  ZilchBindMethod(ActivateAutoUpdate);
+  RaverieBindOverloadedMethod(SetObject, RaverieInstanceOverload(void, Object*));
+  RaverieBindMethod(Refresh);
+  RaverieBindMethod(Invalidate);
+  RaverieBindMethod(ActivateAutoUpdate);
 }
 
 PropertyView::PropertyView(Composite* parent) : Composite(parent), mFixedHeight(false)
@@ -321,4 +321,4 @@ void PropertyView::OnMetaModified(MetaLibraryEvent* e)
   Invalidate();
 }
 
-} // namespace Zero
+} // namespace Raverie

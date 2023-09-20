@@ -4,7 +4,7 @@
 #include "Containers/Algorithm.hpp"
 #include "StringReplacement.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 struct TestLetterIndex
@@ -138,4 +138,4 @@ String Replace(StringParam matchString, StringParam replaceString, StringParam s
   return Replace(replacements, source);
 }
 
-} // namespace Zero
+} // namespace Raverie

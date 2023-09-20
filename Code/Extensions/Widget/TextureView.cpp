@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 class SkyboxDrag : public MouseManipulation
@@ -29,7 +29,7 @@ public:
   }
 };
 
-ZilchDefineType(TextureView, builder, type)
+RaverieDefineType(TextureView, builder, type)
 {
 }
 
@@ -142,7 +142,7 @@ void TextureView::RenderUpdate(
     frameNode.mShaderInputRange.start = shaderInputs.Size();
 
     // Add our custom shader inputs
-    ZilchShaderGenerator* shaderGenerator = Z::gEngine->has(GraphicsEngine)->mShaderGenerator;
+    RaverieShaderGenerator* shaderGenerator = Z::gEngine->has(GraphicsEngine)->mShaderGenerator;
     ShaderInput input = shaderGenerator->CreateShaderInput(
         "TextureCubePreview", "SkyboxPreviewInput", ShaderInputType::Vec4, mSkyboxInput);
     shaderInputs.PushBack(input);
@@ -165,4 +165,4 @@ void TextureView::RenderUpdate(
       viewNode, Vec3(0, 0, 0), Vec3(size, 0), mUv0, mUv1, color * colorTx.ColorMultiply);
 }
 
-} // namespace Zero
+} // namespace Raverie

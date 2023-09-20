@@ -1,11 +1,11 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
-ZilchDefineType(HeightMapSource, builder, type)
+RaverieDefineType(HeightMapSource, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 }
 
 PatchLayer::PatchLayer()
@@ -179,4 +179,4 @@ void HeightMapSource::Unload()
   DeleteObjectsInContainer(mData);
 }
 
-} // namespace Zero
+} // namespace Raverie

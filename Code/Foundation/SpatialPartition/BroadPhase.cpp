@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 static Memory::Heap* sDefaultBroadPhaseHeap = Memory::GetNamedHeap("BroadPhase");
@@ -13,7 +13,7 @@ IBroadPhase::VolumeCastCallBack IBroadPhase::mCastAabbCallBack = nullptr;
 IBroadPhase::VolumeCastCallBack IBroadPhase::mCastSphereCallBack = nullptr;
 IBroadPhase::VolumeCastCallBack IBroadPhase::mCastFrustumCallBack = nullptr;
 
-ZilchDefineType(IBroadPhase, builder, type)
+RaverieDefineType(IBroadPhase, builder, type)
 {
 }
 
@@ -34,87 +34,87 @@ void IBroadPhase::Serialize(Serializer& stream)
 
 void IBroadPhase::CreateProxy(BroadPhaseProxy& proxy, BroadPhaseData& data)
 {
-  ErrorIf(true, "CreateProxy function not implemented on BroadPhase %s", ZilchGetDerivedType()->Name.c_str());
+  ErrorIf(true, "CreateProxy function not implemented on BroadPhase %s", RaverieGetDerivedType()->Name.c_str());
 }
 
 void IBroadPhase::CreateProxies(BroadPhaseObjectArray& objects)
 {
-  ErrorIf(true, "CreateProxies function not implemented on BroadPhase %s", ZilchGetDerivedType()->Name.c_str());
+  ErrorIf(true, "CreateProxies function not implemented on BroadPhase %s", RaverieGetDerivedType()->Name.c_str());
 }
 
 void IBroadPhase::RemoveProxy(BroadPhaseProxy& proxy)
 {
-  ErrorIf(true, "RemoveProxy function not implemented on BroadPhase %s", ZilchGetDerivedType()->Name.c_str());
+  ErrorIf(true, "RemoveProxy function not implemented on BroadPhase %s", RaverieGetDerivedType()->Name.c_str());
 }
 
 void IBroadPhase::RemoveProxies(ProxyHandleArray& proxies)
 {
-  ErrorIf(true, "RemoveProxies function not implemented on BroadPhase %s", ZilchGetDerivedType()->Name.c_str());
+  ErrorIf(true, "RemoveProxies function not implemented on BroadPhase %s", RaverieGetDerivedType()->Name.c_str());
 }
 
 void IBroadPhase::UpdateProxy(BroadPhaseProxy& proxy, BroadPhaseData& data)
 {
-  ErrorIf(true, "UpdateProxy function not implemented on BroadPhase %s", ZilchGetDerivedType()->Name.c_str());
+  ErrorIf(true, "UpdateProxy function not implemented on BroadPhase %s", RaverieGetDerivedType()->Name.c_str());
 }
 
 void IBroadPhase::UpdateProxies(BroadPhaseObjectArray& objects)
 {
-  ErrorIf(true, "UpdateProxies function not implemented on BroadPhase %s", ZilchGetDerivedType()->Name.c_str());
+  ErrorIf(true, "UpdateProxies function not implemented on BroadPhase %s", RaverieGetDerivedType()->Name.c_str());
 }
 
 void IBroadPhase::SelfQuery(ClientPairArray& results)
 {
-  ErrorIf(true, "SelfQuery function not implemented on BroadPhase %s", ZilchGetDerivedType()->Name.c_str());
+  ErrorIf(true, "SelfQuery function not implemented on BroadPhase %s", RaverieGetDerivedType()->Name.c_str());
 }
 
 void IBroadPhase::Query(BroadPhaseData& data, ClientPairArray& results)
 {
-  ErrorIf(true, "Query function not implemented on BroadPhase %s", ZilchGetDerivedType()->Name.c_str());
+  ErrorIf(true, "Query function not implemented on BroadPhase %s", RaverieGetDerivedType()->Name.c_str());
 }
 
 void IBroadPhase::BatchQuery(BroadPhaseDataArray& data, ClientPairArray& results)
 {
-  ErrorIf(true, "BatchQuery function not implemented on BroadPhase %s", ZilchGetDerivedType()->Name.c_str());
+  ErrorIf(true, "BatchQuery function not implemented on BroadPhase %s", RaverieGetDerivedType()->Name.c_str());
 }
 
 void IBroadPhase::Construct()
 {
-  ErrorIf(true, "Construct function not implemented on BroadPhase %s", ZilchGetDerivedType()->Name.c_str());
+  ErrorIf(true, "Construct function not implemented on BroadPhase %s", RaverieGetDerivedType()->Name.c_str());
 }
 
 void IBroadPhase::CastRay(CastDataParam data, ProxyCastResults& results)
 {
-  ErrorIf(true, "CastRay function not implemented on BroadPhase %s", ZilchGetDerivedType()->Name.c_str());
+  ErrorIf(true, "CastRay function not implemented on BroadPhase %s", RaverieGetDerivedType()->Name.c_str());
 }
 
 void IBroadPhase::CastSegment(CastDataParam data, ProxyCastResults& results)
 {
-  ErrorIf(true, "CastSegment function not implemented on BroadPhase %s", ZilchGetDerivedType()->Name.c_str());
+  ErrorIf(true, "CastSegment function not implemented on BroadPhase %s", RaverieGetDerivedType()->Name.c_str());
 }
 
 void IBroadPhase::CastAabb(CastDataParam data, ProxyCastResults& results)
 {
-  ErrorIf(true, "CastAabb function not implemented on BroadPhase %s", ZilchGetDerivedType()->Name.c_str());
+  ErrorIf(true, "CastAabb function not implemented on BroadPhase %s", RaverieGetDerivedType()->Name.c_str());
 }
 
 void IBroadPhase::CastSphere(CastDataParam data, ProxyCastResults& results)
 {
-  ErrorIf(true, "CastSphere function not implemented on BroadPhase %s", ZilchGetDerivedType()->Name.c_str());
+  ErrorIf(true, "CastSphere function not implemented on BroadPhase %s", RaverieGetDerivedType()->Name.c_str());
 }
 
 void IBroadPhase::CastFrustum(CastDataParam data, ProxyCastResults& results)
 {
-  ErrorIf(true, "CastFrustum function not implemented on BroadPhase %s", ZilchGetDerivedType()->Name.c_str());
+  ErrorIf(true, "CastFrustum function not implemented on BroadPhase %s", RaverieGetDerivedType()->Name.c_str());
 }
 
 void IBroadPhase::RegisterCollisions()
 {
-  ErrorIf(true, "RegisterCollisions function not implemented on BroadPhase %s", ZilchGetDerivedType()->Name.c_str());
+  ErrorIf(true, "RegisterCollisions function not implemented on BroadPhase %s", RaverieGetDerivedType()->Name.c_str());
 }
 
 void IBroadPhase::Cleanup()
 {
-  ErrorIf(true, "Cleanup function not implemented on BroadPhase %s", ZilchGetDerivedType()->Name.c_str());
+  ErrorIf(true, "Cleanup function not implemented on BroadPhase %s", RaverieGetDerivedType()->Name.c_str());
 }
 
 bool IBroadPhase::TestRayVsAabb(const Aabb& aabb, Vec3Param start, Vec3Param direction, real& time)
@@ -176,4 +176,4 @@ uint IBroadPhase::GetType()
   return mType;
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // A simple resource factory that wraps a lot of functionality of
@@ -14,10 +14,10 @@ template <typename ResourceType, typename BlockType>
 class SimpleResourceFactory : public MetaComposition
 {
 public:
-  ZilchDeclareType(SimpleResourceFactory, TypeCopyMode::ReferenceType);
-  SimpleResourceFactory() : MetaComposition(ZilchTypeId(BlockType)), mDeleteMemory(false){};
+  RaverieDeclareType(SimpleResourceFactory, TypeCopyMode::ReferenceType);
+  SimpleResourceFactory() : MetaComposition(RaverieTypeId(BlockType)), mDeleteMemory(false){};
 
-  SimpleResourceFactory(bool deleteMemory) : MetaComposition(ZilchTypeId(BlockType))
+  SimpleResourceFactory(bool deleteMemory) : MetaComposition(RaverieTypeId(BlockType))
   {
     mDeleteMemory = deleteMemory;
   }
@@ -116,7 +116,7 @@ public:
 
   Handle AllocateBlock(BoundType* blockMeta, bool runSetup)
   {
-    Handle handle = ZilchAllocate(BlockType, blockMeta);
+    Handle handle = RaverieAllocate(BlockType, blockMeta);
 
     // Run default serialization if necessary
     if (runSetup)
@@ -168,4 +168,4 @@ public:
   bool mDeleteMemory;
 };
 
-} // namespace Zero
+} // namespace Raverie

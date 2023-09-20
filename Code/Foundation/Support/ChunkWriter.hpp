@@ -2,7 +2,7 @@
 #pragma once
 #include "Platform/File.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 template <typename streamType>
@@ -74,4 +74,4 @@ public:
 
 typedef ChunkWriter<File> ChunkFileWriter;
 
-} // namespace Zero
+} // namespace Raverie

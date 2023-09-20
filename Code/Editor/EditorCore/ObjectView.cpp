@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace ObjectViewUi
@@ -22,7 +22,7 @@ DeclareEnum3(FlagState, Disabled, Enabled, Hidden);
 class FlagEditor : public ValueEditor
 {
 public:
-  typedef FlagEditor ZilchSelf;
+  typedef FlagEditor RaverieSelf;
   Element* mIcon;
   bool mEnabled;
 
@@ -198,7 +198,7 @@ public:
 
     forRange (Component* component, cog->GetComponents())
     {
-      int priority = PartialMatch(SubFilterString, ZilchVirtualTypeId(component)->Name.All(), CaseInsensitiveCompare);
+      int priority = PartialMatch(SubFilterString, RaverieVirtualTypeId(component)->Name.All(), CaseInsensitiveCompare);
 
       if (priority != cNoMatch)
         return true;
@@ -217,11 +217,11 @@ public:
 
     forRange (Component* component, cog->GetComponents())
     {
-      BoundType* metaType = ZilchVirtualTypeId(component);
+      BoundType* metaType = RaverieVirtualTypeId(component);
 
       forRange (Property* property, metaType->GetProperties())
       {
-        if (property->PropertyType->IsA(ZilchTypeId(Resource)))
+        if (property->PropertyType->IsA(RaverieTypeId(Resource)))
         {
           Any var = property->GetValue(component);
 
@@ -275,7 +275,7 @@ public:
 class TreeViewSearchObjectTree : public TreeViewSearch
 {
 public:
-  typedef TreeViewSearchObjectTree ZilchSelf;
+  typedef TreeViewSearchObjectTree RaverieSelf;
   ObjectViewFilter* mObjectFilter;
 
   TreeViewSearchObjectTree(Composite* parent) : TreeViewSearch(parent, nullptr, nullptr)
@@ -344,7 +344,7 @@ public:
 };
 
 // Removed Entry
-ZilchDefineType(RemovedEntry, builder, type)
+RaverieDefineType(RemovedEntry, builder, type)
 {
 }
 
@@ -416,7 +416,7 @@ class SpaceObjectSource : public DataSource
 {
 public:
   typedef u64 RemovedEntryId;
-  typedef SpaceObjectSource ZilchSelf;
+  typedef SpaceObjectSource RaverieSelf;
 
   Space* mSpace;
 
@@ -807,7 +807,7 @@ public:
       return false;
     if (column == CommonColumns::Name)
     {
-      Property* property = ZilchTypeId(Cog)->GetProperty("Name");
+      Property* property = RaverieTypeId(Cog)->GetProperty("Name");
       ChangeAndQueueProperty(Z::gEditor->GetOperationQueue(), cog, property, variant);
     }
     else if (column == cHiddenColumn)
@@ -977,10 +977,10 @@ public:
     forRange (DataIndex& index, indicesToMove.All())
       sortedCogs.PushBack((Cog*)ToEntry(index));
 
-    Zero::Sort(sortedCogs.All(), CogHierarchyIndexCompareFn);
+    Raverie::Sort(sortedCogs.All(), CogHierarchyIndexCompareFn);
 
     if (insertMode == InsertMode::After)
-      Zero::Reverse(sortedCogs.Begin(), sortedCogs.End());
+      Raverie::Reverse(sortedCogs.Begin(), sortedCogs.End());
 
     forRange (Cog* cog, sortedCogs)
       Move(destinationEntry, cog, insertMode);
@@ -1161,7 +1161,7 @@ void RegisterObjectViewEditors()
   factory->RegisterEditor("LockEditor", CreateLockEditor);
 }
 
-ZilchDefineType(ObjectView, builder, type)
+RaverieDefineType(ObjectView, builder, type)
 {
 }
 
@@ -1523,7 +1523,7 @@ void ObjectView::OnRightMouseUp(MouseEvent* event)
     return;
 
   ContextMenu* menu = new ContextMenu(this);
-  menu->AddZeroContextMenu("Create");
+  menu->AddContextMenu("Create");
   menu->ShiftOntoScreen(ToVector3(event->Position));
 }
 
@@ -1569,4 +1569,4 @@ void ObjectView::OnDataActivated(DataEvent* event)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

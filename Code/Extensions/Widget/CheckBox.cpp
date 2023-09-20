@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 const String cCheckBoxIcon = "Background";
@@ -19,7 +19,7 @@ Tweakable(Vec4, FocusBorderColor, Vec4(1, 1, 1, 1), cLocation);
 Tweakable(Vec2, CheckSize, Vec2(12, 12), cLocation);
 } // namespace CheckBoxUi
 
-ZilchDefineType(CheckBox, builder, type)
+RaverieDefineType(CheckBox, builder, type)
 {
 }
 
@@ -161,7 +161,7 @@ void CheckBox::OnLeftClick(MouseEvent* event)
   ToggleChecked();
 }
 
-ZilchDefineType(TextCheckBox, builder, type)
+RaverieDefineType(TextCheckBox, builder, type)
 {
 }
 
@@ -215,4 +215,4 @@ void TextCheckBox::OnLeftClick(MouseEvent* event)
   mCheckBox->ToggleChecked();
 }
 
-} // namespace Zero
+} // namespace Raverie

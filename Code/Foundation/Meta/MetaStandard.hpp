@@ -4,23 +4,23 @@
 // Standard includes
 #include "Foundation/Geometry/GeometryStandard.hpp"
 
-namespace Zero
+namespace Raverie
 {
 class PropertyPath;
 class MetaSelection;
 
 // Meta library
-class MetaLibrary : public Zilch::StaticLibrary
+class MetaLibrary : public Raverie::StaticLibrary
 {
 public:
-  ZilchDeclareStaticLibraryInternals(MetaLibrary);
+  RaverieDeclareStaticLibraryInternals(MetaLibrary);
 
   static void Initialize();
   static void Shutdown();
 };
 
 const Guid cInvalidUniqueId = (Guid)(u64)-1;
-} // namespace Zero
+} // namespace Raverie
 
 // Project includes
 #include "NativeTypeConversion.hpp"
@@ -41,7 +41,7 @@ const Guid cInvalidUniqueId = (Guid)(u64)-1;
 #include "MetaComposition.hpp"
 #include "LocalModifications.hpp"
 #include "MetaSelection.hpp"
-#include "ZeroMetaArray.hpp"
+#include "RaverieMetaArray.hpp"
 #include "MetaMath.hpp"
 #include "MetaEditorExtensions.hpp"
 #include "MetaLibraryExtensions.hpp"

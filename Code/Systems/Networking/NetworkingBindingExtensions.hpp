@@ -1,14 +1,14 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Meta Net Property
 class MetaNetProperty : public MetaAttribute
 {
 public:
-  ZilchDeclareType(MetaNetProperty, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MetaNetProperty, TypeCopyMode::ReferenceType);
 
   /// The net property type name.
   String mNetPropertyConfig;
@@ -17,4 +17,4 @@ public:
   String mNetChannelConfig;
 };
 
-} // namespace Zero
+} // namespace Raverie

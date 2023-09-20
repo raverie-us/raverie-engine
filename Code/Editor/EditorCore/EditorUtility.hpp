@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class Cog;
@@ -61,4 +61,4 @@ Aabb GetAabbFromObjects(metaRangeType objects, IncludeMode::Type includeMode = I
   return aabb;
 }
 
-} // namespace Zero
+} // namespace Raverie

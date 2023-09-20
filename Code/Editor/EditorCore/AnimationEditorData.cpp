@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -26,7 +26,7 @@ String GetObjectNameFromPath(StringParam objectPath)
   return last;
 }
 
-ZilchDefineType(AnimationEditorData, builder, type)
+RaverieDefineType(AnimationEditorData, builder, type)
 {
 }
 
@@ -307,4 +307,4 @@ RichAnimation* ConvertToRichAnimation(Animation* animation)
   return richAnim;
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 TextBlock::TextBlock()
@@ -26,11 +26,11 @@ void TextBlock::Save(StringParam filename)
   WriteStringRangeToFile(filename, Text);
 }
 
-ZilchDefineType(TextBlock, builder, type)
+RaverieDefineType(TextBlock, builder, type)
 {
-  ZilchBindGetterProperty(Text);
+  RaverieBindGetterProperty(Text);
 
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 }
 
 String TextBlock::GetText()
@@ -103,4 +103,4 @@ TextBlockManager::TextBlockManager(BoundType* resourceType) : ResourceManager(re
   mExtension = "txt";
 }
 
-} // namespace Zero
+} // namespace Raverie

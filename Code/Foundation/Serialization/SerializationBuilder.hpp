@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Mix in class used to implement serializers. Inherited serializes need to
@@ -52,4 +52,4 @@ public:
   }
 };
 
-} // namespace Zero
+} // namespace Raverie

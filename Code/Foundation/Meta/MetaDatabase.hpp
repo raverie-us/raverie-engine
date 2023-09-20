@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 namespace Events
 {
@@ -13,7 +13,7 @@ DeclareEvent(MetaRemoved);
 class MetaLibraryEvent : public Event
 {
 public:
-  ZilchDeclareType(MetaLibraryEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MetaLibraryEvent, TypeCopyMode::ReferenceType);
   LibraryRef mLibrary;
 };
 
@@ -21,7 +21,7 @@ public:
 class MetaSerializedProperty : public ReferenceCountedEventObject
 {
 public:
-  ZilchDeclareType(MetaSerializedProperty, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MetaSerializedProperty, TypeCopyMode::ReferenceType);
 
   MetaSerializedProperty();
   MetaSerializedProperty(AnyParam defaultValue);
@@ -71,4 +71,4 @@ public:
   Array<BoundType*> mCompositionTypes;
 };
 
-} // namespace Zero
+} // namespace Raverie

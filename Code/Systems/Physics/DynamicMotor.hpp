@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Forward Declarations
@@ -25,7 +25,7 @@ typedef Physics::LinearAxisJoint LinearAxisJoint;
 class DynamicMotor : public Component
 {
 public:
-  ZilchDeclareType(DynamicMotor, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(DynamicMotor, TypeCopyMode::ReferenceType);
 
   DynamicMotor();
   virtual ~DynamicMotor();
@@ -69,4 +69,4 @@ private:
   CogId mVelJointCog;
 };
 
-} // namespace Zero
+} // namespace Raverie

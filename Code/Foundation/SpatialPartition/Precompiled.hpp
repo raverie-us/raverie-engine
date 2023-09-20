@@ -1,6 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-#include "Foundation/Zilch/Precompiled.hpp"
-using namespace Zilch;
+#include "Foundation/RaverieLanguage/Precompiled.hpp"
+using namespace Raverie;
 #include "SpatialPartitionStandard.hpp"

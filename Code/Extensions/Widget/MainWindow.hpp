@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -12,7 +12,7 @@ DeclareEvent(MainWindowTransformUpdated);
 class MainWindowTransformEvent : public Event
 {
 public:
-  ZilchDeclareType(MainWindowTransformEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MainWindowTransformEvent, TypeCopyMode::ReferenceType);
 
   MainWindowTransformEvent(Vec2Param oldScreenSize = Vec2::cZero,
                            Vec2Param newScreenSize = Vec2::cZero);
@@ -26,7 +26,7 @@ public:
 class MainWindow : public RootWidget
 {
 public:
-  ZilchDeclareType(MainWindow, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MainWindow, TypeCopyMode::ReferenceType);
 
   MainWindow();
 
@@ -68,4 +68,4 @@ public:
   void WidgetDestroyed(Widget* widget) override;
 };
 
-} // namespace Zero
+} // namespace Raverie

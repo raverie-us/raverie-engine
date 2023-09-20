@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 GeometryImporter::GeometryImporter(StringParam inputFile, StringParam outputPath, StringParam metaFile) :
     mScene(nullptr),
@@ -71,13 +71,13 @@ GeometryProcessorCodes::Enum GeometryImporter::ProcessModelFiles()
   if (!FileExists(mInputFile))
   {
     ZPrint("Missing model file '%s'\n", mInputFile.c_str());
-    return Zero::GeometryProcessorCodes::Failed;
+    return Raverie::GeometryProcessorCodes::Failed;
   }
 
   if (!FileExists(mMetaFile))
   {
     ZPrint("Missing meta file '%s'\n", mMetaFile.c_str());
-    return Zero::GeometryProcessorCodes::Failed;
+    return Raverie::GeometryProcessorCodes::Failed;
   }
 
   // Load from meta file
@@ -106,7 +106,7 @@ GeometryProcessorCodes::Enum GeometryImporter::ProcessModelFiles()
     String error(mAssetImporter.GetErrorString());
     error = ProcessAssimpErrorMessage(error);
     ZPrint("Geometry Processor Error: %s\n", error.c_str());
-    return Zero::GeometryProcessorCodes::Failed;
+    return Raverie::GeometryProcessorCodes::Failed;
   }
 
   if (SceneEmpty())
@@ -576,4 +576,4 @@ String GeometryImporter::ProcessAssimpErrorMessage(StringParam errorMessage)
   return errorMessage;
 }
 
-} // namespace Zero
+} // namespace Raverie

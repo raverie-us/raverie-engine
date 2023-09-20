@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Physics
@@ -339,4 +339,4 @@ inline void SolveConstraintPosition(ListType& jointList, UpdateFunctor functor)
 
 } // namespace Physics
 
-} // namespace Zero
+} // namespace Raverie

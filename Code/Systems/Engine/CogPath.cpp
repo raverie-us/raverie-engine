@@ -4,7 +4,7 @@
 
 static bool cCogPathDeprecate = false;
 
-namespace Zero
+namespace Raverie
 {
 namespace Events
 {
@@ -21,7 +21,7 @@ static const char cPathSeparatorChar = cPathSeparator[0];
 static const char cSelfSpecifierChar = cSelfSpecifier[0];
 static const char cParentSpecifierChar = cParentSpecifier[0];
 
-ZilchDefineType(CogPathMetaSerialization, builder, type)
+RaverieDefineType(CogPathMetaSerialization, builder, type)
 {
 }
 
@@ -32,42 +32,42 @@ DeclareEnum2(CogPathErrorCode, DidNotFind, ParseError)
   return IsAlphaNumeric(r) || r == '_' || r == ' ';
 }
 
-ZilchDefineType(CogPath, builder, type)
+RaverieDefineType(CogPath, builder, type)
 {
-  ZilchBindDefaultCopyDestructor();
-  ZilchBindConstructor(StringParam);
+  RaverieBindDefaultCopyDestructor();
+  RaverieBindConstructor(StringParam);
 
   type->Add(new CogPathMetaComposition());
   type->Add(new CogPathMetaSerialization());
   type->CreatableInScript = true;
 
-  ZeroBindDocumented();
-  ZilchBindGetterSetter(Path);
-  ZilchBindGetterSetter(Cog);
+  RaverieBindDocumented();
+  RaverieBindGetterSetter(Path);
+  RaverieBindGetterSetter(Cog);
 
   // METAREFACTOR This should be a property, but we need a custom Cog display
-  ZilchBindGetterSetter(DirectCog);
+  RaverieBindGetterSetter(DirectCog);
 
-  ZilchBindGetterSetter(RelativeTo);
-  ZilchBindGetterSetterProperty(ErrorOnResolveToNull);
-  ZilchBindGetterSetterProperty(ErrorOnPathCantCompute);
-  ZilchBindGetterSetterProperty(ErrorOnDirectLinkFail);
-  ZilchBindGetterSetterProperty(UpdateCogOnPathChange);
-  ZilchBindGetterSetterProperty(UpdateCogOnInitialize);
-  ZilchBindGetterSetterProperty(UpdatePathOnCogChange);
+  RaverieBindGetterSetter(RelativeTo);
+  RaverieBindGetterSetterProperty(ErrorOnResolveToNull);
+  RaverieBindGetterSetterProperty(ErrorOnPathCantCompute);
+  RaverieBindGetterSetterProperty(ErrorOnDirectLinkFail);
+  RaverieBindGetterSetterProperty(UpdateCogOnPathChange);
+  RaverieBindGetterSetterProperty(UpdateCogOnInitialize);
+  RaverieBindGetterSetterProperty(UpdatePathOnCogChange);
 
-  ZilchBindMethod(Refresh);
-  ZilchBindMethod(RefreshIfNull);
-  ZilchBindMethod(Clone);
+  RaverieBindMethod(Refresh);
+  RaverieBindMethod(RefreshIfNull);
+  RaverieBindMethod(Clone);
 
-  ZeroBindEvent(Events::CogPathCogChanged, CogPathEvent);
+  RaverieBindEvent(Events::CogPathCogChanged, CogPathEvent);
 
-  ZilchBindOverloadedMethod(Resolve, (Cog * (*)(Cog*, StringParam)));
-  ZilchBindOverloadedMethod(ComputePath, (String(*)(Cog*, Cog*, CogPathPreference::Enum)));
+  RaverieBindOverloadedMethod(Resolve, (Cog * (*)(Cog*, StringParam)));
+  RaverieBindOverloadedMethod(ComputePath, (String(*)(Cog*, Cog*, CogPathPreference::Enum)));
 
-  ZilchBindGetterSetterProperty(PathPreference0);
-  ZilchBindGetterSetterProperty(PathPreference1);
-  ZilchBindGetterSetterProperty(PathPreference2);
+  RaverieBindGetterSetterProperty(PathPreference0);
+  RaverieBindGetterSetterProperty(PathPreference1);
+  RaverieBindGetterSetterProperty(PathPreference2);
 }
 
 bool ValidateMetaIsCog(Cog* cog, Status& status)
@@ -76,8 +76,8 @@ bool ValidateMetaIsCog(Cog* cog, Status& status)
     return true;
 
   // This must be directly equal to, not IsA!
-  BoundType* meta = ZilchVirtualTypeId(cog);
-  if (meta != ZilchTypeId(Cog))
+  BoundType* meta = RaverieVirtualTypeId(cog);
+  if (meta != RaverieTypeId(Cog))
   {
     status.State = StatusState::Failure;
     status.Context = StatusCodeCogPath::OnlySupportsCogTypes;
@@ -930,7 +930,7 @@ Cog* CogPath::RestoreLink(CogInitializer& initializer, Cog* owner, Component* co
   if (owner != nullptr)
     mSharedNode->mRelativeTo = owner;
 
-  Zero::RestoreLink(
+  Raverie::RestoreLink(
       &mSharedNode->mResolvedCog, initializer.Context, component, propertyName, GetErrorOnDirectLinkFail());
   Cog* newCog = mSharedNode->mResolvedCog;
   if (newCog)
@@ -1231,9 +1231,9 @@ bool CogPath::RefreshIfNull()
   return newCog != oldCog;
 }
 
-ZilchDefineType(CogPathEvent, builder, type)
+RaverieDefineType(CogPathEvent, builder, type)
 {
-  ZilchBindFieldProperty(mCogPath);
+  RaverieBindFieldProperty(mCogPath);
 }
 
 CogPathEvent::CogPathEvent()
@@ -1295,17 +1295,17 @@ bool Policy<CogPath>::Serialize(Serializer& stream, cstr fieldName, CogPath& pat
     if (!stream.EnumField("CogPathPreference",
                           "PathPreference0",
                           (uint&)value.mPathPreference0,
-                          ZilchTypeId(CogPathPreference::Enum)))
+                          RaverieTypeId(CogPathPreference::Enum)))
       value.mPathPreference0 = CogPathPreference::CogRelative;
     if (!stream.EnumField("CogPathPreference",
                           "PathPreference1",
                           (uint&)value.mPathPreference1,
-                          ZilchTypeId(CogPathPreference::Enum)))
+                          RaverieTypeId(CogPathPreference::Enum)))
       value.mPathPreference1 = CogPathPreference::SpaceRelative;
     if (!stream.EnumField("CogPathPreference",
                           "PathPreference2",
                           (uint&)value.mPathPreference2,
-                          ZilchTypeId(CogPathPreference::Enum)))
+                          RaverieTypeId(CogPathPreference::Enum)))
       value.mPathPreference2 = CogPathPreference::Absolute;
     stream.End("CogPath", StructureType::Object);
 
@@ -1319,11 +1319,11 @@ bool Policy<CogPath>::Serialize(Serializer& stream, cstr fieldName, CogPath& pat
 }
 } // namespace Serialization
 
-ZilchDefineType(CogPathMetaComposition, builder, type)
+RaverieDefineType(CogPathMetaComposition, builder, type)
 {
 }
 
-CogPathMetaComposition::CogPathMetaComposition() : MetaComposition(ZilchTypeId(Component))
+CogPathMetaComposition::CogPathMetaComposition() : MetaComposition(RaverieTypeId(Component))
 {
   mSupportsComponentAddition = false;
 }
@@ -1337,7 +1337,7 @@ Handle CogPathMetaComposition::GetComponent(HandleParam owner, BoundType* compon
 
     // If the component is null, the constructed Handle will be of type
     // 'Component' instead of the actual type we were querying. This can cause a
-    // problem when building a Zilch::Call. Don't do this if the component is
+    // problem when building a Raverie::Call. Don't do this if the component is
     // valid though otherwise component interfaces won't work (the base class
     // type will be set over the derived class type).
     if (component.IsNull())
@@ -1412,4 +1412,4 @@ bool CogPathMetaSerialization::ConvertFromString(StringParam input, Any& output)
   return true;
 }
 
-} // namespace Zero
+} // namespace Raverie

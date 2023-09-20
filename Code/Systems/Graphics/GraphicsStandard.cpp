@@ -2,174 +2,174 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Ranges
-ZilchDefineRange(GraphicalEntryRange);
-ZilchDefineRange(MultiSpriteEntryRange);
-ZilchDefineRange(VertexSemanticRange);
-ZilchDefineRange(ParticleListRange);
-ZilchDefineRange(Array<HandleOf<Material>>);
-ZilchDefineRange(Array<HandleOf<RenderGroup>>);
+RaverieDefineRange(GraphicalEntryRange);
+RaverieDefineRange(MultiSpriteEntryRange);
+RaverieDefineRange(VertexSemanticRange);
+RaverieDefineRange(ParticleListRange);
+RaverieDefineRange(Array<HandleOf<Material>>);
+RaverieDefineRange(Array<HandleOf<RenderGroup>>);
 
 // Enums
-ZilchDefineEnum(BlendMode);
-ZilchDefineEnum(BlendFactor);
-ZilchDefineEnum(BlendEquation);
-ZilchDefineEnum(CullMode);
-ZilchDefineEnum(DepthMode);
-ZilchDefineEnum(GraphicalSortMethod);
-ZilchDefineEnum(MeshEmitMode);
-ZilchDefineEnum(PerspectiveMode);
-ZilchDefineEnum(PrimitiveType);
-ZilchDefineEnum(SpriteGeometryMode);
-ZilchDefineEnum(SpriteParticleAnimationMode);
-ZilchDefineEnum(SpriteParticleGeometryMode);
-ZilchDefineEnum(SpriteParticleSortMode);
-ZilchDefineEnum(StencilMode);
-ZilchDefineEnum(StencilOp);
-ZilchDefineEnum(SystemSpace);
-ZilchDefineEnum(TextAlign);
-ZilchDefineEnum(TextureCompareFunc);
-ZilchDefineEnum(TextureCompareMode);
-ZilchDefineEnum(VertexElementType);
-ZilchDefineEnum(VertexSemantic);
-ZilchDefineEnum(ViewportScaling);
+RaverieDefineEnum(BlendMode);
+RaverieDefineEnum(BlendFactor);
+RaverieDefineEnum(BlendEquation);
+RaverieDefineEnum(CullMode);
+RaverieDefineEnum(DepthMode);
+RaverieDefineEnum(GraphicalSortMethod);
+RaverieDefineEnum(MeshEmitMode);
+RaverieDefineEnum(PerspectiveMode);
+RaverieDefineEnum(PrimitiveType);
+RaverieDefineEnum(SpriteGeometryMode);
+RaverieDefineEnum(SpriteParticleAnimationMode);
+RaverieDefineEnum(SpriteParticleGeometryMode);
+RaverieDefineEnum(SpriteParticleSortMode);
+RaverieDefineEnum(StencilMode);
+RaverieDefineEnum(StencilOp);
+RaverieDefineEnum(SystemSpace);
+RaverieDefineEnum(TextAlign);
+RaverieDefineEnum(TextureCompareFunc);
+RaverieDefineEnum(TextureCompareMode);
+RaverieDefineEnum(VertexElementType);
+RaverieDefineEnum(VertexSemantic);
+RaverieDefineEnum(ViewportScaling);
 
-ZilchDeclareExternalType(GraphicsDriverSupport);
-ZilchDeclareExternalType(SamplerSettings);
+RaverieDeclareExternalType(GraphicsDriverSupport);
+RaverieDeclareExternalType(SamplerSettings);
 
-ZilchDefineStaticLibrary(GraphicsLibrary)
+RaverieDefineStaticLibrary(GraphicsLibrary)
 {
   builder.CreatableInScriptDefault = false;
 
   // Ranges
-  ZilchInitializeRange(GraphicalEntryRange);
-  ZilchInitializeRange(MultiSpriteEntryRange);
-  ZilchInitializeRange(ParticleListRange);
-  ZilchInitializeRange(VertexSemanticRange);
-  ZilchInitializeRange(Array<HandleOf<Material>>);
-  ZilchInitializeRange(Array<HandleOf<RenderGroup>>);
+  RaverieInitializeRange(GraphicalEntryRange);
+  RaverieInitializeRange(MultiSpriteEntryRange);
+  RaverieInitializeRange(ParticleListRange);
+  RaverieInitializeRange(VertexSemanticRange);
+  RaverieInitializeRange(Array<HandleOf<Material>>);
+  RaverieInitializeRange(Array<HandleOf<RenderGroup>>);
 
   // Enums
-  ZilchInitializeEnum(BlendMode);
-  ZilchInitializeEnum(BlendFactor);
-  ZilchInitializeEnum(BlendEquation);
-  ZilchInitializeEnum(CullMode);
-  ZilchInitializeEnum(DepthMode);
-  ZilchInitializeEnum(GraphicalSortMethod);
-  ZilchInitializeEnum(MeshEmitMode);
-  ZilchInitializeEnum(PerspectiveMode);
-  ZilchInitializeEnum(PrimitiveType);
-  ZilchInitializeEnum(SpriteGeometryMode);
-  ZilchInitializeEnum(SpriteParticleAnimationMode);
-  ZilchInitializeEnum(SpriteParticleGeometryMode);
-  ZilchInitializeEnum(SpriteParticleSortMode);
-  ZilchInitializeEnum(StencilMode);
-  ZilchInitializeEnum(StencilOp);
-  ZilchInitializeEnum(SystemSpace);
-  ZilchInitializeEnum(TextAlign);
-  ZilchInitializeEnum(TextureCompareFunc);
-  ZilchInitializeEnum(TextureCompareMode);
-  ZilchInitializeEnum(VertexElementType);
-  ZilchInitializeEnum(VertexSemantic);
-  ZilchInitializeEnum(ViewportScaling);
+  RaverieInitializeEnum(BlendMode);
+  RaverieInitializeEnum(BlendFactor);
+  RaverieInitializeEnum(BlendEquation);
+  RaverieInitializeEnum(CullMode);
+  RaverieInitializeEnum(DepthMode);
+  RaverieInitializeEnum(GraphicalSortMethod);
+  RaverieInitializeEnum(MeshEmitMode);
+  RaverieInitializeEnum(PerspectiveMode);
+  RaverieInitializeEnum(PrimitiveType);
+  RaverieInitializeEnum(SpriteGeometryMode);
+  RaverieInitializeEnum(SpriteParticleAnimationMode);
+  RaverieInitializeEnum(SpriteParticleGeometryMode);
+  RaverieInitializeEnum(SpriteParticleSortMode);
+  RaverieInitializeEnum(StencilMode);
+  RaverieInitializeEnum(StencilOp);
+  RaverieInitializeEnum(SystemSpace);
+  RaverieInitializeEnum(TextAlign);
+  RaverieInitializeEnum(TextureCompareFunc);
+  RaverieInitializeEnum(TextureCompareMode);
+  RaverieInitializeEnum(VertexElementType);
+  RaverieInitializeEnum(VertexSemantic);
+  RaverieInitializeEnum(ViewportScaling);
 
   // Meta Components
-  ZilchInitializeType(MaterialFactory);
-  ZilchInitializeType(CompositionLabelExtension);
-  ZilchInitializeType(HideBaseFilter);
+  RaverieInitializeType(MaterialFactory);
+  RaverieInitializeType(CompositionLabelExtension);
+  RaverieInitializeType(HideBaseFilter);
 
   // Events
-  ZilchInitializeType(GraphicalEvent);
-  ZilchInitializeType(GraphicalSortEvent);
-  ZilchInitializeType(ParticleEvent);
-  ZilchInitializeType(RenderTasksEvent);
-  ZilchInitializeType(ResourceListEvent);
-  ZilchInitializeType(ShaderInputsEvent);
+  RaverieInitializeType(GraphicalEvent);
+  RaverieInitializeType(GraphicalSortEvent);
+  RaverieInitializeType(ParticleEvent);
+  RaverieInitializeType(RenderTasksEvent);
+  RaverieInitializeType(ResourceListEvent);
+  RaverieInitializeType(ShaderInputsEvent);
 
-  ZilchInitializeType(Graphical);
-  ZilchInitializeType(SlicedDefinition);
+  RaverieInitializeType(Graphical);
+  RaverieInitializeType(SlicedDefinition);
 
-  ZilchInitializeType(Atlas);
-  ZilchInitializeType(BaseSprite);
-  ZilchInitializeTypeAs(GraphicsBlendSettings, "BlendSettings");
-  ZilchInitializeType(BlendSettingsMrt);
-  ZilchInitializeType(Bone);
-  ZilchInitializeType(Camera);
-  ZilchInitializeType(ColorTargetMrt);
-  ZilchInitializeType(DebugGraphical);
-  ZilchInitializeType(DebugGraphicalPrimitive);
-  ZilchInitializeType(DebugGraphicalThickLine);
-  ZilchInitializeType(DebugGraphicalText);
-  ZilchInitializeType(DefinitionSet);
-  ZilchInitializeTypeAs(GraphicsDepthSettings, "DepthSettings");
-  // ZilchInitializeType(DynamicMeshParticleEmitter);
-  ZilchInitializeType(Font);
-  ZilchInitializeType(GraphicalEntry);
-  ZilchInitializeType(GraphicalRangeInterface);
-  ZilchInitializeExternalType(GraphicsDriverSupport);
-  ZilchInitializeType(GraphicsEngine);
-  ZilchInitializeType(GraphicsRaycastProvider);
-  ZilchInitializeType(GraphicsSpace);
-  ZilchInitializeType(HeightMapModel);
-  ZilchInitializeType(ImageDefinition);
-  ZilchInitializeType(IndexBuffer);
-  ZilchInitializeType(Material);
-  ZilchInitializeType(MaterialBlock);
-  ZilchInitializeType(MaterialList);
-  ZilchInitializeType(Mesh);
-  ZilchInitializeType(Model);
-  ZilchInitializeType(MultiRenderTarget);
-  ZilchInitializeType(MultiSprite);
-  ZilchInitializeType(MultiSpriteEntry);
-  ZilchInitializeType(Particle);
-  ZilchInitializeType(ParticleAnimator);
-  ZilchInitializeType(ParticleCollisionPlane);
-  ZilchInitializeType(ParticleCollisionHeightmap);
-  ZilchInitializeType(ParticleEmitter);
-  ZilchInitializeType(ParticleSystem);
-  ZilchInitializeTypeAs(ProxyObject<MaterialBlock>, "MaterialBlockProxy");
-  ZilchInitializeType(RenderGroup);
-  ZilchInitializeType(RenderGroupList);
-  ZilchInitializeTypeAs(GraphicsRenderSettings, "RenderSettings");
-  ZilchInitializeType(RenderTarget);
-  ZilchInitializeExternalType(SamplerSettings);
-  ZilchInitializeType(SelectionIcon);
-  ZilchInitializeType(ShaderInputs);
-  ZilchInitializeType(Skeleton);
-  ZilchInitializeType(SkinnedModel);
-  ZilchInitializeType(Sprite);
-  ZilchInitializeType(SpriteParticleSystem);
-  ZilchInitializeType(SpriteSource);
-  ZilchInitializeType(SpriteText);
-  ZilchInitializeType(SubRenderGroupPass);
-  ZilchInitializeType(TextDefinition);
-  ZilchInitializeType(Texture);
-  ZilchInitializeType(TextureData);
-  ZilchInitializeType(VertexBuffer);
-  ZilchInitializeType(ViewportInterface);
-  ZilchInitializeType(ZilchFragment);
+  RaverieInitializeType(Atlas);
+  RaverieInitializeType(BaseSprite);
+  RaverieInitializeTypeAs(GraphicsBlendSettings, "BlendSettings");
+  RaverieInitializeType(BlendSettingsMrt);
+  RaverieInitializeType(Bone);
+  RaverieInitializeType(Camera);
+  RaverieInitializeType(ColorTargetMrt);
+  RaverieInitializeType(DebugGraphical);
+  RaverieInitializeType(DebugGraphicalPrimitive);
+  RaverieInitializeType(DebugGraphicalThickLine);
+  RaverieInitializeType(DebugGraphicalText);
+  RaverieInitializeType(DefinitionSet);
+  RaverieInitializeTypeAs(GraphicsDepthSettings, "DepthSettings");
+  // RaverieInitializeType(DynamicMeshParticleEmitter);
+  RaverieInitializeType(Font);
+  RaverieInitializeType(GraphicalEntry);
+  RaverieInitializeType(GraphicalRangeInterface);
+  RaverieInitializeExternalType(GraphicsDriverSupport);
+  RaverieInitializeType(GraphicsEngine);
+  RaverieInitializeType(GraphicsRaycastProvider);
+  RaverieInitializeType(GraphicsSpace);
+  RaverieInitializeType(HeightMapModel);
+  RaverieInitializeType(ImageDefinition);
+  RaverieInitializeType(IndexBuffer);
+  RaverieInitializeType(Material);
+  RaverieInitializeType(MaterialBlock);
+  RaverieInitializeType(MaterialList);
+  RaverieInitializeType(Mesh);
+  RaverieInitializeType(Model);
+  RaverieInitializeType(MultiRenderTarget);
+  RaverieInitializeType(MultiSprite);
+  RaverieInitializeType(MultiSpriteEntry);
+  RaverieInitializeType(Particle);
+  RaverieInitializeType(ParticleAnimator);
+  RaverieInitializeType(ParticleCollisionPlane);
+  RaverieInitializeType(ParticleCollisionHeightmap);
+  RaverieInitializeType(ParticleEmitter);
+  RaverieInitializeType(ParticleSystem);
+  RaverieInitializeTypeAs(ProxyObject<MaterialBlock>, "MaterialBlockProxy");
+  RaverieInitializeType(RenderGroup);
+  RaverieInitializeType(RenderGroupList);
+  RaverieInitializeTypeAs(GraphicsRenderSettings, "RenderSettings");
+  RaverieInitializeType(RenderTarget);
+  RaverieInitializeExternalType(SamplerSettings);
+  RaverieInitializeType(SelectionIcon);
+  RaverieInitializeType(ShaderInputs);
+  RaverieInitializeType(Skeleton);
+  RaverieInitializeType(SkinnedModel);
+  RaverieInitializeType(Sprite);
+  RaverieInitializeType(SpriteParticleSystem);
+  RaverieInitializeType(SpriteSource);
+  RaverieInitializeType(SpriteText);
+  RaverieInitializeType(SubRenderGroupPass);
+  RaverieInitializeType(TextDefinition);
+  RaverieInitializeType(Texture);
+  RaverieInitializeType(TextureData);
+  RaverieInitializeType(VertexBuffer);
+  RaverieInitializeType(ViewportInterface);
+  RaverieInitializeType(RaverieFragment);
 
   // Dependent on RenderGroupList
-  ZilchInitializeType(ChildRenderGroupList);
+  RaverieInitializeType(ChildRenderGroupList);
 
-  ZilchInitializeTypeAs(GraphicsStatics, "Graphics");
+  RaverieInitializeTypeAs(GraphicsStatics, "Graphics");
 
   // Particle Animators
-  ZilchInitializeType(LinearParticleAnimator);
-  ZilchInitializeType(ParticleAttractor);
-  ZilchInitializeType(ParticleColorAnimator);
-  ZilchInitializeType(ParticleTwister);
-  ZilchInitializeType(ParticleWander);
+  RaverieInitializeType(LinearParticleAnimator);
+  RaverieInitializeType(ParticleAttractor);
+  RaverieInitializeType(ParticleColorAnimator);
+  RaverieInitializeType(ParticleTwister);
+  RaverieInitializeType(ParticleWander);
 
   // Particle Emitters
-  ZilchInitializeType(ParticleEmitterShared);
-  ZilchInitializeType(BoxParticleEmitter);
-  ZilchInitializeType(MeshParticleEmitter);
-  ZilchInitializeType(SphericalParticleEmitter);
-  ZilchInitializeType(MeshParticleEmitter);
+  RaverieInitializeType(ParticleEmitterShared);
+  RaverieInitializeType(BoxParticleEmitter);
+  RaverieInitializeType(MeshParticleEmitter);
+  RaverieInitializeType(SphericalParticleEmitter);
+  RaverieInitializeType(MeshParticleEmitter);
 
   EngineLibraryExtensions::AddNativeExtensions(builder);
 }
@@ -190,9 +190,9 @@ void GraphicsLibrary::Initialize()
   InitializeResourceManager(RenderGroupManager);
   InitializeResourceManager(SpriteSourceManager);
   InitializeResourceManager(TextureManager);
-  InitializeResourceManager(ZilchFragmentManager);
+  InitializeResourceManager(RaverieFragmentManager);
 
-  ResourceLibrary::sFragmentType = ZilchTypeId(ZilchFragment);
+  ResourceLibrary::sFragmentType = RaverieTypeId(RaverieFragment);
 }
 
 void GraphicsLibrary::Shutdown()
@@ -201,4 +201,4 @@ void GraphicsLibrary::Shutdown()
   ShaderIntrinsicsLibrary::Destroy();
 }
 
-} // namespace Zero
+} // namespace Raverie

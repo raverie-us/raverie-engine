@@ -5,7 +5,7 @@
 
 #define RaverieLazyShaderCompositing
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -13,14 +13,14 @@ namespace Events
 DefineEvent(ShaderInputsModified);
 }
 
-ZilchDefineType(ShaderInputsEvent, builder, type)
+RaverieDefineType(ShaderInputsEvent, builder, type)
 {
   type->AddAttribute(ObjectAttributes::cHidden);
 }
 
-ZilchDefineType(GraphicsStatics, builder, type)
+RaverieDefineType(GraphicsStatics, builder, type)
 {
-  ZilchBindGetter(DriverSupport);
+  RaverieBindGetter(DriverSupport);
 }
 
 GraphicsDriverSupport* GraphicsStatics::GetDriverSupport()
@@ -35,7 +35,7 @@ System* CreateGraphicsSystem()
 
 Memory::Pool* gShaderPool = nullptr;
 
-ZilchDefineType(GraphicsEngine, builder, type)
+RaverieDefineType(GraphicsEngine, builder, type)
 {
 }
 
@@ -77,7 +77,7 @@ void GraphicsEngine::Initialize(SystemInitializer& initializer)
   ShaderSettingsLibrary::InitializeInstance();
 
   // Need to get translator or mode from Renderer
-  mShaderGenerator = CreateZilchShaderGenerator();
+  mShaderGenerator = CreateRaverieShaderGenerator();
 
   ConnectThisTo(Z::gEngine, Events::EngineShutdown, OnEngineShutdown);
 
@@ -93,9 +93,9 @@ void GraphicsEngine::Initialize(SystemInitializer& initializer)
   ConnectThisTo(MaterialManager::GetInstance(), Events::ResourceModified, OnMaterialModified);
   ConnectThisTo(MaterialManager::GetInstance(), Events::ResourceRemoved, OnMaterialRemoved);
 
-  ConnectThisTo(ZilchFragmentManager::GetInstance(), Events::ResourceAdded, OnZilchFragmentAdded);
-  ConnectThisTo(ZilchFragmentManager::GetInstance(), Events::ResourceModified, OnZilchFragmentModified);
-  ConnectThisTo(ZilchFragmentManager::GetInstance(), Events::ResourceRemoved, OnZilchFragmentRemoved);
+  ConnectThisTo(RaverieFragmentManager::GetInstance(), Events::ResourceAdded, OnRaverieFragmentAdded);
+  ConnectThisTo(RaverieFragmentManager::GetInstance(), Events::ResourceModified, OnRaverieFragmentModified);
+  ConnectThisTo(RaverieFragmentManager::GetInstance(), Events::ResourceRemoved, OnRaverieFragmentRemoved);
 
   ConnectThisTo(MeshManager::GetInstance(), Events::ResourceAdded, OnMeshAdded);
   ConnectThisTo(MeshManager::GetInstance(), Events::ResourceModified, OnMeshModified);
@@ -105,11 +105,11 @@ void GraphicsEngine::Initialize(SystemInitializer& initializer)
   ConnectThisTo(TextureManager::GetInstance(), Events::ResourceModified, OnTextureModified);
   ConnectThisTo(TextureManager::GetInstance(), Events::ResourceRemoved, OnTextureRemoved);
 
-  ConnectThisTo(ZilchManager::GetInstance(), Events::CompileZilchFragments, OnCompileZilchFragments);
-  ConnectThisTo(ZilchManager::GetInstance(), Events::ScriptsCompiledPrePatch, OnScriptsCompiledPrePatch);
-  ConnectThisTo(ZilchManager::GetInstance(), Events::ScriptsCompiledCommit, OnScriptsCompiledCommit);
-  ConnectThisTo(ZilchManager::GetInstance(), Events::ScriptsCompiledPostPatch, OnScriptsCompiledPostPatch);
-  ConnectThisTo(ZilchManager::GetInstance(), Events::ScriptCompilationFailed, OnScriptCompilationFailed);
+  ConnectThisTo(RaverieManager::GetInstance(), Events::CompileRaverieFragments, OnCompileRaverieFragments);
+  ConnectThisTo(RaverieManager::GetInstance(), Events::ScriptsCompiledPrePatch, OnScriptsCompiledPrePatch);
+  ConnectThisTo(RaverieManager::GetInstance(), Events::ScriptsCompiledCommit, OnScriptsCompiledCommit);
+  ConnectThisTo(RaverieManager::GetInstance(), Events::ScriptsCompiledPostPatch, OnScriptsCompiledPostPatch);
+  ConnectThisTo(RaverieManager::GetInstance(), Events::ScriptCompilationFailed, OnScriptCompilationFailed);
 
   ParticleList::Memory = new Memory::Pool("Particles", Memory::GetRoot(), sizeof(Particle), 1024);
   gShaderPool = new Memory::Pool("Shaders", Memory::GetRoot(), sizeof(Shader), 1024);
@@ -260,7 +260,7 @@ void GraphicsEngine::Update(bool debugger)
     RendererThreadMain(mRendererJobQueue);
   }
 
-  ZilchManager::GetInstance()->mDebugger.DoNotAllowBreakReason =
+  RaverieManager::GetInstance()->mDebugger.DoNotAllowBreakReason =
       "Cannot currently break within the graphics engine because it must "
       "continue running in editor";
 
@@ -386,7 +386,7 @@ void GraphicsEngine::Update(bool debugger)
 
   gDebugDraw->ClearObjects();
 
-  ZilchManager::GetInstance()->mDebugger.DoNotAllowBreakReason.Clear();
+  RaverieManager::GetInstance()->mDebugger.DoNotAllowBreakReason.Clear();
 }
 
 void GraphicsEngine::OnEngineShutdown(Event* event)
@@ -481,14 +481,14 @@ void GraphicsEngine::CheckTextureYInvert(Texture* texture)
 {
   ProfileScopeFunctionArgs(texture->Name);
   // Check for Y-invert
-  // Some Api's expect byte 0 to be the bottom left pixel, in Zero byte 0 is the
+  // Some Api's expect byte 0 to be the bottom left pixel, in Raverie byte 0 is the
   // top left Have to Y-invert because sampling from a rendered target must also
-  // work correctly Uv coordinate correction from Zero to Api is done by the
+  // work correctly Uv coordinate correction from Raverie to Api is done by the
   // shader translation of texture samples
   if (!Z::gRenderer->YInvertImageData(texture->mType))
     return;
 
-  // All incoming image data from Zero should be a color format and/or block
+  // All incoming image data from Raverie should be a color format and/or block
   // compressed
   if (texture->mImageData && IsColorFormat(texture->mFormat))
   {
@@ -772,19 +772,19 @@ void GraphicsEngine::OnMaterialRemoved(ResourceEvent* event)
   RemoveMaterial(material);
 }
 
-void GraphicsEngine::OnZilchFragmentAdded(ResourceEvent* event)
+void GraphicsEngine::OnRaverieFragmentAdded(ResourceEvent* event)
 {
   // OnResourcesAdded will invoke a compile after this
   mModifiedFragmentFiles.PushBack(event->EventResource->Name);
 }
 
-void GraphicsEngine::OnZilchFragmentModified(ResourceEvent* event)
+void GraphicsEngine::OnRaverieFragmentModified(ResourceEvent* event)
 {
   // Happens on save, wait for successful compilation to process
   mModifiedFragmentFiles.PushBack(event->EventResource->Name);
 }
 
-void GraphicsEngine::OnZilchFragmentRemoved(ResourceEvent* event)
+void GraphicsEngine::OnRaverieFragmentRemoved(ResourceEvent* event)
 {
   // Only need removed fragments if going to send compile in removed resources
   mRemovedFragmentFiles.PushBack(event->EventResource->Name);
@@ -853,10 +853,10 @@ void GraphicsEngine::OnResourcesAdded(ResourceEvent* event)
   mAddedMaterials.Clear();
   mAddedRenderGroups.Clear();
 
-  // If added ZilchFragments
+  // If added RaverieFragments
   if (mModifiedFragmentFiles.Empty() == false)
   {
-    ZilchManager::GetInstance()->TriggerCompileExternally();
+    RaverieManager::GetInstance()->TriggerCompileExternally();
   }
   else
   {
@@ -1044,7 +1044,7 @@ void GraphicsEngine::ProcessModifiedScripts(LibraryRef library)
     mComponentShaderProperties.Erase(typeName);
 
     // Only look for inputs on component types
-    if (type->IsA(ZilchTypeId(Component)))
+    if (type->IsA(RaverieTypeId(Component)))
     {
 
       forRange (Property* metaProperty, type->GetProperties())
@@ -1073,10 +1073,10 @@ void GraphicsEngine::ProcessModifiedScripts(LibraryRef library)
   }
 }
 
-ZilchFragmentType::Enum GraphicsEngine::GetFragmentType(MaterialBlock* materialBlock)
+RaverieFragmentType::Enum GraphicsEngine::GetFragmentType(MaterialBlock* materialBlock)
 {
-  return mShaderGenerator->mFragmentTypes.FindValue(ZilchVirtualTypeId(materialBlock)->Name,
-                                                    ZilchFragmentType::Fragment);
+  return mShaderGenerator->mFragmentTypes.FindValue(RaverieVirtualTypeId(materialBlock)->Name,
+                                                    RaverieFragmentType::Fragment);
 }
 
 HandleOf<RenderTarget>
@@ -1117,17 +1117,17 @@ void GraphicsEngine::ForceCompileAllShaders()
   AddRendererJob(addShadersJob);
 }
 
-void GraphicsEngine::ModifiedFragment(ZilchFragmentType::Enum type, StringParam name)
+void GraphicsEngine::ModifiedFragment(RaverieFragmentType::Enum type, StringParam name)
 {
   switch (type)
   {
-  case Zero::ZilchFragmentType::CoreVertex:
+  case Raverie::RaverieFragmentType::CoreVertex:
     mModifiedCoreVertex.PushBack(name);
     break;
-  case Zero::ZilchFragmentType::RenderPass:
+  case Raverie::RaverieFragmentType::RenderPass:
     mModifiedRenderPass.PushBack(name);
     break;
-  case Zero::ZilchFragmentType::PostProcess:
+  case Raverie::RaverieFragmentType::PostProcess:
     mModifiedPostProcess.PushBack(name);
     break;
   default:
@@ -1135,17 +1135,17 @@ void GraphicsEngine::ModifiedFragment(ZilchFragmentType::Enum type, StringParam 
   }
 }
 
-void GraphicsEngine::RemovedFragment(ZilchFragmentType::Enum type, StringParam name)
+void GraphicsEngine::RemovedFragment(RaverieFragmentType::Enum type, StringParam name)
 {
   switch (type)
   {
-  case Zero::ZilchFragmentType::CoreVertex:
+  case Raverie::RaverieFragmentType::CoreVertex:
     mRemovedCoreVertex.PushBack(name);
     break;
-  case Zero::ZilchFragmentType::RenderPass:
+  case Raverie::RaverieFragmentType::RenderPass:
     mRemovedRenderPass.PushBack(name);
     break;
-  case Zero::ZilchFragmentType::PostProcess:
+  case Raverie::RaverieFragmentType::PostProcess:
     mRemovedPostProcess.PushBack(name);
     break;
   default:
@@ -1153,33 +1153,33 @@ void GraphicsEngine::RemovedFragment(ZilchFragmentType::Enum type, StringParam n
   }
 }
 
-void GraphicsEngine::OnCompileZilchFragments(ZilchCompileFragmentEvent* event)
+void GraphicsEngine::OnCompileRaverieFragments(RaverieCompileFragmentEvent* event)
 {
   String libraryName = BuildString(event->mOwningLibrary->Name, "Fragments");
   event->mReturnedLibrary =
       mShaderGenerator->BuildFragmentsLibrary(event->mDependencies, event->mFragments, libraryName);
 }
 
-void GraphicsEngine::OnScriptsCompiledPrePatch(ZilchCompileEvent* event)
+void GraphicsEngine::OnScriptsCompiledPrePatch(RaverieCompileEvent* event)
 {
   forRange (ResourceLibrary* modifiedLibrary, event->mModifiedLibraries.All())
   {
     if (!modifiedLibrary->mSwapFragment.HasPendingLibrary())
       continue;
 
-    ZilchShaderIRLibraryRef currentLibrary =
+    RaverieShaderIRLibraryRef currentLibrary =
         mShaderGenerator->GetCurrentInternalLibrary(modifiedLibrary->mSwapFragment.mCurrentLibrary);
-    ZilchFragmentTypeMap& currentFragmentTypes = mShaderGenerator->mFragmentTypes;
+    RaverieFragmentTypeMap& currentFragmentTypes = mShaderGenerator->mFragmentTypes;
 
-    ZilchShaderIRLibraryRef pendingLibrary =
+    RaverieShaderIRLibraryRef pendingLibrary =
         mShaderGenerator->GetPendingInternalLibrary(modifiedLibrary->mSwapFragment.mPendingLibrary);
-    ZilchFragmentTypeMap& pendingFragmentTypes =
+    RaverieFragmentTypeMap& pendingFragmentTypes =
         mShaderGenerator->mPendingFragmentTypes[modifiedLibrary->mSwapFragment.mPendingLibrary];
 
     // Find removed types
     if (currentLibrary != nullptr)
     {
-      forRange (ZilchShaderIRType* shaderType, currentLibrary->mTypes.Values())
+      forRange (RaverieShaderIRType* shaderType, currentLibrary->mTypes.Values())
       {
         ShaderIRTypeMeta* shaderTypeMeta = shaderType->mMeta;
         if (shaderTypeMeta == nullptr)
@@ -1190,19 +1190,19 @@ void GraphicsEngine::OnScriptsCompiledPrePatch(ZilchCompileEvent* event)
         //  continue;
 
         // Skip if type still exists
-        if (pendingLibrary->mTypes.ContainsKey(shaderTypeMeta->mZilchName))
+        if (pendingLibrary->mTypes.ContainsKey(shaderTypeMeta->mRaverieName))
           continue;
 
-        ZilchFragmentType::Enum fragmentType =
-            currentFragmentTypes.FindValue(shaderTypeMeta->mZilchName, ZilchFragmentType::Fragment);
-        RemovedFragment(fragmentType, shaderTypeMeta->mZilchName);
+        RaverieFragmentType::Enum fragmentType =
+            currentFragmentTypes.FindValue(shaderTypeMeta->mRaverieName, RaverieFragmentType::Fragment);
+        RemovedFragment(fragmentType, shaderTypeMeta->mRaverieName);
       }
     }
 
     // Find added/modified types
     if (mModifiedFragmentFiles.Empty() == false)
     {
-      forRange (ZilchShaderIRType* shaderType, pendingLibrary->mTypes.Values())
+      forRange (RaverieShaderIRType* shaderType, pendingLibrary->mTypes.Values())
       {
         ShaderIRTypeMeta* shaderTypeMeta = shaderType->mMeta;
         if (shaderTypeMeta == nullptr)
@@ -1224,44 +1224,44 @@ void GraphicsEngine::OnScriptsCompiledPrePatch(ZilchCompileEvent* event)
         {
           // Check for fragments that used to have a special attribute and add
           // them to the appropriate removed list
-          ZilchFragmentType::Enum currentFragmentType =
-              currentFragmentTypes.FindValue(shaderTypeMeta->mZilchName, ZilchFragmentType::Fragment);
-          ZilchFragmentType::Enum pendingFragmentType =
-              pendingFragmentTypes.FindValue(shaderTypeMeta->mZilchName, ZilchFragmentType::Fragment);
+          RaverieFragmentType::Enum currentFragmentType =
+              currentFragmentTypes.FindValue(shaderTypeMeta->mRaverieName, RaverieFragmentType::Fragment);
+          RaverieFragmentType::Enum pendingFragmentType =
+              pendingFragmentTypes.FindValue(shaderTypeMeta->mRaverieName, RaverieFragmentType::Fragment);
 
           if (pendingFragmentType != currentFragmentType)
-            RemovedFragment(currentFragmentType, shaderTypeMeta->mZilchName);
+            RemovedFragment(currentFragmentType, shaderTypeMeta->mRaverieName);
 
-          ModifiedFragment(pendingFragmentType, shaderTypeMeta->mZilchName);
+          ModifiedFragment(pendingFragmentType, shaderTypeMeta->mRaverieName);
 
           // If current type is fragment and pending type isn't then any
           // affected composites are just going to get removed and don't need to
           // be checked
-          if (pendingFragmentType == ZilchFragmentType::Fragment)
+          if (pendingFragmentType == RaverieFragmentType::Fragment)
           {
             forRange (UniqueComposite& composite, mUniqueComposites.Values())
             {
-              if (composite.mFragmentNameMap.Contains(shaderTypeMeta->mZilchName))
+              if (composite.mFragmentNameMap.Contains(shaderTypeMeta->mRaverieName))
                 mModifiedComposites.Insert(composite.mName);
             }
           }
 
           // Find all types dependent on this one and also list them as modified
-          HashSet<ZilchShaderIRType*> dependents;
+          HashSet<RaverieShaderIRType*> dependents;
           pendingLibrary->GetAllDependents(shaderType, dependents);
-          forRange (ZilchShaderIRType* dependent, dependents.All())
+          forRange (RaverieShaderIRType* dependent, dependents.All())
           {
             ShaderIRTypeMeta* dependentTypeMeta = dependent->mMeta;
             if (dependentTypeMeta == nullptr)
               continue;
 
-            ZilchFragmentType::Enum dependentType =
-                pendingFragmentTypes.FindValue(dependentTypeMeta->mZilchName, ZilchFragmentType::Fragment);
+            RaverieFragmentType::Enum dependentType =
+                pendingFragmentTypes.FindValue(dependentTypeMeta->mRaverieName, RaverieFragmentType::Fragment);
 
             // Do not need to check composites unless it's a regular fragment
             // type Composites will otherwise be handled by the other fragment
             // types being modified
-            if (dependentType == ZilchFragmentType::Fragment)
+            if (dependentType == RaverieFragmentType::Fragment)
             {
               // Check all composites
               // Post patch still needs to run composite update on materials,
@@ -1269,13 +1269,13 @@ void GraphicsEngine::OnScriptsCompiledPrePatch(ZilchCompileEvent* event)
               // be removed from this list
               forRange (UniqueComposite& composite, mUniqueComposites.Values())
               {
-                if (composite.mFragmentNameMap.Contains(dependentTypeMeta->mZilchName))
+                if (composite.mFragmentNameMap.Contains(dependentTypeMeta->mRaverieName))
                   mModifiedComposites.Insert(composite.mName);
               }
             }
             else
             {
-              ModifiedFragment(dependentType, dependentTypeMeta->mZilchName);
+              ModifiedFragment(dependentType, dependentTypeMeta->mRaverieName);
             }
           }
         }
@@ -1289,7 +1289,7 @@ void GraphicsEngine::OnScriptsCompiledPrePatch(ZilchCompileEvent* event)
   MaterialManager::GetInstance()->ReInitializeRemoveComponents();
 }
 
-void GraphicsEngine::OnScriptsCompiledCommit(ZilchCompileEvent* event)
+void GraphicsEngine::OnScriptsCompiledCommit(RaverieCompileEvent* event)
 {
   // Update the old libraries with the new ones
   mNewLibrariesCommitted = mShaderGenerator->Commit(event);
@@ -1303,7 +1303,7 @@ void GraphicsEngine::OnScriptsCompiledCommit(ZilchCompileEvent* event)
   }
 }
 
-void GraphicsEngine::OnScriptsCompiledPostPatch(ZilchCompileEvent* event)
+void GraphicsEngine::OnScriptsCompiledPostPatch(RaverieCompileEvent* event)
 {
   MaterialManager::GetInstance()->ReInitializeAddComponents();
 
@@ -1482,4 +1482,4 @@ void SaveToImageJob::Execute()
   delete[] mImage;
 }
 
-} // namespace Zero
+} // namespace Raverie

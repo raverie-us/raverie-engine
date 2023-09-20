@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 namespace Events
 {
@@ -12,10 +12,10 @@ DefineEvent(OsShellUpdate);
 DefineEvent(FileDialogComplete);
 } // namespace Events
 
-ZilchDefineType(OsShell, builder, type)
+RaverieDefineType(OsShell, builder, type)
 {
-  type->HandleManager = ZilchManagerId(PointerManager);
-  ZilchBindSetter(MouseCursor);
+  type->HandleManager = RaverieManagerId(PointerManager);
+  RaverieBindSetter(MouseCursor);
 }
 
 OsShell* CreateOsShellSystem()
@@ -27,7 +27,7 @@ OsShell::OsShell()
 {
 }
 
-const char* ZeroExportNamed(ExportCopy)(bool isCut)
+const char* RaverieExportNamed(ExportCopy)(bool isCut)
 {
   ClipboardEvent toSend;
   Z::gEngine->has(OsShell)->DispatchEvent(isCut ? Events::Cut : Events::Copy, &toSend);
@@ -38,7 +38,7 @@ const char* ZeroExportNamed(ExportCopy)(bool isCut)
   return sCopyBuffer.c_str();
 }
 
-void ZeroExportNamed(ExportPaste)(const char* text)
+void RaverieExportNamed(ExportPaste)(const char* text)
 {
   ClipboardEvent toSend;
   toSend.mText = text;
@@ -74,11 +74,11 @@ void OsShell::SetMouseCursor(Cursor::Enum cursorId)
   return mShell.SetMouseCursor(cursorId);
 }
 
-ZilchDefineType(ClipboardEvent, builder, type)
+RaverieDefineType(ClipboardEvent, builder, type)
 {
-  ZilchBindMethodProperty(Clear);
-  ZilchBindGetterSetterProperty(Text);
-  ZilchBindMemberProperty(mHandled);
+  RaverieBindMethodProperty(Clear);
+  RaverieBindGetterSetterProperty(Text);
+  RaverieBindMemberProperty(mHandled);
 }
 
 void ClipboardEvent::Clear()
@@ -96,7 +96,7 @@ String ClipboardEvent::GetText()
   return mText;
 }
 
-ZilchDefineType(OsFileSelection, builder, type)
+RaverieDefineType(OsFileSelection, builder, type)
 {
 }
 
@@ -133,4 +133,4 @@ void FileDialogConfig::Callback(Array<String>& files, void* userData)
   delete self;
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -2,39 +2,39 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 using namespace AudioConstants;
 
 // Sound Space
 
-ZilchDefineType(SoundSpace, builder, type)
+RaverieDefineType(SoundSpace, builder, type)
 {
-  ZeroBindComponent();
+  RaverieBindComponent();
   type->AddAttribute(ObjectAttributes::cCore);
-  ZeroBindDocumented();
-  ZeroBindDependency(TimeSpace);
+  RaverieBindDocumented();
+  RaverieBindDependency(TimeSpace);
 
-  ZilchBindFieldProperty(mPauseWithTimeSpace);
-  ZilchBindFieldProperty(mPitchWithTimeSpace);
+  RaverieBindFieldProperty(mPauseWithTimeSpace);
+  RaverieBindFieldProperty(mPitchWithTimeSpace);
 
-  ZilchBindGetterSetter(Paused);
-  ZilchBindGetterSetter(Volume);
-  ZilchBindGetterSetter(MuteAudio);
-  ZilchBindGetterSetter(Decibels);
-  ZilchBindGetterSetter(Pitch);
-  ZilchBindGetterSetter(Semitones);
-  ZilchBindGetter(InputNode)->AddAttribute(DeprecatedAttribute);
-  ZilchBindGetter(OutputNode)->AddAttribute(DeprecatedAttribute);
-  ZilchBindGetter(SoundNodeInput);
-  ZilchBindGetter(SoundNodeOutput);
-  ZilchBindMethod(InterpolatePitch);
-  ZilchBindMethod(InterpolateSemitones);
-  ZilchBindMethod(InterpolateVolume);
-  ZilchBindMethod(InterpolateDecibels);
-  ZilchBindMethod(PlayCue);
-  ZilchBindMethod(PlayCuePaused);
+  RaverieBindGetterSetter(Paused);
+  RaverieBindGetterSetter(Volume);
+  RaverieBindGetterSetter(MuteAudio);
+  RaverieBindGetterSetter(Decibels);
+  RaverieBindGetterSetter(Pitch);
+  RaverieBindGetterSetter(Semitones);
+  RaverieBindGetter(InputNode)->AddAttribute(DeprecatedAttribute);
+  RaverieBindGetter(OutputNode)->AddAttribute(DeprecatedAttribute);
+  RaverieBindGetter(SoundNodeInput);
+  RaverieBindGetter(SoundNodeOutput);
+  RaverieBindMethod(InterpolatePitch);
+  RaverieBindMethod(InterpolateSemitones);
+  RaverieBindMethod(InterpolateVolume);
+  RaverieBindMethod(InterpolateDecibels);
+  RaverieBindMethod(PlayCue);
+  RaverieBindMethod(PlayCuePaused);
 }
 
 SoundSpace::SoundSpace() :
@@ -220,7 +220,7 @@ HandleOf<SoundInstance> SoundSpace::PlayCuePaused(SoundCue* cue)
   return instance;
 }
 
-Zilch::HandleOf<Zero::SoundNode> SoundSpace::GetSoundNodeInput()
+Raverie::HandleOf<Raverie::SoundNode> SoundSpace::GetSoundNodeInput()
 {
   return mSoundNodeInput;
 }
@@ -230,7 +230,7 @@ HandleOf<SoundNode> SoundSpace::GetInputNode()
   return mSoundNodeInput;
 }
 
-Zilch::HandleOf<Zero::SoundNode> SoundSpace::GetSoundNodeOutput()
+Raverie::HandleOf<Raverie::SoundNode> SoundSpace::GetSoundNodeOutput()
 {
   return mSoundNodeOutput;
 }
@@ -278,9 +278,9 @@ void SoundSpace::Update()
     r.Front().Update(invDt);
 }
 
-InList<SoundListener>* Zero::SoundSpace::GetListeners()
+InList<SoundListener>* Raverie::SoundSpace::GetListeners()
 {
   return &mListeners;
 }
 
-} // namespace Zero
+} // namespace Raverie

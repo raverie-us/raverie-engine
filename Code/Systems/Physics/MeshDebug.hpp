@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class GenericPhysicsMesh;
@@ -12,7 +12,7 @@ class HeightMapCollider;
 class MeshDebug : public Component
 {
 public:
-  ZilchDeclareType(MeshDebug, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MeshDebug, TypeCopyMode::ReferenceType);
   void CacheData();
 
   void Initialize(CogInitializer& initializer) override;
@@ -33,4 +33,4 @@ public:
   HeightMapCollider* mHeightMap;
 };
 
-} // namespace Zero
+} // namespace Raverie

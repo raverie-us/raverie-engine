@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 String EscapeString(StringRange input)
@@ -592,4 +592,4 @@ void CharacterLocation::Compute(StringRange input, CharacterLocation* outLocatio
   else
     *outLocation = location;
 }
-} // namespace Zero
+} // namespace Raverie

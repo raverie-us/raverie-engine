@@ -6,20 +6,20 @@
   static void Add(uint spaceId, Debug::DebugObjectType& debugObject);                                                  \
   static void Add(Space* space, Debug::DebugObjectType& debugObject);
 
-namespace Zero
+namespace Raverie
 {
 
 class DebugDraw
 {
 public:
-  ZilchDeclareType(DebugDraw, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(DebugDraw, TypeCopyMode::ReferenceType);
   typedef DebugDraw self_type;
 
-#define ZeroDebugPrimitive(X) AddDeclarations(X);
+#define RaverieDebugPrimitive(X) AddDeclarations(X);
 #include "Foundation/Geometry/DebugPrimitives.inl"
-#undef ZeroDebugPrimitive
+#undef RaverieDebugPrimitive
 };
 
-} // namespace Zero
+} // namespace Raverie
 
 #undef AddDeclarations

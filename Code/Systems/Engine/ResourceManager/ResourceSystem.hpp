@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 class ResourceManager;
 class ResourceLoader;
@@ -29,7 +29,7 @@ DeclareEnum3(ContentEditMode,
 class ResourceSystem : public EventObject
 {
 public:
-  ZilchDeclareType(ResourceSystem, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ResourceSystem, TypeCopyMode::ReferenceType);
 
   ResourceSystem();
   static void Initialize();
@@ -107,4 +107,4 @@ namespace Z
 extern ResourceSystem* gResources;
 }
 
-} // namespace Zero
+} // namespace Raverie

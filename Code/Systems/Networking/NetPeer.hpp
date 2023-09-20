@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 //                                   NetPeer //
@@ -12,7 +12,7 @@ namespace Zero
 class NetPeer : public NetObject, public Peer, public Replicator
 {
 public:
-  ZilchDeclareType(NetPeer, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(NetPeer, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetPeer();
@@ -968,4 +968,4 @@ public:
   // TODO: Use this or remove it
 };
 
-} // namespace Zero
+} // namespace Raverie

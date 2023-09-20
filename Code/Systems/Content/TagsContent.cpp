@@ -2,13 +2,13 @@
 #include "Precompiled.hpp"
 #include "TagsContent.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(ContentTags, builder, type)
+RaverieDefineType(ContentTags, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::CallSetDefaults);
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::CallSetDefaults);
 }
 
 void ContentTags::Serialize(Serializer& stream)
@@ -16,4 +16,4 @@ void ContentTags::Serialize(Serializer& stream)
   SerializeName(mTags);
 }
 
-} // namespace Zero
+} // namespace Raverie

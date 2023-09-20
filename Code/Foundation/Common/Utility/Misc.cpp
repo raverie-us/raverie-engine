@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Z
@@ -73,7 +73,7 @@ u32 NextPowerOfTwo(u32 x)
   return 1 << (32 - leadingZeros);
 }
 
-} // namespace Zero
+} // namespace Raverie
 
 // Used for counting printf statement lengths
 char gDiscardBuffer[2] = {0};

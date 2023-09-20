@@ -6,9 +6,9 @@
 #include "Utility/Standard.hpp"
 #include "Platform/Atomic.hpp"
 
-#define ZeroStringPooling
+#define RaverieStringPooling
 
-namespace Zero
+namespace Raverie
 {
 
 class String;
@@ -232,7 +232,7 @@ public:
   ///////Primary equal operator for strings///////
   friend bool operator==(StringParam left, StringParam right)
   {
-#if defined(ZeroStringPooling)
+#if defined(RaverieStringPooling)
     return left.mNode == right.mNode;
 #else
     return StringNode::isEqual(left.mNode, right.mNode);
@@ -286,4 +286,4 @@ private:
 #define DeclareStringConstant(name) extern const String name;
 #define DefineStringConstant(name) const String name = #name;
 
-} // namespace Zero
+} // namespace Raverie

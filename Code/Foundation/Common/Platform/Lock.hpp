@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 //                                  Lockable //
@@ -255,7 +255,7 @@ public:
 
   /// Move Constructor
   LockedRange(MoveReference<LockedRange> rhs) :
-      mContainer(ZeroMove(rhs->mContainer)),
+      mContainer(RaverieMove(rhs->mContainer)),
       mRange(mContainer.All()) // This is correct
   {
   }
@@ -272,7 +272,7 @@ public:
   /// Move Assignment Operator
   LockedRange& operator=(MoveReference<LockedRange> rhs)
   {
-    mContainer = ZeroMove(rhs->mContainer);
+    mContainer = RaverieMove(rhs->mContainer);
     mRange = mContainer.All(); // This is correct
 
     return *this;
@@ -319,4 +319,4 @@ private:
   range_type mRange;
 };
 
-} // namespace Zero
+} // namespace Raverie

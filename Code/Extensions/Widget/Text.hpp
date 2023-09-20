@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class TextDefinition;
@@ -10,7 +10,7 @@ class TextDefinition;
 class Text : public Widget
 {
 public:
-  ZilchDeclareType(Text, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Text, TypeCopyMode::ReferenceType);
 
   Text(Composite* parent, StringParam style);
   Text(Composite* parent, StringParam fontName, uint fontSize);
@@ -53,7 +53,7 @@ public:
 class Label : public Composite
 {
 public:
-  ZilchDeclareType(Label, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Label, TypeCopyMode::ReferenceType);
 
   Label(Composite* parent, StringParam style = DefaultTextStyle, StringParam text = String());
   ~Label();
@@ -74,4 +74,4 @@ public:
   Text* mText;
 };
 
-} // namespace Zero
+} // namespace Raverie

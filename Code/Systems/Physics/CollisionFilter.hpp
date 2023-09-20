@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 DeclareBitField6(
@@ -23,7 +23,7 @@ String GroupFilterDisplay(CollisionFilter* filter);
 /// send out and to whom.
 struct CollisionFilter : public SafeId32EventObject
 {
-  ZilchDeclareType(CollisionFilter, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CollisionFilter, TypeCopyMode::ReferenceType);
 
   CollisionFilter()
   {
@@ -105,4 +105,4 @@ struct HashPolicy<CollisionFilter*>
 
 typedef struct HashPolicy<CollisionFilter*> CollisionFilterHashPolicy;
 
-} // namespace Zero
+} // namespace Raverie

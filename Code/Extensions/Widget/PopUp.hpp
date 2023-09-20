@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 extern const String cPopUpNormal;
@@ -16,7 +16,7 @@ DeclareEvent(PopUpClosed);
 class FloatingComposite : public Composite
 {
 public:
-  ZilchDeclareType(FloatingComposite, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(FloatingComposite, TypeCopyMode::ReferenceType);
   FloatingComposite(Composite* parent, StringParam className = cPopUpNormal);
 
   void UpdateTransform() override;
@@ -38,7 +38,7 @@ DeclareEnum3(PopUpCloseMode, MouseOutTarget, MouseDistance, DisableClose);
 class PopUp : public FloatingComposite
 {
 public:
-  ZilchDeclareType(PopUp, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(PopUp, TypeCopyMode::ReferenceType);
   /// Popup will attach to the root widget of the target and disappear if
   /// the mouse moves outside the target, or the mouse moves away from the popup
   PopUp(Widget* target, PopUpCloseMode::Enum popCloseMode, StringParam className = cPopUpNormal);
@@ -62,4 +62,4 @@ public:
   HandleOf<Widget> mTarget;
 };
 
-} // namespace Zero
+} // namespace Raverie

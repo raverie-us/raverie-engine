@@ -2,7 +2,7 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 using namespace AudioConstants;
@@ -17,7 +17,7 @@ DefineEvent(TagHasNoInstances);
 
 // Tag Object
 
-ZilchDefineType(TagObject, builder, type)
+RaverieDefineType(TagObject, builder, type)
 {
 }
 
@@ -355,7 +355,7 @@ TagObject::InstanceData::~InstanceData()
 
 // Sound Tag
 
-ZilchDefineType(SoundTagDisplay, builder, type)
+RaverieDefineType(SoundTagDisplay, builder, type)
 {
 }
 
@@ -376,39 +376,39 @@ String SoundTagToString(const BoundType* type, const byte* instance)
   return BuildString("SoundTag: ", soundTag->Name);
 }
 
-ZilchDefineType(SoundTag, builder, type)
+RaverieDefineType(SoundTag, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
   type->ToStringFunction = &SoundTagToString;
 
-  ZilchBindGetterSetter(Volume);
-  ZilchBindGetterSetter(Decibels);
-  ZilchBindGetterSetter(UseEqualizer);
-  ZilchBindGetterSetter(EQLowPassGain);
-  ZilchBindGetterSetter(EQBand1Gain);
-  ZilchBindGetterSetter(EQBand2Gain);
-  ZilchBindGetterSetter(EQBand3Gain);
-  ZilchBindGetterSetter(EQHighPassGain);
-  ZilchBindGetterSetter(UseCompressor);
-  ZilchBindGetterSetter(CompressorThreshold);
-  ZilchBindGetterSetter(CompressorAttack);
-  ZilchBindGetterSetter(CompressorRelease);
-  ZilchBindGetterSetter(CompressorRatio);
-  ZilchBindGetterSetter(CompressorKneeWidth);
-  ZilchBindGetterSetter(InstanceLimit);
-  ZilchBindGetter(InstanceCount);
-  ZilchBindGetterSetter(Paused);
-  ZilchBindGetter(Instances);
-  ZilchBindMethod(TagSound);
-  ZilchBindMethod(UnTagSound);
-  ZilchBindMethod(StopSounds);
-  ZilchBindMethod(InterpolateVolume);
-  ZilchBindMethod(InterpolateDecibels);
-  ZilchBindMethod(EQSetAllBands);
-  ZilchBindGetterSetter(TagForDucking);
+  RaverieBindGetterSetter(Volume);
+  RaverieBindGetterSetter(Decibels);
+  RaverieBindGetterSetter(UseEqualizer);
+  RaverieBindGetterSetter(EQLowPassGain);
+  RaverieBindGetterSetter(EQBand1Gain);
+  RaverieBindGetterSetter(EQBand2Gain);
+  RaverieBindGetterSetter(EQBand3Gain);
+  RaverieBindGetterSetter(EQHighPassGain);
+  RaverieBindGetterSetter(UseCompressor);
+  RaverieBindGetterSetter(CompressorThreshold);
+  RaverieBindGetterSetter(CompressorAttack);
+  RaverieBindGetterSetter(CompressorRelease);
+  RaverieBindGetterSetter(CompressorRatio);
+  RaverieBindGetterSetter(CompressorKneeWidth);
+  RaverieBindGetterSetter(InstanceLimit);
+  RaverieBindGetter(InstanceCount);
+  RaverieBindGetterSetter(Paused);
+  RaverieBindGetter(Instances);
+  RaverieBindMethod(TagSound);
+  RaverieBindMethod(UnTagSound);
+  RaverieBindMethod(StopSounds);
+  RaverieBindMethod(InterpolateVolume);
+  RaverieBindMethod(InterpolateDecibels);
+  RaverieBindMethod(EQSetAllBands);
+  RaverieBindGetterSetter(TagForDucking);
 
-  ZeroBindEvent(Events::AddedInstanceToTag, SoundEvent);
-  ZeroBindEvent(Events::TagHasNoInstances, SoundEvent);
+  RaverieBindEvent(Events::AddedInstanceToTag, SoundEvent);
+  RaverieBindEvent(Events::TagHasNoInstances, SoundEvent);
 }
 
 SoundTag::SoundTag() : mTagObject(nullptr), mCompressorTag(nullptr)
@@ -814,4 +814,4 @@ SoundTagManager::SoundTagManager(BoundType* resourceType) : ResourceManager(reso
   mExtension = DataResourceExtension;
 }
 
-} // namespace Zero
+} // namespace Raverie

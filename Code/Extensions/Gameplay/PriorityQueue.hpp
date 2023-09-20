@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Priority Node
@@ -83,7 +83,7 @@ public:
   Node* Dequeue()
   {
     ErrorIf(mNodeCount <= 0, "Cannot call Dequeue() on an empty queue");
-#if ZeroDebug
+#if RaverieDebug
     if (!IsValidQueue())
     {
       Error("Queue has been corrupted (Did you update a node priority manually "
@@ -397,4 +397,4 @@ private:
   size_t mNodeCount;
 };
 
-} // namespace Zero
+} // namespace Raverie

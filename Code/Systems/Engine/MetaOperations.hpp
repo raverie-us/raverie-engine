@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Forward declarations
@@ -54,7 +54,7 @@ public:
 class PropertyOperation : public MetaOperation
 {
 public:
-  ZilchDeclareType(PropertyOperation, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(PropertyOperation, TypeCopyMode::ReferenceType);
 
   PropertyOperation(HandleParam object, PropertyPathParam property, AnyParam before, AnyParam after);
   ~PropertyOperation();
@@ -73,7 +73,7 @@ private:
   /// When scripts change, the types in 'mValueBefore' and 'mValueAfter' could
   /// be deleted. We need to update them to either the new types, or null them
   /// out.
-  void OnScriptsCompiled(ZilchCompileEvent* e);
+  void OnScriptsCompiled(RaverieCompileEvent* e);
   void OnMetaRemoved(MetaLibraryEvent* e);
 
   PropertyPath mPropertyPath;
@@ -210,4 +210,4 @@ public:
   ObjectRestoreState* mRestoreState;
 };
 
-} // namespace Zero
+} // namespace Raverie

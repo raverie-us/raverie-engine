@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -41,7 +41,7 @@ public:
 class PathFinderCell
 {
 public:
-  ZilchDeclareType(PathFinderCell, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(PathFinderCell, TypeCopyMode::ReferenceType);
 
   PathFinderCell();
 
@@ -92,7 +92,7 @@ public:
 class PathFinderGrid : public PathFinder
 {
 public:
-  ZilchDeclareType(PathFinderGrid, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(PathFinderGrid, TypeCopyMode::ReferenceType);
 
   PathFinderGrid();
 
@@ -171,4 +171,4 @@ public:
   Vec3 mLocalCellSize;
 };
 
-} // namespace Zero
+} // namespace Raverie

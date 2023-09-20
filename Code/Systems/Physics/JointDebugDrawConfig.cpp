@@ -1,24 +1,24 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(JointDebugDrawConfig, builder, type)
+RaverieDefineType(JointDebugDrawConfig, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDocumented();
-  ZeroBindDependency(Joint);
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
+  RaverieBindDependency(Joint);
 
-  ZilchBindGetterSetterProperty(Active)->ZeroSerialize(true);
-  ZilchBindFieldProperty(mSize)->ZeroSerialize(real(1.0));
-  ZilchBindFieldProperty(mDetail)->ZeroSerialize(real(10.0));
-  ZilchBindGetterSetterProperty(ObjectAPerspective)->ZeroSerialize(true);
-  ZilchBindGetterSetterProperty(ObjectBPerspective)->ZeroSerialize(false);
+  RaverieBindGetterSetterProperty(Active)->RaverieSerialize(true);
+  RaverieBindFieldProperty(mSize)->RaverieSerialize(real(1.0));
+  RaverieBindFieldProperty(mDetail)->RaverieSerialize(real(10.0));
+  RaverieBindGetterSetterProperty(ObjectAPerspective)->RaverieSerialize(true);
+  RaverieBindGetterSetterProperty(ObjectBPerspective)->RaverieSerialize(false);
 
-  ZeroBindTag(Tags::Physics);
-  ZeroBindTag(Tags::Joint);
+  RaverieBindTag(Tags::Physics);
+  RaverieBindTag(Tags::Joint);
 }
 
 JointDebugDrawConfig::JointDebugDrawConfig()
@@ -65,4 +65,4 @@ void JointDebugDrawConfig::SetObjectBPerspective(bool state)
   mPerspective.SetState(JointDebugDrawConfigFlags::ObjectBPerspective, state);
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class Actions;
@@ -111,4 +111,4 @@ private:
   Vec2 mPixelsPerUnit;
 };
 
-} // namespace Zero
+} // namespace Raverie

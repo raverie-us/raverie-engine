@@ -1,17 +1,17 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
-/// Returns the basic native type corresponding to the specified zilch type (may
+/// Returns the basic native type corresponding to the specified raverie type (may
 /// be null), else nullptr
-NativeType* ZilchTypeToBasicNativeType(Zilch::Type* zilchType);
+NativeType* RaverieTypeToBasicNativeType(Raverie::Type* raverieType);
 
-/// Returns the zilch type corresponding to the specified basic native type (may
+/// Returns the raverie type corresponding to the specified basic native type (may
 /// be null), else nullptr
-Zilch::Type* BasicNativeTypeToZilchType(NativeType* nativeType);
-Zilch::Type* BasicNativeTypeToZilchType(NativeTypeId nativeTypeId);
+Raverie::Type* BasicNativeTypeToRaverieType(NativeType* nativeType);
+Raverie::Type* BasicNativeTypeToRaverieType(NativeTypeId nativeTypeId);
 
 /// Returns a variant containing the stored value of the specified any if the
 /// any's stored value is a basic native type, else Variant()
@@ -20,4 +20,4 @@ Variant ConvertBasicAnyToVariant(const Any& anyValue);
 /// variant's stored value is a basic native type, else Any()
 Any ConvertBasicVariantToAny(const Variant& variantValue);
 
-} // namespace Zero
+} // namespace Raverie

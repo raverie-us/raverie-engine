@@ -1,14 +1,14 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Specifies a range of colors that are interpolated when sampled.
 class ColorGradient : public DataResource
 {
 public:
-  ZilchDeclareType(ColorGradient, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ColorGradient, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   ColorGradient();
@@ -43,4 +43,4 @@ public:
   ColorGradient* CreateNewResourceInternal(StringParam name) override;
 };
 
-} // namespace Zero
+} // namespace Raverie

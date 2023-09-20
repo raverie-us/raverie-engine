@@ -8,22 +8,22 @@
 #include "Systems/Engine/EngineStandard.hpp"
 #include "Foundation/Meta/MetaStandard.hpp"
 #include "Foundation/SpatialPartition/SpatialPartitionStandard.hpp"
-#include "Extensions/ZilchShaders/ZilchShadersStandard.hpp"
+#include "Extensions/RaverieShaders/RaverieShadersStandard.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Graphics library
-class GraphicsLibrary : public Zilch::StaticLibrary
+class GraphicsLibrary : public Raverie::StaticLibrary
 {
 public:
-  ZilchDeclareStaticLibraryInternals(GraphicsLibrary);
+  RaverieDeclareStaticLibraryInternals(GraphicsLibrary);
 
   static void Initialize();
   static void Shutdown();
 };
 
-} // namespace Zero
+} // namespace Raverie
 
 #include "ForwardDeclarations.hpp"
 #include "UtilityStructures.hpp"
@@ -55,9 +55,9 @@ public:
 #include "TextureUtilities.hpp"
 #include "ViewportInterface.hpp"
 #include "VisibilityFlag.hpp"
-#include "ZilchFragment.hpp"
-#include "ZeroZilchShaderGlslBackend.hpp"
-#include "ZilchShaderGenerator.hpp"
+#include "RaverieFragment.hpp"
+#include "RaverieShaderGlslBackend.hpp"
+#include "RaverieShaderGenerator.hpp"
 
 // Some Dependencies
 #include "Atlas.hpp"

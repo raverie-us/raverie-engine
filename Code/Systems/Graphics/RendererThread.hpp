@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 OsInt RendererThreadMain(void* rendererThreadJobQueue);
@@ -199,4 +199,4 @@ public:
   String mFilename;
 };
 
-} // namespace Zero
+} // namespace Raverie

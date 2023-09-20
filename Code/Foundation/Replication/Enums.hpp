@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 //
@@ -198,4 +198,4 @@ DeclareEnum10(ProtocolMessageType,
               Reserved2,             /// Reserved for later use
               Reserved3);            /// Reserved for later use
 
-} // namespace Zero
+} // namespace Raverie

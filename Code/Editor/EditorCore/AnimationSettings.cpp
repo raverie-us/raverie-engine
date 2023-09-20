@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 AnimationSettings::EditFpsPresetArray AnimationSettings::mEditFpsPresets;
@@ -14,18 +14,18 @@ void GetEditFpsPresets(HandleParam instance, Property* property, Array<String>& 
     strings[i] = AnimationSettings::mEditFpsPresets[i].first;
 }
 
-ZilchDefineType(AnimationSettings, builder, type)
+RaverieDefineType(AnimationSettings, builder, type)
 {
-  type->HandleManager = ZilchManagerId(PointerManager);
-  ZilchBindGetterSetterProperty(EditFps)->Add(new EditorIndexedStringArray(GetEditFpsPresets));
-  ZilchBindFieldProperty(mTimeDisplay);
-  ZilchBindFieldProperty(mSnappingX);
-  ZilchBindFieldProperty(mSnappingY);
-  ZilchBindFieldProperty(mAutoKey);
-  ZilchBindFieldProperty(mAutoFocus);
-  ZilchBindFieldProperty(mOnionSkinning);
-  ZilchBindFieldProperty(mPlaybackSpeed);
-  ZilchBindFieldProperty(mPreviewMode);
+  type->HandleManager = RaverieManagerId(PointerManager);
+  RaverieBindGetterSetterProperty(EditFps)->Add(new EditorIndexedStringArray(GetEditFpsPresets));
+  RaverieBindFieldProperty(mTimeDisplay);
+  RaverieBindFieldProperty(mSnappingX);
+  RaverieBindFieldProperty(mSnappingY);
+  RaverieBindFieldProperty(mAutoKey);
+  RaverieBindFieldProperty(mAutoFocus);
+  RaverieBindFieldProperty(mOnionSkinning);
+  RaverieBindFieldProperty(mPlaybackSpeed);
+  RaverieBindFieldProperty(mPreviewMode);
 
   mEditFpsPresets.Resize(4);
   mEditFpsPresets[0] = EditFpsPreset("12fps", 12.0f);
@@ -128,4 +128,4 @@ void AnimationSettingsView::UpdateTransform()
   Composite::UpdateTransform();
 }
 
-} // namespace Zero
+} // namespace Raverie

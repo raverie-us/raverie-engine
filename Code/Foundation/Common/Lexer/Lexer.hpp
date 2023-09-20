@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 class ReplacementNode;
 class CaptureExpressionNode;
@@ -553,6 +553,6 @@ public:
   TokenRange<ParseHandlerType> mRange;
   Array<Token> mTokens;
 };
-} // namespace Zero
+} // namespace Raverie
 
 #include "Lexer.inl"

@@ -4,7 +4,7 @@
 #include "Systems/Engine/EngineStandard.hpp"
 #include "Systems/Graphics/GraphicsStandard.hpp"
 
-namespace Zero
+namespace Raverie
 {
 // Forward declarations
 class CheckBox;
@@ -51,16 +51,16 @@ class Widget;
 class Window;
 
 // Widget library
-class WidgetLibrary : public Zilch::StaticLibrary
+class WidgetLibrary : public Raverie::StaticLibrary
 {
 public:
-  ZilchDeclareStaticLibraryInternals(WidgetLibrary);
+  RaverieDeclareStaticLibraryInternals(WidgetLibrary);
 
   static void Initialize();
   static void Shutdown();
 };
 
-} // namespace Zero
+} // namespace Raverie
 
 #include "WidgetMath.hpp"
 #include "Layout.hpp"

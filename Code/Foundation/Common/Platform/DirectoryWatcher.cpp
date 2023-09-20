@@ -1,12 +1,12 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 DirectoryWatcher::DirectoryWatcher(cstr directoryToWatch, CallbackFunction callback, void* callbackInstance)
 {
-  ZeroCStringCopy(mDirectoryToWatch, File::MaxPath, directoryToWatch, strlen(directoryToWatch));
+  RaverieCStringCopy(mDirectoryToWatch, File::MaxPath, directoryToWatch, strlen(directoryToWatch));
 
   mCallbackInstance = callbackInstance;
   mCallback = callback;
@@ -34,4 +34,4 @@ void DirectoryWatcher::Shutdown()
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

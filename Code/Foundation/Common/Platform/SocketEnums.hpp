@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Socket address type designated by protocol
@@ -396,4 +396,4 @@ DeclareEnum4(InternetProtocol,
 static const InternetProtocol::Enum InternetProtocolMin = InternetProtocol::Unspecified;
 static const InternetProtocol::Enum InternetProtocolMax = InternetProtocol::Both;
 
-} // namespace Zero
+} // namespace Raverie

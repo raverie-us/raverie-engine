@@ -1,0 +1,9 @@
+[Version:1]
+TextContent 
+{
+	RaverieScriptBuilder 
+	{
+		var Name = "ZUiSoundNodeGraph"
+		var ResourceId = 0x58a227eef7b008a2
+	}
+}

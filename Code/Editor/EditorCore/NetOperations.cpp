@@ -5,7 +5,7 @@
 #include "NetOperations.hpp"
 #include "Systems/Networking/NetObject.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 //
@@ -185,4 +185,4 @@ void SetNetPropertyInfoChannelOperation::SetNetPropertyInfoChannel(NetChannelCon
   object->GetSpace()->MarkModified();
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,23 +1,23 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineStaticLibrary(SpatialPartitionLibrary)
+RaverieDefineStaticLibrary(SpatialPartitionLibrary)
 {
   builder.CreatableInScriptDefault = false;
 
-  ZilchInitializeType(IBroadPhase);
-  ZilchInitializeType(NSquaredBroadPhase);
-  ZilchInitializeType(BoundingBoxBroadPhase);
-  ZilchInitializeType(BoundingSphereBroadPhase);
-  ZilchInitializeType(StaticAabbTreeBroadPhase);
-  ZilchInitializeType(SapBroadPhase);
-  ZilchInitializeType(DynamicAabbTreeBroadPhase);
-  ZilchInitializeType(AvlDynamicAabbTreeBroadPhase);
-  ZilchInitializeType(DynamicBroadphasePropertyExtension);
-  ZilchInitializeType(StaticBroadphasePropertyExtension);
+  RaverieInitializeType(IBroadPhase);
+  RaverieInitializeType(NSquaredBroadPhase);
+  RaverieInitializeType(BoundingBoxBroadPhase);
+  RaverieInitializeType(BoundingSphereBroadPhase);
+  RaverieInitializeType(StaticAabbTreeBroadPhase);
+  RaverieInitializeType(SapBroadPhase);
+  RaverieInitializeType(DynamicAabbTreeBroadPhase);
+  RaverieInitializeType(AvlDynamicAabbTreeBroadPhase);
+  RaverieInitializeType(DynamicBroadphasePropertyExtension);
+  RaverieInitializeType(StaticBroadphasePropertyExtension);
 
   MetaLibraryExtensions::AddNativeExtensions(builder);
 }
@@ -32,4 +32,4 @@ void SpatialPartitionLibrary::Shutdown()
 {
 }
 
-} // namespace Zero
+} // namespace Raverie

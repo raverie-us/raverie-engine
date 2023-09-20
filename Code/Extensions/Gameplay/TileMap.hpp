@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class SpriteSource;
@@ -101,7 +101,7 @@ public:
 
   HashMap<Tile, TileStatus::Enum> mValidTileTests;
 
-  ZilchDeclareType(TileMap, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(TileMap, TypeCopyMode::ReferenceType);
 
   typedef HashMap<IntVec2, Tile> TileHashMap;
   typedef TileHashMap::range TileRange;
@@ -170,4 +170,4 @@ private:
   Space* mTestSpace;
 };
 
-} // namespace Zero
+} // namespace Raverie

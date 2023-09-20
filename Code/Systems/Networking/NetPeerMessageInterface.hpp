@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 //
@@ -21,4 +21,4 @@ public:
   virtual bool ReceiveLinkMessage(IpAddress const& theirIpAddress, Message& linkMessage) = 0;
 };
 
-} // namespace Zero
+} // namespace Raverie

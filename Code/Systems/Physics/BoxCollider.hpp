@@ -1,14 +1,14 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Defines the collision volume of a box defined by a size on each axis.
 class BoxCollider : public Collider
 {
 public:
-  ZilchDeclareType(BoxCollider, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(BoxCollider, TypeCopyMode::ReferenceType);
 
   BoxCollider();
 
@@ -47,4 +47,4 @@ private:
   Vec3 mWorldHalfSize;
 };
 
-} // namespace Zero
+} // namespace Raverie

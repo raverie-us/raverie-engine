@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // To allow platforms without threads / yields (such as Emscripten) to give time back to the OS/Browser
@@ -71,7 +71,7 @@ private:
   String mProjectFile;
 
   ExecutableState* mState = nullptr;
-  ZilchSetup* mZilchSetup = nullptr;
+  RaverieSetup* mRaverieSetup = nullptr;
 
   // Initialize:
   UniquePointer<FileSystemInitializer> mFileSystemInitializer;
@@ -79,4 +79,4 @@ private:
   UniquePointer<StdOutListener> mStdoutListener;
 };
 
-} // namespace Zero
+} // namespace Raverie

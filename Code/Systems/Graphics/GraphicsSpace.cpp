@@ -2,7 +2,7 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -11,18 +11,18 @@ DefineEvent(UpdateActiveCameras);
 DefineEvent(UpdateSkeletons);
 } // namespace Events
 
-ZilchDefineType(GraphicsSpace, builder, type)
+RaverieDefineType(GraphicsSpace, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindDocumented();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindComponent();
+  RaverieBindDocumented();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
   type->AddAttribute(ObjectAttributes::cCore);
 
-  ZeroBindDependency(Space);
+  RaverieBindDependency(Space);
 
-  ZilchBindFieldProperty(mActive);
-  ZilchBindFieldProperty(mRandomSeed)->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  ZilchBindFieldProperty(mSeed)->ZeroFilterEquality(mRandomSeed, bool, false);
+  RaverieBindFieldProperty(mActive);
+  RaverieBindFieldProperty(mRandomSeed)->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  RaverieBindFieldProperty(mSeed)->RaverieFilterEquality(mRandomSeed, bool, false);
 }
 
 void GraphicsSpace::Serialize(Serializer& stream)
@@ -108,7 +108,7 @@ void GraphicsSpace::OnFrameUpdate(float frameDt)
 
   mFrameTime += frameDt;
 
-  ZeroForRangeVar (Graphical& graphical, graphicalRange, mGraphicalsToAdd.All())
+  RaverieForRangeVar (Graphical& graphical, graphicalRange, mGraphicalsToAdd.All())
   {
     GraphicalList::Unlink(&graphical);
 
@@ -647,4 +647,4 @@ void GraphicsSpace::SendVisibilityEvents()
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

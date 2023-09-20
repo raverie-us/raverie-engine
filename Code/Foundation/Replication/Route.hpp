@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 //                                    Route //
@@ -27,4 +27,4 @@ public:
   ReplicatorIdSet mTargets; /// Route link targets
 };
 
-} // namespace Zero
+} // namespace Raverie

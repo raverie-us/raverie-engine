@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Base class for common engine/system objects. Provides overloaded new/delete
@@ -16,4 +16,4 @@ public:
   virtual ~EngineObject();
 };
 
-} // namespace Zero
+} // namespace Raverie

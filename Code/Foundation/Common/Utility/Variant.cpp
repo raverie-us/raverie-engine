@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 //                                  Variant //
@@ -25,7 +25,7 @@ Variant::Variant(const Variant& rhs) : mNativeType(nullptr)
 Variant::Variant(MoveReference<Variant> rhs) : mNativeType(nullptr)
 {
   InternalZeroLocalBuffer();
-  Assign(ZeroMove(rhs));
+  Assign(RaverieMove(rhs));
 }
 
 Variant::~Variant()
@@ -44,7 +44,7 @@ Variant& Variant::operator=(const Variant& rhs)
 }
 Variant& Variant::operator=(MoveReference<Variant> rhs)
 {
-  Assign(ZeroMove(rhs));
+  Assign(RaverieMove(rhs));
   return *this;
 }
 
@@ -621,4 +621,4 @@ void Variant::InternalStringToStoredValue(StringRange range)
   return mNativeType->mStringToObjectFn(range, InternalGetData());
 }
 
-} // namespace Zero
+} // namespace Raverie

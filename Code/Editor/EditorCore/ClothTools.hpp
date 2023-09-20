@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class ToolUiEvent;
@@ -16,7 +16,7 @@ DeclareEnum5(SpringSubTools, Anchoring, PointSelector, SpringSelector, SpringCre
 class SpringSubTool : public Object
 {
 public:
-  ZilchDeclareType(SpringSubTool, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SpringSubTool, TypeCopyMode::ReferenceType);
 
   virtual ~SpringSubTool(){};
 
@@ -51,7 +51,7 @@ public:
 class DragSelectSubTool : public SpringSubTool
 {
 public:
-  ZilchDeclareType(DragSelectSubTool, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(DragSelectSubTool, TypeCopyMode::ReferenceType);
 
   DragSelectSubTool();
 
@@ -71,7 +71,7 @@ public:
 class SelectorSpringSubTool : public DragSelectSubTool
 {
 public:
-  ZilchDeclareType(SelectorSpringSubTool, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SelectorSpringSubTool, TypeCopyMode::ReferenceType);
 
   SelectorSpringSubTool();
 
@@ -100,7 +100,7 @@ public:
 class PointMassSelectorSubTool : public SelectorSpringSubTool
 {
 public:
-  ZilchDeclareType(PointMassSelectorSubTool, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(PointMassSelectorSubTool, TypeCopyMode::ReferenceType);
 
   PointMassSelectorSubTool();
 
@@ -114,7 +114,7 @@ public:
 class AnchoringSubTool : public PointMassSelectorSubTool
 {
 public:
-  ZilchDeclareType(AnchoringSubTool, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(AnchoringSubTool, TypeCopyMode::ReferenceType);
 
   AnchoringSubTool();
 
@@ -129,7 +129,7 @@ public:
 class PointSelectorSubTool : public PointMassSelectorSubTool
 {
 public:
-  ZilchDeclareType(PointSelectorSubTool, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(PointSelectorSubTool, TypeCopyMode::ReferenceType);
 
   PointSelectorSubTool();
 };
@@ -137,7 +137,7 @@ public:
 class SpringSelectorSubTool : public SelectorSpringSubTool
 {
 public:
-  ZilchDeclareType(SpringSelectorSubTool, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SpringSelectorSubTool, TypeCopyMode::ReferenceType);
 
   SpringSelectorSubTool();
 
@@ -148,7 +148,7 @@ public:
 class SpringCreatorSubTool : public SpringSubTool
 {
 public:
-  ZilchDeclareType(SpringCreatorSubTool, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SpringCreatorSubTool, TypeCopyMode::ReferenceType);
 
   SpringCreatorSubTool();
 
@@ -174,7 +174,7 @@ public:
 class RopeCreatorSubTool : public SpringSubTool
 {
 public:
-  ZilchDeclareType(RopeCreatorSubTool, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(RopeCreatorSubTool, TypeCopyMode::ReferenceType);
 
   RopeCreatorSubTool();
 
@@ -210,7 +210,7 @@ public:
 class SpringPointProxy : public EventObject
 {
 public:
-  ZilchDeclareType(SpringPointProxy, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SpringPointProxy, TypeCopyMode::ReferenceType);
 
   SpringPointProxy();
 
@@ -234,7 +234,7 @@ public:
 class SpringPointProxyProperty : public PropertyInterface
 {
 public:
-  ZilchDeclareType(SpringPointProxyProperty, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SpringPointProxyProperty, TypeCopyMode::ReferenceType);
   /// Returns whether or not the value is valid. For example, it could be
   /// invalid if this is a multi-selection and there is a conflict between
   /// the values on multiple objects.
@@ -266,7 +266,7 @@ public:
 class SpringTools : public Component
 {
 public:
-  ZilchDeclareType(SpringTools, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SpringTools, TypeCopyMode::ReferenceType);
 
   SpringTools();
   ~SpringTools();
@@ -312,4 +312,4 @@ public:
   PropertyView* mPropertyView;
 };
 
-} // namespace Zero
+} // namespace Raverie

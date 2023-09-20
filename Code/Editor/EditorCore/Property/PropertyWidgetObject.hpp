@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 extern const String cPropArrowRight;
 extern const String cPropArrowDown;
@@ -20,7 +20,7 @@ enum Enum
 class PropertyWidgetObject : public PropertyWidget
 {
 public:
-  ZilchDeclareType(PropertyWidgetObject, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(PropertyWidgetObject, TypeCopyMode::ReferenceType);
 
   PropertyWidgetObject(PropertyWidgetInitializer& initializer,
                        PropertyWidgetObject* parentNode,
@@ -159,4 +159,4 @@ DeclareTweakable(Vec4, TitleRemove);
 DeclareTweakable(Vec4, BackgroundColor);
 } // namespace ComponentUi
 
-} // namespace Zero
+} // namespace Raverie

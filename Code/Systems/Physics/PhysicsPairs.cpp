@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Physics
@@ -70,4 +70,4 @@ bool ColliderPair::operator>(const ColliderPair& rhs) const
 
 } // namespace Physics
 
-} // namespace Zero
+} // namespace Raverie

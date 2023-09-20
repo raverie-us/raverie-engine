@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -33,7 +33,7 @@ const String cSelectionBox = "SelectionBox";
 const String cSelectText = "SelectedText";
 const String cHighlightedText = "TextHighlight";
 
-ZilchDefineType(ListBox, builder, type)
+RaverieDefineType(ListBox, builder, type)
 {
 }
 
@@ -494,7 +494,7 @@ int ListBox::IndexFromPosition(Vec2Param localPosition)
 
 const String DownArrow = "DownArrowGrey";
 
-ZilchDefineType(ComboBox, builder, type)
+RaverieDefineType(ComboBox, builder, type)
 {
 }
 
@@ -766,7 +766,7 @@ void ComboBox::UpdateTransform()
   Composite::UpdateTransform();
 }
 
-ZilchDefineType(StringComboBox, builder, type)
+RaverieDefineType(StringComboBox, builder, type)
 {
 }
 
@@ -828,4 +828,4 @@ String StringComboBox::GetSelectedString()
   return GetItem(selectedIndex);
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 ByteBuffer::BlockRange::BlockRange(ByteBuffer* buffer)
@@ -366,4 +366,4 @@ String ByteBuffer::ToString(size_t subStringSizeBytes) const
   return String(node);
 }
 
-} // namespace Zero
+} // namespace Raverie

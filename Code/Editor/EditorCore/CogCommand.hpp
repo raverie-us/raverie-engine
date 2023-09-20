@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Forward declarations
@@ -11,7 +11,7 @@ class CogCommand : public Command
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(CogCommand, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CogCommand, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   CogCommand(Archetype* archetype);
@@ -44,7 +44,7 @@ class CogCommandManager : public EditorScriptObjects<CogCommand>
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(CogCommandManager, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CogCommandManager, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   CogCommandManager();
@@ -67,4 +67,4 @@ public:
   CommandManager* mCommands;
 };
 
-} // namespace Zero
+} // namespace Raverie

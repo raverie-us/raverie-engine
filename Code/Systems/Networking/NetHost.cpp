@@ -1,26 +1,26 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 //                                    NetHost //
 
-ZilchDefineType(NetHost, builder, type)
+RaverieDefineType(NetHost, builder, type)
 {
   // Bind documentation
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
   // Bind methods
-  ZilchBindGetterProperty(RoundTripTime);
-  ZilchBindGetterProperty(Latency);
+  RaverieBindGetterProperty(RoundTripTime);
+  RaverieBindGetterProperty(Latency);
 
   // Bind member properties
-  ZilchBindFieldGetterProperty(mNetwork);
-  ZilchBindFieldGetterProperty(mIpAddress);
-  // ZilchBindFieldGetterProperty(mRoundTripTime);
-  ZilchBindFieldGetterProperty(mBasicHostInfo);
-  ZilchBindFieldGetterProperty(mExtraHostInfo);
+  RaverieBindFieldGetterProperty(mNetwork);
+  RaverieBindFieldGetterProperty(mIpAddress);
+  // RaverieBindFieldGetterProperty(mRoundTripTime);
+  RaverieBindFieldGetterProperty(mBasicHostInfo);
+  RaverieBindFieldGetterProperty(mExtraHostInfo);
 }
 
 NetHost::NetHost() : mNetwork(Network::LAN), mIpAddress(), mRoundTripTime(0), mBasicHostInfo(), mExtraHostInfo()
@@ -90,4 +90,4 @@ NetHostRange::NetHostRange(const NetHostSet::range& rhs) : NetHostSet::range(rhs
 {
 }
 
-} // namespace Zero
+} // namespace Raverie

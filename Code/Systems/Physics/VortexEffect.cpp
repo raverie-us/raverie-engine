@@ -1,26 +1,26 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(VortexEffect, builder, type)
+RaverieDefineType(VortexEffect, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindDocumented();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindComponent();
+  RaverieBindDocumented();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
 
-  ZilchBindGetterSetterProperty(LocalAxis)->ZeroSerialize(true);
-  ZilchBindGetterSetterProperty(MinDistance)->ZeroSerialize(real(1));
-  ZilchBindGetterSetterProperty(MaxDistance)->ZeroSerialize(real(5));
-  ZilchBindGetterSetterProperty(TwistStrengthAtMinDistance)->ZeroSerialize(real(10));
-  ZilchBindGetterSetterProperty(TwistStrengthAtMaxDistance)->ZeroSerialize(real(2));
-  ZilchBindGetterSetterProperty(InwardStrengthAtMinDistance)->ZeroSerialize(real(2));
-  ZilchBindGetterSetterProperty(InwardStrengthAtMaxDistance)->ZeroSerialize(real(10));
-  ZilchBindGetterSetterProperty(VortexAxis)->ZeroSerialize(Vec3(0, 1, 0));
-  ZilchBindGetterProperty(WorldVortexAxis);
-  ZilchBindGetterSetterProperty(InterpolationType)->ZeroSerialize(PhysicsEffectInterpolationType::Linear);
-  ZilchBindGetterSetterProperty(EndCondition)->ZeroSerialize(PhysicsEffectEndCondition::ClampToMax);
+  RaverieBindGetterSetterProperty(LocalAxis)->RaverieSerialize(true);
+  RaverieBindGetterSetterProperty(MinDistance)->RaverieSerialize(real(1));
+  RaverieBindGetterSetterProperty(MaxDistance)->RaverieSerialize(real(5));
+  RaverieBindGetterSetterProperty(TwistStrengthAtMinDistance)->RaverieSerialize(real(10));
+  RaverieBindGetterSetterProperty(TwistStrengthAtMaxDistance)->RaverieSerialize(real(2));
+  RaverieBindGetterSetterProperty(InwardStrengthAtMinDistance)->RaverieSerialize(real(2));
+  RaverieBindGetterSetterProperty(InwardStrengthAtMaxDistance)->RaverieSerialize(real(10));
+  RaverieBindGetterSetterProperty(VortexAxis)->RaverieSerialize(Vec3(0, 1, 0));
+  RaverieBindGetterProperty(WorldVortexAxis);
+  RaverieBindGetterSetterProperty(InterpolationType)->RaverieSerialize(PhysicsEffectInterpolationType::Linear);
+  RaverieBindGetterSetterProperty(EndCondition)->RaverieSerialize(PhysicsEffectEndCondition::ClampToMax);
 }
 
 VortexEffect::VortexEffect()
@@ -357,4 +357,4 @@ void VortexEffect::SetInterpolationType(PhysicsEffectInterpolationType::Enum typ
   CheckWakeUp();
 }
 
-} // namespace Zero
+} // namespace Raverie

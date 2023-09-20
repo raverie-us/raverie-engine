@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class RenderFont;
@@ -9,7 +9,7 @@ class RenderFont;
 class TextDefinition : public BaseDefinition
 {
 public:
-  ZilchDeclareType(TextDefinition, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(TextDefinition, TypeCopyMode::ReferenceType);
 
   Vec4 FontColor;
   String FontName;
@@ -21,4 +21,4 @@ public:
   void Serialize(Serializer& stream) override;
 };
 
-} // namespace Zero
+} // namespace Raverie

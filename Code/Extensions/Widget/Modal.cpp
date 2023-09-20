@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -27,15 +27,15 @@ Tweakable(Vec4, StipColor, Vec4(1, 1, 1, 1), cLocation);
 Tweakable(float, StripHeight, Pixels(64), cLocation);
 } // namespace ModalStripUi
 
-ZilchDefineType(ModalConfirmEvent, builder, type)
+RaverieDefineType(ModalConfirmEvent, builder, type)
 {
 }
 
-ZilchDefineType(ModalButtonEvent, builder, type)
+RaverieDefineType(ModalButtonEvent, builder, type)
 {
 }
 
-ZilchDefineType(Modal, builder, type)
+RaverieDefineType(Modal, builder, type)
 {
 }
 
@@ -362,4 +362,4 @@ bool ModalButtonsAction::TakeFocusOverride()
   return true;
 }
 
-} // namespace Zero
+} // namespace Raverie

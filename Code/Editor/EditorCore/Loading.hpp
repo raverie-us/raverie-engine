@@ -1,14 +1,14 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Loading Window
 class LoadingWindow : public Composite
 {
 public:
-  typedef LoadingWindow ZilchSelf;
+  typedef LoadingWindow RaverieSelf;
   LoadingWindow(Composite* composite);
 
   void Activate(StringParam taskName);
@@ -25,4 +25,4 @@ private:
   HandleOf<ColorBlock> mDarkScreen;
 };
 
-} // namespace Zero
+} // namespace Raverie

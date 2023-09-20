@@ -1,0 +1,15 @@
+[Version:1]
+TextContent 
+{
+	ContentTags 
+	{
+		var Tags = Array
+		{
+		}
+	}
+	RaverieScriptBuilder 
+	{
+		var Name = "UiHighlight"
+		var ResourceId = 0x569f15ea32786611
+	}
+}

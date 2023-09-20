@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -9,11 +9,11 @@ namespace Events
 DefineEvent(ConsolePrint);
 } // namespace Events
 
-ZilchDefineType(ConsoleTextEvent, builder, type)
+RaverieDefineType(ConsoleTextEvent, builder, type)
 {
 }
 
-ZilchDefineType(ConsoleUi, builder, type)
+RaverieDefineType(ConsoleUi, builder, type)
 {
 }
 
@@ -163,4 +163,4 @@ void ConsoleUi::ConsoleLog(FilterType filterType, cstr message)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

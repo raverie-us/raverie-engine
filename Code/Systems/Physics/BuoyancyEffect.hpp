@@ -1,14 +1,14 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Applies a buoyancy force to an object in a given direction.
 class BuoyancyEffect : public PhysicsEffect
 {
 public:
-  ZilchDeclareType(BuoyancyEffect, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(BuoyancyEffect, TypeCopyMode::ReferenceType);
 
   BuoyancyEffect();
 
@@ -44,4 +44,4 @@ private:
   Vec3 mGravity;
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Search box that will filter a tree view with a give
@@ -9,7 +9,7 @@ namespace Zero
 class TreeViewSearch : public Composite
 {
 public:
-  typedef TreeViewSearch ZilchSelf;
+  typedef TreeViewSearch RaverieSelf;
   TreeViewSearch(Composite* parent, TreeView* treeView, DataSourceFilter* filter);
   ~TreeViewSearch();
 
@@ -27,4 +27,4 @@ public:
   void OnDataModified(Event* event);
 };
 
-} // namespace Zero
+} // namespace Raverie

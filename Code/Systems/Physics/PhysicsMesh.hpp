@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// A mesh used to represent static world geometry. All geometry is
@@ -9,7 +9,7 @@ namespace Zero
 class PhysicsMesh : public GenericPhysicsMesh
 {
 public:
-  ZilchDeclareType(PhysicsMesh, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(PhysicsMesh, TypeCopyMode::ReferenceType);
   typedef StaticAabbTree<uint> AabbTree;
 
   // Interface
@@ -58,4 +58,4 @@ public:
   Array<MeshReference> mModifiedMeshes;
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Editor Resource management functions. These functions work with the
@@ -51,4 +51,4 @@ Resource* NewResourceOnWrite(ResourceManager* resourceManager,
                              Archetype* archetype,
                              bool modified);
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 DeclareEnum13(ControllerButton,
@@ -37,7 +37,7 @@ class EditorCameraController : public Component
 {
 public:
   // Meta Initialization
-  ZilchDeclareType(EditorCameraController, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(EditorCameraController, TypeCopyMode::ReferenceType);
 
   EditorCameraController();
 
@@ -169,4 +169,4 @@ private:
   friend class EditorViewport;
 };
 
-} // namespace Zero
+} // namespace Raverie

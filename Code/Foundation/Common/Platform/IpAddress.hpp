@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 //                                  IpAddress //
@@ -122,4 +122,4 @@ inline Bits Serialize<IpAddress>(SerializeDirection::Enum direction,
   return result;
 };
 
-} // namespace Zero
+} // namespace Raverie

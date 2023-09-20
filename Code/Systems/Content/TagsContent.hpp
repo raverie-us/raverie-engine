@@ -1,13 +1,13 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class ContentTags : public ContentComponent
 {
 public:
-  ZilchDeclareType(ContentTags, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ContentTags, TypeCopyMode::ReferenceType);
 
   /// Constructor
   ContentTags()
@@ -24,4 +24,4 @@ public:
   HashSet<String> mTags;
 };
 
-} // namespace Zero
+} // namespace Raverie

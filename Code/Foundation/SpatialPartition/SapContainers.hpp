@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// The SapPairManager is used to keep track pairs in Sap while performing
@@ -330,4 +330,4 @@ struct SapPairRange
   typename PairManagerType::range mRange;
 };
 
-} // namespace Zero
+} // namespace Raverie

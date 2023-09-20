@@ -2,11 +2,11 @@
 #include "Precompiled.hpp"
 #include "Platform/ThreadSync.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // StringPool
-#if defined(ZeroStringPooling)
+#if defined(RaverieStringPooling)
 typedef HashSet<StringNode*, PoolPolicy> StringPoolSet;
 class StringPool
 {
@@ -245,7 +245,7 @@ String& String::operator=(const String& other)
 
 void String::initializeToDefault()
 {
-#if defined(ZeroStringPooling)
+#if defined(RaverieStringPooling)
   StringPool& pool = StringPool::GetInstance();
   StringNode& node = pool.GetEmptyNode();
 #else
@@ -347,7 +347,7 @@ void String::Assign(const_pointer data, size_type size)
 
   size_t hash = HashString(data, size);
 
-#if defined(ZeroStringPooling)
+#if defined(RaverieStringPooling)
   TemporaryString temp;
   temp.mData = data;
   temp.mSize = size;
@@ -404,7 +404,7 @@ bool String::DebugIsNodePointerInPool(String* str)
     return false;
 
   bool isInPool = false;
-#if defined(ZeroStringPooling)
+#if defined(RaverieStringPooling)
   StringPool& pool = StringPool::GetInstance();
   pool.mLock.Lock();
   {
@@ -438,7 +438,7 @@ void String::DebugForceReleaseStringPoolLock()
   // continue. There's a chance we could be in an invalid state but we're
   // already crashing. This makes the worst case scenario that we double crash
   // and get no report instead of infinite looping on a background process.
-#if defined(ZeroStringPooling)
+#if defined(RaverieStringPooling)
   StringPool& pool = StringPool::GetInstance();
   pool.mLock.Unlock();
 #endif
@@ -446,7 +446,7 @@ void String::DebugForceReleaseStringPoolLock()
 
 void String::poolOrDeleteNode(StringNode* node)
 {
-#if defined(ZeroStringPooling)
+#if defined(RaverieStringPooling)
   StringPool& pool = StringPool::GetInstance();
   pool.mLock.Lock();
   {
@@ -471,7 +471,7 @@ void String::poolOrDeleteNode(StringNode* node)
 
 void StringNode::release()
 {
-#if defined(ZeroStringPooling)
+#if defined(RaverieStringPooling)
   // It is possible that the StringPool can be freed before the last few Strings
   // This only occurs post main (due to pre-main allocated strings)
   // We handle this by setting a special flag on the StringNode
@@ -559,10 +559,10 @@ String String::FormatArgs(cstr format, va_list args)
 {
   // Get the number of characters needed for message
   int bufferSize;
-  ZeroVSPrintfCount(format, args, 1, bufferSize);
+  RaverieVSPrintfCount(format, args, 1, bufferSize);
   char* stringBuffer = (char*)alloca((bufferSize + 1) * sizeof(char));
   stringBuffer[bufferSize] = '\0';
-  ZeroVSPrintf(stringBuffer, bufferSize, format, args);
+  RaverieVSPrintf(stringBuffer, bufferSize, format, args);
   return String(stringBuffer);
 }
 
@@ -590,20 +590,20 @@ String String::ReplaceSub(StringRange source, StringRange text, size_type start,
   // Copy over the front if there is anything to copy
   if (start > 0)
   {
-    ZeroCStringCopy(bufferPos, bufferEnd - bufferPos, source.Data(), start);
+    RaverieCStringCopy(bufferPos, bufferEnd - bufferPos, source.Data(), start);
     bufferPos += start;
   }
 
   if (sizeToAdd != 0)
   {
-    ZeroCStringCopy(bufferPos, bufferEnd - bufferPos, text.Data(), sizeToAdd);
+    RaverieCStringCopy(bufferPos, bufferEnd - bufferPos, text.Data(), sizeToAdd);
     bufferPos += sizeToAdd;
   }
 
   size_type sizeOfEndText = source.SizeInBytes() - end;
   if (sizeOfEndText)
   {
-    ZeroCStringCopy(bufferPos, bufferEnd - bufferPos, source.Data() + end, sizeOfEndText);
+    RaverieCStringCopy(bufferPos, bufferEnd - bufferPos, source.Data() + end, sizeOfEndText);
     bufferPos += sizeOfEndText;
   }
 
@@ -895,4 +895,4 @@ StringRange String::SimplePolicy::ToStringRange(StringParam value)
   return value.All();
 }
 
-} // namespace Zero
+} // namespace Raverie

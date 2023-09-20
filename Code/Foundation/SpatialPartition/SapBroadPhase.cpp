@@ -1,9 +1,9 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
-ZilchDefineType(SapBroadPhase, builder, type)
+RaverieDefineType(SapBroadPhase, builder, type)
 {
 }
 
@@ -115,4 +115,4 @@ void SapBroadPhase::RegisterCollisions()
 {
 }
 
-} // namespace Zero
+} // namespace Raverie

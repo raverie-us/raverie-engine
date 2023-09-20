@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// The most basic BroadPhase that could ever be implemented. Serves no real
@@ -35,6 +35,6 @@ protected:
   Array<uint> mFreeIndices;
 };
 
-} // namespace Zero
+} // namespace Raverie
 
 #include "Foundation/SpatialPartition/BaseNSquared.inl"

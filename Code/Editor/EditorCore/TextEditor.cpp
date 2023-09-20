@@ -1,6 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
-#include "Scintilla/ScintillaPlatformZero.hpp"
+#include "Scintilla/ScintillaPlatformEngine.hpp"
 
 const ByteColor ColorBlack = ByteColorRGBA(0, 0, 0, 0xFF);
 const ByteColor Yellow = ByteColorRGBA(0xFF, 0xFF, 0, 0xFF);
@@ -8,7 +8,7 @@ const ByteColor Red = ByteColorRGBA(163, 21, 21, 0xFF);
 const int cMinFontSize = 8;
 const int cMaxFontSize = 128;
 
-namespace Zero
+namespace Raverie
 {
 
 class TextEditor;
@@ -19,7 +19,7 @@ DefineEvent(CharacterAdded);
 DefineEvent(TextEditorModified);
 } // namespace Events
 
-ZilchDefineType(TextEditorEvent, builder, type)
+RaverieDefineType(TextEditorEvent, builder, type)
 {
 }
 
@@ -29,7 +29,7 @@ class ScintillaWidget : public Widget
 public:
   ScintillaWidget(Composite* parent);
   ~ScintillaWidget();
-  ScintillaZero* mScintilla;
+  ScintillaEngine* mScintilla;
   Scintilla::SurfaceImpl mSurface;
   void RenderUpdate(ViewBlock& viewBlock,
                     FrameBlock& frameBlock,
@@ -44,7 +44,7 @@ public:
 // indicators: [32 = INDIC_IME .. 35 = INDIC_IME_MAX].
 //
 //  - Note: "Container" refers to a class of type 'ScintillaBase'.
-//          So, 'ScintillaZero' is a container.
+//          So, 'ScintillaEngine' is a container.
 namespace ScintillaCustomIndicators
 {
 
@@ -54,14 +54,14 @@ enum
 };
 }
 
-class ScintillaZero : public Scintilla::ScintillaBase
+class ScintillaEngine : public Scintilla::ScintillaBase
 {
 public:
   friend class TextEditor;
   friend class ScintillaWidget;
 
-  ScintillaZero();
-  virtual ~ScintillaZero();
+  ScintillaEngine();
+  virtual ~ScintillaEngine();
   // Method to skip Scintilla's AutoComplete logic
   virtual int KeyCommand(unsigned int iMessage);
 
@@ -122,7 +122,7 @@ private:
   void HighlightMatchingText(int begin, int end, const char* text);
   void HighlightAllTextInstances(int begin, int end, const char* text);
 
-  ScintillaZero& operator=(const ScintillaZero&);
+  ScintillaEngine& operator=(const ScintillaEngine&);
 };
 
 void TextFromSelectionRange(int start, int end, char bufferOut[]);
@@ -161,33 +161,33 @@ static int KeyTranslate(int keyIn)
 {
   switch (keyIn)
   {
-  case Zero::Keys::Down:
+  case Raverie::Keys::Down:
     return SCK_DOWN;
-  case Zero::Keys::Up:
+  case Raverie::Keys::Up:
     return SCK_UP;
-  case Zero::Keys::Left:
+  case Raverie::Keys::Left:
     return SCK_LEFT;
-  case Zero::Keys::Right:
+  case Raverie::Keys::Right:
     return SCK_RIGHT;
-  case Zero::Keys::Home:
+  case Raverie::Keys::Home:
     return SCK_HOME;
-  case Zero::Keys::End:
+  case Raverie::Keys::End:
     return SCK_END;
-  case Zero::Keys::PageUp:
+  case Raverie::Keys::PageUp:
     return SCK_PRIOR;
-  case Zero::Keys::PageDown:
+  case Raverie::Keys::PageDown:
     return SCK_NEXT;
-  case Zero::Keys::Delete:
+  case Raverie::Keys::Delete:
     return SCK_DELETE;
-  case Zero::Keys::Escape:
+  case Raverie::Keys::Escape:
     return SCK_ESCAPE;
-  case Zero::Keys::Back:
+  case Raverie::Keys::Back:
     return SCK_BACK;
-  case Zero::Keys::Tab:
+  case Raverie::Keys::Tab:
     return SCK_TAB;
-  case Zero::Keys::Enter:
+  case Raverie::Keys::Enter:
     return SCK_RETURN;
-  case Zero::Keys::Alt:
+  case Raverie::Keys::Alt:
     return SCK_MENU;
   default:
     return keyIn;
@@ -208,19 +208,19 @@ const float cTextEditorVScrollCursorHeight = 2.0f;
 const float cTextEditorVScrollSliderOffset = 2.0f;
 const float cTextEditorVScrollIndicatorOffset = 0.0f;
 
-ZilchDefineType(TextEditor, builder, type)
+RaverieDefineType(TextEditor, builder, type)
 {
 }
 
 TextEditor::TextEditor(Composite* parent) : BaseScrollArea(parent)
 {
   mTotalMargins = 0;
-  mLexer = Lexer::Zilch;
+  mLexer = Lexer::Raverie;
 
   Scintilla_LinkLexers();
   mScinWidget = new ScintillaWidget(this);
   mScinWidget->SetTakeFocusMode(FocusMode::Hard);
-  mScintilla = new ScintillaZero();
+  mScintilla = new ScintillaEngine();
   mScintilla->Initialise();
   mScintilla->wMain = mScinWidget;
   mScintilla->mOwner = this;
@@ -529,9 +529,9 @@ void TextEditor::SetLexer(uint lexer)
     break;
   }
 
-  case Lexer::Zilch:
+  case Lexer::Raverie:
   {
-    const char zilchKeywords[] = "abstract alias alignof as assert Assign auto base break case catch "
+    const char raverieKeywords[] = "abstract alias alignof as assert Assign auto base break case catch "
                                  "checked "
                                  "class compare const constructor continue copy decrement default "
                                  "delegate delete "
@@ -549,11 +549,11 @@ void TextEditor::SetLexer(uint lexer)
                                  "unchecked unsafe unsigned "
                                  "using var virtual volatile where while yield timeout scope debug";
 
-    const char zilchSpecial[] = "this value event";
+    const char raverieSpecial[] = "this value event";
 
     SendEditor(SCI_SETLEXER, (uptr_t)SCLEX_CPP, 0);
-    SendEditor(SCI_SETKEYWORDS, 0, (sptr_t)zilchKeywords);
-    SendEditor(SCI_SETKEYWORDS, 1, (sptr_t)zilchSpecial);
+    SendEditor(SCI_SETKEYWORDS, 0, (sptr_t)raverieKeywords);
+    SendEditor(SCI_SETKEYWORDS, 1, (sptr_t)raverieSpecial);
     SendEditor(SCI_SETVIEWWS, SCWS_INVISIBLE);
     mLineNumbers = true;
     mBreakpoints = true;
@@ -963,7 +963,7 @@ void TextEditor::SetColorScheme(ColorScheme& scheme)
 
   switch (mLexer)
   {
-  case Lexer::Zilch:
+  case Lexer::Raverie:
   {
     SetCommonLexerStyles(scheme);
 
@@ -1260,7 +1260,7 @@ void TextEditor::OnPaste(ClipboardEvent* event)
 {
   Scintilla::UndoGroup ug(mScintilla->pdoc);
 
-  Zero::String clipboardText = event->GetText();
+  Raverie::String clipboardText = event->GetText();
 
   mScintilla->ClearSelection(mScintilla->multiPasteMode == SC_MULTIPASTE_EACH);
 
@@ -1276,7 +1276,7 @@ void TextEditor::OnPaste(ClipboardEvent* event)
   Array<StringIterator> linePositions;
   linePositions.PushBack(clipboardText.Begin());
 
-  Zero::StringRange clipboardRange = clipboardText;
+  Raverie::StringRange clipboardRange = clipboardText;
   int newLineRuneCount = newLine.ComputeRuneCount();
 
   // check for newlines for multiselect positions within the text to paste
@@ -2151,8 +2151,8 @@ void TextEditor::OnNotify(Scintilla::SCNotification& notify)
   }
 }
 
-// Implement Scintilla in Zero Ui
-ScintillaZero::ScintillaZero()
+// Implement Scintilla in Raverie Ui
+ScintillaEngine::ScintillaEngine()
 {
   mMouseCapture = false;
 
@@ -2167,11 +2167,11 @@ ScintillaZero::ScintillaZero()
   kmap.AssignCmdKey('V', SCI_CTRL, SCI_NULL); // SCI_PASTE
 }
 
-ScintillaZero::~ScintillaZero()
+ScintillaEngine::~ScintillaEngine()
 {
 }
 
-void ScintillaZero::Clear()
+void ScintillaEngine::Clear()
 {
   if (sel.Empty())
   {
@@ -2214,7 +2214,7 @@ void ScintillaZero::Clear()
   sel.RemoveDuplicates();
 }
 
-void ScintillaZero::NewLine()
+void ScintillaEngine::NewLine()
 {
   Scintilla::UndoGroup ug(pdoc);
 
@@ -2244,7 +2244,7 @@ void ScintillaZero::NewLine()
   ShowCaretAtCurrentPosition();
 }
 
-void ScintillaZero::MoveSelectedLinesUp()
+void ScintillaEngine::MoveSelectedLinesUp()
 {
   Scintilla::UndoGroup ug(pdoc);
 
@@ -2319,7 +2319,7 @@ void ScintillaZero::MoveSelectedLinesUp()
   }
 }
 
-void ScintillaZero::MoveSelectedLinesDown()
+void ScintillaEngine::MoveSelectedLinesDown()
 {
   Scintilla::UndoGroup ug(pdoc);
 
@@ -2381,7 +2381,7 @@ void ScintillaZero::MoveSelectedLinesDown()
   }
 }
 
-int ScintillaZero::KeyCommand(unsigned int iMessage)
+int ScintillaEngine::KeyCommand(unsigned int iMessage)
 {
   switch (iMessage)
   {
@@ -2606,7 +2606,7 @@ int ScintillaZero::KeyCommand(unsigned int iMessage)
   return 0;
 }
 
-void ScintillaZero::MoveSelection(Scintilla::SelectionRange& selection, int pos, bool extend)
+void ScintillaEngine::MoveSelection(Scintilla::SelectionRange& selection, int pos, bool extend)
 {
   Scintilla::SelectionPosition newPos(pos);
 
@@ -2618,7 +2618,7 @@ void ScintillaZero::MoveSelection(Scintilla::SelectionRange& selection, int pos,
     selection.anchor = selection.caret;
 }
 
-bool ScintillaZero::IsSelected(Scintilla::SelectionRange& range, int* endSelectionOut)
+bool ScintillaEngine::IsSelected(Scintilla::SelectionRange& range, int* endSelectionOut)
 {
   for (size_t i = 0; i < sel.Count(); ++i)
   {
@@ -2633,7 +2633,7 @@ bool ScintillaZero::IsSelected(Scintilla::SelectionRange& range, int* endSelecti
   return false;
 }
 
-bool ScintillaZero::FindTextNotSelected(int start, int end, const char* text, Scintilla::SelectionRange& newSel)
+bool ScintillaEngine::FindTextNotSelected(int start, int end, const char* text, Scintilla::SelectionRange& newSel)
 {
   int length = strlen(text);
   while (start < end)
@@ -2661,53 +2661,53 @@ bool ScintillaZero::FindTextNotSelected(int start, int end, const char* text, Sc
   return false;
 }
 
-void ScintillaZero::Initialise()
+void ScintillaEngine::Initialise()
 {
 }
 
-void ScintillaZero::Finalise()
+void ScintillaEngine::Finalise()
 {
   ScintillaBase::Finalise();
 }
 
-void ScintillaZero::SetVerticalScrollPos()
+void ScintillaEngine::SetVerticalScrollPos()
 {
   int textHeight = SendEditor(SCI_TEXTHEIGHT);
   mOwner->mClientOffset.y = -Pixels(topLine * textHeight);
   mOwner->MarkAsNeedsUpdate();
 }
 
-void ScintillaZero::SetHorizontalScrollPos()
+void ScintillaEngine::SetHorizontalScrollPos()
 {
   mOwner->mClientOffset.x = -float(xOffset);
   mOwner->MarkAsNeedsUpdate();
 }
 
-bool ScintillaZero::ModifyScrollBars(int nMax, int nPage)
+bool ScintillaEngine::ModifyScrollBars(int nMax, int nPage)
 {
   return true;
 }
 
-void ScintillaZero::Copy()
+void ScintillaEngine::Copy()
 {
   // This logic is now handled in OnCopy to be more browser like,
   // since we cannot explicitly access the clipboard.
 }
 
-void ScintillaZero::Paste()
+void ScintillaEngine::Paste()
 {
 }
 
-bool ScintillaZero::CanPaste()
+bool ScintillaEngine::CanPaste()
 {
   return true;
 }
 
-void ScintillaZero::ClaimSelection()
+void ScintillaEngine::ClaimSelection()
 {
 }
 
-void ScintillaZero::ClearHighlightRanges()
+void ScintillaEngine::ClearHighlightRanges()
 {
   if (mHighlightRanges.empty())
     return;
@@ -2734,7 +2734,7 @@ void ScintillaZero::ClearHighlightRanges()
   mHighlightRanges.clear();
 }
 
-void ScintillaZero::UpdateHighlightIndicators()
+void ScintillaEngine::UpdateHighlightIndicators()
 {
   // Cleanup old highlighting incase main selection has changed.
   ClearHighlightRanges();
@@ -2799,7 +2799,7 @@ void ScintillaZero::UpdateHighlightIndicators()
                            cTextEditorVScrollIndicatorOffset);
 }
 
-void ScintillaZero::ProcessTextMatch(char*& text, int* begin, int* end)
+void ScintillaEngine::ProcessTextMatch(char*& text, int* begin, int* end)
 {
   // Partial text match requires no processing.
   if (mOwner->mHighlightPartialTextMatch)
@@ -2894,7 +2894,7 @@ void ScintillaZero::ProcessTextMatch(char*& text, int* begin, int* end)
   text[size] = 0;
 }
 
-void ScintillaZero::HighlightMatchingText(int begin, int end, const char* text)
+void ScintillaEngine::HighlightMatchingText(int begin, int end, const char* text)
 {
   const uint indicator = ScintillaCustomIndicators::TextMatchHighlight;
 
@@ -2921,7 +2921,7 @@ void ScintillaZero::HighlightMatchingText(int begin, int end, const char* text)
   HighlightAllTextInstances(begin, end, text);
 }
 
-void ScintillaZero::HighlightAllTextInstances(int begin, int end, const char* text)
+void ScintillaEngine::HighlightAllTextInstances(int begin, int end, const char* text)
 {
   // rangeValue == 0 is reserved as the default value for the entire document.
   // rangeValue == 1 is reserved for the main 'text' selected.
@@ -3000,33 +3000,33 @@ void ScintillaZero::HighlightAllTextInstances(int begin, int end, const char* te
   }
 }
 
-void ScintillaZero::NotifyChange()
+void ScintillaEngine::NotifyChange()
 {
   mOwner->mScinWidget->MarkAsNeedsUpdate();
 }
 
-void ScintillaZero::NotifyFocus(bool focus)
+void ScintillaEngine::NotifyFocus(bool focus)
 {
 }
 
-void ScintillaZero::SetTicking(bool on)
+void ScintillaEngine::SetTicking(bool on)
 {
   if (timer.ticking != on)
     timer.ticking = on;
   timer.ticksToWait = caret.period;
 }
 
-uint ScintillaZero::SendEditor(unsigned int Msg, unsigned long wParam, long lParam)
+uint ScintillaEngine::SendEditor(unsigned int Msg, unsigned long wParam, long lParam)
 {
   return WndProc(Msg, wParam, lParam);
 }
 
-void ScintillaZero::NotifyParent(Scintilla::SCNotification scn)
+void ScintillaEngine::NotifyParent(Scintilla::SCNotification scn)
 {
   mOwner->OnNotify(scn);
 }
 
-void ScintillaZero::SetMouseCapture(bool captured)
+void ScintillaEngine::SetMouseCapture(bool captured)
 {
   mMouseCapture = captured;
 
@@ -3036,16 +3036,16 @@ void ScintillaZero::SetMouseCapture(bool captured)
     mOwner->mScinWidget->ReleaseMouseCapture();
 }
 
-bool ScintillaZero::HaveMouseCapture()
+bool ScintillaEngine::HaveMouseCapture()
 {
   return mMouseCapture;
 }
 
-void ScintillaZero::CreateCallTipWindow(Scintilla::PRectangle rc)
+void ScintillaEngine::CreateCallTipWindow(Scintilla::PRectangle rc)
 {
 }
 
-sptr_t ScintillaZero::DefWndProc(unsigned int iMessage, uptr_t wParam, sptr_t lParam)
+sptr_t ScintillaEngine::DefWndProc(unsigned int iMessage, uptr_t wParam, sptr_t lParam)
 {
   switch (iMessage)
   {
@@ -3096,7 +3096,7 @@ sptr_t ScintillaZero::DefWndProc(unsigned int iMessage, uptr_t wParam, sptr_t lP
   return 0;
 }
 
-void ScintillaZero::InsertAutoCompleteText(const char* text, int length, int removeCount, int charOffset)
+void ScintillaEngine::InsertAutoCompleteText(const char* text, int length, int removeCount, int charOffset)
 {
   Scintilla::UndoGroup ug(pdoc);
 
@@ -3108,21 +3108,21 @@ void ScintillaZero::InsertAutoCompleteText(const char* text, int length, int rem
   }
 }
 
-void ScintillaZero::AddToPopUp(const char* label, int cmd /*= 0*/, bool enabled /*= true*/)
+void ScintillaEngine::AddToPopUp(const char* label, int cmd /*= 0*/, bool enabled /*= true*/)
 {
 }
 
-void ScintillaZero::UpdateSystemCaret()
+void ScintillaEngine::UpdateSystemCaret()
 {
   ScintillaBase::UpdateSystemCaret();
 }
 
-void ScintillaZero::CopyToClipboard(const Scintilla::SelectionText& selectedText)
+void ScintillaEngine::CopyToClipboard(const Scintilla::SelectionText& selectedText)
 {
 }
 
-void ScintillaZero::NotifyDoubleClick(Scintilla::Point pt, bool shift, bool ctrl, bool alt)
+void ScintillaEngine::NotifyDoubleClick(Scintilla::Point pt, bool shift, bool ctrl, bool alt)
 {
 }
 
-} // namespace Zero
+} // namespace Raverie

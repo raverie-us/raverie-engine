@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 //                                    Peer //
@@ -419,7 +419,7 @@ bool Peer::Send(const IpAddress& ipAddress, const Message& message)
   Message messageCopy(message);
 
   // Add message
-  outPacket.mMessages.PushBack(OutMessage(ZeroMove(messageCopy)));
+  outPacket.mMessages.PushBack(OutMessage(RaverieMove(messageCopy)));
 
   // Send outgoing packet
   return SendPacket(outPacket);
@@ -440,7 +440,7 @@ bool Peer::Send(const IpAddress& ipAddress, const Array<Message>& messages)
     Message messageCopy(message);
 
     // Add message
-    outPacket.mMessages.PushBack(OutMessage(ZeroMove(messageCopy)));
+    outPacket.mMessages.PushBack(OutMessage(RaverieMove(messageCopy)));
   }
 
   // Send outgoing packet
@@ -1197,7 +1197,7 @@ void Peer::UpdatePeerState()
     }
 
     // Push received packet into link to be processed later
-    link->ReceivePacket(ZeroMove(inPacket));
+    link->ReceivePacket(RaverieMove(inPacket));
   }
   inPackets.Clear();
 
@@ -1254,7 +1254,7 @@ void Peer::TranslateRawPackets(Array<RawPacket>& rawPackets, Array<InPacket>& in
     // Read as InPacket
     InPacket inPacket(rawPacket.mIpAddress);
     if (rawPacket.mData.Read(inPacket)) // Successful?
-      inPackets.PushBack(ZeroMove(inPacket));
+      inPackets.PushBack(RaverieMove(inPacket));
   }
   rawPackets.Clear();
 }
@@ -1308,7 +1308,7 @@ void Peer::PeerEventIncomingLinkCreated(const IpAddress& ipAddress)
   incomingLinkCreatedMessage.GetData().Write(incomingLinkCreatedData);
 
   // Push incoming link created event message
-  PushUserEventMessage(ZeroMove(incomingLinkCreatedMessage));
+  PushUserEventMessage(RaverieMove(incomingLinkCreatedMessage));
 }
 void Peer::PeerEventFatalError(const String& errorString)
 {
@@ -1321,7 +1321,7 @@ void Peer::PeerEventFatalError(const String& errorString)
   fatalErrorMessage.GetData().Write(fatalErrorData);
 
   // Push fatal error event message
-  PushUserEventMessage(ZeroMove(fatalErrorMessage));
+  PushUserEventMessage(RaverieMove(fatalErrorMessage));
 
   // Set fatal error flag (will close peer on the next user update call)
   mFatalError = true;
@@ -1338,7 +1338,7 @@ void Peer::PushUserEventMessage(MoveReference<Message> message)
   //   rawPacket.mData.Write(*message);
   //
   //   // Release raw packet to the user
-  //   mReleasedCustomPackets.PushBack(ZeroMove(rawPacket));
+  //   mReleasedCustomPackets.PushBack(RaverieMove(rawPacket));
   // //-<>-<>-<>-<>-< Released Raw Packets Unlocked >-<>-<>-<>-<>
 }
 
@@ -1418,4 +1418,4 @@ void PeerPlugin::Uninitialize()
   mPeer = nullptr;
 }
 
-} // namespace Zero
+} // namespace Raverie

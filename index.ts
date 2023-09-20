@@ -62,7 +62,7 @@ const executable =
   resourceLibraries: [
     "FragmentCore",
     "Loading",
-    "ZeroCore",
+    "EngineCore",
     "UiWidget",
     "EditorUi",
     "Editor",
@@ -626,7 +626,7 @@ const format = async (options) => {
     await runClangTidy(options, sourceFiles);
   }
   await runClangFormat(options, sourceFiles);
-  const scriptFiles = gatherSourceFiles(dirs.resources, "zilchscript|z|zilchfrag|zilchFrag");
+  const scriptFiles = gatherSourceFiles(dirs.resources, "raveriescript|raveriefrag");
   const allFiles = sourceFiles.concat(scriptFiles);
   await runRaverieFormat(options, allFiles);
   console.log("Formatted");

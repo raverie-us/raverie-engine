@@ -5,7 +5,7 @@
 #include <typeinfo>
 #include "Utility/Typedefs.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 //
@@ -430,13 +430,13 @@ struct is_enum
 /// Use SFINAE to detect if we have a member
 /// This must be a macro because the name of the member cannot be provided as a
 /// template argument
-#define ZeroDeclareHasMemberTrait(TypeTraitName, MemberName)                                                           \
-  template <typename ZilchT>                                                                                           \
-  static ::Zero::TrueType check_##TypeTraitName(decltype(&ZilchT::MemberName)*);                                       \
-  template <typename ZilchT>                                                                                           \
-  static ::Zero::FalseType check_##TypeTraitName(...);                                                                 \
-  template <typename ZilchT>                                                                                           \
-  struct TypeTraitName : public decltype(check_##TypeTraitName<ZilchT>(nullptr))                                       \
+#define RaverieDeclareHasMemberTrait(TypeTraitName, MemberName)                                                           \
+  template <typename RaverieT>                                                                                           \
+  static ::Raverie::TrueType check_##TypeTraitName(decltype(&RaverieT::MemberName)*);                                       \
+  template <typename RaverieT>                                                                                           \
+  static ::Raverie::FalseType check_##TypeTraitName(...);                                                                 \
+  template <typename RaverieT>                                                                                           \
+  struct TypeTraitName : public decltype(check_##TypeTraitName<RaverieT>(nullptr))                                       \
   {                                                                                                                    \
   };
 
@@ -573,42 +573,42 @@ struct disable_if<false, Type>
 };
 
 /// Enable If via Class Template Parameter
-#define TC_ENABLE_IF(Condition) typename Zero::enable_if<(Condition)>::type
-#define TC_ENABLE_IF_IS_SAME(TypeA, TypeB) typename Zero::enable_if<(Zero::is_same<TypeA, TypeB>::value)>::type
-#define TC_DISABLE_IF(Condition) typename Zero::disable_if<(Condition)>::type
-#define TC_DISABLE_IF_IS_SAME(TypeA, TypeB) typename Zero::disable_if<(Zero::is_same<TypeA, TypeB>::value)>::type
+#define TC_ENABLE_IF(Condition) typename Raverie::enable_if<(Condition)>::type
+#define TC_ENABLE_IF_IS_SAME(TypeA, TypeB) typename Raverie::enable_if<(Raverie::is_same<TypeA, TypeB>::value)>::type
+#define TC_DISABLE_IF(Condition) typename Raverie::disable_if<(Condition)>::type
+#define TC_DISABLE_IF_IS_SAME(TypeA, TypeB) typename Raverie::disable_if<(Raverie::is_same<TypeA, TypeB>::value)>::type
 
 /// Enable If via Function Template Parameter (Declaration)
-#define TF_ENABLE_IF(Condition) typename Zero::enable_if<(Condition)>::type* = nullptr
+#define TF_ENABLE_IF(Condition) typename Raverie::enable_if<(Condition)>::type* = nullptr
 #define TF_ENABLE_IF_IS_SAME(TypeA, TypeB)                                                                             \
-  typename Zero::enable_if<(Zero::is_same<TypeA, TypeB>::value)>::type* = nullptr
-#define TF_DISABLE_IF(Condition) typename Zero::disable_if<(Condition)>::type* = nullptr
+  typename Raverie::enable_if<(Raverie::is_same<TypeA, TypeB>::value)>::type* = nullptr
+#define TF_DISABLE_IF(Condition) typename Raverie::disable_if<(Condition)>::type* = nullptr
 #define TF_DISABLE_IF_IS_SAME(TypeA, TypeB)                                                                            \
-  typename Zero::disable_if<(Zero::is_same<TypeA, TypeB>::value)>::type* = nullptr
+  typename Raverie::disable_if<(Raverie::is_same<TypeA, TypeB>::value)>::type* = nullptr
 
 /// Enable If via Function Template Parameter (Definition)
-#define TF_ENABLE_IF_DEF(Condition) typename Zero::enable_if<(Condition)>::type*
-#define TF_ENABLE_IF_IS_SAME_DEF(TypeA, TypeB) typename Zero::enable_if<(Zero::is_same<TypeA, TypeB>::value)>::type*
-#define TF_DISABLE_IF_DEF(Condition) typename Zero::disable_if<(Condition)>::type*
-#define TF_DISABLE_IF_IS_SAME_DEF(TypeA, TypeB) typename Zero::disable_if<(Zero::is_same<TypeA, TypeB>::value)>::type*
+#define TF_ENABLE_IF_DEF(Condition) typename Raverie::enable_if<(Condition)>::type*
+#define TF_ENABLE_IF_IS_SAME_DEF(TypeA, TypeB) typename Raverie::enable_if<(Raverie::is_same<TypeA, TypeB>::value)>::type*
+#define TF_DISABLE_IF_DEF(Condition) typename Raverie::disable_if<(Condition)>::type*
+#define TF_DISABLE_IF_IS_SAME_DEF(TypeA, TypeB) typename Raverie::disable_if<(Raverie::is_same<TypeA, TypeB>::value)>::type*
 
 /// Enable If via Function Return Type
-#define R_ENABLE_IF(Condition, ReturnType) typename Zero::enable_if<(Condition), ReturnType>::type
-#define R_DISABLE_IF(Condition, ReturnType) typename Zero::disable_if<(Condition), ReturnType>::type
+#define R_ENABLE_IF(Condition, ReturnType) typename Raverie::enable_if<(Condition), ReturnType>::type
+#define R_DISABLE_IF(Condition, ReturnType) typename Raverie::disable_if<(Condition), ReturnType>::type
 
 /// Enable If via Function Parameter (Declaration)
-#define P_ENABLE_IF(Condition) typename Zero::enable_if<(Condition)>::type* = nullptr
+#define P_ENABLE_IF(Condition) typename Raverie::enable_if<(Condition)>::type* = nullptr
 #define P_ENABLE_IF_IS_SAME(TypeA, TypeB)                                                                              \
-  typename Zero::enable_if<(Zero::is_same<TypeA, TypeB>::value)>::type* = nullptr
-#define P_DISABLE_IF(Condition) typename Zero::disable_if<(Condition)>::type* = nullptr
+  typename Raverie::enable_if<(Raverie::is_same<TypeA, TypeB>::value)>::type* = nullptr
+#define P_DISABLE_IF(Condition) typename Raverie::disable_if<(Condition)>::type* = nullptr
 #define P_DISABLE_IF_IS_SAME(TypeA, TypeB)                                                                             \
-  typename Zero::disable_if<(Zero::is_same<TypeA, TypeB>::value)>::type* = nullptr
+  typename Raverie::disable_if<(Raverie::is_same<TypeA, TypeB>::value)>::type* = nullptr
 
 /// Enable If via Function Parameter (Definition)
-#define P_ENABLE_IF_DEF(Condition) typename Zero::enable_if<(Condition)>::type*
-#define P_ENABLE_IF_IS_SAME_DEF(TypeA, TypeB) typename Zero::enable_if<(Zero::is_same<TypeA, TypeB>::value)>::type*
-#define P_DISABLE_IF_DEF(Condition) typename Zero::disable_if<(Condition)>::type*
-#define P_DISABLE_IF_IS_SAME_DEF(TypeA, TypeB) typename Zero::disable_if<(Zero::is_same<TypeA, TypeB>::value)>::type*
+#define P_ENABLE_IF_DEF(Condition) typename Raverie::enable_if<(Condition)>::type*
+#define P_ENABLE_IF_IS_SAME_DEF(TypeA, TypeB) typename Raverie::enable_if<(Raverie::is_same<TypeA, TypeB>::value)>::type*
+#define P_DISABLE_IF_DEF(Condition) typename Raverie::disable_if<(Condition)>::type*
+#define P_DISABLE_IF_IS_SAME_DEF(TypeA, TypeB) typename Raverie::disable_if<(Raverie::is_same<TypeA, TypeB>::value)>::type*
 
 //
 // Make Signed/Unsigned
@@ -884,29 +884,29 @@ struct is_move_reference<MoveReference<T>> : public TrueType
 {
 };
 
-/// Determines how ZeroMove is applied to types
+/// Determines how RaverieMove is applied to types
 template <typename T, typename Enable = void>
-struct ZeroMoveHelper;
+struct RaverieMoveHelper;
 
 // Is built-in type?
 template <typename T>
-struct ZeroMoveHelper<T, TC_ENABLE_IF(is_scalar<typename remove_const_and_volatile<T>::type>::value)>
+struct RaverieMoveHelper<T, TC_ENABLE_IF(is_scalar<typename remove_const_and_volatile<T>::type>::value)>
 {
   typedef T type;
 };
 
 // Is user type?
 template <typename T>
-struct ZeroMoveHelper<T, TC_ENABLE_IF(!is_scalar<typename remove_const_and_volatile<T>::type>::value)>
+struct RaverieMoveHelper<T, TC_ENABLE_IF(!is_scalar<typename remove_const_and_volatile<T>::type>::value)>
 {
   typedef MoveReference<typename remove_reference_const_and_volatile<T>::type> type;
 };
 
 /// Creates a move reference
 template <typename T>
-typename ZeroMoveHelper<T>::type ZeroMove(T& value)
+typename RaverieMoveHelper<T>::type RaverieMove(T& value)
 {
-  return (typename ZeroMoveHelper<T>::type)(value);
+  return (typename RaverieMoveHelper<T>::type)(value);
 }
 
 //
@@ -1089,4 +1089,4 @@ struct False : ConstantTValue<T, bool, false>
 {
 };
 
-} // namespace Zero
+} // namespace Raverie

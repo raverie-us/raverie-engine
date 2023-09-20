@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 typedef Array<float> BufferType;
@@ -132,4 +132,4 @@ private:
   volatile int mValue;
 };
 
-} // namespace Zero
+} // namespace Raverie

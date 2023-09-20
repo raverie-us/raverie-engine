@@ -1,9 +1,9 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
-ZilchDefineType(StaticAabbTreeBroadPhase, builder, type)
+RaverieDefineType(StaticAabbTreeBroadPhase, builder, type)
 {
 }
 
@@ -124,4 +124,4 @@ void StaticAabbTreeBroadPhase::CastFrustum(CastDataParam data, ProxyCastResults&
   forRangeBroadphaseTree(TreeType, mTree, Frustum, data.GetFrustum()) callback.Refine(range.Front(), data);
 }
 
-} // namespace Zero
+} // namespace Raverie

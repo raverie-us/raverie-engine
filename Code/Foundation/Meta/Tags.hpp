@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 typedef HashSet<String> TagList;
@@ -43,4 +43,4 @@ inline bool ContainsRequiredTagsCaseInsensitive(const TagList& requiredTags, con
   return true;
 }
 
-} // namespace Zero
+} // namespace Raverie

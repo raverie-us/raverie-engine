@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -24,51 +24,51 @@ GameEvent::GameEvent()
   mSpace = nullptr;
 }
 
-ZilchDefineType(GameEvent, builder, type)
+RaverieDefineType(GameEvent, builder, type)
 {
-  ZeroBindDocumented();
-  ZilchBindFieldProperty(LevelName);
-  ZilchBindFieldProperty(mGame);
-  ZilchBindFieldProperty(mSpace);
-  ZilchBindFieldProperty(mHandled);
+  RaverieBindDocumented();
+  RaverieBindFieldProperty(LevelName);
+  RaverieBindFieldProperty(mGame);
+  RaverieBindFieldProperty(mSpace);
+  RaverieBindFieldProperty(mHandled);
 }
 
-ZilchDefineType(GameSession, builder, type)
+RaverieDefineType(GameSession, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindDefaultConstructor();
-  ZilchBindDestructor();
+  RaverieBindDefaultConstructor();
+  RaverieBindDestructor();
 
-  ZilchBindMethod(Start);
-  ZilchBindMethod(Quit);
-  ZilchBindMethod(RequestQuit);
-  ZilchBindMethod(CreateSpace);
-  ZilchBindMethod(CreateNamedSpace);
-  ZilchBindMethod(Pause);
+  RaverieBindMethod(Start);
+  RaverieBindMethod(Quit);
+  RaverieBindMethod(RequestQuit);
+  RaverieBindMethod(CreateSpace);
+  RaverieBindMethod(CreateNamedSpace);
+  RaverieBindMethod(Pause);
 
-  ZilchBindMethod(FindSpaceByName);
-  ZilchBindMethod(FindAllSpacesByName);
-  ZilchBindMethod(IsEditorMode);
-  ZilchBindGetter(AllSpaces);
+  RaverieBindMethod(FindSpaceByName);
+  RaverieBindMethod(FindAllSpacesByName);
+  RaverieBindMethod(IsEditorMode);
+  RaverieBindGetter(AllSpaces);
 
-  ZilchBindGetter(Focused);
-  ZilchBindGetter(Resolution);
+  RaverieBindGetter(Focused);
+  RaverieBindGetter(Resolution);
 
-  ZilchBindField(mPaused);
+  RaverieBindField(mPaused);
 
-  ZeroBindEvent(Events::GameSetup, GameEvent);
-  ZeroBindEvent(Events::GameLoad, GameEvent);
+  RaverieBindEvent(Events::GameSetup, GameEvent);
+  RaverieBindEvent(Events::GameLoad, GameEvent);
 
-  ZeroBindEvent(Events::GameFocusIn, GameEvent);
-  ZeroBindEvent(Events::GameFocusOut, GameEvent);
+  RaverieBindEvent(Events::GameFocusIn, GameEvent);
+  RaverieBindEvent(Events::GameFocusOut, GameEvent);
 
-  ZeroBindEvent(Events::GameQuit, GameEvent);
-  ZeroBindEvent(Events::GameRequestQuit, GameEvent);
-  ZeroBindEvent(Events::GameStarted, GameEvent);
+  RaverieBindEvent(Events::GameQuit, GameEvent);
+  RaverieBindEvent(Events::GameRequestQuit, GameEvent);
+  RaverieBindEvent(Events::GameStarted, GameEvent);
 
-  ZeroBindEvent(Events::LevelStarted, GameEvent);
-  ZeroBindEvent(Events::EditSpaces, Event);
+  RaverieBindEvent(Events::LevelStarted, GameEvent);
+  RaverieBindEvent(Events::EditSpaces, Event);
 }
 
 GameSession::GameSession()
@@ -176,7 +176,7 @@ void GameSession::Quit()
   // editor features however, for now we'll just decide that this is the
   // behavior and maybe later we can scan the call stack to find which
   // GameSession(s) we're running
-  ZilchManager::GetInstance()->mDebugger.Resume();
+  RaverieManager::GetInstance()->mDebugger.Resume();
 
   mQuiting = true;
   this->Destroy();
@@ -418,4 +418,4 @@ void GameSession::InternalRemove(Space* space)
   mTrackedSpaces.EraseEqualValues(space);
 }
 
-} // namespace Zero
+} // namespace Raverie

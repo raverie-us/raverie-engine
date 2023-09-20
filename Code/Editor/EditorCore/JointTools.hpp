@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 DeclareEnum16(JointToolTypes,
@@ -26,7 +26,7 @@ DeclareEnum16(JointToolTypes,
 class JointTool : public ObjectConnectingTool
 {
 public:
-  ZilchDeclareType(JointTool, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(JointTool, TypeCopyMode::ReferenceType);
 
   JointTool();
 
@@ -73,4 +73,4 @@ public:
   JointToolTypes::Enum mJointType;
 };
 
-} // namespace Zero
+} // namespace Raverie

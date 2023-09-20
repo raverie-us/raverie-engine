@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // for bones
@@ -121,4 +121,4 @@ public:
 // animation data is keyed by node name
 typedef HashMap<String, HierarchyData> HierarchyDataMap;
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 Vec2 CollisionMatrixItem::mPadding = Pixels(1, 1);
@@ -529,7 +529,7 @@ void CollisionTableMatrix::OnRegisterNewGroup(ObjectEvent* event)
 void CollisionTableMatrix::OnAddNewCollisionGroup(Event* event)
 {
   Window* window = NULL;
-  BoundType* resourceType = ZilchTypeId(CollisionGroup);
+  BoundType* resourceType = RaverieTypeId(CollisionGroup);
 
   AddResourceWindow* addWidget = OpenAddWindow(resourceType, &window);
   addWidget->ShowResourceTypeSearch(false);
@@ -712,4 +712,4 @@ void CollisionTableEditor::OnCollisionTableRemoved(ResourceEvent* e)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

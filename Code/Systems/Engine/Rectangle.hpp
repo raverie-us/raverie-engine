@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Location
@@ -32,7 +32,7 @@ Location::Enum GetOpposite(Location::Enum location);
 // Thickness
 struct Thickness
 {
-  ZilchDeclareType(Thickness, TypeCopyMode::ValueType);
+  RaverieDeclareType(Thickness, TypeCopyMode::ValueType);
 
   Thickness();
   Thickness(float splat);
@@ -101,7 +101,7 @@ typedef const Rectangle& RectangleParam;
 /// Two dimensional, unrotated rectangle.
 struct Rectangle
 {
-  ZilchDeclareType(Rectangle, TypeCopyMode::ValueType);
+  RaverieDeclareType(Rectangle, TypeCopyMode::ValueType);
 
   static Rectangle PointAndSize(Vec2Param point, Vec2Param size);
   static Rectangle CenterAndSize(Vec2Param point, Vec2Param size);
@@ -192,4 +192,4 @@ struct Rectangle
 
 String ToString(const Rectangle& value, bool shortFormat = false);
 
-} // namespace Zero
+} // namespace Raverie

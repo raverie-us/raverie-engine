@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 const float ListView::cHeaderRowHeight = Pixels(20.0f);
@@ -852,4 +852,4 @@ void ListColumnHeader::UpdateTransform()
   Composite::UpdateTransform();
 }
 
-} // namespace Zero
+} // namespace Raverie

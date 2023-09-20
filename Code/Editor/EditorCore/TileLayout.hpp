@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Helper for computed tiled Layouts
@@ -125,4 +125,4 @@ struct TileLayout
   }
 };
 
-} // namespace Zero
+} // namespace Raverie

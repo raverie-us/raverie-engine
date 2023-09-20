@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Forward declarations
@@ -20,7 +20,7 @@ public:
                       PropertyAction::Enum action) override;
   void MarkPropertyModified(HandleParam object, PropertyPathParam property) override;
   void RevertProperty(HandleParam object, PropertyPathParam property) override;
-  void InvokeFunction(HandleParam object, Zilch::Function* function) override;
+  void InvokeFunction(HandleParam object, Raverie::Function* function) override;
   HandleOf<MetaComposition> GetMetaComposition(BoundType* objectType) override;
 
   void Undo() override;
@@ -47,4 +47,4 @@ public:
   OperationQueue* mOperationQueue;
 };
 
-} // namespace Zero
+} // namespace Raverie

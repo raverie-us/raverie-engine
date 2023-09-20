@@ -3,7 +3,7 @@
 #include "Precompiled.hpp"
 #include "opus.h"
 
-namespace Zero
+namespace Raverie
 {
 
 using namespace AudioConstants;
@@ -565,4 +565,4 @@ void StreamingDecoder::Reset()
   StartDecodingThread();
 }
 
-} // namespace Zero
+} // namespace Raverie

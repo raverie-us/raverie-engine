@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 String GetDocumentationLocation()
 {
@@ -14,7 +14,7 @@ String GetDocumentationLocation()
 
 /// This exists just in case you want to get all unbound meta types with the
 /// documentation tool
-void SaveNonZilchMetaDocumentation()
+void SaveNonRaverieMetaDocumentation()
 {
   // obviously, this command is only meant to be ran by developers since this
   // saves in source directory
@@ -192,14 +192,14 @@ void SaveDocumentation()
 /// source directory
 void BindDocumentationCommands(Cog* config, CommandManager* commands)
 {
-  if (Z::gEngine->GetConfigCog()->has(Zero::DeveloperConfig))
+  if (Z::gEngine->GetConfigCog()->has(Raverie::DeveloperConfig))
   {
     commands->AddCommand("SaveDocumentation", BindCommandFunction(SaveDocumentation))->DevOnly = true;
-    commands->AddCommand("SaveNonZilchDocumentation", BindCommandFunction(SaveNonZilchMetaDocumentation))->DevOnly =
+    commands->AddCommand("SaveNonRaverieDocumentation", BindCommandFunction(SaveNonRaverieMetaDocumentation))->DevOnly =
         true;
     commands->AddCommand("SaveEventList", BindCommandFunction(SaveEventList))->DevOnly = true;
     commands->AddCommand("SaveCommandList", BindCommandFunction(SaveListOfCommands))->DevOnly = true;
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

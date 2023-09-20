@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 Permutation::Permutation() : mInOrder(false), mNoDuplicates(false), mMinIndex(0), mMaxIndex(0)
@@ -152,4 +152,4 @@ void MultiPermuter::PopFront()
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

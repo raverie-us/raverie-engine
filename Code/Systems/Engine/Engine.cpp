@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -62,18 +62,18 @@ void ZeroDoNotify(
   ZPrintFilter(Filter::EngineFilter, "%s : %s\n", title.c_str(), message.c_str());
 }
 
-ZilchDefineType(Engine, builder, type)
+RaverieDefineType(Engine, builder, type)
 {
-  type->HandleManager = ZilchManagerId(PointerManager);
+  type->HandleManager = RaverieManagerId(PointerManager);
 
-  ZeroBindEvent(Events::EngineUpdate, UpdateEvent);
+  RaverieBindEvent(Events::EngineUpdate, UpdateEvent);
 
-  ZilchBindMethod(Terminate);
-  ZilchBindMethod(CreateGameSession);
-  ZilchBindMethod(CreateGameSessionFromArchetype);
+  RaverieBindMethod(Terminate);
+  RaverieBindMethod(CreateGameSession);
+  RaverieBindMethod(CreateGameSessionFromArchetype);
 
-  ZilchBindMethod(RebuildArchetypes);
-  ZilchBindGetter(GameSessions);
+  RaverieBindMethod(RebuildArchetypes);
+  RaverieBindGetter(GameSessions);
 
   type->Add(new EngineMetaComposition());
 }
@@ -114,7 +114,7 @@ void Engine::Initialize(SystemInitializer& initializer)
     system->Initialize(initializer);
   }
 
-  Z::gSystemObjects->Add(this, ZilchTypeId(Engine), ObjectCleanup::None);
+  Z::gSystemObjects->Add(this, RaverieTypeId(Engine), ObjectCleanup::None);
 
   mTimeSystem = this->has(TimeSystem);
 }
@@ -173,7 +173,7 @@ void Engine::Terminate()
 GameSession* Engine::CreateGameSession()
 {
   GameSession* game = (GameSession*)Z::gFactory->CreateCheckedType(
-      ZilchTypeId(GameSession), nullptr, CoreArchetypes::Game, CreationFlags::Default, nullptr);
+      RaverieTypeId(GameSession), nullptr, CoreArchetypes::Game, CreationFlags::Default, nullptr);
 
   return game;
 }
@@ -181,7 +181,7 @@ GameSession* Engine::CreateGameSession()
 GameSession* Engine::CreateGameSessionFromArchetype(Archetype* archetype)
 {
   CogCreationContext context;
-  GameSession* game = (GameSession*)Z::gFactory->BuildFromArchetype(ZilchTypeId(GameSession), archetype, &context);
+  GameSession* game = (GameSession*)Z::gFactory->BuildFromArchetype(RaverieTypeId(GameSession), archetype, &context);
   CogInitializer initializer(game->mSpace, game);
 
   if (game != nullptr)
@@ -207,7 +207,7 @@ void Engine::AddSystem(System* system)
   // Add a system to the core to be updated every frame
   mSystems.PushBack(system);
 
-  BoundType* type = ZilchVirtualTypeId(system);
+  BoundType* type = RaverieVirtualTypeId(system);
   AddSystemInterface(type, system);
   Z::gSystemObjects->Add(system, type, ObjectCleanup::None);
 }
@@ -335,11 +335,11 @@ void Engine::LoadPendingLevels()
     space.LoadPendingLevel();
 }
 
-ZilchDefineType(EngineMetaComposition, builder, type)
+RaverieDefineType(EngineMetaComposition, builder, type)
 {
 }
 
-EngineMetaComposition::EngineMetaComposition() : MetaComposition(ZilchTypeId(System))
+EngineMetaComposition::EngineMetaComposition() : MetaComposition(RaverieTypeId(System))
 {
 }
 
@@ -376,4 +376,4 @@ void FatalEngineError(cstr format, ...)
   abort();
 }
 
-} // namespace Zero
+} // namespace Raverie

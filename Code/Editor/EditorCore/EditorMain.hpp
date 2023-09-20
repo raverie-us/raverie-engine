@@ -1,13 +1,13 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class EditorMain : public Editor
 {
 public:
-  ZilchDeclareType(EditorMain, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(EditorMain, TypeCopyMode::ReferenceType);
   float mTimeSinceEscape;
   bool mDisableInput;
 
@@ -67,4 +67,4 @@ public:
   Array<ResourcePackage*> PackagesToLoad;
 };
 
-} // namespace Zero
+} // namespace Raverie

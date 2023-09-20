@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 struct PhysicsCar;
@@ -16,7 +16,7 @@ DeclareBitField7(CarWheelFlags, IsDriveWheel, IsInContact, InEditor, ChildedWhee
 /// etc...).
 struct PhysicsCarWheel : public Component
 {
-  ZilchDeclareType(PhysicsCarWheel, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(PhysicsCarWheel, TypeCopyMode::ReferenceType);
 
   PhysicsCarWheel();
 
@@ -245,4 +245,4 @@ struct PhysicsCarWheel : public Component
   real mSideGrip;
 };
 
-} // namespace Zero
+} // namespace Raverie

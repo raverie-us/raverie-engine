@@ -1,24 +1,24 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(LinearParticleAnimator, builder, type)
+RaverieDefineType(LinearParticleAnimator, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDependency(Transform);
-  ZeroBindDependency(ParticleSystem);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDependency(Transform);
+  RaverieBindDependency(ParticleSystem);
+  RaverieBindDocumented();
 
-  ZilchBindFieldProperty(mForce);
-  ZilchBindFieldProperty(mRandomForce);
+  RaverieBindFieldProperty(mForce);
+  RaverieBindFieldProperty(mRandomForce);
 
-  ZilchBindFieldProperty(mTorque);
-  ZilchBindFieldProperty(mGrowth);
-  ZilchBindFieldProperty(mDampening);
-  ZilchBindFieldProperty(mTwist);
+  RaverieBindFieldProperty(mTorque);
+  RaverieBindFieldProperty(mGrowth);
+  RaverieBindFieldProperty(mDampening);
+  RaverieBindFieldProperty(mTwist);
 }
 
 LinearParticleAnimator::LinearParticleAnimator()
@@ -117,15 +117,15 @@ void LinearParticleAnimator::Animate(ParticleList* particleList, float dt, Mat4R
   }
 }
 
-ZilchDefineType(ParticleWander, builder, type)
+RaverieDefineType(ParticleWander, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDependency(ParticleSystem);
-  ZeroBindDocumented();
-  ZilchBindFieldProperty(mWanderAngle);
-  ZilchBindFieldProperty(mWanderAngleVariance);
-  ZilchBindFieldProperty(mWanderStrength);
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDependency(ParticleSystem);
+  RaverieBindDocumented();
+  RaverieBindFieldProperty(mWanderAngle);
+  RaverieBindFieldProperty(mWanderAngleVariance);
+  RaverieBindFieldProperty(mWanderStrength);
 }
 
 ParticleWander::ParticleWander()
@@ -187,16 +187,16 @@ void ParticleWander::Animate(ParticleList* particleList, float dt, Mat4Ref trans
   }
 }
 
-ZilchDefineType(ParticleColorAnimator, builder, type)
+RaverieDefineType(ParticleColorAnimator, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDependency(ParticleSystem);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDependency(ParticleSystem);
+  RaverieBindDocumented();
 
-  ZilchBindFieldProperty(mTimeGradient)->Add(new MetaEditorResource(false, true));
-  ZilchBindFieldProperty(mVelocityGradient)->Add(new MetaEditorResource(false, true));
-  ZilchBindFieldProperty(mMaxParticleSpeed);
+  RaverieBindFieldProperty(mTimeGradient)->Add(new MetaEditorResource(false, true));
+  RaverieBindFieldProperty(mVelocityGradient)->Add(new MetaEditorResource(false, true));
+  RaverieBindFieldProperty(mMaxParticleSpeed);
 }
 
 ParticleColorAnimator::~ParticleColorAnimator()
@@ -261,18 +261,18 @@ void ParticleColorAnimator::Animate(ParticleList* particleList, float dt, Mat4Re
   }
 }
 
-ZilchDefineType(ParticleAttractor, builder, type)
+RaverieDefineType(ParticleAttractor, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDependency(ParticleSystem);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDependency(ParticleSystem);
+  RaverieBindDocumented();
 
-  ZilchBindFieldProperty(mPositionSpace);
-  ZilchBindFieldProperty(mAttractPosition);
-  ZilchBindFieldProperty(mStrength);
-  ZilchBindFieldProperty(mMinDistance);
-  ZilchBindFieldProperty(mMaxDistance);
+  RaverieBindFieldProperty(mPositionSpace);
+  RaverieBindFieldProperty(mAttractPosition);
+  RaverieBindFieldProperty(mStrength);
+  RaverieBindFieldProperty(mMinDistance);
+  RaverieBindFieldProperty(mMaxDistance);
 }
 
 ParticleAttractor::~ParticleAttractor()
@@ -326,17 +326,17 @@ void ParticleAttractor::Animate(ParticleList* particleList, float dt, Mat4Ref tr
   }
 }
 
-ZilchDefineType(ParticleTwister, builder, type)
+RaverieDefineType(ParticleTwister, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDependency(ParticleSystem);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDependency(ParticleSystem);
+  RaverieBindDocumented();
 
-  ZilchBindFieldProperty(mAxis);
-  ZilchBindFieldProperty(mStrength);
-  ZilchBindFieldProperty(mMinDistance);
-  ZilchBindFieldProperty(mMaxDistance);
+  RaverieBindFieldProperty(mAxis);
+  RaverieBindFieldProperty(mStrength);
+  RaverieBindFieldProperty(mMinDistance);
+  RaverieBindFieldProperty(mMaxDistance);
 }
 
 ParticleTwister::ParticleTwister()
@@ -398,17 +398,17 @@ void ParticleTwister::Animate(ParticleList* particleList, float dt, Mat4Ref tran
   }
 }
 
-ZilchDefineType(ParticleCollisionPlane, builder, type)
+RaverieDefineType(ParticleCollisionPlane, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDependency(ParticleSystem);
-  ZeroBindDocumented();
-  ZilchBindFieldProperty(mPlaneSpace);
-  ZilchBindFieldProperty(mPlanePosition);
-  ZilchBindFieldProperty(mPlaneNormal);
-  ZilchBindGetterSetterProperty(Restitution)->Add(new EditorSlider(0.0f, 1.0f, 0.01f));
-  ZilchBindGetterSetterProperty(Friction)->Add(new EditorSlider(0.0f, 1.0f, 0.01f));
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDependency(ParticleSystem);
+  RaverieBindDocumented();
+  RaverieBindFieldProperty(mPlaneSpace);
+  RaverieBindFieldProperty(mPlanePosition);
+  RaverieBindFieldProperty(mPlaneNormal);
+  RaverieBindGetterSetterProperty(Restitution)->Add(new EditorSlider(0.0f, 1.0f, 0.01f));
+  RaverieBindGetterSetterProperty(Friction)->Add(new EditorSlider(0.0f, 1.0f, 0.01f));
 }
 
 ParticleCollisionPlane::~ParticleCollisionPlane()
@@ -504,15 +504,15 @@ void ParticleCollisionPlane::SetFriction(float friction)
 }
 
 // Heightmap
-ZilchDefineType(ParticleCollisionHeightmap, builder, type)
+RaverieDefineType(ParticleCollisionHeightmap, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDependency(ParticleSystem);
-  ZeroBindDocumented();
-  ZilchBindFieldProperty(mHeightMap);
-  ZilchBindGetterSetterProperty(Restitution)->Add(new EditorSlider(0.0f, 1.0f, 0.01f));
-  ZilchBindGetterSetterProperty(Friction)->Add(new EditorSlider(0.0f, 1.0f, 0.01f));
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDependency(ParticleSystem);
+  RaverieBindDocumented();
+  RaverieBindFieldProperty(mHeightMap);
+  RaverieBindGetterSetterProperty(Restitution)->Add(new EditorSlider(0.0f, 1.0f, 0.01f));
+  RaverieBindGetterSetterProperty(Friction)->Add(new EditorSlider(0.0f, 1.0f, 0.01f));
 }
 
 ParticleCollisionHeightmap::~ParticleCollisionHeightmap()
@@ -599,4 +599,4 @@ void ParticleCollisionHeightmap::SetFriction(float friction)
   mFriction = Math::Clamp(friction, 0.0f, 1.0f);
 }
 
-} // namespace Zero
+} // namespace Raverie

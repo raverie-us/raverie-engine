@@ -2,7 +2,7 @@
 #include "Precompiled.hpp"
 #include <chrono>
 
-namespace Zero
+namespace Raverie
 {
 
 TimeType Time::GetTime()
@@ -61,4 +61,4 @@ TimeType Time::ClocksPerSecond()
   return CLOCKS_PER_SEC;
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 DeclareEnum3(DataFileFormat,
@@ -70,7 +70,7 @@ bool LoadFromDataFile(type& object,
   {
     PolymorphicNode node;
     stream->GetPolymorphic(node);
-    cstr objectTypeName = ZilchVirtualTypeId(&object)->Name.c_str();
+    cstr objectTypeName = RaverieVirtualTypeId(&object)->Name.c_str();
     if (!checkTypename || node.TypeName == objectTypeName)
     {
       object.Serialize(*stream);
@@ -192,4 +192,4 @@ void PolymorphicSerialize(cstr Name, cstr FieldName, Serializer& stream, contain
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

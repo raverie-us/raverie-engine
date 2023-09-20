@@ -20,7 +20,7 @@
 /// The object passed in will be in the correct space specified by
 /// RangeInLocalSpace.
 
-namespace Zero
+namespace Raverie
 {
 
 // These functors are to deal with colliding a shape against a complex shape.
@@ -543,4 +543,4 @@ bool SpecialComplexCastVsShape(const CastType& castShape,
   return hitItem;
 }
 
-} // namespace Zero
+} // namespace Raverie

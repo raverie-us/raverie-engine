@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class String;
@@ -13,4 +13,4 @@ typedef const String& StringParam;
 typedef const String& StringRef;
 typedef const StringRange& StringRangeParam;
 
-} // namespace Zero
+} // namespace Raverie

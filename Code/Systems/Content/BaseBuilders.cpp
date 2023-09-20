@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 void DirectBuilderComponent::Serialize(Serializer& stream)
@@ -85,4 +85,4 @@ void DirectBuilderComponent::BuildContent(BuildOptions& buildOptions)
   SetFileToCurrentTime(destFile);
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Forward Declarations
@@ -14,7 +14,7 @@ class UpdateEvent;
 class BackgroundTaskButton : public IconButton
 {
 public:
-  typedef BackgroundTaskButton ZilchSelf;
+  typedef BackgroundTaskButton RaverieSelf;
   BackgroundTaskButton(Composite* parent);
 
   /// Widget Interface.
@@ -54,7 +54,7 @@ private:
 class BackgroundTaskItem : public Composite
 {
 public:
-  typedef BackgroundTaskItem ZilchSelf;
+  typedef BackgroundTaskItem RaverieSelf;
   BackgroundTaskItem(Composite* parent, BackgroundTask* task);
 
   /// Widget Interface.
@@ -87,7 +87,7 @@ private:
 class BackgroundTaskWindow : public PopUp
 {
 public:
-  typedef BackgroundTaskWindow ZilchSelf;
+  typedef BackgroundTaskWindow RaverieSelf;
   BackgroundTaskWindow(Composite* parent);
 
   /// Widget interface.
@@ -100,4 +100,4 @@ private:
   Element* mBackground;
 };
 
-} // namespace Zero
+} // namespace Raverie

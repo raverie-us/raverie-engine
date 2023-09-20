@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class ContentItem;
@@ -15,38 +15,38 @@ namespace Events
 {
 // Sent out before scripts are compiled
 DeclareEvent(PreScriptCompile);
-DeclareEvent(CompileZilchFragments);
+DeclareEvent(CompileRaverieFragments);
 // Sent out on the Z::gResources in the constructor of ResourceLibrary (no
 // resources added/loaded yet).
 DeclareEvent(ResourceLibraryConstructed);
 } // namespace Events
 
-// Status of Zilch Script Compile
-DeclareEnum2(ZilchCompileStatus,
+// Status of Raverie Script Compile
+DeclareEnum2(RaverieCompileStatus,
              Modified, // Scripts have been modified and will not match what is
                        // in library
              Compiled  // All scripts compiled and project library is up to date
 );
 
-// Zilch Compiled Event
-class ZilchCompiledEvent : public Event
+// Raverie Compiled Event
+class RaverieCompiledEvent : public Event
 {
 public:
-  ZilchDeclareType(ZilchCompiledEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(RaverieCompiledEvent, TypeCopyMode::ReferenceType);
   LibraryRef mLibrary;
 };
 
 // Compile Fragment Event
-class ZilchCompileFragmentEvent : public Event
+class RaverieCompileFragmentEvent : public Event
 {
 public:
-  ZilchDeclareType(ZilchCompileFragmentEvent, TypeCopyMode::ReferenceType);
-  ZilchCompileFragmentEvent(Module& dependencies,
-                            Array<ZilchDocumentResource*>& fragments,
+  RaverieDeclareType(RaverieCompileFragmentEvent, TypeCopyMode::ReferenceType);
+  RaverieCompileFragmentEvent(Module& dependencies,
+                            Array<RaverieDocumentResource*>& fragments,
                             ResourceLibrary* owningLibrary);
 
   Module& mDependencies;
-  Array<ZilchDocumentResource*>& mFragments;
+  Array<RaverieDocumentResource*>& mFragments;
   LibraryRef mReturnedLibrary;
   ResourceLibrary* mOwningLibrary;
 };
@@ -97,7 +97,7 @@ class ResourcePackage : public ReferenceCountedThreadSafeId32EventObject
 {
 public:
   ResourcePackage();
-  ZilchDeclareType(ResourcePackage, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ResourcePackage, TypeCopyMode::ReferenceType);
 
   void Save(StringParam filename);
   void Load(StringParam filename);
@@ -112,7 +112,7 @@ public:
 
 class ResourcePackageDisplay : public MetaDisplay
 {
-  ZilchDeclareType(ResourcePackageDisplay, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ResourcePackageDisplay, TypeCopyMode::ReferenceType);
 
   String GetName(HandleParam object) override;
   String GetDebugText(HandleParam object) override;
@@ -134,18 +134,18 @@ public:
   LibraryRef mPendingLibrary;
 
   // Is the library up to date or are there modifications?
-  ZilchCompileStatus::Enum mCompileStatus;
+  RaverieCompileStatus::Enum mCompileStatus;
 };
 
 // Resource Library
 /// A Resource Library is a set of resources loaded from a
 /// resource package. Used to manage resource lifetimes.
-/// EventHandler is Zilch's EventObject and is needed for compilation events.
+/// EventHandler is Raverie's EventObject and is needed for compilation events.
 /// This should be removed once we combine the two
 class ResourceLibrary : public SafeId32EventObject, public EventHandler
 {
 public:
-  ZilchDeclareDerivedTypeExplicit(ResourceLibrary, SafeId32EventObject, TypeCopyMode::ReferenceType);
+  RaverieDeclareDerivedTypeExplicit(ResourceLibrary, SafeId32EventObject, TypeCopyMode::ReferenceType);
 
   ResourceLibrary();
   ~ResourceLibrary();
@@ -165,7 +165,7 @@ public:
 
   /// If the given type was built in this library, it will attempt to find the
   /// type replacing it in the pending libraries. It's usually only valid to
-  /// call this function in response to the ZilchManager compile events before
+  /// call this function in response to the RaverieManager compile events before
   /// libraries are committed.
   BoundType* GetReplacingType(BoundType* oldType);
 
@@ -192,7 +192,7 @@ public:
   void OnScriptProjectPreParser(ParseEvent* e);
   void OnScriptProjectPostSyntaxer(ParseEvent* e);
 
-  // Only called once all libraries within Zero are fully compiled
+  // Only called once all libraries within Raverie are fully compiled
   // Turns each pending library into the current library
   void PreCommitUnload();
   void Commit();
@@ -210,13 +210,13 @@ public:
   Array<ResourceLibrary*> Dependents;
 
   // All scripts and plugins that exist within this resource library
-  Array<ZilchDocumentResource*> mScripts;
-  Array<ZilchDocumentResource*> mFragments;
-  Array<ZilchLibraryResource*> mPlugins;
+  Array<RaverieDocumentResource*> mScripts;
+  Array<RaverieDocumentResource*> mFragments;
+  Array<RaverieLibraryResource*> mPlugins;
 
   // The plugins that this resource library has built (may be empty if none
   // exist or haven't been compiled yet)
-  OrderedHashMap<ZilchLibraryResource*, SwapLibrary> mSwapPlugins;
+  OrderedHashMap<RaverieLibraryResource*, SwapLibrary> mSwapPlugins;
 
   // The library that this resource library has built (may be null if it hasn't
   // compiled yet) If this is set to 'Compiled', it also implies that the
@@ -228,7 +228,7 @@ public:
   SwapLibrary mSwapFragment;
 
   // A project we use for the scripts (we clear it and re-add all code files)
-  // We need this to stick around for the Zilch debugger
+  // We need this to stick around for the Raverie debugger
   Project mScriptProject;
 
   // All loaded resources. These handles are the ones in charge of keeping the
@@ -237,7 +237,7 @@ public:
 
   // When a Resource is added, we want to do something special for scripts and
   // fragments. Unfortunately, we don't know those types in the Engine project.
-  // These should be set during the Graphics and ZilchScript project
+  // These should be set during the Graphics and RaverieScript project
   // initialization.
   static BoundType* sScriptType;
   static BoundType* sFragmentType;
@@ -252,4 +252,4 @@ private:
   static bool sLibraryUnloading;
 };
 
-} // namespace Zero
+} // namespace Raverie

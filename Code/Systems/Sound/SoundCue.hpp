@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 /// Whether a SoundCue should play once or loop continuously.
 /// <param name="Single">The sound will play once to its EndTime and then
@@ -22,7 +22,7 @@ DeclareEnum2(SoundSelectMode, Random, Sequential);
 class SoundEntry : public Object
 {
 public:
-  ZilchDeclareType(SoundEntry, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SoundEntry, TypeCopyMode::ReferenceType);
 
   SoundEntry();
 
@@ -88,7 +88,7 @@ private:
 
 class SoundEntryDisplay : public MetaDisplay
 {
-  ZilchDeclareType(SoundEntryDisplay, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SoundEntryDisplay, TypeCopyMode::ReferenceType);
 
   String GetName(HandleParam object) override;
   String GetDebugText(HandleParam object) override;
@@ -101,7 +101,7 @@ class SoundEntryDisplay : public MetaDisplay
 class SoundTagEntry : public Object
 {
 public:
-  ZilchDeclareType(SoundTagEntry, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SoundTagEntry, TypeCopyMode::ReferenceType);
 
   SoundTagEntry();
 
@@ -120,7 +120,7 @@ private:
 
 class SoundTagEntryDisplay : public MetaDisplay
 {
-  ZilchDeclareType(SoundTagEntryDisplay, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SoundTagEntryDisplay, TypeCopyMode::ReferenceType);
 
   String GetName(HandleParam object) override;
   String GetDebugText(HandleParam object) override;
@@ -133,7 +133,7 @@ typedef Array<SoundTag*> SoundTagList;
 class SoundCueDisplay : public MetaDisplay
 {
 public:
-  ZilchDeclareType(SoundCueDisplay, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SoundCueDisplay, TypeCopyMode::ReferenceType);
 
   String GetName(HandleParam object) override;
   String GetDebugText(HandleParam object) override;
@@ -145,7 +145,7 @@ public:
 class SoundCue : public DataResource
 {
 public:
-  ZilchDeclareType(SoundCue, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SoundCue, TypeCopyMode::ReferenceType);
 
   SoundCue();
   ~SoundCue();
@@ -280,4 +280,4 @@ public:
   SoundCueManager(BoundType* resourceType);
 };
 
-} // namespace Zero
+} // namespace Raverie

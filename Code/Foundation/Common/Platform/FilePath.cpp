@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 const Rune cExtensionDelimiter = Rune('.');
@@ -248,4 +248,4 @@ StringRange FilePath::FindLastDirectorySeparator(StringRange path)
   return found;
 }
 
-} // namespace Zero
+} // namespace Raverie

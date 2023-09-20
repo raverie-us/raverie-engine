@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 struct SearchViewResult;
@@ -11,7 +11,7 @@ class SearchViewEvent;
 class GeneralSearchView : public Composite
 {
 public:
-  ZilchDeclareType(GeneralSearchView, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(GeneralSearchView, TypeCopyMode::ReferenceType);
 
   GeneralSearchView(Composite* parent, Widget* returnFocus);
 
@@ -35,4 +35,4 @@ public:
   SearchView* mView;
 };
 
-} // namespace Zero
+} // namespace Raverie

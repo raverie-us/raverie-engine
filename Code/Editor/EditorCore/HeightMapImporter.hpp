@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // forward declaration
@@ -15,7 +15,7 @@ DeclareEnum2(ImportMode, MaintainAspectRatio, FitToPatches);
 class HeightMapImporter : public Composite
 {
 public:
-  ZilchDeclareType(HeightMapImporter, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(HeightMapImporter, TypeCopyMode::ReferenceType);
 
   /// Constructor
   HeightMapImporter(Composite* parent, Editor* editor);
@@ -119,4 +119,4 @@ private:
   float mPrevY;
 };
 
-} // namespace Zero
+} // namespace Raverie

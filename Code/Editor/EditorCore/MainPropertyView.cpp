@@ -1,10 +1,10 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(MainPropertyView, builder, type)
+RaverieDefineType(MainPropertyView, builder, type)
 {
 }
 
@@ -303,7 +303,7 @@ void MainPropertyView::EditResources(MetaSelection* selection)
       PreviewWidget* preview = group->AddPreviewWidget(resource->Name, resource, PreviewImportance::High);
 
       // If it's a resource, we want to edit the object from the preview
-      if (preview && ZilchVirtualTypeId(resource)->IsA(ZilchTypeId(Archetype)))
+      if (preview && RaverieVirtualTypeId(resource)->IsA(RaverieTypeId(Archetype)))
       {
         mSpecialEdit->Add(preview->GetEditObject());
         addedSpecialEdit = true;
@@ -409,4 +409,4 @@ void MainPropertyView::ClearPreview()
   mPreviewArea->SetActive(false);
 }
 
-} // namespace Zero
+} // namespace Raverie

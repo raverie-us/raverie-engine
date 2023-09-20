@@ -2,14 +2,14 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 using namespace AudioConstants;
 
 // Sound Emitter
 
-ZilchDefineType(SoundEmitterDisplay, builder, type)
+RaverieDefineType(SoundEmitterDisplay, builder, type)
 {
 }
 
@@ -23,38 +23,38 @@ String SoundEmitterDisplay::GetDebugText(HandleParam object)
   return "SoundEmitter";
 }
 
-ZilchDefineType(SoundEmitter, builder, type)
+RaverieDefineType(SoundEmitter, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindDocumented();
-  ZeroBindSetup(SetupMode::CallSetDefaults);
-  ZeroBindTag(Tags::Sound);
+  RaverieBindComponent();
+  RaverieBindDocumented();
+  RaverieBindSetup(SetupMode::CallSetDefaults);
+  RaverieBindTag(Tags::Sound);
 
-  ZeroBindDependency(Cog);
-  ZeroBindDependency(Transform);
+  RaverieBindDependency(Cog);
+  RaverieBindDependency(Transform);
 
-  ZilchBindGetterSetterProperty(Volume)->Add(new EditorSlider(0.0f, 2.0f, 0.01f));
-  ZilchBindGetterSetterProperty(Decibels)->Add(new EditorSlider(-32.0f, 6.0f, 0.1f));
-  ZilchBindGetterSetterProperty(Pitch)->Add(new EditorSlider(-2.0f, 2.0f, 0.1f));
-  ZilchBindGetterSetterProperty(Semitones)->Add(new EditorSlider(-24.0f, 24.0f, 0.1f));
-  ZilchBindFieldProperty(mDirectional)->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  ZilchBindGetterSetterProperty(EmitAngle)->Add(new EditorSlider(0.0f, 360.0f, 1.0f))->ZeroFilterBool(mDirectional);
-  ZilchBindGetterSetterProperty(RearVolume)->Add(new EditorSlider(0.0f, 1.0f, 0.1f))->ZeroFilterBool(mDirectional);
+  RaverieBindGetterSetterProperty(Volume)->Add(new EditorSlider(0.0f, 2.0f, 0.01f));
+  RaverieBindGetterSetterProperty(Decibels)->Add(new EditorSlider(-32.0f, 6.0f, 0.1f));
+  RaverieBindGetterSetterProperty(Pitch)->Add(new EditorSlider(-2.0f, 2.0f, 0.1f));
+  RaverieBindGetterSetterProperty(Semitones)->Add(new EditorSlider(-24.0f, 24.0f, 0.1f));
+  RaverieBindFieldProperty(mDirectional)->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  RaverieBindGetterSetterProperty(EmitAngle)->Add(new EditorSlider(0.0f, 360.0f, 1.0f))->RaverieFilterBool(mDirectional);
+  RaverieBindGetterSetterProperty(RearVolume)->Add(new EditorSlider(0.0f, 1.0f, 0.1f))->RaverieFilterBool(mDirectional);
 
-  ZilchBindGetterSetterProperty(Attenuator);
+  RaverieBindGetterSetterProperty(Attenuator);
 
-  ZilchBindGetterSetter(Paused);
-  ZilchBindMethod(PlayCue);
-  ZilchBindMethod(PlayCuePaused);
-  ZilchBindGetter(IsPlaying);
-  ZilchBindMethod(InterpolatePitch);
-  ZilchBindMethod(InterpolateSemitones);
-  ZilchBindMethod(InterpolateVolume);
-  ZilchBindMethod(InterpolateDecibels);
-  ZilchBindGetter(InputNode)->AddAttribute(DeprecatedAttribute);
-  ZilchBindGetter(OutputNode)->AddAttribute(DeprecatedAttribute);
-  ZilchBindGetter(SoundNodeInput);
-  ZilchBindGetter(SoundNodeOutput);
+  RaverieBindGetterSetter(Paused);
+  RaverieBindMethod(PlayCue);
+  RaverieBindMethod(PlayCuePaused);
+  RaverieBindGetter(IsPlaying);
+  RaverieBindMethod(InterpolatePitch);
+  RaverieBindMethod(InterpolateSemitones);
+  RaverieBindMethod(InterpolateVolume);
+  RaverieBindMethod(InterpolateDecibels);
+  RaverieBindGetter(InputNode)->AddAttribute(DeprecatedAttribute);
+  RaverieBindGetter(OutputNode)->AddAttribute(DeprecatedAttribute);
+  RaverieBindGetter(SoundNodeInput);
+  RaverieBindGetter(SoundNodeOutput);
 
   type->Add(new SoundEmitterDisplay());
 }
@@ -375,7 +375,7 @@ void SoundEmitter::SetAttenuator(SoundAttenuator* attenuation)
   SetUpAttenuatorNode(attenuation);
 }
 
-Zilch::HandleOf<Zero::SoundNode> SoundEmitter::GetSoundNodeInput()
+Raverie::HandleOf<Raverie::SoundNode> SoundEmitter::GetSoundNodeInput()
 {
   return mSoundNodeInput;
 }
@@ -385,7 +385,7 @@ HandleOf<SoundNode> SoundEmitter::GetInputNode()
   return mSoundNodeInput;
 }
 
-Zilch::HandleOf<Zero::SoundNode> SoundEmitter::GetSoundNodeOutput()
+Raverie::HandleOf<Raverie::SoundNode> SoundEmitter::GetSoundNodeOutput()
 {
   return mSoundNodeOutput;
 }
@@ -580,4 +580,4 @@ SoundAttenuatorNode* SoundEmitter::IsAttenuatorInList(SoundAttenuator* attenuato
   return nullptr;
 }
 
-} // namespace Zero
+} // namespace Raverie

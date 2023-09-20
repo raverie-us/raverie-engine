@@ -7,7 +7,7 @@
 #include "Foundation/Support/SupportStandard.hpp" // TODO: Investigate Replication dependency on Profiler
 
 // Using Directives
-namespace Zero
+namespace Raverie
 {
 // Basic Math Types
 using Math::BoolVector2;
@@ -23,10 +23,10 @@ using Math::Quaternion;
 using Math::Vector2;
 using Math::Vector3;
 using Math::Vector4;
-} // namespace Zero
+} // namespace Raverie
 
 // Peer Forward Declarations
-namespace Zero
+namespace Raverie
 {
 class Peer;
 class PeerPlugin;
@@ -39,7 +39,7 @@ class OutPacket;
 class OutMessage;
 class FragmentedMessage;
 class InMessageChannel;
-} // namespace Zero
+} // namespace Raverie
 
 // Peer Includes
 #include "Enums.hpp"
@@ -56,7 +56,7 @@ class InMessageChannel;
 #include "Peer.hpp"
 
 // Replicator Forward Declarations
-namespace Zero
+namespace Raverie
 {
 class Replicator;
 class ReplicatorLink;
@@ -68,7 +68,7 @@ class ReplicaChannelType;
 class ReplicaProperty;
 class ReplicaPropertyType;
 class Route;
-} // namespace Zero
+} // namespace Raverie
 
 // Replicator Includes
 #include "ReplicaConfig.hpp"

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 struct Aabb;
@@ -75,4 +75,4 @@ struct Frustum
   Plane Planes[PlaneDim];
 };
 
-} // namespace Zero
+} // namespace Raverie

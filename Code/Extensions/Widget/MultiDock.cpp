@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 DockingArea::DockingArea()
@@ -776,7 +776,7 @@ bool MultiDocker::StartManipulation(Widget* widget, DockMode::Enum direction)
   return true;
 }
 
-ZilchDefineType(MultiDock, builder, type)
+RaverieDefineType(MultiDock, builder, type)
 {
 }
 
@@ -1257,4 +1257,4 @@ void MultiDock::ComputeAndApplyLayout(bool animate)
   Composite::UpdateTransform();
 }
 
-} // namespace Zero
+} // namespace Raverie

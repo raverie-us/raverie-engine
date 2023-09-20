@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Attributes
@@ -195,4 +195,4 @@ bool DecodeBinary(ByteBufferBlock& buffer, const String& encoded)
   return false;
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class Spacer;
@@ -45,7 +45,7 @@ typedef Array<TilePaletteChange> TilePaletteChangeList;
 class TilePaletteSprite : public Composite
 {
 public:
-  ZilchDeclareType(TilePaletteSprite, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(TilePaletteSprite, TypeCopyMode::ReferenceType);
 
   TilePaletteSprite(Composite* parent);
   ~TilePaletteSprite();
@@ -93,7 +93,7 @@ public:
 
   static const String mCollisionTextureName;
 
-  ZilchDeclareType(TilePaletteView, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(TilePaletteView, TypeCopyMode::ReferenceType);
 
   TilePaletteView(Composite* parent, TileEditor2D* editor);
   ~TilePaletteView();
@@ -212,4 +212,4 @@ public:
   };
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Component to inspect various properties on a collider that the user
@@ -9,7 +9,7 @@ namespace Zero
 class ColliderInspector : public Component
 {
 public:
-  ZilchDeclareType(ColliderInspector, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ColliderInspector, TypeCopyMode::ReferenceType);
 
   Vec3 GetColliderLocalCenterOfMass() const;
   real ComputeMass() const;
@@ -20,4 +20,4 @@ public:
   Mat3 GetInertia() const;
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,115 +1,115 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Ranges
-ZilchDefineRange(InstanceListType::range);
-ZilchDefineRange(NodeInfoListType::range);
+RaverieDefineRange(InstanceListType::range);
+RaverieDefineRange(NodeInfoListType::range);
 
 // Enums
-ZilchDefineEnum(FalloffCurveType);
-ZilchDefineEnum(SoundPlayMode);
-ZilchDefineEnum(SoundSelectMode);
-ZilchDefineEnum(SynthWaveType);
-ZilchDefineEnum(AudioMixTypes);
-ZilchDefineEnum(AudioLatency);
-ZilchDefineEnum(GranularSynthWindows);
+RaverieDefineEnum(FalloffCurveType);
+RaverieDefineEnum(SoundPlayMode);
+RaverieDefineEnum(SoundSelectMode);
+RaverieDefineEnum(SynthWaveType);
+RaverieDefineEnum(AudioMixTypes);
+RaverieDefineEnum(AudioLatency);
+RaverieDefineEnum(GranularSynthWindows);
 
 // Arrays
-ZeroDefineArrayType(Array<SoundEntry>);
-ZeroDefineArrayType(Array<SoundTagEntry>);
+RaverieDefineArrayType(Array<SoundEntry>);
+RaverieDefineArrayType(Array<SoundTagEntry>);
 
-ZilchDefineStaticLibrary(SoundLibrary)
+RaverieDefineStaticLibrary(SoundLibrary)
 {
   builder.CreatableInScriptDefault = false;
 
   // Ranges
-  ZilchInitializeRangeAs(InstanceListType::range, "SoundInstanceRange");
-  ZilchInitializeRangeAs(NodeInfoListType::range, "NodeInfoListRange");
+  RaverieInitializeRangeAs(InstanceListType::range, "SoundInstanceRange");
+  RaverieInitializeRangeAs(NodeInfoListType::range, "NodeInfoListRange");
 
   // Enums
-  ZilchInitializeEnum(FalloffCurveType);
-  ZilchInitializeEnum(SoundPlayMode);
-  ZilchInitializeEnum(SoundSelectMode);
-  ZilchInitializeEnum(SynthWaveType);
-  ZilchInitializeEnum(AudioMixTypes);
-  ZilchInitializeEnum(AudioLatency);
-  ZilchInitializeEnum(GranularSynthWindows);
+  RaverieInitializeEnum(FalloffCurveType);
+  RaverieInitializeEnum(SoundPlayMode);
+  RaverieInitializeEnum(SoundSelectMode);
+  RaverieInitializeEnum(SynthWaveType);
+  RaverieInitializeEnum(AudioMixTypes);
+  RaverieInitializeEnum(AudioLatency);
+  RaverieInitializeEnum(GranularSynthWindows);
 
   // Arrays
-  ZeroInitializeArrayTypeAs(Array<SoundEntry>, "Sounds");
-  ZeroInitializeArrayTypeAs(Array<SoundTagEntry>, "SoundTags");
+  RaverieInitializeArrayTypeAs(Array<SoundEntry>, "Sounds");
+  RaverieInitializeArrayTypeAs(Array<SoundTagEntry>, "SoundTags");
 
   // Events
-  ZilchInitializeType(SoundInstanceEvent);
-  ZilchInitializeType(SoundEvent);
-  ZilchInitializeType(MidiEvent);
-  ZilchInitializeType(AudioFloatDataEvent);
-  ZilchInitializeType(CustomAudioNodeEvent);
-  ZilchInitializeType(AudioByteDataEvent);
+  RaverieInitializeType(SoundInstanceEvent);
+  RaverieInitializeType(SoundEvent);
+  RaverieInitializeType(MidiEvent);
+  RaverieInitializeType(AudioFloatDataEvent);
+  RaverieInitializeType(CustomAudioNodeEvent);
+  RaverieInitializeType(AudioByteDataEvent);
 
-  ZilchInitializeTypeAs(SoundSystem, "Audio");
-  ZilchInitializeType(SoundNode);
-  ZilchInitializeType(SimpleCollapseNode);
-  ZilchInitializeType(SoundAsset);
-  ZilchInitializeType(SoundListener);
-  ZilchInitializeType(ListenerNode);
-  ZilchInitializeType(AudioSettings);
-  ZilchInitializeType(SoundSpace);
-  ZilchInitializeType(SoundAttenuatorDisplay);
-  ZilchInitializeType(SoundAttenuator);
-  ZilchInitializeType(AttenuatorNode);
-  ZilchInitializeType(SoundEmitterDisplay);
-  ZilchInitializeType(SoundEmitter);
-  ZilchInitializeType(EmitterNode);
-  ZilchInitializeType(SoundInstance);
-  ZilchInitializeType(SoundEntryDisplay);
-  ZilchInitializeType(SoundEntry);
-  ZilchInitializeType(SoundTagEntryDisplay);
-  ZilchInitializeType(SoundTagEntry);
-  ZilchInitializeType(SoundCueDisplay);
-  ZilchInitializeType(SoundCue);
-  ZilchInitializeType(SoundDisplay);
-  ZilchInitializeType(Sound);
-  ZilchInitializeType(SimpleSound);
-  ZilchInitializeType(SoundBuffer);
-  ZilchInitializeType(CustomAudioNode);
-  ZilchInitializeType(GeneratedWaveNode);
-  ZilchInitializeType(VolumeNode);
-  ZilchInitializeType(PitchNode);
-  ZilchInitializeType(LowPassNode);
-  ZilchInitializeType(HighPassNode);
-  ZilchInitializeType(BandPassNode);
-  ZilchInitializeType(EqualizerNode);
-  ZilchInitializeType(ReverbNode);
-  ZilchInitializeType(DelayNode);
-  ZilchInitializeType(FlangerNode);
-  ZilchInitializeType(ChorusNode);
-  ZilchInitializeType(RecordingNode);
-  ZilchInitializeType(CompressorNode);
-  ZilchInitializeType(ExpanderNode);
-  ZilchInitializeType(SoundTag);
-  ZilchInitializeType(PanningNode);
-  ZilchInitializeType(AddNoiseNode);
-  ZilchInitializeType(AdsrEnvelope);
-  ZilchInitializeType(AdditiveSynthNode);
-  ZilchInitializeType(GranularSynthNode);
-  ZilchInitializeType(ModulationNode);
-  ZilchInitializeType(MicrophoneInputNode);
-  ZilchInitializeType(SaveAudioNode);
-  ZilchInitializeType(SoundTagDisplay);
-  ZilchInitializeType(SoundTag);
-  ZilchInitializeType(TagObject);
-  ZilchInitializeType(NodePrintInfo);
-  ZilchInitializeType(SimpleCollapseNode);
-  ZilchInitializeType(OutputNode);
-  ZilchInitializeType(CombineNode);
-  ZilchInitializeType(CombineAndPauseNode);
-  ZilchInitializeType(SoundAsset);
-  ZilchInitializeType(DecompressedSoundAsset);
-  ZilchInitializeType(StreamingSoundAsset);
+  RaverieInitializeTypeAs(SoundSystem, "Audio");
+  RaverieInitializeType(SoundNode);
+  RaverieInitializeType(SimpleCollapseNode);
+  RaverieInitializeType(SoundAsset);
+  RaverieInitializeType(SoundListener);
+  RaverieInitializeType(ListenerNode);
+  RaverieInitializeType(AudioSettings);
+  RaverieInitializeType(SoundSpace);
+  RaverieInitializeType(SoundAttenuatorDisplay);
+  RaverieInitializeType(SoundAttenuator);
+  RaverieInitializeType(AttenuatorNode);
+  RaverieInitializeType(SoundEmitterDisplay);
+  RaverieInitializeType(SoundEmitter);
+  RaverieInitializeType(EmitterNode);
+  RaverieInitializeType(SoundInstance);
+  RaverieInitializeType(SoundEntryDisplay);
+  RaverieInitializeType(SoundEntry);
+  RaverieInitializeType(SoundTagEntryDisplay);
+  RaverieInitializeType(SoundTagEntry);
+  RaverieInitializeType(SoundCueDisplay);
+  RaverieInitializeType(SoundCue);
+  RaverieInitializeType(SoundDisplay);
+  RaverieInitializeType(Sound);
+  RaverieInitializeType(SimpleSound);
+  RaverieInitializeType(SoundBuffer);
+  RaverieInitializeType(CustomAudioNode);
+  RaverieInitializeType(GeneratedWaveNode);
+  RaverieInitializeType(VolumeNode);
+  RaverieInitializeType(PitchNode);
+  RaverieInitializeType(LowPassNode);
+  RaverieInitializeType(HighPassNode);
+  RaverieInitializeType(BandPassNode);
+  RaverieInitializeType(EqualizerNode);
+  RaverieInitializeType(ReverbNode);
+  RaverieInitializeType(DelayNode);
+  RaverieInitializeType(FlangerNode);
+  RaverieInitializeType(ChorusNode);
+  RaverieInitializeType(RecordingNode);
+  RaverieInitializeType(CompressorNode);
+  RaverieInitializeType(ExpanderNode);
+  RaverieInitializeType(SoundTag);
+  RaverieInitializeType(PanningNode);
+  RaverieInitializeType(AddNoiseNode);
+  RaverieInitializeType(AdsrEnvelope);
+  RaverieInitializeType(AdditiveSynthNode);
+  RaverieInitializeType(GranularSynthNode);
+  RaverieInitializeType(ModulationNode);
+  RaverieInitializeType(MicrophoneInputNode);
+  RaverieInitializeType(SaveAudioNode);
+  RaverieInitializeType(SoundTagDisplay);
+  RaverieInitializeType(SoundTag);
+  RaverieInitializeType(TagObject);
+  RaverieInitializeType(NodePrintInfo);
+  RaverieInitializeType(SimpleCollapseNode);
+  RaverieInitializeType(OutputNode);
+  RaverieInitializeType(CombineNode);
+  RaverieInitializeType(CombineAndPauseNode);
+  RaverieInitializeType(SoundAsset);
+  RaverieInitializeType(DecompressedSoundAsset);
+  RaverieInitializeType(StreamingSoundAsset);
 
   EngineLibraryExtensions::AddNativeExtensions(builder);
 }
@@ -125,4 +125,4 @@ void SoundLibrary::Shutdown()
   GetLibrary()->ClearComponents();
 }
 
-} // namespace Zero
+} // namespace Raverie

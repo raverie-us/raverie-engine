@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 //                                 NetProperty //
@@ -11,7 +11,7 @@ namespace Zero
 class NetProperty : public SafeId32Object, public ReplicaProperty
 {
 public:
-  ZilchDeclareType(NetProperty, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(NetProperty, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetProperty(const String& name, NetPropertyType* netPropertyType, const Variant& propertyData);
@@ -46,7 +46,7 @@ public:
 class NetPropertyType : public SafeId32Object, public ReplicaPropertyType
 {
 public:
-  ZilchDeclareType(NetPropertyType, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(NetPropertyType, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetPropertyType(const String& name,
@@ -106,7 +106,7 @@ public:
 class NetPropertyConfig : public DataResource
 {
 public:
-  ZilchDeclareType(NetPropertyConfig, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(NetPropertyConfig, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetPropertyConfig();
@@ -292,7 +292,7 @@ public:
 class NetPropertyInfo : public SafeId32
 {
 public:
-  ZilchDeclareType(NetPropertyInfo, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(NetPropertyInfo, TypeCopyMode::ReferenceType);
 
   /// Constructors.
   NetPropertyInfo();
@@ -357,7 +357,7 @@ typedef Array<NetPropertyInfo> NetPropertyInfoArray;
   class PropertyFilter##typeName : public MetaPropertyFilter                                                           \
   {                                                                                                                    \
   public:                                                                                                              \
-    ZilchDeclareType(PropertyFilter##typeName, TypeCopyMode::ReferenceType);                                           \
+    RaverieDeclareType(PropertyFilter##typeName, TypeCopyMode::ReferenceType);                                           \
     bool Filter(Member* prop, HandleParam instance) override;                                                          \
   }
 
@@ -380,22 +380,22 @@ DeclarePropertyFilterForType(String);
 class PropertyFilterMultiPrimitiveTypes : public MetaPropertyFilter
 {
 public:
-  ZilchDeclareType(PropertyFilterMultiPrimitiveTypes, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(PropertyFilterMultiPrimitiveTypes, TypeCopyMode::ReferenceType);
   bool Filter(Member* prop, HandleParam instance) override;
 };
 
 class PropertyFilterFloatingPointTypes : public MetaPropertyFilter
 {
 public:
-  ZilchDeclareType(PropertyFilterFloatingPointTypes, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(PropertyFilterFloatingPointTypes, TypeCopyMode::ReferenceType);
   bool Filter(Member* prop, HandleParam instance) override;
 };
 
 class PropertyFilterArithmeticTypes : public MetaPropertyFilter
 {
 public:
-  ZilchDeclareType(PropertyFilterArithmeticTypes, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(PropertyFilterArithmeticTypes, TypeCopyMode::ReferenceType);
   bool Filter(Member* prop, HandleParam instance) override;
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // A bone object in the skeleton hierarchy
@@ -71,4 +71,4 @@ typedef HashMap<String, ShaderSet> ShaderSetMap;
 
 void ShaderInputSetValue(ShaderInput& input, AnyParam value);
 
-} // namespace Zero
+} // namespace Raverie

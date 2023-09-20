@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Fill out necessary tooltip information for a Composite, if available.
@@ -34,7 +34,7 @@ DeclareEnum6(ToolTipColorScheme, Default, Gray, Red, Yellow, Green, Orange);
 class ToolTip : public Composite
 {
 public:
-  ZilchDeclareType(ToolTip, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ToolTip, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   ToolTip(Widget* source);
@@ -143,4 +143,4 @@ private:
   HandleOf<Widget> mSource;
 };
 
-} // namespace Zero
+} // namespace Raverie

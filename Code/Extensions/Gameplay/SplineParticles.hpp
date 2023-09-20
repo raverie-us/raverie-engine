@@ -1,14 +1,14 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class SplineParticleEmitter : public ParticleEmitterShared
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(SplineParticleEmitter, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SplineParticleEmitter, TypeCopyMode::ReferenceType);
 
   /// Component Interface.
   void Serialize(Serializer& stream) override;
@@ -41,7 +41,7 @@ class SplineParticleAnimator : public ParticleAnimator
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(SplineParticleAnimator, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SplineParticleAnimator, TypeCopyMode::ReferenceType);
 
   ~SplineParticleAnimator();
 
@@ -85,4 +85,4 @@ public:
   float mSpringDampingRatio;
 };
 
-} // namespace Zero
+} // namespace Raverie

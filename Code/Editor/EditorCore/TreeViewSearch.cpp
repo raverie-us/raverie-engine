@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 TreeViewSearch::TreeViewSearch(Composite* parent, TreeView* treeView, DataSourceFilter* filter) : Composite(parent)
@@ -131,4 +131,4 @@ void TreeViewSearch::CancelFilter()
   mTreeView->ShowSelected();
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 namespace Memory
 {
@@ -47,4 +47,4 @@ Contact* ContactAlreadyExistsDebug(Manifold* manifold);
 
 } // namespace Physics
 
-} // namespace Zero
+} // namespace Raverie

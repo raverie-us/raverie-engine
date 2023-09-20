@@ -5,7 +5,7 @@
 #include "Systems/Engine/ThreadDispatch.hpp"
 #include "Systems/Engine/JobSystem.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Aspect ratios of valid cubemap layouts: 1/6, 6/1, 2/3, 3/2, 3/4, 4/3, 4/2
@@ -313,19 +313,19 @@ Vec3 GetFaceDirection(TextureFace::Enum face, float x, float y, float halfWidth)
 {
   switch (face)
   {
-  case Zero::TextureFace::PositiveX:
+  case Raverie::TextureFace::PositiveX:
     return Vec3(halfWidth, halfWidth - y, x - halfWidth);
-  case Zero::TextureFace::PositiveY:
+  case Raverie::TextureFace::PositiveY:
     return Vec3(halfWidth - x, halfWidth, y - halfWidth);
-  case Zero::TextureFace::PositiveZ:
+  case Raverie::TextureFace::PositiveZ:
     return Vec3(halfWidth - x, halfWidth - y, halfWidth);
-  case Zero::TextureFace::NegativeX:
+  case Raverie::TextureFace::NegativeX:
     return Vec3(-halfWidth, halfWidth - y, halfWidth - x);
-  case Zero::TextureFace::NegativeY:
+  case Raverie::TextureFace::NegativeY:
     return Vec3(halfWidth - x, -halfWidth, halfWidth - y);
-  case Zero::TextureFace::NegativeZ:
+  case Raverie::TextureFace::NegativeZ:
     return Vec3(x - halfWidth, halfWidth - y, -halfWidth);
-  case Zero::TextureFace::None:
+  case Raverie::TextureFace::None:
     break;
   }
 
@@ -1031,4 +1031,4 @@ void MipmapCubemap(Array<MipHeader>& mipHeaders, Array<byte*>& imageData, Textur
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

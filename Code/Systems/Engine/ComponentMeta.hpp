@@ -1,14 +1,14 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Meta Data Inheritance
 class ComponentMetaDataInheritance : public MetaDataInheritance
 {
 public:
-  ZilchDeclareType(ComponentMetaDataInheritance, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ComponentMetaDataInheritance, TypeCopyMode::ReferenceType);
 
   /// MetaDataInheritance Interface.
   void Revert(HandleParam object) override;
@@ -22,7 +22,7 @@ public:
 class ComponentMetaOperations : public MetaOperations
 {
 public:
-  ZilchDeclareType(ComponentMetaOperations, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ComponentMetaOperations, TypeCopyMode::ReferenceType);
 
   u64 GetUndoHandleId(HandleParam object) override;
 
@@ -34,4 +34,4 @@ public:
   ObjectRestoreState* GetRestoreState(HandleParam object) override;
 };
 
-} // namespace Zero
+} // namespace Raverie

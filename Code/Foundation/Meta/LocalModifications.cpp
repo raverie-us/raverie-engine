@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace ObjectContext
@@ -9,11 +9,11 @@ namespace ObjectContext
 DefineStringConstant(Instance);
 }
 
-ZilchDefineType(MetaDataInheritance, builder, type)
+RaverieDefineType(MetaDataInheritance, builder, type)
 {
 }
 
-ZilchDefineType(MetaDataInheritanceRoot, builder, type)
+RaverieDefineType(MetaDataInheritanceRoot, builder, type)
 {
 }
 
@@ -50,7 +50,7 @@ ObjectState::ChildId::ChildId(HandleParam object) : mId(cInvalidUniqueId)
 
 ObjectState::ChildId::ChildId(Object* object) : mId(cInvalidUniqueId)
 {
-  BoundType* type = ZilchVirtualTypeId(object);
+  BoundType* type = RaverieVirtualTypeId(object);
   mTypeName = type->Name;
 
   if (MetaDataInheritance* inheritance = type->HasInherited<MetaDataInheritance>())
@@ -568,7 +568,7 @@ bool ObjectContainsProperty(HandleParam object, Property* property)
   // Walk child property objects
   forRange (Property* property, objectType->GetProperties())
   {
-    BoundType* propertyType = Zilch::BoundType::GetBoundType(property->PropertyType);
+    BoundType* propertyType = Raverie::BoundType::GetBoundType(property->PropertyType);
 
     // If the contained property has its own properties, check them
     if (propertyType && !propertyType->GetProperties().Empty())
@@ -693,4 +693,4 @@ bool MetaDataInheritance::InheritsFromData(HandleParam object)
   return false;
 }
 
-} // namespace Zero
+} // namespace Raverie

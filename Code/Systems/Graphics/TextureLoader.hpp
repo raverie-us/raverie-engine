@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class TextureLoader : public ResourceLoader
@@ -13,4 +13,4 @@ public:
   HandleOf<Resource> LoadFromBlock(ResourceEntry& entry) override;
 };
 
-} // namespace Zero
+} // namespace Raverie

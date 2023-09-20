@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 struct TrackParams
@@ -30,7 +30,7 @@ public:
   PropertyTrack()
   {
     TrackIndex = uint(-1);
-    TypeId = ZilchTypeId(void);
+    TypeId = RaverieTypeId(void);
   }
 
   virtual void Serialize(Serializer& stream)
@@ -143,4 +143,4 @@ PropertyTrack* MakePropertyTrack(BoundType* componentName, Property* property);
 
 #include "PropertyTrack.inl"
 
-} // namespace Zero
+} // namespace Raverie

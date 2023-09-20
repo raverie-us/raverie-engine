@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 //                               ReplicatorLink //
@@ -547,7 +547,7 @@ bool ReplicatorLink::SendSpawn(const ReplicaArray& replicas, TimeMs timestamp)
   // Send spawn message
   Assert(GetCommandChannelId());
   Status status;
-  LinkPlugin::Send(status, ZeroMove(message), true, GetCommandChannelId());
+  LinkPlugin::Send(status, RaverieMove(message), true, GetCommandChannelId());
   if (status.Failed()) // Unable?
     return false;
 
@@ -705,7 +705,7 @@ bool ReplicatorLink::SendClone(const ReplicaArray& replicas, TimeMs timestamp)
   // Send clone message
   Assert(GetCommandChannelId());
   Status status;
-  LinkPlugin::Send(status, ZeroMove(message), true, GetCommandChannelId());
+  LinkPlugin::Send(status, RaverieMove(message), true, GetCommandChannelId());
   if (status.Failed()) // Unable?
     return false;
 
@@ -850,7 +850,7 @@ bool ReplicatorLink::SendForget(const ReplicaArray& replicas, TimeMs timestamp)
   // Send forget message
   Assert(GetCommandChannelId());
   Status status;
-  LinkPlugin::Send(status, ZeroMove(message), true, GetCommandChannelId());
+  LinkPlugin::Send(status, RaverieMove(message), true, GetCommandChannelId());
   if (status.Failed()) // Unable?
     return false;
 
@@ -991,7 +991,7 @@ bool ReplicatorLink::SendDestroy(const ReplicaArray& replicas, TimeMs timestamp)
   // Send destroy message
   Assert(GetCommandChannelId());
   Status status;
-  LinkPlugin::Send(status, ZeroMove(message), true, GetCommandChannelId());
+  LinkPlugin::Send(status, RaverieMove(message), true, GetCommandChannelId());
   if (status.Failed()) // Unable?
     return false;
 
@@ -1101,7 +1101,7 @@ bool ReplicatorLink::SendReverseReplicaChannels(const ReplicaArray& replicas, Ti
   // Send reverse replica channels message
   Assert(GetCommandChannelId());
   Status status;
-  LinkPlugin::Send(status, ZeroMove(message), true, GetCommandChannelId());
+  LinkPlugin::Send(status, RaverieMove(message), true, GetCommandChannelId());
   if (status.Failed()) // Unable?
     return false;
 
@@ -1709,7 +1709,7 @@ void ReplicatorLink::OnConnectResponseReceive(Message& message)
       // Send connect confirmation message
       Assert(GetCommandChannelId());
       Status status;
-      Message message(ReplicatorMessageType::ConnectConfirmation, ZeroMove(confirmExtraData));
+      Message message(ReplicatorMessageType::ConnectConfirmation, RaverieMove(confirmExtraData));
       LinkPlugin::Send(status, message, true, GetCommandChannelId());
       if (status.Succeeded()) // Successful?
       {
@@ -1911,4 +1911,4 @@ void ReplicatorLink::OnPluginMessageReceive(MoveReference<Message> message, bool
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

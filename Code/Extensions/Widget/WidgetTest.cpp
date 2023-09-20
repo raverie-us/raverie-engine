@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 WidgetTest::WidgetTest(Composite* parent, StringParam name) : ColorBlock(parent)
@@ -218,4 +218,4 @@ void OpenTestWidgets(Composite* owner)
   TestLayout(owner, "FlexTests", FlexTests);
 }
 
-} // namespace Zero
+} // namespace Raverie

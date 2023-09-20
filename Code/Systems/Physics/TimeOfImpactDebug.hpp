@@ -1,13 +1,13 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class TimeOfImpactDebug : public Component
 {
 public:
-  ZilchDeclareType(TimeOfImpactDebug, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(TimeOfImpactDebug, TypeCopyMode::ReferenceType);
 
   TimeOfImpactDebug();
 
@@ -33,4 +33,4 @@ private:
   int mSteps;
 };
 
-} // namespace Zero
+} // namespace Raverie

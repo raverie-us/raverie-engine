@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -137,4 +137,4 @@ void AddRemoveListBox::MoveDownPressed(ObjectEvent* event)
   GetDispatcher()->Dispatch(Events::MoveDownPressed, &objectEvent);
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -45,7 +45,7 @@ DeclareEvent(ConfirmModifiedSave);
 class HighlightBorderEvent : public Event
 {
 public:
-  ZilchDeclareType(HighlightBorderEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(HighlightBorderEvent, TypeCopyMode::ReferenceType);
   /// Whether or not the border is visible.
   bool mState;
 
@@ -67,7 +67,7 @@ class MessageBoxEvent;
 class WindowTabEvent : public HandleableEvent
 {
 public:
-  ZilchDeclareType(WindowTabEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(WindowTabEvent, TypeCopyMode::ReferenceType);
   WindowTabEvent()
   {
     TabAreaFound = nullptr;
@@ -88,7 +88,7 @@ public:
 class TabModifiedEvent : public Event
 {
 public:
-  ZilchDeclareType(TabModifiedEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(TabModifiedEvent, TypeCopyMode::ReferenceType);
   TabModifiedEvent(bool modified) : Modified(modified)
   {
   }
@@ -98,7 +98,7 @@ public:
 class TabRenamedEvent : public Event
 {
 public:
-  ZilchDeclareType(TabRenamedEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(TabRenamedEvent, TypeCopyMode::ReferenceType);
   TabRenamedEvent(StringParam name) : Name(name)
   {
   }
@@ -108,7 +108,7 @@ public:
 class QueryModifiedSaveEvent : public Event
 {
 public:
-  ZilchDeclareType(QueryModifiedSaveEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(QueryModifiedSaveEvent, TypeCopyMode::ReferenceType);
   QueryModifiedSaveEvent() : Modified(false){};
   bool Modified;
   String Title;
@@ -121,7 +121,7 @@ class Window;
 class TabWidget : public Composite
 {
 public:
-  typedef TabWidget ZilchSelf;
+  typedef TabWidget RaverieSelf;
 
   TabWidget(Composite* parent);
 
@@ -165,7 +165,7 @@ private:
 class TabArea : public Composite
 {
 public:
-  ZilchDeclareType(TabArea, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(TabArea, TypeCopyMode::ReferenceType);
 
   TabArea(Composite* parent, Window* window);
 
@@ -224,7 +224,7 @@ Thickness GetTotalWindowPadding();
 class Window : public Composite
 {
 public:
-  ZilchDeclareType(Window, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Window, TypeCopyMode::ReferenceType);
 
   Window(Composite* parent);
   ~Window();
@@ -311,4 +311,4 @@ namespace WindowUi
 DeclareTweakable(Vec4, BackgroundColor);
 }
 
-} // namespace Zero
+} // namespace Raverie

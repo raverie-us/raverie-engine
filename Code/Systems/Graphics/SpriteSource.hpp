@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 const float cMaxFrameRate = 100000.0f;
@@ -11,7 +11,7 @@ const float cMinFrameRate = 0.001f;
 class SpriteSource : public Resource
 {
 public:
-  ZilchDeclareType(SpriteSource, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SpriteSource, TypeCopyMode::ReferenceType);
 
   SpriteDataMembers();
   void Unload() override;
@@ -52,4 +52,4 @@ public:
   SpriteSourceManager(BoundType* resourceType);
 };
 
-} // namespace Zero
+} // namespace Raverie

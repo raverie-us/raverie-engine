@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 IndexElementType::Enum DetermineIndexType(uint numIndices)
@@ -53,33 +53,33 @@ Mat4 AiMat4ToZeroMat4(aiMatrix4x4& aiMatrix4)
 #endif
 }
 
-void ConvertAndFillArrayVec2(aiVector3D* aiArray, uint numElements, Array<Vec2>& zeroArray)
+void ConvertAndFillArrayVec2(aiVector3D* aiArray, uint numElements, Array<Vec2>& raverieArray)
 {
-  zeroArray.Resize(numElements);
+  raverieArray.Resize(numElements);
   for (uint i = 0; i < numElements; ++i)
   {
     aiVector3D aiVec = aiArray[i];
-    zeroArray.PushBack(Vec2(aiVec.x, aiVec.y));
+    raverieArray.PushBack(Vec2(aiVec.x, aiVec.y));
   }
 }
 
-void ConvertAndFillArrayVec3(aiVector3D* aiArray, uint numElements, Array<Vec3>& zeroArray)
+void ConvertAndFillArrayVec3(aiVector3D* aiArray, uint numElements, Array<Vec3>& raverieArray)
 {
-  zeroArray.Resize(numElements);
+  raverieArray.Resize(numElements);
   for (uint i = 0; i < numElements; ++i)
   {
     aiVector3D aiVec = aiArray[i];
-    zeroArray.PushBack(Vec3(aiVec.x, aiVec.y, aiVec.z));
+    raverieArray.PushBack(Vec3(aiVec.x, aiVec.y, aiVec.z));
   }
 }
 
-void ConvertAndFillArrayVec4(aiColor4D* aiArray, uint numElements, Array<Vec4>& zeroArray)
+void ConvertAndFillArrayVec4(aiColor4D* aiArray, uint numElements, Array<Vec4>& raverieArray)
 {
-  zeroArray.Resize(numElements);
+  raverieArray.Resize(numElements);
   for (uint i = 0; i < numElements; ++i)
   {
     aiColor4D aiVec = aiArray[i];
-    zeroArray.PushBack(Vec4(aiVec.r, aiVec.g, aiVec.b, aiVec.a));
+    raverieArray.PushBack(Vec4(aiVec.r, aiVec.g, aiVec.b, aiVec.a));
   }
 }
 
@@ -121,4 +121,4 @@ ScalingKey AssimpToZeroScalingKey(aiVectorKey scalingKey)
   return zKey;
 }
 
-} // namespace Zero
+} // namespace Raverie

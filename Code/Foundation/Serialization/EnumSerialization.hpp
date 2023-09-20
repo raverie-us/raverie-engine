@@ -1,16 +1,16 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 #define SerializeEnumName(enumName, variable)                                                                          \
-  stream.EnumField(enumName::EnumName, #variable, (uint&)variable, ZilchTypeId(enumName::Enum))
+  stream.EnumField(enumName::EnumName, #variable, (uint&)variable, RaverieTypeId(enumName::Enum))
 
 #define SerializeEnumCustomName(enumName, variableName, variable)                                                      \
-  stream.EnumField(enumName::EnumName, variableName, (uint&)variable, ZilchTypeId(enumName::Enum))
+  stream.EnumField(enumName::EnumName, variableName, (uint&)variable, RaverieTypeId(enumName::Enum))
 
 #define SerializeEnumNameDefault(enumName, variable, defaultValue)                                                     \
-  if (!stream.EnumField(enumName::EnumName, #variable, (uint&)variable, ZilchTypeId(enumName::Enum)))                  \
+  if (!stream.EnumField(enumName::EnumName, #variable, (uint&)variable, RaverieTypeId(enumName::Enum)))                  \
     variable = defaultValue;
 
 // Bit Field Serialization
@@ -72,4 +72,4 @@ void SerializeBits(
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

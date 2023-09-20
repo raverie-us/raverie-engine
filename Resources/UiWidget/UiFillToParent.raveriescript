@@ -1,0 +1,17 @@
+// MIT Licensed (see LICENSE.md).
+
+[RunInEditor]
+class UiFillToParent : RaverieComponent
+{
+  [Dependency] var UiWidget : UiWidget;
+  
+  function Initialize(init : CogInitializer)
+  {
+    Raverie.Connect(this.Owner, Events.UiPreUpdate, this.OnUiPreUpdate);
+  }
+  
+  function OnUiPreUpdate(event : UiTransformUpdateEvent)
+  {
+    UiFillLayout.FillToParent(this.UiWidget);
+  }
+}

@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -16,7 +16,7 @@ DeclareEvent(RenderTasksUpdateInternal);
 class GraphicalRangeInterface
 {
 public:
-  ZilchDeclareType(GraphicalRangeInterface, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(GraphicalRangeInterface, TypeCopyMode::ReferenceType);
 
   /// Add a Graphical to the list.
   void Add(Graphical* graphical);
@@ -35,7 +35,7 @@ public:
 class SubRenderGroupPass : public SafeId32
 {
 public:
-  ZilchDeclareType(SubRenderGroupPass, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SubRenderGroupPass, TypeCopyMode::ReferenceType);
 
   SubRenderGroupPass(RenderTasksEvent* renderTasksEvent, RenderGroup& baseRenderGroup);
 
@@ -77,7 +77,7 @@ public:
 class RenderTasksEvent : public Event
 {
 public:
-  ZilchDeclareType(RenderTasksEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(RenderTasksEvent, TypeCopyMode::ReferenceType);
 
   RenderTasksEvent();
   ~RenderTasksEvent();
@@ -254,4 +254,4 @@ public:
 // Method for sending RenderTasksUpdate event and collecting results
 void RenderTasksUpdateHelper(RenderTasksUpdateData& update);
 
-} // namespace Zero
+} // namespace Raverie

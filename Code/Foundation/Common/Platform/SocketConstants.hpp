@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 #define SOCKET_LIBRARY_SUPPORTS_IPV6
@@ -50,4 +50,4 @@ static const size_t Ipv4MinMtuBytes = 576;
 
 // TODO: Add more IPv6 constants
 
-} // namespace Zero
+} // namespace Raverie

@@ -7,7 +7,7 @@ const size_t BufferSize = 8192;
 // Type-defines
 typedef size_t ChunkLengthType;
 
-namespace Zero
+namespace Raverie
 {
 
 // Random number generator for guids
@@ -22,12 +22,12 @@ DefineEvent(Disconnected);
 DefineEvent(ReceivedData);
 } // namespace Events
 
-ZilchDefineType(ConnectionData, builder, type)
+RaverieDefineType(ConnectionData, builder, type)
 {
-  ZilchBindGetterProperty(Host);
-  ZilchBindGetterProperty(Port);
-  ZilchBindFieldProperty(Index);
-  ZilchBindFieldProperty(Incoming);
+  RaverieBindGetterProperty(Host);
+  RaverieBindGetterProperty(Port);
+  RaverieBindFieldProperty(Index);
+  RaverieBindFieldProperty(Incoming);
 }
 
 // Constructor
@@ -51,12 +51,12 @@ uint ConnectionData::GetPort() const
   return AddressAndPort.GetIpPort(status);
 }
 
-ZilchDefineType(ConnectionEvent, builder, type)
+RaverieDefineType(ConnectionEvent, builder, type)
 {
-  ZilchBindFieldProperty(Host);
-  ZilchBindFieldProperty(Port);
-  ZilchBindFieldProperty(Index);
-  ZilchBindFieldProperty(Incoming);
+  RaverieBindFieldProperty(Host);
+  RaverieBindFieldProperty(Port);
+  RaverieBindFieldProperty(Index);
+  RaverieBindFieldProperty(Incoming);
 }
 
 // Constructor
@@ -69,9 +69,9 @@ ConnectionEvent::ConnectionEvent(const ConnectionData* connectionInfo)
   Incoming = connectionInfo->Incoming;
 }
 
-ZilchDefineType(ReceivedDataEvent, builder, type)
+RaverieDefineType(ReceivedDataEvent, builder, type)
 {
-  ZilchBindFieldProperty(Buffer);
+  RaverieBindFieldProperty(Buffer);
 }
 
 ReceivedDataEvent::ReceivedDataEvent(const ConnectionData* connectionInfo, const byte* data, size_t size) :
@@ -95,7 +95,7 @@ SocketData::SocketData(const SocketData& rhs) :
     PartialReceivedData(rhs.PartialReceivedData),
     PartialSentData(rhs.PartialSentData)
 {
-  Handle = ZeroMove(const_cast<SocketData&>(rhs).Handle);
+  Handle = RaverieMove(const_cast<SocketData&>(rhs).Handle);
 }
 
 SocketData& SocketData::operator=(const SocketData& rhs)
@@ -122,34 +122,34 @@ bool ProtocolSetup::RequiresCustomData()
 }
 
 // Define the meta-implementations
-ZilchDefineType(TcpSocket, builder, type)
+RaverieDefineType(TcpSocket, builder, type)
 {
   // Make constructible in script
   type->CreatableInScript = true;
 
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindMethod(Connect);
-  ZilchBindOverloadedMethod(Listen, ZilchInstanceOverload(bool, int));
-  ZilchBindOverloadedMethod(Listen, ZilchInstanceOverload(bool, int, uint));
-  ZilchBindOverloadedMethod(Listen, ZilchInstanceOverload(bool, int, uint, TcpSocketBind::Enum));
-  ZilchBindMethod(Close);
-  ZilchBindMethod(CloseConnection);
-  ZilchBindMethod(SendTo);
-  ZilchBindMethod(SendToAll);
-  ZilchBindMethod(SendToAllExcept);
-  ZilchBindMethod(SendToAllAndSelf);
-  ZilchBindMethod(IsConnected);
+  RaverieBindMethod(Connect);
+  RaverieBindOverloadedMethod(Listen, RaverieInstanceOverload(bool, int));
+  RaverieBindOverloadedMethod(Listen, RaverieInstanceOverload(bool, int, uint));
+  RaverieBindOverloadedMethod(Listen, RaverieInstanceOverload(bool, int, uint, TcpSocketBind::Enum));
+  RaverieBindMethod(Close);
+  RaverieBindMethod(CloseConnection);
+  RaverieBindMethod(SendTo);
+  RaverieBindMethod(SendToAll);
+  RaverieBindMethod(SendToAllExcept);
+  RaverieBindMethod(SendToAllAndSelf);
+  RaverieBindMethod(IsConnected);
 
-  ZilchBindGetterProperty(OutgoingConnectionCount);
-  ZilchBindGetterProperty(IncomingConnectionCount);
-  ZilchBindGetterProperty(ConnectionCount);
+  RaverieBindGetterProperty(OutgoingConnectionCount);
+  RaverieBindGetterProperty(IncomingConnectionCount);
+  RaverieBindGetterProperty(ConnectionCount);
 
-  ZeroBindEvent(Events::SocketError, TextErrorEvent);
-  ZeroBindEvent(Events::ConnectionCompleted, ConnectionEvent);
-  ZeroBindEvent(Events::ConnectionFailed, ConnectionEvent);
-  ZeroBindEvent(Events::Disconnected, ConnectionEvent);
-  ZeroBindEvent(Events::ReceivedData, ReceivedDataEvent);
+  RaverieBindEvent(Events::SocketError, TextErrorEvent);
+  RaverieBindEvent(Events::ConnectionCompleted, ConnectionEvent);
+  RaverieBindEvent(Events::ConnectionFailed, ConnectionEvent);
+  RaverieBindEvent(Events::Disconnected, ConnectionEvent);
+  RaverieBindEvent(Events::ReceivedData, ReceivedDataEvent);
 }
 
 TcpSocket::TcpSocket()
@@ -294,7 +294,7 @@ void TcpSocket::InternalConnect(const ConnectionData& info)
       // list
       SocketData newSocketData;
       newSocketData.ConnectionInfo = info;
-      newSocketData.Handle = ZeroMove(newSocket);
+      newSocketData.Handle = RaverieMove(newSocket);
 
       // Add the socket to the pending connections list
       mPendingOutgoingConnections.PushBack(newSocketData);
@@ -758,7 +758,7 @@ void TcpSocket::HandleIncomingConnections()
     // list
     newSocketData.ConnectionInfo.AddressAndPort = newSocket.GetConnectedRemoteAddress();
     newSocketData.ConnectionInfo.Incoming = true;
-    newSocketData.Handle = ZeroMove(newSocket);
+    newSocketData.Handle = RaverieMove(newSocket);
 
     ConnectionEvent e(&newSocketData.ConnectionInfo);
     // Dispatch an event to inform the user of a connection
@@ -1364,4 +1364,4 @@ void TcpSocket::SetSocketOptions(Socket& socket)
   socket.SetBlocking(status, false);
 }
 
-} // namespace Zero
+} // namespace Raverie

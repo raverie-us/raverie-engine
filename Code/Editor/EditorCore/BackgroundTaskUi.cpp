@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace TaskUi
@@ -90,7 +90,7 @@ void BackgroundTaskButton::Flash(bool toFlash)
 
   ActionSequence* seq = new ActionSequence(this, ActionExecuteMode::FrameUpdate);
   seq->Add(AnimatePropertyGetSet(Widget, Color, Ease::Quad::InOut, mIcon, t, color));
-  seq->Add(new CallParamAction<ZilchSelf, bool, &ZilchSelf::Flash>(this, !toFlash));
+  seq->Add(new CallParamAction<RaverieSelf, bool, &RaverieSelf::Flash>(this, !toFlash));
 }
 
 void BackgroundTaskButton::OnTaskStarted(BackgroundTaskEvent* e)
@@ -350,4 +350,4 @@ void BackgroundTaskWindow::OnTaskStarted(BackgroundTaskEvent* e)
   SetSize(Measure(data));
 }
 
-} // namespace Zero
+} // namespace Raverie

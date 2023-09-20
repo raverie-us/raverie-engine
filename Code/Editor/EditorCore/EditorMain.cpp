@@ -1,10 +1,10 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(EditorMain, builder, type)
+RaverieDefineType(EditorMain, builder, type)
 {
 }
 
@@ -146,7 +146,7 @@ void EditorMain::OnKeyDown(KeyboardEvent* keyEvent)
   if (commands->TestCommandKeyboardShortcuts(keyEvent))
     return;
 
-  if (keyEvent->CtrlPressed && keyEvent->AltPressed && mConfig->has(Zero::DeveloperConfig) && keyEvent->Key == 'F')
+  if (keyEvent->CtrlPressed && keyEvent->AltPressed && mConfig->has(Raverie::DeveloperConfig) && keyEvent->Key == 'F')
     this->ShowWindow("Find/Replace Objects");
 
   // Global special hot keys
@@ -251,7 +251,7 @@ LibraryView* EditorMain::CreateLibraryView(bool showCore, bool autoDock)
   if (!showCore)
   {
     library->AddHiddenLibrary("Loading");
-    library->AddHiddenLibrary("ZeroCore");
+    library->AddHiddenLibrary("EngineCore");
     library->AddHiddenLibrary("UiWidget");
     library->AddHiddenLibrary("Editor");
     library->AddHiddenLibrary("EditorUi");
@@ -502,7 +502,7 @@ void EditorMain::ShowRenderGroupHierarchies(CommandEvent* event)
   // Just show current window if it already exists.
   if (Widget* widget = mManager->FindWidget("RenderGroupHierarchies"))
   {
-    Zero::ShowWidget(widget);
+    Raverie::ShowWidget(widget);
     return;
   }
 
@@ -536,10 +536,10 @@ DocumentEditor* EditorMain::OpenTextString(StringParam name, StringParam text, S
   document->mName = documentName;
   document->mData = text;
   DocumentEditor* editor = CreateDocumentEditor(this, document);
-  TypeExtensionEntry* zilchEntry = FileExtensionManager::GetZilchScriptTypeEntry();
+  TypeExtensionEntry* raverieEntry = FileExtensionManager::GetRaverieScriptTypeEntry();
 
-  if (zilchEntry->IsValidExtensionNoDot(extension))
-    editor->SetLexer(Lexer::Zilch);
+  if (raverieEntry->IsValidExtensionNoDot(extension))
+    editor->SetLexer(Lexer::Raverie);
 
   AttachDocumentEditor(document->mName, editor);
   // After the document is attached we need to re-layout the editor so that the
@@ -568,10 +568,10 @@ DocumentEditor* EditorMain::OpenTextFile(StringParam filename)
       DocumentEditor* editor = CreateDocumentEditor(this, document);
 
       String extension = FilePath::GetExtension(filename);
-      TypeExtensionEntry* zilchEntry = FileExtensionManager::GetZilchScriptTypeEntry();
+      TypeExtensionEntry* raverieEntry = FileExtensionManager::GetRaverieScriptTypeEntry();
 
-      if (zilchEntry->IsValidExtensionNoDot(extension))
-        editor->SetLexer(Lexer::Zilch);
+      if (raverieEntry->IsValidExtensionNoDot(extension))
+        editor->SetLexer(Lexer::Raverie);
 
       AttachDocumentEditor(name, editor);
       return editor;
@@ -708,25 +708,25 @@ void OnExportTypeList(Editor* editor)
 {
   MetaDatabase* instance = MetaDatabase::GetInstance();
   // Append all libraries into one list to make searching easier
-  Zilch::LibraryArray allLibraries;
+  Raverie::LibraryArray allLibraries;
   allLibraries.Append(instance->mLibraries.All());
   allLibraries.Append(instance->mNativeLibraries.All());
 
   Array<BoundType*> baseTypesToFind;
-  baseTypesToFind.PushBack(ZilchTypeId(Collider));
-  baseTypesToFind.PushBack(ZilchTypeId(Joint));
-  baseTypesToFind.PushBack(ZilchTypeId(PhysicsEffect));
-  baseTypesToFind.PushBack(ZilchTypeId(Graphical));
-  baseTypesToFind.PushBack(ZilchTypeId(ParticleAnimator));
-  baseTypesToFind.PushBack(ZilchTypeId(ParticleEmitter));
-  baseTypesToFind.PushBack(ZilchTypeId(Component));
-  baseTypesToFind.PushBack(ZilchTypeId(Resource));
-  baseTypesToFind.PushBack(ZilchTypeId(Event));
-  baseTypesToFind.PushBack(ZilchTypeId(Tool));
-  baseTypesToFind.PushBack(ZilchTypeId(Enum));
-  baseTypesToFind.PushBack(ZilchTypeId(MetaComposition));
-  baseTypesToFind.PushBack(ZilchTypeId(Widget));
-  baseTypesToFind.PushBack(ZilchTypeId(ContentComponent));
+  baseTypesToFind.PushBack(RaverieTypeId(Collider));
+  baseTypesToFind.PushBack(RaverieTypeId(Joint));
+  baseTypesToFind.PushBack(RaverieTypeId(PhysicsEffect));
+  baseTypesToFind.PushBack(RaverieTypeId(Graphical));
+  baseTypesToFind.PushBack(RaverieTypeId(ParticleAnimator));
+  baseTypesToFind.PushBack(RaverieTypeId(ParticleEmitter));
+  baseTypesToFind.PushBack(RaverieTypeId(Component));
+  baseTypesToFind.PushBack(RaverieTypeId(Resource));
+  baseTypesToFind.PushBack(RaverieTypeId(Event));
+  baseTypesToFind.PushBack(RaverieTypeId(Tool));
+  baseTypesToFind.PushBack(RaverieTypeId(Enum));
+  baseTypesToFind.PushBack(RaverieTypeId(MetaComposition));
+  baseTypesToFind.PushBack(RaverieTypeId(Widget));
+  baseTypesToFind.PushBack(RaverieTypeId(ContentComponent));
 
   typedef OrderedHashMap<BoundType*, HashSet<String>> MapType;
   // Build a map of base type we're searching for to a set of all names that
@@ -833,7 +833,7 @@ void OnResaveAllResources(Editor* editor)
   }
 }
 
-void ZeroExportNamed(ExportHandleCrash)()
+void RaverieExportNamed(ExportHandleCrash)()
 {
   // Get the error context printed
   // DoNotifyErrorWithContext("Crashing");
@@ -901,7 +901,7 @@ void CreateEditor(StringParam projectFile)
 
   SetupTools(editorMain);
 
-  commands->GetContext()->Add(editorMain, ZilchTypeId(Editor));
+  commands->GetContext()->Add(editorMain, RaverieTypeId(Editor));
   rootWidget->LoadMenu("Main");
 
   Connect(Z::gEngine, Events::Notify, editorMain, &EditorMain::OnNotifyEvent);
@@ -1127,13 +1127,13 @@ void CreateEditor(StringParam projectFile)
   // Moves everything off the screen
   editorMain->SetExploded(true, false);
 
-  ZPrint("Welcome to the Zero Editor.\n");
+  ZPrint("Welcome to the Raverie Editor.\n");
 
   editorMain->mLoading = new LoadingWindow(rootWidget);
   editorMain->mLoading->SetActive(false);
 
   // Compile once before trying to load a project so that the engine can render
-  ZilchManager::GetInstance()->TriggerCompileExternally();
+  RaverieManager::GetInstance()->TriggerCompileExternally();
 
   // If we have a file to be loaded
   if (!projectFile.Empty())
@@ -1142,7 +1142,7 @@ void CreateEditor(StringParam projectFile)
     String extension = FilePath::GetExtension(projectFile);
 
     // If the file passed in is a project file...
-    if (extension == "zeroproj")
+    if (extension == "raverieproj")
     {
       // Open the project
       OpenProjectFile(projectFile);
@@ -1172,4 +1172,4 @@ void CreateEditor(StringParam projectFile)
   HotKeyCommands::GetInstance()->CopyCommandData(commands->mCommands);
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,13 +1,13 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class GjkDebug : public Component
 {
 public:
-  ZilchDeclareType(GjkDebug, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(GjkDebug, TypeCopyMode::ReferenceType);
 
   void InitEpa(void);
   void AddPoint(void);
@@ -59,4 +59,4 @@ private:
   real mDt;
 };
 
-} // namespace Zero
+} // namespace Raverie

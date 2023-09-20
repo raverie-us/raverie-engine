@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // macro to define a function pointer for the simple collider types.
@@ -349,4 +349,4 @@ struct CastArrayLookup
   LookupFunc mLookups[Collider::cSize];
 };
 
-} // namespace Zero
+} // namespace Raverie

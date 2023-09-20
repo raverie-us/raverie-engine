@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Z
@@ -10,4 +10,4 @@ namespace Z
 extern Renderer* gRenderer;
 }
 
-} // namespace Zero
+} // namespace Raverie

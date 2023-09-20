@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// UniquePointer takes sole ownership over a pointer and
@@ -174,4 +174,4 @@ UniquePointer<type> MakeUnique(const param0& p0, const param0& p1)
   return UniquePointer<type>(new type(p0, p1));
 }
 
-} // namespace Zero
+} // namespace Raverie

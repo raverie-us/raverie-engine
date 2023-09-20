@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class GraphicalPatchIndices
@@ -36,7 +36,7 @@ public:
 class HeightMapModel : public Graphical
 {
 public:
-  ZilchDeclareType(HeightMapModel, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(HeightMapModel, TypeCopyMode::ReferenceType);
 
   // Component Interface
 
@@ -73,4 +73,4 @@ public:
   HashMap<HeightPatch*, GraphicalHeightPatch> mGraphicalPatches;
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,10 +1,10 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
-// Zero Library Extensions
+// Raverie Library Extensions
 class EngineLibraryExtensions
 {
 public:
@@ -19,7 +19,7 @@ public:
   static void AddExtensionsPostCompilation(LibraryBuilder& builder);
 
   // Called after each type is parsed (only called for Resource Libraries)
-  static void TypeParsedCallback(Zilch::ParseEvent* e, void* userData);
+  static void TypeParsedCallback(Raverie::ParseEvent* e, void* userData);
 
   // Used to search for where a Proxy came from. This is helpful when scripts
   // failed to compile on startup
@@ -31,4 +31,4 @@ private:
   static void AddResourceExtensions(LibraryBuilder& builder, ResourceLibrary* resources);
 };
 
-} // namespace Zero
+} // namespace Raverie

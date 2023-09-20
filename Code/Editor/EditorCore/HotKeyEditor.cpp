@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -20,7 +20,7 @@ static const String cTagsColumn = "Tags";
 static const String cDescriptionColumn = "Description";
 
 // Orange
-static const Vec4 cZeroCommandColor(1, 0.647f, 0, 1);
+static const Vec4 cCommandColor(1, 0.647f, 0, 1);
 
 static const bool cNotUsingHotKeyResource = true;
 static const bool cHotKeysEditable = false;
@@ -44,7 +44,7 @@ public:
 class CogCommandScriptEditor : public ValueEditor
 {
 public:
-  typedef CogCommandScriptEditor ZilchSelf;
+  typedef CogCommandScriptEditor RaverieSelf;
   Element* mIcon;
   HandleOf<CogCommand> mCommand;
 
@@ -106,7 +106,7 @@ public:
 class BindingEditor : public InPlaceTextEditor
 {
 public:
-  typedef BindingEditor ZilchSelf;
+  typedef BindingEditor RaverieSelf;
 
   // <Keys::Enum>
   unsigned mModifier1;
@@ -393,7 +393,7 @@ public:
 class TreeViewSearchHotKeys : public TreeViewSearch
 {
 public:
-  typedef TreeViewSearchHotKeys ZilchSelf;
+  typedef TreeViewSearchHotKeys RaverieSelf;
   HotKeyFilter* mHotKeyFilter;
 
   TreeViewSearchHotKeys(Composite* parent) : TreeViewSearch(parent, nullptr, nullptr)
@@ -474,7 +474,7 @@ public:
     if (!row->mIsACogCommand)
       return false;
 
-    Cog* object = ((CogCommand*)row->mZeroCommand)->mCog;
+    Cog* object = ((CogCommand*)row->mCommand)->mCog;
     return mSelection->Contains(object);
   }
 
@@ -485,9 +485,9 @@ public:
     if (!row->mIsACogCommand)
       return;
 
-    Cog* object = ((CogCommand*)row->mZeroCommand)->mCog;
+    Cog* object = ((CogCommand*)row->mCommand)->mCog;
     if (object)
-      mSelection->SelectOnly(object->GetComponentByName(row->mZeroCommand->Name));
+      mSelection->SelectOnly(object->GetComponentByName(row->mCommand->Name));
   }
 
   void Deselect(DataIndex index) override
@@ -497,7 +497,7 @@ public:
     if (!row->mIsACogCommand)
       return;
 
-    Cog* object = ((CogCommand*)row->mZeroCommand)->mCog;
+    Cog* object = ((CogCommand*)row->mCommand)->mCog;
     mSelection->Remove(object);
   }
 
@@ -618,10 +618,10 @@ void HotKeyCommands::CopyCommandData(Array<Command*>& commands)
 
 static void CopyCommand(CommandEntry& lhs, Command* rhs)
 {
-  lhs.mIsACogCommand = (rhs->ZilchGetDerivedType() == ZilchTypeId(CogCommand));
+  lhs.mIsACogCommand = (rhs->RaverieGetDerivedType() == RaverieTypeId(CogCommand));
   lhs.mDevOnly = rhs->DevOnly;
 
-  lhs.mZeroCommand = rhs;
+  lhs.mCommand = rhs;
   lhs.mName = rhs->Name;
   lhs.mDescription = rhs->Description;
 
@@ -743,7 +743,7 @@ void HotKeyCommands::GetData(DataEntry* dataEntry, Any& variant, StringParam col
     variant = nullptr;
 
     if (row->mIsACogCommand)
-      variant = (CogCommand*)row->mZeroCommand;
+      variant = (CogCommand*)row->mCommand;
   }
   else if (column == cCommandColumn)
   {
@@ -834,7 +834,7 @@ bool HotKeyCommands::Remove(DataEntry* dataEntry)
   return true;
 }
 
-ZilchDefineType(HotKeyEditor, builder, type)
+RaverieDefineType(HotKeyEditor, builder, type)
 {
 }
 
@@ -860,7 +860,7 @@ HotKeyEditor::HotKeyEditor(Composite* parent) :
     }
   }
 
-  ConnectThisTo(ZilchManager::GetInstance(), Events::ScriptsCompiledPostPatch, OnScriptsCompiled);
+  ConnectThisTo(RaverieManager::GetInstance(), Events::ScriptsCompiledPostPatch, OnScriptsCompiled);
 
   CommandManager* commands = CommandManager::GetInstance();
   ConnectThisTo(commands, Events::CommandAdded, OnGlobalCommandAdded);
@@ -1276,7 +1276,7 @@ void HotKeyEditor::OnCogCommandSort(MouseEvent* event)
     {
       toolTip->ClearText();
       toolTip->AddText("Click to sort by:", Vec4(1));
-      toolTip->AddText("  Zero Commands", cZeroCommandColor);
+      toolTip->AddText("  Raverie Commands", cCommandColor);
     }
   }
   else
@@ -1347,7 +1347,7 @@ void HotKeyEditor::OnMouseEnterIconHeader(MouseEvent* event)
   if (mCogCommandSortToggle)
     CreateCommandHeaderToolTip(source, "User Commands", Vec4(1));
   else
-    CreateCommandHeaderToolTip(source, "Native Commands", cZeroCommandColor);
+    CreateCommandHeaderToolTip(source, "Native Commands", cCommandColor);
 }
 
 void HotKeyEditor::OnMouseEnterCommandHeader(MouseEvent* event)
@@ -1415,8 +1415,8 @@ void HotKeyEditor::OnTreeViewHeaderAdded(TreeViewHeaderAddedEvent* event)
                                   &HotKeyEditor::OnMouseEnterBindingHeader,
                                   &HotKeyEditor::OnMouseEnterTagsHeader};
 
-  Zero::Connect(header, Events::LeftMouseUp, this, handler[index]);
-  Zero::Connect(header, Events::MouseEnterHierarchy, this, handler[index + 4]);
+  Raverie::Connect(header, Events::LeftMouseUp, this, handler[index]);
+  Raverie::Connect(header, Events::MouseEnterHierarchy, this, handler[index + 4]);
   ConnectThisTo(header, Events::MouseExitHierarchy, OnMouseExitHeader);
 }
 
@@ -1558,11 +1558,11 @@ void HotKeyEditor::OnModalClosed(ModalConfirmEvent* event) // unused, not firing
   MetaOperations::NotifyObjectModified(mHotKeys->mCommand);
 }
 
-ZilchDefineType(HotKeyBinding, builder, type)
+RaverieDefineType(HotKeyBinding, builder, type)
 {
-  ZilchBindFieldProperty(mModifier1);
-  ZilchBindFieldProperty(mModifier2);
-  ZilchBindFieldProperty(mMainKey);
+  RaverieBindFieldProperty(mModifier1);
+  RaverieBindFieldProperty(mModifier2);
+  RaverieBindFieldProperty(mMainKey);
 }
 
 void RegisterHotKeyEditors()
@@ -1575,4 +1575,4 @@ void RegisterHotKeyEditors()
   factory->RegisterEditor("DescriptionEditor", CreateDescriptionEditor);
 }
 
-} // namespace Zero
+} // namespace Raverie

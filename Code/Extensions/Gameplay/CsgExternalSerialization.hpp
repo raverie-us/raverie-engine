@@ -7,7 +7,7 @@
 
 // Polygon and Shape2D are in Geometry which doesn't know about
 // serialization. To deal with this we define a policy externally.
-namespace Zero
+namespace Raverie
 {
 
 namespace Serialization
@@ -49,4 +49,4 @@ struct Policy<Shape2D>
 
 } // namespace Serialization
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class Viewport;
@@ -40,7 +40,7 @@ class ViewportTextWidget : public Text
   ByteColor mTextHoverColor;
 
 public:
-  ZilchDeclareType(ViewportTextWidget, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ViewportTextWidget, TypeCopyMode::ReferenceType);
 
   ViewportTextWidget(Composite* parent) : Text(parent, "Text")
   {
@@ -78,7 +78,7 @@ public:
 class Tool : public EventObject
 {
 public:
-  ZilchDeclareType(Tool, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Tool, TypeCopyMode::ReferenceType);
 
   static Component* GetOrCreateEditComponent(
       BoundType* meta, StringParam defaultName, StringParam defaultArchetype, CogId& lastEdited, bool canCreate = true);
@@ -95,7 +95,7 @@ public:
   }
   virtual String ToString(bool shortFormat = false) const
   {
-    return ZilchVirtualTypeId(this)->Name;
+    return RaverieVirtualTypeId(this)->Name;
   }
 
   virtual bool KeyDown(Viewport* viewport, KeyboardEvent* event)
@@ -195,4 +195,4 @@ void ColliderRayCast(Viewport* viewport,
                      BaseCastFilter* filter = nullptr);
 void BeginSelectDrag(EditorViewport* viewport, MouseEvent* event, SelectTool* tool);
 
-} // namespace Zero
+} // namespace Raverie

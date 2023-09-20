@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 // Empty Base
 class EmptyBase
@@ -25,7 +25,7 @@ protected:
   }
 };
 
-#define ZeroDeclareExplicitSingletonContents(T)                                                                        \
+#define RaverieDeclareExplicitSingletonContents(T)                                                                        \
 public:                                                                                                                \
   static T* GetInstance()                                                                                              \
   {                                                                                                                    \
@@ -52,14 +52,14 @@ private:                                                                        
                                                                                                                        \
 public:
 
-#define ZeroDefineExplicitSingletonContents(T) T* T::mInstance = nullptr;
+#define RaverieDefineExplicitSingletonContents(T) T* T::mInstance = nullptr;
 
 // Explicit Singleton
 template <typename T, typename Base = EmptyBase>
 class ExplicitSingleton : public Base
 {
 public:
-  ZeroDeclareExplicitSingletonContents(T);
+  RaverieDeclareExplicitSingletonContents(T);
 
 protected:
   ExplicitSingleton()
@@ -70,4 +70,4 @@ protected:
 template <typename T, typename Base>
 T* ExplicitSingleton<T, Base>::mInstance = nullptr;
 
-} // namespace Zero
+} // namespace Raverie

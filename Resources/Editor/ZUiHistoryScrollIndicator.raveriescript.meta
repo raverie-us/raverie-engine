@@ -1,0 +1,16 @@
+[Version:1]
+TextContent 
+{
+	ContentTags 
+	{
+		var Tags = Array
+		{
+			"OperationHistory"
+		}
+	}
+	RaverieScriptBuilder 
+	{
+		var Name = "ZUiHistoryScrollIndicator"
+		var ResourceId = 0x5a6054d4c2ed65fa
+	}
+}

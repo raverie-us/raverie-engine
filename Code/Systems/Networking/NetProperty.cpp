@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 /// Translates the specified variant into the target type (if possible) and
@@ -33,20 +33,20 @@ Variant TranslateVariant(const Variant& originalValue, BasicNetType::Enum target
 
 //                                 NetProperty //
 
-ZilchDefineType(NetProperty, builder, type)
+RaverieDefineType(NetProperty, builder, type)
 {
   // Bind tags
-  ZeroBindTag(Tags::Networking);
+  RaverieBindTag(Tags::Networking);
 
   // Bind documentation
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
   // Bind operations
-  ZilchBindGetterProperty(Name);
-  ZilchBindGetterProperty(NetPropertyType);
-  ZilchBindGetterProperty(NetChannel);
-  ZilchBindGetterProperty(LastChangeTimestamp);
-  ZilchBindGetterProperty(LastChangeTimePassed);
+  RaverieBindGetterProperty(Name);
+  RaverieBindGetterProperty(NetPropertyType);
+  RaverieBindGetterProperty(NetChannel);
+  RaverieBindGetterProperty(LastChangeTimestamp);
+  RaverieBindGetterProperty(LastChangeTimePassed);
 }
 
 NetProperty::NetProperty(const String& name, NetPropertyType* netPropertyType, const Variant& propertyData) :
@@ -110,20 +110,20 @@ float NetProperty::GetLastChangeTimePassed() const
 
 //                               NetPropertyType //
 
-ZilchDefineType(NetPropertyType, builder, type)
+RaverieDefineType(NetPropertyType, builder, type)
 {
   // Bind tags
-  ZeroBindTag(Tags::Networking);
+  RaverieBindTag(Tags::Networking);
 
   // Bind documentation
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
   // Bind operations
-  ZilchBindGetterProperty(Name);
+  RaverieBindGetterProperty(Name);
 
   // Bind configuration
-  ZilchBindMethod(ResetConfig);
-  ZilchBindMethod(SetConfig);
+  RaverieBindMethod(ResetConfig);
+  RaverieBindMethod(SetConfig);
 }
 
 NetPropertyType::NetPropertyType(const String& name,
@@ -303,10 +303,10 @@ void NetPropertyType::SetConfig(NetPropertyConfig* netPropertyConfig)
   BindVariantGetSetForType(property, Quaternion)
 
 #define BindVariantGetSetForType(property, typeName)                                                                   \
-  ZilchBindGetterSetterProperty(property##typeName)->Add(new PropertyFilter##typeName)
+  RaverieBindGetterSetterProperty(property##typeName)->Add(new PropertyFilter##typeName)
 
 #define DefinePropertyFilterForType(typeName)                                                                          \
-  ZilchDefineType(PropertyFilter##typeName, builder, type)                                                             \
+  RaverieDefineType(PropertyFilter##typeName, builder, type)                                                             \
   {                                                                                                                    \
   }                                                                                                                    \
   bool PropertyFilter##typeName::Filter(Member* prop, HandleParam instance)                                            \
@@ -330,7 +330,7 @@ DefinePropertyFilterForType(Real4);
 DefinePropertyFilterForType(Quaternion);
 DefinePropertyFilterForType(String);
 
-ZilchDefineType(PropertyFilterMultiPrimitiveTypes, builder, type)
+RaverieDefineType(PropertyFilterMultiPrimitiveTypes, builder, type)
 {
 }
 
@@ -359,7 +359,7 @@ bool PropertyFilterMultiPrimitiveTypes::Filter(Member* prop, HandleParam instanc
   }
 }
 
-ZilchDefineType(PropertyFilterFloatingPointTypes, builder, type)
+RaverieDefineType(PropertyFilterFloatingPointTypes, builder, type)
 {
 }
 
@@ -388,7 +388,7 @@ bool PropertyFilterFloatingPointTypes::Filter(Member* prop, HandleParam instance
   }
 }
 
-ZilchDefineType(PropertyFilterArithmeticTypes, builder, type)
+RaverieDefineType(PropertyFilterArithmeticTypes, builder, type)
 {
 }
 
@@ -417,39 +417,39 @@ bool PropertyFilterArithmeticTypes::Filter(Member* prop, HandleParam instance)
   }
 }
 
-ZilchDefineType(NetPropertyConfig, builder, type)
+RaverieDefineType(NetPropertyConfig, builder, type)
 {
   // Bind tags
-  ZeroBindTag(Tags::Networking);
+  RaverieBindTag(Tags::Networking);
 
   // Bind documentation
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
   // Bind setup (can be added in the editor)
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindSetup(SetupMode::DefaultSerialization);
 
   // Bind data members
-  ZilchBindGetterSetterProperty(BasicNetType)->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  ZilchBindGetterSetterProperty(UseDeltaThreshold)->Add(new PropertyFilterArithmeticTypes);
+  RaverieBindGetterSetterProperty(BasicNetType)->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  RaverieBindGetterSetterProperty(UseDeltaThreshold)->Add(new PropertyFilterArithmeticTypes);
   BindVariantGetSetForArithmeticTypes(DeltaThreshold);
-  ZilchBindGetterSetterProperty(SerializationMode)->Add(new PropertyFilterMultiPrimitiveTypes);
-  ZilchBindGetterSetterProperty(UseHalfFloats)
+  RaverieBindGetterSetterProperty(SerializationMode)->Add(new PropertyFilterMultiPrimitiveTypes);
+  RaverieBindGetterSetterProperty(UseHalfFloats)
       ->AddAttributeChainable(PropertyAttributes::cInvalidatesObject)
       ->Add(new PropertyFilterFloatingPointTypes);
-  ZilchBindGetterSetterProperty(UseQuantization)
+  RaverieBindGetterSetterProperty(UseQuantization)
       ->AddAttributeChainable(PropertyAttributes::cInvalidatesObject)
       ->Add(new PropertyFilterArithmeticTypes);
   BindVariantGetSetForArithmeticTypes(QuantizationRangeMin);
   BindVariantGetSetForArithmeticTypes(QuantizationRangeMax);
-  ZilchBindGetterSetterProperty(UseInterpolation)->Add(new PropertyFilterArithmeticTypes);
-  ZilchBindGetterSetterProperty(InterpolationCurve)->Add(new PropertyFilterArithmeticTypes);
-  ZilchBindGetterSetterProperty(SampleTimeOffset)->Add(new PropertyFilterArithmeticTypes);
-  ZilchBindGetterSetterProperty(ExtrapolationLimit)->Add(new PropertyFilterArithmeticTypes);
-  ZilchBindGetterSetterProperty(UseConvergence)->Add(new PropertyFilterArithmeticTypes);
-  ZilchBindGetterSetterProperty(EventOnConvergenceStateChange)->Add(new PropertyFilterArithmeticTypes);
-  ZilchBindGetterSetterProperty(ActiveConvergenceWeight)->Add(new PropertyFilterArithmeticTypes);
-  ZilchBindGetterSetterProperty(RestingConvergenceDuration)->Add(new PropertyFilterArithmeticTypes);
-  ZilchBindGetterSetterProperty(ConvergenceInterval)->Add(new PropertyFilterArithmeticTypes);
+  RaverieBindGetterSetterProperty(UseInterpolation)->Add(new PropertyFilterArithmeticTypes);
+  RaverieBindGetterSetterProperty(InterpolationCurve)->Add(new PropertyFilterArithmeticTypes);
+  RaverieBindGetterSetterProperty(SampleTimeOffset)->Add(new PropertyFilterArithmeticTypes);
+  RaverieBindGetterSetterProperty(ExtrapolationLimit)->Add(new PropertyFilterArithmeticTypes);
+  RaverieBindGetterSetterProperty(UseConvergence)->Add(new PropertyFilterArithmeticTypes);
+  RaverieBindGetterSetterProperty(EventOnConvergenceStateChange)->Add(new PropertyFilterArithmeticTypes);
+  RaverieBindGetterSetterProperty(ActiveConvergenceWeight)->Add(new PropertyFilterArithmeticTypes);
+  RaverieBindGetterSetterProperty(RestingConvergenceDuration)->Add(new PropertyFilterArithmeticTypes);
+  RaverieBindGetterSetterProperty(ConvergenceInterval)->Add(new PropertyFilterArithmeticTypes);
   BindVariantGetSetForArithmeticTypes(SnapThreshold);
 }
 
@@ -712,19 +712,19 @@ NetPropertyConfigManager::NetPropertyConfigManager(BoundType* resourceType) : Re
 
 //                               NetPropertyInfo //
 
-ZilchDefineType(NetPropertyInfo, builder, type)
+RaverieDefineType(NetPropertyInfo, builder, type)
 {
   // Bind documentation
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
   // // Bind default constructor
-  // ZilchBindDefaultConstructor();
+  // RaverieBindDefaultConstructor();
 
   // Bind property interface
-  ZilchBindCustomGetterPropertyAs(GetComponentName, "Component");
-  ZilchBindCustomGetterPropertyAs(GetPropertyName, "Property");
-  ZilchBindGetterSetterProperty(NetChannelConfig);
-  ZilchBindGetterSetterProperty(NetPropertyConfig);
+  RaverieBindCustomGetterPropertyAs(GetComponentName, "Component");
+  RaverieBindCustomGetterPropertyAs(GetPropertyName, "Property");
+  RaverieBindGetterSetterProperty(NetChannelConfig);
+  RaverieBindGetterSetterProperty(NetPropertyConfig);
 }
 
 NetPropertyInfo::NetPropertyInfo() : mComponentType(nullptr), mPropertyName(), mNetChannelConfig(), mNetPropertyConfig()
@@ -815,4 +815,4 @@ NetPropertyConfig* NetPropertyInfo::GetNetPropertyConfig()
   return mNetPropertyConfig;
 }
 
-} // namespace Zero
+} // namespace Raverie

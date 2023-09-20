@@ -1,12 +1,12 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(MetaScriptTagAttribute, builder, type)
+RaverieDefineType(MetaScriptTagAttribute, builder, type)
 {
-  ZilchBindField(mTags);
+  RaverieBindField(mTags);
 }
 
 MetaScriptTagAttribute::MetaScriptTagAttribute()
@@ -55,12 +55,12 @@ void MetaScriptTagAttribute::PostProcess(Status& status, ReflectionObject* owner
   mTags = String::JoinRange(" ", mTagSet.All());
 }
 
-ZilchDefineType(MetaScriptShortcutAttribute, builder, type)
+RaverieDefineType(MetaScriptShortcutAttribute, builder, type)
 {
-  ZilchBindField(mKey);
-  ZilchBindField(mCtrl)->AddAttribute(PropertyAttributes::cOptional);
-  ZilchBindField(mAlt)->AddAttribute(PropertyAttributes::cOptional);
-  ZilchBindField(mShift)->AddAttribute(PropertyAttributes::cOptional);
+  RaverieBindField(mKey);
+  RaverieBindField(mCtrl)->AddAttribute(PropertyAttributes::cOptional);
+  RaverieBindField(mAlt)->AddAttribute(PropertyAttributes::cOptional);
+  RaverieBindField(mShift)->AddAttribute(PropertyAttributes::cOptional);
 }
 
 MetaScriptShortcutAttribute::MetaScriptShortcutAttribute() : mCtrl(false), mAlt(false), mShift(false), mKey("Unknown")
@@ -173,4 +173,4 @@ void MetaScriptShortcutAttribute::PostProcess(Status& status, ReflectionObject* 
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

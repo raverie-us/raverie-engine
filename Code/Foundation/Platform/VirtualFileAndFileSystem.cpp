@@ -3,7 +3,7 @@
 
 //#define DEBUG_FILE_TIMES
 
-namespace Zero
+namespace Raverie
 {
 const Rune cDirectorySeparatorRune = Rune('/');
 const char cDirectorySeparatorCstr[] = "/";
@@ -438,7 +438,7 @@ struct FileRangePrivateData
 
 FileRange::FileRange(StringParam path) : mPath(path)
 {
-  ZeroConstructPrivateData(FileRangePrivateData);
+  RaverieConstructPrivateData(FileRangePrivateData);
   SystemEntry* entry = FileSystem::GetInstance()->FindEntry(path);
   if (entry && entry->mType == EntryType::Directory)
     self->mRange = entry->mChildren.All();
@@ -446,25 +446,25 @@ FileRange::FileRange(StringParam path) : mPath(path)
 
 FileRange::~FileRange()
 {
-  ZeroDestructPrivateData(FileRangePrivateData);
+  RaverieDestructPrivateData(FileRangePrivateData);
 }
 
 bool FileRange::Empty()
 {
-  ZeroGetPrivateData(FileRangePrivateData);
+  RaverieGetPrivateData(FileRangePrivateData);
   return self->mRange.Empty();
 }
 
 String FileRange::Front()
 {
-  ZeroGetPrivateData(FileRangePrivateData);
+  RaverieGetPrivateData(FileRangePrivateData);
   SystemEntry& entry = self->mRange.Front();
   return entry.mName;
 }
 
 FileEntry FileRange::FrontEntry()
 {
-  ZeroGetPrivateData(FileRangePrivateData);
+  RaverieGetPrivateData(FileRangePrivateData);
   SystemEntry& frontEntry = self->mRange.Front();
   FileEntry result;
   result.mPath = mPath;
@@ -475,7 +475,7 @@ FileEntry FileRange::FrontEntry()
 
 void FileRange::PopFront()
 {
-  ZeroGetPrivateData(FileRangePrivateData);
+  RaverieGetPrivateData(FileRangePrivateData);
   self->mRange.PopFront();
 }
 
@@ -489,7 +489,7 @@ struct FilePrivateData
 
 File::File()
 {
-  ZeroConstructPrivateData(FilePrivateData);
+  RaverieConstructPrivateData(FilePrivateData);
   self->mEntry = nullptr;
   self->mPosition = 0;
 }
@@ -497,12 +497,12 @@ File::File()
 File::~File()
 {
   Close();
-  ZeroDestructPrivateData(FilePrivateData);
+  RaverieDestructPrivateData(FilePrivateData);
 }
 
 size_t File::Size()
 {
-  ZeroGetPrivateData(FilePrivateData);
+  RaverieGetPrivateData(FilePrivateData);
   if (self->mEntry)
     return self->mEntry->mFileData.Size();
   return 0;
@@ -519,7 +519,7 @@ bool File::Open(StringParam filePath,
                 FileShare::Enum share,
                 Status* status)
 {
-  ZeroGetPrivateData(FilePrivateData);
+  RaverieGetPrivateData(FilePrivateData);
 
   SystemEntry* entry = nullptr;
   if (mode == FileMode::Read)
@@ -563,7 +563,7 @@ void File::Open(OsHandle handle, FileMode::Enum mode)
 
 void File::Open(Status& status, FILE* file, FileMode::Enum mode)
 {
-  ZeroGetPrivateData(FilePrivateData);
+  RaverieGetPrivateData(FilePrivateData);
   // We could support this by offering a dual interface where we also store a
   // FILE*
   Error("Memory File does not support opening files via FILE");
@@ -571,13 +571,13 @@ void File::Open(Status& status, FILE* file, FileMode::Enum mode)
 
 bool File::IsOpen()
 {
-  ZeroGetPrivateData(FilePrivateData);
+  RaverieGetPrivateData(FilePrivateData);
   return self->mEntry != nullptr;
 }
 
 void File::Close()
 {
-  ZeroGetPrivateData(FilePrivateData);
+  RaverieGetPrivateData(FilePrivateData);
 
   // Guard against closing more than once.
   if (!self->mEntry)
@@ -590,13 +590,13 @@ void File::Close()
 
 FilePosition File::Tell()
 {
-  ZeroGetPrivateData(FilePrivateData);
+  RaverieGetPrivateData(FilePrivateData);
   return self->mPosition;
 }
 
 bool File::Seek(FilePosition pos, SeekOrigin::Enum rel)
 {
-  ZeroGetPrivateData(FilePrivateData);
+  RaverieGetPrivateData(FilePrivateData);
   if (!self->mEntry)
     return false;
 
@@ -620,7 +620,7 @@ bool File::Seek(FilePosition pos, SeekOrigin::Enum rel)
 
 size_t File::Write(byte* data, size_t sizeInBytes)
 {
-  ZeroGetPrivateData(FilePrivateData);
+  RaverieGetPrivateData(FilePrivateData);
   SystemEntry* entry = self->mEntry;
   if (!entry)
     return 0;
@@ -635,7 +635,7 @@ size_t File::Write(byte* data, size_t sizeInBytes)
 
 size_t File::Read(Status& status, byte* data, size_t sizeInBytes)
 {
-  ZeroGetPrivateData(FilePrivateData);
+  RaverieGetPrivateData(FilePrivateData);
   if (!self->mEntry)
   {
     status.SetFailed("No file was open");
@@ -655,7 +655,7 @@ size_t File::Read(Status& status, byte* data, size_t sizeInBytes)
 
 bool File::HasData(Status& status)
 {
-  ZeroGetPrivateData(FilePrivateData);
+  RaverieGetPrivateData(FilePrivateData);
   if (!self->mEntry)
   {
     status.SetFailed("No file was open");
@@ -672,8 +672,8 @@ void File::Flush()
 
 void File::Duplicate(Status& status, File& destinationFile)
 {
-  ZeroGetPrivateData(FilePrivateData);
-  ZeroGetObjectPrivateData(FilePrivateData, &destinationFile, other);
+  RaverieGetPrivateData(FilePrivateData);
+  RaverieGetObjectPrivateData(FilePrivateData, &destinationFile, other);
 
   if (!self->mEntry || !other->mEntry)
   {
@@ -685,7 +685,7 @@ void File::Duplicate(Status& status, File& destinationFile)
   self->mEntry->CopyTo(other->mEntry);
 }
 
-void ZeroExportNamed(ExportFileCreate)(const char* filePath, byte* dataSteal, size_t dataLength) {
+void RaverieExportNamed(ExportFileCreate)(const char* filePath, byte* dataSteal, size_t dataLength) {
   // The data will be "stolen" by AddVirtualFileSystemEntry (no need to de-allocate)
   DataBlock block;
   block.Data = dataSteal;
@@ -693,8 +693,8 @@ void ZeroExportNamed(ExportFileCreate)(const char* filePath, byte* dataSteal, si
   AddVirtualFileSystemEntry(filePath, &block, time(0));
 }
 
-void ZeroExportNamed(ExportFileDelete)(const char* filePath) {
+void RaverieExportNamed(ExportFileDelete)(const char* filePath) {
   FileSystem::GetInstance()->DeleteEntry(filePath);
 }
 
-} // namespace Zero
+} // namespace Raverie

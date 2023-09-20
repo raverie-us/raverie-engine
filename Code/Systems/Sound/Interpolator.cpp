@@ -2,7 +2,7 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 float GetValueLinearCurve(const float current, const float total, const float startValue, const float endValue)
 {
@@ -158,7 +158,7 @@ bool InterpolatingObject::Finished(HandleOf<SoundNode> nodeForEvent)
   }
 }
 
-void InterpolatingObject::SetCustomCurve(Zero::Array<Math::Vec3>* curveData)
+void InterpolatingObject::SetCustomCurve(Raverie::Array<Math::Vec3>* curveData)
 {
   mCurrentCurveType = FalloffCurveType::Custom;
   CustomCurveObject.SetCurveData(curveData);
@@ -243,7 +243,7 @@ CustomCurve::~CustomCurve()
     delete CurveData;
 }
 
-void CustomCurve::SetCurveData(Zero::Array<Math::Vec3>* newCurveData)
+void CustomCurve::SetCurveData(Raverie::Array<Math::Vec3>* newCurveData)
 {
   if (CurveData)
     delete CurveData;
@@ -296,4 +296,4 @@ float CustomCurve::GetValue(const float current, const float total, const float 
   return result * (endValue - startValue) + startValue;
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// A text box with a label to the left. The text box will take up
@@ -9,7 +9,7 @@ namespace Zero
 class LabeledTextBox : public Composite
 {
 public:
-  typedef LabeledTextBox ZilchSelf;
+  typedef LabeledTextBox RaverieSelf;
 
   LabeledTextBox(Composite* parent);
 
@@ -25,4 +25,4 @@ public:
   Label* mLabel;
 };
 
-} // namespace Zero
+} // namespace Raverie

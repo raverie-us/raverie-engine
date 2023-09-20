@@ -7,7 +7,7 @@ const uintptr_t cSentinelPattern = (uintptr_t)0xffdeadff;
 
 } // namespace SapInternal
 
-namespace Zero
+namespace Raverie
 {
 
 template <typename ClientDataType>
@@ -545,7 +545,7 @@ template <uint Axis>
 uint Sap<ClientDataType>::BatchSort(EndPointArray& newEndpoints)
 {
   // reverse sort the new endpoints
-  Zero::Sort(newEndpoints.All(), greater<EndPointType>());
+  Raverie::Sort(newEndpoints.All(), greater<EndPointType>());
 
   EndPointArray& axis = mAxes[Axis];
 
@@ -935,4 +935,4 @@ bool Sap<ClientDataType>::CheckRemainingAxesOverlap(uint box1, uint box2) const
   return false;
 }
 
-} // namespace Zero
+} // namespace Raverie

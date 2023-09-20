@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Z
@@ -17,12 +17,12 @@ DefineEvent(PackagedStarted);
 DefineEvent(PackagedFinished);
 } // namespace Events
 
-ZilchDefineType(ResourceSystem, builder, type)
+RaverieDefineType(ResourceSystem, builder, type)
 {
-  type->HandleManager = ZilchManagerId(PointerManager);
+  type->HandleManager = RaverieManagerId(PointerManager);
 
-  ZilchBindMethod(GetResourceByName);
-  ZilchBindMethod(GetResourceByTypeAndName);
+  RaverieBindMethod(GetResourceByName);
+  RaverieBindMethod(GetResourceByTypeAndName);
 }
 
 ResourceSystem::ResourceSystem()
@@ -70,7 +70,7 @@ void ResourceSystem::SetupDefaults()
         resource->mContentItem->ShowInEditor = true;
 
         // Moved default font to the Loading library for progress display
-        ErrorIf(resource->mContentItem->mLibrary->Name != "ZeroCore" &&
+        ErrorIf(resource->mContentItem->mLibrary->Name != "EngineCore" &&
                     resource->mContentItem->mLibrary->Name != "Loading",
                 "Only resources that are in core can be defaults");
       }
@@ -389,4 +389,4 @@ void ResourceSystem::ReloadEntry(Resource* resource, ResourceEntry& entry)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

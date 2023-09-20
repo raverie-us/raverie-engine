@@ -25,23 +25,23 @@
   }
 
 #define AddBindings(DebugObjectType)                                                                                   \
-  ZilchBindOverloadedMethod(Add, (void (*)(Debug::DebugObjectType&)));                                                 \
-  ZilchFullBindMethod(builder, type, ZilchSelf::Add, (void (*)(Space*, Debug::DebugObjectType&)), "Add", "space, shape")
+  RaverieBindOverloadedMethod(Add, (void (*)(Debug::DebugObjectType&)));                                                 \
+  RaverieFullBindMethod(builder, type, RaverieSelf::Add, (void (*)(Space*, Debug::DebugObjectType&)), "Add", "space, shape")
 
-namespace Zero
+namespace Raverie
 {
-ZilchDefineType(DebugDraw, builder, type)
+RaverieDefineType(DebugDraw, builder, type)
 {
-  ZeroBindDocumented();
-#define ZeroDebugPrimitive(X) AddBindings(X);
+  RaverieBindDocumented();
+#define RaverieDebugPrimitive(X) AddBindings(X);
 #include "Foundation/Geometry/DebugPrimitives.inl"
-#undef ZeroDebugPrimitive
+#undef RaverieDebugPrimitive
 }
 
-#define ZeroDebugPrimitive(X) AddDefinitions(X);
+#define RaverieDebugPrimitive(X) AddDefinitions(X);
 #include "Foundation/Geometry/DebugPrimitives.inl"
-#undef ZeroDebugPrimitive
+#undef RaverieDebugPrimitive
 
-} // namespace Zero
+} // namespace Raverie
 
 #undef AddDefinitions

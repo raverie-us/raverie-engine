@@ -3,7 +3,7 @@
 #include "Containers/Array.hpp"
 #include "Graph.hpp"
 
-namespace Zero
+namespace Raverie
 {
 namespace Memory
 {
@@ -74,4 +74,4 @@ public:
   Memory::Stack* mStack;
 };
 
-} // namespace Zero
+} // namespace Raverie

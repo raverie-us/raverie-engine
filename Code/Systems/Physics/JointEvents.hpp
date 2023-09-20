@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -19,7 +19,7 @@ class Collider;
 class JointEvent : public Event
 {
 public:
-  ZilchDeclareType(JointEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(JointEvent, TypeCopyMode::ReferenceType);
 
   JointEvent();
 
@@ -40,4 +40,4 @@ public:
   Link<JointEvent> link;
 };
 
-} // namespace Zero
+} // namespace Raverie

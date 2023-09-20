@@ -13,7 +13,7 @@ ColumnLimit: '120'
 ConstructorInitializerAllOnOneLineOrOnePerLine: 'true'
 DerivePointerAlignment: 'false'
 ExperimentalAutoDetectBinPacking: 'false'
-ForEachMacros: ['forRange', 'forRangeRef', 'ZeroForRangeVar', 'ZeroForRangeRefVar', 'ZilchForEach', 'ZilchRefForEach', 'ZilchForRange', 'ZilchRefForRange']
+ForEachMacros: ['forRange', 'forRangeRef', 'RaverieForRangeVar', 'RaverieForRangeRefVar', 'RaverieForEach', 'RaverieRefForEach', 'RaverieForRange', 'RaverieRefForRange']
 IncludeBlocks: Preserve
 IndentPPDirectives: AfterHash
 PenaltyReturnTypeOnItsOwnLine: '100'

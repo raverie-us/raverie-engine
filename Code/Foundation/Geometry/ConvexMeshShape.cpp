@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 ConvexMeshShape::ConvexMeshShape()
@@ -29,4 +29,4 @@ Obb ConvexMeshShape::Transform(Mat4Param transformation) const
   return mWorldAabb.Transform(transformation);
 }
 
-} // namespace Zero
+} // namespace Raverie

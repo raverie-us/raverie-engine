@@ -1,35 +1,35 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
-ZilchDefineType(PhysicsCar, builder, type)
+RaverieDefineType(PhysicsCar, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
 
-  ZeroBindDependency(RigidBody);
+  RaverieBindDependency(RigidBody);
 
-  ZilchBindFieldProperty(mActive);
-  ZilchBindGetterSetterProperty(DebugDraw);
+  RaverieBindFieldProperty(mActive);
+  RaverieBindGetterSetterProperty(DebugDraw);
 
-  ZilchBindFieldProperty(mMaxSpeed);
-  ZilchBindFieldProperty(mMaxTorque);
-  ZilchBindFieldProperty(mGripScalar);
-  ZilchBindFieldProperty(mAntiLockBrakes);
-  ZilchBindFieldProperty(mTorqueGovernor);
-  ZilchBindFieldProperty(mWheelFrictionSideRollCoef)->Add(new EditorSlider(0, 1, 0.001));
-  ZilchBindFieldProperty(mWheelFrictionFrontRollCoef)->Add(new EditorSlider(0, 1, 0.001));
+  RaverieBindFieldProperty(mMaxSpeed);
+  RaverieBindFieldProperty(mMaxTorque);
+  RaverieBindFieldProperty(mGripScalar);
+  RaverieBindFieldProperty(mAntiLockBrakes);
+  RaverieBindFieldProperty(mTorqueGovernor);
+  RaverieBindFieldProperty(mWheelFrictionSideRollCoef)->Add(new EditorSlider(0, 1, 0.001));
+  RaverieBindFieldProperty(mWheelFrictionFrontRollCoef)->Add(new EditorSlider(0, 1, 0.001));
 
-  ZilchBindGetterSetter(Steer);
-  ZilchBindGetterSetter(Gas);
-  ZilchBindGetterSetter(Brake);
+  RaverieBindGetterSetter(Steer);
+  RaverieBindGetterSetter(Gas);
+  RaverieBindGetterSetter(Brake);
 
-  ZilchBindFieldGetter(mWheelCogs);
-  ZilchBindMethod(NumberOfWheelsInContact);
+  RaverieBindFieldGetter(mWheelCogs);
+  RaverieBindMethod(NumberOfWheelsInContact);
 
-  ZeroBindTag(Tags::Physics);
+  RaverieBindTag(Tags::Physics);
 }
 
 PhysicsCar::PhysicsCar()
@@ -331,9 +331,9 @@ uint PhysicsCar::NumberOfWheelsInContact()
   return numberInContact;
 }
 
-ZilchDefineType(PhysicsCar::CarWheelRef, builder, type)
+RaverieDefineType(PhysicsCar::CarWheelRef, builder, type)
 {
-  type->HandleManager = ZilchManagerId(PointerManager);
+  type->HandleManager = RaverieManagerId(PointerManager);
 }
 
 Cog* PhysicsCar::CarWheelRef::GetCog()
@@ -350,12 +350,12 @@ PhysicsCarWheel* PhysicsCar::CarWheelRef::GetCarWheel()
   return cog->has(PhysicsCarWheel);
 }
 
-ZilchDefineType(PhysicsCar::CarWheelArray, builder, type)
+RaverieDefineType(PhysicsCar::CarWheelArray, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindMethod(Get);
-  ZilchBindGetter(Count);
+  RaverieBindMethod(Get);
+  RaverieBindGetter(Count);
 }
 
 PhysicsCar::CarWheelArray::CarWheelArray()
@@ -380,4 +380,4 @@ int PhysicsCar::CarWheelArray::GetCount()
   return mCarBody->mWheelRefs.Size();
 }
 
-} // namespace Zero
+} // namespace Raverie

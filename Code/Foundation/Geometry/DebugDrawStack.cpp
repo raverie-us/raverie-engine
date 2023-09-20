@@ -1,16 +1,16 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 void DebugDrawStep::Draw()
 {
-#define ZeroDebugPrimitive(DebugType)                                                                                  \
+#define RaverieDebugPrimitive(DebugType)                                                                                  \
   for (size_t i = 0; i < m##DebugType##List.Size(); ++i)                                                               \
     gDebugDraw->Add(m##DebugType##List[i]);
 #include "DebugPrimitives.inl"
-#undef ZeroDebugPrimitive
+#undef RaverieDebugPrimitive
 }
 
 void DebugDrawStack::Add(const DebugDrawStep& step)
@@ -37,4 +37,4 @@ void DebugDrawStack::Draw(int index)
   mSteps[index].Draw();
 }
 
-} // namespace Zero
+} // namespace Raverie

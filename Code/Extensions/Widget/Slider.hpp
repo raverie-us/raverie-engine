@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -18,7 +18,7 @@ DeclareEvent(SliderChanged);
 class ProgressBar : public Composite
 {
 public:
-  ZilchDeclareType(ProgressBar, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ProgressBar, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   ProgressBar(Composite* parent);
@@ -64,7 +64,7 @@ DeclareEnum3(SliderType, Number, Percentage, Degree);
 class Slider : public Composite
 {
 public:
-  ZilchDeclareType(Slider, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Slider, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   Slider(Composite* parent, SliderType::Type sliderType);
@@ -147,4 +147,4 @@ private:
   SliderType::Type mType;
 };
 
-} // namespace Zero
+} // namespace Raverie

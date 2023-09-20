@@ -47,14 +47,14 @@ target_sources(Gameplay
     ${CMAKE_CURRENT_LIST_DIR}/TileMapSource.cpp
     ${CMAKE_CURRENT_LIST_DIR}/TileMapSource.hpp
     ${CMAKE_CURRENT_LIST_DIR}/TileMapSourceLoadPattern.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Zero.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Zero.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/RaverieStatic.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/RaverieStatic.hpp
 )
 
 raverie_target_includes(Gameplay
   PUBLIC
     Common
-    Zilch
+    Raverie
     Engine
-    ZilchShaders
+    RaverieShaders
 )

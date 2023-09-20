@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Forward Declarations.
@@ -89,7 +89,7 @@ DeclareEnum2(AnimationNodeState, Running, Finished);
 class AnimationNode : public ReferenceCountedEventObject
 {
 public:
-  ZilchDeclareType(AnimationNode, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(AnimationNode, TypeCopyMode::ReferenceType);
 
   typedef Array<AnimationGraphEvent*>& EventList;
 
@@ -171,7 +171,7 @@ protected:
 class PoseNode : public AnimationNode
 {
 public:
-  ZilchDeclareType(PoseNode, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(PoseNode, TypeCopyMode::ReferenceType);
 
   /// Constructors.
   PoseNode(AnimationFrame& pose);
@@ -189,7 +189,7 @@ public:
 class BasicAnimation : public AnimationNode
 {
 public:
-  ZilchDeclareType(BasicAnimation, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(BasicAnimation, TypeCopyMode::ReferenceType);
 
   /// Constructors.
   BasicAnimation();
@@ -234,7 +234,7 @@ template <typename DerivedType>
 class DualBlend : public AnimationNode
 {
 public:
-  ZilchDeclareType(DualBlend, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(DualBlend, TypeCopyMode::ReferenceType);
   typedef DualBlend<DerivedType> self_type;
 
   /// Constructors.
@@ -269,7 +269,7 @@ public:
 class DirectBlend : public DualBlend<DirectBlend>
 {
 public:
-  ZilchDeclareType(DirectBlend, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(DirectBlend, TypeCopyMode::ReferenceType);
 
   /// Constructors.
   DirectBlend();
@@ -300,7 +300,7 @@ DeclareEnum2(AnimationBlendMode,
 class CrossBlend : public DualBlend<CrossBlend>
 {
 public:
-  ZilchDeclareType(CrossBlend, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CrossBlend, TypeCopyMode::ReferenceType);
 
   /// Constructors.
   CrossBlend();
@@ -332,7 +332,7 @@ public:
 class SelectiveNode : public DualBlend<SelectiveNode>
 {
 public:
-  ZilchDeclareType(SelectiveNode, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SelectiveNode, TypeCopyMode::ReferenceType);
 
   /// Constructors.
   SelectiveNode();
@@ -353,7 +353,7 @@ public:
 class ChainNode : public DualBlend<ChainNode>
 {
 public:
-  ZilchDeclareType(ChainNode, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ChainNode, TypeCopyMode::ReferenceType);
 
   /// Constructors.
   ChainNode();
@@ -364,4 +364,4 @@ public:
   void PrintNode(uint tabs) override;
 };
 
-} // namespace Zero
+} // namespace Raverie

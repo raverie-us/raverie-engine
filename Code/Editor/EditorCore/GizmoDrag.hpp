@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Forward Declarations
@@ -20,7 +20,7 @@ class GizmoUpdateEvent : public GizmoEvent
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(GizmoUpdateEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(GizmoUpdateEvent, TypeCopyMode::ReferenceType);
 
   /// Constructors.
   GizmoUpdateEvent(Cog* gizmoCog, ViewportMouseEvent* e);
@@ -46,7 +46,7 @@ class GizmoDrag : public Component
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(GizmoDrag, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(GizmoDrag, TypeCopyMode::ReferenceType);
 
   /// Component Interface.
   void Serialize(Serializer& stream) override;
@@ -125,4 +125,4 @@ public:
   bool mNormalInWorld;
 };
 
-} // namespace Zero
+} // namespace Raverie

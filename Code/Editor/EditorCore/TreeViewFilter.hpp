@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Data Source that filters another DataSource
@@ -171,4 +171,4 @@ public:
   }
 };
 
-} // namespace Zero
+} // namespace Raverie

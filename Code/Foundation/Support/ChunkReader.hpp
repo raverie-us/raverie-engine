@@ -3,7 +3,7 @@
 #include "Utility/Standard.hpp"
 #include "Platform/File.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 #pragma pack(push, 4)
@@ -134,4 +134,4 @@ public:
 typedef ChunkReader<File> ChunkFileReader;
 typedef ChunkReader<ByteBufferBlock> ChunkBufferReader;
 
-} // namespace Zero
+} // namespace Raverie

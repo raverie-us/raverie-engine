@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -219,7 +219,7 @@ public:
 class PathFinderMesh : public PathFinder
 {
 public:
-  ZilchDeclareType(PathFinderMesh, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(PathFinderMesh, TypeCopyMode::ReferenceType);
 
   PathFinderMesh();
 
@@ -271,14 +271,14 @@ public:
   /// Finds a path between cell indices (or returns an empty array if no path
   /// could be found).
   HandleOf<ArrayClass<Vec3>> FindPath(NavMeshPolygonId start, NavMeshPolygonId goal);
-  using ZilchBase::FindPath;
+  using RaverieBase::FindPath;
 
   /// Finds a path on another thread between cell indices.
   /// When the thread is completed, the events PathFinderGridCompleted or
   /// PathFinderGridFailed will be sent on both the returned PathFinderRequest
   /// and on the Cog that owns this component (on this.Owner).
   HandleOf<PathFinderRequest> FindPathThreaded(NavMeshPolygonId start, NavMeshPolygonId goal);
-  using ZilchBase::FindPathThreaded;
+  using RaverieBase::FindPathThreaded;
 
   /// Returns the triangle closest to the given world position.
   NavMeshPolygonId WorldPositionToPolygon(Vec3Param worldPosition);
@@ -293,4 +293,4 @@ public:
   CopyOnWriteHandle<PathFinderAlgorithmMesh> mMesh;
 };
 
-} // namespace Zero
+} // namespace Raverie

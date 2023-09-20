@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Tags
@@ -20,7 +20,7 @@ DefineEvent(MouseExitGizmo);
 DefineEvent(MouseExitGizmoHierarchy);
 } // namespace Events
 
-ZilchDefineType(GizmoRayTestEvent, builder, type)
+RaverieDefineType(GizmoRayTestEvent, builder, type)
 {
 }
 GizmoRayTestEvent::GizmoRayTestEvent() :
@@ -45,14 +45,14 @@ Ray GizmoRayTestEvent::GetWorldRay()
   return mMouseEvent->mWorldRay;
 }
 
-ZilchDefineType(GizmoEvent, builder, type)
+RaverieDefineType(GizmoEvent, builder, type)
 {
-  ZilchBindGetterProperty(Gizmo);
-  ZilchBindFieldGetter(mSource);
-  ZilchBindGetterProperty(ViewportMouseEvent);
+  RaverieBindGetterProperty(Gizmo);
+  RaverieBindFieldGetter(mSource);
+  RaverieBindGetterProperty(ViewportMouseEvent);
 
-  ZilchBindGetter(OperationQueue);
-  ZilchBindGetter(Finished);
+  RaverieBindGetter(OperationQueue);
+  RaverieBindGetter(Finished);
 }
 
 GizmoEvent::GizmoEvent(Cog* gizmoCog, ViewportMouseEvent* e) :
@@ -83,23 +83,23 @@ bool GizmoEvent::GetFinished()
   return mOperationQueue.IsNotNull();
 }
 
-ZilchDefineType(Gizmo, builder, type)
+RaverieDefineType(Gizmo, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindTag(Tags::Gizmo);
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindTag(Tags::Gizmo);
 
-  ZilchBindGetterSetterProperty(Active);
-  ZilchBindFieldProperty(mForwardEventsToChildren);
-  ZilchBindGetterProperty(EditingObject);
-  ZilchBindGetterProperty(MouseOver);
+  RaverieBindGetterSetterProperty(Active);
+  RaverieBindFieldProperty(mForwardEventsToChildren);
+  RaverieBindGetterProperty(EditingObject);
+  RaverieBindGetterProperty(MouseOver);
 
-  ZeroBindEvent(Events::MouseEnterGizmo, GizmoEvent);
-  ZeroBindEvent(Events::MouseEnterGizmoHierarchy, GizmoEvent);
-  ZeroBindEvent(Events::MouseExitGizmo, GizmoEvent);
-  ZeroBindEvent(Events::MouseExitGizmoHierarchy, GizmoEvent);
+  RaverieBindEvent(Events::MouseEnterGizmo, GizmoEvent);
+  RaverieBindEvent(Events::MouseEnterGizmoHierarchy, GizmoEvent);
+  RaverieBindEvent(Events::MouseExitGizmo, GizmoEvent);
+  RaverieBindEvent(Events::MouseExitGizmoHierarchy, GizmoEvent);
 
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 }
 
 Gizmo::Gizmo()
@@ -199,10 +199,10 @@ bool Gizmo::GetMouseOver()
   return mMouseOver;
 }
 
-ZilchDefineType(GizmoSpace, builder, type)
+RaverieDefineType(GizmoSpace, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindEvent(Events::GizmoTargetSet, ObjectEvent);
+  RaverieBindComponent();
+  RaverieBindEvent(Events::GizmoTargetSet, ObjectEvent);
   type->AddAttribute(ObjectAttributes::cHidden);
   type->AddAttribute(ObjectAttributes::cCore);
 }
@@ -302,4 +302,4 @@ void GizmoSpace::ForwardEventToAllGizmos(Event* e)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

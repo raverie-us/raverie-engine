@@ -1,15 +1,15 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(UiDockLayout, builder, type)
+RaverieDefineType(UiDockLayout, builder, type)
 {
-  ZeroBindDocumented();
-  ZeroBindComponent();
-  ZeroBindInterface(UiLayout);
-  ZilchBindFieldProperty(mSpacing);
+  RaverieBindDocumented();
+  RaverieBindComponent();
+  RaverieBindInterface(UiLayout);
+  RaverieBindFieldProperty(mSpacing);
 }
 
 void UiDockLayout::Initialize(CogInitializer& initializer)
@@ -77,7 +77,7 @@ void UiDockLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
   // Debug break if set
   if (mDebug)
   {
-    ZeroDebugBreak();
+    RaverieDebugBreak();
     mDebug = false;
   }
 
@@ -210,4 +210,4 @@ void UiDockLayout::DoLayout(Rectangle& rect, UiTransformUpdateEvent* e)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

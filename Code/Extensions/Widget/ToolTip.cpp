@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace ToolTipUi
@@ -55,7 +55,7 @@ void ToolTipPlacement::SetPriority(IndicatorSide::Type pri0,
   mPriority[3] = pri3;
 }
 
-ZilchDefineType(ToolTip, builder, type)
+RaverieDefineType(ToolTip, builder, type)
 {
 }
 
@@ -587,4 +587,4 @@ void ToolTip::OnMouseUpdate(MouseEvent* event)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

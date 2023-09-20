@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Converts a host byte order value to a network byte order value
@@ -78,7 +78,7 @@ public:
   void Clear();
 
   /// Address data
-  ZeroDeclarePrivateDataBytes(SocketAddressStorageBytes);
+  RaverieDeclarePrivateDataBytes(SocketAddressStorageBytes);
 };
 
 /// Serializes a socket address (currently only defined for InternetworkV4 and
@@ -519,7 +519,7 @@ struct MoveWithoutDestructionOperator<Socket>
   static inline void MoveWithoutDestruction(Socket* dest, Socket* source)
   {
     // Construct new socket in place at destination
-    new (dest) Socket(ZeroMove(*source));
+    new (dest) Socket(RaverieMove(*source));
 
     // We actually do need to destroy the source socket
     // in order to uninitialize the socket library as needed
@@ -544,4 +544,4 @@ SocketAddress QueryLocalSocketAddress(Status& status, const Socket& socket);
 /// most platforms)
 SocketAddress QueryRemoteSocketAddress(Status& status, const Socket& socket);
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class ColorGradientEditor;
@@ -15,7 +15,7 @@ namespace GradientEditing
 class GradientKey : public Spacer
 {
 public:
-  typedef GradientKey ZilchSelf;
+  typedef GradientKey RaverieSelf;
   GradientKey(ColorGradientEditor* parent, Vec4Param color, float interpolant);
 
   /// Update the translation of the object when anything changes
@@ -76,7 +76,7 @@ private:
 class ColorGradientEditor : public Composite
 {
 public:
-  typedef ColorGradientEditor ZilchSelf;
+  typedef ColorGradientEditor RaverieSelf;
   typedef Gradient<Vec4> GradientType;
   typedef GradientEditing::GradientKey InternalKey;
 
@@ -148,4 +148,4 @@ private:
 
 void DrawColorGradient(ColorGradient* gradient, PixelBuffer* buffer);
 
-} // namespace Zero
+} // namespace Raverie

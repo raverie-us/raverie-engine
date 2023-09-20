@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Generated Wave Node
@@ -11,7 +11,7 @@ namespace Zero
 class GeneratedWaveNode : public SoundNode
 {
 public:
-  ZilchDeclareType(GeneratedWaveNode, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(GeneratedWaveNode, TypeCopyMode::ReferenceType);
 
   GeneratedWaveNode(StringParam name, unsigned ID);
 
@@ -90,7 +90,7 @@ private:
 class AdsrEnvelope
 {
 public:
-  ZilchDeclareType(AdsrEnvelope, TypeCopyMode::ValueType);
+  RaverieDeclareType(AdsrEnvelope, TypeCopyMode::ValueType);
 
   AdsrEnvelope() :
       mDelayTime(0.0f),
@@ -178,7 +178,7 @@ public:
   float mVolume;
 
 private:
-  typedef Zero::Array<NoteHarmonic> HarmonicsListType;
+  typedef Raverie::Array<NoteHarmonic> HarmonicsListType;
   HarmonicsListType Harmonics;
 };
 
@@ -188,7 +188,7 @@ private:
 class AdditiveSynthNode : public SoundNode
 {
 public:
-  ZilchDeclareType(AdditiveSynthNode, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(AdditiveSynthNode, TypeCopyMode::ReferenceType);
 
   AdditiveSynthNode(StringParam name, unsigned ID);
   ~AdditiveSynthNode();
@@ -240,7 +240,7 @@ private:
 class MicrophoneInputNode : public SoundNode
 {
 public:
-  ZilchDeclareType(MicrophoneInputNode, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MicrophoneInputNode, TypeCopyMode::ReferenceType);
 
   MicrophoneInputNode(StringParam name, unsigned ID);
 
@@ -416,7 +416,7 @@ public:
 class GranularSynthNode : public SoundNode
 {
 public:
-  ZilchDeclareType(GranularSynthNode, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(GranularSynthNode, TypeCopyMode::ReferenceType);
 
   GranularSynthNode(StringParam name, unsigned ID);
 
@@ -506,7 +506,7 @@ private:
   // Number of audio channels in the samples
   unsigned mSampleChannelsThreaded;
   // List of grains
-  Zero::Array<Grain> GrainListThreaded;
+  Raverie::Array<Grain> GrainListThreaded;
   // Index of the first inactive grain in the list
   int mFirstInactiveGrainIndexThreaded;
   // Index of the audio sample where the grain should start playing
@@ -549,4 +549,4 @@ private:
   const float mMaxResampleValue = 100.0f;
 };
 
-} // namespace Zero
+} // namespace Raverie

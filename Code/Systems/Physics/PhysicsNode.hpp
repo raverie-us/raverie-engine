@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Base class created to have a PhysicsNode InList on itself.
@@ -75,4 +75,4 @@ private:
   WorldTransformation mTransform;
 };
 
-} // namespace Zero
+} // namespace Raverie

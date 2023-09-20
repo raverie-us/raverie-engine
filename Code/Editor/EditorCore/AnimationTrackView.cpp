@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace AnimTrackUi
@@ -274,7 +274,7 @@ void RegisterAnimationTrackViewEditors()
   factory->RegisterEditor("AnimationName", CreateAnimationNameEditor);
 }
 
-ZilchDefineType(AnimationTrackView, builder, type)
+RaverieDefineType(AnimationTrackView, builder, type)
 {
 }
 
@@ -618,4 +618,4 @@ void AnimationTrackView::OnTrackAdded(TrackEvent* e)
   mTree->ShowRow(index);
 }
 
-} // namespace Zero
+} // namespace Raverie

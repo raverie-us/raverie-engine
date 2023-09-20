@@ -1,13 +1,13 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // The attribute parameter name
 const String cAutoRegisterParameterName = "autoRegister";
 
-ZilchDefineType(CogCommand, builder, type)
+RaverieDefineType(CogCommand, builder, type)
 {
 }
 
@@ -51,7 +51,7 @@ void CogCommand::Execute()
   }
 }
 
-ZilchDefineType(CogCommandManager, builder, type)
+RaverieDefineType(CogCommandManager, builder, type)
 {
 }
 
@@ -147,4 +147,4 @@ Space* CogCommandManager::GetSpace()
   return mCommandSpace;
 }
 
-} // namespace Zero
+} // namespace Raverie

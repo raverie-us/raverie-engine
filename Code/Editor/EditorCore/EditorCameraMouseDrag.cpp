@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 EditorCameraMouseDrag::EditorCameraMouseDrag(Mouse* mouse,
@@ -125,4 +125,4 @@ void EditorCameraMouseDrag::OnTargetDestroy(MouseEvent* event)
   this->Destroy();
 }
 
-} // namespace Zero
+} // namespace Raverie

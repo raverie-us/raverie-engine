@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 WebRequest::WebRequest() :
@@ -37,4 +37,4 @@ void WebRequest::Shutdown()
 {
 }
 
-} // namespace Zero
+} // namespace Raverie

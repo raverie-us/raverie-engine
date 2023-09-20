@@ -3,7 +3,7 @@
 
 const uint cMaxContacts = 4;
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Memory
@@ -93,4 +93,4 @@ typedef PodArray<Manifold> ManifoldArray;
 
 } // namespace Physics
 
-} // namespace Zero
+} // namespace Raverie

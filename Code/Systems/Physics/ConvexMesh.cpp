@@ -2,21 +2,21 @@
 #include "Precompiled.hpp"
 #include "Foundation/Geometry/QuickHull3D.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 DefinePhysicsRuntimeClone(ConvexMesh);
 
-ZilchDefineType(ConvexMesh, builder, type)
+RaverieDefineType(ConvexMesh, builder, type)
 {
-  ZeroBindDocumented();
-  ZilchBindConstructor();
-  ZilchBindDestructor();
+  RaverieBindDocumented();
+  RaverieBindConstructor();
+  RaverieBindDestructor();
 
-  ZeroBindTag(Tags::Physics);
+  RaverieBindTag(Tags::Physics);
 
-  ZilchBindMethod(CreateRuntime);
-  ZilchBindMethod(RuntimeClone);
+  RaverieBindMethod(CreateRuntime);
+  RaverieBindMethod(RuntimeClone);
 }
 
 void ConvexMesh::Serialize(Serializer& stream)
@@ -139,4 +139,4 @@ void ConvexMeshManager::UpdateAndNotifyModifiedResources()
   mModifiedMeshes.Clear();
 }
 
-} // namespace Zero
+} // namespace Raverie

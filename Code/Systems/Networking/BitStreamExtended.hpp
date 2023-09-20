@@ -20,7 +20,7 @@ StaticAssertWithinRange(Range17, BITSTREAM_EXTENDED_SMALL_SIZE_BITS, 1, UINTMAX_
 #define BITSTREAM_EXTENDED_LARGE_SIZE_BITS BITS_NEEDED_TO_REPRESENT(BYTES_TO_BITS(POW2(BITSTREAM_MAX_SIZE_BITS)) - 1)
 StaticAssertWithinRange(Range18, BITSTREAM_EXTENDED_LARGE_SIZE_BITS, 1, UINTMAX_BITS);
 
-namespace Zero
+namespace Raverie
 {
 
 //                              BitStreamExtended //
@@ -46,7 +46,7 @@ class BitStreamExtended : public BitStream
   static const float DefaultFloatingPointQuantum;
 
 public:
-  ZilchDeclareType(BitStreamExtended, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(BitStreamExtended, TypeCopyMode::ReferenceType);
 
   /// Constructors.
   BitStreamExtended();
@@ -444,7 +444,7 @@ inline Bits SerializeKnownExtendedVariant(SerializeDirection::Enum direction, Bi
       return bitStream.SerializeQuantized(direction, enumValue, enumValueMin, enumValueMax);
     }
     // Any is an resource type?
-    else if (anyValue.StoredType->IsA(ZilchTypeId(Resource)))
+    else if (anyValue.StoredType->IsA(RaverieTypeId(Resource)))
     {
       Bits startBitsResource = bitStream.GetBitsSerialized(direction);
 
@@ -502,7 +502,7 @@ inline Bits SerializeKnownExtendedVariant(SerializeDirection::Enum direction, Bi
       return bitStream.GetBitsSerialized(direction) - startBitsResource;
     }
     // Any is a bitstream extended type?
-    else if (anyValue.StoredType == ZilchTypeId(BitStreamExtended))
+    else if (anyValue.StoredType == RaverieTypeId(BitStreamExtended))
     {
       // Get bitstream extended
       BitStreamExtended* bitStreamExtended = anyValue.Get<BitStreamExtended*>();
@@ -527,19 +527,19 @@ inline Bits SerializeKnownExtendedVariant(SerializeDirection::Enum direction, Bi
   }
 }
 
-/// Returns true if BitStream can serialize the specified zilch type, else
+/// Returns true if BitStream can serialize the specified raverie type, else
 /// false.
-inline bool BitStreamCanSerializeType(Type* zilchType)
+inline bool BitStreamCanSerializeType(Type* raverieType)
 {
   // Get basic native type (or null)
-  NativeType* basicNativeType = ZilchTypeToBasicNativeType(zilchType);
+  NativeType* basicNativeType = RaverieTypeToBasicNativeType(raverieType);
 
   //    Is a basic any type?
   // OR Is an enum?
   // OR Is a resource?
   // OR Is a bitstream extended?
-  return (basicNativeType != nullptr) || (zilchType->IsEnum()) || (zilchType->IsA(ZilchTypeId(Resource))) ||
-         (zilchType == ZilchTypeId(BitStreamExtended));
+  return (basicNativeType != nullptr) || (raverieType->IsEnum()) || (raverieType->IsA(RaverieTypeId(Resource))) ||
+         (raverieType == RaverieTypeId(BitStreamExtended));
 }
 
 /// Serializes a Variant.
@@ -552,4 +552,4 @@ Bits Serialize<Variant>(SerializeDirection::Enum direction, BitStream& bitStream
 template <>
 Bits Serialize<BitStreamExtended>(SerializeDirection::Enum direction, BitStream& bitStream, BitStreamExtended& value);
 
-} // namespace Zero
+} // namespace Raverie

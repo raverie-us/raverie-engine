@@ -3,7 +3,7 @@
 #pragma once
 #include "ContainerCommon.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 template <typename keytype, typename type>
@@ -66,4 +66,4 @@ class StdSet : public std::set<type>
 {
 };
 
-} // namespace Zero
+} // namespace Raverie

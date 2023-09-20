@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 class FpsSampler : public DataSampler
@@ -33,7 +33,7 @@ class FpsSampler : public DataSampler
 // Oscilloscope sampler
 class OscilloscopeSampler : public DataSampler
 {
-  typedef OscilloscopeSampler ZilchSelf;
+  typedef OscilloscopeSampler RaverieSelf;
 
   void Setup(RangeData& data, EntryLabel& label) override
   {
@@ -172,12 +172,12 @@ void EndTracing(Editor* editor)
   static const String cComplete("X");
   static const String cValue("value");
 
-  Zilch::JsonBuilder builder;
+  Raverie::JsonBuilder builder;
   builder.IsCompactMode = true;
-  builder.Begin(Zilch::JsonType::ArraySingleLine);
+  builder.Begin(Raverie::JsonType::ArraySingleLine);
   forRange (Profile::TraceEvent& traceEvent, traceEvents)
   {
-    builder.Begin(Zilch::JsonType::Object);
+    builder.Begin(Raverie::JsonType::Object);
     builder.Key(cPhase);
     builder.Value(cComplete);
 
@@ -197,7 +197,7 @@ void EndTracing(Editor* editor)
     if (!traceEvent.mArgs.Empty())
     {
       builder.Key(cArgs);
-      builder.Begin(Zilch::JsonType::Object);
+      builder.Begin(Raverie::JsonType::Object);
       builder.Key(cValue);
       builder.Value(traceEvent.mArgs);
       builder.End();
@@ -226,4 +226,4 @@ void SetupGraphCommands(Cog* configCog, CommandManager* commands)
   commands->AddCommand("EndTracing", BindCommandFunction(EndTracing), true);
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -27,5 +27,5 @@ target_sources(UiWidget
 raverie_target_includes(UiWidget
   PUBLIC
     Engine
-    ZilchShaders
+    RaverieShaders
 )

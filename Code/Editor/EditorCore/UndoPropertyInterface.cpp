@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 Handle GetActingObject(HandleParam object, Cog* cog)
@@ -46,7 +46,7 @@ void PropertyToUndo::MarkPropertyModified(HandleParam object, PropertyPathParam 
 
 void PropertyToUndo::RevertProperty(HandleParam object, PropertyPathParam property)
 {
-  Zero::RevertProperty(mOperationQueue, object, property);
+  Raverie::RevertProperty(mOperationQueue, object, property);
 }
 
 void PropertyToUndo::InvokeFunction(HandleParam object, Function* function)
@@ -103,4 +103,4 @@ void UndoMetaComposition::MoveComponent(HandleParam owner, HandleParam component
   mPropertyInterface->SendComponentsModifiedOnGrid(owner);
 }
 
-} // namespace Zero
+} // namespace Raverie

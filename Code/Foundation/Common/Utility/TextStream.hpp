@@ -2,7 +2,7 @@
 #pragma once
 #include "String/StringBuilder.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Simple callback interface for process stdio
@@ -40,4 +40,4 @@ class TextStreamNull : public TextStream
   void Write(cstr text) override{};
 };
 
-} // namespace Zero
+} // namespace Raverie

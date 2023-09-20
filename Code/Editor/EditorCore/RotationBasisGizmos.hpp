@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -17,7 +17,7 @@ DeclareEvent(RotationBasisAabbQuery);
 class RotationBasisGizmoInitializationEvent : public ObjectEvent
 {
 public:
-  ZilchDeclareType(RotationBasisGizmoInitializationEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(RotationBasisGizmoInitializationEvent, TypeCopyMode::ReferenceType);
 
   RotationBasisGizmoInitializationEvent();
 
@@ -28,7 +28,7 @@ public:
 class RotationBasisGizmoAabbQueryEvent : public ObjectEvent
 {
 public:
-  ZilchDeclareType(RotationBasisGizmoAabbQueryEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(RotationBasisGizmoAabbQueryEvent, TypeCopyMode::ReferenceType);
 
   RotationBasisGizmoAabbQueryEvent();
 
@@ -39,7 +39,7 @@ public:
 /// selection).
 class RotationBasisGizmoMetaTransform : public MetaTransform
 {
-  ZilchDeclareType(RotationBasisGizmoMetaTransform, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(RotationBasisGizmoMetaTransform, TypeCopyMode::ReferenceType);
   MetaTransformInstance GetInstance(HandleParam object) override;
 };
 
@@ -48,7 +48,7 @@ class RotationBasisGizmoMetaTransform : public MetaTransform
 class RotationBasisGizmo : public Component
 {
 public:
-  ZilchDeclareType(RotationBasisGizmo, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(RotationBasisGizmo, TypeCopyMode::ReferenceType);
 
   RotationBasisGizmo();
 
@@ -110,7 +110,7 @@ public:
 class OrientationBasisGizmo : public Component
 {
 public:
-  ZilchDeclareType(OrientationBasisGizmo, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(OrientationBasisGizmo, TypeCopyMode::ReferenceType);
 
   OrientationBasisGizmo();
   void Initialize(CogInitializer& initializer) override;
@@ -161,7 +161,7 @@ public:
 class PhysicsCarWheelBasisGizmo : public Component
 {
 public:
-  ZilchDeclareType(PhysicsCarWheelBasisGizmo, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(PhysicsCarWheelBasisGizmo, TypeCopyMode::ReferenceType);
 
   PhysicsCarWheelBasisGizmo();
   void Initialize(CogInitializer& initializer) override;
@@ -195,7 +195,7 @@ public:
 class RevoluteBasisGizmo : public Component
 {
 public:
-  ZilchDeclareType(RevoluteBasisGizmo, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(RevoluteBasisGizmo, TypeCopyMode::ReferenceType);
 
   /// A revolute needs to store 2 bases that can be independently
   /// reverted, hence we need a special class.
@@ -242,4 +242,4 @@ public:
   Array<RevoluteJointBasisProperty> mCogs;
 };
 
-} // namespace Zero
+} // namespace Raverie

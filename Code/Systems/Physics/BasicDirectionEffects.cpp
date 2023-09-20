@@ -1,18 +1,18 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(BasicDirectionEffect, builder, type)
+RaverieDefineType(BasicDirectionEffect, builder, type)
 {
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDocumented();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetterProperty(LocalSpaceDirection)->ZeroSerialize(true);
-  ZilchBindGetterSetterProperty(Strength)->ZeroSerialize(real(10));
-  ZilchBindGetterSetterProperty(Direction)->ZeroSerialize(Vec3(0, -1, 0));
-  ZilchBindGetterProperty(WorldDirection);
+  RaverieBindGetterSetterProperty(LocalSpaceDirection)->RaverieSerialize(true);
+  RaverieBindGetterSetterProperty(Strength)->RaverieSerialize(real(10));
+  RaverieBindGetterSetterProperty(Direction)->RaverieSerialize(Vec3(0, -1, 0));
+  RaverieBindGetterProperty(WorldDirection);
 }
 
 BasicDirectionEffect::BasicDirectionEffect()
@@ -96,11 +96,11 @@ Vec3 BasicDirectionEffect::GetWorldDirection() const
   return worldForceDirection.AttemptNormalized();
 }
 
-ZilchDefineType(ForceEffect, builder, type)
+RaverieDefineType(ForceEffect, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
 }
 
 ForceEffect::ForceEffect()
@@ -118,11 +118,11 @@ void ForceEffect::ApplyEffect(RigidBody* obj, real dt)
   obj->ApplyForceNoWakeUp(force);
 }
 
-ZilchDefineType(GravityEffect, builder, type)
+RaverieDefineType(GravityEffect, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
 }
 
 GravityEffect::GravityEffect()
@@ -157,4 +157,4 @@ void GravityEffect::ApplyEffect(SpringSystem* obj, real dt)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

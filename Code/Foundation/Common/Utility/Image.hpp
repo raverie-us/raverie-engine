@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 typedef unsigned int ImagePixel;
@@ -116,4 +116,4 @@ void FixAlphaHalo(Image* image);
 // Set all pixels that match color to transparent
 void SetColorToAlpha(Image* buffer, uint color);
 
-} // namespace Zero
+} // namespace Raverie

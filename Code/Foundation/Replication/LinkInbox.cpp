@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 LinkInbox::LinkInbox(PeerLink* link)
@@ -34,21 +34,21 @@ LinkInbox::LinkInbox(MoveReference<LinkInbox> rhs)
     mLink(rhs->mLink),
 
     /// Packet Data
-    mReceivedPackets(ZeroMove(rhs->mReceivedPackets)),
+    mReceivedPackets(RaverieMove(rhs->mReceivedPackets)),
     mLastReceiveTime(rhs->mLastReceiveTime),
-    mIncomingPacketSequence(ZeroMove(rhs->mIncomingPacketSequence)),
+    mIncomingPacketSequence(RaverieMove(rhs->mIncomingPacketSequence)),
     mLastOutPacketSequenceHistorySendTime(rhs->mLastOutPacketSequenceHistorySendTime),
     mLastOutPacketSequenceHistoryNESQ(rhs->mLastOutPacketSequenceHistoryNESQ),
     mLastInPacketSequenceHistoryNESQ(rhs->mLastInPacketSequenceHistoryNESQ),
 
     /// Channel Data
-    mCustomDefaultChannel(ZeroMove(rhs->mCustomDefaultChannel)),
-    mProtocolDefaultChannel(ZeroMove(rhs->mProtocolDefaultChannel)),
-    mChannels(ZeroMove(rhs->mChannels)),
+    mCustomDefaultChannel(RaverieMove(rhs->mCustomDefaultChannel)),
+    mProtocolDefaultChannel(RaverieMove(rhs->mProtocolDefaultChannel)),
+    mChannels(RaverieMove(rhs->mChannels)),
 
     /// Message Data
-    mReleasedCustomMessages(ZeroMove(rhs->mReleasedCustomMessages)),
-    mReleasedProtocolMessages(ZeroMove(rhs->mReleasedProtocolMessages))
+    mReleasedCustomMessages(RaverieMove(rhs->mReleasedCustomMessages)),
+    mReleasedProtocolMessages(RaverieMove(rhs->mReleasedProtocolMessages))
 {
 }
 
@@ -58,21 +58,21 @@ LinkInbox& LinkInbox::operator=(MoveReference<LinkInbox> rhs)
   mLink = rhs->mLink;
 
   /// Packet Data
-  mReceivedPackets = ZeroMove(rhs->mReceivedPackets);
+  mReceivedPackets = RaverieMove(rhs->mReceivedPackets);
   mLastReceiveTime = rhs->mLastReceiveTime;
-  mIncomingPacketSequence = ZeroMove(rhs->mIncomingPacketSequence);
+  mIncomingPacketSequence = RaverieMove(rhs->mIncomingPacketSequence);
   mLastOutPacketSequenceHistorySendTime = rhs->mLastOutPacketSequenceHistorySendTime;
   mLastOutPacketSequenceHistoryNESQ = rhs->mLastOutPacketSequenceHistoryNESQ;
   mLastInPacketSequenceHistoryNESQ = rhs->mLastInPacketSequenceHistoryNESQ;
 
   /// Channel Data
-  mCustomDefaultChannel = ZeroMove(rhs->mCustomDefaultChannel);
-  mProtocolDefaultChannel = ZeroMove(rhs->mProtocolDefaultChannel);
-  mChannels = ZeroMove(rhs->mChannels);
+  mCustomDefaultChannel = RaverieMove(rhs->mCustomDefaultChannel);
+  mProtocolDefaultChannel = RaverieMove(rhs->mProtocolDefaultChannel);
+  mChannels = RaverieMove(rhs->mChannels);
 
   /// Message Data
-  mReleasedCustomMessages = ZeroMove(rhs->mReleasedCustomMessages);
-  mReleasedProtocolMessages = ZeroMove(rhs->mReleasedProtocolMessages);
+  mReleasedCustomMessages = RaverieMove(rhs->mReleasedCustomMessages);
+  mReleasedProtocolMessages = RaverieMove(rhs->mReleasedProtocolMessages);
 
   return *this;
 }
@@ -129,7 +129,7 @@ void LinkInbox::ReceivePacket(MoveReference<InPacket> packet)
   if (!packet->GetMessages().Empty())
   {
     // Process packet next inbox update
-    mReceivedPackets.PushBack(ZeroMove(packet));
+    mReceivedPackets.PushBack(RaverieMove(packet));
   }
 
   // Set last packet receive time
@@ -215,7 +215,7 @@ void LinkInbox::Update(ACKArray& remoteACKs, NAKArray& remoteNAKs)
 
           // Add new incoming message channel
           InMessageChannel newChannel(channelId, channelOpenedData.mTransferMode);
-          ArraySet<InMessageChannel>::pointer_bool_pair result = mChannels.Insert(ZeroMove(newChannel));
+          ArraySet<InMessageChannel>::pointer_bool_pair result = mChannels.Insert(RaverieMove(newChannel));
           Assert(result.second); // (Insertion should have succeeded)
 
           // Open new incoming message channel
@@ -283,7 +283,7 @@ void LinkInbox::Update(ACKArray& remoteACKs, NAKArray& remoteNAKs)
           break; // Ignore message
 
         // Attempt to push message into channel for later release
-        channel->Push(ZeroMove(message));
+        channel->Push(RaverieMove(message));
       }
       break;
       }
@@ -356,7 +356,7 @@ void LinkInbox::Update(ACKArray& remoteACKs, NAKArray& remoteNAKs)
 
       // Send packet sequence history message
       Status status;
-      mLink->SendInternal(status, ZeroMove(message), false);
+      mLink->SendInternal(status, RaverieMove(message), false);
       mLastOutPacketSequenceHistoryNESQ = packetSequenceHistoryData.mNext;
       mLastOutPacketSequenceHistorySendTime = now;
     }
@@ -376,7 +376,7 @@ void LinkInbox::ReleaseCustomMessages(Array<Message>& messages)
       continue;
 
     // Release custom message
-    mReleasedCustomMessages.PushBack(ZeroMove(message));
+    mReleasedCustomMessages.PushBack(RaverieMove(message));
   }
   messages.Clear();
 }
@@ -393,7 +393,7 @@ void LinkInbox::ReleaseProtocolMessages(Array<Message>& messages)
       continue;
 
     // Release protocol message
-    mReleasedProtocolMessages.PushBack(ZeroMove(message));
+    mReleasedProtocolMessages.PushBack(RaverieMove(message));
   }
   messages.Clear();
 }
@@ -411,7 +411,7 @@ void LinkInbox::PushUserEventMessage(MoveReference<Message> message)
 void LinkInbox::PushProtocolEventMessage(MoveReference<Message> message)
 {
   // Release event message for the protocol
-  mReleasedProtocolMessages.PushBack(ZeroMove(message));
+  mReleasedProtocolMessages.PushBack(RaverieMove(message));
 }
 
-} // namespace Zero
+} // namespace Raverie

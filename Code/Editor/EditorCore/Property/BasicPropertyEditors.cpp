@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace PropertyViewUi
@@ -24,15 +24,15 @@ DefineEvent(NumberValueChanged);
 DefineEvent(NumberValueCommited);
 } // namespace Events
 
-ZilchDefineType(ValueEvent, builder, type)
+RaverieDefineType(ValueEvent, builder, type)
 {
 }
 
-ZilchDefineType(ObjectPollEvent, builder, type)
+RaverieDefineType(ObjectPollEvent, builder, type)
 {
 }
 
-ZilchDefineType(DirectProperty, builder, type)
+RaverieDefineType(DirectProperty, builder, type)
 {
 }
 
@@ -283,7 +283,7 @@ void DirectProperty::OnMetaModified(Event* e)
 class PropertyIndexedStringArray : public DirectProperty
 {
 public:
-  typedef PropertyIndexedStringArray ZilchSelf;
+  typedef PropertyIndexedStringArray RaverieSelf;
   ComboBox* mSelectBox;
   EditorIndexedStringArray* mMetaEdit;
   StringSource mStrings;
@@ -340,12 +340,12 @@ public:
   void OnIndexChanged(ObjectEvent* event)
   {
     uint index = mSelectBox->GetSelectedItem();
-    if (mProperty->PropertyType == ZilchTypeId(int))
+    if (mProperty->PropertyType == RaverieTypeId(int))
     {
       Any variantValue = (int)index;
       CommitValue(variantValue);
     }
-    else if (mProperty->PropertyType == ZilchTypeId(String))
+    else if (mProperty->PropertyType == RaverieTypeId(String))
     {
       Any variantValue = mStrings[index];
       CommitValue(variantValue);
@@ -357,7 +357,7 @@ public:
 class PropertyEditorEnum : public DirectProperty
 {
 public:
-  typedef PropertyEditorEnum ZilchSelf;
+  typedef PropertyEditorEnum RaverieSelf;
   ComboBox* mSelectBox;
   SelectorButton* mSelectorButton;
   // Storing a pointer to this is safe because when meta is changed, the entire
@@ -493,7 +493,7 @@ public:
 class PropertyEditorRange : public DirectProperty
 {
 public:
-  typedef PropertyEditorRange ZilchSelf;
+  typedef PropertyEditorRange RaverieSelf;
   Slider* mSlider;
 
   PropertyEditorRange(PropertyWidgetInitializer& initializer) : DirectProperty(initializer)
@@ -572,7 +572,7 @@ public:
 class PropertyEditorString : public DirectProperty
 {
 public:
-  typedef PropertyEditorString ZilchSelf;
+  typedef PropertyEditorString RaverieSelf;
   TextBox* mEditText;
 
   PropertyEditorString(PropertyWidgetInitializer& initializer) : DirectProperty(initializer)
@@ -648,33 +648,33 @@ void ComputeLimits(double& min, double& max)
 
 void ComputeLimits(BoundType* boundType, double& min, double& max)
 {
-  if (boundType == ZilchTypeId(float))
+  if (boundType == RaverieTypeId(float))
     ComputeLimits<float>(min, max);
-  else if (boundType == ZilchTypeId(double))
+  else if (boundType == RaverieTypeId(double))
     ComputeLimits<double>(min, max);
-  else if (boundType == ZilchTypeId(int))
+  else if (boundType == RaverieTypeId(int))
     ComputeLimits<int>(min, max);
 }
 
 double ConvertValue(AnyParam startValue)
 {
   BoundType* boundType = Type::GetBoundType(startValue.StoredType);
-  if (boundType == ZilchTypeId(float))
+  if (boundType == RaverieTypeId(float))
     return (double)startValue.Get<float>();
-  else if (boundType == ZilchTypeId(double))
+  else if (boundType == RaverieTypeId(double))
     return (double)startValue.Get<double>();
-  else if (boundType == ZilchTypeId(int))
+  else if (boundType == RaverieTypeId(int))
     return (double)startValue.Get<int>();
   return 0.0;
 }
 
 Any ConvertValue(BoundType* boundType, double newValue)
 {
-  if (boundType == ZilchTypeId(float))
+  if (boundType == RaverieTypeId(float))
     return float(newValue);
-  else if (boundType == ZilchTypeId(double))
+  else if (boundType == RaverieTypeId(double))
     return double(newValue);
-  else if (boundType == ZilchTypeId(int))
+  else if (boundType == RaverieTypeId(int))
     return int(newValue);
   return 0;
 }
@@ -808,7 +808,7 @@ public:
 class PropertyEditorNumber : public DirectProperty
 {
 public:
-  typedef PropertyEditorNumber ZilchSelf;
+  typedef PropertyEditorNumber RaverieSelf;
   TextBox* mEditText;
   IconButton* mSpinButton;
   EditorRange* mEditRange;
@@ -927,7 +927,7 @@ public:
 class PropertyEditorBool : public DirectProperty
 {
 public:
-  typedef PropertyEditorBool ZilchSelf;
+  typedef PropertyEditorBool RaverieSelf;
   CheckBox* mCheckBox;
 
   PropertyEditorBool(PropertyWidgetInitializer& initializer) : DirectProperty(initializer)
@@ -991,7 +991,7 @@ DeclareEnum4(AxisLables, X, Y, Z, W);
 class PropertyEditVector : public DirectProperty
 {
 public:
-  typedef PropertyEditVector ZilchSelf;
+  typedef PropertyEditVector RaverieSelf;
   TextBox* mEditText[4];
   Label* mAxisLabel[4];
   uint mDimension;
@@ -1328,7 +1328,7 @@ public:
 class PropertyEditRotationBasis : public PropertyEditRotation
 {
 public:
-  typedef PropertyEditRotationBasis ZilchSelf;
+  typedef PropertyEditRotationBasis RaverieSelf;
 
   Vec3 mEulerCurrent;
   bool mEulerMode;
@@ -1485,7 +1485,7 @@ Vec4 VariantToFloatColor(AnyParam variant)
 // Convert float color of variant target type
 Any FloatColorToVariant(BoundType* boundType, const Vec4& color)
 {
-  if (boundType == ZilchTypeId(Vec4))
+  if (boundType == RaverieTypeId(Vec4))
     return color;
   return Vec4(1, 1, 1, 1);
 }
@@ -1493,7 +1493,7 @@ Any FloatColorToVariant(BoundType* boundType, const Vec4& color)
 class PropertyEditColor : public DirectProperty
 {
 public:
-  typedef PropertyEditColor ZilchSelf;
+  typedef PropertyEditColor RaverieSelf;
   Element* mBackground;
   IconButton* mEyeDropper;
   ColorDisplay* mColorDisplay;
@@ -1636,25 +1636,25 @@ public:
 
 void RegisterGeneralEditors()
 {
-  ZilchTypeId(String)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditorString>));
-  ZilchTypeId(double)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditorNumber>));
-  ZilchTypeId(float)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditorNumber>));
-  ZilchTypeId(int)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditorNumber>));
-  ZilchTypeId(bool)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditorBool>));
+  RaverieTypeId(String)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditorString>));
+  RaverieTypeId(double)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditorNumber>));
+  RaverieTypeId(float)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditorNumber>));
+  RaverieTypeId(int)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditorNumber>));
+  RaverieTypeId(bool)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditorBool>));
 
-  ZilchTypeId(IntVec2)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditVectorN<IntVec2, int, 2>>));
-  ZilchTypeId(IntVec3)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditVectorN<IntVec3, int, 3>>));
-  ZilchTypeId(IntVec4)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditVectorN<IntVec4, int, 4>>));
-  ZilchTypeId(Vec2)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditVectorN<Vec2, float, 2>>));
-  ZilchTypeId(Vec3)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditVectorN<Vec3, float, 3>>));
-  ZilchTypeId(Vec4)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditColor>));
-  ZilchTypeId(Quat)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditRotation>));
-  ZilchTypeId(Enum)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditorEnum>));
+  RaverieTypeId(IntVec2)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditVectorN<IntVec2, int, 2>>));
+  RaverieTypeId(IntVec3)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditVectorN<IntVec3, int, 3>>));
+  RaverieTypeId(IntVec4)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditVectorN<IntVec4, int, 4>>));
+  RaverieTypeId(Vec2)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditVectorN<Vec2, float, 2>>));
+  RaverieTypeId(Vec3)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditVectorN<Vec3, float, 3>>));
+  RaverieTypeId(Vec4)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditColor>));
+  RaverieTypeId(Quat)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditRotation>));
+  RaverieTypeId(Enum)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditorEnum>));
 
-  ZilchTypeId(EditorSlider)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditorRange>));
-  ZilchTypeId(EditorRange)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditorNumber>));
-  ZilchTypeId(EditorRotationBasis)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditRotationBasis>));
-  ZilchTypeId(EditorIndexedStringArray)->Add(new MetaPropertyEditor(&CreateProperty<PropertyIndexedStringArray>));
+  RaverieTypeId(EditorSlider)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditorRange>));
+  RaverieTypeId(EditorRange)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditorNumber>));
+  RaverieTypeId(EditorRotationBasis)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditRotationBasis>));
+  RaverieTypeId(EditorIndexedStringArray)->Add(new MetaPropertyEditor(&CreateProperty<PropertyIndexedStringArray>));
 }
 
-} // namespace Zero
+} // namespace Raverie

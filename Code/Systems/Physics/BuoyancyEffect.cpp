@@ -1,21 +1,21 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(BuoyancyEffect, builder, type)
+RaverieDefineType(BuoyancyEffect, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
 
-  ZeroBindDependency(Region);
+  RaverieBindDependency(Region);
 
-  ZilchBindFieldProperty(mDensity)->ZeroSerialize(real(1));
-  ZilchBindFieldProperty(mGravity)->ZeroSerialize(Vec3(0, real(-9.81), 0));
-  ZilchBindGetterSetterProperty(Detail)->ZeroSerialize(5u);
-  ZilchBindFieldProperty(mDebugDrawRuntime)->ZeroSerialize(false);
+  RaverieBindFieldProperty(mDensity)->RaverieSerialize(real(1));
+  RaverieBindFieldProperty(mGravity)->RaverieSerialize(Vec3(0, real(-9.81), 0));
+  RaverieBindGetterSetterProperty(Detail)->RaverieSerialize(5u);
+  RaverieBindFieldProperty(mDebugDrawRuntime)->RaverieSerialize(false);
 }
 
 BuoyancyEffect::BuoyancyEffect()
@@ -199,4 +199,4 @@ bool BuoyancyEffect::PointInObject(Collider* object, Vec3Param point)
   return Physics::CollisionManager::TestIntersection(object, point);
 }
 
-} // namespace Zero
+} // namespace Raverie

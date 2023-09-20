@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 u16 HostToNetworkShort(u16 hostShort)
@@ -583,4 +583,4 @@ SocketAddress QueryRemoteSocketAddress(Status& status, const Socket& socket)
   return SocketAddress();
 }
 
-} // namespace Zero
+} // namespace Raverie

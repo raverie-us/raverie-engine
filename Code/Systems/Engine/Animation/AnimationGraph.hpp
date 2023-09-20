@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// The AnimationGraph component controls animation for an individual game
@@ -12,7 +12,7 @@ namespace Zero
 class AnimationGraph : public Component
 {
 public:
-  ZilchDeclareType(AnimationGraph, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(AnimationGraph, TypeCopyMode::ReferenceType);
 
   /// Constructor / destructor.
   AnimationGraph();
@@ -99,7 +99,7 @@ private:
 class SimpleAnimation : public Component
 {
 public:
-  ZilchDeclareType(SimpleAnimation, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SimpleAnimation, TypeCopyMode::ReferenceType);
 
   SimpleAnimation()
   {
@@ -130,4 +130,4 @@ private:
   HandleOf<Animation> mAnimation;
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Forward declarations
@@ -19,7 +19,7 @@ class MainPropertyView : public Composite
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(MainPropertyView, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MainPropertyView, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   MainPropertyView(Composite* parent, MetaSelection* selection, OperationQueue* queue);
@@ -105,4 +105,4 @@ private:
   HandleOf<Widget> mPreviewTile;
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 // Because CogPath is a shared reference counted object, it doesn't actually
 // matter if the user marks it as read only because it can still be modified by
@@ -30,7 +30,7 @@ Tweakable(float, CogPathCogLabelSpace, 100.0f, cLocation);
 class PropertyArchetype : public DirectProperty
 {
 public:
-  typedef PropertyArchetype ZilchSelf;
+  typedef PropertyArchetype RaverieSelf;
   TextBox* mEditText;
   IconButton* mUpload;
   IconButton* mUploadInherit;
@@ -287,7 +287,7 @@ public:
 
     // Disable reverting of game and space until we resolve some issues
     bool revertTypeDisabled =
-        (mInstance.StoredType->IsA(ZilchTypeId(GameSession)) || mInstance.StoredType->IsA(ZilchTypeId(Space)));
+        (mInstance.StoredType->IsA(RaverieTypeId(GameSession)) || mInstance.StoredType->IsA(RaverieTypeId(Space)));
 
     // Update button tooltips
     if (MetaSelection* selection = mInstance.Get<MetaSelection*>())
@@ -473,7 +473,7 @@ template <typename PropertyEditor>
 class CogPickerManipulation : public MouseManipulation
 {
 public:
-  typedef CogPickerManipulation ZilchSelf;
+  typedef CogPickerManipulation RaverieSelf;
 
   CogPickerManipulation(Mouse* mouse, Composite* owner, PropertyEditor* editor) : MouseManipulation(mouse, owner)
   {
@@ -507,7 +507,7 @@ public:
 class PropertyEditorCogRef : public DirectProperty
 {
 public:
-  typedef PropertyEditorCogRef ZilchSelf;
+  typedef PropertyEditorCogRef RaverieSelf;
   TextBox* mName;
   PropertyState mState;
 
@@ -654,7 +654,7 @@ public:
 class PropertyEditorCogPath : public DirectProperty
 {
 public:
-  typedef PropertyEditorCogPath ZilchSelf;
+  typedef PropertyEditorCogPath RaverieSelf;
 
   Composite* mTopBar;
   Composite* mLabelPathIcons;
@@ -762,7 +762,7 @@ public:
     while (node)
     {
       BoundType* type = node->mObject.StoredType;
-      if (type && type->IsA(ZilchTypeId(Cog)))
+      if (type && type->IsA(RaverieTypeId(Cog)))
         if (Cog* cog = (Cog*)node->mObject.Dereference())
           return cog;
 
@@ -810,7 +810,7 @@ public:
       BuildPath(mNode, rootInstance, propertyPath);
 
       EnsureCogPathIsRelativeTo();
-      Property* prop = ZilchTypeId(CogPath)->GetProperty("Cog");
+      Property* prop = RaverieTypeId(CogPath)->GetProperty("Cog");
       propertyPath.AddPropertyToPath(prop);
 
       PropertyState state(to);
@@ -828,7 +828,7 @@ public:
     BuildPath(mNode, rootInstance, propertyPath);
 
     EnsureCogPathIsRelativeTo();
-    Property* prop = ZilchTypeId(CogPath)->GetProperty("Path");
+    Property* prop = RaverieTypeId(CogPath)->GetProperty("Path");
     propertyPath.AddPropertyToPath(prop);
 
     PropertyState state(mPathTextBox->GetText());
@@ -849,7 +849,7 @@ public:
     {
       PropertyPath path(mProperty);
 
-      forRange (Property* subProperty, ZilchTypeId(CogPath)->GetProperties())
+      forRange (Property* subProperty, RaverieTypeId(CogPath)->GetProperties())
       {
         path.AddPropertyToPath(subProperty);
 
@@ -1127,7 +1127,7 @@ void CogPickerManipulation<PropertyEditor>::OnKeyDown(KeyboardEvent* event)
 class FocusComposite : public ColoredComposite
 {
 public:
-  typedef FocusComposite ZilchSelf;
+  typedef FocusComposite RaverieSelf;
 
   FocusComposite(Composite* parent, Vec4Param color) : ColoredComposite(parent, color)
   {
@@ -1149,7 +1149,7 @@ public:
 class ResourceEditor : public Composite
 {
 public:
-  typedef ResourceEditor ZilchSelf;
+  typedef ResourceEditor RaverieSelf;
 
   BoundType* mResourceType;
   ResourceManager* mResourceManager;
@@ -1246,7 +1246,7 @@ public:
     if (mSmallDisplay)
       mResourcePreviewParent->MoveToFront();
 
-    if (resourceType->IsA(ZilchTypeId(ColorGradient)))
+    if (resourceType->IsA(RaverieTypeId(ColorGradient)))
     {
       Composite* topDown = new Composite(this);
       topDown->SetSizing(SizePolicy::Flex, 1.0f);
@@ -1498,14 +1498,14 @@ public:
 
       mResourcePreviewParent->SetActive(false);
 
-      if (mResourceType->IsA(ZilchTypeId(ColorGradient)))
+      if (mResourceType->IsA(RaverieTypeId(ColorGradient)))
         mNameArea->SetSizing(SizeAxis::Y, SizePolicy::Flex, 1);
       return;
     }
 
     mResourcePreviewParent->SetActive(true);
 
-    if (mResourceType->IsA(ZilchTypeId(ColorGradient)))
+    if (mResourceType->IsA(RaverieTypeId(ColorGradient)))
       mNameArea->SetSizing(SizeAxis::Y, SizePolicy::Fixed, Pixels(22));
 
     if (mResourceManager && mResourceManager->mCanDuplicate)
@@ -1546,7 +1546,7 @@ public:
       else
         mResourcePreview->SetMinSize(Vec2(46, 46));
 
-      if (mResourceType->IsA(ZilchTypeId(ColorGradient)))
+      if (mResourceType->IsA(RaverieTypeId(ColorGradient)))
         mResourcePreview->SetMinSize(Vec2(46, 5));
     }
   }
@@ -1605,7 +1605,7 @@ const String NoResourceName = "None";
 class PropertyEditorResource : public DirectProperty
 {
 public:
-  typedef PropertyEditorResource ZilchSelf;
+  typedef PropertyEditorResource RaverieSelf;
   Any mVariantValue;
   MetaEditorResource* mMetaEdit;
   ResourceManager* mResourceManager;
@@ -1762,7 +1762,7 @@ public:
   {
     if (resource)
     {
-      if (mProperty->PropertyType == ZilchTypeId(String))
+      if (mProperty->PropertyType == RaverieTypeId(String))
       {
         // Set the as a string with the full Id and name
         mVariantValue = resource->ResourceIdName;
@@ -1836,7 +1836,7 @@ public:
   {
     mEditor->SetResource(nullptr);
 
-    if (mProperty->PropertyType == ZilchTypeId(String))
+    if (mProperty->PropertyType == RaverieTypeId(String))
     {
       // Set the as a string with the full Id and name
       mVariantValue = String();
@@ -1882,7 +1882,7 @@ public:
 
       SearchProvider* searchProvider = GetResourceSearchProvider();
       if (mMetaEdit)
-        searchProvider->SetCallbackFilter<ZilchSelf, &ZilchSelf::OnSearchFilter>(this);
+        searchProvider->SetCallbackFilter<RaverieSelf, &RaverieSelf::OnSearchFilter>(this);
       searchView->mSearch->SearchProviders.PushBack(searchProvider);
 
       searchView->TakeFocus();
@@ -1941,7 +1941,7 @@ public:
     while (node)
     {
       Handle object = node->mObject;
-      if (object.StoredType && object.StoredType->IsA(ZilchTypeId(MetaSelection)))
+      if (object.StoredType && object.StoredType->IsA(RaverieTypeId(MetaSelection)))
         return object.Get<MetaSelection*>();
       node = node->mParent;
     }
@@ -2036,7 +2036,7 @@ public:
 class ListItem : public Composite
 {
 public:
-  typedef ListItem ZilchSelf;
+  typedef ListItem RaverieSelf;
 
   Element* mBackground;
   Element* mExpandIcon;
@@ -2116,7 +2116,7 @@ public:
 class AddItemButton : public Composite
 {
 public:
-  typedef AddItemButton ZilchSelf;
+  typedef AddItemButton RaverieSelf;
 
   Element* mBackground;
   Element* mBorder;
@@ -2199,7 +2199,7 @@ template <typename ResourceList>
 class ResourceListItem : public ListItem
 {
 public:
-  typedef ResourceListItem ZilchSelf;
+  typedef ResourceListItem RaverieSelf;
 
   PropertyWidget* mPropertyWidget;
   ResourceList* mResourceList;
@@ -2226,7 +2226,7 @@ public:
 
   void OnSelect(MouseEvent* event)
   {
-    Zilch::BoundType* type = ZilchTypeId(typename ResourceList::ManagerType::ResourceType);
+    Raverie::BoundType* type = RaverieTypeId(typename ResourceList::ManagerType::ResourceType);
     Resource* resource = Z::gResources->GetResourceByTypeAndName(type->Name, mResourceIdName);
     if (resource != nullptr)
       Z::gEditor->EditResource(resource);
@@ -2368,7 +2368,7 @@ template <typename ResourceList>
 class ResourceListEditor : public PropertyWidget
 {
 public:
-  typedef ResourceListEditor<ResourceList> ZilchSelf;
+  typedef ResourceListEditor<ResourceList> RaverieSelf;
 
   ResourceList* mResourceList;
 
@@ -2542,20 +2542,20 @@ public:
 
 void RegisterEngineEditors()
 {
-  ZilchTypeId(CogPath)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditorCogPath>));
+  RaverieTypeId(CogPath)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditorCogPath>));
 
   // METAREFACTOR Was this ever used?
   // PropEditors->PropertyEditorMap["Cog"] = new
   // PropertyGridTypeData(&CreateProperty<PropertyEditorCogRef>);
 
-  ZilchTypeId(Resource)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditorResource>));
-  ZilchTypeId(MetaEditorResource)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditorResource>));
-  ZilchTypeId(CogArchetypeExtension)->Add(new MetaPropertyEditor(&CreateProperty<PropertyArchetype>));
-  ZilchTypeId(RenderGroupList)->Add(new MetaPropertyEditor(&CreateProperty<ResourceListEditor<RenderGroupList>>));
-  ZilchTypeId(ChildRenderGroupList)
+  RaverieTypeId(Resource)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditorResource>));
+  RaverieTypeId(MetaEditorResource)->Add(new MetaPropertyEditor(&CreateProperty<PropertyEditorResource>));
+  RaverieTypeId(CogArchetypeExtension)->Add(new MetaPropertyEditor(&CreateProperty<PropertyArchetype>));
+  RaverieTypeId(RenderGroupList)->Add(new MetaPropertyEditor(&CreateProperty<ResourceListEditor<RenderGroupList>>));
+  RaverieTypeId(ChildRenderGroupList)
       ->Add(new MetaPropertyEditor(&CreateProperty<ResourceListEditor<ChildRenderGroupList>>));
-  ZilchTypeId(MaterialList)->Add(new MetaPropertyEditor(&CreateProperty<ResourceListEditor<MaterialList>>));
-  ZilchTypeId(CompositionLabelExtension)->Add(new MetaPropertyEditor(&CreateProperty<CompositionLabel>));
+  RaverieTypeId(MaterialList)->Add(new MetaPropertyEditor(&CreateProperty<ResourceListEditor<MaterialList>>));
+  RaverieTypeId(CompositionLabelExtension)->Add(new MetaPropertyEditor(&CreateProperty<CompositionLabel>));
 }
 
-} // namespace Zero
+} // namespace Raverie

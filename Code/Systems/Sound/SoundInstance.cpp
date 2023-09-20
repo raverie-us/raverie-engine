@@ -2,7 +2,7 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 using namespace AudioConstants;
@@ -27,11 +27,11 @@ DefineEvent(SoundCuePostPlay);
 
 // Sound Instance Event
 
-ZilchDefineType(SoundInstanceEvent, builder, type)
+RaverieDefineType(SoundInstanceEvent, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindGetter(SoundInstance);
+  RaverieBindGetter(SoundInstance);
 }
 
 // Cross Fade Object
@@ -235,42 +235,42 @@ void MusicNotificationObject::ResetBeats(float currentTime, SoundInstance* insta
 
 // Sound Instance
 
-ZilchDefineType(SoundInstance, builder, type)
+RaverieDefineType(SoundInstance, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetter(Volume);
-  ZilchBindGetterSetter(Decibels);
-  ZilchBindGetterSetter(Pitch);
-  ZilchBindGetterSetter(Semitones);
-  ZilchBindGetter(IsPlaying);
-  ZilchBindGetter(SoundNode);
-  ZilchBindMethod(InterpolatePitch);
-  ZilchBindMethod(InterpolateSemitones);
-  ZilchBindMethod(InterpolateVolume);
-  ZilchBindMethod(InterpolateDecibels);
-  ZilchBindGetterSetter(Paused);
-  ZilchBindMethod(Stop);
-  ZilchBindGetterSetter(Looping);
-  ZilchBindGetterSetter(Time);
-  ZilchBindGetter(FileLength);
-  ZilchBindGetterSetter(EndTime);
-  ZilchBindGetterSetter(LoopStartTime);
-  ZilchBindGetterSetter(LoopEndTime);
-  ZilchBindGetterSetter(LoopTailTime);
-  ZilchBindGetterSetter(CrossFadeLoopTail);
-  ZilchBindGetterSetter(CustomEventTime);
-  ZilchBindGetter(SoundName);
+  RaverieBindGetterSetter(Volume);
+  RaverieBindGetterSetter(Decibels);
+  RaverieBindGetterSetter(Pitch);
+  RaverieBindGetterSetter(Semitones);
+  RaverieBindGetter(IsPlaying);
+  RaverieBindGetter(SoundNode);
+  RaverieBindMethod(InterpolatePitch);
+  RaverieBindMethod(InterpolateSemitones);
+  RaverieBindMethod(InterpolateVolume);
+  RaverieBindMethod(InterpolateDecibels);
+  RaverieBindGetterSetter(Paused);
+  RaverieBindMethod(Stop);
+  RaverieBindGetterSetter(Looping);
+  RaverieBindGetterSetter(Time);
+  RaverieBindGetter(FileLength);
+  RaverieBindGetterSetter(EndTime);
+  RaverieBindGetterSetter(LoopStartTime);
+  RaverieBindGetterSetter(LoopEndTime);
+  RaverieBindGetterSetter(LoopTailTime);
+  RaverieBindGetterSetter(CrossFadeLoopTail);
+  RaverieBindGetterSetter(CustomEventTime);
+  RaverieBindGetter(SoundName);
 
-  ZeroBindEvent(Events::SoundLooped, SoundInstanceEvent);
-  ZeroBindEvent(Events::SoundStopped, SoundInstanceEvent);
-  ZeroBindEvent(Events::MusicBeat, SoundInstanceEvent);
-  ZeroBindEvent(Events::MusicBar, SoundInstanceEvent);
-  ZeroBindEvent(Events::MusicEighthNote, SoundInstanceEvent);
-  ZeroBindEvent(Events::MusicQuarterNote, SoundInstanceEvent);
-  ZeroBindEvent(Events::MusicHalfNote, SoundInstanceEvent);
-  ZeroBindEvent(Events::MusicWholeNote, SoundInstanceEvent);
-  ZeroBindEvent(Events::MusicCustomTime, SoundInstanceEvent);
+  RaverieBindEvent(Events::SoundLooped, SoundInstanceEvent);
+  RaverieBindEvent(Events::SoundStopped, SoundInstanceEvent);
+  RaverieBindEvent(Events::MusicBeat, SoundInstanceEvent);
+  RaverieBindEvent(Events::MusicBar, SoundInstanceEvent);
+  RaverieBindEvent(Events::MusicEighthNote, SoundInstanceEvent);
+  RaverieBindEvent(Events::MusicQuarterNote, SoundInstanceEvent);
+  RaverieBindEvent(Events::MusicHalfNote, SoundInstanceEvent);
+  RaverieBindEvent(Events::MusicWholeNote, SoundInstanceEvent);
+  RaverieBindEvent(Events::MusicCustomTime, SoundInstanceEvent);
 }
 
 SoundInstance::SoundInstance(Status& status, SoundSpace* space, SoundAsset* asset, float volume, float pitch) :
@@ -1158,4 +1158,4 @@ void SoundInstance::SetTimeSignatureThreaded(float beats, float noteType)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

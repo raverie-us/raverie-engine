@@ -2,7 +2,7 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 RenderGroupSource::RenderGroupSource()
@@ -212,7 +212,7 @@ bool RenderGroupSource::Move(DataEntry* destinationEntry, DataEntry* movingEntry
     mOperationQueue->BeginBatch("RenderGroup_Move");
 
     RemoveFromParent(moving);
-    ChangeAndQueueProperty(mOperationQueue, moving, PropertyPath("ParentRenderGroup"), Any(ZilchTypeId(RenderGroup)));
+    ChangeAndQueueProperty(mOperationQueue, moving, PropertyPath("ParentRenderGroup"), Any(RaverieTypeId(RenderGroup)));
 
     mOperationQueue->EndBatch();
   }
@@ -273,7 +273,7 @@ void RenderGroupSource::RemoveFromParent(RenderGroup* renderGroup)
   }
 }
 
-ZilchDefineType(RenderGroupHierarchies, builder, type)
+RaverieDefineType(RenderGroupHierarchies, builder, type)
 {
 }
 
@@ -309,4 +309,4 @@ void RenderGroupHierarchies::OnResourceModified(ResourceEvent* event)
   mTree->SetDataSource(mSource);
 }
 
-} // namespace Zero
+} // namespace Raverie

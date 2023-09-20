@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 //
@@ -311,7 +311,7 @@ Variant ReplicaProperty::GetValue() const
   }
 
   // Return current property value
-  return ZeroMove(value);
+  return RaverieMove(value);
 }
 
 const Variant& ReplicaProperty::GetPropertyData() const
@@ -321,7 +321,7 @@ const Variant& ReplicaProperty::GetPropertyData() const
 
 void ReplicaProperty::SetLastValue(MoveReference<Variant> value)
 {
-  mLastValue = ZeroMove(value);
+  mLastValue = RaverieMove(value);
 }
 const Variant& ReplicaProperty::GetLastValue() const
 {
@@ -352,7 +352,7 @@ void UpdateLastValueArithmetic(ReplicaProperty* replicaProperty, const ReplicaPr
   if (serializationMode == SerializationMode::All || !replicaPropertyType->GetUseDeltaThreshold())
   {
     // Perform standard last value update
-    return replicaProperty->SetLastValue(ZeroMove(currentValue));
+    return replicaProperty->SetLastValue(RaverieMove(currentValue));
   }
   // Serialize only the primitive members that have changed?
   else
@@ -392,7 +392,7 @@ void UpdateLastValueArithmetic(ReplicaProperty* replicaProperty, const ReplicaPr
     }
 
     // Perform last value update with our modified current value
-    return replicaProperty->SetLastValue(ZeroMove(currentValue));
+    return replicaProperty->SetLastValue(RaverieMove(currentValue));
   }
 }
 
@@ -404,7 +404,7 @@ void ReplicaProperty::UpdateLastValue(bool forceAll)
     // Perform standard last value update
     Variant currentValue = GetValue();
     const Variant& lastValue = GetLastValue();
-    return SetLastValue(ZeroMove(currentValue));
+    return SetLastValue(RaverieMove(currentValue));
   }
 
   // Get replica property type
@@ -419,7 +419,7 @@ void ReplicaProperty::UpdateLastValue(bool forceAll)
     // Perform standard last value update
     Variant currentValue = GetValue();
     const Variant& lastValue = GetLastValue();
-    return SetLastValue(ZeroMove(currentValue));
+    return SetLastValue(RaverieMove(currentValue));
   }
 
     // Non-Boolean Arithmetic Types
@@ -1350,7 +1350,7 @@ bool DeserializeArithmetic(Variant& newValue,
   }
 
   // Success
-  newValue = ZeroMove(currentValue);
+  newValue = RaverieMove(currentValue);
   return true;
 }
 
@@ -1575,7 +1575,7 @@ bool DeserializeQuantizedArithmetic(Variant& newValue,
   }
 
   // Success
-  newValue = ZeroMove(currentValue);
+  newValue = RaverieMove(currentValue);
   return true;
 }
 
@@ -2718,4 +2718,4 @@ const Variant& ReplicaPropertyType::GetSnapThreshold() const
   return mSnapThreshold;
 }
 
-} // namespace Zero
+} // namespace Raverie

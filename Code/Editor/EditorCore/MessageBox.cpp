@@ -1,6 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -8,7 +8,7 @@ namespace Events
 DefineEvent(MessageBoxResult);
 } // namespace Events
 
-ZilchDefineType(MessageBoxEvent, builder, type)
+RaverieDefineType(MessageBoxEvent, builder, type)
 {
 }
 
@@ -44,7 +44,7 @@ MessageBox* MessageBox::Show(Composite* parent, StringParam caption, StringParam
   return dialog;
 }
 
-Zero::MessageBox* MessageBox::Show(Composite* parent, StringParam caption, StringParam text, Array<String>& buttons)
+Raverie::MessageBox* MessageBox::Show(Composite* parent, StringParam caption, StringParam text, Array<String>& buttons)
 {
   MessageBox* dialog = new MessageBox(parent, caption, text, buttons);
 
@@ -207,4 +207,4 @@ void MessageBox::OnDestroy()
   Composite::OnDestroy();
 }
 
-} // namespace Zero
+} // namespace Raverie

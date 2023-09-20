@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 struct TempToken
@@ -85,4 +85,4 @@ private:
   StringRange mAll;
 };
 
-} // namespace Zero
+} // namespace Raverie

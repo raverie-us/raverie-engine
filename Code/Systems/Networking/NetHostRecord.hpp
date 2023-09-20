@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// NetHostRecord.
@@ -10,7 +10,7 @@ namespace Zero
 class NetHostRecord : public SafeId32
 {
 public:
-  ZilchDeclareType(NetHostRecord, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(NetHostRecord, TypeCopyMode::ReferenceType);
 
   /// Constructors.
   NetHostRecord();
@@ -42,4 +42,4 @@ typedef Array<NetHostRecordPtr> HostRecordsArray;
 typedef HashMap<IpAddress, NetHostRecord*> HostRecordsMap;
 typedef HashMap<MessageReceiptId, IpAddress> RecieptIpMap;
 
-} // namespace Zero
+} // namespace Raverie

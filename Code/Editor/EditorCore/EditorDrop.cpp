@@ -3,7 +3,7 @@
 
 #include "Systems/Sound/SoundStandard.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 bool DropOnObject(MetaDropEvent* event, Cog* droppedOn)
@@ -16,7 +16,7 @@ bool DropOnObject(MetaDropEvent* event, Cog* droppedOn)
   // Search for property
   {
     // Search for a valid property
-    BoundType* cogType = ZilchVirtualTypeId(droppedOn);
+    BoundType* cogType = RaverieVirtualTypeId(droppedOn);
     MetaComposition* composition = cogType->HasInherited<MetaComposition>();
 
     // Check all components on object for properties that can be dropped.
@@ -78,7 +78,7 @@ bool DropOnObjectViewport(MetaDropEvent* event, Viewport* viewport, Space* space
   if (Archetype* archetype = instance.Get<Archetype*>())
   {
     // Only drop normal game objects (not spaces)
-    if (archetype->mStoredType != ZilchTypeId(Cog))
+    if (archetype->mStoredType != RaverieTypeId(Cog))
       return false;
 
     if (event->Testing)
@@ -189,7 +189,7 @@ bool EditorDrop(MetaDropEvent* event, Viewport* viewport, Space* space, Cog* dro
   // It's useful to have dropping a Mesh or Sprite act like dropping an
   // Archetype. Create the object, but use Shift to set a property like most
   // other Resources
-  if (droppedType->IsA(ZilchTypeId(Mesh)) || droppedType->IsA(ZilchTypeId(SpriteSource)))
+  if (droppedType->IsA(RaverieTypeId(Mesh)) || droppedType->IsA(RaverieTypeId(SpriteSource)))
   {
     if (Keyboard::Instance->KeyIsDown(Keys::Shift) == false)
       droppedOn = nullptr;
@@ -208,4 +208,4 @@ bool EditorDrop(MetaDropEvent* event, Viewport* viewport, Space* space, Cog* dro
   return false;
 }
 
-} // namespace Zero
+} // namespace Raverie

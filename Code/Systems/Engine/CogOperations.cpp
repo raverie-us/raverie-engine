@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 void AttachObject(OperationQueue* queue, Cog* object, Cog* parent, bool relative)
@@ -123,7 +123,7 @@ Cog* CreateFromArchetype(OperationQueue* queue,
                          Vec3Param scale)
 {
   // Only cog archetypes work with undo
-  if (archetype->mStoredType != ZilchTypeId(Cog))
+  if (archetype->mStoredType != RaverieTypeId(Cog))
   {
     DoNotifyError("Invalid archetype", "Can not create this type of archetype in a space");
     return NULL;
@@ -915,7 +915,7 @@ void ClearArchetypeOperation::Undo()
   if (parent)
   {
     Hierarchy* hierarchy = parent->has(Hierarchy);
-    ObjectState::ChildId childId(ZilchTypeId(Cog), mNewChildId);
+    ObjectState::ChildId childId(RaverieTypeId(Cog), mNewChildId);
     modifications->ChildRemoved(hierarchy, childId);
     modifications->SetChildOrderModified(hierarchy, mParentWasChildOrderModified);
   }
@@ -958,7 +958,7 @@ void ClearArchetypeOperation::Redo()
 
   if (parent)
   {
-    ObjectState::ChildId childId(ZilchTypeId(Cog), mNewChildId);
+    ObjectState::ChildId childId(RaverieTypeId(Cog), mNewChildId);
     modifications->ChildAdded(parent->has(Hierarchy), childId);
   }
 
@@ -969,4 +969,4 @@ void ClearArchetypeOperation::Redo()
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

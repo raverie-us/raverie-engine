@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Forward declarations.
@@ -14,7 +14,7 @@ class MetaEventConnection;
 class Factory : public System
 {
 public:
-  ZilchDeclareType(Factory, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Factory, TypeCopyMode::ReferenceType);
 
   Factory(Engine* engine, Tracker* tracker);
   ~Factory();
@@ -67,4 +67,4 @@ namespace Z
 extern Factory* gFactory;
 }
 
-} // namespace Zero
+} // namespace Raverie

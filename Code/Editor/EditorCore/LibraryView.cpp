@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 const String cTagIcon = "Tag";
@@ -53,7 +53,7 @@ public:
 
   void SortByTagName()
   {
-    Zero::Sort(mEntries.All(), LibDataEntrySort);
+    Raverie::Sort(mEntries.All(), LibDataEntrySort);
   }
 
   void Clear()
@@ -133,7 +133,7 @@ public:
     if (entry->mResource)
     {
       Resource* resource = entry->mResource;
-      BoundType* resourceType = ZilchVirtualTypeId(resource);
+      BoundType* resourceType = RaverieVirtualTypeId(resource);
       if (column == CommonColumns::Name)
         variant = resource->Name;
       else if (column == CommonColumns::Type)
@@ -252,7 +252,7 @@ TileViewWidget* LibraryTileView::CreateTileViewWidget(
     return new TileViewWidget(parent, this, previewWidget, index);
 }
 
-ZilchDefineType(LibraryView, builder, type)
+RaverieDefineType(LibraryView, builder, type)
 {
 }
 
@@ -541,7 +541,7 @@ void LibraryView::UpdateVisibleResources()
       }
 
       // Add the type name
-      resourceTypes.Insert(ZilchVirtualTypeId(resource)->Name);
+      resourceTypes.Insert(RaverieVirtualTypeId(resource)->Name);
 
       // Add a filter tag as well
       String filterTag = resource->FilterTag;
@@ -701,18 +701,18 @@ void LibraryView::OnRightClickObject(Composite* objectToAttachTo, DataIndex inde
       ConnectMenu(menu, "Duplicate", OnDuplicate, false);
     }
 
-    BoundType* resourceType = ZilchVirtualTypeId(resource);
+    BoundType* resourceType = RaverieVirtualTypeId(resource);
 
     // Add composing and translation test functions for materials
-    if (resourceType->IsA(ZilchTypeId(Material)))
+    if (resourceType->IsA(RaverieTypeId(Material)))
     {
-      ConnectMenu(menu, "ComposeZilchMaterial", OnComposeZilchMaterial, false);
-      ConnectMenu(menu, "TranslateZilchPixelMaterial", OnTranslateZilchPixelMaterial, false);
-      ConnectMenu(menu, "TranslateZilchGeometryMaterial", OnTranslateZilchGeometryMaterial, false);
-      ConnectMenu(menu, "TranslateZilchVertexMaterial", OnTranslateZilchVertexMaterial, false);
+      ConnectMenu(menu, "ComposeRaverieMaterial", OnComposeRaverieMaterial, false);
+      ConnectMenu(menu, "TranslateRaveriePixelMaterial", OnTranslateRaveriePixelMaterial, false);
+      ConnectMenu(menu, "TranslateRaverieGeometryMaterial", OnTranslateRaverieGeometryMaterial, false);
+      ConnectMenu(menu, "TranslateRaverieVertexMaterial", OnTranslateRaverieVertexMaterial, false);
     }
     // Add a translation tests function for fragments
-    if (resourceType->IsA(ZilchTypeId(ZilchFragment)))
+    if (resourceType->IsA(RaverieTypeId(RaverieFragment)))
     {
       ConnectMenu(menu, "TranslateFragment", OnTranslateFragment, false);
     }
@@ -752,7 +752,7 @@ void LibraryView::OnRightMouseUp(MouseEvent* event)
   }
 
   // If a specific resource is not found pop up the generic add resources menu
-  menu->AddZeroContextMenu("Resources");
+  menu->AddContextMenu("Resources");
   menu->ShiftOntoScreen(ToVector3(event->Position));
 }
 
@@ -1121,44 +1121,44 @@ void LibraryView::OnDuplicate(Event* event)
     DuplicateResource(resource);
 }
 
-void LibraryView::OnComposeZilchMaterial(Event* event)
+void LibraryView::OnComposeRaverieMaterial(Event* event)
 {
   LibDataEntry* treeNode = (LibDataEntry*)mSource->ToEntry(mPrimaryCommandIndex);
   if (Resource* resource = treeNode->mResource)
     if (Resource* resource = treeNode->mResource)
     {
       ObjectEvent toSend(resource);
-      Z::gEditor->DispatchEvent("ComposeZilchMaterial", &toSend);
+      Z::gEditor->DispatchEvent("ComposeRaverieMaterial", &toSend);
     }
 }
 
-void LibraryView::OnTranslateZilchPixelMaterial(Event* event)
+void LibraryView::OnTranslateRaveriePixelMaterial(Event* event)
 {
   LibDataEntry* treeNode = (LibDataEntry*)mSource->ToEntry(mPrimaryCommandIndex);
   if (Resource* resource = treeNode->mResource)
   {
     ObjectEvent toSend(resource);
-    Z::gEditor->DispatchEvent("TranslateZilchPixelMaterial", &toSend);
+    Z::gEditor->DispatchEvent("TranslateRaveriePixelMaterial", &toSend);
   }
 }
 
-void LibraryView::OnTranslateZilchGeometryMaterial(Event* event)
+void LibraryView::OnTranslateRaverieGeometryMaterial(Event* event)
 {
   LibDataEntry* treeNode = (LibDataEntry*)mSource->ToEntry(mPrimaryCommandIndex);
   if (Resource* resource = treeNode->mResource)
   {
     ObjectEvent toSend(resource);
-    Z::gEditor->DispatchEvent("TranslateZilchGeometryMaterial", &toSend);
+    Z::gEditor->DispatchEvent("TranslateRaverieGeometryMaterial", &toSend);
   }
 }
 
-void LibraryView::OnTranslateZilchVertexMaterial(Event* event)
+void LibraryView::OnTranslateRaverieVertexMaterial(Event* event)
 {
   LibDataEntry* treeNode = (LibDataEntry*)mSource->ToEntry(mPrimaryCommandIndex);
   if (Resource* resource = treeNode->mResource)
   {
     ObjectEvent toSend(resource);
-    Z::gEditor->DispatchEvent("TranslateZilchVertexMaterial", &toSend);
+    Z::gEditor->DispatchEvent("TranslateRaverieVertexMaterial", &toSend);
   }
 }
 
@@ -1168,7 +1168,7 @@ void LibraryView::OnTranslateFragment(Event* event)
   if (Resource* resource = treeNode->mResource)
   {
     ObjectEvent toSend(resource);
-    Z::gEditor->DispatchEvent("TranslateZilchFragment", &toSend);
+    Z::gEditor->DispatchEvent("TranslateRaverieFragment", &toSend);
   }
 }
 
@@ -1197,7 +1197,7 @@ bool LibraryView::AddResourceOptionsToMenu(ContextMenu* menu, StringParam resouc
 
   // Attempt to get bound type for the tag and if we have a type is it a
   // resource
-  if (boundType && boundType->IsA(ZilchTypeId(Resource)))
+  if (boundType && boundType->IsA(RaverieTypeId(Resource)))
   {
     ResourceManager* manager = Z::gResources->GetResourceManager(boundType);
     if (manager->mCanAddFile || manager->mCanCreateNew)
@@ -1212,7 +1212,7 @@ bool LibraryView::AddResourceOptionsToMenu(ContextMenu* menu, StringParam resouc
       buttonTitle.Append(boundType->Name);
 
       ContextMenuEntry* entry = menu->AddEntry(buttonTitle.ToString());
-      ConnectThisTo(entry, Zero::Events::MenuItemSelected, OnAddResource);
+      ConnectThisTo(entry, Raverie::Events::MenuItemSelected, OnAddResource);
       entry->mContext.Add(boundType);
       return true;
     }
@@ -1443,7 +1443,7 @@ void LibraryView::OpenTagEditor()
 
   ActionSequence* seq = new ActionSequence(this);
   seq->Add(
-      AnimatePropertyGetSet(ZilchSelf, TagEditorCurrentHeight, Ease::Quad::Out, this, 0.3f, mTagEditorFinalHeight));
+      AnimatePropertyGetSet(RaverieSelf, TagEditorCurrentHeight, Ease::Quad::Out, this, 0.3f, mTagEditorFinalHeight));
 
   mTagEditor->SetIsAnimating(true);
 }
@@ -1457,9 +1457,9 @@ void LibraryView::CloseTagEditor()
 
   ActionSequence* seq = new ActionSequence(this);
   seq->Add(
-      AnimatePropertyGetSet(ZilchSelf, TagEditorCurrentHeight, Ease::Quad::Out, this, 0.3f, mTagEditorFinalHeight));
+      AnimatePropertyGetSet(RaverieSelf, TagEditorCurrentHeight, Ease::Quad::Out, this, 0.3f, mTagEditorFinalHeight));
 
   mTagEditor->SetIsAnimating(true);
 }
 
-} // namespace Zero
+} // namespace Raverie

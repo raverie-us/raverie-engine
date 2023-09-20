@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Represents info about a file path. This can be converted to the full
@@ -51,4 +51,4 @@ public:
   static StringRange FindLastDirectorySeparator(StringRange path);
 };
 
-} // namespace Zero
+} // namespace Raverie

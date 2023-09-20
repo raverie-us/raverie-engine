@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Forward Declarations
@@ -25,7 +25,7 @@ class CurveEditorToolbar;
 class AnimationButton : public Composite
 {
 public:
-  typedef AnimationButton ZilchSelf;
+  typedef AnimationButton RaverieSelf;
 
   AnimationButton(Composite* parent, StringParam element);
   void SetElement(StringParam element);
@@ -38,7 +38,7 @@ public:
 class AnimationSelector : public Composite
 {
 public:
-  typedef AnimationSelector ZilchSelf;
+  typedef AnimationSelector RaverieSelf;
 
   AnimationSelector(Composite* parent, AnimationEditor* editor);
 
@@ -61,7 +61,7 @@ public:
 class AnimationToolBox : public Composite
 {
 public:
-  typedef AnimationToolBox ZilchSelf;
+  typedef AnimationToolBox RaverieSelf;
 
   AnimationToolBox(Composite* parent, AnimationEditor* editor);
   ~AnimationToolBox();
@@ -107,7 +107,7 @@ class AnimationControls;
 class PlayControls : public Composite
 {
 public:
-  typedef PlayControls ZilchSelf;
+  typedef PlayControls RaverieSelf;
   PlayControls(Composite* parent, AnimationControls* controls);
 
   void Pause();
@@ -128,7 +128,7 @@ DeclareEnum3(PreviewDirection, Paused, Forward, Backward);
 class AnimationControls : public Composite
 {
 public:
-  typedef AnimationControls ZilchSelf;
+  typedef AnimationControls RaverieSelf;
 
   AnimationControls(Composite* parent, AnimationEditor* editor);
 
@@ -213,4 +213,4 @@ private:
   AnimationEditorData* mEditorData;
 };
 
-} // namespace Zero
+} // namespace Raverie

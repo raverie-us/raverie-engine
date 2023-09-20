@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 enum CoordinateMode
@@ -24,7 +24,7 @@ enum eImageMode
 class SlicedDefinition : public BaseDefinition
 {
 public:
-  ZilchDeclareType(SlicedDefinition, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SlicedDefinition, TypeCopyMode::ReferenceType);
 
   // BaseDefinition Interface
   void Initialize() override;
@@ -46,11 +46,11 @@ public:
 class ImageDefinition : public SlicedDefinition
 {
 public:
-  ZilchDeclareType(ImageDefinition, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ImageDefinition, TypeCopyMode::ReferenceType);
 
   // BaseDefinition Interface
   void Initialize() override;
   void Serialize(Serializer& stream) override;
 };
 
-} // namespace Zero
+} // namespace Raverie

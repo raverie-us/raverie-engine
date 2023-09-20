@@ -1,13 +1,13 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class HeightMapBrushStroke
 {
 public:
-  ZilchDeclareType(HeightMapBrushStroke, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(HeightMapBrushStroke, TypeCopyMode::ReferenceType);
 
   HeightMapBrushStroke()
   {
@@ -65,4 +65,4 @@ private:
   uint mFramesBetweenKeys;
 };
 
-} // namespace Zero
+} // namespace Raverie

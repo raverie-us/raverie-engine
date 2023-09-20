@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Info used during attach/detach to know who the
@@ -26,7 +26,7 @@ DeclareEvent(ChildrenOrderChanged);
 class HierarchyEvent : public Event
 {
 public:
-  ZilchDeclareType(HierarchyEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(HierarchyEvent, TypeCopyMode::ReferenceType);
 
   Cog* Parent;
   Cog* Child;
@@ -38,7 +38,7 @@ public:
 class Hierarchy : public Component
 {
 public:
-  ZilchDeclareType(Hierarchy, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Hierarchy, TypeCopyMode::ReferenceType);
 
   Hierarchy();
   ~Hierarchy();
@@ -68,7 +68,7 @@ public:
 class HierarchyComposition : public MetaComposition
 {
 public:
-  ZilchDeclareType(HierarchyComposition, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(HierarchyComposition, TypeCopyMode::ReferenceType);
 
   HierarchyComposition();
 
@@ -81,4 +81,4 @@ public:
 class Transform;
 void RelativeAttach(Transform* child, Transform* parent);
 
-} // namespace Zero
+} // namespace Raverie

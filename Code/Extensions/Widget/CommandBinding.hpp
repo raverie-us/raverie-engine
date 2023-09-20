@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 inline void CommandFailed(Command* command, BoundType* contextType)
@@ -35,10 +35,10 @@ public:
     pt1* param1 = manager->GetContext()->Get<pt1>();
 
     if (param0 == NULL)
-      return CommandFailed(command, ZilchTypeId(pt0));
+      return CommandFailed(command, RaverieTypeId(pt0));
 
     if (param1 == NULL)
-      return CommandFailed(command, ZilchTypeId(pt1));
+      return CommandFailed(command, RaverieTypeId(pt1));
 
     mFunction(param0, param1);
   }
@@ -71,7 +71,7 @@ public:
   {
     pt0* param0 = manager->GetContext()->Get<pt0>();
     if (param0 == nullptr)
-      return CommandFailed(command, ZilchTypeId(pt0));
+      return CommandFailed(command, RaverieTypeId(pt0));
 
     mFunction(param0);
   }
@@ -119,7 +119,7 @@ public:
 class MetaScriptTagAttribute : public MetaAttribute
 {
 public:
-  ZilchDeclareType(MetaScriptTagAttribute, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MetaScriptTagAttribute, TypeCopyMode::ReferenceType);
   MetaScriptTagAttribute();
 
   void PostProcess(Status& status, ReflectionObject* owner) override;
@@ -131,7 +131,7 @@ public:
 class MetaScriptShortcutAttribute : public MetaAttribute
 {
 public:
-  ZilchDeclareType(MetaScriptShortcutAttribute, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MetaScriptShortcutAttribute, TypeCopyMode::ReferenceType);
   MetaScriptShortcutAttribute();
 
   void PostProcess(Status& status, ReflectionObject* owner) override;
@@ -142,4 +142,4 @@ public:
   String mKey;
 };
 
-} // namespace Zero
+} // namespace Raverie

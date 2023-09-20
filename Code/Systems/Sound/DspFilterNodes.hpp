@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Volume Node
@@ -11,7 +11,7 @@ namespace Zero
 class VolumeNode : public SimpleCollapseNode
 {
 public:
-  ZilchDeclareType(VolumeNode, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(VolumeNode, TypeCopyMode::ReferenceType);
 
   VolumeNode(StringParam name, unsigned ID);
 
@@ -72,7 +72,7 @@ private:
 class PanningNode : public SimpleCollapseNode
 {
 public:
-  ZilchDeclareType(PanningNode, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(PanningNode, TypeCopyMode::ReferenceType);
 
   PanningNode(StringParam name, unsigned ID);
 
@@ -148,7 +148,7 @@ private:
 class PitchNode : public SimpleCollapseNode
 {
 public:
-  ZilchDeclareType(PitchNode, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(PitchNode, TypeCopyMode::ReferenceType);
 
   PitchNode(StringParam name, unsigned ID);
 
@@ -194,7 +194,7 @@ private:
 class LowPassNode : public SimpleCollapseNode
 {
 public:
-  ZilchDeclareType(LowPassNode, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(LowPassNode, TypeCopyMode::ReferenceType);
 
   LowPassNode(StringParam name, unsigned ID);
   ~LowPassNode();
@@ -217,7 +217,7 @@ private:
   Threaded<float> mCutoffFrequency;
   // The filter used for calculations (contains history so must have separate
   // filters per listener)
-  typedef Zero::HashMap<ListenerNode*, LowPassFilter*> FilterMapType;
+  typedef Raverie::HashMap<ListenerNode*, LowPassFilter*> FilterMapType;
   FilterMapType FiltersPerListener;
 };
 
@@ -228,7 +228,7 @@ private:
 class HighPassNode : public SimpleCollapseNode
 {
 public:
-  ZilchDeclareType(HighPassNode, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(HighPassNode, TypeCopyMode::ReferenceType);
 
   HighPassNode(StringParam name, unsigned ID);
   ~HighPassNode();
@@ -249,7 +249,7 @@ private:
   // The cutoff frequency for the high pass filter
   Threaded<float> mCutoffFrequency;
   // The filter used for calculations
-  typedef Zero::HashMap<ListenerNode*, HighPassFilter*> FilterMapType;
+  typedef Raverie::HashMap<ListenerNode*, HighPassFilter*> FilterMapType;
   FilterMapType FiltersPerListener;
 };
 
@@ -260,7 +260,7 @@ private:
 class BandPassNode : public SimpleCollapseNode
 {
 public:
-  ZilchDeclareType(BandPassNode, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(BandPassNode, TypeCopyMode::ReferenceType);
 
   BandPassNode(StringParam name, unsigned ID);
   ~BandPassNode();
@@ -288,7 +288,7 @@ private:
   // The Q factor (controls width of the band)
   Threaded<float> mQuality;
   // The filter used for calculations
-  typedef Zero::HashMap<ListenerNode*, BandPassFilter*> FilterMapType;
+  typedef Raverie::HashMap<ListenerNode*, BandPassFilter*> FilterMapType;
   FilterMapType FiltersPerListener;
 };
 
@@ -299,7 +299,7 @@ private:
 class EqualizerNode : public SimpleCollapseNode
 {
 public:
-  ZilchDeclareType(EqualizerNode, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(EqualizerNode, TypeCopyMode::ReferenceType);
 
   EqualizerNode(StringParam name, unsigned ID);
   ~EqualizerNode();
@@ -355,7 +355,7 @@ private:
   // volume adjustment applied to the band centered at 2500 Hz
   Threaded<float> mBand3Gain;
   // The filters used for calculations
-  typedef Zero::HashMap<ListenerNode*, Equalizer*> FilterMapType;
+  typedef Raverie::HashMap<ListenerNode*, Equalizer*> FilterMapType;
   FilterMapType FiltersPerListener;
 };
 
@@ -365,7 +365,7 @@ private:
 class ReverbNode : public SimpleCollapseNode
 {
 public:
-  ZilchDeclareType(ReverbNode, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ReverbNode, TypeCopyMode::ReferenceType);
 
   ReverbNode(StringParam name, unsigned ID);
   ~ReverbNode();
@@ -405,7 +405,7 @@ private:
   // Whether the reverb tail has finished
   bool mOutputFinishedThreaded;
   // The filter used for calculations
-  typedef Zero::HashMap<ListenerNode*, Reverb*> FilterMapType;
+  typedef Raverie::HashMap<ListenerNode*, Reverb*> FilterMapType;
   FilterMapType FiltersPerListener;
 };
 
@@ -415,7 +415,7 @@ private:
 class DelayNode : public SimpleCollapseNode
 {
 public:
-  ZilchDeclareType(DelayNode, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(DelayNode, TypeCopyMode::ReferenceType);
 
   DelayNode(StringParam name, unsigned ID);
   ~DelayNode();
@@ -462,7 +462,7 @@ private:
   // Wet level value (0 - 1.0)
   Threaded<float> mWetValue;
   // The filter used for calculations
-  typedef Zero::HashMap<ListenerNode*, DelayLine*> FilterMapType;
+  typedef Raverie::HashMap<ListenerNode*, DelayLine*> FilterMapType;
   FilterMapType FiltersPerListener;
 };
 
@@ -472,7 +472,7 @@ private:
 class FlangerNode : public SimpleCollapseNode
 {
 public:
-  ZilchDeclareType(FlangerNode, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(FlangerNode, TypeCopyMode::ReferenceType);
 
   FlangerNode(StringParam name, unsigned ID);
   ~FlangerNode();
@@ -513,7 +513,7 @@ private:
     Oscillator LFO;
   };
 
-  typedef Zero::HashMap<ListenerNode*, Data*> FilterMapType;
+  typedef Raverie::HashMap<ListenerNode*, Data*> FilterMapType;
   FilterMapType FiltersPerListener;
 
   // Maximum delay allowed
@@ -530,7 +530,7 @@ private:
 class ChorusNode : public SimpleCollapseNode
 {
 public:
-  ZilchDeclareType(ChorusNode, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ChorusNode, TypeCopyMode::ReferenceType);
 
   ChorusNode(StringParam name, unsigned ID);
   ~ChorusNode();
@@ -579,7 +579,7 @@ private:
     Oscillator LFO;
   };
 
-  typedef Zero::HashMap<ListenerNode*, Data*> FilterMapType;
+  typedef Raverie::HashMap<ListenerNode*, Data*> FilterMapType;
   FilterMapType FiltersPerListener;
 
   // Minimum delay amount
@@ -599,7 +599,7 @@ private:
 class CompressorNode : public SimpleCollapseNode
 {
 public:
-  ZilchDeclareType(CompressorNode, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CompressorNode, TypeCopyMode::ReferenceType);
 
   CompressorNode(StringParam name, unsigned ID);
 
@@ -657,7 +657,7 @@ private:
 class ExpanderNode : public SimpleCollapseNode
 {
 public:
-  ZilchDeclareType(ExpanderNode, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ExpanderNode, TypeCopyMode::ReferenceType);
 
   ExpanderNode(StringParam name, unsigned ID);
 
@@ -716,7 +716,7 @@ private:
 class AddNoiseNode : public SimpleCollapseNode
 {
 public:
-  ZilchDeclareType(AddNoiseNode, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(AddNoiseNode, TypeCopyMode::ReferenceType);
 
   AddNoiseNode(StringParam name, unsigned ID);
 
@@ -766,7 +766,7 @@ private:
 class ModulationNode : public SimpleCollapseNode
 {
 public:
-  ZilchDeclareType(ModulationNode, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ModulationNode, TypeCopyMode::ReferenceType);
 
   ModulationNode(StringParam name, unsigned ID);
   ~ModulationNode();
@@ -801,8 +801,8 @@ private:
   Threaded<float> mFrequency;
   Threaded<float> mWetLevelValue;
 
-  typedef Zero::HashMap<ListenerNode*, Oscillator*> OscMapType;
+  typedef Raverie::HashMap<ListenerNode*, Oscillator*> OscMapType;
   OscMapType OscillatorsPerListenerThreaded;
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace
@@ -168,7 +168,7 @@ void TileEditor2DOperation::Redo()
 }
 
 // --------------------------------------------------------- TileEditor2DSubTool
-ZilchDefineType(TileEditor2DSubTool, builder, type)
+RaverieDefineType(TileEditor2DSubTool, builder, type)
 {
 }
 
@@ -228,7 +228,7 @@ bool TileEditor2DSubTool::HasChange(TileMapChange& change)
 }
 
 // -------------------------------------------------------- TileEditor2DDrawTool
-ZilchDefineType(TileEditor2DDrawTool, builder, type)
+RaverieDefineType(TileEditor2DDrawTool, builder, type)
 {
 }
 
@@ -394,7 +394,7 @@ void TileEditor2DDrawTool::ApplyChanges(TileMap* map, Array<TileMapChange>& chan
 
 // ----------------------------------------------------------------
 // TileEditor2DSelectTool
-ZilchDefineType(TileEditor2DSelectTool, builder, type)
+RaverieDefineType(TileEditor2DSelectTool, builder, type)
 {
 }
 
@@ -479,22 +479,22 @@ void TileEditor2DSelectTool::SecondaryStart(TileMap* map)
 const char* TileEditor2D::cDefaultName = "TileMap";
 const char* TileEditor2D::cDefaultArchetype = "DefaultTileMap";
 
-ZilchDefineType(TileEditor2D, builder, type)
+RaverieDefineType(TileEditor2D, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindDependency(MouseCapture);
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindComponent();
+  RaverieBindDependency(MouseCapture);
+  RaverieBindSetup(SetupMode::DefaultSerialization);
 
-  ZilchBindGetterSetterProperty(ToolType);
-  ZilchBindMethodProperty(CreateTileMap);
+  RaverieBindGetterSetterProperty(ToolType);
+  RaverieBindMethodProperty(CreateTileMap);
   type->AddAttribute(ObjectAttributes::cTool);
 
-  ZilchBindGetterSetterProperty(ShowCollision);
-  ZilchBindGetterSetterProperty(ShowCoordinates);
-  ZilchBindFieldProperty(mShowArchetype);
-  ZilchBindFieldProperty(mShowInvalid);
-  ZilchBindFieldProperty(mShowGrid);
-  ZilchBindFieldProperty(mTiledDrawing);
+  RaverieBindGetterSetterProperty(ShowCollision);
+  RaverieBindGetterSetterProperty(ShowCoordinates);
+  RaverieBindFieldProperty(mShowArchetype);
+  RaverieBindFieldProperty(mShowInvalid);
+  RaverieBindFieldProperty(mShowGrid);
+  RaverieBindFieldProperty(mTiledDrawing);
 }
 
 TileEditor2D::TileEditor2D()
@@ -804,7 +804,7 @@ void TileEditor2D::OnToolDraw(Event*)
     }
 
     for (uint i = 1; i < gridLines.Size(); i += 2)
-      Zero::gDebugDraw->Add(Zero::Debug::Line(gridLines[i - 1], gridLines[i]).Color(Color::Gray));
+      Raverie::gDebugDraw->Add(Raverie::Debug::Line(gridLines[i - 1], gridLines[i]).Color(Color::Gray));
   }
 
   if (mShowCollision)
@@ -860,7 +860,7 @@ void TileEditor2D::OnToolDraw(Event*)
 
       Archetype* archetype = tile.GetArchetypeResource();
       if (archetype)
-        Zero::gDebugDraw->Add(Zero::Debug::Text(pos, real(0.15f), archetype->Name).Centered(true).Color(Color::Orange));
+        Raverie::gDebugDraw->Add(Raverie::Debug::Text(pos, real(0.15f), archetype->Name).Centered(true).Color(Color::Orange));
     }
   }
 
@@ -939,7 +939,7 @@ TileMap* TileEditor2D::GetTileMap()
 {
   // Disabled creation
   TileMap* tileMap = static_cast<TileMap*>(
-      Tool::GetOrCreateEditComponent(ZilchTypeId(TileMap), cDefaultName, cDefaultArchetype, mLastEdited, false));
+      Tool::GetOrCreateEditComponent(RaverieTypeId(TileMap), cDefaultName, cDefaultArchetype, mLastEdited, false));
   if (tileMap == NULL && mAddTileMapWidget.IsNull())
   {
     mAddTileMapWidget = Tool::CreateViewportTextWidget("No TileMap Object, Add New +");
@@ -1043,4 +1043,4 @@ void TileEditor2D::CommitOperation(TileMap* map, Array<TileMapChange>& changes)
   queue->Queue(op);
 }
 
-} // namespace Zero
+} // namespace Raverie

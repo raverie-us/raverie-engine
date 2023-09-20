@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Forward declarations
@@ -47,7 +47,7 @@ class LinkId : public Component
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(LinkId, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(LinkId, TypeCopyMode::ReferenceType);
 
   /// Component Interface.
   void Serialize(Serializer& stream) override;
@@ -62,7 +62,7 @@ public:
 class Named : public Component
 {
 public:
-  ZilchDeclareType(Named, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Named, TypeCopyMode::ReferenceType);
 
   /// Component Interface.
   void Serialize(Serializer& stream) override;
@@ -74,7 +74,7 @@ public:
 class Archetyped : public Component
 {
 public:
-  ZilchDeclareType(Archetyped, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Archetyped, TypeCopyMode::ReferenceType);
 
   /// Component Interface.
   void Serialize(Serializer& stream) override;
@@ -86,7 +86,7 @@ public:
 class EditorFlags : public Component
 {
 public:
-  ZilchDeclareType(EditorFlags, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(EditorFlags, TypeCopyMode::ReferenceType);
 
   EditorFlags()
   {
@@ -106,7 +106,7 @@ public:
 class SpaceObjects : public Component
 {
 public:
-  ZilchDeclareType(SpaceObjects, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SpaceObjects, TypeCopyMode::ReferenceType);
 
   // Component Interface
   void Serialize(Serializer& stream) override;
@@ -120,7 +120,7 @@ public:
 class ArchetypeInstance
 {
 public:
-  ZilchDeclareType(ArchetypeInstance, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ArchetypeInstance, TypeCopyMode::ReferenceType);
   String Name;
   uint Version;
 };
@@ -236,4 +236,4 @@ public:
   GameSession* mGameSession;
 };
 
-} // namespace Zero
+} // namespace Raverie

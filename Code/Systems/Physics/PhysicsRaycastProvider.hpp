@@ -1,14 +1,14 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Provides the interface for casting through PhysicsSpaces.
 class PhysicsRaycastProvider : public RaycastProvider
 {
 public:
-  ZilchDeclareType(PhysicsRaycastProvider, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(PhysicsRaycastProvider, TypeCopyMode::ReferenceType);
 
   PhysicsRaycastProvider();
 
@@ -27,4 +27,4 @@ public:
   bool mMultiSelectKinematic;
 };
 
-} // namespace Zero
+} // namespace Raverie

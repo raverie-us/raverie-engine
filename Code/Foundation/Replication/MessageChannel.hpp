@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Typedefs
@@ -141,8 +141,8 @@ struct MoveWithoutDestructionOperator<InMessageChannel>
 {
   static inline void MoveWithoutDestruction(InMessageChannel* dest, InMessageChannel* source)
   {
-    new (dest) InMessageChannel(ZeroMove(*source));
+    new (dest) InMessageChannel(RaverieMove(*source));
   }
 };
 
-} // namespace Zero
+} // namespace Raverie

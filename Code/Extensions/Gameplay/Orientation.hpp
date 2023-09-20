@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 DeclareEnum6(OrientationBases, ForwardZUpY, ForwardNegativeZUpY, ForwardXUpY, ForwardXUpZ, ForwardYUpZ, Custom);
@@ -13,7 +13,7 @@ class Orientation : public Component
 {
 public:
   // Meta Initialization
-  ZilchDeclareType(Orientation, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Orientation, TypeCopyMode::ReferenceType);
 
   // Component Interface
   void Serialize(Serializer& stream) override;
@@ -168,4 +168,4 @@ private:
   Vec3 mGlobalUp;
 };
 
-} // namespace Zero
+} // namespace Raverie

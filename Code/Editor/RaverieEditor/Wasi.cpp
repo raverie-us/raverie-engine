@@ -2,7 +2,7 @@
 #include <wasi/api.h>
 #include <unistd.h>
 
-ZeroNoReturn void fatal(const char* str) {
+RaverieNoReturn void fatal(const char* str) {
   ImportPrintLine(STDERR_FILENO, str, strlen(str));
   abort();
 }

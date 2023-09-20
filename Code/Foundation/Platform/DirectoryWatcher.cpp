@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 class TrackedFile
@@ -118,4 +118,4 @@ OsInt DirectoryWatcher::RunThreadEntryPoint()
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

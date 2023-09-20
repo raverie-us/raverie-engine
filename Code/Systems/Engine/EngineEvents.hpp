@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -12,7 +12,7 @@ DeclareEvent(ScriptInitialize);
 class TextEvent : public Event
 {
 public:
-  ZilchDeclareType(TextEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(TextEvent, TypeCopyMode::ReferenceType);
   TextEvent(StringParam text) : Text(text)
   {
   }
@@ -22,7 +22,7 @@ public:
 class TextErrorEvent : public TextEvent
 {
 public:
-  ZilchDeclareType(TextErrorEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(TextErrorEvent, TypeCopyMode::ReferenceType);
   TextErrorEvent(StringParam text, int code) : TextEvent(text), Code(code)
   {
   }
@@ -32,7 +32,7 @@ public:
 class BlockingTaskEvent : public Event
 {
 public:
-  ZilchDeclareType(BlockingTaskEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(BlockingTaskEvent, TypeCopyMode::ReferenceType);
 
   BlockingTaskEvent(StringParam taskName = String()) : mTaskName(taskName)
   {
@@ -40,4 +40,4 @@ public:
   String mTaskName;
 };
 
-} // namespace Zero
+} // namespace Raverie

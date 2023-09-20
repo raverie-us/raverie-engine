@@ -1,15 +1,15 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(SphericalParticleEmitter, builder, type)
+RaverieDefineType(SphericalParticleEmitter, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindInterface(ParticleEmitterShared);
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindInterface(ParticleEmitterShared);
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
 }
 
 void SphericalParticleEmitter::Initialize(CogInitializer& initializer)
@@ -106,12 +106,12 @@ int SphericalParticleEmitter::EmitParticles(
   return particlesToEmit;
 }
 
-ZilchDefineType(BoxParticleEmitter, builder, type)
+RaverieDefineType(BoxParticleEmitter, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindInterface(ParticleEmitterShared);
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindInterface(ParticleEmitterShared);
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
 }
 
 void BoxParticleEmitter::Initialize(CogInitializer& initializer)
@@ -198,16 +198,16 @@ int BoxParticleEmitter::EmitParticles(
   return particlesToEmit;
 }
 
-ZilchDefineType(MeshParticleEmitter, builder, type)
+RaverieDefineType(MeshParticleEmitter, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
 
-  ZeroBindInterface(ParticleEmitterShared);
-  ZeroBindDocumented();
-  ZilchBindGetterSetterProperty(Mesh);
-  ZilchBindGetterSetterProperty(MeshEmitMode);
-  ZilchBindFieldProperty(mNormalExtrude);
+  RaverieBindInterface(ParticleEmitterShared);
+  RaverieBindDocumented();
+  RaverieBindGetterSetterProperty(Mesh);
+  RaverieBindGetterSetterProperty(MeshEmitMode);
+  RaverieBindFieldProperty(mNormalExtrude);
 }
 
 void MeshParticleEmitter::Initialize(CogInitializer& initializer)
@@ -426,4 +426,4 @@ MeshEmitMode::Enum MeshParticleEmitter::GetMeshEmitMode()
   return mMeshEmitMode;
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace ViewportMenuUi
@@ -245,7 +245,7 @@ void EditorViewportMenu::OnGridButtonPressed(Event* e)
     {
       // Add the grid draw to the level settings object
       Cog* levelSettings = space->FindObjectByName(SpecialCogNames::LevelSettings);
-      levelSettings->AddComponentByType(ZilchTypeId(GridDraw));
+      levelSettings->AddComponentByType(RaverieTypeId(GridDraw));
       GridDraw* grid = levelSettings->has(GridDraw);
 
       // Set the grid axis based on the edit mode
@@ -264,4 +264,4 @@ void EditorViewportMenu::OnPopUpClosed(Event*)
     FadeOut();
 }
 
-} // namespace Zero
+} // namespace Raverie

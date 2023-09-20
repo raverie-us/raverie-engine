@@ -1,13 +1,13 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class NSquaredBroadPhase : public IBroadPhase
 {
 public:
-  ZilchDeclareType(NSquaredBroadPhase, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(NSquaredBroadPhase, TypeCopyMode::ReferenceType);
 
   typedef NSquared<void*> BroadPhaseType;
   typedef NSquaredRange<void*> range;
@@ -49,4 +49,4 @@ private:
   ClientPairArray mDataPairs;
 };
 
-} // namespace Zero
+} // namespace Raverie

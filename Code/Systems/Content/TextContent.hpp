@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Text content item. Text content is content that is loaded
@@ -10,7 +10,7 @@ namespace Zero
 class TextContent : public ContentComposition
 {
 public:
-  ZilchDeclareType(TextContent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(TextContent, TypeCopyMode::ReferenceType);
 
   TextContent();
 };
@@ -18,7 +18,7 @@ public:
 class BaseTextBuilder : public DirectBuilderComponent
 {
 public:
-  ZilchDeclareType(BaseTextBuilder, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(BaseTextBuilder, TypeCopyMode::ReferenceType);
 
   void Generate(ContentInitializer& initializer) override;
   BaseTextBuilder(uint order, StringParam extension, StringParam resourceName) :
@@ -34,7 +34,7 @@ const String TextExtension = ".txt";
 class TextBuilder : public BaseTextBuilder
 {
 public:
-  ZilchDeclareType(TextBuilder, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(TextBuilder, TypeCopyMode::ReferenceType);
 
   void SetDefaults()
   {
@@ -44,42 +44,42 @@ public:
   }
 };
 
-const String ZilchScriptResourceName = "ZilchScript";
+const String RaverieScriptResourceName = "RaverieScript";
 
-/// Zilch Script File builder.
-class ZilchScriptBuilder : public BaseTextBuilder
+/// Raverie Script File builder.
+class RaverieScriptBuilder : public BaseTextBuilder
 {
 public:
-  ZilchDeclareType(ZilchScriptBuilder, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(RaverieScriptBuilder, TypeCopyMode::ReferenceType);
 
   void SetDefaults()
   {
   }
 
-  ZilchScriptBuilder() :
+  RaverieScriptBuilder() :
       BaseTextBuilder(
-          15, FileExtensionManager::GetZilchScriptTypeEntry()->GetDefaultExtensionWithDot(), ZilchScriptResourceName)
+          15, FileExtensionManager::GetRaverieScriptTypeEntry()->GetDefaultExtensionWithDot(), RaverieScriptResourceName)
   {
   }
 };
 
-class ZilchFragmentBuilder : public BaseTextBuilder
+class RaverieFragmentBuilder : public BaseTextBuilder
 {
 public:
-  ZilchDeclareType(ZilchFragmentBuilder, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(RaverieFragmentBuilder, TypeCopyMode::ReferenceType);
 
   void SetDefaults()
   {
   }
 
-  ZilchFragmentBuilder()
+  RaverieFragmentBuilder()
       // Increase the load order to 9 so that these load before materials
       // (since a material may need the block created from this fragment)
       :
       BaseTextBuilder(
-          9, FileExtensionManager::GetZilchFragmentTypeEntry()->GetDefaultExtensionWithDot(), "ZilchFragment")
+          9, FileExtensionManager::GetRaverieFragmentTypeEntry()->GetDefaultExtensionWithDot(), "RaverieFragment")
   {
   }
 };
 
-} // namespace Zero
+} // namespace Raverie

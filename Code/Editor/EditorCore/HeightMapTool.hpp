@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Forward declarations
@@ -21,7 +21,7 @@ class HeightMapSubTool : public Object
 {
 public:
   /// Meta
-  ZilchDeclareType(HeightMapSubTool, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(HeightMapSubTool, TypeCopyMode::ReferenceType);
 
   /// Virtual destructor
   virtual ~HeightMapSubTool()
@@ -55,7 +55,7 @@ class HeightManipulationTool : public HeightMapSubTool
 {
 public:
   /// Meta
-  ZilchDeclareType(HeightManipulationTool, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(HeightManipulationTool, TypeCopyMode::ReferenceType);
 
   /// Constructor
   HeightManipulationTool();
@@ -109,7 +109,7 @@ class RaiseLowerTool : public HeightManipulationTool
 {
 public:
   /// Meta
-  ZilchDeclareType(RaiseLowerTool, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(RaiseLowerTool, TypeCopyMode::ReferenceType);
 
   /// Constructor
   RaiseLowerTool();
@@ -130,7 +130,7 @@ class SmoothSharpenTool : public HeightManipulationTool
 {
 public:
   /// Meta
-  ZilchDeclareType(SmoothSharpenTool, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SmoothSharpenTool, TypeCopyMode::ReferenceType);
 
   /// Constructor
   SmoothSharpenTool();
@@ -176,7 +176,7 @@ class FlattenTool : public HeightManipulationTool
 {
 public:
   /// Meta
-  ZilchDeclareType(FlattenTool, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(FlattenTool, TypeCopyMode::ReferenceType);
 
   /// Constructor
   FlattenTool();
@@ -212,7 +212,7 @@ class CreateDestroyTool : public HeightMapSubTool
 {
 public:
   /// Meta
-  ZilchDeclareType(CreateDestroyTool, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CreateDestroyTool, TypeCopyMode::ReferenceType);
 
   /// Constructor
   CreateDestroyTool();
@@ -248,7 +248,7 @@ class WeightPainterTool : public HeightMapSubTool
 {
 public:
   /// Meta
-  ZilchDeclareType(WeightPainterTool, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(WeightPainterTool, TypeCopyMode::ReferenceType);
 
   /// Constructor
   WeightPainterTool();
@@ -275,7 +275,7 @@ public:
 class HeightMapMouseCapture : public MouseManipulation
 {
 public:
-  typedef HeightMapMouseCapture ZilchSelf;
+  typedef HeightMapMouseCapture RaverieSelf;
 
   HandleOf<ReactiveViewport> mViewport;
   HandleOf<HeightMapTool> mHeightMapTool;
@@ -337,7 +337,8 @@ DeclareEnum2(CellIndexType, Local, Absoulte)
     ///     <description>
     ///       CreateDestroy:\Destroy patches instead of creating them.\ \
 ///       RaiseLower:\Lower height map with the brush instead of raising
-    ///       it.\ \ SmoothSharpen:\Sharpen height map with the brush instead
+    ///       it.\ \
+ SmoothSharpen:\Sharpen height map with the brush instead
     ///       of smoothing it.
     ///     </description>
     ///   </command>
@@ -346,7 +347,7 @@ DeclareEnum2(CellIndexType, Local, Absoulte)
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(HeightMapTool, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(HeightMapTool, TypeCopyMode::ReferenceType);
 
   /// Constructor and destructor
   HeightMapTool();
@@ -412,4 +413,4 @@ private:
   CogId mSelection;
 };
 
-} // namespace Zero
+} // namespace Raverie

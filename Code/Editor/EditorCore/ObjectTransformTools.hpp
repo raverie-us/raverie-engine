@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -13,7 +13,7 @@ DeclareEvent(DuplicateFirstChance);
 class ToolGizmoEvent : public Event
 {
 public:
-  ZilchDeclareType(ToolGizmoEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ToolGizmoEvent, TypeCopyMode::ReferenceType);
   ToolGizmoEvent(Cog* gizmo)
   {
     mGizmo = gizmo;
@@ -26,7 +26,7 @@ public:
 class GizmoCreator : public Component
 {
 public:
-  ZilchDeclareType(GizmoCreator, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(GizmoCreator, TypeCopyMode::ReferenceType);
 
   GizmoCreator();
 
@@ -50,7 +50,7 @@ public:
 class ObjectTransformTool : public Component
 {
 public:
-  ZilchDeclareType(ObjectTransformTool, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ObjectTransformTool, TypeCopyMode::ReferenceType);
 
   ObjectTransformTool();
 
@@ -135,7 +135,7 @@ public:
 class ObjectTranslateTool : public ObjectTransformTool
 {
 public:
-  ZilchDeclareType(ObjectTranslateTool, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ObjectTranslateTool, TypeCopyMode::ReferenceType);
 
   ObjectTranslateTool();
 
@@ -187,7 +187,7 @@ public:
 class ObjectScaleTool : public ObjectTransformTool
 {
 public:
-  ZilchDeclareType(ObjectScaleTool, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ObjectScaleTool, TypeCopyMode::ReferenceType);
 
   ObjectScaleTool();
 
@@ -243,7 +243,7 @@ public:
 class ObjectRotateTool : public ObjectTransformTool
 {
 public:
-  ZilchDeclareType(ObjectRotateTool, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ObjectRotateTool, TypeCopyMode::ReferenceType);
 
   ObjectRotateTool();
 
@@ -275,4 +275,4 @@ public:
   bool mAffectRotation;
 };
 
-} // end namespace Zero
+} // end namespace Raverie

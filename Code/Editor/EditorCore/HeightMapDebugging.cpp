@@ -1,18 +1,18 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(HeightMapDebugDrawer, builder, type)
+RaverieDefineType(HeightMapDebugDrawer, builder, type)
 {
   type->AddAttribute(ObjectAttributes::cHidden);
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDependency(HeightMap);
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDependency(HeightMap);
 
-  ZilchBindFieldProperty(mDrawTriangles)->ZeroSerialize(true);
-  ZilchBindFieldProperty(mDrawOffset);
+  RaverieBindFieldProperty(mDrawTriangles)->RaverieSerialize(true);
+  RaverieBindFieldProperty(mDrawOffset);
 }
 
 HeightMapDebugDrawer::HeightMapDebugDrawer()
@@ -187,17 +187,17 @@ void HeightMapDebugDrawer::DrawAabbProjection(const Aabb& aabb)
   gDebugDraw->Add(Debug::Obb(aabb));
 }
 
-ZilchDefineType(HeightMapAabbChecker, builder, type)
+RaverieDefineType(HeightMapAabbChecker, builder, type)
 {
   type->AddAttribute(ObjectAttributes::cHidden);
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultConstructor);
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultConstructor);
 
-  ZeroBindDependency(Transform);
+  RaverieBindDependency(Transform);
 
-  ZilchBindFieldProperty(mDrawHeightMap);
-  ZilchBindFieldProperty(mSkipNonCollidingCells);
-  ZilchBindFieldProperty(mHeightMapPath);
+  RaverieBindFieldProperty(mDrawHeightMap);
+  RaverieBindFieldProperty(mSkipNonCollidingCells);
+  RaverieBindFieldProperty(mHeightMapPath);
 }
 
 HeightMapAabbChecker::HeightMapAabbChecker()
@@ -300,4 +300,4 @@ void HeightMapAabbChecker::Draw()
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

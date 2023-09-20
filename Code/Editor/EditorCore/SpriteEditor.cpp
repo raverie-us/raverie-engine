@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // All of this should be switched over to the data driven tweakable system
@@ -135,13 +135,13 @@ SpriteOrigin::Enum ComputeOrigin(Vec2 currentOrigin, int frameSizeX, int frameSi
   return origin;
 }
 
-ZilchDefineType(SpriteFrame, builder, type)
+RaverieDefineType(SpriteFrame, builder, type)
 {
   // These are owned by the SpriteDataSource and can't be returned to script
-  type->HandleManager = ZilchManagerId(PointerManager);
+  type->HandleManager = RaverieManagerId(PointerManager);
 
-  ZilchBindConstructor(SpriteFrame&);
-  ZilchBindDestructor();
+  RaverieBindConstructor(SpriteFrame&);
+  RaverieBindDestructor();
 }
 
 SpriteFrame::SpriteFrame()
@@ -182,12 +182,12 @@ void SpriteFrame::AllocateFrame(uint frameIndex, Image& sourceImage, IntRect sou
 SpriteFrame* GetSpriteFrame(Widget* sidget)
 {
   Widget* widget = sidget->GetParent();
-  while (widget && !ZilchVirtualTypeId(widget)->IsA(ZilchTypeId(SpriteFrame)))
+  while (widget && !RaverieVirtualTypeId(widget)->IsA(RaverieTypeId(SpriteFrame)))
     widget = widget->GetParent();
   return (SpriteFrame*)widget;
 }
 
-ZilchDefineType(SpritePreview, builder, type)
+RaverieDefineType(SpritePreview, builder, type)
 {
 }
 
@@ -497,29 +497,29 @@ bool SpriteDataSource::SetData(DataEntry* dataEntry, const Any& variant, StringP
 }
 
 // Sprite Source Editor
-ZilchDefineType(SpriteSourceEditor, builder, type)
+RaverieDefineType(SpriteSourceEditor, builder, type)
 {
-  ZilchBindGetterSetterProperty(SpriteName);
+  RaverieBindGetterSetterProperty(SpriteName);
 
-  ZilchBindGetterSetterProperty(Origin);
-  ZilchBindFieldProperty(mOriginX);
-  ZilchBindFieldProperty(mOriginY);
+  RaverieBindGetterSetterProperty(Origin);
+  RaverieBindFieldProperty(mOriginX);
+  RaverieBindFieldProperty(mOriginY);
 
-  ZilchBindFieldProperty(mLooping);
+  RaverieBindFieldProperty(mLooping);
 
-  ZilchBindGetterSetterProperty(Sampling);
-  ZilchBindGetterSetterProperty(FrameRate);
-  ZilchBindFieldProperty(mPixelsPerUnit);
+  RaverieBindGetterSetterProperty(Sampling);
+  RaverieBindGetterSetterProperty(FrameRate);
+  RaverieBindFieldProperty(mPixelsPerUnit);
 
-  ZilchBindFieldProperty(mSpriteFill);
+  RaverieBindFieldProperty(mSpriteFill);
 
-  ZilchBindGetterSetterProperty(Left);
-  ZilchBindGetterSetterProperty(Right);
-  ZilchBindGetterSetterProperty(Top);
-  ZilchBindGetterSetterProperty(Bottom);
+  RaverieBindGetterSetterProperty(Left);
+  RaverieBindGetterSetterProperty(Right);
+  RaverieBindGetterSetterProperty(Top);
+  RaverieBindGetterSetterProperty(Bottom);
 
-  ZilchBindGetterSetterProperty(CurrentFrame);
-  ZilchBindGetterSetterProperty(PreviewAnimation);
+  RaverieBindGetterSetterProperty(CurrentFrame);
+  RaverieBindGetterSetterProperty(PreviewAnimation);
 }
 
 SpriteSourceEditor::SpriteSourceEditor(Composite* parent) : Composite(parent)
@@ -1269,4 +1269,4 @@ void EditSprite(SpriteSource* spriteSource)
   CenterToWindow(Z::gEditor, window, true);
 }
 
-} // namespace Zero
+} // namespace Raverie

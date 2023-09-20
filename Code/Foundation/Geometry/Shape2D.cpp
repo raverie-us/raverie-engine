@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 f32 ComputeArea(const Array<Vec2>& contour)
@@ -317,7 +317,7 @@ void Shape2D::DrawTriangles(ByteColor color, Mat4Param transform, bool borders, 
     b = Math::TransformPoint(transform, b);
     c = Math::TransformPoint(transform, c);
 
-    using namespace Zero;
+    using namespace Raverie;
     gDebugDraw->Add(Debug::Triangle(a, b, c).Color(color).Alpha(128).Border(borders));
   }
 }
@@ -696,4 +696,4 @@ void TransformShape(Mat4Param matrix, Shape2D* shape)
     TransformPolygon(matrix, &shape->mContours[i]);
 }
 
-} // namespace Zero
+} // namespace Raverie

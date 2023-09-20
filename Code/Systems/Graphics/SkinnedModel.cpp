@@ -2,18 +2,18 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(SkinnedModel, builder, type)
+RaverieDefineType(SkinnedModel, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindInterface(Graphical);
-  ZeroBindDocumented();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindComponent();
+  RaverieBindInterface(Graphical);
+  RaverieBindDocumented();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
 
-  ZilchBindGetterSetterProperty(Mesh);
-  ZilchBindGetterSetterProperty(SkeletonPath);
+  RaverieBindGetterSetterProperty(Mesh);
+  RaverieBindGetterSetterProperty(SkeletonPath);
 }
 
 void SkinnedModel::Serialize(Serializer& stream)
@@ -230,4 +230,4 @@ void SkinnedModel::OnSkeletonDestroyed(Event* event)
   UpdateBoneIndexRemap();
 }
 
-} // namespace Zero
+} // namespace Raverie

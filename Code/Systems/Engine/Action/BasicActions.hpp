@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 ////Basic Actions////////
@@ -10,7 +10,7 @@ namespace Zero
 class ActionDelay : public Action
 {
 public:
-  ZilchDeclareType(ActionDelay, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ActionDelay, TypeCopyMode::ReferenceType);
 
   ActionDelay(float duration) : mTimeLeft(duration)
   {
@@ -54,7 +54,7 @@ public:
 private:
 };
 
-/// Temporary action (needs to be reworked for zilch) that sends an
+/// Temporary action (needs to be reworked for raverie) that sends an
 /// event to an object. Takes ownership of the event to send.
 class ActionEvent : public Action
 {
@@ -96,4 +96,4 @@ public:
   }
 };
 
-} // namespace Zero
+} // namespace Raverie

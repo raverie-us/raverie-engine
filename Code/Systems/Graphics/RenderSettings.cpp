@@ -2,30 +2,30 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(ShaderInputs, builder, type)
+RaverieDefineType(ShaderInputs, builder, type)
 {
-  ZeroBindDocumented();
-  ZilchBindDestructor();
+  RaverieBindDocumented();
+  RaverieBindDestructor();
 
-  ZilchBindMethod(Create);
+  RaverieBindMethod(Create);
 
-  ZilchBindOverloadedMethod(Add, ZilchInstanceOverload(void, String, String, bool));
-  ZilchBindOverloadedMethod(Add, ZilchInstanceOverload(void, String, String, int));
-  ZilchBindOverloadedMethod(Add, ZilchInstanceOverload(void, String, String, IntVec2));
-  ZilchBindOverloadedMethod(Add, ZilchInstanceOverload(void, String, String, IntVec3));
-  ZilchBindOverloadedMethod(Add, ZilchInstanceOverload(void, String, String, IntVec4));
-  ZilchBindOverloadedMethod(Add, ZilchInstanceOverload(void, String, String, float));
-  ZilchBindOverloadedMethod(Add, ZilchInstanceOverload(void, String, String, Vec2));
-  ZilchBindOverloadedMethod(Add, ZilchInstanceOverload(void, String, String, Vec3));
-  ZilchBindOverloadedMethod(Add, ZilchInstanceOverload(void, String, String, Vec4));
-  ZilchBindOverloadedMethod(Add, ZilchInstanceOverload(void, String, String, Mat3));
-  ZilchBindOverloadedMethod(Add, ZilchInstanceOverload(void, String, String, Mat4));
-  ZilchBindOverloadedMethod(Add, ZilchInstanceOverload(void, String, String, Texture*));
-  ZilchBindMethod(Remove);
-  ZilchBindMethod(Clear);
+  RaverieBindOverloadedMethod(Add, RaverieInstanceOverload(void, String, String, bool));
+  RaverieBindOverloadedMethod(Add, RaverieInstanceOverload(void, String, String, int));
+  RaverieBindOverloadedMethod(Add, RaverieInstanceOverload(void, String, String, IntVec2));
+  RaverieBindOverloadedMethod(Add, RaverieInstanceOverload(void, String, String, IntVec3));
+  RaverieBindOverloadedMethod(Add, RaverieInstanceOverload(void, String, String, IntVec4));
+  RaverieBindOverloadedMethod(Add, RaverieInstanceOverload(void, String, String, float));
+  RaverieBindOverloadedMethod(Add, RaverieInstanceOverload(void, String, String, Vec2));
+  RaverieBindOverloadedMethod(Add, RaverieInstanceOverload(void, String, String, Vec3));
+  RaverieBindOverloadedMethod(Add, RaverieInstanceOverload(void, String, String, Vec4));
+  RaverieBindOverloadedMethod(Add, RaverieInstanceOverload(void, String, String, Mat3));
+  RaverieBindOverloadedMethod(Add, RaverieInstanceOverload(void, String, String, Mat4));
+  RaverieBindOverloadedMethod(Add, RaverieInstanceOverload(void, String, String, Texture*));
+  RaverieBindMethod(Remove);
+  RaverieBindMethod(Clear);
 }
 
 ShaderInputs::~ShaderInputs()
@@ -101,7 +101,7 @@ void ShaderInputs::Add(String fragmentName, String inputName, Texture* input)
 
 void ShaderInputs::Add(String fragmentName, String inputName, ShaderInputType::Enum type, AnyParam value)
 {
-  ZilchShaderGenerator* shaderGenerator = Z::gEngine->has(GraphicsEngine)->mShaderGenerator;
+  RaverieShaderGenerator* shaderGenerator = Z::gEngine->has(GraphicsEngine)->mShaderGenerator;
 
   ShaderInput shaderInput = shaderGenerator->CreateShaderInput(fragmentName, inputName, type, value);
   if (shaderInput.mShaderInputType != ShaderInputType::Invalid)
@@ -119,24 +119,24 @@ void ShaderInputs::Clear()
 }
 
 DefineThreadSafeReferenceCountedHandle(GraphicsBlendSettings);
-ZilchDefineType(GraphicsBlendSettings, builder, type)
+RaverieDefineType(GraphicsBlendSettings, builder, type)
 {
-  ZeroBindDocumented();
-  ZeroBindThreadSafeReferenceCountedHandle();
-  ZilchBindDefaultCopyDestructor();
+  RaverieBindDocumented();
+  RaverieBindThreadSafeReferenceCountedHandle();
+  RaverieBindDefaultCopyDestructor();
   type->CreatableInScript = true;
 
   // Will probably remove these functions, so don't want them bound
-  // ZilchBindMethod(SetBlendAlpha);
-  // ZilchBindMethod(SetBlendAdditive);
+  // RaverieBindMethod(SetBlendAlpha);
+  // RaverieBindMethod(SetBlendAdditive);
 
-  ZilchBindGetterSetterProperty(BlendMode);
-  ZilchBindGetterSetterProperty(BlendEquation);
-  ZilchBindGetterSetterProperty(SourceFactor);
-  ZilchBindGetterSetterProperty(DestFactor);
-  ZilchBindGetterSetterProperty(BlendEquationAlpha);
-  ZilchBindGetterSetterProperty(SourceFactorAlpha);
-  ZilchBindGetterSetterProperty(DestFactorAlpha);
+  RaverieBindGetterSetterProperty(BlendMode);
+  RaverieBindGetterSetterProperty(BlendEquation);
+  RaverieBindGetterSetterProperty(SourceFactor);
+  RaverieBindGetterSetterProperty(DestFactor);
+  RaverieBindGetterSetterProperty(BlendEquationAlpha);
+  RaverieBindGetterSetterProperty(SourceFactorAlpha);
+  RaverieBindGetterSetterProperty(DestFactorAlpha);
 
   BlendSettings::Constructed = &GraphicsBlendSettings::ConstructedStatic;
   BlendSettings::Destructed = &GraphicsBlendSettings::DestructedStatic;
@@ -163,38 +163,38 @@ void GraphicsBlendSettings::DestructedInstance()
 }
 
 DefineThreadSafeReferenceCountedHandle(GraphicsDepthSettings);
-ZilchDefineType(GraphicsDepthSettings, builder, type)
+RaverieDefineType(GraphicsDepthSettings, builder, type)
 {
-  ZeroBindDocumented();
-  ZeroBindThreadSafeReferenceCountedHandle();
-  ZilchBindDefaultCopyDestructor();
+  RaverieBindDocumented();
+  RaverieBindThreadSafeReferenceCountedHandle();
+  RaverieBindDefaultCopyDestructor();
   type->CreatableInScript = true;
 
   // Will probably remove these functions, so don't want them bound
-  // ZilchBindMethod(SetDepthRead);
-  // ZilchBindMethod(SetDepthWrite);
-  // ZilchBindMethod(SetStencilTestMode);
-  // ZilchBindMethod(SetStencilIncrement);
-  // ZilchBindMethod(SetStencilDecrement);
+  // RaverieBindMethod(SetDepthRead);
+  // RaverieBindMethod(SetDepthWrite);
+  // RaverieBindMethod(SetStencilTestMode);
+  // RaverieBindMethod(SetStencilIncrement);
+  // RaverieBindMethod(SetStencilDecrement);
 
-  ZilchBindGetterSetterProperty(DepthMode);
-  ZilchBindGetterSetterProperty(DepthCompareFunc);
-  ZilchBindGetterSetterProperty(StencilMode);
-  ZilchBindGetterSetterProperty(StencilCompareFunc);
-  ZilchBindGetterSetterProperty(StencilFailOp);
-  ZilchBindGetterSetterProperty(DepthFailOp);
-  ZilchBindGetterSetterProperty(DepthPassOp);
-  ZilchBindGetterSetterProperty(StencilCompareFuncBackFace);
-  ZilchBindGetterSetterProperty(StencilFailOpBackFace);
-  ZilchBindGetterSetterProperty(DepthFailOpBackFace);
-  ZilchBindGetterSetterProperty(DepthPassOpBackFace);
+  RaverieBindGetterSetterProperty(DepthMode);
+  RaverieBindGetterSetterProperty(DepthCompareFunc);
+  RaverieBindGetterSetterProperty(StencilMode);
+  RaverieBindGetterSetterProperty(StencilCompareFunc);
+  RaverieBindGetterSetterProperty(StencilFailOp);
+  RaverieBindGetterSetterProperty(DepthFailOp);
+  RaverieBindGetterSetterProperty(DepthPassOp);
+  RaverieBindGetterSetterProperty(StencilCompareFuncBackFace);
+  RaverieBindGetterSetterProperty(StencilFailOpBackFace);
+  RaverieBindGetterSetterProperty(DepthFailOpBackFace);
+  RaverieBindGetterSetterProperty(DepthPassOpBackFace);
 
-  ZilchBindFieldProperty(mStencilReadMask);
-  ZilchBindFieldProperty(mStencilWriteMask);
-  ZilchBindFieldProperty(mStencilTestValue);
-  ZilchBindFieldProperty(mStencilReadMaskBackFace);
-  ZilchBindFieldProperty(mStencilWriteMaskBackFace);
-  ZilchBindFieldProperty(mStencilTestValueBackFace);
+  RaverieBindFieldProperty(mStencilReadMask);
+  RaverieBindFieldProperty(mStencilWriteMask);
+  RaverieBindFieldProperty(mStencilTestValue);
+  RaverieBindFieldProperty(mStencilReadMaskBackFace);
+  RaverieBindFieldProperty(mStencilWriteMaskBackFace);
+  RaverieBindFieldProperty(mStencilTestValueBackFace);
 
   DepthSettings::Constructed = &GraphicsDepthSettings::ConstructedStatic;
   DepthSettings::Destructed = &GraphicsDepthSettings::DestructedStatic;
@@ -220,20 +220,20 @@ void GraphicsDepthSettings::DestructedInstance()
   DestructThreadSafeReferenceCountedHandle();
 }
 
-ZilchDefineType(GraphicsRenderSettings, builder, type)
+RaverieDefineType(GraphicsRenderSettings, builder, type)
 {
-  ZeroBindDocumented();
-  ZilchBindDefaultCopyDestructor();
+  RaverieBindDocumented();
+  RaverieBindDefaultCopyDestructor();
   type->CreatableInScript = true;
 
-  ZilchBindSetter(ColorTarget);
-  ZilchBindSetter(DepthTarget);
-  ZilchBindGetter(MultiRenderTarget);
+  RaverieBindSetter(ColorTarget);
+  RaverieBindSetter(DepthTarget);
+  RaverieBindGetter(MultiRenderTarget);
 
-  ZilchBindGetterSetter(BlendSettings);
-  ZilchBindGetterSetter(DepthSettings);
-  ZilchBindGetterSetter(CullMode);
-  ZilchBindGetterSetter(GlobalShaderInputs);
+  RaverieBindGetterSetter(BlendSettings);
+  RaverieBindGetterSetter(DepthSettings);
+  RaverieBindGetterSetter(CullMode);
+  RaverieBindGetterSetter(GlobalShaderInputs);
 }
 
 GraphicsRenderSettings::GraphicsRenderSettings()
@@ -351,11 +351,11 @@ MultiRenderTarget* GraphicsRenderSettings::GetMultiRenderTarget()
   return multiRenderTarget;
 }
 
-ZilchDefineType(ColorTargetMrt, builder, type)
+RaverieDefineType(ColorTargetMrt, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindMethod(Set);
+  RaverieBindMethod(Set);
 }
 
 void ColorTargetMrt::Set(uint index, RenderTarget* colorTarget)
@@ -365,12 +365,12 @@ void ColorTargetMrt::Set(uint index, RenderTarget* colorTarget)
   mRenderSettings->SetColorTargetMrt(colorTarget, index);
 }
 
-ZilchDefineType(BlendSettingsMrt, builder, type)
+RaverieDefineType(BlendSettingsMrt, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindMethod(Get);
-  ZilchBindMethod(Set);
+  RaverieBindMethod(Get);
+  RaverieBindMethod(Set);
 }
 
 void BlendSettingsMrt::Set(uint index, GraphicsBlendSettings* blendSettings)
@@ -390,29 +390,29 @@ GraphicsBlendSettings* BlendSettingsMrt::Get(uint index)
   return mRenderSettings->GetBlendSettingsMrt(index);
 }
 
-ZilchDefineType(MultiRenderTarget, builder, type)
+RaverieDefineType(MultiRenderTarget, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindGetterAs(ColorTargetMrt, "ColorTarget");
-  ZilchBindSetter(ColorTarget0);
-  ZilchBindSetter(ColorTarget1);
-  ZilchBindSetter(ColorTarget2);
-  ZilchBindSetter(ColorTarget3);
-  ZilchBindSetter(ColorTarget4);
-  ZilchBindSetter(ColorTarget5);
-  ZilchBindSetter(ColorTarget6);
-  ZilchBindSetter(ColorTarget7);
+  RaverieBindGetterAs(ColorTargetMrt, "ColorTarget");
+  RaverieBindSetter(ColorTarget0);
+  RaverieBindSetter(ColorTarget1);
+  RaverieBindSetter(ColorTarget2);
+  RaverieBindSetter(ColorTarget3);
+  RaverieBindSetter(ColorTarget4);
+  RaverieBindSetter(ColorTarget5);
+  RaverieBindSetter(ColorTarget6);
+  RaverieBindSetter(ColorTarget7);
 
-  ZilchBindGetterAs(BlendSettingsMrt, "BlendSettings");
-  ZilchBindGetterSetter(BlendSettings0);
-  ZilchBindGetterSetter(BlendSettings1);
-  ZilchBindGetterSetter(BlendSettings2);
-  ZilchBindGetterSetter(BlendSettings3);
-  ZilchBindGetterSetter(BlendSettings4);
-  ZilchBindGetterSetter(BlendSettings5);
-  ZilchBindGetterSetter(BlendSettings6);
-  ZilchBindGetterSetter(BlendSettings7);
+  RaverieBindGetterAs(BlendSettingsMrt, "BlendSettings");
+  RaverieBindGetterSetter(BlendSettings0);
+  RaverieBindGetterSetter(BlendSettings1);
+  RaverieBindGetterSetter(BlendSettings2);
+  RaverieBindGetterSetter(BlendSettings3);
+  RaverieBindGetterSetter(BlendSettings4);
+  RaverieBindGetterSetter(BlendSettings5);
+  RaverieBindGetterSetter(BlendSettings6);
+  RaverieBindGetterSetter(BlendSettings7);
 }
 
 MultiRenderTarget::MultiRenderTarget(HandleOf<GraphicsRenderSettings> renderSettings) :
@@ -422,4 +422,4 @@ MultiRenderTarget::MultiRenderTarget(HandleOf<GraphicsRenderSettings> renderSett
 {
 }
 
-} // namespace Zero
+} // namespace Raverie

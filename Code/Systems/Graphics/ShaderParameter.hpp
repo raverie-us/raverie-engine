@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 #define SetParam(name)                                                                                                 \
   {                                                                                                                    \
@@ -57,4 +57,4 @@ void Load(type& data, Shader* shader)
   data.Visit(shader, LoadShaderParamter());
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class GameSession;
@@ -32,7 +32,7 @@ typedef ArrayMultiMap<String, Space*> SpaceMap;
 class GameEvent : public Event
 {
 public:
-  ZilchDeclareType(GameEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(GameEvent, TypeCopyMode::ReferenceType);
 
   GameEvent();
 
@@ -52,7 +52,7 @@ public:
 class GameSession : public Cog
 {
 public:
-  ZilchDeclareType(GameSession, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(GameSession, TypeCopyMode::ReferenceType);
 
   GameSession();
   ~GameSession();
@@ -150,4 +150,4 @@ public:
   HandleOf<GameWidget> mGameWidget;
 };
 
-} // namespace Zero
+} // namespace Raverie

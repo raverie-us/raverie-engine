@@ -1,12 +1,12 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(ContentSystem, builder, type)
+RaverieDefineType(ContentSystem, builder, type)
 {
-  type->HandleManager = ZilchManagerId(PointerManager);
+  type->HandleManager = RaverieManagerId(PointerManager);
 }
 
 void CreateAudioContent(ContentSystem* system);
@@ -23,7 +23,7 @@ namespace Events
 DefineEvent(PackageBuilt);
 } // namespace Events
 
-ZilchDefineType(ContentSystemEvent, builder, type)
+RaverieDefineType(ContentSystemEvent, builder, type)
 {
 }
 
@@ -753,4 +753,4 @@ void ContentSystem::EnumerateLibrariesInPath(StringParam path)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

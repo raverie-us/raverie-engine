@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -18,17 +18,17 @@ DefineEvent(GroupCollisionPreSolve);
 DefineEvent(PhysicsUpdateFinished);
 } // namespace Events
 
-ZilchDefineType(BaseCollisionEvent, builder, type)
+RaverieDefineType(BaseCollisionEvent, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindGetterProperty(Object);
-  ZilchBindGetterProperty(OtherObject);
+  RaverieBindGetterProperty(Object);
+  RaverieBindGetterProperty(OtherObject);
 
-  ZilchBindGetterProperty(ContactPointCount);
-  ZilchBindGetterProperty(IsGhost);
+  RaverieBindGetterProperty(ContactPointCount);
+  RaverieBindGetterProperty(IsGhost);
 
-  ZilchBindGetterProperty(ContactPoints);
+  RaverieBindGetterProperty(ContactPoints);
 }
 
 BaseCollisionEvent::BaseCollisionEvent()
@@ -110,13 +110,13 @@ const Physics::ManifoldPoint& BaseCollisionEvent::GetPoint(uint index)
   return mManifold->Contacts[index];
 }
 
-ZilchDefineType(CollisionEvent, builder, type)
+RaverieDefineType(CollisionEvent, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindGetterProperty(FirstPoint);
+  RaverieBindGetterProperty(FirstPoint);
 
-  ZeroBindTag(Tags::Physics);
+  RaverieBindTag(Tags::Physics);
 }
 
 CollisionEvent::CollisionEvent()
@@ -160,15 +160,15 @@ String CollisionEvent::GetEventName(BaseCollisionEvent::CollisionType type)
     return Events::CollisionEnded;
 }
 
-ZilchDefineType(CollisionGroupEvent, builder, type)
+RaverieDefineType(CollisionGroupEvent, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindGetterProperty(TypeAName);
-  ZilchBindGetterProperty(TypeBName);
-  ZilchBindGetterProperty(FirstPoint);
+  RaverieBindGetterProperty(TypeAName);
+  RaverieBindGetterProperty(TypeBName);
+  RaverieBindGetterProperty(FirstPoint);
 
-  ZeroBindTag(Tags::Physics);
+  RaverieBindTag(Tags::Physics);
 }
 
 CollisionGroupEvent::CollisionGroupEvent()
@@ -211,14 +211,14 @@ String CollisionGroupEvent::GetEventName(BaseCollisionEvent::CollisionType type)
     return Events::GroupCollisionEnded;
 }
 
-ZilchDefineType(PreSolveEvent, builder, type)
+RaverieDefineType(PreSolveEvent, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetter(Restitution);
-  ZilchBindGetterSetter(Friction);
+  RaverieBindGetterSetter(Restitution);
+  RaverieBindGetterSetter(Friction);
 
-  ZeroBindTag(Tags::Physics);
+  RaverieBindTag(Tags::Physics);
 }
 
 PreSolveEvent::PreSolveEvent()
@@ -257,4 +257,4 @@ void PreSolveEvent::SetFriction(real friction)
   mManifold->DynamicFriction = friction;
 }
 
-} // namespace Zero
+} // namespace Raverie

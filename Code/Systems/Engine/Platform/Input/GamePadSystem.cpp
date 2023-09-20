@@ -2,7 +2,7 @@
 #include "Precompiled.hpp"
 #include "Foundation/Platform/PlatformCommunication.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Z
@@ -19,14 +19,14 @@ DefineEvent(GamepadsUpdated);
 DefineEvent(GamepadUpdated);
 } // namespace Events
 
-ZilchDefineType(GamepadEvent, builder, type)
+RaverieDefineType(GamepadEvent, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindFieldProperty(mGamepad);
-  ZilchBindFieldProperty(mButton);
-  ZilchBindFieldProperty(mFlickDirection);
-  ZilchBindFieldProperty(mFlickedStick);
+  RaverieBindFieldProperty(mGamepad);
+  RaverieBindFieldProperty(mButton);
+  RaverieBindFieldProperty(mFlickDirection);
+  RaverieBindFieldProperty(mFlickedStick);
 }
 
 GamepadEvent::GamepadEvent(Gamepad* gamepad, int buttonIndex)
@@ -83,33 +83,33 @@ void Button::Update(Gamepad* pad, uint value, float elasped, bool& anyDown)
   }
 }
 
-ZilchDefineType(Gamepad, builder, type)
+RaverieDefineType(Gamepad, builder, type)
 {
-  type->HandleManager = ZilchManagerId(PointerManager);
-  ZeroBindDocumented();
+  type->HandleManager = RaverieManagerId(PointerManager);
+  RaverieBindDocumented();
 
-  ZilchBindFieldProperty(mIsActive);
-  ZilchBindFieldProperty(mGamepadIndex);
+  RaverieBindFieldProperty(mIsActive);
+  RaverieBindFieldProperty(mGamepadIndex);
 
-  ZilchBindFieldProperty(mLeftStick);
-  ZilchBindFieldProperty(mRightStick);
-  ZilchBindFieldProperty(mLeftStickDelta);
-  ZilchBindFieldProperty(mRightStickDelta);
+  RaverieBindFieldProperty(mLeftStick);
+  RaverieBindFieldProperty(mRightStick);
+  RaverieBindFieldProperty(mLeftStickDelta);
+  RaverieBindFieldProperty(mRightStickDelta);
 
-  ZilchBindFieldProperty(mLeftTrigger);
-  ZilchBindFieldProperty(mRightTrigger);
+  RaverieBindFieldProperty(mLeftTrigger);
+  RaverieBindFieldProperty(mRightTrigger);
 
-  ZilchBindMethod(IsButtonPressed);
-  ZilchBindMethod(IsButtonHeld);
-  ZilchBindMethod(IsButtonReleased);
-  ZilchBindMethod(TimeButtonHeld);
+  RaverieBindMethod(IsButtonPressed);
+  RaverieBindMethod(IsButtonHeld);
+  RaverieBindMethod(IsButtonReleased);
+  RaverieBindMethod(TimeButtonHeld);
 
-  ZilchBindMethod(Vibrate);
+  RaverieBindMethod(Vibrate);
 
-  ZeroBindEvent(Events::ButtonDown, GamepadEvent);
-  ZeroBindEvent(Events::ButtonUp, GamepadEvent);
-  ZeroBindEvent(Events::GamepadUpdated, ObjectEvent);
-  ZeroBindEvent(Events::GamepadStickFlicked, GamepadEvent);
+  RaverieBindEvent(Events::ButtonDown, GamepadEvent);
+  RaverieBindEvent(Events::ButtonUp, GamepadEvent);
+  RaverieBindEvent(Events::GamepadUpdated, ObjectEvent);
+  RaverieBindEvent(Events::GamepadStickFlicked, GamepadEvent);
 }
 
 Gamepad::Gamepad()
@@ -340,13 +340,13 @@ void Gamepad::Update(float elasped)
   }
 }
 
-ZilchDefineType(Gamepads, builder, type)
+RaverieDefineType(Gamepads, builder, type)
 {
-  type->HandleManager = ZilchManagerId(PointerManager);
-  ZeroBindDocumented();
-  ZilchBindMethod(GetGamePad);
-  ZilchBindGetterProperty(MaxGamepadCount);
-  ZeroBindEvent(Events::GamepadsUpdated, ObjectEvent);
+  type->HandleManager = RaverieManagerId(PointerManager);
+  RaverieBindDocumented();
+  RaverieBindMethod(GetGamePad);
+  RaverieBindGetterProperty(MaxGamepadCount);
+  RaverieBindEvent(Events::GamepadsUpdated, ObjectEvent);
 }
 
 Gamepads::Gamepads()
@@ -407,4 +407,4 @@ void Gamepads::Update()
     mGamePads[i]->Update(0.0f);
 }
 
-} // namespace Zero
+} // namespace Raverie

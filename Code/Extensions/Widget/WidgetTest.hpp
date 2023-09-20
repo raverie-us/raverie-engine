@@ -1,13 +1,13 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class WidgetTest : public ColorBlock
 {
 public:
-  typedef WidgetTest ZilchSelf;
+  typedef WidgetTest RaverieSelf;
   WidgetTest(Composite* parent, StringParam name);
   void OnMouseEvent(MouseEvent* event);
   void OnKeyboardEvent(KeyboardEvent* event);
@@ -18,7 +18,7 @@ public:
 class ParentWidgetTest : public Composite
 {
 public:
-  typedef ParentWidgetTest ZilchSelf;
+  typedef ParentWidgetTest RaverieSelf;
   ParentWidgetTest(Composite* parent, StringParam name);
   void OnFocusEvent(FocusEvent* event);
   void OnMouseEvent(MouseEvent* event);
@@ -29,4 +29,4 @@ void FlexMinSizeLayoutTest(Composite* testWindow);
 void StandardControlsLayoutTest(Composite* testWindow);
 void OpenTestWidgets(Composite* owner);
 
-} // namespace Zero
+} // namespace Raverie

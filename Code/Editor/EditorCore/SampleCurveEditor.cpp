@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 SampleCurveEditor::SampleCurveEditor(Composite* parent, GraphWidget* graph) : CurveEditor(parent)
@@ -365,4 +365,4 @@ void MultiSampleCurveEditor::OnWidthChange(Event*)
   DispatchBubble(Events::TabModified, &eventToSend);
 }
 
-} // namespace Zero
+} // namespace Raverie

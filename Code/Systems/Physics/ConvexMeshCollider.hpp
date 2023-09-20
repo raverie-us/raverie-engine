@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class ConvexMesh;
@@ -11,7 +11,7 @@ class ConvexMesh;
 class ConvexMeshCollider : public Collider
 {
 public:
-  ZilchDeclareType(ConvexMeshCollider, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ConvexMeshCollider, TypeCopyMode::ReferenceType);
 
   ConvexMeshCollider();
 
@@ -50,4 +50,4 @@ public:
   HandleOf<ConvexMesh> mConvexMesh;
 };
 
-} // namespace Zero
+} // namespace Raverie

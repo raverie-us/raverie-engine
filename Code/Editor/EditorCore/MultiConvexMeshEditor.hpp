@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class Cog;
@@ -42,7 +42,7 @@ public:
 class MultiConvexMeshPoint : public Widget
 {
 public:
-  ZilchDeclareType(MultiConvexMeshPoint, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MultiConvexMeshPoint, TypeCopyMode::ReferenceType);
 
   MultiConvexMeshPoint(Composite* parent, MultiConvexMeshEditor* editor);
   MultiConvexMeshPoint(Composite* parent, MultiConvexMeshEditor* editor, Vec3Param worldPoint);
@@ -124,7 +124,7 @@ DeclareEnum2(MultiConvexMeshAutoComputeMode, Alpha, Intensity);
 /// Contains the different settings that the user can modify.
 struct MultiConvexMeshPropertyViewInfo : public EventObject
 {
-  ZilchDeclareType(MultiConvexMeshPropertyViewInfo, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MultiConvexMeshPropertyViewInfo, TypeCopyMode::ReferenceType);
 
   MultiConvexMeshPropertyViewInfo();
 
@@ -178,7 +178,7 @@ struct MultiConvexMeshPropertyViewInfo : public EventObject
 class MultiConvexMeshEditor : public Composite
 {
 public:
-  ZilchDeclareType(MultiConvexMeshEditor, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MultiConvexMeshEditor, TypeCopyMode::ReferenceType);
 
   MultiConvexMeshEditor(Composite* parent, MultiConvexMesh* mesh);
 
@@ -334,4 +334,4 @@ public:
   OperationQueue mQueue;
 };
 
-} // namespace Zero
+} // namespace Raverie

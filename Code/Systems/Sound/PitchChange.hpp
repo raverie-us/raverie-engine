@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 // Pitch Change Handler
 
@@ -63,4 +63,4 @@ private:
   Data PreviousData;
 };
 
-} // namespace Zero
+} // namespace Raverie

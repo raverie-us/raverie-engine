@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Forward declarations
@@ -13,7 +13,7 @@ struct ConnectionData;
 class SendableEvent : public Event
 {
 public:
-  ZilchDeclareType(SendableEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SendableEvent, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   SendableEvent();
@@ -36,4 +36,4 @@ public:
   const ConnectionData* Connection;
 };
 
-} // namespace Zero
+} // namespace Raverie

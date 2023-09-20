@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class DisplayScene;
@@ -21,7 +21,7 @@ DeclareEvent(ManipulatorToolEnd);
 class ManipulatorToolEvent : public ViewportMouseEvent
 {
 public:
-  ZilchDeclareType(ManipulatorToolEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ManipulatorToolEvent, TypeCopyMode::ReferenceType);
 
   ManipulatorToolEvent(ViewportMouseEvent* event);
 
@@ -89,7 +89,7 @@ class ManipulatorTool : public Component
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(ManipulatorTool, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ManipulatorTool, TypeCopyMode::ReferenceType);
 
   ManipulatorTool();
 
@@ -202,4 +202,4 @@ public:
   Array<TransformingObject> mTransformingObjects;
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Manages network bandwidth statistics
@@ -364,4 +364,4 @@ private:
   uintmax_type mPacketsReceived; /// Packets received
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 static const bool cAllowUndo = false;
@@ -13,14 +13,14 @@ const String cHeightMapArchetype("DefaultHeightMap");
 /// Constants
 const float MinRadius = 0.001f;
 
-ZilchDefineType(HeightMapSubTool, builder, type)
+RaverieDefineType(HeightMapSubTool, builder, type)
 {
   // These options are referred to directly by pointer on the import options
   // (unsafe for script)
-  type->HandleManager = ZilchManagerId(PointerManager);
+  type->HandleManager = RaverieManagerId(PointerManager);
   type->Add(new TypeNameDisplay());
 
-  ZeroBindExpanded();
+  RaverieBindExpanded();
 }
 
 bool HeightMapSubTool::LeftMouseDown(HeightMap* map, ViewportMouseEvent* e)
@@ -45,12 +45,12 @@ void HeightMapSubTool::Draw(HeightMap* map)
 }
 
 /// Meta
-ZilchDefineType(HeightManipulationTool, builder, type)
+RaverieDefineType(HeightManipulationTool, builder, type)
 {
-  ZilchBindFieldProperty(mRadius);
-  ZilchBindFieldProperty(mFeatherRadius);
+  RaverieBindFieldProperty(mRadius);
+  RaverieBindFieldProperty(mFeatherRadius);
 
-  ZeroBindExpanded();
+  RaverieBindExpanded();
 }
 
 HeightManipulationTool::HeightManipulationTool()
@@ -186,12 +186,12 @@ void HeightManipulationTool::Draw(HeightMap* map)
                       .Color(Color::Green));
 }
 
-ZilchDefineType(RaiseLowerTool, builder, type)
+RaverieDefineType(RaiseLowerTool, builder, type)
 {
-  ZilchBindFieldProperty(mStrength)->Add(new EditorSlider(0, 1, 0.001f));
-  ZilchBindFieldProperty(mRelative);
+  RaverieBindFieldProperty(mStrength)->Add(new EditorSlider(0, 1, 0.001f));
+  RaverieBindFieldProperty(mRelative);
 
-  ZeroBindExpanded();
+  RaverieBindExpanded();
 }
 
 RaiseLowerTool::RaiseLowerTool()
@@ -229,15 +229,15 @@ void RaiseLowerTool::ApplyToCells(HeightMapCellRange& range, ViewportMouseEvent*
   }
 }
 
-ZilchDefineType(SmoothSharpenTool, builder, type)
+RaverieDefineType(SmoothSharpenTool, builder, type)
 {
-  ZilchBindFieldProperty(mStrength)->Add(new EditorSlider(0, 1, 0.001f));
-  ZilchBindField(mUniformSamples);
-  ZilchBindField(mRandomSamples);
-  ZilchBindField(mRandomSampleDistance);
-  ZilchBindField(mAutoDetermineSamples);
+  RaverieBindFieldProperty(mStrength)->Add(new EditorSlider(0, 1, 0.001f));
+  RaverieBindField(mUniformSamples);
+  RaverieBindField(mRandomSamples);
+  RaverieBindField(mRandomSampleDistance);
+  RaverieBindField(mAutoDetermineSamples);
 
-  ZeroBindExpanded();
+  RaverieBindExpanded();
 }
 
 SmoothSharpenTool::SmoothSharpenTool() : mRandom(1234)
@@ -465,14 +465,14 @@ void SmoothSharpenTool::ApplyToCells(HeightMapCellRange& range, ViewportMouseEve
     Smooth(range);
 }
 
-ZilchDefineType(FlattenTool, builder, type)
+RaverieDefineType(FlattenTool, builder, type)
 {
-  ZilchBindFieldProperty(mHeight);
-  ZilchBindFieldProperty(mSlopeNormal);
-  ZilchBindFieldProperty(mSampleOnMouseDown);
-  ZilchBindFieldProperty(mSampleNormal);
+  RaverieBindFieldProperty(mHeight);
+  RaverieBindFieldProperty(mSlopeNormal);
+  RaverieBindFieldProperty(mSampleOnMouseDown);
+  RaverieBindFieldProperty(mSampleNormal);
 
-  ZeroBindExpanded();
+  RaverieBindExpanded();
 }
 
 FlattenTool::FlattenTool()
@@ -530,14 +530,14 @@ bool FlattenTool::LeftMouseDown(HeightMap* map, ViewportMouseEvent* e)
   return HeightManipulationTool::LeftMouseDown(map, e);
 }
 
-ZilchDefineType(CreateDestroyTool, builder, type)
+RaverieDefineType(CreateDestroyTool, builder, type)
 {
-  ZilchBindFieldProperty(mBaseHeight);
-  ZilchBindFieldProperty(mUsePerlinNoise);
-  ZilchBindFieldProperty(mPerlinFrequency);
-  ZilchBindFieldProperty(mPerlinAmplitude);
+  RaverieBindFieldProperty(mBaseHeight);
+  RaverieBindFieldProperty(mUsePerlinNoise);
+  RaverieBindFieldProperty(mPerlinFrequency);
+  RaverieBindFieldProperty(mPerlinAmplitude);
 
-  ZeroBindExpanded();
+  RaverieBindExpanded();
 }
 
 CreateDestroyTool::CreateDestroyTool()
@@ -626,15 +626,15 @@ void CreateDestroyTool::Draw(HeightMap* map)
 {
 }
 
-ZilchDefineType(WeightPainterTool, builder, type)
+RaverieDefineType(WeightPainterTool, builder, type)
 {
-  ZilchBindFieldProperty(mTextureChannel);
+  RaverieBindFieldProperty(mTextureChannel);
 
-  ZilchBindFieldProperty(mStrength)->Add(new EditorSlider(0, 1, 0.001f));
-  ZilchBindFieldProperty(mRadius);
-  ZilchBindFieldProperty(mFeatherRadius);
+  RaverieBindFieldProperty(mStrength)->Add(new EditorSlider(0, 1, 0.001f));
+  RaverieBindFieldProperty(mRadius);
+  RaverieBindFieldProperty(mFeatherRadius);
 
-  ZeroBindExpanded();
+  RaverieBindExpanded();
 }
 
 WeightPainterTool::WeightPainterTool()
@@ -828,18 +828,18 @@ void WeightPainterTool::Paint(HeightMap* map)
   }
 }
 
-ZilchDefineType(HeightMapTool, builder, type)
+RaverieDefineType(HeightMapTool, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultConstructor);
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultConstructor);
   type->AddAttribute(ObjectAttributes::cTool);
 
-  ZilchBindFieldProperty(mShowPatchIndex)->ZeroAdvancedGroup();
-  ZilchBindFieldProperty(mShowCellIndex)->ZeroAdvancedGroup();
-  ZilchBindFieldProperty(mCellIndexType)->ZeroAdvancedGroup();
+  RaverieBindFieldProperty(mShowPatchIndex)->RaverieAdvancedGroup();
+  RaverieBindFieldProperty(mShowCellIndex)->RaverieAdvancedGroup();
+  RaverieBindFieldProperty(mCellIndexType)->RaverieAdvancedGroup();
 
-  ZilchBindGetterSetterProperty(CurrentTool)->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  ZilchBindFieldProperty(mSubTool);
+  RaverieBindGetterSetterProperty(CurrentTool)->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  RaverieBindFieldProperty(mSubTool);
 }
 
 HeightMapTool::HeightMapTool()
@@ -1206,7 +1206,7 @@ HeightMap* HeightMapTool::GetHeightMap()
 {
   // Disabled creation
   HeightMap* heightMap = static_cast<HeightMap*>(
-      Tool::GetOrCreateEditComponent(ZilchTypeId(HeightMap), cHeightMapName, cHeightMapArchetype, mLastEdited, false));
+      Tool::GetOrCreateEditComponent(RaverieTypeId(HeightMap), cHeightMapName, cHeightMapArchetype, mLastEdited, false));
   if (heightMap == NULL && mAddHeightMapWidget.IsNull())
   {
     mAddHeightMapWidget = Tool::CreateViewportTextWidget("No HeightMap Object, Add New +");
@@ -1274,4 +1274,4 @@ void HeightMapMouseCapture::OnMouseMove(MouseEvent* event)
   mHeightMapTool->OnMouseMove(&e);
 }
 
-} // namespace Zero
+} // namespace Raverie

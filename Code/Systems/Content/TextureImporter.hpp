@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 void ResizeImage(TextureFormat::Enum format,
@@ -48,4 +48,4 @@ public:
   bool mMetaChanged;
 };
 
-} // namespace Zero
+} // namespace Raverie

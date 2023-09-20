@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 //                               PendingHostPing //
@@ -110,4 +110,4 @@ void PendingHostPing::AddSendAttempt(uint sendAttemptId, TimeMs now)
   mSendAttempts.InsertOrAssign(sendAttemptId, now);
 }
 
-} // namespace Zero
+} // namespace Raverie

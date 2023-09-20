@@ -2,26 +2,26 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(TextureData, builder, type)
+RaverieDefineType(TextureData, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindConstructor(TextureFormat::Enum, int, int);
-  ZilchBindDestructor();
+  RaverieBindConstructor(TextureFormat::Enum, int, int);
+  RaverieBindDestructor();
   type->CreatableInScript = true;
 
-  ZilchBindFieldGetter(mFormat);
-  ZilchBindFieldGetter(mWidth);
-  ZilchBindFieldGetter(mHeight);
-  ZilchBindFieldGetter(mPixelCount);
+  RaverieBindFieldGetter(mFormat);
+  RaverieBindFieldGetter(mWidth);
+  RaverieBindFieldGetter(mHeight);
+  RaverieBindFieldGetter(mPixelCount);
 
-  ZilchBindOverloadedMethod(Get, ZilchInstanceOverload(Vec4, uint));
-  ZilchBindOverloadedMethod(Get, ZilchInstanceOverload(Vec4, uint, uint));
-  ZilchBindOverloadedMethod(Set, ZilchInstanceOverload(void, uint, Vec4));
-  ZilchBindOverloadedMethod(Set, ZilchInstanceOverload(void, uint, uint, Vec4));
+  RaverieBindOverloadedMethod(Get, RaverieInstanceOverload(Vec4, uint));
+  RaverieBindOverloadedMethod(Get, RaverieInstanceOverload(Vec4, uint, uint));
+  RaverieBindOverloadedMethod(Set, RaverieInstanceOverload(void, uint, Vec4));
+  RaverieBindOverloadedMethod(Set, RaverieInstanceOverload(void, uint, uint, Vec4));
 }
 
 TextureData::TextureData(TextureFormat::Enum format, int width, int height) : mPixelCount(0), mData(nullptr)
@@ -101,4 +101,4 @@ void TextureData::Set(uint x, uint y, Vec4 value)
   Set(x + y * mWidth, value);
 }
 
-} // namespace Zero
+} // namespace Raverie

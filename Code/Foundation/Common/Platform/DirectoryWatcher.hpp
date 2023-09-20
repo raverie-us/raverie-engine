@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 class Thread;
 class Event;
@@ -49,4 +49,4 @@ private:
   OsEvent mCancelEvent;
 };
 
-} // namespace Zero
+} // namespace Raverie

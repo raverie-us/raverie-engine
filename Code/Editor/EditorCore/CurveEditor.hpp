@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Typedefs
@@ -49,7 +49,7 @@ class Tangent;
 class CurveEvent : public Event
 {
 public:
-  ZilchDeclareType(CurveEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CurveEvent, TypeCopyMode::ReferenceType);
   CurveEvent() : mControlPoint(NULL){};
 
   /// The curve that was modified.
@@ -141,7 +141,7 @@ class CurveEditor : public Composite
 {
 public:
   /// Typedefs
-  typedef CurveEditor ZilchSelf;
+  typedef CurveEditor RaverieSelf;
   typedef CurveEditing::CurveEditorToolbar CurveEditorToolbar;
   typedef CurveEditing::Draggable Draggable;
   typedef CurveEditing::ControlPoint ControlPoint;
@@ -274,7 +274,7 @@ class Draggable;
 class CurveEditorToolbar : public Composite
 {
 public:
-  typedef CurveEditorToolbar ZilchSelf;
+  typedef CurveEditorToolbar RaverieSelf;
 
   CurveEditorToolbar(Composite* parent, float textBoxWidth = Pixels(50));
 
@@ -289,7 +289,7 @@ public:
   void OnYChanged(Event* e);
 
 private:
-  friend class Zero::CurveEditor;
+  friend class Raverie::CurveEditor;
 
   /// Filters out tangents in the selection.
   struct range
@@ -325,7 +325,7 @@ class Draggable : public Widget
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(Draggable, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Draggable, TypeCopyMode::ReferenceType);
 
   Draggable(CurveObject* curveObject);
   ~Draggable();
@@ -368,7 +368,7 @@ class ControlPoint : public Draggable
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(ControlPoint, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ControlPoint, TypeCopyMode::ReferenceType);
 
   /// Constructor / destructor.
   ControlPoint(CurveObject* parent, Vec2Param pos, Vec2Param tanIn, Vec2Param tanOut, uint editorFlags = 0);
@@ -438,7 +438,7 @@ class Tangent : public Draggable
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(Tangent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Tangent, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   Tangent(CurveObject* curve, ControlPoint* controlPoint, Vec2Param direction, TangentSide::Type side);
@@ -505,4 +505,4 @@ public:
   CurveEditor* mCurveEditor;
 };
 
-} // namespace Zero
+} // namespace Raverie

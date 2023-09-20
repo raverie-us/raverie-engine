@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 using Csg::Internal::float_t;
@@ -405,7 +405,7 @@ void Clean(ContourArray* contours, f32 angleTolerance, f32 distanceTolerance)
     // If this has caused a degenerate contour, remove it
     if (contour.Size() < 3)
     {
-      Zero::Swap(contour, contours->Back());
+      Raverie::Swap(contour, contours->Back());
       contours->PopBack();
     }
     else
@@ -834,4 +834,4 @@ bool Operate(const OperationInput& input, ContourArray* results)
 
 } // namespace Csg
 
-} // namespace Zero
+} // namespace Raverie

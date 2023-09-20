@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -32,7 +32,7 @@ struct PostAddOp
 class PostAddResourceEvent : public Event
 {
 public:
-  ZilchDeclareType(PostAddResourceEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(PostAddResourceEvent, TypeCopyMode::ReferenceType);
 
   PostAddResourceEvent(PostAddOp& postAdd, ResourceAdd* resource);
 
@@ -47,7 +47,7 @@ AddResourceWindow* OpenAddWindow(BoundType* resourceType, Window** window = null
 class AddResourceWindow : public Composite
 {
 public:
-  ZilchDeclareType(AddResourceWindow, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(AddResourceWindow, TypeCopyMode::ReferenceType);
 
   AddResourceWindow(Composite* parent);
 
@@ -91,7 +91,7 @@ private:
 class ResourceTypeSearch : public ColoredComposite
 {
 public:
-  ZilchDeclareType(ResourceTypeSearch, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ResourceTypeSearch, TypeCopyMode::ReferenceType);
   ResourceTypeSearch(Composite* parent);
 
   BoundType* GetSelectedResourceType();
@@ -129,7 +129,7 @@ private:
 class ResourceTemplateSearch : public ColoredComposite
 {
 public:
-  ZilchDeclareType(ResourceTemplateSearch, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ResourceTemplateSearch, TypeCopyMode::ReferenceType);
 
   ResourceTemplateSearch(Composite* parent);
 
@@ -167,7 +167,7 @@ private:
 class ResourceTemplateDisplay : public ColoredComposite
 {
 public:
-  ZilchDeclareType(ResourceTemplateDisplay, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ResourceTemplateDisplay, TypeCopyMode::ReferenceType);
   ResourceTemplateDisplay(Composite* parent, PostAddOp& postAdd);
 
   void ShowResourceTemplate(Resource* resourceTemplate);
@@ -220,7 +220,7 @@ private:
 class ImportButton : public ColoredComposite
 {
 public:
-  ZilchDeclareType(ImportButton, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ImportButton, TypeCopyMode::ReferenceType);
   ImportButton(Composite* parent);
 
   void OnMouseEnter(Event*);
@@ -232,4 +232,4 @@ public:
   Element* mIcon;
 };
 
-} // namespace Zero
+} // namespace Raverie

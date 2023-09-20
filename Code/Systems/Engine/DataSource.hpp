@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 typedef void* DataItem;
@@ -59,7 +59,7 @@ DeclareEvent(DataReplaced);
 class DataEvent : public Event
 {
 public:
-  ZilchDeclareType(DataEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(DataEvent, TypeCopyMode::ReferenceType);
   DataIndex Index;
   String Command;
 };
@@ -67,7 +67,7 @@ public:
 class DataReplaceEvent : public Event
 {
 public:
-  ZilchDeclareType(DataReplaceEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(DataReplaceEvent, TypeCopyMode::ReferenceType);
   DataIndex mOldIndex;
   DataIndex mNewIndex;
 };
@@ -104,7 +104,7 @@ const DataIndex cRootIndex = DataIndex(u64(-1));
 class DataSource : public EventObject
 {
 public:
-  ZilchDeclareType(DataSource, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(DataSource, TypeCopyMode::ReferenceType);
   DataSource()
   {
   }
@@ -553,4 +553,4 @@ private:
   Array<String> mDescriptions;
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -13,7 +13,7 @@ DeclareEvent(ConsolePrint);
 class ConsoleTextEvent : public Event
 {
 public:
-  ZilchDeclareType(ConsoleTextEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ConsoleTextEvent, TypeCopyMode::ReferenceType);
   String Text;
 };
 
@@ -21,7 +21,7 @@ public:
 class ConsoleUi : public TextEditor
 {
 public:
-  ZilchDeclareType(ConsoleUi, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ConsoleUi, TypeCopyMode::ReferenceType);
 
   ConsoleUi(Composite* parent);
   ~ConsoleUi();
@@ -56,4 +56,4 @@ public:
   void AddBlock(StringParam text);
 };
 
-} // namespace Zero
+} // namespace Raverie

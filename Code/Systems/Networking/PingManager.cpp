@@ -3,7 +3,7 @@
 
 #undef SetPort
 
-namespace Zero
+namespace Raverie
 {
 
 PingManager::PingManager(NetPeer* netPeer) :
@@ -241,7 +241,7 @@ bool PingManager::SendHostPong(
   netHostPongData.mPingId = pingId;
   netHostPongData.mSendAttemptId = sendAttemptId;
   netHostPongData.mManagerId = theirManagerId;
-  netHostPongData.mEventBundleData = ZeroMove(pongData);
+  netHostPongData.mEventBundleData = RaverieMove(pongData);
 
   netHostPongMessage.GetData().Write(netHostPongData);
 
@@ -370,4 +370,4 @@ void PingManager::SetPongCallback(PongReceivedCallback callback)
   mPongCallback = callback;
 }
 
-} // namespace Zero
+} // namespace Raverie

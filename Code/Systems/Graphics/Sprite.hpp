@@ -2,14 +2,14 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Common interface for 2D Sprite based graphicals.
 class BaseSprite : public Graphical
 {
 public:
-  ZilchDeclareType(BaseSprite, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(BaseSprite, TypeCopyMode::ReferenceType);
 
   // Component Interface
 
@@ -41,7 +41,7 @@ public:
 class Sprite : public BaseSprite
 {
 public:
-  ZilchDeclareType(Sprite, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Sprite, TypeCopyMode::ReferenceType);
 
   // Component Interface
 
@@ -102,7 +102,7 @@ public:
 class SpriteText : public BaseSprite
 {
 public:
-  ZilchDeclareType(SpriteText, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SpriteText, TypeCopyMode::ReferenceType);
 
   // Component Interface
 
@@ -163,7 +163,7 @@ const uint cMultiSpriteCellSize = 8;
 class MultiSpriteEntry
 {
 public:
-  ZilchDeclareType(MultiSpriteEntry, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MultiSpriteEntry, TypeCopyMode::ReferenceType);
 
   IntVec2 GetIndex();
   SpriteSource* GetSpriteSource();
@@ -217,7 +217,7 @@ public:
 class MultiSprite : public BaseSprite
 {
 public:
-  ZilchDeclareType(MultiSprite, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MultiSprite, TypeCopyMode::ReferenceType);
 
   // Component Interface
 
@@ -270,4 +270,4 @@ public:
   HashMap<CogId, GroupMap> mGroupMaps;
 };
 
-} // namespace Zero
+} // namespace Raverie

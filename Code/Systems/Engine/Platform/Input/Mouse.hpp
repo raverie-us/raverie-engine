@@ -1,14 +1,14 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Mouse object for Display System.
 class Mouse : public ExplicitSingleton<Mouse, EventObject>
 {
 public:
-  ZilchDeclareType(Mouse, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Mouse, TypeCopyMode::ReferenceType);
 
   Mouse();
 
@@ -56,4 +56,4 @@ namespace Z
 extern Mouse* gMouse;
 }
 
-} // namespace Zero
+} // namespace Raverie

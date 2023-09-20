@@ -2,7 +2,7 @@
 #pragma once
 #include "VariantConfig.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 //                                  Variant //
@@ -363,7 +363,7 @@ struct MoveWithoutDestructionOperator<Variant>
   static inline void MoveWithoutDestruction(Variant* dest, Variant* source)
   {
     // Move source variant to destination
-    new (dest) Variant(ZeroMove(*source));
+    new (dest) Variant(RaverieMove(*source));
 
     // Source variant should now be empty, which means it should also be zeroed,
     // which means it's safe to skip calling it's destructor (As a sanity check
@@ -394,7 +394,7 @@ inline void ToValue(StringRange range, Variant& value, NativeType* nativeType);
 /// parsed value to the variant, else clears the variant
 inline void ToValue(StringRange range, Variant& value);
 
-} // namespace Zero
+} // namespace Raverie
 
 // Includes
 #include "Variant.inl"

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class Viewport;
@@ -24,7 +24,7 @@ DeclareEvent(SelectToolPreDraw);
 class SelectToolFrustumEvent : public Event
 {
 public:
-  ZilchDeclareType(SelectToolFrustumEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SelectToolFrustumEvent, TypeCopyMode::ReferenceType);
 
   SelectToolFrustumEvent() : Handled(false), HandledEventScript(false)
   {
@@ -66,7 +66,7 @@ class SelectTool : public Component
 public:
   typedef RaycastResultList::RayCastEntries RayCastEntries;
   /// Meta Initialization.
-  ZilchDeclareType(SelectTool, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SelectTool, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   SelectTool();
@@ -131,7 +131,7 @@ class CreationTool : public Component
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(CreationTool, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CreationTool, TypeCopyMode::ReferenceType);
 
   /// Constructor
   CreationTool();
@@ -197,7 +197,7 @@ class ObjectConnectingTool : public Component
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(ObjectConnectingTool, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ObjectConnectingTool, TypeCopyMode::ReferenceType);
 
   ObjectConnectingTool();
 
@@ -242,7 +242,7 @@ class ParentingTool : public ObjectConnectingTool
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(ParentingTool, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ParentingTool, TypeCopyMode::ReferenceType);
 
   ParentingTool();
 
@@ -255,4 +255,4 @@ public:
   bool mMaintainPosition;
 };
 
-} // namespace Zero
+} // namespace Raverie

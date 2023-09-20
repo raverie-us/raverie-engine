@@ -2,7 +2,7 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 static const float cAcceptableLoadtime = 0.15f;
@@ -308,4 +308,4 @@ void RepeatingJob::ForceTerminate()
   Unlock();
 }
 
-} // namespace Zero
+} // namespace Raverie

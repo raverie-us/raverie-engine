@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 Sphere::Sphere()
@@ -129,4 +129,4 @@ Sphere Sphere::UniformTransform(Mat4Param transformation) const
   return ret;
 }
 
-} // namespace Zero
+} // namespace Raverie

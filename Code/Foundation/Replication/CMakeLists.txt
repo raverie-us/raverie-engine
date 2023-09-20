@@ -47,6 +47,6 @@ target_sources(Replication
 raverie_target_includes(Replication
   PUBLIC
     Common
-    Zilch
+    Raverie
     Geometry
 )

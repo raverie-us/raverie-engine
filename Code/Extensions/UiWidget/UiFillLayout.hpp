@@ -1,14 +1,14 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class UiFillLayout : public UiLayout
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(UiFillLayout, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(UiFillLayout, TypeCopyMode::ReferenceType);
 
   /// Component Interface.
   void Initialize(CogInitializer& initializer) override;
@@ -21,4 +21,4 @@ public:
   static void FillToRectangle(RectangleParam rect, UiWidget* widget);
 };
 
-} // namespace Zero
+} // namespace Raverie

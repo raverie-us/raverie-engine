@@ -78,5 +78,5 @@ target_sources(Geometry
 raverie_target_includes(Geometry
   PUBLIC
     Common
-    Zilch
+    Raverie
 )

@@ -8,7 +8,7 @@
 #include "SerializationUtility.hpp"
 #include "String/ToString.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 TextSaver::TextSaver()
@@ -575,4 +575,4 @@ void TextSaver::SetFlags()
   mDepth = 0;
 }
 
-} // namespace Zero
+} // namespace Raverie

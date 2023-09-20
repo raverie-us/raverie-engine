@@ -1,10 +1,10 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 // This define controls whether we use our own Png loading/saving
-#define ZeroCustomPngSupport
+#define RaverieCustomPngSupport
 
 // When reading, file positions must be at the beginning (0).
 
@@ -32,4 +32,4 @@ void LoadPng(Status& status,
              TextureFormat::Enum requireFormat = TextureFormat::None);
 void SavePng(Status& status, Stream* stream, const byte* image, uint width, uint height, TextureFormat::Enum format);
 
-} // namespace Zero
+} // namespace Raverie

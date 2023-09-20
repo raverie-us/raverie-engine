@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -25,7 +25,7 @@ void TabJump(Widget* widget, KeyboardEvent* event)
   }
 }
 
-ZilchDefineType(Spacer, builder, type)
+RaverieDefineType(Spacer, builder, type)
 {
 }
 
@@ -61,7 +61,7 @@ void Spacer::SetSize(Vec2 size)
 }
 
 // Splitter
-ZilchDefineType(Splitter, builder, type)
+RaverieDefineType(Splitter, builder, type)
 {
 }
 
@@ -193,4 +193,4 @@ void Splitter::OnMouseExit(MouseEvent* event)
   event->GetMouse()->SetCursor(Cursor::Arrow);
 }
 
-} // namespace Zero
+} // namespace Raverie

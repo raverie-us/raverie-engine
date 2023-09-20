@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 namespace Events
 {
@@ -13,7 +13,7 @@ DeclareEvent(SearchDataModified);
 class TagEvent : public Event
 {
 public:
-  ZilchDeclareType(TagEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(TagEvent, TypeCopyMode::ReferenceType);
   TagLabel* mTag;
   String mTagName;
 };
@@ -22,7 +22,7 @@ class TagLabel : public Composite
 {
 public:
   typedef TagLabel self_type;
-  typedef TagLabel ZilchSelf;
+  typedef TagLabel RaverieSelf;
 
   /// Constructor.
   TagLabel(Composite* parent, StringParam name, bool removeable);
@@ -50,7 +50,7 @@ private:
 class TagChainBase : public Composite
 {
 public:
-  typedef TagChainBase ZilchSelf;
+  typedef TagChainBase RaverieSelf;
 
   /// Constructor.
   TagChainBase(Composite* parent);
@@ -75,7 +75,7 @@ protected:
 class TagChain : public TagChainBase
 {
 public:
-  typedef TagChain ZilchSelf;
+  typedef TagChain RaverieSelf;
 
   /// Constructor.
   TagChain(Composite* parent);
@@ -95,7 +95,7 @@ DeclareEnum2(SearchIconSide, Left, Right);
 class TagChainTextBox : public TagChainBase
 {
 public:
-  typedef TagChainTextBox ZilchSelf;
+  typedef TagChainTextBox RaverieSelf;
 
   /// Constructor.
   TagChainTextBox(Composite* parent);
@@ -144,7 +144,7 @@ private:
 class TagEditor : public Composite
 {
 public:
-  typedef TagEditor ZilchSelf;
+  typedef TagEditor RaverieSelf;
 
   /// Constructor.
   TagEditor(Composite* parent);
@@ -183,7 +183,7 @@ protected:
 class ResourceTagEditor : public TagEditor
 {
 public:
-  typedef ResourceTagEditor ZilchSelf;
+  typedef ResourceTagEditor RaverieSelf;
 
   /// Constructor.
   ResourceTagEditor(Composite* parent);
@@ -202,4 +202,4 @@ private:
   Array<HandleOf<Resource>> mResources;
 };
 
-} // namespace Zero
+} // namespace Raverie

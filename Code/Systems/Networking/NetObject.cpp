@@ -1,94 +1,94 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 //                                  NetObject //
 
-ZilchDefineType(NetObject, builder, type)
+RaverieDefineType(NetObject, builder, type)
 {
-  ZeroBindComponent();
+  RaverieBindComponent();
 
   // Bind tags
-  ZeroBindTag(Tags::Networking);
+  RaverieBindTag(Tags::Networking);
 
   // Bind documentation
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
   // Bind dependencies
-  ZeroBindDependency(Cog);
+  RaverieBindDependency(Cog);
 
   // Bind setup (can be added in the editor)
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindSetup(SetupMode::DefaultSerialization);
 
   // Bind peer interface
-  ZilchBindGetterProperty(Role)->Add(new EditInGameFilter);
-  ZilchBindCustomGetter(IsClient);
-  ZilchBindCustomGetter(IsServer);
-  ZilchBindCustomGetter(IsOffline);
-  ZilchBindCustomGetter(IsClientOrOffline);
-  ZilchBindCustomGetter(IsServerOrOffline);
-  ZilchBindCustomGetter(IsClientOrServer);
+  RaverieBindGetterProperty(Role)->Add(new EditInGameFilter);
+  RaverieBindCustomGetter(IsClient);
+  RaverieBindCustomGetter(IsServer);
+  RaverieBindCustomGetter(IsOffline);
+  RaverieBindCustomGetter(IsClientOrOffline);
+  RaverieBindCustomGetter(IsServerOrOffline);
+  RaverieBindCustomGetter(IsClientOrServer);
 
   // Bind object interface
-  ZilchBindGetterSetterProperty(DetectOutgoingChanges);
-  ZilchBindGetterSetterProperty(AcceptIncomingChanges);
-  ZilchBindGetterSetterProperty(AllowNapping);
-  ZilchBindGetterSetterProperty(AccurateTimestampOnOnline);
-  ZilchBindGetterSetterProperty(AccurateTimestampOnChange);
-  ZilchBindGetterSetterProperty(AccurateTimestampOnOffline);
-  ZilchBindGetterProperty(OnlineTimestamp)->Add(new EditInGameFilter);
-  ZilchBindGetterProperty(LastChangeTimestamp)->Add(new EditInGameFilter);
-  ZilchBindGetterProperty(OfflineTimestamp)->Add(new EditInGameFilter);
-  ZilchBindCustomGetterProperty(IsOnline)->Add(new EditInGameFilter);
-  ZilchBindGetterProperty(NetObjectId)->Add(new EditInGameFilter);
-  ZilchBindCustomGetterProperty(IsNapping)->Add(new EditInGameFilter);
-  ZilchBindGetterProperty(OnlineTimePassed)->Add(new EditInGameFilter);
-  ZilchBindGetterProperty(LastChangeTimePassed)->Add(new EditInGameFilter);
-  ZilchBindGetterProperty(OfflineTimePassed)->Add(new EditInGameFilter);
-  ZilchBindMethodProperty(SelectRemote)->Add(new EditInGameFilter);
-  ZilchBindMethodProperty(ReplicateNow)->Add(new EditInGameFilter);
-  ZilchBindMethodProperty(WakeUp)->Add(new EditInGameFilter);
-  ZilchBindMethodProperty(TakeNap)->Add(new EditInGameFilter);
-  ZilchBindMethodProperty(Forget)->Add(new EditInGameFilter);
+  RaverieBindGetterSetterProperty(DetectOutgoingChanges);
+  RaverieBindGetterSetterProperty(AcceptIncomingChanges);
+  RaverieBindGetterSetterProperty(AllowNapping);
+  RaverieBindGetterSetterProperty(AccurateTimestampOnOnline);
+  RaverieBindGetterSetterProperty(AccurateTimestampOnChange);
+  RaverieBindGetterSetterProperty(AccurateTimestampOnOffline);
+  RaverieBindGetterProperty(OnlineTimestamp)->Add(new EditInGameFilter);
+  RaverieBindGetterProperty(LastChangeTimestamp)->Add(new EditInGameFilter);
+  RaverieBindGetterProperty(OfflineTimestamp)->Add(new EditInGameFilter);
+  RaverieBindCustomGetterProperty(IsOnline)->Add(new EditInGameFilter);
+  RaverieBindGetterProperty(NetObjectId)->Add(new EditInGameFilter);
+  RaverieBindCustomGetterProperty(IsNapping)->Add(new EditInGameFilter);
+  RaverieBindGetterProperty(OnlineTimePassed)->Add(new EditInGameFilter);
+  RaverieBindGetterProperty(LastChangeTimePassed)->Add(new EditInGameFilter);
+  RaverieBindGetterProperty(OfflineTimePassed)->Add(new EditInGameFilter);
+  RaverieBindMethodProperty(SelectRemote)->Add(new EditInGameFilter);
+  RaverieBindMethodProperty(ReplicateNow)->Add(new EditInGameFilter);
+  RaverieBindMethodProperty(WakeUp)->Add(new EditInGameFilter);
+  RaverieBindMethodProperty(TakeNap)->Add(new EditInGameFilter);
+  RaverieBindMethodProperty(Forget)->Add(new EditInGameFilter);
 
   // Bind channel interface
-  ZilchBindMethod(HasNetChannel);
-  ZilchBindMethod(GetNetChannel);
+  RaverieBindMethod(HasNetChannel);
+  RaverieBindMethod(GetNetChannel);
 
   // Bind ownership interface
-  ZilchBindCustomGetter(IsOwnedByAUser);
-  ZilchBindCustomGetter(IsNotOwnedByAUser);
-  ZilchBindMethod(IsOwnedByUser);
-  ZilchBindMethod(IsOwnedByPeer);
-  ZilchBindCustomGetterProperty(IsMine)->Add(new EditInGameFilter);
-  ZilchBindCustomGetter(IsNotMine);
-  ZilchBindCustomGetter(IsClientAndMine);
-  ZilchBindCustomGetter(IsClientButNotMine);
-  ZilchBindCustomGetter(IsServerAndMine);
-  ZilchBindCustomGetter(IsServerButNotMine);
-  ZilchBindCustomGetter(IsOfflineAndMine);
-  ZilchBindCustomGetter(IsOfflineButNotMine);
-  ZilchBindGetterSetter(NetUserOwner);
-  ZilchBindGetterProperty(NetUserOwnerPath)->Add(new EditInGameFilter);
-  ZilchBindGetterProperty(NetUserOwnerUserId)->Add(new EditInGameFilter);
-  ZilchBindGetterProperty(NetUserOwnerPeerId)->Add(new EditInGameFilter);
-  ZilchBindMethod(SetNetUserOwnerUp);
-  ZilchBindMethod(SetNetUserOwnerDown);
+  RaverieBindCustomGetter(IsOwnedByAUser);
+  RaverieBindCustomGetter(IsNotOwnedByAUser);
+  RaverieBindMethod(IsOwnedByUser);
+  RaverieBindMethod(IsOwnedByPeer);
+  RaverieBindCustomGetterProperty(IsMine)->Add(new EditInGameFilter);
+  RaverieBindCustomGetter(IsNotMine);
+  RaverieBindCustomGetter(IsClientAndMine);
+  RaverieBindCustomGetter(IsClientButNotMine);
+  RaverieBindCustomGetter(IsServerAndMine);
+  RaverieBindCustomGetter(IsServerButNotMine);
+  RaverieBindCustomGetter(IsOfflineAndMine);
+  RaverieBindCustomGetter(IsOfflineButNotMine);
+  RaverieBindGetterSetter(NetUserOwner);
+  RaverieBindGetterProperty(NetUserOwnerPath)->Add(new EditInGameFilter);
+  RaverieBindGetterProperty(NetUserOwnerUserId)->Add(new EditInGameFilter);
+  RaverieBindGetterProperty(NetUserOwnerPeerId)->Add(new EditInGameFilter);
+  RaverieBindMethod(SetNetUserOwnerUp);
+  RaverieBindMethod(SetNetUserOwnerDown);
 
   // Bind network dispatch interface
-  ZilchBindMethod(DispatchLocal);
-  ZilchBindMethod(DispatchRemote);
-  ZilchBindMethod(DispatchBroadcast);
-  ZilchBindMethod(DispatchLocalAndRemote);
-  ZilchBindMethod(DispatchLocalAndBroadcast);
+  RaverieBindMethod(DispatchLocal);
+  RaverieBindMethod(DispatchRemote);
+  RaverieBindMethod(DispatchBroadcast);
+  RaverieBindMethod(DispatchLocalAndRemote);
+  RaverieBindMethod(DispatchLocalAndBroadcast);
 
   // Bind channel configuration interface
-  ZilchBindGetterSetterProperty(AutomaticChannel);
+  RaverieBindGetterSetterProperty(AutomaticChannel);
 
   // Bind property info interface
-  ZilchBindFieldProperty(mNetPropertyInfos);
+  RaverieBindFieldProperty(mNetPropertyInfos);
 }
 
 NetObject::NetObject() :
@@ -116,13 +116,13 @@ NetObject::~NetObject()
 void NetObject::Serialize(Serializer& stream)
 {
   // Get this net object's derived type
-  BoundType* derivedType = ZilchVirtualTypeId(this);
+  BoundType* derivedType = RaverieVirtualTypeId(this);
 
   // Use accurate timestamps by default for all derived net object types (every
   // net object type other than NetObject itself) These types (NetPeer,
   // NetSpace, and NetUser) almost always require accurate timestamps, so we
   // enable them by default
-  bool accurateTimestampsByDefault = (derivedType != ZilchTypeId(NetObject));
+  bool accurateTimestampsByDefault = (derivedType != RaverieTypeId(NetObject));
 
   // Serialize data members
   SerializeNameDefault(mDetectOutgoingChanges, GetDetectOutgoingChanges());
@@ -583,7 +583,7 @@ void NetObject::AddScriptNetProperties()
   forRange (Component* component, components)
   {
     // Get component type
-    BoundType* componentType = ZilchVirtualTypeId(component);
+    BoundType* componentType = RaverieVirtualTypeId(component);
     if (!componentType) // Unable?
     {
       Assert(false);
@@ -1725,7 +1725,7 @@ bool NetObject::AddNetPropertyToChannel(Component* component,
                   String::Format("Unable to add NetProperty '%s' declared in Component '%s' to the "
                                  "NetChannel '%s' on the NetObject '%s' - Error adding NetChannel",
                                  property->Name.c_str(),
-                                 ZilchVirtualTypeId(component)->Name.c_str(),
+                                 RaverieVirtualTypeId(component)->Name.c_str(),
                                  netChannelName.c_str(),
                                  owner->GetDescription().c_str()));
     return false;
@@ -1739,7 +1739,7 @@ bool NetObject::AddNetPropertyToChannel(Component* component,
                   String::Format("Unable to add NetProperty '%s' declared in Component '%s' to the "
                                  "NetChannel '%s' on the NetObject '%s' - Error adding NetProperty",
                                  property->Name.c_str(),
-                                 ZilchVirtualTypeId(component)->Name.c_str(),
+                                 RaverieVirtualTypeId(component)->Name.c_str(),
                                  netChannelName.c_str(),
                                  owner->GetDescription().c_str()));
 
@@ -2374,7 +2374,7 @@ NetPropertyInfo* NetObject::AddNetPropertyInfo(BoundType* componentType, StringP
   NetPropertyInfo netPropertyInfo(componentType, propertyName);
 
   // Does this property belong to the Transform or RigidBody component?
-  if (componentType == ZilchTypeId(Transform) || componentType == ZilchTypeId(RigidBody))
+  if (componentType == RaverieTypeId(Transform) || componentType == RaverieTypeId(RigidBody))
   {
     // Note: We special case Transform and RigidBody to both use the Transform
     // NetChannel by default for performance and convenience reasons In the
@@ -2428,7 +2428,7 @@ void NetObject::RemoveNetPropertyInfo(BoundType* componentType, StringParam prop
 
 //                               EditInGameFilter //
 
-ZilchDefineType(EditInGameFilter, builder, type)
+RaverieDefineType(EditInGameFilter, builder, type)
 {
 }
 
@@ -2456,4 +2456,4 @@ bool EditInGameFilter::Filter(Member* prop, HandleParam instance)
   return !owner->IsEditorMode();
 }
 
-} // namespace Zero
+} // namespace Raverie

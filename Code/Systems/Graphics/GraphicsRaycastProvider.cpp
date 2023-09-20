@@ -2,7 +2,7 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 String GraphicsRaycastProviderToString(const BoundType* type, const byte* value)
@@ -11,15 +11,15 @@ String GraphicsRaycastProviderToString(const BoundType* type, const byte* value)
   return Name;
 }
 
-ZilchDefineType(GraphicsRaycastProvider, builder, type)
+RaverieDefineType(GraphicsRaycastProvider, builder, type)
 {
-  ZilchBindFieldProperty(mMultiSelectGraphical);
-  ZilchBindFieldProperty(mVisibleOnly);
-  ZilchBindConstructor();
+  RaverieBindFieldProperty(mMultiSelectGraphical);
+  RaverieBindFieldProperty(mVisibleOnly);
+  RaverieBindConstructor();
 
   type->ToStringFunction = GraphicsRaycastProviderToString;
   type->Add(new StringNameDisplay("Graphics"));
-  ZeroBindExpanded();
+  RaverieBindExpanded();
 }
 
 GraphicsRaycastProvider::GraphicsRaycastProvider()
@@ -119,4 +119,4 @@ bool GraphicsRaycastProvider::FrustumTest(Graphical* graphical, Frustum& frustum
   return graphical->TestFrustum(frustum, castInfo);
 }
 
-} // namespace Zero
+} // namespace Raverie

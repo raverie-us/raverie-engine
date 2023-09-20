@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 static const String cResourcesTag = "Resources";
@@ -430,7 +430,7 @@ bool ComponentSearchProvider::AddToAlternatePreview(SearchData* search, Composit
 {
   mSearchType.Clear();
 
-  // Cannot offer to create a ZilchComponent if there is already a component
+  // Cannot offer to create a RaverieComponent if there is already a component
   // with a name that matches the 'SearchString'.
   if (mResultsContainExactMatch)
     return false;
@@ -449,7 +449,7 @@ bool ComponentSearchProvider::AddToAlternatePreview(SearchData* search, Composit
 
 void ComponentSearchProvider::AttemptAlternateSearchCompleted()
 {
-  // Cannot create a ZilchComponent if there is already a component with
+  // Cannot create a RaverieComponent if there is already a component with
   // a name that matches the search or if there is no search string.
   if (mResultsContainExactMatch || mSearchType.Empty())
     return;
@@ -499,4 +499,4 @@ void AddEditorProviders(SearchData& search)
   search.SearchProviders.PushBack(commandManager->GetCommandSearchProvider());
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 DataNode* FindSimilarInterfaces(DataNode* parent, BoundType* typeToAdd);
@@ -162,7 +162,7 @@ void AddDependencies(DataNode* parent, BoundType* type, DataNode* addLocation)
     {
       // These types were special cased with Cogs and we want to ignore them
       // until it's refactored to not use dependencies.
-      if (dependency == ZilchTypeId(Cog) || dependency == ZilchTypeId(Space) || dependency == ZilchTypeId(GameSession))
+      if (dependency == RaverieTypeId(Cog) || dependency == RaverieTypeId(Space) || dependency == RaverieTypeId(GameSession))
       {
         continue;
       }
@@ -303,7 +303,7 @@ CachedModifications::ObjectNode* CachedModifications::FindChildNode(Object* root
   while (currObject != rootObject)
   {
     ++pathSize;
-    BoundType* currType = ZilchVirtualTypeId(currObject);
+    BoundType* currType = RaverieVirtualTypeId(currObject);
     MetaOwner* metaOwner = currType->HasInherited<MetaOwner>();
     currObject = metaOwner->GetOwner(currObject).Get<Object*>();
   }
@@ -317,7 +317,7 @@ CachedModifications::ObjectNode* CachedModifications::FindChildNode(Object* root
   {
     objectPath[pathSize - i - 1] = currObject;
 
-    BoundType* currType = ZilchVirtualTypeId(currObject);
+    BoundType* currType = RaverieVirtualTypeId(currObject);
     MetaOwner* metaOwner = currType->HasInherited<MetaOwner>();
     currObject = metaOwner->GetOwner(currObject).Get<Object*>();
   }
@@ -348,7 +348,7 @@ bool CachedModifications::Empty()
 
 Object* GetComponentFromChildId(Object* instance, const ObjectState::ChildId& childId)
 {
-  MetaComposition* composition = ZilchVirtualTypeId(instance)->Has<MetaComposition>();
+  MetaComposition* composition = RaverieVirtualTypeId(instance)->Has<MetaComposition>();
   if (composition == nullptr)
     return nullptr;
 
@@ -385,7 +385,7 @@ void CachedModifications::ApplyModificationsToObjectInternal(Object* object, Obj
   }
 
   // We can only walk children if there is a meta composition
-  BoundType* objectType = ZilchVirtualTypeId(object);
+  BoundType* objectType = RaverieVirtualTypeId(object);
   if (MetaComposition* composition = objectType->Has<MetaComposition>())
   {
     // Walk each child state and try to find the respective object
@@ -444,7 +444,7 @@ CachedModifications::ObjectNode* CachedModifications::StoreOverlappingModificati
   }
 
   // We can only walk children if there is a meta composition
-  BoundType* objectType = ZilchVirtualTypeId(object);
+  BoundType* objectType = RaverieVirtualTypeId(object);
   if (MetaComposition* composition = objectType->Has<MetaComposition>())
   {
     // Walk each child state and try to find the respective object
@@ -558,7 +558,7 @@ void CachedModifications::ExtractInternal(DataNode* dataNode, ObjectNode* object
 
 CachedModifications::ObjectNode* CachedModifications::ExtractInternal(Object* object)
 {
-  BoundType* objectType = ZilchVirtualTypeId(object);
+  BoundType* objectType = RaverieVirtualTypeId(object);
 
   ObjectNode* currNode = nullptr;
 
@@ -664,4 +664,4 @@ void CachedModifications::ObjectNode::Combine(ObjectNode* toCombine)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

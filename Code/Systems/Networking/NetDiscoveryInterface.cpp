@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 //
@@ -21,8 +21,8 @@ RespondingHostData::RespondingHostData(RespondingHostData const& rhs) :
 
 RespondingHostData::RespondingHostData(MoveReference<RespondingHostData> rhs) :
     mRoundTripTime(rhs->mRoundTripTime),
-    mBasicHostInfo(ZeroMove(rhs->mBasicHostInfo)),
-    mExtraHostInfo(ZeroMove(rhs->mExtraHostInfo)),
+    mBasicHostInfo(RaverieMove(rhs->mBasicHostInfo)),
+    mExtraHostInfo(RaverieMove(rhs->mExtraHostInfo)),
     mRefreshResult(rhs->mRefreshResult)
 {
 }
@@ -311,11 +311,11 @@ void NetDiscoveryInterface::DispatchHost(IpAddress const& hostIp, OpenHostReques
   {
     if (!hostData->mBasicHostInfo.IsEmpty())
     {
-      netHost->mBasicHostInfo = ZeroMove(hostData->mBasicHostInfo);
+      netHost->mBasicHostInfo = RaverieMove(hostData->mBasicHostInfo);
     }
     if (!hostData->mExtraHostInfo.IsEmpty())
     {
-      netHost->mExtraHostInfo = ZeroMove(hostData->mExtraHostInfo);
+      netHost->mExtraHostInfo = RaverieMove(hostData->mExtraHostInfo);
     }
   }
 
@@ -376,7 +376,7 @@ IpAddress NetDiscoveryInterface::PongHelper(IpAddress const& theirIpAddress,
 
   // Create EventBundle and set its game session so it can deserialize properly.
   EventBundle pongBundle(static_cast<GameSession*>(mNetPeer->GetOwner()));
-  pongBundle = ZeroMove(netHostPongData.mEventBundleData);
+  pongBundle = RaverieMove(netHostPongData.mEventBundleData);
 
   // a temporary which talks about the host which we intended to ping (like for
   // example, sometimes we ping the master server, but we want a host which it
@@ -405,7 +405,7 @@ IpAddress NetDiscoveryInterface::PongHelper(IpAddress const& theirIpAddress,
       pingedHostIp = refreshData.mHostIp;
       // read out the IP, then here we can just move the info back into the
       // pong.
-      pongBundle = ZeroMove(refreshData.mBasicHostInfo);
+      pongBundle = RaverieMove(refreshData.mBasicHostInfo);
       // this ping did come from a master server.
       fromMasterServer = true;
     }
@@ -446,7 +446,7 @@ IpAddress NetDiscoveryInterface::PongHelper(IpAddress const& theirIpAddress,
   }
 
   // save the basic host info.
-  respondingHostData->mBasicHostInfo = ZeroMove(pongBundle.GetBitStream());
+  respondingHostData->mBasicHostInfo = RaverieMove(pongBundle.GetBitStream());
   respondingHostData->UpdateToBasic(fromMasterServer);
 
   // set round trip time.
@@ -548,7 +548,7 @@ void MultiHostRequest::FlushHostRequest(NetPeer& netPeer, NetDiscoveryInterface&
   ArrayMap<IpAddress, RespondingHostData>& respondingHostData = netDiscoveryInstance.mRespondingHostData;
 
   // Operate on all responding host data in it.
-  typedef Zero::Pair<Zero::IpAddress, Zero::RespondingHostData> HostDataPair;
+  typedef Raverie::Pair<Raverie::IpAddress, Raverie::RespondingHostData> HostDataPair;
   forRange (HostDataPair& ipDataPair, respondingHostData.All())
   {
     FlushHost(netPeer, netDiscoveryInstance, ipDataPair.first);
@@ -558,7 +558,7 @@ void MultiHostRequest::FlushHostRequest(NetPeer& netPeer, NetDiscoveryInterface&
   NetHostListUpdate event;
   event.mNetwork = mNetwork;
 
-  Zero::String eventId = mAllowDiscovery ? Events::NetHostListDiscovered : Events::NetHostListRefreshed;
+  Raverie::String eventId = mAllowDiscovery ? Events::NetHostListDiscovered : Events::NetHostListRefreshed;
 
   netPeer.DispatchEvent(eventId, &event);
 }
@@ -599,4 +599,4 @@ void MultiHostRequest::SetIsFirstResponseFrom(IpAddress const& pingedHostIp, boo
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 //
@@ -266,4 +266,4 @@ public:
                                                                ///< recursion)
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -9,7 +9,7 @@
     return;                                                                                                            \
   }
 
-namespace Zero
+namespace Raverie
 {
 
 // float CubicHermite(float t, float f0, float f1, float f2, float f3)
@@ -714,7 +714,7 @@ void TextureImporter::LoadImageData(Status& status, StringParam extension)
   byte* imageData = nullptr;
   bool imageLoadAttempted = false;
 
-#ifdef ZeroCustomPngSupport
+#ifdef RaverieCustomPngSupport
   if (IsPng(&stream))
   {
     LoadPng(status, &stream, &imageData, &width, &height, &mLoadFormat);
@@ -724,7 +724,7 @@ void TextureImporter::LoadImageData(Status& status, StringParam extension)
   }
 #endif
 
-#ifdef ZeroCustomHdrSupport
+#ifdef RaverieCustomHdrSupport
   if (IsHdr(&stream))
   {
     LoadHdr(status, &stream, &imageData, &width, &height, &mLoadFormat);
@@ -806,4 +806,4 @@ void TextureImporter::AddImageData(byte* imageData, uint width, uint height)
   mImageData.PushBack(imageData);
 }
 
-} // namespace Zero
+} // namespace Raverie

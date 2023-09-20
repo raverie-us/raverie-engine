@@ -4,7 +4,7 @@
 #include "Utility/Hashing.hpp"
 #include "String.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 const char* const cEmpty = "";
@@ -354,4 +354,4 @@ String String::JoinRange(StringRangeParam separator, RangeType range, PolicyType
   return result;
 }
 
-} // namespace Zero
+} // namespace Raverie

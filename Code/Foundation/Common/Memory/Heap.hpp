@@ -2,7 +2,7 @@
 #pragma once
 #include "Graph.hpp"
 
-namespace Zero
+namespace Raverie
 {
 namespace Memory
 {
@@ -174,4 +174,4 @@ using ReservedSizeHeapAllocator = ReservedSizeAllocator<Memory::Heap, ReserveSiz
 typedef TypedAllocator<Memory::Heap> DefaultAllocator;
 typedef MemsetZeroTypedAllocator<Memory::Heap> MemsetZeroDefaultAllocator;
 
-} // namespace Zero
+} // namespace Raverie

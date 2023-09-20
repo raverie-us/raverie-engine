@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Cog Serialization
@@ -189,7 +189,7 @@ void CogSerialization::PostProcessAfterCopy(Cog* cog, CachedModifications& resto
   restoreState.ApplyModificationsToObject(cog);
 }
 
-ZilchDefineType(LinkId, builder, type)
+RaverieDefineType(LinkId, builder, type)
 {
 }
 
@@ -198,7 +198,7 @@ void LinkId::Serialize(Serializer& stream)
   SerializeName(Id);
 }
 
-ZilchDefineType(Named, builder, type)
+RaverieDefineType(Named, builder, type)
 {
 }
 
@@ -207,7 +207,7 @@ void Named::Serialize(Serializer& stream)
   SerializeName(Name);
 }
 
-ZilchDefineType(Archetyped, builder, type)
+RaverieDefineType(Archetyped, builder, type)
 {
 }
 
@@ -216,7 +216,7 @@ void Archetyped::Serialize(Serializer& stream)
   SerializeName(Name);
 }
 
-ZilchDefineType(EditorFlags, builder, type)
+RaverieDefineType(EditorFlags, builder, type)
 {
 }
 
@@ -226,7 +226,7 @@ void EditorFlags::Serialize(Serializer& stream)
   SerializeNameDefault(mHidden, false);
 }
 
-ZilchDefineType(ArchetypeInstance, builder, type)
+RaverieDefineType(ArchetypeInstance, builder, type)
 {
 }
 
@@ -252,7 +252,7 @@ bool ShouldSave(Cog& cog)
   return true;
 }
 
-ZilchDefineType(SpaceObjects, builder, type)
+RaverieDefineType(SpaceObjects, builder, type)
 {
 }
 
@@ -271,7 +271,7 @@ CogCreationContext::CogCreationContext()
   CurrentContextMode = ContextMode::Creating;
 }
 
-CogCreationContext::CogCreationContext(Zero::Space* space, StringParam source)
+CogCreationContext::CogCreationContext(Raverie::Space* space, StringParam source)
 {
   mCurrentSubContextId = 0;
   mSubIdCounter = 0;
@@ -380,4 +380,4 @@ uint CogSavingContext::ToContextId(uint objectId)
 //  CogSerialization::StartSerializeObject);
 //}
 
-} // namespace Zero
+} // namespace Raverie

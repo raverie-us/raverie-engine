@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 DataBlock::DataBlock() : Data(nullptr), Size(0)
 {
@@ -34,4 +34,4 @@ size_t DataBlock::Hash()
   return HashString((char*)Data, Size);
 }
 
-} // namespace Zero
+} // namespace Raverie

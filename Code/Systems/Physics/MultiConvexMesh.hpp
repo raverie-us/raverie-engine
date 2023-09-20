@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 DeclareBitField2(MultiConvexMeshFlags, NewlyCreatedInEditor, EditType2D);
@@ -12,19 +12,19 @@ class SubConvexMesh;
 class MultiConvexMeshVertexData : public BoundMeshData<MultiConvexMesh, Vec3>
 {
 public:
-  ZilchDeclareType(MultiConvexMeshVertexData, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MultiConvexMeshVertexData, TypeCopyMode::ReferenceType);
 };
 
 class MultiConvexMeshIndexData : public BoundMeshData<MultiConvexMesh, uint>
 {
 public:
-  ZilchDeclareType(MultiConvexMeshIndexData, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MultiConvexMeshIndexData, TypeCopyMode::ReferenceType);
 };
 
 class MultiConvexMeshSubMeshData : public BoundMeshData<MultiConvexMesh, SubConvexMesh*>
 {
 public:
-  ZilchDeclareType(MultiConvexMeshSubMeshData, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MultiConvexMeshSubMeshData, TypeCopyMode::ReferenceType);
   typedef MultiConvexMeshSubMeshData SelfType;
   typedef BoundMeshDataRange<SelfType> RangeType;
 
@@ -45,7 +45,7 @@ public:
 class SubConvexMesh : public SafeId32Object
 {
 public:
-  ZilchDeclareType(SubConvexMesh, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SubConvexMesh, TypeCopyMode::ReferenceType);
 
   typedef Array<Vec3> VertexArray;
   typedef const Array<Vec3>& VertexArrayParam;
@@ -115,7 +115,7 @@ public:
 class MultiConvexMesh : public Resource
 {
 public:
-  ZilchDeclareType(MultiConvexMesh, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MultiConvexMesh, TypeCopyMode::ReferenceType);
 
   MultiConvexMesh();
   ~MultiConvexMesh();
@@ -228,4 +228,4 @@ public:
   Array<MeshReference> mModifiedMeshes;
 };
 
-} // namespace Zero
+} // namespace Raverie

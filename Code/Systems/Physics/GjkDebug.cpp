@@ -4,30 +4,30 @@
 
 #include <cstdlib>
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(GjkDebug, builder, type)
+RaverieDefineType(GjkDebug, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultConstructor);
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultConstructor);
 
-  ZeroBindDependency(Collider);
+  RaverieBindDependency(Collider);
 
-  ZilchBindGetterSetterProperty(OtherObject);
-  ZilchBindFieldProperty(mMaxExpands);
-  ZilchBindFieldProperty(mDt);
-  // ZilchBindFieldProperty(mShowCSO);
-  // ZilchBindFieldProperty(mSubdivisions)->Add(new EditorSlider(12.0f,
-  // 48.0f, 1.0f)); ZilchBindFieldProperty(mOpacityCSO)->Add(new
+  RaverieBindGetterSetterProperty(OtherObject);
+  RaverieBindFieldProperty(mMaxExpands);
+  RaverieBindFieldProperty(mDt);
+  // RaverieBindFieldProperty(mShowCSO);
+  // RaverieBindFieldProperty(mSubdivisions)->Add(new EditorSlider(12.0f,
+  // 48.0f, 1.0f)); RaverieBindFieldProperty(mOpacityCSO)->Add(new
   // EditorSlider(0.0f, 255.0f, 1.0f));
-  // ZilchBindFieldProperty(mOpacitySimplex)->Add(new EditorSlider(0.0f,
+  // RaverieBindFieldProperty(mOpacitySimplex)->Add(new EditorSlider(0.0f,
   // 255.0f, 1.0f));
 
-  // ZilchBindMethod(InitEpa)->SetHidden(false);
-  // ZilchBindMethod(AddPoint)->SetHidden(false);
-  ZilchBindMethodProperty(StepEpa);
-  ZilchBindMethodProperty(ToggleAnimation);
+  // RaverieBindMethod(InitEpa)->SetHidden(false);
+  // RaverieBindMethod(AddPoint)->SetHidden(false);
+  RaverieBindMethodProperty(StepEpa);
+  RaverieBindMethodProperty(ToggleAnimation);
 }
 
 GjkDebug::GjkDebug(void) :
@@ -324,4 +324,4 @@ Vec3 GjkDebug::RandomPoint(void)
   return point - center;
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Functor for computing the total mass and center of mass on a rigid body
@@ -300,4 +300,4 @@ void ComputeInertia(RigidBody* body)
   body->mInvInertia.SetInvTensorModel(invInertiaM);
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -10,114 +10,114 @@ static const Bytes BasicNetHostInfoMaxSize = 480;
 /// Peer closed string used in GetInfo returned whenever the net peer is closed
 static const String cPeerClosed = "[Peer Closed]";
 
-namespace Zero
+namespace Raverie
 {
 
 //                                   NetPeer //
 
-ZilchDefineType(NetPeer, builder, type)
+RaverieDefineType(NetPeer, builder, type)
 {
-  ZeroBindComponent();
+  RaverieBindComponent();
 
   // Bind documentation
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
   // Bind base class as interface
-  ZeroBindInterface(NetObject);
+  RaverieBindInterface(NetObject);
 
   // Bind dependencies
-  ZeroBindDependency(GameSession);
+  RaverieBindDependency(GameSession);
 
   // Bind setup (can be added in the editor)
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindSetup(SetupMode::DefaultSerialization);
 
   // Bind host interface
-  ZilchBindGetterSetterProperty(LanDiscoverable);
-  ZilchBindGetterSetterProperty(InternetDiscoverable);
-  ZilchBindGetterSetterProperty(HostPortRangeStart);
-  ZilchBindGetterSetterProperty(HostPortRangeEnd);
-  ZilchBindGetterSetterProperty(HostPingInterval);
-  ZilchBindGetterSetterProperty(InternetHostPublishInterval);
-  ZilchBindGetterSetterProperty(InternetHostRecordLifetime);
-  ZilchBindGetterSetterProperty(InternetSameIpHostRecordLimit);
-  ZilchBindMethod(SubscribeToMasterServer);
-  ZilchBindMethod(UnsubscribeFromMasterServer);
-  ZilchBindMethod(GetHostByIndex);
-  ZilchBindOverloadedMethod(GetHostByAddress, ZilchConstInstanceOverload(NetHost*, Network::Enum, const IpAddress&));
-  ZilchBindOverloadedMethod(GetHostByAddress, ZilchConstInstanceOverload(NetHost*, const IpAddress&));
-  ZilchBindMethod(GetHostList);
-  ZilchBindMethod(DiscoverHostList);
-  ZilchBindMethod(ClearHostList);
-  ZilchBindMethod(ClearHostLists);
-  ZilchBindMethod(RefreshHost);
-  ZilchBindMethod(RefreshHostList);
-  ZilchBindMethod(CancelHostRequests);
+  RaverieBindGetterSetterProperty(LanDiscoverable);
+  RaverieBindGetterSetterProperty(InternetDiscoverable);
+  RaverieBindGetterSetterProperty(HostPortRangeStart);
+  RaverieBindGetterSetterProperty(HostPortRangeEnd);
+  RaverieBindGetterSetterProperty(HostPingInterval);
+  RaverieBindGetterSetterProperty(InternetHostPublishInterval);
+  RaverieBindGetterSetterProperty(InternetHostRecordLifetime);
+  RaverieBindGetterSetterProperty(InternetSameIpHostRecordLimit);
+  RaverieBindMethod(SubscribeToMasterServer);
+  RaverieBindMethod(UnsubscribeFromMasterServer);
+  RaverieBindMethod(GetHostByIndex);
+  RaverieBindOverloadedMethod(GetHostByAddress, RaverieConstInstanceOverload(NetHost*, Network::Enum, const IpAddress&));
+  RaverieBindOverloadedMethod(GetHostByAddress, RaverieConstInstanceOverload(NetHost*, const IpAddress&));
+  RaverieBindMethod(GetHostList);
+  RaverieBindMethod(DiscoverHostList);
+  RaverieBindMethod(ClearHostList);
+  RaverieBindMethod(ClearHostLists);
+  RaverieBindMethod(RefreshHost);
+  RaverieBindMethod(RefreshHostList);
+  RaverieBindMethod(CancelHostRequests);
 
   // Bind peer interface
-  ZilchBindGetterProperty(Info)->Add(new EditInGameFilter);
-  ZilchBindCustomGetterProperty(IsOpen)->Add(new EditInGameFilter);
-  ZilchBindOverloadedMethod(Open, ZilchInstanceOverload(bool, Role::Enum, uint, uint));
-  ZilchBindOverloadedMethod(Open, ZilchInstanceOverload(bool, Role::Enum, uint));
-  ZilchBindOverloadedMethod(Open, ZilchInstanceOverload(bool, Role::Enum));
-  ZilchBindOverloadedMethod(OpenClient, ZilchInstanceOverload(bool, uint, uint));
-  ZilchBindOverloadedMethod(OpenClient, ZilchInstanceOverload(bool, uint));
-  ZilchBindOverloadedMethod(OpenClient, ZilchInstanceOverload(bool));
-  ZilchBindOverloadedMethod(OpenServer, ZilchInstanceOverload(bool, uint));
-  ZilchBindOverloadedMethod(OpenServer, ZilchInstanceOverload(bool));
-  ZilchBindOverloadedMethod(OpenOffline, ZilchInstanceOverload(bool));
-  ZilchBindMethod(Close);
-  ZilchBindGetterProperty(NetPeerId)->Add(new EditInGameFilter);
-  ZilchBindGetterProperty(Ipv4Address)->Add(new EditInGameFilter);
-  ZilchBindGetterProperty(Ipv4Host)->Add(new EditInGameFilter);
-  ZilchBindGetterProperty(Ipv4Port)->Add(new EditInGameFilter);
-  ZilchBindGetterProperty(NetObjectCount)->Add(new EditInGameFilter);
-  ZilchBindGetterProperty(NetUserCount)->Add(new EditInGameFilter);
-  ZilchBindGetterProperty(NetSpaceCount)->Add(new EditInGameFilter);
-  ZilchBindGetterSetterProperty(FrameFillWarning);
-  ZilchBindGetterSetterProperty(FrameFillSkip);
+  RaverieBindGetterProperty(Info)->Add(new EditInGameFilter);
+  RaverieBindCustomGetterProperty(IsOpen)->Add(new EditInGameFilter);
+  RaverieBindOverloadedMethod(Open, RaverieInstanceOverload(bool, Role::Enum, uint, uint));
+  RaverieBindOverloadedMethod(Open, RaverieInstanceOverload(bool, Role::Enum, uint));
+  RaverieBindOverloadedMethod(Open, RaverieInstanceOverload(bool, Role::Enum));
+  RaverieBindOverloadedMethod(OpenClient, RaverieInstanceOverload(bool, uint, uint));
+  RaverieBindOverloadedMethod(OpenClient, RaverieInstanceOverload(bool, uint));
+  RaverieBindOverloadedMethod(OpenClient, RaverieInstanceOverload(bool));
+  RaverieBindOverloadedMethod(OpenServer, RaverieInstanceOverload(bool, uint));
+  RaverieBindOverloadedMethod(OpenServer, RaverieInstanceOverload(bool));
+  RaverieBindOverloadedMethod(OpenOffline, RaverieInstanceOverload(bool));
+  RaverieBindMethod(Close);
+  RaverieBindGetterProperty(NetPeerId)->Add(new EditInGameFilter);
+  RaverieBindGetterProperty(Ipv4Address)->Add(new EditInGameFilter);
+  RaverieBindGetterProperty(Ipv4Host)->Add(new EditInGameFilter);
+  RaverieBindGetterProperty(Ipv4Port)->Add(new EditInGameFilter);
+  RaverieBindGetterProperty(NetObjectCount)->Add(new EditInGameFilter);
+  RaverieBindGetterProperty(NetUserCount)->Add(new EditInGameFilter);
+  RaverieBindGetterProperty(NetSpaceCount)->Add(new EditInGameFilter);
+  RaverieBindGetterSetterProperty(FrameFillWarning);
+  RaverieBindGetterSetterProperty(FrameFillSkip);
 
   // Bind link interface
-  ZilchBindGetterProperty(LinkCount)->Add(new EditInGameFilter);
-  ZilchBindOverloadedMethod(ConnectLink, ZilchInstanceOverload(bool, const IpAddress&, EventBundle*));
-  ZilchBindOverloadedMethod(ConnectLink, ZilchInstanceOverload(bool, const IpAddress&, Event*));
-  ZilchBindOverloadedMethod(ConnectLink, ZilchInstanceOverload(bool, const IpAddress&));
-  ZilchBindOverloadedMethod(DisconnectLink, ZilchInstanceOverload(bool, const IpAddress&, EventBundle*));
-  ZilchBindOverloadedMethod(DisconnectLink, ZilchInstanceOverload(bool, const IpAddress&, Event*));
-  ZilchBindOverloadedMethod(DisconnectLink, ZilchInstanceOverload(bool, const IpAddress&));
-  ZilchBindOverloadedMethod(DisconnectLink, ZilchInstanceOverload(bool, NetPeerId, EventBundle*));
-  ZilchBindOverloadedMethod(DisconnectLink, ZilchInstanceOverload(bool, NetPeerId, Event*));
-  ZilchBindOverloadedMethod(DisconnectLink, ZilchInstanceOverload(bool, NetPeerId));
-  ZilchBindOverloadedMethod(DisconnectAllLinks, ZilchInstanceOverload(uint, EventBundle*));
-  ZilchBindOverloadedMethod(DisconnectAllLinks, ZilchInstanceOverload(uint, Event*));
-  ZilchBindOverloadedMethod(DisconnectAllLinks, ZilchInstanceOverload(uint));
-  ZilchBindMethod(GetLinkCreationDirection);
-  ZilchBindMethod(GetLinkStatus);
-  ZilchBindMethod(GetLinkState);
-  ZilchBindMethod(GetLinkIpAddress);
-  ZilchBindMethod(GetOurIpAddressFromLink);
-  ZilchBindMethod(GetLinkInternetProtocol);
-  ZilchBindMethod(GetLinkNetPeerId);
+  RaverieBindGetterProperty(LinkCount)->Add(new EditInGameFilter);
+  RaverieBindOverloadedMethod(ConnectLink, RaverieInstanceOverload(bool, const IpAddress&, EventBundle*));
+  RaverieBindOverloadedMethod(ConnectLink, RaverieInstanceOverload(bool, const IpAddress&, Event*));
+  RaverieBindOverloadedMethod(ConnectLink, RaverieInstanceOverload(bool, const IpAddress&));
+  RaverieBindOverloadedMethod(DisconnectLink, RaverieInstanceOverload(bool, const IpAddress&, EventBundle*));
+  RaverieBindOverloadedMethod(DisconnectLink, RaverieInstanceOverload(bool, const IpAddress&, Event*));
+  RaverieBindOverloadedMethod(DisconnectLink, RaverieInstanceOverload(bool, const IpAddress&));
+  RaverieBindOverloadedMethod(DisconnectLink, RaverieInstanceOverload(bool, NetPeerId, EventBundle*));
+  RaverieBindOverloadedMethod(DisconnectLink, RaverieInstanceOverload(bool, NetPeerId, Event*));
+  RaverieBindOverloadedMethod(DisconnectLink, RaverieInstanceOverload(bool, NetPeerId));
+  RaverieBindOverloadedMethod(DisconnectAllLinks, RaverieInstanceOverload(uint, EventBundle*));
+  RaverieBindOverloadedMethod(DisconnectAllLinks, RaverieInstanceOverload(uint, Event*));
+  RaverieBindOverloadedMethod(DisconnectAllLinks, RaverieInstanceOverload(uint));
+  RaverieBindMethod(GetLinkCreationDirection);
+  RaverieBindMethod(GetLinkStatus);
+  RaverieBindMethod(GetLinkState);
+  RaverieBindMethod(GetLinkIpAddress);
+  RaverieBindMethod(GetOurIpAddressFromLink);
+  RaverieBindMethod(GetLinkInternetProtocol);
+  RaverieBindMethod(GetLinkNetPeerId);
 
   // Bind user interface
-  ZilchBindOverloadedMethod(AddUser, ZilchInstanceOverload(bool, EventBundle*));
-  ZilchBindOverloadedMethod(AddUser, ZilchInstanceOverload(bool, Event*));
-  ZilchBindOverloadedMethod(AddUser, ZilchInstanceOverload(bool));
-  ZilchBindMethod(GetUser);
-  ZilchBindGetter(UsersAddedByMyPeer);
-  ZilchBindMethod(GetUsersAddedByPeer);
-  ZilchBindGetter(Users);
-  ZilchBindGetterProperty(UserCount)->Add(new EditInGameFilter);
-  ZilchBindOverloadedMethod(RemoveUser, ZilchInstanceOverload(bool, Cog*, EventBundle*));
-  ZilchBindOverloadedMethod(RemoveUser, ZilchInstanceOverload(bool, Cog*, Event*));
-  ZilchBindOverloadedMethod(RemoveUser, ZilchInstanceOverload(bool, Cog*));
+  RaverieBindOverloadedMethod(AddUser, RaverieInstanceOverload(bool, EventBundle*));
+  RaverieBindOverloadedMethod(AddUser, RaverieInstanceOverload(bool, Event*));
+  RaverieBindOverloadedMethod(AddUser, RaverieInstanceOverload(bool));
+  RaverieBindMethod(GetUser);
+  RaverieBindGetter(UsersAddedByMyPeer);
+  RaverieBindMethod(GetUsersAddedByPeer);
+  RaverieBindGetter(Users);
+  RaverieBindGetterProperty(UserCount)->Add(new EditInGameFilter);
+  RaverieBindOverloadedMethod(RemoveUser, RaverieInstanceOverload(bool, Cog*, EventBundle*));
+  RaverieBindOverloadedMethod(RemoveUser, RaverieInstanceOverload(bool, Cog*, Event*));
+  RaverieBindOverloadedMethod(RemoveUser, RaverieInstanceOverload(bool, Cog*));
 
-  ZilchBindGetterSetterProperty(InternetHostListTimeout);
-  ZilchBindGetterSetterProperty(BasicHostInfoTimeout);
-  ZilchBindGetterSetterProperty(ExtraHostInfoTimeout);
+  RaverieBindGetterSetterProperty(InternetHostListTimeout);
+  RaverieBindGetterSetterProperty(BasicHostInfoTimeout);
+  RaverieBindGetterSetterProperty(ExtraHostInfoTimeout);
 
   // Bind replication interface
-  ZilchBindMethod(GetNetSpace);
-  ZilchBindMethod(GetNetObject);
+  RaverieBindMethod(GetNetSpace);
+  RaverieBindMethod(GetNetObject);
 
   // Bind network events
   BindNetEvents(builder, type);
@@ -1850,7 +1850,7 @@ void NetPeer::HandlePendingRequests()
       // Create network connect request data
       NetConnectRequestData netConnectRequestData;
       netConnectRequestData.mAddUserRequestCount = addUserRequestCount;
-      netConnectRequestData.mEventBundleData = ZeroMove(netRequest.mOurRequestBundle.GetBitStream());
+      netConnectRequestData.mEventBundleData = RaverieMove(netRequest.mOurRequestBundle.GetBitStream());
 
       // Write network connect request data
       BitStream extraData;
@@ -2006,7 +2006,7 @@ bool NetPeer::ReceiveUserAddRequest(NetPeerId theirNetPeerId, const IpAddress& t
     return false;
   }
   EventBundle theirRequestBundle(static_cast<GameSession*>(GetOwner()));
-  theirRequestBundle = ZeroMove(netUserAddRequestData.mEventBundleData);
+  theirRequestBundle = RaverieMove(netUserAddRequestData.mEventBundleData);
 
   // Handle received network user add request
   EventBundle ourResponseBundle(static_cast<GameSession*>(GetOwner()));
@@ -2055,7 +2055,7 @@ NetUser* NetPeer::HandleReceivedUserAddRequest(NetPeerId theirNetPeerId,
 
   // Get our add response as provided by the event handler
   ourAddResponse = event.mReturnOurAddResponse;
-  (*returnOurResponseBundle) = ZeroMove(event.mReturnOurResponseBundle.GetBitStream());
+  (*returnOurResponseBundle) = RaverieMove(event.mReturnOurResponseBundle.GetBitStream());
 
   // User request accepted?
   if (ourAddResponse)
@@ -2248,7 +2248,7 @@ bool NetPeer::ReceiveUserAddResponse(NetPeerId theirNetPeerId,
     return false;
   }
   EventBundle theirResponseBundle(static_cast<GameSession*>(GetOwner()));
-  theirResponseBundle = ZeroMove(netUserAddResponseData.mEventBundleData);
+  theirResponseBundle = RaverieMove(netUserAddResponseData.mEventBundleData);
 
   // (If accepted, we should have been provided a valid user ID)
   Assert(netUserAddResponseData.mAddResponse == NetUserAddResponse::Accept ? netUserAddResponseData.mNetUserId != 0
@@ -2365,7 +2365,7 @@ bool NetPeer::ReceiveUserRemoveRequest(NetPeerId theirNetPeerId,
     return false;
   }
   EventBundle theirRequestBundle(static_cast<GameSession*>(GetOwner()));
-  theirRequestBundle = ZeroMove(netUserRemoveRequestData.mEventBundleData);
+  theirRequestBundle = RaverieMove(netUserRemoveRequestData.mEventBundleData);
 
   // (Should be a valid user ID)
   Assert(netUserRemoveRequestData.mNetUserId);
@@ -2432,7 +2432,7 @@ BitStream NetPeer::GetBasicNetHostInfo()
   owner->DispatchEvent(Events::AcquireBasicNetHostInfo, &event);
 
   // Write host info
-  BitStream bitStream = ZeroMove(event.mReturnHostInfo.GetBitStream());
+  BitStream bitStream = RaverieMove(event.mReturnHostInfo.GetBitStream());
 
   // Invalid host info size?
   if (bitStream.GetBytesWritten() > BasicNetHostInfoMaxSize)
@@ -2460,7 +2460,7 @@ BitStream NetPeer::GetExtraNetHostInfo()
   owner->DispatchEvent(Events::AcquireExtraNetHostInfo, &event);
 
   // Write host info
-  BitStream bitStream = ZeroMove(event.mReturnHostInfo.GetBitStream());
+  BitStream bitStream = RaverieMove(event.mReturnHostInfo.GetBitStream());
 
   if (bitStream.GetBytesWritten() > MaxMessageWholeDataBytes)
   {
@@ -3642,7 +3642,7 @@ bool NetPeer::ValidateNetEvent(StringParam netEventId, Event* netEvent, Transmis
 
   // Dispatched event type does not match the registered event type? (This
   // prevents event spoofing)
-  BoundType* dispatchedEventType = ZilchVirtualTypeId(netEvent);
+  BoundType* dispatchedEventType = RaverieVirtualTypeId(netEvent);
   if (!dispatchedEventType->IsA(registeredEventIdType))
   {
     if (direction == TransmissionDirection::Outgoing)
@@ -4626,7 +4626,7 @@ void NetPeer::ClientOnConnectRequest(ReplicatorLink* link, ConnectRequestData& c
   // Create event
   NetPeerSentConnectRequest event(owner);
   event.mTheirIpAddress = link->GetLink()->GetTheirIpAddress();
-  event.mOurRequestBundle = ZeroMove(netConnectRequestData.mEventBundleData);
+  event.mOurRequestBundle = RaverieMove(netConnectRequestData.mEventBundleData);
   event.mOurPendingUserAddRequestCount = netConnectRequestData.mAddUserRequestCount;
 
   // Dispatch event
@@ -4651,7 +4651,7 @@ BitStream NetPeer::ClientOnConnectResponse(ReplicatorLink* link, ConnectResponse
   // Create event
   NetPeerReceivedConnectResponse event(owner);
   event.mTheirIpAddress = link->GetLink()->GetTheirIpAddress();
-  event.mOurRequestBundle = ZeroMove(netConnectRequestData.mEventBundleData);
+  event.mOurRequestBundle = RaverieMove(netConnectRequestData.mEventBundleData);
   event.mOurPendingUserAddRequestCount = netConnectRequestData.mAddUserRequestCount;
   event.mOurIpAddress = connectResponseData.mIpAddress;
   event.mTheirConnectResponse = connectResponseData.mConnectResponse;
@@ -4693,7 +4693,7 @@ Pair<bool, BitStream> NetPeer::ServerOnConnectRequest(ReplicatorLink* link, Conn
   // Create event
   NetPeerReceivedConnectRequest event(owner);
   event.mTheirIpAddress = link->GetLink()->GetTheirIpAddress();
-  event.mTheirRequestBundle = ZeroMove(netConnectRequestData.mEventBundleData);
+  event.mTheirRequestBundle = RaverieMove(netConnectRequestData.mEventBundleData);
   event.mTheirPendingUserAddRequestCount = netConnectRequestData.mAddUserRequestCount;
   event.mOurIpAddress = connectRequestData.mIpAddress;
   event.mReturnOurConnectResponse = true; // Optionally set by the event receiver
@@ -4703,8 +4703,8 @@ Pair<bool, BitStream> NetPeer::ServerOnConnectRequest(ReplicatorLink* link, Conn
 
   // Return accept decision and extra data
   Pair<bool, BitStream> result(event.mReturnOurConnectResponse,
-                               ZeroMove(event.mReturnOurResponseBundle.GetBitStream()));
-  return ZeroMove(result);
+                               RaverieMove(event.mReturnOurResponseBundle.GetBitStream()));
+  return RaverieMove(result);
 }
 void NetPeer::ServerOnConnectResponse(ReplicatorLink* link, ConnectResponseData& connectResponseData)
 {
@@ -4723,7 +4723,7 @@ void NetPeer::ServerOnConnectResponse(ReplicatorLink* link, ConnectResponseData&
   NetPeerSentConnectResponse event(owner);
   event.mTheirNetPeerId = link->GetReplicatorId().value();
   event.mTheirIpAddress = link->GetLink()->GetTheirIpAddress();
-  event.mTheirRequestBundle = ZeroMove(netConnectRequestData.mEventBundleData);
+  event.mTheirRequestBundle = RaverieMove(netConnectRequestData.mEventBundleData);
   event.mTheirPendingUserAddRequestCount = netConnectRequestData.mAddUserRequestCount;
   event.mOurIpAddress = link->GetLink()->GetOurIpAddress();
   event.mOurConnectResponse = connectResponseData.mConnectResponse;
@@ -5175,7 +5175,7 @@ void NetPeer::UpdatePublishInterval(UpdateEvent* event)
 
     NetHostPublishData netHostPublishData;
     netHostPublishData.mProjectGuid = GetOurProjectGuid();
-    netHostPublishData.mBasicHostInfo = ZeroMove(event.mReturnHostInfo.GetBitStream());
+    netHostPublishData.mBasicHostInfo = RaverieMove(event.mReturnHostInfo.GetBitStream());
 
     netHostPublishMessage.GetData().Write(netHostPublishData);
 
@@ -5196,7 +5196,7 @@ bool NetPeer::HandlePing(IpAddress const& theirIpAddress, NetHostPingData& netHo
     return true;
 
   EventBundle pingBundle(static_cast<GameSession*>(GetOwner()));
-  pingBundle = ZeroMove(netHostPingData.mEventBundleData);
+  pingBundle = RaverieMove(netHostPingData.mEventBundleData);
 
   switch (GetRole())
   {
@@ -5306,7 +5306,7 @@ void NetPeer::MasterServerRecievePublish(const IpAddress& theirIpAddress,
     // copying the event bundle.
     NetHostRecord* record = projectRecordsMap[theirIpAddress];
     record->mLifetime = 0;
-    record->mBasicHostInfo = ZeroMove(EventBundle(basicHostInfo).GetBitStream());
+    record->mBasicHostInfo = RaverieMove(EventBundle(basicHostInfo).GetBitStream());
 
     // ZPrint("Updated host record for %s.\n",
     // theirIpAddress.GetString().c_str());
@@ -5317,7 +5317,7 @@ void NetPeer::MasterServerRecievePublish(const IpAddress& theirIpAddress,
   }
   else // Record did not exist.
   {
-    Zero::String justIp = theirIpAddress.GetHost();
+    Raverie::String justIp = theirIpAddress.GetHost();
 
     // get the number of servers hosted for this IP currently.
     unsigned int count = mIpAddressServerCounts.FindValue(justIp, 0);
@@ -5339,7 +5339,7 @@ void NetPeer::MasterServerRecievePublish(const IpAddress& theirIpAddress,
 
     // set the information of the host record.
     newRecord->mIpAddress = theirIpAddress;
-    newRecord->mBasicHostInfo = ZeroMove(basicHostInfo.GetBitStream());
+    newRecord->mBasicHostInfo = RaverieMove(basicHostInfo.GetBitStream());
     newRecord->mProjectGuid = thierProjectGuid;
 
     // ZPrint("Added new host record for %s.\n",
@@ -5394,7 +5394,7 @@ void NetPeer::UpdateHostRecords(UpdateEvent* event)
 void NetPeer::RemoveNetHostRecord(Guid const& projectGuid, IpAddress const& netHostRecordIp)
 {
   HostRecordsMap& projectRecords = GetProjectRecordsMap(projectGuid);
-  Zero::String justIp = netHostRecordIp.GetHost();
+  Raverie::String justIp = netHostRecordIp.GetHost();
   NetHostRecord* record = projectRecords[netHostRecordIp];
 
   if (!projectRecords.ContainsKey(netHostRecordIp))
@@ -5477,7 +5477,7 @@ void NetPeer::ReceiveHostPublish(IpAddress const& theirIpAddress, Message& messa
 
   // move the message data into an event bundle
   EventBundle basicHostInfo(static_cast<GameSession*>(GetOwner()));
-  basicHostInfo = ZeroMove(netHostPublishData.mBasicHostInfo);
+  basicHostInfo = RaverieMove(netHostPublishData.mBasicHostInfo);
 
   // Get their project GUID
   Guid theirProjectGuid = netHostPublishData.mProjectGuid;
@@ -5542,4 +5542,4 @@ NetLinkData::NetLinkData()
 {
 }
 
-} // namespace Zero
+} // namespace Raverie

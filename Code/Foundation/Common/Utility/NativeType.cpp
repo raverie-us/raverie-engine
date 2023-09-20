@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 template <>
@@ -12,4 +12,4 @@ NativeType* NativeType::GetInstance<void>()
   return nullptr;
 }
 
-} // namespace Zero
+} // namespace Raverie

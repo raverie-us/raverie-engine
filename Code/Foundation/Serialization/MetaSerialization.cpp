@@ -1,11 +1,11 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Meta Serialization
-ZilchDefineType(MetaSerialization, builder, type)
+RaverieDefineType(MetaSerialization, builder, type)
 {
 }
 
@@ -99,7 +99,7 @@ bool MetaSerialization::SerializeReferenceProperty(BoundType* propertyType,
     {
       if (propertyType->CreatableInScript && propertyType->GetDefaultConstructor() != nullptr)
       {
-        object = ZilchAllocateUntyped(propertyType);
+        object = RaverieAllocateUntyped(propertyType);
 
         // Re-assign the newly allocated object
         value = object;
@@ -119,8 +119,8 @@ void MetaSerialization::SerializeObject(AnyParam object, Serializer& serializer)
   Handle handle = object.ToHandle();
   ReturnIf(handle.IsNull(), , "Cannot serialize null object");
 
-  if (Object* zeroObject = handle.Get<Object*>())
-    zeroObject->Serialize(serializer);
+  if (Object* raverieObject = handle.Get<Object*>())
+    raverieObject->Serialize(serializer);
   else
     MetaSerializeProperties(handle, serializer);
 }
@@ -148,7 +148,7 @@ void MetaSerialization::SerializeMembers(HandleParam object, Serializer& seriali
 }
 
 // Serialization Primitive
-ZilchDefineType(EnumMetaSerialization, builder, type)
+RaverieDefineType(EnumMetaSerialization, builder, type)
 {
 }
 
@@ -192,64 +192,64 @@ bool EnumMetaSerialization::ConvertFromString(StringParam input, Any& output)
   return false;
 }
 
-ZilchDefineTemplateType(PrimitiveMetaSerialization<Integer>, builder, type)
+RaverieDefineTemplateType(PrimitiveMetaSerialization<Integer>, builder, type)
 {
 }
 
-ZilchDefineTemplateType(PrimitiveMetaSerialization<Integer2>, builder, type)
+RaverieDefineTemplateType(PrimitiveMetaSerialization<Integer2>, builder, type)
 {
 }
 
-ZilchDefineTemplateType(PrimitiveMetaSerialization<Integer3>, builder, type)
+RaverieDefineTemplateType(PrimitiveMetaSerialization<Integer3>, builder, type)
 {
 }
 
-ZilchDefineTemplateType(PrimitiveMetaSerialization<Integer4>, builder, type)
+RaverieDefineTemplateType(PrimitiveMetaSerialization<Integer4>, builder, type)
 {
 }
 
-ZilchDefineTemplateType(PrimitiveMetaSerialization<String>, builder, type)
+RaverieDefineTemplateType(PrimitiveMetaSerialization<String>, builder, type)
 {
 }
 
-ZilchDefineTemplateType(PrimitiveMetaSerialization<Boolean>, builder, type)
+RaverieDefineTemplateType(PrimitiveMetaSerialization<Boolean>, builder, type)
 {
 }
 
-ZilchDefineTemplateType(PrimitiveMetaSerialization<Real>, builder, type)
+RaverieDefineTemplateType(PrimitiveMetaSerialization<Real>, builder, type)
 {
 }
 
-ZilchDefineTemplateType(PrimitiveMetaSerialization<Real2>, builder, type)
+RaverieDefineTemplateType(PrimitiveMetaSerialization<Real2>, builder, type)
 {
 }
 
-ZilchDefineTemplateType(PrimitiveMetaSerialization<Real3>, builder, type)
+RaverieDefineTemplateType(PrimitiveMetaSerialization<Real3>, builder, type)
 {
 }
 
-ZilchDefineTemplateType(PrimitiveMetaSerialization<Real4>, builder, type)
+RaverieDefineTemplateType(PrimitiveMetaSerialization<Real4>, builder, type)
 {
 }
 
-ZilchDefineTemplateType(PrimitiveMetaSerialization<Mat2>, builder, type)
+RaverieDefineTemplateType(PrimitiveMetaSerialization<Mat2>, builder, type)
 {
 }
 
-ZilchDefineTemplateType(PrimitiveMetaSerialization<Mat3>, builder, type)
+RaverieDefineTemplateType(PrimitiveMetaSerialization<Mat3>, builder, type)
 {
 }
 
-ZilchDefineTemplateType(PrimitiveMetaSerialization<Mat4>, builder, type)
+RaverieDefineTemplateType(PrimitiveMetaSerialization<Mat4>, builder, type)
 {
 }
 
-ZilchDefineTemplateType(PrimitiveMetaSerialization<Quat>, builder, type)
+RaverieDefineTemplateType(PrimitiveMetaSerialization<Quat>, builder, type)
 {
 }
 
 // String Serialization
-ZilchDefineType(MetaStringSerialization, builder, type)
+RaverieDefineType(MetaStringSerialization, builder, type)
 {
 }
 
@@ -294,7 +294,7 @@ bool MetaStringSerialization::ConvertFromString(StringParam input, Any& output)
 }
 
 // Serialization Filter
-ZilchDefineType(SerializationFilter, builder, type)
+RaverieDefineType(SerializationFilter, builder, type)
 {
 }
 
@@ -452,7 +452,7 @@ void MetaSerializeComponents(HandleParam instance, Serializer& serializer)
         Handle component = composition->GetComponent(instance, componentType);
         if (component.IsNull())
         {
-          component = ZilchAllocateUntyped(componentType);
+          component = RaverieAllocateUntyped(componentType);
           composition->AddComponent(instance, component);
         }
 
@@ -523,4 +523,4 @@ void SerializeObjectFromDataBlock(DataBlock& block, Object* object)
   object->Serialize(loader);
 }
 
-} // namespace Zero
+} // namespace Raverie

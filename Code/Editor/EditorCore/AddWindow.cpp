@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -13,7 +13,7 @@ DefineEvent(PostAddResource);
 } // namespace Events
 
 // Post Add Resource Event
-ZilchDefineType(PostAddResourceEvent, builder, type)
+RaverieDefineType(PostAddResourceEvent, builder, type)
 {
 }
 
@@ -43,9 +43,9 @@ AddResourceWindow* OpenAddWindow(BoundType* resourceType, Window** window, Strin
 
   if (resourceType)
     addDialog->SelectResourceType(resourceType);
-  // Select zilch script by default
+  // Select raverie script by default
   else
-    addDialog->SelectResourceType(ZilchTypeId(ZilchScript));
+    addDialog->SelectResourceType(RaverieTypeId(RaverieScript));
 
   addWindow->SizeToContents();
 
@@ -69,7 +69,7 @@ AddResourceWindow* OpenAddWindow(BoundType* resourceType, Window** window, Strin
 }
 
 // Add Resource Window
-ZilchDefineType(AddResourceWindow, builder, type)
+RaverieDefineType(AddResourceWindow, builder, type)
 {
 }
 
@@ -194,7 +194,7 @@ void AddResourceWindow::AddTags(TagList& tags)
     // Only add tags that are not resource types as they are automatically added
     // to resources upon their creation
     BoundType* type = MetaDatabase::GetInstance()->FindType(tag);
-    if (type && type->IsA(ZilchTypeId(Resource)))
+    if (type && type->IsA(RaverieTypeId(Resource)))
       continue;
 
     allTags.Append(tag);
@@ -285,7 +285,7 @@ class ReourceManagersDataSource : public PolicyDataSource<ResourceManagerPolicy>
 };
 
 // Resource Type Search
-ZilchDefineType(ResourceTypeSearch, builder, type)
+RaverieDefineType(ResourceTypeSearch, builder, type)
 {
 }
 
@@ -467,7 +467,7 @@ void ResourceTypeSearch::OnResourceTypeSelected(Event*)
 }
 
 // Resource Template Search
-ZilchDefineType(ResourceTemplateSearch, builder, type)
+RaverieDefineType(ResourceTemplateSearch, builder, type)
 {
 }
 
@@ -573,7 +573,7 @@ void ResourceTemplateSearch::ShowTemplates(BoundType* resourceType)
 
       PreviewWidget* tileWidget = ResourcePreview::CreatePreviewWidget(item, displayName, resource);
 
-      if (resourceType->IsA(ZilchTypeId(ColorGradient)))
+      if (resourceType->IsA(RaverieTypeId(ColorGradient)))
       {
         item->SetLayout(CreateStackLayout(LayoutDirection::TopToBottom, Vec2::cZero, Thickness(10, 3)));
         tileWidget->SetSizing(SizePolicy::Flex, Vec2(1, 1));
@@ -682,7 +682,7 @@ void ResourceTemplateSearch::OnKeyDown(KeyboardEvent* e)
 }
 
 // Resource Template Display
-ZilchDefineType(ResourceTemplateDisplay, builder, type)
+RaverieDefineType(ResourceTemplateDisplay, builder, type)
 {
 }
 
@@ -841,7 +841,7 @@ void ResourceTemplateDisplay::ShowResourceTemplate(Resource* resource)
     // mPreviewWidget->SetSizing(SizePolicy::Fixed, Pixels(48, 48));
 
     mPreviewWidget->SetSizing(SizePolicy::Flex, Vec2(1));
-    if (ZilchVirtualTypeId(resource)->IsA(ZilchTypeId(ColorGradient)))
+    if (RaverieVirtualTypeId(resource)->IsA(RaverieTypeId(ColorGradient)))
       mPreviewWidget->SetSizing(SizeAxis::Y, SizePolicy::Fixed, Pixels(34));
 
     mPreviewWidget->mVerticalAlignment = VerticalAlignment::Center;
@@ -899,7 +899,7 @@ void ResourceTemplateDisplay::UpdateTransform()
 
 void ResourceTemplateDisplay::BuildContentLibraryList()
 {
-  bool devConfig = Z::gEngine->GetConfigCog()->has(Zero::DeveloperConfig);
+  bool devConfig = Z::gEngine->GetConfigCog()->has(Raverie::DeveloperConfig);
   forRange (ResourceLibrary* resourceLibrary, Z::gResources->LoadedResourceLibraries.Values())
   {
     ContentLibrary* contentLibrary = Z::gContentSystem->Libraries.FindValue(resourceLibrary->Name, nullptr);
@@ -1113,7 +1113,7 @@ void ResourceTemplateDisplay::OnCreate(Event*)
   if (resourceTemplate == nullptr)
     return;
 
-  BoundType* resourceType = ZilchVirtualTypeId(resourceTemplate);
+  BoundType* resourceType = RaverieVirtualTypeId(resourceTemplate);
   ResourceManager* manager = Z::gResources->GetResourceManager(resourceType);
 
   String newName = mNameField->GetText();
@@ -1139,7 +1139,7 @@ void ResourceTemplateDisplay::OnCreate(Event*)
       {
         Property* property = mPostAdd.mProperty.GetPropertyFromRoot(instance);
 
-        if (property && ZilchVirtualTypeId(resourceAdd.SourceResource)->IsA(property->PropertyType))
+        if (property && RaverieVirtualTypeId(resourceAdd.SourceResource)->IsA(property->PropertyType))
           ChangeAndQueueProperty(
               Z::gEditor->GetOperationQueue(), instance, mPostAdd.mProperty, resourceAdd.SourceResource);
       }
@@ -1193,7 +1193,7 @@ void ResourceTemplateDisplay::OnTagsFocusLost(Event*)
 }
 
 // Resource Template Display
-ZilchDefineType(ImportButton, builder, type)
+RaverieDefineType(ImportButton, builder, type)
 {
 }
 
@@ -1243,4 +1243,4 @@ void ImportButton::OnMouseExit(Event*)
   mIcon->SetColor(Vec4(1, 1, 1, 0.85f));
 }
 
-} // namespace Zero
+} // namespace Raverie

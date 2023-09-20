@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 Mat3 GenerateRotationMatrix(Vec3Param facing)
@@ -72,4 +72,4 @@ void GenerateRotationMatrix(EulerAnglesParam eulerAngles, Mat3Ptr matrix)
   Math::ToMatrix3(eulerAngles, matrix);
 }
 
-} // namespace Zero
+} // namespace Raverie

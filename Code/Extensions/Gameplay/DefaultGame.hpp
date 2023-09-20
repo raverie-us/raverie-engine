@@ -1,14 +1,14 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Create the starting space and load the starting level into that space
 class DefaultGameSetup : public Component
 {
 public:
-  ZilchDeclareType(DefaultGameSetup, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(DefaultGameSetup, TypeCopyMode::ReferenceType);
 
   DefaultGameSetup();
 
@@ -30,4 +30,4 @@ public:
   bool mLoadEditingLevel;
 };
 
-} // namespace Zero
+} // namespace Raverie

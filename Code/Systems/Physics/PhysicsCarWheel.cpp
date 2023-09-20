@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 real CalculateObjectMass(Vec3Param dir, RigidBody* body, Vec3Param contactPoint)
@@ -15,63 +15,63 @@ real CalculateObjectMass(Vec3Param dir, RigidBody* body, Vec3Param contactPoint)
   return linear + angular;
 }
 
-ZilchDefineType(PhysicsCarWheel, builder, type)
+RaverieDefineType(PhysicsCarWheel, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindDependency(Transform);
+  RaverieBindComponent();
+  RaverieBindDependency(Transform);
 
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDocumented();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetterProperty(Active);
-  ZilchBindGetterSetterProperty(PhysicsCarPath);
-  ZilchBindGetterSetterProperty(SpringMinLength);
-  ZilchBindGetterSetterProperty(SpringStartLength);
-  ZilchBindGetterSetterProperty(SpringMaxLength);
-  ZilchBindFieldProperty(mSpringRestLength);
-  ZilchBindFieldProperty(mDriveFactor);
-  ZilchBindGetterSetterProperty(SteerFactor);
-  ZilchBindGetterSetterProperty(Radius);
+  RaverieBindGetterSetterProperty(Active);
+  RaverieBindGetterSetterProperty(PhysicsCarPath);
+  RaverieBindGetterSetterProperty(SpringMinLength);
+  RaverieBindGetterSetterProperty(SpringStartLength);
+  RaverieBindGetterSetterProperty(SpringMaxLength);
+  RaverieBindFieldProperty(mSpringRestLength);
+  RaverieBindFieldProperty(mDriveFactor);
+  RaverieBindGetterSetterProperty(SteerFactor);
+  RaverieBindGetterSetterProperty(Radius);
 
-  ZilchBindFieldProperty(mFrequencyHz);
-  ZilchBindFieldProperty(mDampingCompressionRatio);
-  ZilchBindFieldProperty(mDampingRelaxationRatio);
-  ZilchBindGetterSetterProperty(MaxSpringForce);
-  ZilchBindGetterSetterProperty(MaxBrakeStrength);
-  ZilchBindGetterSetterProperty(IsDriveWheel);
-  ZilchBindGetterSetterProperty(Is2DWheel);
-  ZilchBindFieldProperty(mForwardStaticFriction);
-  ZilchBindFieldProperty(mForwardDynamicFriction);
-  ZilchBindFieldProperty(mSideStaticFriction);
-  ZilchBindFieldProperty(mSideDynamicFriction);
-  ZilchBindFieldProperty(mGripScalar);
-  ZilchBindFieldProperty(mMaxSpringCompressionDistance);
-  ZilchBindFieldProperty(mMaxSpringRelaxationDistance);
+  RaverieBindFieldProperty(mFrequencyHz);
+  RaverieBindFieldProperty(mDampingCompressionRatio);
+  RaverieBindFieldProperty(mDampingRelaxationRatio);
+  RaverieBindGetterSetterProperty(MaxSpringForce);
+  RaverieBindGetterSetterProperty(MaxBrakeStrength);
+  RaverieBindGetterSetterProperty(IsDriveWheel);
+  RaverieBindGetterSetterProperty(Is2DWheel);
+  RaverieBindFieldProperty(mForwardStaticFriction);
+  RaverieBindFieldProperty(mForwardDynamicFriction);
+  RaverieBindFieldProperty(mSideStaticFriction);
+  RaverieBindFieldProperty(mSideDynamicFriction);
+  RaverieBindFieldProperty(mGripScalar);
+  RaverieBindFieldProperty(mMaxSpringCompressionDistance);
+  RaverieBindFieldProperty(mMaxSpringRelaxationDistance);
 
-  ZilchBindGetterSetterProperty(WheelLocalStartPosition);
-  ZilchBindGetterSetterProperty(PreRotation);
+  RaverieBindGetterSetterProperty(WheelLocalStartPosition);
+  RaverieBindGetterSetterProperty(PreRotation);
 
-  ZilchBindGetterSetterProperty(WorldWheelBasis)->Add(new EditorRotationBasis("PhysicsCarWheelBasisGizmo"));
+  RaverieBindGetterSetterProperty(WorldWheelBasis)->Add(new EditorRotationBasis("PhysicsCarWheelBasisGizmo"));
 
-  ZilchBindGetter(IsInContact);
-  ZilchBindGetter(IsSliding);
-  ZilchBindGetter(Rotation);
-  ZilchBindGetter(RotationalVelocity);
-  ZilchBindGetter(Grip);
-  ZilchBindGetter(NormalImpulse);
-  ZilchBindGetter(ForwardImpulse);
-  ZilchBindGetter(SideImpulse);
-  ZilchBindGetter(SpringLength);
-  ZilchBindGetter(ContactedObject);
-  ZilchBindGetter(ContactPoint);
-  ZilchBindGetter(ContactNormal);
-  ZilchBindGetter(WorldAxleAxis);
-  ZilchBindGetter(WorldForwardAxis);
-  ZilchBindGetter(WorldSpringAxis);
-  ZilchBindGetter(WorldLinearVelocity);
-  ZilchBindGetter(WorldAngularVelocity);
+  RaverieBindGetter(IsInContact);
+  RaverieBindGetter(IsSliding);
+  RaverieBindGetter(Rotation);
+  RaverieBindGetter(RotationalVelocity);
+  RaverieBindGetter(Grip);
+  RaverieBindGetter(NormalImpulse);
+  RaverieBindGetter(ForwardImpulse);
+  RaverieBindGetter(SideImpulse);
+  RaverieBindGetter(SpringLength);
+  RaverieBindGetter(ContactedObject);
+  RaverieBindGetter(ContactPoint);
+  RaverieBindGetter(ContactNormal);
+  RaverieBindGetter(WorldAxleAxis);
+  RaverieBindGetter(WorldForwardAxis);
+  RaverieBindGetter(WorldSpringAxis);
+  RaverieBindGetter(WorldLinearVelocity);
+  RaverieBindGetter(WorldAngularVelocity);
 
-  ZeroBindTag(Tags::Physics);
+  RaverieBindTag(Tags::Physics);
 }
 
 PhysicsCarWheel::PhysicsCarWheel()
@@ -1063,4 +1063,4 @@ Vec3 PhysicsCarWheel::GetWorldAngularVelocity()
   return GetWorldAxleAxis() * GetRotationalVelocity();
 }
 
-} // namespace Zero
+} // namespace Raverie

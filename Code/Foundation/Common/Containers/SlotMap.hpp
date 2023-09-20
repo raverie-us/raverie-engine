@@ -4,7 +4,7 @@
 #include "ContainerCommon.hpp"
 #include "Memory/Allocator.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 /// Intrusive slot map container. Uses an array of slots combined with
@@ -193,7 +193,7 @@ public:
       AddToFreeList(eraseId.GetSlot());
       // Reduce the size
       --mSize;
-#ifdef ZeroDebug
+#ifdef RaverieDebug
       eraseId.GetSlot() = InvalidSlotIndex;
 #endif
     }
@@ -311,4 +311,4 @@ private:
   void operator=(const Slotmap& other);
 };
 
-} // namespace Zero
+} // namespace Raverie

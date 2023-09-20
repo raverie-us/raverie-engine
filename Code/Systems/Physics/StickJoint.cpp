@@ -12,7 +12,7 @@
             dot(cross(a,b),c) = dot(a,cross(b,c)) = dot(cross(c,a),b)
 */
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Physics
@@ -24,14 +24,14 @@ ImplementJointType(StickJoint);
 
 ImplementAnchorAccessors(StickJoint, mAnchors);
 
-ZilchDefineType(StickJoint, builder, type)
+RaverieDefineType(StickJoint, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindInterface(Joint);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindInterface(Joint);
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetterProperty(Length);
+  RaverieBindGetterSetterProperty(Length);
   BindAnchorAccessors(Vec3::cZero);
 }
 
@@ -67,7 +67,7 @@ void StickJoint::ComputeInitialConfiguration()
 void StickJoint::ComponentAdded(BoundType* typeId, Component* component)
 {
   Joint::ComponentAdded(typeId, component);
-  if (typeId == ZilchTypeId(JointLimit))
+  if (typeId == RaverieTypeId(JointLimit))
   {
     JointLimit* limit = static_cast<JointLimit*>(component);
     limit->mMinErr = 0;
@@ -176,4 +176,4 @@ void StickJoint::SetLength(real length)
 
 } // namespace Physics
 
-} // namespace Zero
+} // namespace Raverie

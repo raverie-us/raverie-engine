@@ -6,7 +6,7 @@
 #include "Containers/InList.hpp"
 #include "Platform/Timer.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Profile
@@ -153,37 +153,37 @@ public:
 void PrintProfileGraph();
 
 } // namespace Profile
-} // namespace Zero
+} // namespace Raverie
 
 #define ZPROFILE_ENABLED 1
 
 #if ZPROFILE_ENABLED
 
 #  define ProfileScopeFunction()                                                                                       \
-    static Zero::Profile::Record __LocalRecord(__FUNCTION__);                                                          \
-    Zero::Profile::ScopeTimer __ScopedBlock(&__LocalRecord);
+    static Raverie::Profile::Record __LocalRecord(__FUNCTION__);                                                          \
+    Raverie::Profile::ScopeTimer __ScopedBlock(&__LocalRecord);
 
 #  define ProfileScopeFunctionArgs(args)                                                                               \
-    static Zero::Profile::Record __LocalRecord(__FUNCTION__);                                                          \
-    Zero::Profile::ScopeTimer __ScopedBlock(&__LocalRecord, args);
+    static Raverie::Profile::Record __LocalRecord(__FUNCTION__);                                                          \
+    Raverie::Profile::ScopeTimer __ScopedBlock(&__LocalRecord, args);
 
 #  define ProfileScope(name)                                                                                           \
-    static Zero::Profile::Record __LocalRecord(name);                                                                  \
-    Zero::Profile::ScopeTimer __ScopedBlock(&__LocalRecord);
+    static Raverie::Profile::Record __LocalRecord(name);                                                                  \
+    Raverie::Profile::ScopeTimer __ScopedBlock(&__LocalRecord);
 
 #  define ProfileScopeArgs(name, args)                                                                                 \
-    static Zero::Profile::Record __LocalRecord(name);                                                                  \
-    Zero::Profile::ScopeTimer __ScopedBlock(&__LocalRecord, args);
+    static Raverie::Profile::Record __LocalRecord(name);                                                                  \
+    Raverie::Profile::ScopeTimer __ScopedBlock(&__LocalRecord, args);
 
 #  define ProfileScopeTree(name, parentName, color)                                                                    \
-    static Zero::Profile::Record __LocalRecord(name, parentName, color);                                               \
-    Zero::Profile::ScopeTimer __ScopedBlock(&__LocalRecord);
+    static Raverie::Profile::Record __LocalRecord(name, parentName, color);                                               \
+    Raverie::Profile::ScopeTimer __ScopedBlock(&__LocalRecord);
 
 #  define ProfileScopeTreeArgs(name, args, parentName, color)                                                          \
-    static Zero::Profile::Record __LocalRecord(name, parentName, color);                                               \
-    Zero::Profile::ScopeTimer __ScopedBlock(&__LocalRecord, args);
+    static Raverie::Profile::Record __LocalRecord(name, parentName, color);                                               \
+    Raverie::Profile::ScopeTimer __ScopedBlock(&__LocalRecord, args);
 
-#  define ProfileScopeRecord(recordName) Zero::Profile::ScopeTimer __ScopedBlock(&recordName);
+#  define ProfileScopeRecord(recordName) Raverie::Profile::ScopeTimer __ScopedBlock(&recordName);
 
 #else
 

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Forward Declarations
@@ -23,7 +23,7 @@ class AnimationCurveEditor : public CurveEditor
 {
 public:
   /// Typedefs.
-  typedef AnimationCurveEditor ZilchSelf;
+  typedef AnimationCurveEditor RaverieSelf;
 
   /// Constructor.
   AnimationCurveEditor(AnimationGraphEditor* parent);
@@ -48,7 +48,7 @@ private:
 class AnimationCurveObject : public CurveObject
 {
 public:
-  typedef AnimationCurveObject ZilchSelf;
+  typedef AnimationCurveObject RaverieSelf;
 
   AnimationCurveObject(AnimationGraphEditor* editor, TrackNode* track);
 
@@ -104,7 +104,7 @@ class AnimationGraphEditor : public Composite
 {
 public:
   /// Type defines.
-  typedef AnimationGraphEditor ZilchSelf;
+  typedef AnimationGraphEditor RaverieSelf;
 
   /// Constructor.
   AnimationGraphEditor(Composite* parent, AnimationEditor* editor, ScrollingGraph* graphData);
@@ -187,4 +187,4 @@ private:
   AnimationScrubber* mScrubber;
 };
 
-} // namespace Zero
+} // namespace Raverie

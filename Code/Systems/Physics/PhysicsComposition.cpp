@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 void AddChildBody(RigidBody* parent, RigidBody* child)
@@ -67,7 +67,7 @@ void ValidateNode(PhysicsNode* node)
   if (cog == parentNodeCog)
     return;
 
-  ZeroDebugBreak();
+  RaverieDebugBreak();
   ErrorIf(true, "Not valid link");
 }
 
@@ -650,4 +650,4 @@ void PhysicsDetach(PhysicsNode* node, AttachmentInfo& info)
   CompleteTreeRebuild(GetTreeRoot(node));
 }
 
-} // namespace Zero
+} // namespace Raverie

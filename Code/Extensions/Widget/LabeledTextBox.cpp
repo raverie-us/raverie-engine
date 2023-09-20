@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 LabeledTextBox::LabeledTextBox(Composite* parent) : Composite(parent)
@@ -40,4 +40,4 @@ void LabeledTextBox::SetText(StringParam text)
   MarkAsNeedsUpdate();
 }
 
-} // namespace Zero
+} // namespace Raverie

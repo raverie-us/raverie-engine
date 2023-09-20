@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 WorldTransformation::WorldTransformation()
@@ -232,4 +232,4 @@ bool WorldTransformation::IsUniformlyScaled()
   return mWorldScale.x == mWorldScale.y && mWorldScale.y == mWorldScale.z;
 }
 
-} // namespace Zero
+} // namespace Raverie

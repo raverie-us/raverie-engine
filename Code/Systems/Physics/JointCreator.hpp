@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 DeclareBitField5(JointCreatorFlags, UseCenter, OverrideLength, AutoSnaps, AttachToCommonParent, AttachToWorld);
@@ -11,7 +11,7 @@ DeclareBitField5(JointCreatorFlags, UseCenter, OverrideLength, AutoSnaps, Attach
 /// calculated from these two points.
 struct JointCreator
 {
-  ZilchDeclareType(JointCreator, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(JointCreator, TypeCopyMode::ReferenceType);
 
   struct ConnectionInfo
   {
@@ -132,4 +132,4 @@ void JointCreator::CallJointFunctions(Joint* joint, ConnectionInfo& info)
   SpecificSetup(typedJoint, info);
 }
 
-} // namespace Zero
+} // namespace Raverie

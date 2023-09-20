@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 typedef InList<Widget, &Widget::mWidgetLink> WidgetList;
@@ -26,7 +26,7 @@ struct FilterLayoutChildren
 class Composite : public Widget
 {
 public:
-  ZilchDeclareType(Composite, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Composite, TypeCopyMode::ReferenceType);
 
   Composite(Composite* parent, AttachType::Enum attachType = AttachType::Normal);
   ~Composite();
@@ -114,4 +114,4 @@ public:
   Element* mBackground;
 };
 
-} // namespace Zero
+} // namespace Raverie

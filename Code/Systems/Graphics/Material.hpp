@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// A composition of shader fragments that defines a shader program that is used
@@ -10,7 +10,7 @@ namespace Zero
 class Material : public DataResource
 {
 public:
-  ZilchDeclareType(Material, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Material, TypeCopyMode::ReferenceType);
 
   // Flag for disabling SendModified() during reinitialization.
   static bool sNotifyModified;
@@ -106,7 +106,7 @@ private:
 class CompositionLabelExtension : public EditorPropertyExtension
 {
 public:
-  ZilchDeclareType(CompositionLabelExtension, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CompositionLabelExtension, TypeCopyMode::ReferenceType);
 };
 
-} // namespace Zero
+} // namespace Raverie

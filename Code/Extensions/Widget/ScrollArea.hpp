@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -15,7 +15,7 @@ class BaseScrollArea;
 class ScrollBar : public Composite
 {
 public:
-  typedef ScrollBar ZilchSelf;
+  typedef ScrollBar RaverieSelf;
 
   ScrollBar(BaseScrollArea* scrollparent, uint orientation);
   ~ScrollBar();
@@ -53,7 +53,7 @@ DeclareEnum3(ScrollUpdate, Auto, ScrollBar, External);
 class BaseScrollArea : public Composite
 {
 public:
-  ZilchDeclareType(BaseScrollArea, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(BaseScrollArea, TypeCopyMode::ReferenceType);
 
   BaseScrollArea(Composite* parent, bool modernStyle = false);
   ~BaseScrollArea();
@@ -146,7 +146,7 @@ private:
 class ScrollArea : public BaseScrollArea
 {
 public:
-  ZilchDeclareType(ScrollArea, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ScrollArea, TypeCopyMode::ReferenceType);
 
   ScrollArea(Composite* composite, bool modernStyle = false);
 
@@ -171,4 +171,4 @@ public:
   Composite* mClipWidget;
 };
 
-} // namespace Zero
+} // namespace Raverie

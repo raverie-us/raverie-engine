@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 void* zAllocate(size_t numberOfBytes)
@@ -267,4 +267,4 @@ Heap* GetNamedHeap(cstr name)
 
 } // namespace Memory
 
-} // namespace Zero
+} // namespace Raverie

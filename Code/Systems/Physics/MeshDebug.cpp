@@ -1,23 +1,23 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(MeshDebug, builder, type)
+RaverieDefineType(MeshDebug, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZilchBindMethod(DrawTriangles);
-  ZilchBindMethod(DrawTriangleVoronoiRegion);
-  ZilchBindMethod(DrawAllTriangleVoronoiRegions);
-  ZilchBindMethod(GetTriangleIndexFromCast);
-  ZilchBindMethod(GetTriangleNormal);
-  ZilchBindMethod(GetPointFromCastOnTriangle);
-  ZilchBindMethod(DrawTriangleFromCast);
-  ZilchBindMethod(TestManifoldPoint);
-  ZilchBindMethod(DrawVectorAtPoint);
-  ZilchBindMethod(GenerateInfoForTriangles);
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindMethod(DrawTriangles);
+  RaverieBindMethod(DrawTriangleVoronoiRegion);
+  RaverieBindMethod(DrawAllTriangleVoronoiRegions);
+  RaverieBindMethod(GetTriangleIndexFromCast);
+  RaverieBindMethod(GetTriangleNormal);
+  RaverieBindMethod(GetPointFromCastOnTriangle);
+  RaverieBindMethod(DrawTriangleFromCast);
+  RaverieBindMethod(TestManifoldPoint);
+  RaverieBindMethod(DrawVectorAtPoint);
+  RaverieBindMethod(GenerateInfoForTriangles);
 }
 
 void MeshDebug::CacheData()
@@ -274,4 +274,4 @@ void MeshDebug::GenerateInfoForTriangles(Vec3Param start1, Vec3Param dir1, Vec3P
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 AnimationProcessor::AnimationProcessor(AnimationBuilder* animationBuilder,
@@ -31,19 +31,19 @@ void AnimationProcessor::ExtractAndProcessAnimationData(const aiScene* scene)
     aiAnimation* sceneAnimation = animations[animIndex];
 
     // Start our animation data for this scenes animation
-    AnimationData zeroAnimationData;
-    zeroAnimationData.AnimationName = CleanAssetName(sceneAnimation->mName.C_Str());
+    AnimationData animationData;
+    animationData.AnimationName = CleanAssetName(sceneAnimation->mName.C_Str());
 
     float ticksPerSecond = (float)sceneAnimation->mTicksPerSecond != 0 ? (float)sceneAnimation->mTicksPerSecond : 1.f;
-    zeroAnimationData.AnimationDuration = (float)sceneAnimation->mDuration / ticksPerSecond;
-    zeroAnimationData.FramesPerSecond = ticksPerSecond;
+    animationData.AnimationDuration = (float)sceneAnimation->mDuration / ticksPerSecond;
+    animationData.FramesPerSecond = ticksPerSecond;
 
-    // Collect each of the animations channel data (Zero Object Tracks)
+    // Collect each of the animations channel data (Raverie Object Tracks)
     aiNodeAnim** sceneAnimationChannels = sceneAnimation->mChannels;
     size_t numChannels = sceneAnimation->mNumChannels;
     for (size_t channelIndex = 0; channelIndex < numChannels; ++channelIndex)
     {
-      SceneTrack zeroTrackData;
+      SceneTrack trackData;
 
       aiNodeAnim* sceneChannelNode = sceneAnimationChannels[channelIndex];
       String name = CleanAssetName(sceneChannelNode->mNodeName.C_Str());
@@ -61,7 +61,7 @@ void AnimationProcessor::ExtractAndProcessAnimationData(const aiScene* scene)
       // Entire node hierarchy path to this particular animation node
       HierarchyData& node = mHierarchyDataMap[name];
 
-      zeroTrackData.FullPath = node.mNodePath;
+      trackData.FullPath = node.mNodePath;
 
       // These variables are used to decompose the transform matrix to extract
       // the scale for animation correction
@@ -95,7 +95,7 @@ void AnimationProcessor::ExtractAndProcessAnimationData(const aiScene* scene)
         }
 
         positionKey.Position = Math::TransformPoint(transform, positionKey.Position);
-        zeroTrackData.PositionKeys.PushBack(positionKey);
+        trackData.PositionKeys.PushBack(positionKey);
       }
 
       size_t numRotationKeys = sceneChannelNode->mNumRotationKeys;
@@ -112,7 +112,7 @@ void AnimationProcessor::ExtractAndProcessAnimationData(const aiScene* scene)
         }
 
         rotationKey.Rotation = changeOfBasis * rotationKey.Rotation * changeOfBasis.Inverted();
-        zeroTrackData.RotationKeys.PushBack(rotationKey);
+        trackData.RotationKeys.PushBack(rotationKey);
       }
 
       size_t numScalingKeys = sceneChannelNode->mNumScalingKeys;
@@ -129,12 +129,12 @@ void AnimationProcessor::ExtractAndProcessAnimationData(const aiScene* scene)
           scalingKey.Scale = preScaleCorrection * scalingKey.Scale * postScaleCorrection;
         }
 
-        zeroTrackData.ScalingKeys.PushBack(scalingKey);
+        trackData.ScalingKeys.PushBack(scalingKey);
       }
 
-      zeroAnimationData.ObjectTracks.PushBack(zeroTrackData);
+      animationData.ObjectTracks.PushBack(trackData);
     }
-    mAnimationDataArray.PushBack(zeroAnimationData);
+    mAnimationDataArray.PushBack(animationData);
   }
 }
 
@@ -322,4 +322,4 @@ void AnimationProcessor::ExportAnimationData(String outputPath)
   mBuilder->mAnimations = entries;
 }
 
-} // namespace Zero
+} // namespace Raverie

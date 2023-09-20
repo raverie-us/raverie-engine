@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class TrapezoidMap
@@ -167,4 +167,4 @@ public:
   RegionId FindRegionBelow(RegionId indexO, EdgeId edgeStart);
 };
 
-} // namespace Zero
+} // namespace Raverie

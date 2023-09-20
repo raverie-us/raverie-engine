@@ -60,12 +60,12 @@ set(Engine_ResourceManager_Sources
 set(Engine_Scripting_Sources
     ${CMAKE_CURRENT_LIST_DIR}/Scripting/ScriptEvents.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Scripting/ScriptEvents.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Scripting/ZilchAction.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Scripting/ZilchAction.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Scripting/ZilchManager.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Scripting/ZilchManager.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Scripting/ZilchResource.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Scripting/ZilchResource.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Scripting/RaverieAction.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Scripting/RaverieAction.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Scripting/RaverieManager.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Scripting/RaverieManager.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Scripting/RaverieResource.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Scripting/RaverieResource.hpp
 )
 
 target_sources(Engine
@@ -231,5 +231,5 @@ raverie_target_includes(Engine
   PUBLIC
     Common
     Geometry
-    Zilch
+    Raverie
 )

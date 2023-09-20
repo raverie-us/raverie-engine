@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class Permutation : public Array<size_t>
@@ -70,4 +70,4 @@ public:
   bool mEmpty;
 };
 
-} // namespace Zero
+} // namespace Raverie

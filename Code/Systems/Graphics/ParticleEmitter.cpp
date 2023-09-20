@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -10,10 +10,10 @@ DefineEvent(ParticlesExhausted);
 DefineEvent(AllParticlesDead);
 } // namespace Events
 
-ZilchDefineType(ParticleEmitter, builder, type)
+RaverieDefineType(ParticleEmitter, builder, type)
 {
-  ZeroBindDocumented();
-  ZeroBindTag(Tags::Particle);
+  RaverieBindDocumented();
+  RaverieBindTag(Tags::Particle);
 }
 
 ParticleEmitter::ParticleEmitter()
@@ -40,7 +40,7 @@ void ParticleEmitter::Initialize(CogInitializer& initializer)
 }
 
 // Hide Base Filter
-ZilchDefineType(HideBaseFilter, builder, type)
+RaverieDefineType(HideBaseFilter, builder, type)
 {
 }
 
@@ -58,49 +58,49 @@ bool HideBaseFilter::Filter(Member* prop, HandleParam instance)
 // Emitter Common Data
 const float ParticleEmitterShared::mMaxEmitRate = 50000.0f;
 
-ZilchDefineType(ParticleEmitterShared, builder, type)
+RaverieDefineType(ParticleEmitterShared, builder, type)
 {
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDocumented();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
 
-  ZeroBindInterface(ParticleEmitter);
-  ZeroBindDependency(Transform);
-  ZeroBindDependency(ParticleSystem);
-  ZeroBindEvent(Events::ParticlesExhausted, ObjectEvent);
-  ZeroBindEvent(Events::AllParticlesDead, ObjectEvent);
+  RaverieBindInterface(ParticleEmitter);
+  RaverieBindDependency(Transform);
+  RaverieBindDependency(ParticleSystem);
+  RaverieBindEvent(Events::ParticlesExhausted, ObjectEvent);
+  RaverieBindEvent(Events::AllParticlesDead, ObjectEvent);
 
-  ZilchBindFieldProperty(mActive);
+  RaverieBindFieldProperty(mActive);
 
-  ZilchBindFieldProperty(mEmitDelay);
-  ZilchBindFieldProperty(mEmitCount);
+  RaverieBindFieldProperty(mEmitDelay);
+  RaverieBindFieldProperty(mEmitCount);
 
-  ZilchBindGetterSetterProperty(EmitRate);
-  ZilchBindFieldProperty(mEmitVariance);
-  ZilchBindFieldProperty(mEmitRateSoftStartTime);
+  RaverieBindGetterSetterProperty(EmitRate);
+  RaverieBindFieldProperty(mEmitVariance);
+  RaverieBindFieldProperty(mEmitRateSoftStartTime);
 
-  ZilchBindFieldProperty(mSize);
-  ZilchBindFieldProperty(mSizeVariance);
+  RaverieBindFieldProperty(mSize);
+  RaverieBindFieldProperty(mSizeVariance);
 
-  ZilchBindFieldProperty(mLifetime);
-  ZilchBindFieldProperty(mLifetimeVariance);
+  RaverieBindFieldProperty(mLifetime);
+  RaverieBindFieldProperty(mLifetimeVariance);
 
-  ZilchBindFieldProperty(mSpin);
-  ZilchBindFieldProperty(mSpinVariance);
+  RaverieBindFieldProperty(mSpin);
+  RaverieBindFieldProperty(mSpinVariance);
 
-  ZilchBindFieldProperty(mRandomSpin);
+  RaverieBindFieldProperty(mRandomSpin);
 
-  ZilchBindFieldProperty(mFill)->Add(new EditorSlider(0, 1, 0.01f))->HideOnDerivedType(MeshParticleEmitter);
-  ZilchBindFieldProperty(mEmitterVelocityPercent);
+  RaverieBindFieldProperty(mFill)->Add(new EditorSlider(0, 1, 0.01f))->HideOnDerivedType(MeshParticleEmitter);
+  RaverieBindFieldProperty(mEmitterVelocityPercent);
 
-  ZilchBindFieldProperty(mStartVelocity);
-  ZilchBindFieldProperty(mRandomVelocity);
-  ZilchBindFieldProperty(mTangentVelocity);
+  RaverieBindFieldProperty(mStartVelocity);
+  RaverieBindFieldProperty(mRandomVelocity);
+  RaverieBindFieldProperty(mTangentVelocity);
 
-  ZilchBindFieldProperty(mEmitterSize)->HideOnDerivedType(MeshParticleEmitter);
+  RaverieBindFieldProperty(mEmitterSize)->HideOnDerivedType(MeshParticleEmitter);
 
-  ZilchBindFieldProperty(mFastMovingEmitter);
+  RaverieBindFieldProperty(mFastMovingEmitter);
 
-  ZilchBindMethodProperty(ResetCount);
+  RaverieBindMethodProperty(ResetCount);
 }
 
 ParticleEmitterShared::ParticleEmitterShared()
@@ -298,4 +298,4 @@ Particle* ParticleEmitterShared::CreateInitializedParticle(ParticleList* particl
   return newParticle;
 }
 
-} // namespace Zero
+} // namespace Raverie

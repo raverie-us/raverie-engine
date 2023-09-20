@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Forward Declarations
@@ -24,7 +24,7 @@ DeclareTweakable(Vec4, ColorWidgetHighlight);
 class ValueEvent : public Event
 {
 public:
-  ZilchDeclareType(ValueEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ValueEvent, TypeCopyMode::ReferenceType);
   Any NewValue;
   uint UserData;
 };
@@ -32,7 +32,7 @@ public:
 class ObjectPollEvent : public Event
 {
 public:
-  ZilchDeclareType(ObjectPollEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ObjectPollEvent, TypeCopyMode::ReferenceType);
   ObjectPollEvent() : OwnedWidget(nullptr), FoundObject(nullptr)
   {
   }
@@ -46,7 +46,7 @@ public:
 class DirectProperty : public PropertyWidget
 {
 public:
-  ZilchDeclareType(DirectProperty, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(DirectProperty, TypeCopyMode::ReferenceType);
 
   DirectProperty(PropertyWidgetInitializer& initializer);
 
@@ -92,4 +92,4 @@ namespace PropertyViewUi
 DeclareTweakable(Vec4, ModifiedTextColor);
 }
 
-} // namespace Zero
+} // namespace Raverie

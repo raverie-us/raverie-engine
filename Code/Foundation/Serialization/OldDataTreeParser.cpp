@@ -4,7 +4,7 @@
 #include "DataTreeNode.hpp"
 #include "DataTree.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 DataTreeGrammar& DataTreeGrammar::GetInstance()
@@ -212,7 +212,7 @@ void AssignValue(DataNode* node, ParseNodeInfo<Token>* info)
   }
   else if (valueToken.mRule == grammar.mStringLiteral)
   {
-    node->mTypeName = ZilchTypeId(String)->Name;
+    node->mTypeName = RaverieTypeId(String)->Name;
     StringRange processedValue = valueToken.mString.All();
 
     // 1 and -2 to strip the quotes
@@ -357,4 +357,4 @@ void OldDataTreeParser::PostProcessAttributes(DataNode* node)
     PostProcessAttributes(&child);
 }
 
-} // namespace Zero
+} // namespace Raverie

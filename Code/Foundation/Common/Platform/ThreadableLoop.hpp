@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// If the platform supports threading, the threadable loop will run until it
@@ -37,4 +37,4 @@ private:
   Thread mThread;
 };
 
-} // namespace Zero
+} // namespace Raverie

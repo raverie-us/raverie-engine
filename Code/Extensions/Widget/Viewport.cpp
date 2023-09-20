@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace ViewportUi
@@ -10,7 +10,7 @@ const cstr cLocation = "EditorUi/Viewport";
 Tweakable(Vec4, BorderColor, Vec4(1, 1, 1, 1), cLocation);
 } // namespace ViewportUi
 
-ZilchDefineType(Viewport, builder, type)
+RaverieDefineType(Viewport, builder, type)
 {
 }
 
@@ -323,4 +323,4 @@ void ViewportDisplay::RenderUpdate(
   frameNode.mBlendSettingsIndex = frameBlock.mRenderQueues->mBlendSettingsOverrides.Size() - 1;
 }
 
-} // namespace Zero
+} // namespace Raverie

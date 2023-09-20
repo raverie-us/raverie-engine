@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 typedef HashMap<String, String> AnimationNodeRedirectMap;
@@ -42,4 +42,4 @@ public:
   AnimationNodeRedirectMap& mAnimationRedirectMap;
 };
 
-} // namespace Zero
+} // namespace Raverie

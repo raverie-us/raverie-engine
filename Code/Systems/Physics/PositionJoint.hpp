@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class Collider;
@@ -63,4 +63,4 @@ struct PositionJoint : public Joint
 
 typedef Physics::PositionJoint PositionJoint;
 
-} // namespace Zero
+} // namespace Raverie

@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Sound
@@ -11,7 +11,7 @@ namespace Zero
 class Sound : public Resource
 {
 public:
-  ZilchDeclareType(Sound, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Sound, TypeCopyMode::ReferenceType);
 
   Sound() : mAsset(nullptr)
   {
@@ -37,7 +37,7 @@ public:
 
 class SoundDisplay : public MetaDisplay
 {
-  ZilchDeclareType(SoundDisplay, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SoundDisplay, TypeCopyMode::ReferenceType);
 
   String GetName(HandleParam object) override;
   String GetDebugText(HandleParam object) override;
@@ -69,4 +69,4 @@ public:
   SoundManager(BoundType* resourceType);
 };
 
-} // namespace Zero
+} // namespace Raverie

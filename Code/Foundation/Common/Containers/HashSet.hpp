@@ -4,7 +4,7 @@
 #include "ContainerCommon.hpp"
 #include "HashedContainer.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 template <typename Hasher, typename ValueType>
@@ -199,4 +199,4 @@ public:
   }
 };
 
-} // namespace Zero
+} // namespace Raverie

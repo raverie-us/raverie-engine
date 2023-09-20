@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -15,7 +15,7 @@ DeclareEnum2(NotifyException, None, Script);
 class NotifyEvent : public Event
 {
 public:
-  ZilchDeclareType(NotifyEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(NotifyEvent, TypeCopyMode::ReferenceType);
   NotifyType::Enum Type;
   String Name;
   String Message;
@@ -92,4 +92,4 @@ namespace Z
 extern Array<NotificationCallback> gNotifyCallbackStack;
 }
 
-} // namespace Zero
+} // namespace Raverie

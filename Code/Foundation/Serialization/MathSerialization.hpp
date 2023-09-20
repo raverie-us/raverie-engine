@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Serialization
@@ -99,4 +99,4 @@ struct Policy<Mat4>
 
 } // namespace Serialization
 
-} // namespace Zero
+} // namespace Raverie

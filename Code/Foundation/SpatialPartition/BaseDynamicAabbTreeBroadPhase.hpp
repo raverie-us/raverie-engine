@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 DeclareEnum3(BaseDAabbTreeSelfQuery, SingleObject, FullTree, PartialTree);
@@ -80,6 +80,6 @@ protected:
   uint mBuildTreeObjectCountQuery;
 };
 
-} // namespace Zero
+} // namespace Raverie
 
 #include "Foundation/SpatialPartition/BaseDynamicAabbTreeBroadPhase.inl"

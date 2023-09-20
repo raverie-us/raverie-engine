@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 template <typename ArrayType>
@@ -139,31 +139,31 @@ class IndexedHalfEdgeMesh;
 class IndexedHalfEdgeMeshVertexArray : public BoundArray<IndexedHalfEdgeMesh, Vec3>
 {
 public:
-  ZilchDeclareType(IndexedHalfEdgeMeshVertexArray, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(IndexedHalfEdgeMeshVertexArray, TypeCopyMode::ReferenceType);
 };
 
 class IndexedHalfEdgeMeshEdgeArray : public BoundArray<IndexedHalfEdgeMesh, IndexedHalfEdge*>
 {
 public:
-  ZilchDeclareType(IndexedHalfEdgeMeshEdgeArray, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(IndexedHalfEdgeMeshEdgeArray, TypeCopyMode::ReferenceType);
 };
 
 class IndexedHalfEdgeFaceEdgeIndexArray : public BoundArray<IndexedHalfEdgeFace, int>
 {
 public:
-  ZilchDeclareType(IndexedHalfEdgeFaceEdgeIndexArray, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(IndexedHalfEdgeFaceEdgeIndexArray, TypeCopyMode::ReferenceType);
 };
 
 class IndexedHalfEdgeMeshFaceArray : public BoundArray<IndexedHalfEdgeMesh, IndexedHalfEdgeFace*>
 {
 public:
-  ZilchDeclareType(IndexedHalfEdgeMeshFaceArray, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(IndexedHalfEdgeMeshFaceArray, TypeCopyMode::ReferenceType);
 };
 
 class IndexedHalfEdge : public SafeId32Object
 {
 public:
-  ZilchDeclareType(IndexedHalfEdge, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(IndexedHalfEdge, TypeCopyMode::ReferenceType);
 
   /// Index of the tail vertex in the vertex list.
   int mVertexIndex;
@@ -176,7 +176,7 @@ public:
 class IndexedHalfEdgeFace : public SafeId32Object
 {
 public:
-  ZilchDeclareType(IndexedHalfEdgeFace, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(IndexedHalfEdgeFace, TypeCopyMode::ReferenceType);
 
   typedef Array<int> EdgeArray;
   typedef IndexedHalfEdgeFaceEdgeIndexArray BoundEdgeArray;
@@ -203,7 +203,7 @@ public:
 class IndexedHalfEdgeMesh : public ReferenceCountedObject
 {
 public:
-  ZilchDeclareType(IndexedHalfEdgeMesh, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(IndexedHalfEdgeMesh, TypeCopyMode::ReferenceType);
 
   typedef Array<Vec3> VertexArray;
   typedef Array<IndexedHalfEdge*> EdgeArray;
@@ -237,4 +237,4 @@ public:
   BoundFaceArray mBoundFaces;
 };
 
-} // namespace Zero
+} // namespace Raverie

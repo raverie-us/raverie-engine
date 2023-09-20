@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 DeclareEnum3(ShapeSegResult, None, Point, Segment);
@@ -159,4 +159,4 @@ float PolygonQuantizeFloat(float value);
 void TransformPolygon(Mat4Param matrix, Polygon* polygon);
 void TransformPolygon(Mat3Param matrix, Polygon* polygon);
 
-} // namespace Zero
+} // namespace Raverie

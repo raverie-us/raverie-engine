@@ -2,14 +2,14 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// A set of shader inputs for overriding values per object or globally.
 class ShaderInputs : public ReferenceCountedThreadSafeId32
 {
 public:
-  ZilchDeclareType(ShaderInputs, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ShaderInputs, TypeCopyMode::ReferenceType);
 
   ~ShaderInputs();
 
@@ -64,7 +64,7 @@ public:
 class GraphicsBlendSettings : public BlendSettings
 {
 public:
-  ZilchDeclareType(GraphicsBlendSettings, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(GraphicsBlendSettings, TypeCopyMode::ReferenceType);
   DeclareThreadSafeReferenceCountedHandleNoData(GraphicsBlendSettings);
 
   static void ConstructedStatic(BlendSettings* settings);
@@ -77,7 +77,7 @@ public:
 class GraphicsDepthSettings : public DepthSettings
 {
 public:
-  ZilchDeclareType(GraphicsDepthSettings, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(GraphicsDepthSettings, TypeCopyMode::ReferenceType);
   DeclareThreadSafeReferenceCountedHandleNoData(GraphicsDepthSettings);
 
   static void ConstructedStatic(DepthSettings* settings);
@@ -90,7 +90,7 @@ public:
 class GraphicsRenderSettings : public RenderSettings
 {
 public:
-  ZilchDeclareType(GraphicsRenderSettings, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(GraphicsRenderSettings, TypeCopyMode::ReferenceType);
 
   GraphicsRenderSettings();
 
@@ -136,7 +136,7 @@ public:
 class ColorTargetMrt : public ThreadSafeReferenceCounted
 {
 public:
-  ZilchDeclareType(ColorTargetMrt, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ColorTargetMrt, TypeCopyMode::ReferenceType);
 
   ColorTargetMrt(HandleOf<GraphicsRenderSettings> renderSettings) : mRenderSettings(renderSettings)
   {
@@ -152,7 +152,7 @@ public:
 class BlendSettingsMrt : public ThreadSafeReferenceCounted
 {
 public:
-  ZilchDeclareType(BlendSettingsMrt, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(BlendSettingsMrt, TypeCopyMode::ReferenceType);
 
   BlendSettingsMrt(HandleOf<GraphicsRenderSettings> renderSettings) : mRenderSettings(renderSettings)
   {
@@ -170,7 +170,7 @@ public:
 class MultiRenderTarget : public ThreadSafeReferenceCounted
 {
 public:
-  ZilchDeclareType(MultiRenderTarget, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MultiRenderTarget, TypeCopyMode::ReferenceType);
 
   MultiRenderTarget(HandleOf<GraphicsRenderSettings> renderSettings);
 
@@ -264,4 +264,4 @@ public:
   BlendSettingsMrt mBlendSettingsMrt;
 };
 
-} // namespace Zero
+} // namespace Raverie

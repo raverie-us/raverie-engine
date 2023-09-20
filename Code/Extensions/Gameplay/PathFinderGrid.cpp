@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -138,7 +138,7 @@ float PathFinderAlgorithmGrid::QueryHeuristic(IntVec3Param node, IntVec3Param go
   if (mDiagonalMovement)
   {
     int sorted[] = {dx, dy, dz};
-    Zero::InsertionSort(sorted, sorted + 3, Zero::less<int>(), sorted);
+    Raverie::InsertionSort(sorted, sorted + 3, Raverie::less<int>(), sorted);
 
     int max = sorted[2];
     int mid = sorted[1];
@@ -210,35 +210,35 @@ void PathFinderAlgorithmGrid::Clear()
   mCells.Clear();
 }
 
-ZilchDefineType(PathFinderGrid, builder, type)
+RaverieDefineType(PathFinderGrid, builder, type)
 {
-  ZeroBindDocumented();
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDocumented();
-  ZeroBindInterface(PathFinder);
-  ZeroBindDependency(Transform);
-  ZeroBindEvent(Events::PathFinderGridFinished, PathFinderEvent<IntVec3>);
+  RaverieBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
+  RaverieBindInterface(PathFinder);
+  RaverieBindDependency(Transform);
+  RaverieBindEvent(Events::PathFinderGridFinished, PathFinderEvent<IntVec3>);
 
-  ZilchBindOverloadedMethod(FindPath, ZilchInstanceOverload(HandleOf<ArrayClass<IntVec3>>, IntVec3Param, IntVec3Param));
-  ZilchBindOverloadedMethod(FindPath, ZilchInstanceOverload(HandleOf<ArrayClass<Real3>>, Real3Param, Real3Param));
-  ZilchBindOverloadedMethod(FindPathThreaded,
-                            ZilchInstanceOverload(HandleOf<PathFinderRequest>, IntVec3Param, IntVec3Param));
-  ZilchBindOverloadedMethod(FindPathThreaded,
-                            ZilchInstanceOverload(HandleOf<PathFinderRequest>, Real3Param, Real3Param));
+  RaverieBindOverloadedMethod(FindPath, RaverieInstanceOverload(HandleOf<ArrayClass<IntVec3>>, IntVec3Param, IntVec3Param));
+  RaverieBindOverloadedMethod(FindPath, RaverieInstanceOverload(HandleOf<ArrayClass<Real3>>, Real3Param, Real3Param));
+  RaverieBindOverloadedMethod(FindPathThreaded,
+                            RaverieInstanceOverload(HandleOf<PathFinderRequest>, IntVec3Param, IntVec3Param));
+  RaverieBindOverloadedMethod(FindPathThreaded,
+                            RaverieInstanceOverload(HandleOf<PathFinderRequest>, Real3Param, Real3Param));
 
-  ZilchBindMethod(SetCollision);
-  ZilchBindMethod(GetCollision);
-  ZilchBindMethod(SetCost);
-  ZilchBindMethod(GetCost);
-  ZilchBindMethod(Clear);
-  ZilchBindGetterSetterProperty(DiagonalMovement);
-  ZilchBindGetterSetterProperty(CellSize);
+  RaverieBindMethod(SetCollision);
+  RaverieBindMethod(GetCollision);
+  RaverieBindMethod(SetCost);
+  RaverieBindMethod(GetCost);
+  RaverieBindMethod(Clear);
+  RaverieBindGetterSetterProperty(DiagonalMovement);
+  RaverieBindGetterSetterProperty(CellSize);
 
-  ZilchBindMethod(WorldPositionToCellIndex);
-  ZilchBindMethod(LocalPositionToCellIndex);
-  ZilchBindMethod(CellIndexToWorldPosition);
-  ZilchBindMethod(CellIndexToLocalPosition);
+  RaverieBindMethod(WorldPositionToCellIndex);
+  RaverieBindMethod(LocalPositionToCellIndex);
+  RaverieBindMethod(CellIndexToWorldPosition);
+  RaverieBindMethod(CellIndexToLocalPosition);
 }
 
 PathFinderGrid::PathFinderGrid() :
@@ -258,7 +258,7 @@ void PathFinderGrid::Serialize(Serializer& stream)
 
 void PathFinderGrid::Initialize(CogInitializer& initializer)
 {
-  ZilchBase::Initialize(initializer);
+  RaverieBase::Initialize(initializer);
   mTransform = GetOwner()->has(Transform);
 }
 
@@ -296,7 +296,7 @@ HandleOf<ArrayClass<IntVec3>> PathFinderGrid::FindPath(IntVec3Param start, IntVe
 
 HandleOf<ArrayClass<Vec3>> PathFinderGrid::FindPath(Vec3Param worldStart, Vec3Param worldGoal)
 {
-  return ZilchBase::FindPath(worldStart, worldGoal);
+  return RaverieBase::FindPath(worldStart, worldGoal);
 }
 
 HandleOf<PathFinderRequest> PathFinderGrid::FindPathThreaded(IntVec3Param start, IntVec3Param goal)
@@ -306,7 +306,7 @@ HandleOf<PathFinderRequest> PathFinderGrid::FindPathThreaded(IntVec3Param start,
 
 HandleOf<PathFinderRequest> PathFinderGrid::FindPathThreaded(Vec3Param worldStart, Vec3Param worldGoal)
 {
-  return ZilchBase::FindPathThreaded(worldStart, worldGoal);
+  return RaverieBase::FindPathThreaded(worldStart, worldGoal);
 }
 
 void PathFinderGrid::SetCellSize(Vec3Param size)
@@ -412,4 +412,4 @@ Vec3 PathFinderGrid::CellIndexToLocalPosition(IntVec3Param index)
   return localPosition;
 }
 
-} // namespace Zero
+} // namespace Raverie

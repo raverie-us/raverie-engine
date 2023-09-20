@@ -3,7 +3,7 @@
 
 #include "zlib.h"
 
-namespace Zero
+namespace Raverie
 {
 
 class Deflater
@@ -698,4 +698,4 @@ void Archive::WriteBuffer(ByteBufferBlock& buffer)
   WriteZipInternal(buffer);
 }
 
-} // namespace Zero
+} // namespace Raverie

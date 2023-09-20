@@ -2,7 +2,7 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 FontProcessor::FontProcessor(RenderQueues* renderQueues, ViewNode* viewNode, Vec4 vertexColor) :
@@ -65,4 +65,4 @@ void FontProcessorFindCharPosition::ProcessRenderRune(RenderRune& rune, Vec2 pos
   ++mCurrentIndex;
 }
 
-} // namespace Zero
+} // namespace Raverie

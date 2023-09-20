@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 DeclareBitField2(FlowFlags, LocalForce, AttractToFlowCenter);
@@ -13,7 +13,7 @@ DeclareBitField2(FlowFlags, LocalForce, AttractToFlowCenter);
 class FlowEffect : public PhysicsEffect
 {
 public:
-  ZilchDeclareType(FlowEffect, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(FlowEffect, TypeCopyMode::ReferenceType);
 
   FlowEffect();
 
@@ -72,4 +72,4 @@ private:
   Vec3 mWorldFlowCenter;
 };
 
-} // namespace Zero
+} // namespace Raverie

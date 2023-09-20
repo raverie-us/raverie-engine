@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 #define StatsProfileScope(statistics, type) ProfileScopeRecord(*statistics.GetRecord(type));
@@ -74,7 +74,7 @@ uint BroadPhaseHandle::GetProxyCount()
   return mProxies.Size();
 }
 
-ZilchDefineType(BroadPhaseTracker, builder, type)
+RaverieDefineType(BroadPhaseTracker, builder, type)
 {
 }
 
@@ -93,7 +93,7 @@ void BroadPhaseTracker::Initialize()
 
 void BroadPhaseTracker::SaveToStream(Serializer& stream)
 {
-  stream.StartPolymorphic(ZilchVirtualTypeId(this));
+  stream.StartPolymorphic(RaverieVirtualTypeId(this));
 
   // Serialize flags
   SerializeName(mRefineRayCast);
@@ -106,7 +106,7 @@ void BroadPhaseTracker::SaveToStream(Serializer& stream)
   for (uint i = 0; i < broadPhases.Size(); ++i)
   {
     IBroadPhase* broadPhase = broadPhases[i]->mBroadPhase;
-    BoundType* type = ZilchVirtualTypeId(broadPhase);
+    BoundType* type = RaverieVirtualTypeId(broadPhase);
     stream.StartPolymorphic(type);
     broadPhase->Serialize(stream);
     stream.EndPolymorphic();
@@ -117,7 +117,7 @@ void BroadPhaseTracker::SaveToStream(Serializer& stream)
   for (uint i = 0; i < broadPhases.Size(); ++i)
   {
     IBroadPhase* broadPhase = broadPhases[i]->mBroadPhase;
-    BoundType* type = ZilchVirtualTypeId(broadPhase);
+    BoundType* type = RaverieVirtualTypeId(broadPhase);
     stream.StartPolymorphic(type);
     broadPhase->Serialize(stream);
     stream.EndPolymorphic();
@@ -493,8 +493,8 @@ void BroadPhaseTracker::CastIntoBroadphase(uint broadPhaseType,
         // If they do not match, there was an error in one of them
         ErrorIf(true, "Ray cast results were bad");
         IBroadPhase* lastBroadPhase = broadPhases[i - 1]->mBroadPhase;
-        cstr lastName = ZilchVirtualTypeId(lastBroadPhase)->Name.c_str();
-        cstr currName = ZilchVirtualTypeId(broadPhase)->Name.c_str();
+        cstr lastName = RaverieVirtualTypeId(lastBroadPhase)->Name.c_str();
+        cstr currName = RaverieVirtualTypeId(broadPhase)->Name.c_str();
         String message = BuildString(lastName, " and ", currName, " did not have the same results on a ray cast.");
         DoNotifyTimer("Missed Ray Cast!", message, "Warning", 0.5);
       }
@@ -638,7 +638,7 @@ void BroadPhaseTracker::ReportMissedCollision(uint bpType, NodePointerPair pair,
       ++handle->mStats.mCollisionsMissed;
 
       // Throw an error
-      cstr name = ZilchVirtualTypeId(handle->mBroadPhase)->Name.c_str();
+      cstr name = RaverieVirtualTypeId(handle->mBroadPhase)->Name.c_str();
       String message = BuildString(name, " did not catch a collision.");
       ErrorIf(true, "%s", message.c_str());
       DoNotifyTimer("Missed Collision!", message, "Warning", 0.5);
@@ -647,4 +647,4 @@ void BroadPhaseTracker::ReportMissedCollision(uint bpType, NodePointerPair pair,
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

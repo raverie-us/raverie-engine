@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 void FlipManifoldInfo(Intersection::Manifold* manifold);
@@ -220,4 +220,4 @@ bool Collide(const SweptTriangle& sweptTri, const Tetrahedron& tetrahedron, Inte
 bool Collide(const SweptTriangle& sweptTri, const ConvexMeshShape& supportShape, Intersection::Manifold* manifold);
 bool Collide(const SweptTriangle& sweptTri1, const SweptTriangle& sweptTri2, Intersection::Manifold* manifold);
 
-} // namespace Zero
+} // namespace Raverie

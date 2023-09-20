@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 namespace Events
 {
@@ -32,7 +32,7 @@ class WebServerConnection;
 class WebServerRequestEvent : public Event
 {
 public:
-  ZilchDeclareType(WebServerRequestEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(WebServerRequestEvent, TypeCopyMode::ReferenceType);
 
   WebServerRequestEvent(WebServerConnection* connection);
 
@@ -125,7 +125,7 @@ class WebServer : public ReferenceCountedThreadSafeId32EventObject
 public:
   friend class WebServerConnection;
 
-  ZilchDeclareType(WebServer, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(WebServer, TypeCopyMode::ReferenceType);
 
   WebServer();
   ~WebServer();
@@ -208,4 +208,4 @@ class WebServerDirectory : public WebServer
 public:
 };
 
-} // namespace Zero
+} // namespace Raverie

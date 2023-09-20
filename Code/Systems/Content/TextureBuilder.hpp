@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 const String ZTexLoader = "TextureZTex";
@@ -30,7 +30,7 @@ public:
 class TextureInfo : public ContentComponent
 {
 public:
-  ZilchDeclareType(TextureInfo, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(TextureInfo, TypeCopyMode::ReferenceType);
 
   void Serialize(Serializer& stream) override;
   void Generate(ContentInitializer& initializer) override;
@@ -56,14 +56,14 @@ public:
 class ShowPremultipliedAlphaFilter : public MetaPropertyFilter
 {
 public:
-  ZilchDeclareType(ShowPremultipliedAlphaFilter, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ShowPremultipliedAlphaFilter, TypeCopyMode::ReferenceType);
   bool Filter(Member* prop, HandleParam instance) override;
 };
 
 class ShowGammaCorrectionFilter : public MetaPropertyFilter
 {
 public:
-  ZilchDeclareType(ShowGammaCorrectionFilter, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ShowGammaCorrectionFilter, TypeCopyMode::ReferenceType);
   bool Filter(Member* prop, HandleParam instance) override;
 };
 
@@ -72,7 +72,7 @@ public:
 class TextureBuilder : public BuilderComponent
 {
 public:
-  ZilchDeclareType(TextureBuilder, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(TextureBuilder, TypeCopyMode::ReferenceType);
 
   // BuilderComponent Interface
 
@@ -139,4 +139,4 @@ public:
 //  void Serialize(Serializer& stream) override;
 //};
 
-} // namespace Zero
+} // namespace Raverie

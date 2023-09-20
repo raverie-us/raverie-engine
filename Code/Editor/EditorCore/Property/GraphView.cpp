@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 const uint maxSamples = 60;
@@ -244,4 +244,4 @@ void GraphView::DrawPieGraph()
 {
 }
 
-} // namespace Zero
+} // namespace Raverie

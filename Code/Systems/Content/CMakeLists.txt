@@ -88,7 +88,7 @@ target_sources(Content
 raverie_target_includes(Content
   PUBLIC
     Common
-    Zilch
+    Raverie
     Assimp
     ZLib
     Opus

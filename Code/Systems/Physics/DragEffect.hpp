@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Applies drag or damping forces to slow down an object's linear and angular
@@ -11,7 +11,7 @@ namespace Zero
 class DragEffect : public PhysicsEffect
 {
 public:
-  ZilchDeclareType(DragEffect, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(DragEffect, TypeCopyMode::ReferenceType);
 
   DragEffect();
 
@@ -48,4 +48,4 @@ private:
   real mAngularDrag;
 };
 
-} // namespace Zero
+} // namespace Raverie

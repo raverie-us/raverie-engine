@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class ContentLibrary;
@@ -9,7 +9,7 @@ class ContentLibrary;
 class EditorSettings : public Component
 {
 public:
-  ZilchDeclareType(EditorSettings, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(EditorSettings, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   EditorSettings();
@@ -28,4 +28,4 @@ public:
   bool mAutoUpdateContentChanges;
 };
 
-} // namespace Zero
+} // namespace Raverie

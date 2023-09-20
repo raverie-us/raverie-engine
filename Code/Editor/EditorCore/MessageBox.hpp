@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 // Events
 namespace Events
@@ -25,7 +25,7 @@ DeclareEnum2(MessageBoxConfirmCancel, Confirm, Cancel);
 class MessageBoxEvent : public Event
 {
 public:
-  ZilchDeclareType(MessageBoxEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MessageBoxEvent, TypeCopyMode::ReferenceType);
   // The button that was pressed (zero based index)
   size_t ButtonIndex;
 
@@ -44,7 +44,7 @@ class MessageBox : public Window
 {
 public:
   // Declare the self type
-  typedef MessageBox ZilchSelf;
+  typedef MessageBox RaverieSelf;
 
   // Create a message box
   static MessageBox* Show(StringParam caption, StringParam text, const cstr buttons[]);
@@ -73,4 +73,4 @@ private:
   void OnButtonPressed(ObjectEvent* event);
 };
 
-} // namespace Zero
+} // namespace Raverie

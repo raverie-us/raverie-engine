@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 struct ProxyResult;
@@ -11,7 +11,7 @@ struct BaseCastFilter;
 class HeightMapCollider : public Collider
 {
 public:
-  ZilchDeclareType(HeightMapCollider, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(HeightMapCollider, TypeCopyMode::ReferenceType);
 
   HeightMapCollider();
 
@@ -106,4 +106,4 @@ private:
   TriangleInfoMap mInfoMap;
 };
 
-} // namespace Zero
+} // namespace Raverie

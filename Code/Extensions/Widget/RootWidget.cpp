@@ -1,6 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
-namespace Zero
+namespace Raverie
 {
 Array<Widget*> RootWidget::sMouseTrapFocusWidgets;
 
@@ -20,9 +20,9 @@ const cstr cLocation = "EditorUi/";
 Tweakable(Vec4, ClearColor, ToFloatColor(ByteColorRGBA(46, 46, 46, 255)), cLocation);
 } // namespace RootWidgetUi
 
-ZilchDefineType(RootWidget, builder, type)
+RaverieDefineType(RootWidget, builder, type)
 {
-  ZeroBindEvent(Events::Closing, HandleableEvent);
+  RaverieBindEvent(Events::Closing, HandleableEvent);
 }
 
 RootWidget::RootWidget() : Composite(NULL)
@@ -160,11 +160,11 @@ void RootWidget::OnUiRenderUpdate(Event* event)
   Mat4 scale;
   scale.Scale(1.0f, -1.0f, 1.0f);
   viewBlock.mWorldToView = scale * translation;
-  BuildOrthographicTransformZero(viewBlock.mViewToPerspective, mSize.y, mSize.x / mSize.y, -1.0f, 1.0f);
+  BuildOrthographicTransformEngine(viewBlock.mViewToPerspective, mSize.y, mSize.x / mSize.y, -1.0f, 1.0f);
 
   Mat4 apiPerspective;
   Z::gRenderer->BuildOrthographicTransform(apiPerspective, mSize.y, mSize.x / mSize.y, -1.0f, 1.0f);
-  viewBlock.mZeroPerspectiveToApiPerspective = apiPerspective * viewBlock.mViewToPerspective.Inverted();
+  viewBlock.mEnginePerspectiveToApiPerspective = apiPerspective * viewBlock.mViewToPerspective.Inverted();
 
   RenderUpdate(viewBlock, frameBlock, Mat4::cIdentity, colorTx, clipRect);
 
@@ -202,7 +202,7 @@ void RootWidget::OnUiRenderUpdate(Event* event)
   BoundType* defaultRenderPass = MetaDatabase::GetInstance()->FindType("ColorOutput");
   ReturnIf(defaultRenderPass == nullptr, , "We expected to have a type defined called ColorOutput");
 
-  HandleOf<MaterialBlock> renderPassHandle = ZilchAllocate(MaterialBlock, defaultRenderPass);
+  HandleOf<MaterialBlock> renderPassHandle = RaverieAllocate(MaterialBlock, defaultRenderPass);
   MaterialBlock& renderPass = renderPassHandle;
 
   Material* spriteMaterial = MaterialManager::FindOrNull("AlphaSprite");
@@ -1051,4 +1051,4 @@ void RootWidget::OnDebuggerResumeDelay()
   mDebuggerText->SetActive(false);
 }
 
-} // namespace Zero
+} // namespace Raverie

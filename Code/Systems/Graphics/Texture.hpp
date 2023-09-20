@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Data that represents a texture in the way that is intended to be used by
@@ -10,7 +10,7 @@ namespace Zero
 class Texture : public Resource
 {
 public:
-  ZilchDeclareType(Texture, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Texture, TypeCopyMode::ReferenceType);
 
   /// Makes an anonymous Texture resource that can be defined by script and
   /// uploaded to the gpu.
@@ -123,4 +123,4 @@ public:
   TextureManager(BoundType* resourceType);
 };
 
-} // namespace Zero
+} // namespace Raverie

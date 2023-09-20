@@ -7,7 +7,7 @@
 using namespace std;
 namespace reg = std::regex_constants;
 
-namespace Zero
+namespace Raverie
 {
 // We use the pimpl pattern to avoid including stl in the header
 struct RegexPrivateData
@@ -324,4 +324,4 @@ String Regex::Escape(StringRange input, EscapeMode::Enum mode, RegexFlavor::Enum
   // Return the final escaped string
   return builder.ToString();
 }
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class Editor;
@@ -29,7 +29,7 @@ DeclareEvent(ShortcutInfoEnter);
 class ToolUiEvent : public Event
 {
 public:
-  ZilchDeclareType(ToolUiEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ToolUiEvent, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   ToolUiEvent(Composite* parent);
@@ -103,7 +103,7 @@ public:
 class ToolControl : public Composite
 {
 public:
-  ZilchDeclareType(ToolControl, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ToolControl, TypeCopyMode::ReferenceType);
 
   ToolControl(Composite* parent);
   ~ToolControl();
@@ -181,4 +181,4 @@ private:
   ShortcutSource mShortcutSource;
 };
 
-} // namespace Zero
+} // namespace Raverie

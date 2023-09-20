@@ -2,21 +2,21 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 using namespace AudioConstants;
 
 // Volume Node
 
-ZilchDefineType(VolumeNode, builder, type)
+RaverieDefineType(VolumeNode, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetter(Volume);
-  ZilchBindMethod(InterpolateVolume);
-  ZilchBindGetterSetter(Decibels);
-  ZilchBindMethod(InterpolateDecibels);
+  RaverieBindGetterSetter(Volume);
+  RaverieBindMethod(InterpolateVolume);
+  RaverieBindGetterSetter(Decibels);
+  RaverieBindMethod(InterpolateDecibels);
 }
 
 VolumeNode::VolumeNode(StringParam name, unsigned ID) : SimpleCollapseNode(name, ID, false, false), mVolume(1.0f)
@@ -136,16 +136,16 @@ void VolumeNode::InterpolateVolumeThreaded(float volume, float time)
 
 // Panning Node
 
-ZilchDefineType(PanningNode, builder, type)
+RaverieDefineType(PanningNode, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetter(SumToMono);
-  ZilchBindGetterSetter(LeftVolume);
-  ZilchBindGetterSetter(RightVolume);
-  ZilchBindMethod(InterpolateLeftVolume);
-  ZilchBindMethod(InterpolateRightVolume);
-  ZilchBindMethod(InterpolateVolumes);
+  RaverieBindGetterSetter(SumToMono);
+  RaverieBindGetterSetter(LeftVolume);
+  RaverieBindGetterSetter(RightVolume);
+  RaverieBindMethod(InterpolateLeftVolume);
+  RaverieBindMethod(InterpolateRightVolume);
+  RaverieBindMethod(InterpolateVolumes);
 }
 
 PanningNode::PanningNode(StringParam name, unsigned ID) :
@@ -376,14 +376,14 @@ void PanningNode::SetVolumeThreaded(bool left, float newVolume, float time)
 
 // Pitch Node
 
-ZilchDefineType(PitchNode, builder, type)
+RaverieDefineType(PitchNode, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetter(Pitch);
-  ZilchBindGetterSetter(Semitones);
-  ZilchBindMethod(InterpolatePitch);
-  ZilchBindMethod(InterpolateSemitones);
+  RaverieBindGetterSetter(Pitch);
+  RaverieBindGetterSetter(Semitones);
+  RaverieBindMethod(InterpolatePitch);
+  RaverieBindMethod(InterpolateSemitones);
 }
 
 PitchNode::PitchNode(StringParam name, unsigned ID) : SimpleCollapseNode(name, ID, false, false), mPitchSemitones(0.0f)
@@ -462,11 +462,11 @@ void PitchNode::SetPitchThreaded(float semitones, float interpolationTime)
 
 // Low Pass Node
 
-ZilchDefineType(LowPassNode, builder, type)
+RaverieDefineType(LowPassNode, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetter(CutoffFrequency);
+  RaverieBindGetterSetter(CutoffFrequency);
 }
 
 LowPassNode::LowPassNode(StringParam name, unsigned ID) :
@@ -557,11 +557,11 @@ void LowPassNode::SetCutoffFrequencyThreaded(float frequency)
 
 // High Pass Node
 
-ZilchDefineType(HighPassNode, builder, type)
+RaverieDefineType(HighPassNode, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetter(CutoffFrequency);
+  RaverieBindGetterSetter(CutoffFrequency);
 }
 
 HighPassNode::HighPassNode(StringParam name, unsigned ID) :
@@ -653,12 +653,12 @@ void HighPassNode::SetCutoffFrequencyThreaded(float frequency)
 
 // Band Pass Node
 
-ZilchDefineType(BandPassNode, builder, type)
+RaverieDefineType(BandPassNode, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetter(CentralFrequency);
-  ZilchBindGetterSetter(QualityFactor);
+  RaverieBindGetterSetter(CentralFrequency);
+  RaverieBindGetterSetter(QualityFactor);
 }
 
 BandPassNode::BandPassNode(StringParam name, unsigned ID) :
@@ -761,16 +761,16 @@ void BandPassNode::SetQualityFactorThreaded(float Q)
 
 // Equalizer Node
 
-ZilchDefineType(EqualizerNode, builder, type)
+RaverieDefineType(EqualizerNode, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetter(LowPassGain);
-  ZilchBindGetterSetter(HighPassGain);
-  ZilchBindGetterSetter(Band1Gain);
-  ZilchBindGetterSetter(Band2Gain);
-  ZilchBindGetterSetter(Band3Gain);
-  ZilchBindMethod(InterpolateAllBands);
+  RaverieBindGetterSetter(LowPassGain);
+  RaverieBindGetterSetter(HighPassGain);
+  RaverieBindGetterSetter(Band1Gain);
+  RaverieBindGetterSetter(Band2Gain);
+  RaverieBindGetterSetter(Band3Gain);
+  RaverieBindMethod(InterpolateAllBands);
 }
 
 EqualizerNode::EqualizerNode(StringParam name, unsigned ID) :
@@ -947,15 +947,15 @@ void EqualizerNode::InterpolateAllThreaded(float* values, float timeToInterpolat
 
 // Reverb Node
 
-ZilchDefineType(ReverbNode, builder, type)
+RaverieDefineType(ReverbNode, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetter(Length);
-  ZilchBindGetterSetter(WetPercent)->AddAttribute(DeprecatedAttribute);
-  ZilchBindGetterSetter(WetValue);
-  ZilchBindMethod(InterpolateWetPercent)->AddAttribute(DeprecatedAttribute);
-  ZilchBindMethod(InterpolateWetValue);
+  RaverieBindGetterSetter(Length);
+  RaverieBindGetterSetter(WetPercent)->AddAttribute(DeprecatedAttribute);
+  RaverieBindGetterSetter(WetValue);
+  RaverieBindMethod(InterpolateWetPercent)->AddAttribute(DeprecatedAttribute);
+  RaverieBindMethod(InterpolateWetValue);
 }
 
 ReverbNode::ReverbNode(StringParam name, unsigned ID) :
@@ -1090,17 +1090,17 @@ void ReverbNode::InterpolateWetValueThreaded(float value, float time)
 
 // Delay Node
 
-ZilchDefineType(DelayNode, builder, type)
+RaverieDefineType(DelayNode, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetter(Delay);
-  ZilchBindGetterSetter(FeedbackPercent)->AddAttribute(DeprecatedAttribute);
-  ZilchBindGetterSetter(FeedbackValue);
-  ZilchBindGetterSetter(WetPercent)->AddAttribute(DeprecatedAttribute);
-  ZilchBindGetterSetter(WetValue);
-  ZilchBindMethod(InterpolateWetPercent)->AddAttribute(DeprecatedAttribute);
-  ZilchBindMethod(InterpolateWetValue);
+  RaverieBindGetterSetter(Delay);
+  RaverieBindGetterSetter(FeedbackPercent)->AddAttribute(DeprecatedAttribute);
+  RaverieBindGetterSetter(FeedbackValue);
+  RaverieBindGetterSetter(WetPercent)->AddAttribute(DeprecatedAttribute);
+  RaverieBindGetterSetter(WetValue);
+  RaverieBindMethod(InterpolateWetPercent)->AddAttribute(DeprecatedAttribute);
+  RaverieBindMethod(InterpolateWetValue);
 }
 
 DelayNode::DelayNode(StringParam name, unsigned ID) :
@@ -1264,14 +1264,14 @@ void DelayNode::InterpolateWetValueThreaded(float value, float time)
 
 // Flanger Node
 
-ZilchDefineType(FlangerNode, builder, type)
+RaverieDefineType(FlangerNode, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetter(MaxDelayMillisec);
-  ZilchBindGetterSetter(ModulationFrequency);
-  ZilchBindGetterSetter(FeedbackPercent)->AddAttribute(DeprecatedAttribute);
-  ZilchBindGetterSetter(FeedbackValue);
+  RaverieBindGetterSetter(MaxDelayMillisec);
+  RaverieBindGetterSetter(ModulationFrequency);
+  RaverieBindGetterSetter(FeedbackPercent)->AddAttribute(DeprecatedAttribute);
+  RaverieBindGetterSetter(FeedbackValue);
 }
 
 FlangerNode::FlangerNode(StringParam name, unsigned ID) :
@@ -1421,16 +1421,16 @@ ChorusNode::Data::Data(float frequency, float minDelay, float feedback)
   LFO.SetNoteOn(true);
 }
 
-ZilchDefineType(ChorusNode, builder, type)
+RaverieDefineType(ChorusNode, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetter(MaxDelayMillisec);
-  ZilchBindGetterSetter(MinDelayMillisec);
-  ZilchBindGetterSetter(ModulationFrequency);
-  ZilchBindGetterSetter(FeedbackPercent)->AddAttribute(DeprecatedAttribute);
-  ZilchBindGetterSetter(FeedbackValue);
-  ZilchBindGetterSetter(OffsetMillisec);
+  RaverieBindGetterSetter(MaxDelayMillisec);
+  RaverieBindGetterSetter(MinDelayMillisec);
+  RaverieBindGetterSetter(ModulationFrequency);
+  RaverieBindGetterSetter(FeedbackPercent)->AddAttribute(DeprecatedAttribute);
+  RaverieBindGetterSetter(FeedbackValue);
+  RaverieBindGetterSetter(OffsetMillisec);
 }
 
 ChorusNode::ChorusNode(StringParam name, unsigned ID) :
@@ -1578,17 +1578,17 @@ void ChorusNode::SetFeedbackThreaded(float value)
 
 // Compressor Node
 
-ZilchDefineType(CompressorNode, builder, type)
+RaverieDefineType(CompressorNode, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetter(InputGainDecibels);
-  ZilchBindGetterSetter(ThresholdDecibels);
-  ZilchBindGetterSetter(AttackMillisec);
-  ZilchBindGetterSetter(ReleaseMillisec);
-  ZilchBindGetterSetter(Ratio);
-  ZilchBindGetterSetter(OutputGainDecibels);
-  ZilchBindGetterSetter(KneeWidth);
+  RaverieBindGetterSetter(InputGainDecibels);
+  RaverieBindGetterSetter(ThresholdDecibels);
+  RaverieBindGetterSetter(AttackMillisec);
+  RaverieBindGetterSetter(ReleaseMillisec);
+  RaverieBindGetterSetter(Ratio);
+  RaverieBindGetterSetter(OutputGainDecibels);
+  RaverieBindGetterSetter(KneeWidth);
 }
 
 CompressorNode::CompressorNode(StringParam name, unsigned ID) :
@@ -1710,17 +1710,17 @@ bool CompressorNode::GetOutputSamples(BufferType* outputBuffer,
 
 // Expander Node
 
-ZilchDefineType(ExpanderNode, builder, type)
+RaverieDefineType(ExpanderNode, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetter(InputGainDecibels);
-  ZilchBindGetterSetter(ThresholdDecibels);
-  ZilchBindGetterSetter(AttackMillisec);
-  ZilchBindGetterSetter(ReleaseMillisec);
-  ZilchBindGetterSetter(Ratio);
-  ZilchBindGetterSetter(OutputGainDecibels);
-  ZilchBindGetterSetter(KneeWidth);
+  RaverieBindGetterSetter(InputGainDecibels);
+  RaverieBindGetterSetter(ThresholdDecibels);
+  RaverieBindGetterSetter(AttackMillisec);
+  RaverieBindGetterSetter(ReleaseMillisec);
+  RaverieBindGetterSetter(Ratio);
+  RaverieBindGetterSetter(OutputGainDecibels);
+  RaverieBindGetterSetter(KneeWidth);
 }
 
 ExpanderNode::ExpanderNode(StringParam name, unsigned ID) :
@@ -1842,14 +1842,14 @@ bool ExpanderNode::GetOutputSamples(BufferType* outputBuffer,
 
 // Add Noise Node
 
-ZilchDefineType(AddNoiseNode, builder, type)
+RaverieDefineType(AddNoiseNode, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetter(AdditiveGain);
-  ZilchBindGetterSetter(MultiplicativeGain);
-  ZilchBindGetterSetter(AdditiveCutoff);
-  ZilchBindGetterSetter(MultiplicativeCutoff);
+  RaverieBindGetterSetter(AdditiveGain);
+  RaverieBindGetterSetter(MultiplicativeGain);
+  RaverieBindGetterSetter(AdditiveCutoff);
+  RaverieBindGetterSetter(MultiplicativeCutoff);
 }
 
 float ValueFromDecibels(float decibels)
@@ -1972,14 +1972,14 @@ bool AddNoiseNode::GetOutputSamples(BufferType* outputBuffer,
 
 // Modulation Node
 
-ZilchDefineType(ModulationNode, builder, type)
+RaverieDefineType(ModulationNode, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetter(UseAmplitudeModulation);
-  ZilchBindGetterSetter(Frequency);
-  ZilchBindGetterSetter(WetPercent)->AddAttribute(DeprecatedAttribute);
-  ZilchBindGetterSetter(WetValue);
+  RaverieBindGetterSetter(UseAmplitudeModulation);
+  RaverieBindGetterSetter(Frequency);
+  RaverieBindGetterSetter(WetPercent)->AddAttribute(DeprecatedAttribute);
+  RaverieBindGetterSetter(WetValue);
 }
 
 ModulationNode::ModulationNode(StringParam name, unsigned ID) :
@@ -2114,4 +2114,4 @@ void ModulationNode::SetFrequencyThreaded(float frequency)
     sineWave->SetFrequency(frequency);
 }
 
-} // namespace Zero
+} // namespace Raverie

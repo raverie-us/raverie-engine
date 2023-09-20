@@ -1,10 +1,10 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(MouseManipulation, builder, type)
+RaverieDefineType(MouseManipulation, builder, type)
 {
 }
 
@@ -293,4 +293,4 @@ void SizingManipulation::OnMouseMove(MouseEvent* event)
   beingSized->UpdateTransformExternal();
 }
 
-} // namespace Zero
+} // namespace Raverie

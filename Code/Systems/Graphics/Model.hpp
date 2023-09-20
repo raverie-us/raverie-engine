@@ -2,14 +2,14 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Renders a mesh.
 class Model : public Graphical
 {
 public:
-  ZilchDeclareType(Model, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Model, TypeCopyMode::ReferenceType);
 
   // Component Interface
 
@@ -34,4 +34,4 @@ public:
   void OnMeshModified(ResourceEvent* event);
 };
 
-} // namespace Zero
+} // namespace Raverie

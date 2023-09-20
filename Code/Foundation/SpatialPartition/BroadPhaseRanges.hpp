@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Default behavior for a range. Returns true to any query attempt.
@@ -503,4 +503,4 @@ struct BroadPhaseTreeSelfRange : public QueryCheck
   _RangeType range = tree.QueryWithPolicy(queryObj, nodeArray_, policy);                                               \
   for (; !range.Empty(); range.PopFront())
 
-} // namespace Zero
+} // namespace Raverie

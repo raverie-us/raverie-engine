@@ -4,7 +4,7 @@
 #include "Platform/Timer.hpp"
 #include "Utility/Misc.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Profile
@@ -251,4 +251,4 @@ void PrintProfileGraph()
 }
 
 } // namespace Profile
-} // namespace Zero
+} // namespace Raverie

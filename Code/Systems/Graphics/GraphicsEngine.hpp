@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 DeclareEnum3(UniqueCompositeOp, Add, Remove, Modify);
@@ -15,7 +15,7 @@ DeclareEvent(ShaderInputsModified);
 class ShaderInputsEvent : public Event
 {
 public:
-  ZilchDeclareType(ShaderInputsEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ShaderInputsEvent, TypeCopyMode::ReferenceType);
   BoundType* mType;
 };
 
@@ -31,7 +31,7 @@ public:
 class GraphicsStatics
 {
 public:
-  ZilchDeclareType(GraphicsStatics, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(GraphicsStatics, TypeCopyMode::ReferenceType);
 
   /// Information about the active graphics hardware.
   static GraphicsDriverSupport* GetDriverSupport();
@@ -54,7 +54,7 @@ public:
 class GraphicsEngine : public System
 {
 public:
-  ZilchDeclareType(GraphicsEngine, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(GraphicsEngine, TypeCopyMode::ReferenceType);
 
   GraphicsEngine();
   ~GraphicsEngine();
@@ -100,9 +100,9 @@ public:
   void OnMaterialModified(ResourceEvent* event);
   void OnMaterialRemoved(ResourceEvent* event);
 
-  void OnZilchFragmentAdded(ResourceEvent* event);
-  void OnZilchFragmentModified(ResourceEvent* event);
-  void OnZilchFragmentRemoved(ResourceEvent* event);
+  void OnRaverieFragmentAdded(ResourceEvent* event);
+  void OnRaverieFragmentModified(ResourceEvent* event);
+  void OnRaverieFragmentRemoved(ResourceEvent* event);
 
   void OnMeshAdded(ResourceEvent* event);
   void OnMeshModified(ResourceEvent* event);
@@ -136,7 +136,7 @@ public:
 
   void ProcessModifiedScripts(LibraryRef library);
 
-  ZilchFragmentType::Enum GetFragmentType(MaterialBlock* materialBlock);
+  RaverieFragmentType::Enum GetFragmentType(MaterialBlock* materialBlock);
 
   HandleOf<RenderTarget> GetRenderTarget(uint width,
                                          uint height,
@@ -147,15 +147,15 @@ public:
 
   void WriteTextureToFile(HandleOf<Texture> texture, StringParam filename);
 
-  void ModifiedFragment(ZilchFragmentType::Enum type, StringParam name);
-  void RemovedFragment(ZilchFragmentType::Enum type, StringParam name);
+  void ModifiedFragment(RaverieFragmentType::Enum type, StringParam name);
+  void RemovedFragment(RaverieFragmentType::Enum type, StringParam name);
 
   // ResourceLibraries don't know how to compile fragment libraries, so we do it
   // here.
-  void OnCompileZilchFragments(ZilchCompileFragmentEvent* event);
-  void OnScriptsCompiledPrePatch(ZilchCompileEvent* event);
-  void OnScriptsCompiledCommit(ZilchCompileEvent* event);
-  void OnScriptsCompiledPostPatch(ZilchCompileEvent* event);
+  void OnCompileRaverieFragments(RaverieCompileFragmentEvent* event);
+  void OnScriptsCompiledPrePatch(RaverieCompileEvent* event);
+  void OnScriptsCompiledCommit(RaverieCompileEvent* event);
+  void OnScriptsCompiledPostPatch(RaverieCompileEvent* event);
   void OnScriptCompilationFailed(Event* event);
 
   void UpdateUniqueComposites(Material* material, UniqueCompositeOp::Enum uniqueCompositeOp);
@@ -187,7 +187,7 @@ public:
 
   RenderTargetManager mRenderTargetManager;
 
-  ZilchShaderGenerator* mShaderGenerator;
+  RaverieShaderGenerator* mShaderGenerator;
 
   Array<Resource*> mRenderGroups;
 
@@ -243,4 +243,4 @@ public:
   String mFilename;
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -28,7 +28,7 @@ System* CreateTimeSystem();
 class UpdateEvent : public Event
 {
 public:
-  ZilchDeclareType(UpdateEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(UpdateEvent, TypeCopyMode::ReferenceType);
 
   UpdateEvent(float dt, float rDt, float timePassed, float realTimePassed);
 
@@ -52,7 +52,7 @@ DeclareEnum2(TimeMode, FixedFrametime, ActualFrametime);
 class TimeSpace : public Component
 {
 public:
-  ZilchDeclareType(TimeSpace, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(TimeSpace, TypeCopyMode::ReferenceType);
 
   TimeSpace();
   ~TimeSpace();
@@ -154,7 +154,7 @@ public:
 class TimeSystem : public System
 {
 public:
-  ZilchDeclareType(TimeSystem, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(TimeSystem, TypeCopyMode::ReferenceType);
 
   TimeSystem();
   ~TimeSystem();
@@ -190,4 +190,4 @@ private:
   Timer mTimer;
 };
 
-} // namespace Zero
+} // namespace Raverie

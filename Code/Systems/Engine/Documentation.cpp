@@ -1,10 +1,10 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(DocumentationLibrary, builder, type)
+RaverieDefineType(DocumentationLibrary, builder, type)
 {
 }
 
@@ -36,7 +36,7 @@ String ReplaceTypeIfTemplated(StringParam typeString)
   }
 }
 
-MethodDoc* MethodDocWithSameParams(Array<MethodDoc*>& methodList, Zilch::Function* function)
+MethodDoc* MethodDocWithSameParams(Array<MethodDoc*>& methodList, Raverie::Function* function)
 {
   uint matchIndex = (uint)-1;
 
@@ -234,7 +234,7 @@ String InsertIntoReplacementsMap(String& baseName,
 
 // ExceptionDoc
 template <>
-struct Zero::Serialization::Trait<ExceptionDoc>
+struct Raverie::Serialization::Trait<ExceptionDoc>
 {
   enum
   {
@@ -254,7 +254,7 @@ void ExceptionDoc::Serialize(Serializer& stream)
 
 // CommandDoc
 template <>
-struct Zero::Serialization::Trait<CommandDoc>
+struct Raverie::Serialization::Trait<CommandDoc>
 {
 
   enum
@@ -283,7 +283,7 @@ bool CommandCompareFn(CommandDoc* lhs, CommandDoc* rhs)
 
 void CommandDocList::Sort(void)
 {
-  Zero::Sort(mCommands.All(), CommandCompareFn);
+  Raverie::Sort(mCommands.All(), CommandCompareFn);
 }
 
 void CommandDocList::Serialize(Serializer& stream)
@@ -293,7 +293,7 @@ void CommandDocList::Serialize(Serializer& stream)
 
 // EventDoc
 template <>
-struct Zero::Serialization::Trait<EventDoc>
+struct Raverie::Serialization::Trait<EventDoc>
 {
 
   enum
@@ -328,7 +328,7 @@ bool EventDoc::operator<(const EventDoc& rhs) const
 
 // EventDocList
 template <>
-struct Zero::Serialization::Trait<EventDocList>
+struct Raverie::Serialization::Trait<EventDocList>
 {
 
   enum
@@ -353,7 +353,7 @@ bool eventCompareFn(EventDoc* lhs, EventDoc* rhs)
 
 void EventDocList::Sort(void)
 {
-  Zero::Sort(mEvents.All(), eventCompareFn);
+  Raverie::Sort(mEvents.All(), eventCompareFn);
 }
 
 void EventDocList::BuildMap(void)
@@ -368,7 +368,7 @@ void EventDocList::BuildMap(void)
 
 // PropertyDoc
 template <>
-struct Zero::Serialization::Trait<PropertyDoc>
+struct Raverie::Serialization::Trait<PropertyDoc>
 {
 
   enum
@@ -392,7 +392,7 @@ void PropertyDoc::Serialize(Serializer& stream)
 
 // ParameterDoc
 template <>
-struct Zero::Serialization::Trait<ParameterDoc>
+struct Raverie::Serialization::Trait<ParameterDoc>
 {
   enum
   {
@@ -413,7 +413,7 @@ void ParameterDoc::Serialize(Serializer& stream)
 
 // MethodDoc
 template <>
-struct Zero::Serialization::Trait<MethodDoc>
+struct Raverie::Serialization::Trait<MethodDoc>
 {
 
   enum
@@ -479,7 +479,7 @@ void AttributeDoc::Serialize(Serializer& stream)
 }
 
 // AttributeDocList
-Zero::AttributeDocList::~AttributeDocList()
+Raverie::AttributeDocList::~AttributeDocList()
 {
   forRange (AttributeDoc* attribToDelete, mObjectAttributes.All())
   {
@@ -547,14 +547,14 @@ void AttributeDocList::CreateAttributeMap(void)
 
 void AttributeDocList::Sort(void)
 {
-  Zero::Sort(mObjectAttributes.All(), AttributeDocCompareFn);
-  Zero::Sort(mFunctionAttributes.All(), AttributeDocCompareFn);
-  Zero::Sort(mPropertyAttributes.All(), AttributeDocCompareFn);
+  Raverie::Sort(mObjectAttributes.All(), AttributeDocCompareFn);
+  Raverie::Sort(mFunctionAttributes.All(), AttributeDocCompareFn);
+  Raverie::Sort(mPropertyAttributes.All(), AttributeDocCompareFn);
 }
 
 // ClassDoc
 template <>
-struct Zero::Serialization::Trait<ClassDoc>
+struct Raverie::Serialization::Trait<ClassDoc>
 {
 
   enum
@@ -611,9 +611,9 @@ void ClassDoc::BuildMapsAndArrays()
   mEventsMap.Clear();
 
   // sort the arrays so when they serialize they will be alphabetical
-  Zero::Sort(mProperties.All(), TrimCompareFn<PropertyDoc>);
-  Zero::Sort(mMethods.All(), TrimCompareFn<MethodDoc>);
-  Zero::Sort(mEventsSent.All(), TrimCompareFn<EventDoc>);
+  Raverie::Sort(mProperties.All(), TrimCompareFn<PropertyDoc>);
+  Raverie::Sort(mMethods.All(), TrimCompareFn<MethodDoc>);
+  Raverie::Sort(mEventsSent.All(), TrimCompareFn<EventDoc>);
 
   // insert pointers into the arrays into the maps for the respective doc types
 
@@ -722,7 +722,7 @@ MethodDoc* ClassDoc::GetMethodDoc(Function* function)
   return nullptr;
 }
 
-void ClassDoc::CreateMethodDocFromBoundType(Zilch::Function* method, TypeReplacementMap* replacements, bool exportDoc)
+void ClassDoc::CreateMethodDocFromBoundType(Raverie::Function* method, TypeReplacementMap* replacements, bool exportDoc)
 {
 
   MethodDoc* newMethod = new MethodDoc();
@@ -751,7 +751,7 @@ void ClassDoc::CreateMethodDocFromBoundType(Zilch::Function* method, TypeReplace
 
   DelegateType* type = method->FunctionType;
 
-  Zilch::Type* returnType = type->Return;
+  Raverie::Type* returnType = type->Return;
 
   if (returnType)
   {
@@ -882,7 +882,7 @@ void DocumentationLibrary::LoadDocumentation(StringParam fileName)
   MetaDatabase* meta = MetaDatabase::GetInstance();
   forRange (Library* lib, meta->mNativeLibraries.All())
   {
-    BoundType* resourceType = ZilchTypeId(Resource);
+    BoundType* resourceType = RaverieTypeId(Resource);
 
     forRange (BoundType* type, lib->BoundTypes.Values())
     {
@@ -908,9 +908,9 @@ void DocumentationLibrary::FinalizeDocumentation(void)
   mClassMap.Clear();
   mEnumAndFlagMap.Clear();
 
-  Zero::Sort(mClasses.All(), TrimCompareFn<ClassDoc>);
-  Zero::Sort(mEnums.All(), TrimCompareFn<EnumDoc>);
-  Zero::Sort(mFlags.All(), TrimCompareFn<EnumDoc>);
+  Raverie::Sort(mClasses.All(), TrimCompareFn<ClassDoc>);
+  Raverie::Sort(mEnums.All(), TrimCompareFn<EnumDoc>);
+  Raverie::Sort(mFlags.All(), TrimCompareFn<EnumDoc>);
 
   // build the enum and flag map
   forRange (EnumDoc* enumDoc, mEnums.All())
@@ -1147,19 +1147,16 @@ void DocumentationLibrary::GetDocumentationFromTemplateHandler(StringParam libNa
 
   Array<Constant> dummyTypes;
 
-  // if we have two params, use Wrapper and Utf8Encoding as replaceable dummy
+  // if we have two params, use Wrapper and Void as replaceable dummy
   // types
   if (templateHandler.TemplateParameters.Size() == 2)
   {
-    dummyTypes.PushBack(Constant(ZilchTypeId(Wrapper)));
-    dummyTypes.PushBack(Constant(ZilchTypeId(Utf8Encoding)));
+    dummyTypes.PushBack(Constant(RaverieTypeId(Wrapper)));
+    dummyTypes.PushBack(Constant(RaverieTypeId(Void)));
   }
-
-  // if we have one params, use Void as replaceable dummy types
   else if (templateHandler.TemplateParameters.Size() == 1)
   {
-    // Array<Constant> dummyTypes;
-    dummyTypes.PushBack(Constant(ZilchTypeId(Wrapper)));
+    dummyTypes.PushBack(Constant(RaverieTypeId(Wrapper)));
   }
 
   String instanceFullName = templateHandler.GetFullName(dummyTypes);
@@ -1240,7 +1237,7 @@ void DocumentationLibrary::LoadFromMeta()
   {
     BoundType* templatedType = boundTemplate.second;
 
-    templatedType->AddAttribute(Zilch::ImportDocumentation);
+    templatedType->AddAttribute(Raverie::ImportDocumentation);
   }
 
   // loop over every template type
@@ -1331,4 +1328,4 @@ namespace Z
 DocumentationLibrary* gDocumentation = nullptr;
 }
 
-} // namespace Zero
+} // namespace Raverie

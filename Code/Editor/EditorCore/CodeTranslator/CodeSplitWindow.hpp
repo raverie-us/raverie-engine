@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class TextEditor;
@@ -23,7 +23,7 @@ struct CodeTranslator
 class CodeSplitWindow : public Composite
 {
 public:
-  typedef CodeSplitWindow ZilchSelf;
+  typedef CodeSplitWindow RaverieSelf;
   CodeSplitWindow(Composite* parent);
 
   void OnKeyDown(KeyboardEvent* event);
@@ -37,4 +37,4 @@ public:
   String mCommandToRunOnSave;
 };
 
-} // namespace Zero
+} // namespace Raverie

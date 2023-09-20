@@ -1,19 +1,19 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(TorqueEffect, builder, type)
+RaverieDefineType(TorqueEffect, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetterProperty(LocalTorque)->ZeroSerialize(true);
-  ZilchBindGetterSetterProperty(TorqueStrength)->ZeroSerialize(real(1));
-  ZilchBindGetterSetterProperty(TorqueAxis)->ZeroSerialize(Vec3::cYAxis);
-  ZilchBindGetterProperty(WorldTorqueAxis);
+  RaverieBindGetterSetterProperty(LocalTorque)->RaverieSerialize(true);
+  RaverieBindGetterSetterProperty(TorqueStrength)->RaverieSerialize(real(1));
+  RaverieBindGetterSetterProperty(TorqueAxis)->RaverieSerialize(Vec3::cYAxis);
+  RaverieBindGetterProperty(WorldTorqueAxis);
 }
 
 TorqueEffect::TorqueEffect()
@@ -112,4 +112,4 @@ Vec3 TorqueEffect::GetWorldTorqueAxis() const
   return worldTorqueAxis.AttemptNormalized();
 }
 
-} // namespace Zero
+} // namespace Raverie

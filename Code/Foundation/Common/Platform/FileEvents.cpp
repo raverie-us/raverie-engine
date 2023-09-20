@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // How long we consider a file as modified (in seconds)
@@ -113,4 +113,4 @@ void FileModifiedState::Cleanup(TimeType currentTime)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

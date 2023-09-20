@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 class EmptyRenderer : public Renderer
@@ -89,4 +89,4 @@ Renderer* CreateRenderer()
   return new EmptyRenderer();
 }
 
-} // namespace Zero
+} // namespace Raverie

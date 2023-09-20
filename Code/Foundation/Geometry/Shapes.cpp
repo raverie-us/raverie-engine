@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // rotation for an object represented by two extreme points and a radius
@@ -475,4 +475,4 @@ Capsule Capsule::UniformTransform(Mat4Param transformation) const
   return Transform(transformation);
 }
 
-} // namespace Zero
+} // namespace Raverie

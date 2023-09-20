@@ -2,7 +2,7 @@
 #include "Precompiled.hpp"
 #include "PlatformCommunication.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Os
@@ -16,7 +16,7 @@ bool ErrorProcessHandler(ErrorSignaler::ErrorData& errorData)
 {
   const int cDebugBufferLength = 1024;
   char buffer[cDebugBufferLength];
-  ZeroSPrintf(buffer,
+  RaverieSPrintf(buffer,
               cDebugBufferLength,
               "%s(%d) : %s %s\n",
               errorData.File,
@@ -49,4 +49,4 @@ u64 GenerateUniqueId64()
   return ImportRandomUnique();
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 template <typename type>
@@ -121,7 +121,7 @@ bool ValidPropertyTrack(Property* property)
   Type* propertyType = property->PropertyType;
 
 #define DoVariantType(type)                                                                                            \
-  if (propertyType == ZilchTypeId(type))                                                                               \
+  if (propertyType == RaverieTypeId(type))                                                                               \
     return true;
 #include "Foundation/Meta/VariantTypes.inl"
 #undef DoVariantType
@@ -150,7 +150,7 @@ PropertyTrack* MakePropertyTrack(StringParam componentName, StringParam property
 {
   // First check to see if it's a value type
 #define DoVariantType(type)                                                                                            \
-  if (propertyTypeId == ZilchTypeId(type))                                                                             \
+  if (propertyTypeId == RaverieTypeId(type))                                                                             \
     return new AnimatePropertyValueType<type>(componentName, propertyName);
 #include "Foundation/Meta/VariantTypes.inl"
 #undef DoVariantType
@@ -171,4 +171,4 @@ PropertyTrack* MakePropertyTrack(BoundType* componentType, Property* property)
   return MakePropertyTrack(componentName, propertyName, propertyTypeName);
 }
 
-} // namespace Zero
+} // namespace Raverie

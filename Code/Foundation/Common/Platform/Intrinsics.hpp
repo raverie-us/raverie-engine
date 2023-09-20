@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Returns number of least significant zeros
@@ -16,4 +16,4 @@ u32 CountLeadingZeros(u32 x);
 u32 CountTrailingZerosNonIntrinsic(u32 x);
 u32 CountLeadingZerosNonIntrinsic(u32 x);
 
-} // namespace Zero
+} // namespace Raverie

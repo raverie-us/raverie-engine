@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace TagsUi
@@ -25,7 +25,7 @@ const float cTagPadding = Pixels(3);
 const float cTextBoxHeight = Pixels(20);
 const float cTextBoxPaddingY = Pixels(1);
 
-ZilchDefineType(TagEvent, builder, type)
+RaverieDefineType(TagEvent, builder, type)
 {
 }
 
@@ -714,4 +714,4 @@ void ResourceTagEditor::OnTagDeleted(TagEvent* e)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -2,25 +2,25 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(SpriteParticleSystem, builder, type)
+RaverieDefineType(SpriteParticleSystem, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindDocumented();
-  ZeroBindInterface(ParticleSystem);
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindComponent();
+  RaverieBindDocumented();
+  RaverieBindInterface(ParticleSystem);
+  RaverieBindSetup(SetupMode::DefaultSerialization);
 
-  ZilchBindFieldProperty(mVertexColor);
-  ZilchBindFieldProperty(mGeometryMode)->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  ZilchBindFieldProperty(mSpriteSource);
-  ZilchBindFieldProperty(mParticleAnimation);
-  ZilchBindFieldProperty(mParticleSort);
-  ZilchBindFieldProperty(mBeamBaseScale)
-      ->ZeroFilterEquality(mGeometryMode, SpriteParticleGeometryMode::Enum, SpriteParticleGeometryMode::Beam);
-  ZilchBindFieldProperty(mBeamVelocityScale)
-      ->ZeroFilterEquality(mGeometryMode, SpriteParticleGeometryMode::Enum, SpriteParticleGeometryMode::Beam);
+  RaverieBindFieldProperty(mVertexColor);
+  RaverieBindFieldProperty(mGeometryMode)->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  RaverieBindFieldProperty(mSpriteSource);
+  RaverieBindFieldProperty(mParticleAnimation);
+  RaverieBindFieldProperty(mParticleSort);
+  RaverieBindFieldProperty(mBeamBaseScale)
+      ->RaverieFilterEquality(mGeometryMode, SpriteParticleGeometryMode::Enum, SpriteParticleGeometryMode::Beam);
+  RaverieBindFieldProperty(mBeamVelocityScale)
+      ->RaverieFilterEquality(mGeometryMode, SpriteParticleGeometryMode::Enum, SpriteParticleGeometryMode::Beam);
 }
 
 void SpriteParticleSystem::Serialize(Serializer& stream)
@@ -314,4 +314,4 @@ void SpriteParticleSystem::CheckSort(ViewBlock& viewBlock)
   mParticleList.Particles = particle;
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class CameraViewport;
@@ -12,7 +12,7 @@ class ReactiveViewport;
 class ViewportMouseEvent : public MouseEvent
 {
 public:
-  ZilchDeclareType(ViewportMouseEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ViewportMouseEvent, TypeCopyMode::ReferenceType);
 
   ViewportMouseEvent();
   ViewportMouseEvent(MouseEvent* event);
@@ -62,7 +62,7 @@ class ReactiveViewport : public Viewport
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(ReactiveViewport, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ReactiveViewport, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   ReactiveViewport(Composite* parent, Space* space, Camera* camera, CameraViewport* cameraViewport);
@@ -122,7 +122,7 @@ public:
 class GameWidget : public Composite
 {
 public:
-  ZilchDeclareType(GameWidget, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(GameWidget, TypeCopyMode::ReferenceType);
 
   GameWidget(Composite* composite);
   ~GameWidget();
@@ -145,4 +145,4 @@ public:
   String mScreenshotFilename;
 };
 
-} // namespace Zero
+} // namespace Raverie

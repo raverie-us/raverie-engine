@@ -12,31 +12,31 @@
   member = value;                                                                                                      \
   mDirty = true;
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(Texture, builder, type)
+RaverieDefineType(Texture, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindMethod(CreateRuntime);
+  RaverieBindMethod(CreateRuntime);
 
-  ZilchBindFieldGetter(mType);
-  ZilchBindFieldGetter(mCompression);
-  ZilchBindFieldGetter(mWidth);
-  ZilchBindFieldGetter(mHeight);
-  ZilchBindGetterProperty(Size);
-  ZilchBindGetterProperty(Format);
-  ZilchBindGetterSetterProperty(AddressingX);
-  ZilchBindGetterSetterProperty(AddressingY);
-  ZilchBindGetterSetterProperty(Filtering);
-  ZilchBindGetterSetterProperty(Anisotropy);
-  ZilchBindGetterSetterProperty(MipMapping);
-  ZilchBindGetterSetterProperty(CompareMode);
-  ZilchBindGetterSetterProperty(CompareFunc);
+  RaverieBindFieldGetter(mType);
+  RaverieBindFieldGetter(mCompression);
+  RaverieBindFieldGetter(mWidth);
+  RaverieBindFieldGetter(mHeight);
+  RaverieBindGetterProperty(Size);
+  RaverieBindGetterProperty(Format);
+  RaverieBindGetterSetterProperty(AddressingX);
+  RaverieBindGetterSetterProperty(AddressingY);
+  RaverieBindGetterSetterProperty(Filtering);
+  RaverieBindGetterSetterProperty(Anisotropy);
+  RaverieBindGetterSetterProperty(MipMapping);
+  RaverieBindGetterSetterProperty(CompareMode);
+  RaverieBindGetterSetterProperty(CompareFunc);
 
-  ZilchBindOverloadedMethod(Upload, ZilchInstanceOverload(void, TextureData&));
-  ZilchBindOverloadedMethod(SubUpload, ZilchInstanceOverload(void, TextureData&, int, int));
+  RaverieBindOverloadedMethod(Upload, RaverieInstanceOverload(void, TextureData&));
+  RaverieBindOverloadedMethod(SubUpload, RaverieInstanceOverload(void, TextureData&, int, int));
 }
 
 HandleOf<Texture> Texture::CreateRuntime()
@@ -344,4 +344,4 @@ TextureManager::TextureManager(BoundType* resourceType) : ResourceManager(resour
   mPreview = true;
 }
 
-} // namespace Zero
+} // namespace Raverie

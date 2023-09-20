@@ -1,72 +1,72 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Ranges
-ZilchDefineRange(HierarchyNameRange);
-ZilchDefineRange(HierarchyListNameRange);
-ZilchDefineRange(HierarchyRange);
-ZilchDefineRange(CogNameRange);
-ZilchDefineRange(CogRootNameRange);
-ZilchDefineRange(HierarchyList::range);
-ZilchDefineRange(HierarchyList::reverse_range);
-ZilchDefineRange(Space::range);
-ZilchDefineRange(SpaceMap::valueRange);
-ZilchDefineRange(ObjectLinkRange);
-ZilchDefineRange(CogHashSetRange);
-ZilchDefineRange(ResourceTableEntryList::range);
-ZilchDefineRange(OperationListRange);
-ZilchDefineRange(Engine::GameSessionArray::range);
+RaverieDefineRange(HierarchyNameRange);
+RaverieDefineRange(HierarchyListNameRange);
+RaverieDefineRange(HierarchyRange);
+RaverieDefineRange(CogNameRange);
+RaverieDefineRange(CogRootNameRange);
+RaverieDefineRange(HierarchyList::range);
+RaverieDefineRange(HierarchyList::reverse_range);
+RaverieDefineRange(Space::range);
+RaverieDefineRange(SpaceMap::valueRange);
+RaverieDefineRange(ObjectLinkRange);
+RaverieDefineRange(CogHashSetRange);
+RaverieDefineRange(ResourceTableEntryList::range);
+RaverieDefineRange(OperationListRange);
+RaverieDefineRange(Engine::GameSessionArray::range);
 
 // Enums
-ZilchDefineEnum(ActionExecuteMode);
-ZilchDefineEnum(ActionState);
-ZilchDefineEnum(AnimationBlendMode);
-ZilchDefineEnum(AnimationBlendType);
-ZilchDefineEnum(AnimationPlayMode);
-ZilchDefineEnum(Buttons);
-ZilchDefineEnum(CogPathPreference);
-ZilchDefineEnum(Cursor);
-ZilchDefineEnum(EaseType);
-ZilchDefineEnum(FlickedStick);
-ZilchDefineEnum(KeyState);
-ZilchDefineEnum(Math::CurveType);
-ZilchDefineEnum(MouseButtons);
-ZilchDefineEnum(SplineType);
-ZilchDefineEnum(StoreResult);
-ZilchDefineEnum(TabWidth);
-ZilchDefineEnum(TimeMode);
+RaverieDefineEnum(ActionExecuteMode);
+RaverieDefineEnum(ActionState);
+RaverieDefineEnum(AnimationBlendMode);
+RaverieDefineEnum(AnimationBlendType);
+RaverieDefineEnum(AnimationPlayMode);
+RaverieDefineEnum(Buttons);
+RaverieDefineEnum(CogPathPreference);
+RaverieDefineEnum(Cursor);
+RaverieDefineEnum(EaseType);
+RaverieDefineEnum(FlickedStick);
+RaverieDefineEnum(KeyState);
+RaverieDefineEnum(Math::CurveType);
+RaverieDefineEnum(MouseButtons);
+RaverieDefineEnum(SplineType);
+RaverieDefineEnum(StoreResult);
+RaverieDefineEnum(TabWidth);
+RaverieDefineEnum(TimeMode);
 
 void LocationBind(LibraryBuilder& builder, BoundType* type)
 {
-  // We need to alias ZilchSelf for the method binding macros
-  namespace ZilchSelf = Location;
+  // We need to alias RaverieSelf for the method binding macros
+  namespace RaverieSelf = Location;
 
-  ZilchBindMethod(IsCardinal);
-  ZilchBindMethod(GetCardinalAxis);
-  ZilchBindOverloadedMethod(GetDirection, ZilchStaticOverload(Vec2, Location::Enum));
-  ZilchBindOverloadedMethod(GetDirection, ZilchStaticOverload(Vec2, Location::Enum, Location::Enum));
-  ZilchBindMethod(GetOpposite);
+  RaverieBindMethod(IsCardinal);
+  RaverieBindMethod(GetCardinalAxis);
+  RaverieBindOverloadedMethod(GetDirection, RaverieStaticOverload(Vec2, Location::Enum));
+  RaverieBindOverloadedMethod(GetDirection, RaverieStaticOverload(Vec2, Location::Enum, Location::Enum));
+  RaverieBindMethod(GetOpposite);
 }
 
-ZilchDefineExternalBaseType(Location::Enum, TypeCopyMode::ValueType, builder, type)
+RaverieDefineExternalBaseType(Location::Enum, TypeCopyMode::ValueType, builder, type)
 {
-  ZilchFullBindEnum(builder, type, SpecialType::Enumeration);
-  ZilchBindEnumValues(Location);
+  RaverieFullBindEnum(builder, type, SpecialType::Enumeration);
+  RaverieBindEnumValues(Location);
 
   LocationBind(builder, type);
 }
 
 // Arrays
-ZeroDefineArrayType(Array<ContentLibraryReference>);
+RaverieDefineArrayType(Array<ContentLibraryReference>);
 
 // The keys enum has to be declared special since it skips values
-ZilchDefineExternalBaseType(Keys::Enum, TypeCopyMode::ValueType, builder, type)
+RaverieDefineExternalBaseType(Keys::Enum, TypeCopyMode::ValueType, builder, type)
 {
   SetUpKeyNames();
-  ZilchFullBindEnum(builder, type, SpecialType::Enumeration);
+  RaverieFullBindEnum(builder, type, SpecialType::Enumeration);
 
   // For now, just iterate over all keys in the name map and if there was no
   // saved name then assume that the key doesn't exist (linear but whatever)
@@ -75,269 +75,269 @@ ZilchDefineExternalBaseType(Keys::Enum, TypeCopyMode::ValueType, builder, type)
     if (KeyNames[i] == nullptr)
       continue;
 
-    ZilchFullBindEnumValue(builder, type, i, KeyNames[i]);
+    RaverieFullBindEnumValue(builder, type, i, KeyNames[i]);
   }
 }
 
-ZilchDefineStaticLibrary(EngineLibrary)
+RaverieDefineStaticLibrary(EngineLibrary)
 {
   builder.CreatableInScriptDefault = false;
 
   // Ranges
-  ZilchInitializeRange(HierarchyNameRange);
-  ZilchInitializeRange(HierarchyListNameRange);
-  ZilchInitializeRange(HierarchyRange);
-  ZilchInitializeRange(CogNameRange);
-  ZilchInitializeRange(CogRootNameRange);
-  ZilchInitializeRangeAs(HierarchyList::range, "HierarchyListRange");
-  ZilchInitializeRangeAs(HierarchyList::reverse_range, "HierarchyListReverseRange");
-  ZilchInitializeRangeAs(Space::range, "SpaceRange");
-  ZilchInitializeRangeAs(SpaceMap::valueRange, "SpaceMapValueRange");
-  ZilchInitializeRange(ObjectLinkRange);
-  ZilchInitializeRange(CogHashSetRange);
-  ZilchInitializeRangeAs(ResourceTableEntryList::range, "ResourceTableEntryRange");
-  ZilchInitializeRange(OperationListRange);
-  ZilchInitializeRangeAs(Engine::GameSessionArray::range, "GameSessionRange");
+  RaverieInitializeRange(HierarchyNameRange);
+  RaverieInitializeRange(HierarchyListNameRange);
+  RaverieInitializeRange(HierarchyRange);
+  RaverieInitializeRange(CogNameRange);
+  RaverieInitializeRange(CogRootNameRange);
+  RaverieInitializeRangeAs(HierarchyList::range, "HierarchyListRange");
+  RaverieInitializeRangeAs(HierarchyList::reverse_range, "HierarchyListReverseRange");
+  RaverieInitializeRangeAs(Space::range, "SpaceRange");
+  RaverieInitializeRangeAs(SpaceMap::valueRange, "SpaceMapValueRange");
+  RaverieInitializeRange(ObjectLinkRange);
+  RaverieInitializeRange(CogHashSetRange);
+  RaverieInitializeRangeAs(ResourceTableEntryList::range, "ResourceTableEntryRange");
+  RaverieInitializeRange(OperationListRange);
+  RaverieInitializeRangeAs(Engine::GameSessionArray::range, "GameSessionRange");
 
   // Enums
-  ZilchInitializeEnum(ActionExecuteMode);
-  ZilchInitializeEnum(ActionState);
-  ZilchInitializeEnum(AnimationBlendMode);
-  ZilchInitializeEnum(AnimationBlendType);
-  ZilchInitializeEnum(AnimationPlayMode);
-  ZilchInitializeEnum(Buttons);
-  ZilchInitializeEnum(CogPathPreference);
-  ZilchInitializeEnum(Cursor);
-  ZilchInitializeEnumAs(EaseType, "Ease");
-  ZilchInitializeEnum(FlickedStick);
-  ZilchInitializeEnum(Keys);
-  ZilchInitializeEnum(KeyState);
-  ZilchInitializeEnum(Location);
-  ZilchInitializeEnumAs(Math::CurveType, "CurveType");
-  ZilchInitializeEnum(MouseButtons);
-  ZilchInitializeEnum(SplineType);
-  ZilchInitializeEnum(StoreResult);
-  ZilchInitializeEnum(TabWidth);
-  ZilchInitializeEnum(TimeMode);
+  RaverieInitializeEnum(ActionExecuteMode);
+  RaverieInitializeEnum(ActionState);
+  RaverieInitializeEnum(AnimationBlendMode);
+  RaverieInitializeEnum(AnimationBlendType);
+  RaverieInitializeEnum(AnimationPlayMode);
+  RaverieInitializeEnum(Buttons);
+  RaverieInitializeEnum(CogPathPreference);
+  RaverieInitializeEnum(Cursor);
+  RaverieInitializeEnumAs(EaseType, "Ease");
+  RaverieInitializeEnum(FlickedStick);
+  RaverieInitializeEnum(Keys);
+  RaverieInitializeEnum(KeyState);
+  RaverieInitializeEnum(Location);
+  RaverieInitializeEnumAs(Math::CurveType, "CurveType");
+  RaverieInitializeEnum(MouseButtons);
+  RaverieInitializeEnum(SplineType);
+  RaverieInitializeEnum(StoreResult);
+  RaverieInitializeEnum(TabWidth);
+  RaverieInitializeEnum(TimeMode);
 
   // Arrays
-  ZeroInitializeArrayTypeAs(Array<ContentLibraryReference>, "ContentLibraryReferenceArray");
-  ZilchInitializeType(DataSource);
+  RaverieInitializeArrayTypeAs(Array<ContentLibraryReference>, "ContentLibraryReferenceArray");
+  RaverieInitializeType(DataSource);
 
-  ZilchInitializeType(System);
+  RaverieInitializeType(System);
 
   // Meta Components
-  ZilchInitializeType(TransformMetaTransform);
-  ZilchInitializeType(CogMetaComposition);
-  ZilchInitializeType(CogMetaDataInheritance);
-  ZilchInitializeType(CogMetaDisplay);
-  ZilchInitializeType(CogMetaSerialization);
-  ZilchInitializeType(CogMetaOperations);
-  ZilchInitializeType(CogMetaTransform);
-  ZilchInitializeType(CogArchetypeExtension);
-  ZilchInitializeType(CogSerializationFilter);
-  ZilchInitializeType(CogPathMetaSerialization);
-  ZilchInitializeType(ComponentMetaDataInheritance);
-  ZilchInitializeType(DataResourceInheritance);
-  ZilchInitializeType(ResourceMetaSerialization);
-  ZilchInitializeType(EngineMetaComposition);
-  ZilchInitializeType(HierarchyComposition);
-  ZilchInitializeType(MetaResource);
-  ZilchInitializeType(ComponentMetaOperations);
-  ZilchInitializeType(ResourceMetaOperations);
-  ZilchInitializeType(CogArchetypePropertyFilter);
-  ZilchInitializeType(CogPathMetaComposition);
-  ZilchInitializeType(MetaEditorScriptObject);
-  ZilchInitializeType(MetaDependency);
-  ZilchInitializeType(MetaInterface);
-  ZilchInitializeType(RaycasterMetaComposition);
+  RaverieInitializeType(TransformMetaTransform);
+  RaverieInitializeType(CogMetaComposition);
+  RaverieInitializeType(CogMetaDataInheritance);
+  RaverieInitializeType(CogMetaDisplay);
+  RaverieInitializeType(CogMetaSerialization);
+  RaverieInitializeType(CogMetaOperations);
+  RaverieInitializeType(CogMetaTransform);
+  RaverieInitializeType(CogArchetypeExtension);
+  RaverieInitializeType(CogSerializationFilter);
+  RaverieInitializeType(CogPathMetaSerialization);
+  RaverieInitializeType(ComponentMetaDataInheritance);
+  RaverieInitializeType(DataResourceInheritance);
+  RaverieInitializeType(ResourceMetaSerialization);
+  RaverieInitializeType(EngineMetaComposition);
+  RaverieInitializeType(HierarchyComposition);
+  RaverieInitializeType(MetaResource);
+  RaverieInitializeType(ComponentMetaOperations);
+  RaverieInitializeType(ResourceMetaOperations);
+  RaverieInitializeType(CogArchetypePropertyFilter);
+  RaverieInitializeType(CogPathMetaComposition);
+  RaverieInitializeType(MetaEditorScriptObject);
+  RaverieInitializeType(MetaDependency);
+  RaverieInitializeType(MetaInterface);
+  RaverieInitializeType(RaycasterMetaComposition);
 
   // Events
-  ZilchInitializeType(CogPathEvent);
-  ZilchInitializeType(UpdateEvent);
-  ZilchInitializeType(ResourceEvent);
-  ZilchInitializeType(GameEvent);
-  ZilchInitializeType(AnimationGraphEvent);
-  ZilchInitializeType(KeyboardEvent);
-  ZilchInitializeType(FileEditEvent);
-  ZilchInitializeType(KeyboardTextEvent);
-  ZilchInitializeType(OsMouseEvent);
-  ZilchInitializeType(HierarchyEvent);
-  ZilchInitializeType(CogInitializerEvent);
-  ZilchInitializeType(ObjectLinkEvent);
-  ZilchInitializeType(ObjectLinkPointChangedEvent);
-  ZilchInitializeType(HeightMapEvent);
-  ZilchInitializeType(AreaEvent);
-  ZilchInitializeType(GamepadEvent);
-  ZilchInitializeType(OperationQueueEvent);
-  ZilchInitializeType(OsWindowEvent);
-  ZilchInitializeType(OsWindowBorderHitTest);
-  ZilchInitializeType(OsMouseDropEvent);
-  ZilchInitializeType(SavingEvent);
-  ZilchInitializeType(ScriptEvent);
-  ZilchInitializeType(DataEvent);
-  ZilchInitializeType(DataReplaceEvent);
-  ZilchInitializeType(CogReplaceEvent);
-  ZilchInitializeType(TextEvent);
-  ZilchInitializeType(TextErrorEvent);
-  ZilchInitializeType(OsFileSelection);
-  ZilchInitializeType(ClipboardEvent);
-  ZilchInitializeType(ZilchCompiledEvent);
-  ZilchInitializeType(ZilchCompileFragmentEvent);
-  ZilchInitializeType(ZilchCompileEvent);
-  ZilchInitializeType(SplineEvent);
-  ZilchInitializeType(BlockingTaskEvent);
+  RaverieInitializeType(CogPathEvent);
+  RaverieInitializeType(UpdateEvent);
+  RaverieInitializeType(ResourceEvent);
+  RaverieInitializeType(GameEvent);
+  RaverieInitializeType(AnimationGraphEvent);
+  RaverieInitializeType(KeyboardEvent);
+  RaverieInitializeType(FileEditEvent);
+  RaverieInitializeType(KeyboardTextEvent);
+  RaverieInitializeType(OsMouseEvent);
+  RaverieInitializeType(HierarchyEvent);
+  RaverieInitializeType(CogInitializerEvent);
+  RaverieInitializeType(ObjectLinkEvent);
+  RaverieInitializeType(ObjectLinkPointChangedEvent);
+  RaverieInitializeType(HeightMapEvent);
+  RaverieInitializeType(AreaEvent);
+  RaverieInitializeType(GamepadEvent);
+  RaverieInitializeType(OperationQueueEvent);
+  RaverieInitializeType(OsWindowEvent);
+  RaverieInitializeType(OsWindowBorderHitTest);
+  RaverieInitializeType(OsMouseDropEvent);
+  RaverieInitializeType(SavingEvent);
+  RaverieInitializeType(ScriptEvent);
+  RaverieInitializeType(DataEvent);
+  RaverieInitializeType(DataReplaceEvent);
+  RaverieInitializeType(CogReplaceEvent);
+  RaverieInitializeType(TextEvent);
+  RaverieInitializeType(TextErrorEvent);
+  RaverieInitializeType(OsFileSelection);
+  RaverieInitializeType(ClipboardEvent);
+  RaverieInitializeType(RaverieCompiledEvent);
+  RaverieInitializeType(RaverieCompileFragmentEvent);
+  RaverieInitializeType(RaverieCompileEvent);
+  RaverieInitializeType(SplineEvent);
+  RaverieInitializeType(BlockingTaskEvent);
 
   // Components
-  ZilchInitializeType(Component);
-  ZilchInitializeType(Transform);
-  ZilchInitializeType(Hierarchy);
-  ZilchInitializeType(TimeSpace);
-  ZilchInitializeType(ObjectLink);
-  ZilchInitializeType(ObjectLinkAnchor);
-  ZilchInitializeType(Hierarchy);
-  ZilchInitializeType(AnimationGraph);
-  ZilchInitializeType(SimpleAnimation);
-  ZilchInitializeType(HeightMap);
-  ZilchInitializeType(Area);
-  ZilchInitializeType(AnimationGraph);
-  ZilchInitializeType(ProjectSettings);
-  ZilchInitializeType(ProjectDescription);
+  RaverieInitializeType(Component);
+  RaverieInitializeType(Transform);
+  RaverieInitializeType(Hierarchy);
+  RaverieInitializeType(TimeSpace);
+  RaverieInitializeType(ObjectLink);
+  RaverieInitializeType(ObjectLinkAnchor);
+  RaverieInitializeType(Hierarchy);
+  RaverieInitializeType(AnimationGraph);
+  RaverieInitializeType(SimpleAnimation);
+  RaverieInitializeType(HeightMap);
+  RaverieInitializeType(Area);
+  RaverieInitializeType(AnimationGraph);
+  RaverieInitializeType(ProjectSettings);
+  RaverieInitializeType(ProjectDescription);
 
-  ZilchInitializeType(Cog);
-  ZilchInitializeType(Space);
-  ZilchInitializeType(ResourceDisplayFunctions);
-  ZilchInitializeType(Resource);
-  ZilchInitializeType(DataResource);
-  ZilchInitializeType(ResourceSystem);
-  ZilchInitializeType(ResourcePackageDisplay);
-  ZilchInitializeType(ResourcePackage);
-  ZilchInitializeType(ResourceLibrary);
+  RaverieInitializeType(Cog);
+  RaverieInitializeType(Space);
+  RaverieInitializeType(ResourceDisplayFunctions);
+  RaverieInitializeType(Resource);
+  RaverieInitializeType(DataResource);
+  RaverieInitializeType(ResourceSystem);
+  RaverieInitializeType(ResourcePackageDisplay);
+  RaverieInitializeType(ResourcePackage);
+  RaverieInitializeType(ResourceLibrary);
 
-  ZilchInitializeType(CogPath);
+  RaverieInitializeType(CogPath);
 
-  ZilchInitializeType(Engine);
-  ZilchInitializeType(GameSession);
+  RaverieInitializeType(Engine);
+  RaverieInitializeType(GameSession);
 
-  ZilchInitializeType(AnimationNode);
-  ZilchInitializeType(PoseNode);
-  ZilchInitializeType(BasicAnimation);
-  ZilchInitializeType(DualBlend<DirectBlend>);
-  ZilchInitializeType(DirectBlend);
-  ZilchInitializeType(DualBlend<CrossBlend>);
-  ZilchInitializeType(CrossBlend);
-  ZilchInitializeType(DualBlend<SelectiveNode>);
-  ZilchInitializeType(SelectiveNode);
-  ZilchInitializeType(DualBlend<ChainNode>);
-  ZilchInitializeType(ChainNode);
-  ZilchInitializeType(ObjectTrack);
-  ZilchInitializeType(Animation);
-  ZilchInitializeType(Environment);
+  RaverieInitializeType(AnimationNode);
+  RaverieInitializeType(PoseNode);
+  RaverieInitializeType(BasicAnimation);
+  RaverieInitializeType(DualBlend<DirectBlend>);
+  RaverieInitializeType(DirectBlend);
+  RaverieInitializeType(DualBlend<CrossBlend>);
+  RaverieInitializeType(CrossBlend);
+  RaverieInitializeType(DualBlend<SelectiveNode>);
+  RaverieInitializeType(SelectiveNode);
+  RaverieInitializeType(DualBlend<ChainNode>);
+  RaverieInitializeType(ChainNode);
+  RaverieInitializeType(ObjectTrack);
+  RaverieInitializeType(Animation);
+  RaverieInitializeType(Environment);
 
-  ZilchInitializeType(Keyboard);
+  RaverieInitializeType(Keyboard);
 
-  ZilchInitializeType(System);
-  ZilchInitializeType(TimeSystem);
-  ZilchInitializeType(OsShell);
-  ZilchInitializeType(OsWindow);
-  ZilchInitializeType(Mouse);
-  ZilchInitializeType(Factory);
-  ZilchInitializeType(Operation);
-  ZilchInitializeType(OperationQueue);
-  ZilchInitializeType(OperationBatch);
-  ZilchInitializeType(PropertyOperation);
-  ZilchInitializeType(Tracker);
-  ZilchInitializeType(Spline);
-  ZilchInitializeType(SplineSampleData);
-  ZilchInitializeType(SplineBakedPoints);
-  ZilchInitializeType(SplineBakedPoint);
-  ZilchInitializeType(SplineControlPoints);
-  ZilchInitializeType(SplineControlPoint);
+  RaverieInitializeType(System);
+  RaverieInitializeType(TimeSystem);
+  RaverieInitializeType(OsShell);
+  RaverieInitializeType(OsWindow);
+  RaverieInitializeType(Mouse);
+  RaverieInitializeType(Factory);
+  RaverieInitializeType(Operation);
+  RaverieInitializeType(OperationQueue);
+  RaverieInitializeType(OperationBatch);
+  RaverieInitializeType(PropertyOperation);
+  RaverieInitializeType(Tracker);
+  RaverieInitializeType(Spline);
+  RaverieInitializeType(SplineSampleData);
+  RaverieInitializeType(SplineBakedPoints);
+  RaverieInitializeType(SplineBakedPoint);
+  RaverieInitializeType(SplineControlPoints);
+  RaverieInitializeType(SplineControlPoint);
 
-  ZilchInitializeType(Action);
-  ZilchInitializeType(ActionSet);
-  ZilchInitializeType(Actions);
-  ZilchInitializeType(ActionGroup);
-  ZilchInitializeType(ActionSequence);
-  ZilchInitializeType(ActionSpace);
-  ZilchInitializeType(ActionDelay);
+  RaverieInitializeType(Action);
+  RaverieInitializeType(ActionSet);
+  RaverieInitializeType(Actions);
+  RaverieInitializeType(ActionGroup);
+  RaverieInitializeType(ActionSequence);
+  RaverieInitializeType(ActionSpace);
+  RaverieInitializeType(ActionDelay);
 
-  ZilchInitializeType(CogInitializer);
+  RaverieInitializeType(CogInitializer);
 
-  ZilchInitializeType(Thickness);
-  ZilchInitializeType(Rectangle);
+  RaverieInitializeType(Thickness);
+  RaverieInitializeType(Rectangle);
 
-  ZilchInitializeType(LinkId);
-  ZilchInitializeType(Named);
-  ZilchInitializeType(EditorFlags);
-  ZilchInitializeType(SpaceObjects);
-  ZilchInitializeType(Archetype);
-  ZilchInitializeType(Archetyped);
-  ZilchInitializeType(ArchetypeInstance);
+  RaverieInitializeType(LinkId);
+  RaverieInitializeType(Named);
+  RaverieInitializeType(EditorFlags);
+  RaverieInitializeType(SpaceObjects);
+  RaverieInitializeType(Archetype);
+  RaverieInitializeType(Archetyped);
+  RaverieInitializeType(ArchetypeInstance);
 
-  ZilchInitializeType(MetaSelection);
+  RaverieInitializeType(MetaSelection);
 
-  ZilchInitializeType(ObjectLinkEdge);
-  ZilchInitializeType(ObjectLinkAnchor);
-  ZilchInitializeType(ObjectLink);
+  RaverieInitializeType(ObjectLinkEdge);
+  RaverieInitializeType(ObjectLinkAnchor);
+  RaverieInitializeType(ObjectLink);
 
-  ZilchInitializeType(Level);
+  RaverieInitializeType(Level);
 
-  ZilchInitializeType(DebugDraw);
+  RaverieInitializeType(DebugDraw);
 
-  ZilchInitializeType(DocumentResource);
-  ZilchInitializeType(TextBlock);
+  RaverieInitializeType(DocumentResource);
+  RaverieInitializeType(TextBlock);
 
-  ZilchInitializeType(MainConfig);
-  ZilchInitializeType(EditorConfig);
-  ZilchInitializeType(FrameRateSettings);
-  ZilchInitializeType(DebugSettings);
-  ZilchInitializeType(ExportSettings);
-  ZilchInitializeType(ContentConfig);
-  ZilchInitializeType(UserConfig);
-  ZilchInitializeType(DeveloperConfig);
-  ZilchInitializeType(TextEditorConfig);
-  ZilchInitializeType(EditorSettings);
+  RaverieInitializeType(MainConfig);
+  RaverieInitializeType(EditorConfig);
+  RaverieInitializeType(FrameRateSettings);
+  RaverieInitializeType(DebugSettings);
+  RaverieInitializeType(ExportSettings);
+  RaverieInitializeType(ContentConfig);
+  RaverieInitializeType(UserConfig);
+  RaverieInitializeType(DeveloperConfig);
+  RaverieInitializeType(TextEditorConfig);
+  RaverieInitializeType(EditorSettings);
 
-  ZilchInitializeType(HierarchySpline);
+  RaverieInitializeType(HierarchySpline);
 
-  ZilchInitializeType(ObjectStore);
-  ZilchInitializeType(ResourceTable);
-  ZilchInitializeType(ResourceTableEntry);
+  RaverieInitializeType(ObjectStore);
+  RaverieInitializeType(ResourceTable);
+  RaverieInitializeType(ResourceTableEntry);
 
-  ZilchInitializeType(SampleCurve);
+  RaverieInitializeType(SampleCurve);
 
-  ZilchInitializeType(HeightMap);
-  ZilchInitializeType(HeightPatch);
-  ZilchInitializeType(HeightMapSource);
+  RaverieInitializeType(HeightMap);
+  RaverieInitializeType(HeightPatch);
+  RaverieInitializeType(HeightMapSource);
 
-  ZilchInitializeType(SceneGraphSource);
+  RaverieInitializeType(SceneGraphSource);
 
-  ZilchInitializeType(ColorGradient);
+  RaverieInitializeType(ColorGradient);
 
-  ZilchInitializeType(Area);
+  RaverieInitializeType(Area);
 
-  ZilchInitializeType(ProjectSettings);
-  ZilchInitializeType(ContentLibraryReference);
-  ZilchInitializeType(SharedContent);
-  ZilchInitializeType(ProjectDescription);
+  RaverieInitializeType(ProjectSettings);
+  RaverieInitializeType(ContentLibraryReference);
+  RaverieInitializeType(SharedContent);
+  RaverieInitializeType(ProjectDescription);
 
-  ZilchInitializeType(RaycastProvider);
-  ZilchInitializeType(Raycaster);
+  RaverieInitializeType(RaycastProvider);
+  RaverieInitializeType(Raycaster);
 
-  ZilchInitializeType(Gamepad);
-  ZilchInitializeType(Gamepads);
+  RaverieInitializeType(Gamepad);
+  RaverieInitializeType(Gamepads);
 
-  ZilchInitializeType(Tweakables);
+  RaverieInitializeType(Tweakables);
 
-  ZilchInitializeType(EventDirectoryWatcher);
-  ZilchInitializeType(Job);
-  ZilchInitializeType(DocumentationLibrary);
-  ZilchInitializeType(Shortcuts);
-  ZilchInitializeTypeAs(ProxyObject<Component>, "ComponentProxy");
+  RaverieInitializeType(EventDirectoryWatcher);
+  RaverieInitializeType(Job);
+  RaverieInitializeType(DocumentationLibrary);
+  RaverieInitializeType(Shortcuts);
+  RaverieInitializeTypeAs(ProxyObject<Component>, "ComponentProxy");
 
-  ZilchInitializeType(ZilchLibraryResource);
-  ZilchInitializeType(ZilchDocumentResource);
+  RaverieInitializeType(RaverieLibraryResource);
+  RaverieInitializeType(RaverieDocumentResource);
 
   BindActionFunctions(builder);
 
@@ -378,7 +378,7 @@ bool EngineLibrary::Initialize()
   if (!logFile.Empty())
   {
     extraListener.OverrideLogFile(logFile);
-    Zero::Console::Add(&extraListener);
+    Raverie::Console::Add(&extraListener);
   }
 
   // Load the debug drawer.
@@ -410,8 +410,8 @@ bool EngineLibrary::Initialize()
   Gamepads::Initialize();
   LocalModifications::Initialize();
   ObjectStore::Initialize();
-  // Need to initialize zilch here as it can be used in the factory below.
-  ZilchManager::Initialize();
+  // Need to initialize raverie here as it can be used in the factory below.
+  RaverieManager::Initialize();
 
   Space* engineSpace = new Space();
   engineSpace->SetName("EngineSpace");
@@ -423,12 +423,12 @@ bool EngineLibrary::Initialize()
 
   // Create the factory and Tracker for object creation.
   Tracker* tracker = Tracker::StaticInitialize();
-  engine->AddSystemInterface(ZilchTypeId(Tracker), tracker);
+  engine->AddSystemInterface(RaverieTypeId(Tracker), tracker);
 
   Factory* factory = Factory::StaticInitialize(engine, tracker);
-  engine->AddSystemInterface(ZilchTypeId(Factory), factory);
+  engine->AddSystemInterface(RaverieTypeId(Factory), factory);
 
-  MetaDatabase::GetInstance()->AddAlternateName("Project", ZilchTypeId(ProjectSettings));
+  MetaDatabase::GetInstance()->AddAlternateName("Project", RaverieTypeId(ProjectSettings));
   return true;
 }
 
@@ -477,4 +477,4 @@ void EngineLibrary::Shutdown()
   GetLibrary()->ClearComponents();
 }
 
-} // namespace Zero
+} // namespace Raverie

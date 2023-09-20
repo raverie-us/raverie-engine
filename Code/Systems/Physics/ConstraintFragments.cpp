@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Physics
@@ -362,4 +362,4 @@ real ComputeLambda(ConstraintMolecule& mol, JointVelocity& velocites)
 
 } // namespace Physics
 
-} // namespace Zero
+} // namespace Raverie

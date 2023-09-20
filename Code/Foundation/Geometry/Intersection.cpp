@@ -646,7 +646,7 @@ Type CapsuleSphere(Vec3Param capsulePointA,
   Type result = ClosestPointOnCapsuleToPoint(capsulePointA, capsulePointB, capsuleRadius, &closestPoint);
 
 #ifdef VisualizeCapsuleSphere
-  Zero::gDebugDraw->Add(Zero::Debug::LineCross(closestPoint, real(0.5)));
+  Raverie::gDebugDraw->Add(Raverie::Debug::LineCross(closestPoint, real(0.5)));
 #endif
 
   // Vector from sphere's center to the closest point on the capsule
@@ -704,8 +704,8 @@ Type CapsuleSphere(Vec3Param capsulePointA,
     manifold->PointAt(0).Points[1] = v;
 
 #ifdef VisualizeCapsuleSphere
-    Zero::gDebugDraw->Add(Zero::Debug::Sphere(v, real(0.1)).Color(Color::Red));
-    Zero::gDebugDraw->Add(Zero::Debug::Sphere(closestPoint, real(0.1)).Color(Color::Blue));
+    Raverie::gDebugDraw->Add(Raverie::Debug::Sphere(v, real(0.1)).Color(Color::Red));
+    Raverie::gDebugDraw->Add(Raverie::Debug::Sphere(closestPoint, real(0.1)).Color(Color::Blue));
 #endif
 
     manifold->PointCount = 1;

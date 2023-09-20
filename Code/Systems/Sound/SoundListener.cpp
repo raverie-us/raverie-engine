@@ -2,22 +2,22 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 // Sound Listener
 
-ZilchDefineType(SoundListener, builder, type)
+RaverieDefineType(SoundListener, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindDocumented();
-  ZeroBindSetup(SetupMode::CallSetDefaults);
-  ZeroBindDependency(Cog);
-  ZeroBindDependency(Transform);
-  ZeroBindTag(Tags::Sound);
+  RaverieBindComponent();
+  RaverieBindDocumented();
+  RaverieBindSetup(SetupMode::CallSetDefaults);
+  RaverieBindDependency(Cog);
+  RaverieBindDependency(Transform);
+  RaverieBindTag(Tags::Sound);
 
-  ZilchBindGetterSetterProperty(Active);
-  ZilchBindGetter(SoundNode);
-  ZilchBindGetterSetterProperty(AttenuationScale);
+  RaverieBindGetterSetterProperty(Active);
+  RaverieBindGetter(SoundNode);
+  RaverieBindGetterSetterProperty(AttenuationScale);
 }
 
 SoundListener::SoundListener() : mActive(true), mAttenuationScale(1.0f)
@@ -140,4 +140,4 @@ void SoundListener::Update(float invDt)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 struct ConditionalPolicy
 {
@@ -56,4 +56,4 @@ private:
   ConditionPolicy mPolicy;
 };
 
-} // namespace Zero
+} // namespace Raverie

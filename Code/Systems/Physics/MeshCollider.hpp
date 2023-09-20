@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class PhysicsMesh;
@@ -14,7 +14,7 @@ struct BaseCastFilter;
 class MeshCollider : public Collider
 {
 public:
-  ZilchDeclareType(MeshCollider, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MeshCollider, TypeCopyMode::ReferenceType);
 
   MeshCollider();
 
@@ -64,4 +64,4 @@ private:
   HandleOf<PhysicsMesh> mPhysicsMesh;
 };
 
-} // namespace Zero
+} // namespace Raverie

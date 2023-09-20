@@ -1,13 +1,13 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Space
-ZilchDefineType(ActionSpace, builder, type)
+RaverieDefineType(ActionSpace, builder, type)
 {
-  ZeroBindComponent();
+  RaverieBindComponent();
   type->AddAttribute(ObjectAttributes::cCore);
   type->AddAttribute(ObjectAttributes::cHidden);
 }
@@ -50,4 +50,4 @@ void ActionSpace::UpdateActions(UpdateEvent* updateEvent, ActionExecuteMode::Enu
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

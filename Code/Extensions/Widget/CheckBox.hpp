@@ -1,14 +1,14 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Basic Check Box
 class CheckBox : public Composite
 {
 public:
-  ZilchDeclareType(CheckBox, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CheckBox, TypeCopyMode::ReferenceType);
 
   CheckBox(Composite* parent);
   ~CheckBox();
@@ -51,7 +51,7 @@ private:
 class TextCheckBox : public Composite
 {
 public:
-  ZilchDeclareType(TextCheckBox, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(TextCheckBox, TypeCopyMode::ReferenceType);
 
   TextCheckBox(Composite* parent);
   ~TextCheckBox();
@@ -77,4 +77,4 @@ public:
   CheckBox* mCheckBox;
 };
 
-} // namespace Zero
+} // namespace Raverie

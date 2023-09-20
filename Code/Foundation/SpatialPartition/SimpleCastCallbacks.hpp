@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 struct SimpleRayCallback
 {
@@ -185,7 +185,7 @@ struct BroadPhasePolicy
 {
   bool Overlap(T1& obj1, T2& obj2)
   {
-    return Zero::Overlap(obj1, obj2);
+    return Raverie::Overlap(obj1, obj2);
   }
 };
 
@@ -209,4 +209,4 @@ struct BroadPhasePolicy<Frustum, Sphere>
   }
 };
 
-} // namespace Zero
+} // namespace Raverie

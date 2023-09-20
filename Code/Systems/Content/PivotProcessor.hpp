@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class PivotProcessor
@@ -33,4 +33,4 @@ public:
   StringArray mPivotStarts;
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,21 +1,21 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 const real SphereCollider::mMinAllowedRadius = real(0.0001f);
 const real SphereCollider::mMaxAllowedRadius = real(1000000.0f);
 
-ZilchDefineType(SphereCollider, builder, type)
+RaverieDefineType(SphereCollider, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
 
-  ZeroBindInterface(Collider);
-  ZilchBindGetterSetterProperty(Radius);
-  ZilchBindGetter(WorldRadius);
+  RaverieBindInterface(Collider);
+  RaverieBindGetterSetterProperty(Radius);
+  RaverieBindGetter(WorldRadius);
 }
 
 SphereCollider::SphereCollider()
@@ -101,4 +101,4 @@ real SphereCollider::GetWorldRadius() const
   return mWorldRadius;
 }
 
-} // namespace Zero
+} // namespace Raverie

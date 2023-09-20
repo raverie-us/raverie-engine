@@ -1,19 +1,19 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 // Node Print Info
 
-ZilchDefineType(NodePrintInfo, builder, type)
+RaverieDefineType(NodePrintInfo, builder, type)
 {
-  type->HandleManager = ZilchManagerId(PointerManager);
+  type->HandleManager = RaverieManagerId(PointerManager);
 
-  ZilchBindGetter(Connections);
-  ZilchBindField(mPosition);
-  ZilchBindField(mName);
-  ZilchBindField(mHasOutput);
-  ZilchBindField(mID);
+  RaverieBindGetter(Connections);
+  RaverieBindField(mPosition);
+  RaverieBindField(mName);
+  RaverieBindField(mHasOutput);
+  RaverieBindField(mID);
 }
 
 // Sound Node Graph
@@ -527,4 +527,4 @@ NodeInfoListType::range SoundNodeGraph::GetNodeInfoList()
   return mNodeInfoList.All();
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -4,76 +4,76 @@
 #include "IndexedHalfEdgeMesh.hpp"
 #include "QuickHull3DBindings.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Enums
-ZilchDefineEnum(OrientationBases);
-ZilchDefineEnum(SplineAnimatorMode);
-ZilchDefineEnum(PathFinderStatus);
+RaverieDefineEnum(OrientationBases);
+RaverieDefineEnum(SplineAnimatorMode);
+RaverieDefineEnum(PathFinderStatus);
 
-ZilchDefineRange(IndexedHalfEdgeMeshVertexArray::RangeType);
-ZilchDefineRange(IndexedHalfEdgeMeshEdgeArray::RangeType);
-ZilchDefineRange(IndexedHalfEdgeFaceEdgeIndexArray::RangeType);
-ZilchDefineRange(IndexedHalfEdgeMeshFaceArray::RangeType);
+RaverieDefineRange(IndexedHalfEdgeMeshVertexArray::RangeType);
+RaverieDefineRange(IndexedHalfEdgeMeshEdgeArray::RangeType);
+RaverieDefineRange(IndexedHalfEdgeFaceEdgeIndexArray::RangeType);
+RaverieDefineRange(IndexedHalfEdgeMeshFaceArray::RangeType);
 
-ZilchDefineStaticLibrary(GameplayLibrary)
+RaverieDefineStaticLibrary(GameplayLibrary)
 {
   builder.CreatableInScriptDefault = false;
 
   // Enums
-  ZilchInitializeEnum(OrientationBases);
-  ZilchInitializeEnum(SplineAnimatorMode);
-  ZilchInitializeEnum(PathFinderStatus);
+  RaverieInitializeEnum(OrientationBases);
+  RaverieInitializeEnum(SplineAnimatorMode);
+  RaverieInitializeEnum(PathFinderStatus);
 
   // Ranges
-  ZilchInitializeRangeAs(IndexedHalfEdgeMeshVertexArray::RangeType, "IndexedHalfEdgeMeshVertexArrayRange");
-  ZilchInitializeRangeAs(IndexedHalfEdgeMeshEdgeArray::RangeType, "IndexedHalfEdgeMeshEdgeArrayRange");
-  ZilchInitializeRangeAs(IndexedHalfEdgeFaceEdgeIndexArray::RangeType, "IndexedHalfEdgeFaceEdgeIndexArrayRange");
-  ZilchInitializeRangeAs(IndexedHalfEdgeMeshFaceArray::RangeType, "IndexedHalfEdgeMeshFaceArrayRange");
+  RaverieInitializeRangeAs(IndexedHalfEdgeMeshVertexArray::RangeType, "IndexedHalfEdgeMeshVertexArrayRange");
+  RaverieInitializeRangeAs(IndexedHalfEdgeMeshEdgeArray::RangeType, "IndexedHalfEdgeMeshEdgeArrayRange");
+  RaverieInitializeRangeAs(IndexedHalfEdgeFaceEdgeIndexArray::RangeType, "IndexedHalfEdgeFaceEdgeIndexArrayRange");
+  RaverieInitializeRangeAs(IndexedHalfEdgeMeshFaceArray::RangeType, "IndexedHalfEdgeMeshFaceArrayRange");
 
   // Events
-  ZilchInitializeType(MouseEvent);
-  ZilchInitializeType(MouseFileDropEvent);
-  ZilchInitializeType(ViewportMouseEvent);
+  RaverieInitializeType(MouseEvent);
+  RaverieInitializeType(MouseFileDropEvent);
+  RaverieInitializeType(ViewportMouseEvent);
 
-  ZilchInitializeType(Viewport);
-  ZilchInitializeType(ReactiveViewport);
-  ZilchInitializeType(GameWidget);
+  RaverieInitializeType(Viewport);
+  RaverieInitializeType(ReactiveViewport);
+  RaverieInitializeType(GameWidget);
 
-  ZilchInitializeType(TileMapSource);
-  ZilchInitializeType(Reactive);
-  ZilchInitializeType(ReactiveSpace);
-  ZilchInitializeType(MouseCapture);
-  ZilchInitializeType(Orientation);
-  ZilchInitializeType(TileMap);
-  ZilchInitializeType(RandomContext);
-  ZilchInitializeType(CameraViewport);
-  ZilchInitializeType(DefaultGameSetup);
-  ZilchInitializeType(PathFinderBaseEvent);
-  ZilchInitializeTypeAs(PathFinderEvent<Vec3>, "PathFinderEvent");
-  ZilchInitializeTypeAs(PathFinderEvent<IntVec3>, "PathFinderGridEvent");
-  ZilchInitializeType(PathFinder);
-  ZilchInitializeType(PathFinderRequest);
-  ZilchInitializeType(PathFinderGrid);
-  ZilchInitializeType(PathFinderMesh);
+  RaverieInitializeType(TileMapSource);
+  RaverieInitializeType(Reactive);
+  RaverieInitializeType(ReactiveSpace);
+  RaverieInitializeType(MouseCapture);
+  RaverieInitializeType(Orientation);
+  RaverieInitializeType(TileMap);
+  RaverieInitializeType(RandomContext);
+  RaverieInitializeType(CameraViewport);
+  RaverieInitializeType(DefaultGameSetup);
+  RaverieInitializeType(PathFinderBaseEvent);
+  RaverieInitializeTypeAs(PathFinderEvent<Vec3>, "PathFinderEvent");
+  RaverieInitializeTypeAs(PathFinderEvent<IntVec3>, "PathFinderGridEvent");
+  RaverieInitializeType(PathFinder);
+  RaverieInitializeType(PathFinderRequest);
+  RaverieInitializeType(PathFinderGrid);
+  RaverieInitializeType(PathFinderMesh);
 
-  ZilchInitializeType(SplineParticleEmitter);
-  ZilchInitializeType(SplineParticleAnimator);
+  RaverieInitializeType(SplineParticleEmitter);
+  RaverieInitializeType(SplineParticleAnimator);
 
-  ZilchInitializeType(IndexedHalfEdgeMeshVertexArray);
-  ZilchInitializeType(IndexedHalfEdgeMeshEdgeArray);
-  ZilchInitializeType(IndexedHalfEdgeFaceEdgeIndexArray);
-  ZilchInitializeType(IndexedHalfEdgeMeshFaceArray);
-  ZilchInitializeType(IndexedHalfEdge);
-  ZilchInitializeType(IndexedHalfEdgeFace);
-  ZilchInitializeType(IndexedHalfEdgeMesh);
-  ZilchInitializeTypeAs(QuickHull3DInterface, "QuickHull3D");
+  RaverieInitializeType(IndexedHalfEdgeMeshVertexArray);
+  RaverieInitializeType(IndexedHalfEdgeMeshEdgeArray);
+  RaverieInitializeType(IndexedHalfEdgeFaceEdgeIndexArray);
+  RaverieInitializeType(IndexedHalfEdgeMeshFaceArray);
+  RaverieInitializeType(IndexedHalfEdge);
+  RaverieInitializeType(IndexedHalfEdgeFace);
+  RaverieInitializeType(IndexedHalfEdgeMesh);
+  RaverieInitializeTypeAs(QuickHull3DInterface, "QuickHull3D");
 
-  ZilchInitializeTypeAs(ZeroStatic, "Zero");
+  RaverieInitializeTypeAs(RaverieStatic, "Raverie");
 
   // @trevor.sundberg: The Gameplay and Editor libraries are co-dependent
-  ZilchTypeId(Editor)->AssertOnInvalidBinding = &IgnoreOnInvalidBinding;
+  RaverieTypeId(Editor)->AssertOnInvalidBinding = &IgnoreOnInvalidBinding;
 
   EngineLibraryExtensions::AddNativeExtensions(builder);
 }
@@ -91,4 +91,4 @@ void GameplayLibrary::Shutdown()
   GetLibrary()->ClearComponents();
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Forward Declarations.
@@ -13,7 +13,7 @@ class UiLayout : public Component
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(UiLayout, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(UiLayout, TypeCopyMode::ReferenceType);
 
   /// Component Interface.
   void Serialize(Serializer& stream) override;
@@ -84,4 +84,4 @@ protected:
   UiFilteredChildren AllWidgetsInLayout();
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -13,7 +13,7 @@ namespace Math
 namespace Simd
 {
 
-#define SimInline ZeroForceInline
+#define SimInline RaverieForceInline
 
 // wrapper for the shuffle intrinsic so that the rest
 // of the library can be platform independent.

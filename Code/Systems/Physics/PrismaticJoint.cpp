@@ -22,7 +22,7 @@
   Ji   : [0, -i, 0, i]
 */
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Physics
@@ -41,12 +41,12 @@ PrismaticJoint::PrismaticJoint()
   mConstraintFilter = sInfo.mOnAtomMask << DefaultOffset;
 }
 
-ZilchDefineType(PrismaticJoint, builder, type)
+RaverieDefineType(PrismaticJoint, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindInterface(Joint);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindInterface(Joint);
+  RaverieBindDocumented();
 
   BindAnchorAccessors(Vec3(1));
   BindAngleAccessors();
@@ -193,4 +193,4 @@ real PrismaticJoint::GetJointTranslation() const
 
 } // namespace Physics
 
-} // namespace Zero
+} // namespace Raverie

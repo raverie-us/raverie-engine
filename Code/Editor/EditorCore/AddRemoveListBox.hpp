@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -20,7 +20,7 @@ class AddRemoveListBox : public Composite
 {
 public:
   /// Define the self type for connections.
-  typedef AddRemoveListBox ZilchSelf;
+  typedef AddRemoveListBox RaverieSelf;
 
   /// Constructor.  dataTypeName is used for tool tips.
   AddRemoveListBox(Composite* parent, float width, StringParam dataTypeName);
@@ -56,4 +56,4 @@ private:
   IconButton* mMoveDownButton;
 };
 
-} // namespace Zero
+} // namespace Raverie

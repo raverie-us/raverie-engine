@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class DataNode;
@@ -13,4 +13,4 @@ public:
   static DataNode* BuildTree(DataTreeContext& context, StringRange data);
 };
 
-} // namespace Zero
+} // namespace Raverie

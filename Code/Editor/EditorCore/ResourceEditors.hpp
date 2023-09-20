@@ -1,6 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
-namespace Zero
+namespace Raverie
 {
 class Editor;
 
@@ -10,7 +10,7 @@ typedef void (*EditResourceFunction)(Editor*, Resource*);
 class ResourceEditors : public ExplicitSingleton<ResourceEditors, Object>
 {
 public:
-  ZilchDeclareType(ResourceEditors, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ResourceEditors, TypeCopyMode::ReferenceType);
   typedef HashMap<BoundType*, EditResourceFunction> ResourceEditorMap;
   ResourceEditorMap Editors;
 
@@ -19,4 +19,4 @@ public:
   void FindResourceEditor(Resource* resource);
 };
 
-} // namespace Zero
+} // namespace Raverie

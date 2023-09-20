@@ -1,10 +1,10 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(ImageWidget, builder, type)
+RaverieDefineType(ImageWidget, builder, type)
 {
 }
 
@@ -40,7 +40,7 @@ void ImageWidget::ChangeDefinition(BaseDefinition* def)
   mDef = (SlicedDefinition*)def;
 }
 
-Zero::DisplayOrigin::Type ImageWidget::GetDisplayOrigin()
+Raverie::DisplayOrigin::Type ImageWidget::GetDisplayOrigin()
 {
   return mOrigin;
 }
@@ -84,4 +84,4 @@ void ImageWidget::RenderUpdate(
     frameBlock.mRenderQueues->AddStreamedQuad(viewNode, pos0, pos1, uv0, uv1, color);
 }
 
-} // namespace Zero
+} // namespace Raverie

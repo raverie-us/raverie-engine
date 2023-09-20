@@ -1,6 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 
-namespace Zero
+namespace Raverie
 {
 float Noise(int x, int y);
 float SmoothNoise(int x, int y);
@@ -12,4 +12,4 @@ float Noise(int x);
 float SmoothNoise(int x);
 float InterpolatedNoise(float x);
 float PerlinNoise(float x);
-} // namespace Zero
+} // namespace Raverie

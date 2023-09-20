@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -17,7 +17,7 @@ class ViewportMouseEvent;
 class MetaDropEvent : public Event
 {
 public:
-  ZilchDeclareType(MetaDropEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MetaDropEvent, TypeCopyMode::ReferenceType);
 
   MetaDropEvent(MouseEvent* e);
 
@@ -58,7 +58,7 @@ class ToolTip;
 class MetaDrag : public MouseManipulation
 {
 public:
-  typedef MetaDrag ZilchSelf;
+  typedef MetaDrag RaverieSelf;
   MetaDrag(Mouse* mouse, Composite* owner, HandleParam object);
   ~MetaDrag();
 
@@ -79,4 +79,4 @@ private:
   Vec4 mBorderColor;
 };
 
-} // namespace Zero
+} // namespace Raverie

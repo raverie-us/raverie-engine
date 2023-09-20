@@ -4,21 +4,21 @@
 #include "IndexedHalfEdgeMesh.hpp"
 #include "QuickHull3DBindings.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(QuickHull3DInterface, builder, type)
+RaverieDefineType(QuickHull3DInterface, builder, type)
 {
-  ZilchBindDefaultCopyDestructor();
+  RaverieBindDefaultCopyDestructor();
   type->CreatableInScript = true;
 
-  ZilchBindMethod(Add);
-  ZilchBindMethod(Build);
-  ZilchBindMethod(Clear);
-  ZilchBindMethod(Draw);
-  ZilchBindField(mIndex);
-  ZilchBindField(mShowDebugDraw);
-  ZilchBindField(mMesh);
+  RaverieBindMethod(Add);
+  RaverieBindMethod(Build);
+  RaverieBindMethod(Clear);
+  RaverieBindMethod(Draw);
+  RaverieBindField(mIndex);
+  RaverieBindField(mShowDebugDraw);
+  RaverieBindField(mMesh);
 }
 
 QuickHull3DInterface::QuickHull3DInterface()
@@ -158,4 +158,4 @@ void QuickHull3DInterface::BuildHalfEdgeMesh()
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class Editor;
@@ -27,7 +27,7 @@ DeclareEnum4(MouseMode, Default, Select, Camera, Drag);
 class EditorViewport : public Composite
 {
 public:
-  ZilchDeclareType(EditorViewport, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(EditorViewport, TypeCopyMode::ReferenceType);
 
   EditorViewport(Composite* parent, OwnerShip::Enum ownership);
 
@@ -132,4 +132,4 @@ public:
   void OnSettingsChanged(Event* event);
 };
 
-} // namespace Zero
+} // namespace Raverie

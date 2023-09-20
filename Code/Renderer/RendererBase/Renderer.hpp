@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Implemented by api specific renderer (just call C++ delete on the renderer to
@@ -294,14 +294,14 @@ void YInvertNonCompressed(byte* imageData, uint width, uint height, uint pixelSi
 void YInvertBlockCompressed(
     byte* imageData, uint width, uint height, uint dataSize, TextureCompression::Enum compression);
 
-void BuildOrthographicTransformZero(
+void BuildOrthographicTransformEngine(
     Mat4& matrix, float verticalSize, float aspectRatio, float nearDistance, float farDistance);
 void BuildOrthographicTransformGl(
     Mat4& matrix, float verticalSize, float aspectRatio, float nearDistance, float farDistance);
 void BuildOrthographicTransformDx(
     Mat4& matrix, float verticalSize, float aspectRatio, float nearDistance, float farDistance);
 
-void BuildPerspectiveTransformZero(
+void BuildPerspectiveTransformEngine(
     Mat4& matrix, float verticalFov, float aspectRatio, float nearDistance, float farDistance);
 void BuildPerspectiveTransformGl(
     Mat4& matrix, float verticalFov, float aspectRatio, float nearDistance, float farDistance);
@@ -720,7 +720,7 @@ public:
   // View transforms
   Mat4 mWorldToView;
   Mat4 mViewToPerspective;
-  Mat4 mZeroPerspectiveToApiPerspective;
+  Mat4 mEnginePerspectiveToApiPerspective;
 
   float mNearPlane;
   float mFarPlane;
@@ -918,4 +918,4 @@ public:
   uint mShaderInputsVersion;
 };
 
-} // namespace Zero
+} // namespace Raverie

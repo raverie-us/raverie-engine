@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class Collider;
@@ -69,4 +69,4 @@ struct StickJoint : public Joint
 
 typedef Physics::StickJoint StickJoint;
 
-} // namespace Zero
+} // namespace Raverie

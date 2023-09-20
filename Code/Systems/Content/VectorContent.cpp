@@ -1,9 +1,9 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
-ZilchDefineType(FontContent, builder, type)
+RaverieDefineType(FontContent, builder, type)
 {
 }
 
@@ -26,9 +26,9 @@ ContentItem* MakeFontContent(ContentInitializer& initializer)
   return content;
 }
 
-ZilchDefineType(FontBuilder, builder, type)
+RaverieDefineType(FontBuilder, builder, type)
 {
-  ZeroBindDependency(FontContent);
+  RaverieBindDependency(FontContent);
 }
 
 // Note: Since we added more font builders, and we cannot pass the extension
@@ -50,9 +50,9 @@ void CreateVectorContent(ContentSystem* system)
 {
   AddContent<FontContent>(system);
   AddContentComponent<FontBuilder>(system);
-  system->CreatorsByExtension["ttf"] = ContentTypeEntry(ZilchTypeId(FontContent), MakeFontContent);
-  system->CreatorsByExtension["ttc"] = ContentTypeEntry(ZilchTypeId(FontContent), MakeFontContent);
-  system->CreatorsByExtension["otf"] = ContentTypeEntry(ZilchTypeId(FontContent), MakeFontContent);
+  system->CreatorsByExtension["ttf"] = ContentTypeEntry(RaverieTypeId(FontContent), MakeFontContent);
+  system->CreatorsByExtension["ttc"] = ContentTypeEntry(RaverieTypeId(FontContent), MakeFontContent);
+  system->CreatorsByExtension["otf"] = ContentTypeEntry(RaverieTypeId(FontContent), MakeFontContent);
 }
 
-} // namespace Zero
+} // namespace Raverie

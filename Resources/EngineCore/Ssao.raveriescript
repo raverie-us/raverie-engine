@@ -1,0 +1,88 @@
+// MIT Licensed (see LICENSE.md).
+
+// Darkens occluded areas of the scene.
+// This implementation requires data from DeferredRenderer's GeometryPass.
+[RunInEditor]
+class Ssao : RaverieComponent
+{
+  // If effect is applied to the scene.
+  [Property] var Active : Boolean = true;
+  // Radius in world units that can affect a pixel.
+  [Property] var Radius : Real = 1.0;
+  // Exponent used to alter the intensity of occlusion results.
+  [Property] var Intensity : Real = 1.0;
+  // Threshold used in world units when doing edge safe blur on occlusion results.
+  [Property] var BlurDepthThreshold : Real = 0.1;
+  // Output only the occlusion results so effect can be viewed in isolation.
+  [Property] var DebugBuffer : Boolean = false;
+  
+  function AddRenderTasks(event : RenderTasksEvent, lightBuffer : RenderTarget, geometryBuffer0 : RenderTarget)
+  {
+    if (!this.Active)
+      return;
+    
+    var outputSize = lightBuffer.Texture.Size;
+    var halfOutputSize = Math.Max(outputSize / 2, Integer2(1));
+    
+    var occlusionBuffer = event.GetRenderTarget(outputSize, TextureFormat.R8);
+    var halfResOcclusion = event.GetRenderTarget(halfOutputSize, TextureFormat.R8);
+    var halfResGeo = event.GetRenderTarget(halfOutputSize, geometryBuffer0.Texture.Format);
+    
+    // Downsample geo buffer to improve cache performance from ssao sampling pattern
+    var copyGeo = CopyTarget();
+    copyGeo.Texture = geometryBuffer0.Texture;
+    event.AddRenderTaskPostProcess(halfResGeo, copyGeo);
+    
+    // Clear to no occlusion
+    event.AddRenderTaskClearTarget(halfResOcclusion, Real4(1.0));
+    
+    var ssaoSettings = RenderSettings();
+    ssaoSettings.ColorTarget = halfResOcclusion;
+    
+    var ssao = SsaoFragment();
+    ssao.TargetSize = halfResOcclusion.Texture.Size;
+    ssao.SsaoRandom4x4 = Texture.SsaoRandom4x4;
+    ssao.GeometryBuffer0 = halfResGeo.Texture;
+    ssao.Radius = this.Radius;
+    ssao.Intensity = this.Intensity;
+    
+    // Accumulate occlusion
+    event.AddRenderTaskPostProcess(ssaoSettings, ssao);
+    
+    var upsample = JointBilateralOcclusionUpsample();
+    upsample.GeometryBuffer0 = geometryBuffer0.Texture;
+    upsample.HalfResGeometryBuffer0 = halfResGeo.Texture;
+    upsample.InvRes = Real2(1.0) / outputSize;
+    upsample.InvHalfRes = Real2(1.0) / halfOutputSize;
+    upsample.HalfRes = halfOutputSize;
+    upsample.OcclusionBuffer = halfResOcclusion.Texture;
+    
+    // Bring ssao results to full resolution
+    event.AddRenderTaskPostProcess(occlusionBuffer, upsample);
+    
+    // Edge safe blur on occlusion buffer
+    BlurTextureEdgeSafe[BilateralBlurRadius5].Call(event, occlusionBuffer, geometryBuffer0, this.BlurDepthThreshold, 2.0);
+    
+    // Copy results to lightBuffer
+    var copySettings = RenderSettings();
+    copySettings.ColorTarget = lightBuffer;
+    
+    // For viewing just the occlusionBuffer, overwrite the lightBuffer instead of multiplying together
+    if (this.DebugBuffer == false)
+    {
+      copySettings.BlendSettings.BlendMode = BlendMode.Enabled;
+      copySettings.BlendSettings.BlendEquation = BlendEquation.Add;
+      copySettings.BlendSettings.SourceFactor = BlendFactor.Zero;
+      copySettings.BlendSettings.DestFactor = BlendFactor.SourceColor;
+    }
+    
+    // Multiply the lightBuffer with the occlusionBuffer
+    var copyTarget = CopyTargetSingleChannel();
+    copyTarget.Texture = occlusionBuffer.Texture;
+    event.AddRenderTaskPostProcess(copySettings, copyTarget);
+    
+    occlusionBuffer.Release();
+    halfResOcclusion.Release();
+    halfResGeo.Release();
+  }
+}

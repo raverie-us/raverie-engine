@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 struct ProxyResult;
@@ -210,4 +210,4 @@ bool CastShapes(const Shape1Type& shape1, const Shape2Type& shape2, Intersection
   return Collide(shape1, shape2, result);
 }
 
-} // namespace Zero
+} // namespace Raverie

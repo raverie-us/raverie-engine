@@ -1,6 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 
-namespace Zero
+namespace Raverie
 {
 
 template <typename ClientDataType>
@@ -58,4 +58,4 @@ void SerializeNode(Serializer& stream, AabbNode<ClientDataType>& node)
 //                "of pointer type.");
 //}
 
-} // namespace Zero
+} // namespace Raverie

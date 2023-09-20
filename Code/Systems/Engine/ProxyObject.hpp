@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // This file being in the Meta library is subject to discussion. For now, you
@@ -13,7 +13,7 @@ template <typename ComponentType>
 class ProxyObject : public ComponentType
 {
 public:
-  ZilchDeclareInheritableType(ProxyObject, TypeCopyMode::ReferenceType);
+  RaverieDeclareInheritableType(ProxyObject, TypeCopyMode::ReferenceType);
 
   // Creates a type
   static BoundType* CreateProxyType(StringParam typeName, ProxyReason::Enum reason);
@@ -32,15 +32,15 @@ BoundType* ProxyObject<ComponentType>::CreateProxyType(StringParam typeName, Pro
   LibraryBuilder builder(typeName);
   BoundType* type = builder.AddBoundType(typeName, TypeCopyMode::ReferenceType, sizeof(ProxyObject<ComponentType>));
 
-  type->BaseType = ZilchTypeId(ComponentType);
+  type->BaseType = RaverieTypeId(ComponentType);
 
   // Assign the same handle manager as the base type we're proxying
   type->HandleManager = type->BaseType->HandleManager;
   type->AddAttribute(ObjectAttributes::cProxy);
   if (reason == ProxyReason::AllocationException)
     type->AddAttribute(ObjectAttributes::cExceptionProxy);
-  ZilchBindDefaultConstructor();
-  ZilchBindDestructor();
+  RaverieBindDefaultConstructor();
+  RaverieBindDestructor();
 
   LibraryRef library = builder.CreateLibrary();
   MetaDatabase::GetInstance()->AddLibrary(library);
@@ -83,4 +83,4 @@ void ProxyObject<ComponentType>::Serialize(Serializer& stream)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

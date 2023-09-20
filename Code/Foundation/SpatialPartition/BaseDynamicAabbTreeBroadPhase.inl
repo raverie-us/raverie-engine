@@ -1,6 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 
-namespace Zero
+namespace Raverie
 {
 
 template <typename TreeType>
@@ -309,4 +309,4 @@ void BaseDynamicAabbTreeBroadPhase<TreeType>::AddQueryResult(Aabb& aabb)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

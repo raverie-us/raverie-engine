@@ -10,7 +10,7 @@
   Ji   : [-i, -cross(r1,i), i, cross(r2,i)]
 */
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Physics
@@ -20,16 +20,16 @@ JointInfo ManipulatorJoint::sInfo = JointInfo(3, 0);
 
 ImplementJointType(ManipulatorJoint);
 
-ZilchDefineType(ManipulatorJoint, builder, type)
+RaverieDefineType(ManipulatorJoint, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindInterface(Joint);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindInterface(Joint);
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetter(TargetPoint);
-  ZilchBindGetterSetter(LocalPoint);
-  ZilchBindGetterSetter(WorldPoint);
+  RaverieBindGetterSetter(TargetPoint);
+  RaverieBindGetterSetter(LocalPoint);
+  RaverieBindGetterSetter(WorldPoint);
 }
 
 ManipulatorJoint::ManipulatorJoint()
@@ -174,4 +174,4 @@ void ManipulatorJoint::SetWorldPoint(Vec3Param worldPoint)
 
 } // namespace Physics
 
-} // namespace Zero
+} // namespace Raverie

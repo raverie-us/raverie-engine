@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 DeclareBitField4(VortexFlags, LocalAxis, ClampToMax, ContinueFalloff, NoEffect);
@@ -13,7 +13,7 @@ DeclareBitField4(VortexFlags, LocalAxis, ClampToMax, ContinueFalloff, NoEffect);
 class VortexEffect : public PhysicsEffect
 {
 public:
-  ZilchDeclareType(VortexEffect, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(VortexEffect, TypeCopyMode::ReferenceType);
   VortexEffect();
 
   // Component Interface
@@ -88,4 +88,4 @@ private:
   Vec3 mWorldVortexCenter;
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Tags
@@ -9,19 +9,19 @@ namespace Tags
 DefineTag(PhysicsEffect);
 }
 
-ZilchDefineType(PhysicsEffect, builder, type)
+RaverieDefineType(PhysicsEffect, builder, type)
 {
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDocumented();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
 
-  ZilchBindMethod(Toggle);
-  ZilchBindGetterSetterProperty(Active)->ZeroSerialize(true);
-  ZilchBindGetterSetterProperty(WakeUpOnChange)->ZeroSerialize(true);
-  ZilchBindGetterSetterProperty(DebugDrawEffect)->ZeroSerialize(true);
-  ZilchBindGetter(EffectType);
+  RaverieBindMethod(Toggle);
+  RaverieBindGetterSetterProperty(Active)->RaverieSerialize(true);
+  RaverieBindGetterSetterProperty(WakeUpOnChange)->RaverieSerialize(true);
+  RaverieBindGetterSetterProperty(DebugDrawEffect)->RaverieSerialize(true);
+  RaverieBindGetter(EffectType);
 
-  ZeroBindTag(Tags::Physics);
-  ZeroBindTag(Tags::PhysicsEffect);
+  RaverieBindTag(Tags::Physics);
+  RaverieBindTag(Tags::PhysicsEffect);
 }
 
 PhysicsEffect::PhysicsEffect()
@@ -91,19 +91,19 @@ void PhysicsEffect::OnDestroy(uint flags)
 
 void PhysicsEffect::ComponentAdded(BoundType* typeId, Component* component)
 {
-  if (typeId == ZilchTypeId(Region))
+  if (typeId == RaverieTypeId(Region))
   {
     RemoveEffect();
     mFlags.SetFlag(EffectFlags::RegionEffect);
     AddEffect();
   }
-  else if (typeId == ZilchTypeId(RigidBody))
+  else if (typeId == RaverieTypeId(RigidBody))
   {
     RemoveEffect();
     mFlags.SetFlag(EffectFlags::BodyEffect);
     AddEffect();
   }
-  else if (typeId == ZilchTypeId(PhysicsSpace))
+  else if (typeId == RaverieTypeId(PhysicsSpace))
   {
     RemoveEffect();
     mFlags.SetFlag(EffectFlags::SpaceEffect);
@@ -111,7 +111,7 @@ void PhysicsEffect::ComponentAdded(BoundType* typeId, Component* component)
   }
   else
   {
-    if (typeId->IsA(ZilchTypeId(Collider)))
+    if (typeId->IsA(RaverieTypeId(Collider)))
     {
       RemoveEffect();
       mFlags.SetFlag(EffectFlags::ColliderEffect);
@@ -122,19 +122,19 @@ void PhysicsEffect::ComponentAdded(BoundType* typeId, Component* component)
 
 void PhysicsEffect::ComponentRemoved(BoundType* typeId, Component* component)
 {
-  if (typeId == ZilchTypeId(Region))
+  if (typeId == RaverieTypeId(Region))
   {
     RemoveEffect();
     mFlags.ClearFlag(EffectFlags::RegionEffect);
     AddEffect();
   }
-  else if (typeId == ZilchTypeId(RigidBody))
+  else if (typeId == RaverieTypeId(RigidBody))
   {
     RemoveEffect();
     mFlags.ClearFlag(EffectFlags::BodyEffect);
     AddEffect();
   }
-  else if (typeId == ZilchTypeId(PhysicsSpace))
+  else if (typeId == RaverieTypeId(PhysicsSpace))
   {
     RemoveEffect();
     mFlags.ClearFlag(EffectFlags::SpaceEffect);
@@ -142,7 +142,7 @@ void PhysicsEffect::ComponentRemoved(BoundType* typeId, Component* component)
   }
   else
   {
-    if (typeId->IsA(ZilchTypeId(Collider)))
+    if (typeId->IsA(RaverieTypeId(Collider)))
     {
       RemoveEffect();
       mFlags.ClearFlag(EffectFlags::ColliderEffect);
@@ -409,4 +409,4 @@ void PhysicsEffect::SetDebugDrawEffect(bool state)
   mFlags.SetState(EffectFlags::DebugDraw, state);
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 DeclareBitField5(ActionFlag, Started, Completed, NotActive, Linked, Schedulable);
@@ -13,7 +13,7 @@ DeclareEnum2(ActionState, Running, Completed);
 class Action : public ReferenceCountedEventObject
 {
 public:
-  ZilchDeclareType(Action, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Action, TypeCopyMode::ReferenceType);
 
   IntrusiveLink(Action, link);
 
@@ -49,7 +49,7 @@ typedef InList<Action> InActionList;
 class ActionSet : public Action
 {
 public:
-  ZilchDeclareType(ActionSet, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ActionSet, TypeCopyMode::ReferenceType);
   virtual void Add(Action* action) = 0;
   virtual bool IsEmpty() = 0;
 };
@@ -58,7 +58,7 @@ public:
 class Actions : public ActionSet
 {
 public:
-  ZilchDeclareType(Actions, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Actions, TypeCopyMode::ReferenceType);
 
   IntrusiveLink(Actions, link);
 
@@ -89,7 +89,7 @@ private:
 class ActionGroup : public ActionSet
 {
 public:
-  ZilchDeclareType(ActionGroup, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ActionGroup, TypeCopyMode::ReferenceType);
 
   ActionGroup();
   ~ActionGroup();
@@ -109,7 +109,7 @@ private:
 class ActionSequence : public ActionSet
 {
 public:
-  ZilchDeclareType(ActionSequence, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ActionSequence, TypeCopyMode::ReferenceType);
 
   ActionSequence();
   ~ActionSequence();
@@ -124,4 +124,4 @@ private:
   InActionList mActions;
 };
 
-} // namespace Zero
+} // namespace Raverie

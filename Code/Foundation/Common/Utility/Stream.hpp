@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 DeclareEnum3(SeekOrigin, Current, Begin, End);
@@ -117,4 +117,4 @@ public:
   size_t mCurrent;
 };
 
-} // namespace Zero
+} // namespace Raverie

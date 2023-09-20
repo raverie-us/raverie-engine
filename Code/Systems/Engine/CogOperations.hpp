@@ -2,7 +2,7 @@
 #pragma once
 #include "ObjectLoader.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 /// Attaches 'object' to 'parent' and queues the operation.
@@ -161,7 +161,7 @@ class CreateDestroyOperation : public Operation
 {
 public:
   // Required for 'ConnectThisTo' macro
-  typedef CreateDestroyOperation ZilchSelf;
+  typedef CreateDestroyOperation RaverieSelf;
 
   /// Constructor.
   CreateDestroyOperation(Cog* object, ObjectOperationMode::Enum mode);
@@ -272,4 +272,4 @@ public:
   CogRestoreState mRestoreState;
 };
 
-} // namespace Zero
+} // namespace Raverie

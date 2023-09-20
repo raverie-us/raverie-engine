@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Physics
@@ -159,4 +159,4 @@ void ApplyPositionCorrection(RigidBody* b0,
 
 } // namespace Physics
 
-} // namespace Zero
+} // namespace Raverie

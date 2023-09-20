@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// What kind of a constraint solver should be used. A few pre-defined types
@@ -68,4 +68,4 @@ public:
 
 } // namespace Physics
 
-} // namespace Zero
+} // namespace Raverie

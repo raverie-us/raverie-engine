@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Grid Area
@@ -20,34 +20,34 @@ void PixelGridArea::RenderUpdate(
 }
 
 // Sprite Sheet Importer
-ZilchDefineType(SpriteSheetImporter, builder, type)
+RaverieDefineType(SpriteSheetImporter, builder, type)
 {
-  ZilchBindFieldProperty(Name);
-  ZilchBindGetterSetterProperty(FrameWidth);
-  ZilchBindGetterSetterProperty(FrameHeight);
-  ZilchBindGetterSetterProperty(FramesPerRow);
-  ZilchBindGetterSetterProperty(NumberOfRows);
+  RaverieBindFieldProperty(Name);
+  RaverieBindGetterSetterProperty(FrameWidth);
+  RaverieBindGetterSetterProperty(FrameHeight);
+  RaverieBindGetterSetterProperty(FramesPerRow);
+  RaverieBindGetterSetterProperty(NumberOfRows);
 
-  ZilchBindGetterSetterProperty(OffsetX);
-  ZilchBindGetterSetterProperty(OffsetY);
+  RaverieBindGetterSetterProperty(OffsetX);
+  RaverieBindGetterSetterProperty(OffsetY);
 
-  ZilchBindGetterSetterProperty(SpacingX);
-  ZilchBindGetterSetterProperty(SpacingY);
+  RaverieBindGetterSetterProperty(SpacingX);
+  RaverieBindGetterSetterProperty(SpacingY);
 
-  ZilchBindGetterSetterProperty(FrameRate);
-  ZilchBindFieldProperty(PixelsPerUnit);
-  ZilchBindGetterSetterProperty(Smoothing);
-  ZilchBindFieldProperty(CreatePalette);
-  ZilchBindFieldProperty(mOrigin);
+  RaverieBindGetterSetterProperty(FrameRate);
+  RaverieBindFieldProperty(PixelsPerUnit);
+  RaverieBindGetterSetterProperty(Smoothing);
+  RaverieBindFieldProperty(CreatePalette);
+  RaverieBindFieldProperty(mOrigin);
 
-  ZilchBindGetterSetterProperty(PreviewAnimate);
-  ZilchBindGetterSetterProperty(PreviewFrame);
-  ZilchBindGetterSetterProperty(ImportFrames);
-  ZilchBindGetterSetterProperty(UseAlphaColorKey);
-  ZilchBindGetterSetterProperty(AlphaColor);
-  ZilchBindGetterProperty(FrameCount);
-  ZilchBindField(SourceSizeX);
-  ZilchBindField(SourceSizeY);
+  RaverieBindGetterSetterProperty(PreviewAnimate);
+  RaverieBindGetterSetterProperty(PreviewFrame);
+  RaverieBindGetterSetterProperty(ImportFrames);
+  RaverieBindGetterSetterProperty(UseAlphaColorKey);
+  RaverieBindGetterSetterProperty(AlphaColor);
+  RaverieBindGetterProperty(FrameCount);
+  RaverieBindField(SourceSizeX);
+  RaverieBindField(SourceSizeY);
 }
 
 SpriteSheetImporter::SpriteSheetImporter(Composite* parent) : Composite(parent)
@@ -196,7 +196,7 @@ void SpriteSheetImporter::LoadImages(Array<String>& files)
     Image& frameImage = images[i];
 
     Status status;
-    Zero::LoadImage(status, files[i], &frameImage);
+    Raverie::LoadImage(status, files[i], &frameImage);
     if (!status)
     {
       DoNotifyStatus(status);
@@ -250,7 +250,7 @@ void SpriteSheetImporter::LoadSprite(SpriteSource* spriteSource)
   }
 
   Status status;
-  Zero::LoadImage(status, spriteSource->mContentItem->GetFullPath(), &mSourcePixels);
+  Raverie::LoadImage(status, spriteSource->mContentItem->GetFullPath(), &mSourcePixels);
   if (!status)
   {
     DoNotifyStatus(status);
@@ -267,7 +267,7 @@ void SpriteSheetImporter::LoadSprite(SpriteSource* spriteSource)
 void SpriteSheetImporter::LoadImage(StringParam filename)
 {
   Status status;
-  Zero::LoadImage(status, filename, &mSourcePixels);
+  Raverie::LoadImage(status, filename, &mSourcePixels);
   if (!status)
   {
     DoNotifyStatus(status);
@@ -402,7 +402,7 @@ SpriteSheetImporter::AddSpriteResource(StringParam name, Image& output, IntRect 
   String fileName = FilePath::Combine(GetTemporaryDirectory(), "SpriteTemp.png");
 
   Status status;
-  Zero::SaveImage(status, fileName, &output, ImageSaveFormat::Png);
+  Raverie::SaveImage(status, fileName, &output, ImageSaveFormat::Png);
 
   if (!status)
   {
@@ -1224,4 +1224,4 @@ void SpriteSheetImport(Editor* editor)
   Shell::sInstance->OpenFile(*config);
 }
 
-} // namespace Zero
+} // namespace Raverie

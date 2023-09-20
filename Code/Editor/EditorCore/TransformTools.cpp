@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // ManipulatorTool Events
@@ -12,14 +12,14 @@ DefineEvent(ManipulatorToolModified);
 DefineEvent(ManipulatorToolEnd);
 } // namespace Events
 
-ZilchDefineType(ManipulatorToolEvent, builder, type)
+RaverieDefineType(ManipulatorToolEvent, builder, type)
 {
-  ZilchBindGetter(OperationQueue);
-  ZilchBindGetter(Finished);
+  RaverieBindGetter(OperationQueue);
+  RaverieBindGetter(Finished);
 
-  ZilchBindFieldGetter(mGrabLocation);
-  ZilchBindFieldGetter(mStartWorldRectangle);
-  ZilchBindField(mEndWorldRectangle);
+  RaverieBindFieldGetter(mGrabLocation);
+  RaverieBindFieldGetter(mStartWorldRectangle);
+  RaverieBindField(mEndWorldRectangle);
 }
 
 ManipulatorToolEvent::ManipulatorToolEvent(ViewportMouseEvent* event) :
@@ -83,28 +83,28 @@ static const float cToolEpsilon = 0.001f;
 // scale 0].
 static const float cSizeEpsilon = cMinimumBoundingSize + cToolEpsilon;
 
-ZilchDefineType(ManipulatorTool, builder, type)
+RaverieDefineType(ManipulatorTool, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
 
   type->AddAttribute(ObjectAttributes::cTool);
 
-  ZeroBindEvent(Events::ManipulatorToolStart, ManipulatorToolEvent);
-  ZeroBindEvent(Events::ManipulatorToolModified, ManipulatorToolEvent);
-  ZeroBindEvent(Events::ManipulatorToolEnd, ManipulatorToolEvent);
+  RaverieBindEvent(Events::ManipulatorToolStart, ManipulatorToolEvent);
+  RaverieBindEvent(Events::ManipulatorToolModified, ManipulatorToolEvent);
+  RaverieBindEvent(Events::ManipulatorToolEnd, ManipulatorToolEvent);
 
-  ZeroBindDependency(MouseCapture);
+  RaverieBindDependency(MouseCapture);
 
-  ZilchBindFieldProperty(mSizeBoxCollider);
-  ZilchBindFieldProperty(mDuplicateOnCtrlDrag);
-  ZilchBindGetterSetterProperty(IncludeMode);
-  ZilchBindFieldProperty(mGrabMode);
-  ZilchBindFieldProperty(mSnapping);
-  ZilchBindGetterSetterProperty(SnapDistance);
+  RaverieBindFieldProperty(mSizeBoxCollider);
+  RaverieBindFieldProperty(mDuplicateOnCtrlDrag);
+  RaverieBindGetterSetterProperty(IncludeMode);
+  RaverieBindFieldProperty(mGrabMode);
+  RaverieBindFieldProperty(mSnapping);
+  RaverieBindGetterSetterProperty(SnapDistance);
 
-  ZilchBindFieldProperty(mToolColor)->ZeroSetPropertyGroup("Colors");
-  ZilchBindFieldProperty(mHoverColor)->ZeroSetPropertyGroup("Colors");
+  RaverieBindFieldProperty(mToolColor)->RaverieSetPropertyGroup("Colors");
+  RaverieBindFieldProperty(mHoverColor)->RaverieSetPropertyGroup("Colors");
 }
 
 ManipulatorTool::ManipulatorTool()
@@ -998,9 +998,9 @@ void ManipulatorTool::OnMouseDragMove(ViewportMouseEvent* event)
   oppositeGrab -= Vec3(startCenter, 0);
   oppositeGrab = mStartCenter3D + Math::Multiply(mObbBasis, oppositeGrab);
 
-  Property* areaSizeProperty = ZilchTypeId(Area)->GetProperty("Size");
-  Property* colliderOffsetProperty = ZilchTypeId(BoxCollider)->GetProperty("Offset");
-  Property* colliderSizeProperty = ZilchTypeId(BoxCollider)->GetProperty("Size");
+  Property* areaSizeProperty = RaverieTypeId(Area)->GetProperty("Size");
+  Property* colliderOffsetProperty = RaverieTypeId(BoxCollider)->GetProperty("Offset");
+  Property* colliderSizeProperty = RaverieTypeId(BoxCollider)->GetProperty("Size");
 
   ManipulatorToolEvent eventToSend(event);
   eventToSend.mGrabLocation = mLocation;
@@ -1157,10 +1157,10 @@ void ManipulatorTool::OnMouseDragMove(ViewportMouseEvent* event)
 
 void ManipulatorTool::OnMouseDragEnd(ViewportMouseEvent* event)
 {
-  Property* areaSizeProperty = ZilchTypeId(Area)->GetProperty("Size");
+  Property* areaSizeProperty = RaverieTypeId(Area)->GetProperty("Size");
 
-  Property* colliderOffsetProperty = ZilchTypeId(BoxCollider)->GetProperty("Offset");
-  Property* colliderSizeProperty = ZilchTypeId(BoxCollider)->GetProperty("Size");
+  Property* colliderOffsetProperty = RaverieTypeId(BoxCollider)->GetProperty("Offset");
+  Property* colliderSizeProperty = RaverieTypeId(BoxCollider)->GetProperty("Size");
 
   OperationQueue* queue = Z::gEditor->GetOperationQueue();
 
@@ -1370,4 +1370,4 @@ void ManipulatorTool::OnToolDraw(Event*)
   gDebugDraw->Add(Debug::Box(center, halfSize, mObbBasis).Color(toolColor).OnTop(true));
 }
 
-} // namespace Zero
+} // namespace Raverie

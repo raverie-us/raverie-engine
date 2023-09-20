@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 //                             Basic Native Type //
@@ -401,7 +401,7 @@ void MoveConstructObject(void* source, void* destination)
 
   // Use placement new to move construct in place at 'destination', moving the
   // source object
-  new (destination) T(ZeroMove(sourceObject));
+  new (destination) T(RaverieMove(sourceObject));
 }
 
 /// Returns true if the object at lhs is equal to the object at rhs, else false
@@ -751,4 +751,4 @@ public:
 template <>
 NativeType* NativeType::GetInstance<void>();
 
-} // namespace Zero
+} // namespace Raverie

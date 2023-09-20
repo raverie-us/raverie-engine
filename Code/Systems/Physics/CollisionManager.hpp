@@ -6,7 +6,7 @@ namespace Intersection
 struct Manifold;
 } // namespace Intersection
 
-namespace Zero
+namespace Raverie
 {
 
 struct ProxyResult;
@@ -71,4 +71,4 @@ private:
 
 } // namespace Physics
 
-} // namespace Zero
+} // namespace Raverie

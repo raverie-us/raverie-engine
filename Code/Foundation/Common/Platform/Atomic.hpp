@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 //
@@ -400,4 +400,4 @@ private:
   volatile underlying_type mValue;
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 const String DataResourceExtension = "data";
@@ -163,7 +163,7 @@ void LoadResource(HandleParam instance, Property* property, Type* resourceType, 
 }
 
 // ResourceMetaSerialization
-ZilchDefineType(ResourceMetaSerialization, builder, type)
+RaverieDefineType(ResourceMetaSerialization, builder, type)
 {
 }
 
@@ -246,7 +246,7 @@ String ResourceToString(const BoundType* type, const byte* value)
 //}
 
 // ResourceDisplayFunctions
-ZilchDefineType(ResourceDisplayFunctions, builder, Type)
+RaverieDefineType(ResourceDisplayFunctions, builder, Type)
 {
 }
 
@@ -269,26 +269,26 @@ String ResourceDisplayFunctions::GetDebugText(HandleParam object)
 
 Memory::Heap* Resource::sHeap = new Memory::Heap("ResourceObjects", Memory::GetRoot());
 
-ZilchDefineType(Resource, builder, type)
+RaverieDefineType(Resource, builder, type)
 {
   type->AddAttribute(ObjectAttributes::cResourceInterface);
 
   // METAREFACTOR Handle all this resource stuff
   // meta->StringConversion = ResourceStringConversion;
   // meta->SetDefaultValue = ResourceSetDefaultValue;
-  type->HandleManager = ZilchManagerId(ResourceHandleManager);
+  type->HandleManager = RaverieManagerId(ResourceHandleManager);
   type->Add(new ResourceMetaSerialization());
   type->Add(new ResourceDisplayFunctions());
   type->Add(new ResourceMetaOperations());
 
   // When serialized as a property, Resources save out a resource id and name
-  ZeroBindSerializationPrimitive();
+  RaverieBindSerializationPrimitive();
 
-  ZeroBindDocumented();
-  ZilchBindFieldGetterProperty(Name);
+  RaverieBindDocumented();
+  RaverieBindFieldGetterProperty(Name);
   type->ToStringFunction = ResourceToString;
 
-  ZeroBindTag(Tags::Resource);
+  RaverieBindTag(Tags::Resource);
 }
 
 void* Resource::operator new(size_t size)
@@ -314,7 +314,7 @@ Resource::Resource()
 
 HandleOf<Resource> Resource::Clone()
 {
-  BoundType* type = ZilchVirtualTypeId(this);
+  BoundType* type = RaverieVirtualTypeId(this);
   String msg = String::Format("%s's cannot be runtime cloned", type->Name.c_str());
   DoNotifyException("Failed to clone Resource", msg);
   return nullptr;
@@ -442,7 +442,7 @@ void Resource::GetTags(HashSet<String>& tags)
 void Resource::GetTags(Array<String>& coreTags, Array<String>& userTags)
 {
   // First add the resource type as a tag
-  coreTags.PushBack(ZilchVirtualTypeId(this)->Name);
+  coreTags.PushBack(RaverieVirtualTypeId(this)->Name);
 
   if (!FilterTag.Empty())
     coreTags.PushBack(FilterTag);
@@ -504,7 +504,7 @@ bool Resource::IsWritable()
     // Check dev config to override what the content item says
     if (!isWritable)
     {
-      if (DeveloperConfig* devConfig = Z::gEngine->GetConfigCog()->has(Zero::DeveloperConfig))
+      if (DeveloperConfig* devConfig = Z::gEngine->GetConfigCog()->has(Raverie::DeveloperConfig))
         isWritable = devConfig->mCanModifyReadOnlyResources;
     }
 
@@ -554,12 +554,12 @@ bool Resource::InheritRange::Empty()
   return (mCurrent == nullptr);
 }
 
-ZilchDefineType(DataResource, builder, type)
+RaverieDefineType(DataResource, builder, type)
 {
   type->Add(new DataResourceInheritance());
   type->AddAttribute(ObjectAttributes::cResourceInterface);
 
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 }
 
 void DataResource::Save(StringParam filename)
@@ -615,7 +615,7 @@ DataNode* DataResource::GetDataTree()
 }
 
 // Resource Inheritance
-ZilchDefineType(DataResourceInheritance, builder, type)
+RaverieDefineType(DataResourceInheritance, builder, type)
 {
 }
 
@@ -640,7 +640,7 @@ bool DataResourceInheritance::ShouldStoreLocalModifications(HandleParam object)
 }
 
 // Resource Meta Operations
-ZilchDefineType(ResourceMetaOperations, builder, type)
+RaverieDefineType(ResourceMetaOperations, builder, type)
 {
 }
 
@@ -684,4 +684,4 @@ void ResourceMetaOperations::RestoreUndoData(HandleParam object, AnyParam undoDa
     Z::gResources->mModifiedResources.Erase(resource->mResourceId);
 }
 
-} // namespace Zero
+} // namespace Raverie

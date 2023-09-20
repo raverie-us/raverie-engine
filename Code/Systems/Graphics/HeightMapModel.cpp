@@ -2,7 +2,7 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 const uint WeightTextureSize = 128;
@@ -33,13 +33,13 @@ GraphicalPatchIndices::GraphicalPatchIndices()
   }
 }
 
-ZilchDefineType(HeightMapModel, builder, type)
+RaverieDefineType(HeightMapModel, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindDocumented();
-  ZeroBindInterface(Graphical);
-  ZeroBindDependency(HeightMap);
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindComponent();
+  RaverieBindDocumented();
+  RaverieBindInterface(Graphical);
+  RaverieBindDependency(HeightMap);
+  RaverieBindSetup(SetupMode::DefaultSerialization);
 }
 
 void HeightMapModel::Serialize(Serializer& stream)
@@ -344,4 +344,4 @@ void HeightMapModel::CreateGraphicalPatchMesh(HeightPatch* heightPatch)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

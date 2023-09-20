@@ -48,17 +48,17 @@ private:
     Vec3 normal;
   };
 
-  static const size_t InvalidIndex = Zero::Array<Edge>::InvalidIndex;
+  static const size_t InvalidIndex = Raverie::Array<Edge>::InvalidIndex;
 
   void AddEdge(unsigned p0, unsigned p1);
 
-  Zero::Array<CSOVertex> mVertices;
-  Zero::Array<Edge> mEdges;
-  Zero::Array<Face> mFaces;
+  Raverie::Array<CSOVertex> mVertices;
+  Raverie::Array<Edge> mEdges;
+  Raverie::Array<Face> mFaces;
   unsigned mIndexClosest;
   float mDistClosest;
 
-  Zero::Array<unsigned> mVisibleFaces;
+  Raverie::Array<unsigned> mVisibleFaces;
   CSOVertex mDebugPoint;
   unsigned mStep;
 };

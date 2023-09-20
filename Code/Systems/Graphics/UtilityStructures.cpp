@@ -2,7 +2,7 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 void ShaderInputSetValue(ShaderInput& input, AnyParam value)
@@ -26,4 +26,4 @@ void ShaderInputSetValue(ShaderInput& input, AnyParam value)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -20,7 +20,7 @@
   the prismatic, so we don't want to add it back in)
 */
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Physics
@@ -49,20 +49,20 @@ struct GearPolicy : public DefaultFragmentPolicy<GearJoint>
 
 ImplementJointType(GearJoint);
 
-ZilchDefineType(GearJoint, builder, type)
+RaverieDefineType(GearJoint, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindInterface(Joint);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindInterface(Joint);
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetterProperty(Ratio);
-  ZilchBindGetterSetterProperty(Constant);
+  RaverieBindGetterSetterProperty(Ratio);
+  RaverieBindGetterSetterProperty(Constant);
 
-  ZilchBindGetterSetterProperty(JointAPath);
-  ZilchBindGetterSetterProperty(JointBPath);
-  ZilchBindGetterSetter(JointA);
-  ZilchBindGetterSetter(JointB);
+  RaverieBindGetterSetterProperty(JointAPath);
+  RaverieBindGetterSetterProperty(JointBPath);
+  RaverieBindGetterSetter(JointA);
+  RaverieBindGetterSetter(JointB);
 }
 
 GearJoint::GearJoint()
@@ -446,4 +446,4 @@ Joint* GearJoint::GetValidJointOnCog(Cog* cog)
 
 } // namespace Physics
 
-} // namespace Zero
+} // namespace Raverie

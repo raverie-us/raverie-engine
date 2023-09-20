@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Forward Declarations
@@ -11,7 +11,7 @@ class MouseManipulation;
 class Scratchboard : public Composite
 {
 public:
-  typedef Scratchboard ZilchSelf;
+  typedef Scratchboard RaverieSelf;
 
   /// Constructor.
   Scratchboard(Composite* parent);
@@ -87,4 +87,4 @@ private:
   Composite* mClientArea;
 };
 
-} // namespace Zero
+} // namespace Raverie

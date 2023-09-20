@@ -1,27 +1,27 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(UiLegacyToolTip, builder, type)
+RaverieDefineType(UiLegacyToolTip, builder, type)
 {
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindSetup(SetupMode::DefaultSerialization);
 
-  ZilchBindDefaultCopyDestructor();
+  RaverieBindDefaultCopyDestructor();
   type->CreatableInScript = true;
 
-  ZilchBindMethod(SetPlacement);
-  ZilchBindMethod(SetPriority);
+  RaverieBindMethod(SetPlacement);
+  RaverieBindMethod(SetPriority);
 
-  ZilchBindSetter(Padding);
+  RaverieBindSetter(Padding);
 
-  ZilchBindMethod(SetColorScheme);
-  ZilchBindSetter(BackgroundColor);
-  ZilchBindSetter(BorderColor);
+  RaverieBindMethod(SetColorScheme);
+  RaverieBindSetter(BackgroundColor);
+  RaverieBindSetter(BorderColor);
 
-  ZilchBindMethod(ClearText);
-  ZilchBindMethod(AddText);
+  RaverieBindMethod(ClearText);
+  RaverieBindMethod(AddText);
 }
 
 UiLegacyToolTip::UiLegacyToolTip()
@@ -132,4 +132,4 @@ void UiLegacyToolTip::AddText(StringParam text, Vec4Param color)
   toolTip->SetArrowTipTranslation(placement);
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 #define InfoSpan (8.0f + mInfoIcon->mSize.x + 6.0f)
@@ -12,12 +12,12 @@ DefineEvent(GetToolInfo);
 DefineEvent(ShortcutInfoEnter);
 } // namespace Events
 
-ZilchDefineType(ToolUiEvent, builder, type)
+RaverieDefineType(ToolUiEvent, builder, type)
 {
-  ZilchBindFieldProperty(mNeedsPropertyGrid);
-  ZilchBindGetterProperty(Parent);
-  ZilchBindGetterProperty(SelectTool);
-  ZeroBindDocumented();
+  RaverieBindFieldProperty(mNeedsPropertyGrid);
+  RaverieBindGetterProperty(Parent);
+  RaverieBindGetterProperty(SelectTool);
+  RaverieBindDocumented();
 }
 
 ToolUiEvent::ToolUiEvent(Composite* parent) :
@@ -63,7 +63,7 @@ public:
                                       Property* objectProperty = nullptr) override
   {
     BoundType* objectType = object.StoredType;
-    if (objectType->IsA(ZilchTypeId(Cog)))
+    if (objectType->IsA(RaverieTypeId(Cog)))
     {
       // All components with the "Tool" tag
       static Array<uint> sValidComponentIndices;
@@ -258,9 +258,9 @@ void ToolObjectManager::CreateOrUpdateCog(ToolData* object)
   mToolControl->SelectToolInternal(mToolControl->mActiveTool, ShowToolProperties::Auto);
 }
 
-ZilchDefineType(ToolControl, builder, type)
+RaverieDefineType(ToolControl, builder, type)
 {
-  ZeroBindEvent(Events::GetToolInfo, ToolUiEvent);
+  RaverieBindEvent(Events::GetToolInfo, ToolUiEvent);
 }
 
 ToolControl::ToolControl(Composite* parent) : Composite(parent), mTools(this), mCustomUi(nullptr)
@@ -272,9 +272,9 @@ ToolControl::ToolControl(Composite* parent) : Composite(parent), mTools(this), m
   SetName("Tools");
 
   // METAREFACTOR (also, find anywhere else people could be doing this!)
-  MetaDatabase::GetInstance()->mEventMap[Events::ToolActivate] = ZilchTypeId(Event);
-  MetaDatabase::GetInstance()->mEventMap[Events::ToolDeactivate] = ZilchTypeId(Event);
-  MetaDatabase::GetInstance()->mEventMap[Events::ToolDraw] = ZilchTypeId(Event);
+  MetaDatabase::GetInstance()->mEventMap[Events::ToolActivate] = RaverieTypeId(Event);
+  MetaDatabase::GetInstance()->mEventMap[Events::ToolDeactivate] = RaverieTypeId(Event);
+  MetaDatabase::GetInstance()->mEventMap[Events::ToolDraw] = RaverieTypeId(Event);
 
   Composite* toolRow = new Composite(this);
   toolRow->SetLayout(CreateStackLayout(LayoutDirection::LeftToRight, Vec2(6, 0), Thickness(6, 0, 0, 0)));
@@ -316,8 +316,8 @@ ToolControl::ToolControl(Composite* parent) : Composite(parent), mTools(this), m
   ConnectThisTo(mToolBox, Events::ItemSelected, OnToolPulldownSelect);
   ConnectThisTo(this, Events::KeyDown, OnKeyDown);
 
-  ZilchScriptManager* zilchManager = ZilchScriptManager::GetInstance();
-  ConnectThisTo(zilchManager, Events::ScriptsCompiledPostPatch, OnScriptsCompiled);
+  RaverieScriptManager* raverieManager = RaverieScriptManager::GetInstance();
+  ConnectThisTo(raverieManager, Events::ScriptsCompiledPostPatch, OnScriptsCompiled);
 }
 
 ToolControl::~ToolControl()
@@ -413,7 +413,7 @@ void ToolControl::OnInfoMouseEnter(MouseEvent*)
   // Get the shortcuts documentation for all components of the tool.
   forRange (Component* component, mActiveTool->mCog->GetComponents())
   {
-    BoundType* type = ZilchVirtualTypeId(component);
+    BoundType* type = RaverieVirtualTypeId(component);
     const ShortcutSet* shortcuts = Z::gShortcutsDoc->FindSet(type->Name);
 
     if (shortcuts)
@@ -636,4 +636,4 @@ void ToolControl::UpdateShortcutsTip()
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -2,7 +2,7 @@
 #include "Precompiled.hpp"
 #include "Rune.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 Rune::Rune() : value(Invalid)
@@ -78,4 +78,4 @@ size_t Rune::Hash() const
   return HashUint(value);
 }
 
-} // namespace Zero
+} // namespace Raverie

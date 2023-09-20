@@ -1,11 +1,11 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Meta Resource
-ZilchDefineType(MetaResource, builder, type)
+RaverieDefineType(MetaResource, builder, type)
 {
 }
 
@@ -20,9 +20,9 @@ void MetaResource::SetResource(Resource* resource)
 }
 
 // MetaEditor Script Object
-ZilchDefineType(MetaEditorScriptObject, builder, type)
+RaverieDefineType(MetaEditorScriptObject, builder, type)
 {
-  ZilchBindField(mAutoRegister)->AddAttribute(PropertyAttributes::cOptional);
+  RaverieBindField(mAutoRegister)->AddAttribute(PropertyAttributes::cOptional);
 }
 
 MetaEditorScriptObject::MetaEditorScriptObject() : mAutoRegister(true)
@@ -56,7 +56,7 @@ void MetaEditorScriptObject::PostProcess(Status& status, ReflectionObject* owner
 }
 
 // Meta Dependency
-ZilchDefineType(MetaDependency, builder, type)
+RaverieDefineType(MetaDependency, builder, type)
 {
 }
 
@@ -71,7 +71,7 @@ void MetaDependency::PostProcess(Status& status, ReflectionObject* owner)
   BoundType* classType = property->Owner;
 
   // It's only valid for Components to have dependencies
-  if (!classType->IsA(ZilchTypeId(Component)))
+  if (!classType->IsA(RaverieTypeId(Component)))
   {
     String message = "Dependency properties can only be on Component types";
     status.SetFailed(message);
@@ -88,13 +88,13 @@ void MetaDependency::PostProcess(Status& status, ReflectionObject* owner)
     return;
   }
 
-  CogComponentMeta* componentMeta = classType->HasOrAdd<::Zero::CogComponentMeta>(classType);
+  CogComponentMeta* componentMeta = classType->HasOrAdd<::Raverie::CogComponentMeta>(classType);
   componentMeta->mDependencies.Insert(propertyType);
   componentMeta->mSetupMode = SetupMode::DefaultConstructor;
 }
 
 // Meta Interface
-ZilchDefineType(MetaInterface, builder, type)
+RaverieDefineType(MetaInterface, builder, type)
 {
 }
 
@@ -108,9 +108,9 @@ void MetaInterface::PostProcess(Status& status, ReflectionObject* owner)
 
   BoundType* baseType = classType->BaseType;
 
-  CogComponentMeta* componentMeta = classType->HasOrAdd<::Zero::CogComponentMeta>(classType);
+  CogComponentMeta* componentMeta = classType->HasOrAdd<::Raverie::CogComponentMeta>(classType);
   componentMeta->AddInterface(baseType);
   componentMeta->mSetupMode = SetupMode::DefaultConstructor;
 }
 
-} // namespace Zero
+} // namespace Raverie

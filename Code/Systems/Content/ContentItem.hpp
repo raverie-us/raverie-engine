@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 class ContentItemHandleManager : public HandleManager
 {
@@ -23,7 +23,7 @@ typedef uint ContentItemId;
 class ContentItem : public EventObject
 {
 public:
-  ZilchDeclareType(ContentItem, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ContentItem, TypeCopyMode::ReferenceType);
 
   ContentItem();
   virtual ~ContentItem();
@@ -110,7 +110,7 @@ public:
   template <typename type>
   type* Has()
   {
-    return static_cast<type*>(QueryComponentId(ZilchTypeId(type)));
+    return static_cast<type*>(QueryComponentId(RaverieTypeId(type)));
   }
 
   // Called when content item is initialized for derived classes.
@@ -125,10 +125,10 @@ protected:
 class ContentItemMetaOperations : public MetaOperations
 {
 public:
-  ZilchDeclareType(ContentItemMetaOperations, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ContentItemMetaOperations, TypeCopyMode::ReferenceType);
 
   /// MetaOperations Interface.
   void ObjectModified(HandleParam object, bool intermediateChange) override;
 };
 
-} // namespace Zero
+} // namespace Raverie

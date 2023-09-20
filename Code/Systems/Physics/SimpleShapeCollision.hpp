@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Not currently in use. Due to some shapes needing the ability to return
@@ -207,4 +207,4 @@ bool CastVsShape(const CastType& castShape, Collider* collider, ProxyResult* res
   return CastShapes(castShape, shape2, nullptr);
 }
 
-} // namespace Zero
+} // namespace Raverie

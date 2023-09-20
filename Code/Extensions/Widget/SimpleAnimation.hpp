@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 inline Action* MoveWidgetAction(Widget* widget, Vec3 position, float time)
@@ -79,4 +79,4 @@ inline void CenterToWindow(Composite* parent, Widget* child, bool animate)
 
 void AnimateLayout(Array<LayoutResult>& Results, bool animate);
 
-} // namespace Zero
+} // namespace Raverie

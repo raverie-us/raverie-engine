@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 bool EqualsExact(const Vec2& a, const Vec2& b)
@@ -228,7 +228,7 @@ TrapezoidMap::TrapezoidMap(const Array<Vec2>& vertices, const Array<uint>& conto
   while (!order.Empty())
   {
     s32 index = mRandom.Uint32() % order.Size();
-    Zero::Swap(order[index], order.Back());
+    Raverie::Swap(order[index], order.Back());
 
     random.PushBack(order.Back());
     order.PopBack();
@@ -454,7 +454,7 @@ bool TrapezoidMap::IsLeft(EdgeId start, EdgeId end, const Vec2& point) const
 
   if (!IsAboveInternal(end, start))
   {
-    Zero::Swap(p1, p2);
+    Raverie::Swap(p1, p2);
   }
 
   return Cross(p2 - p1, point - p1) > 0.f;
@@ -470,8 +470,8 @@ bool TrapezoidMap::IsLeftInternal(EdgeId start, EdgeId end, VertexId pointId) co
   Vec2 point = mVertices[pointId];
   if (!IsAboveInternal(top, bot))
   {
-    Zero::Swap(p1, p2);
-    Zero::Swap(bot, top);
+    Raverie::Swap(p1, p2);
+    Raverie::Swap(bot, top);
   }
 
   // If the point is on and/or collinear to the edge
@@ -1282,4 +1282,4 @@ void TrapezoidMap::InsertVertex(NodeId rootId, VertexId vertexId)
   Initialize(node, Node::Vertex, vertexId, leftChildId, rightChildId);
 }
 
-} // namespace Zero
+} // namespace Raverie

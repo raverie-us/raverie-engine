@@ -3,9 +3,9 @@
 
 #include "Foundation/SpatialPartition/AvlDynamicAabbTreeBroadPhase.hpp"
 
-namespace Zero
+namespace Raverie
 {
-ZilchDefineType(AvlDynamicAabbTreeBroadPhase, builder, type)
+RaverieDefineType(AvlDynamicAabbTreeBroadPhase, builder, type)
 {
 }
 
@@ -17,4 +17,4 @@ AvlDynamicAabbTreeBroadPhase::~AvlDynamicAabbTreeBroadPhase()
 {
 }
 
-} // namespace Zero
+} // namespace Raverie

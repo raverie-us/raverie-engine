@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 namespace Events
 {
@@ -22,7 +22,7 @@ struct FileDialogConfig;
 class OsShell : public System
 {
 public:
-  ZilchDeclareType(OsShell, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(OsShell, TypeCopyMode::ReferenceType);
 
   OsShell();
 
@@ -42,7 +42,7 @@ public:
 class ClipboardEvent : public Event
 {
 public:
-  ZilchDeclareType(ClipboardEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ClipboardEvent, TypeCopyMode::ReferenceType);
   void Clear();
   void SetText(StringParam text);
   String GetText();
@@ -58,7 +58,7 @@ public:
 class OsFileSelection : public Event
 {
 public:
-  ZilchDeclareType(OsFileSelection, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(OsFileSelection, TypeCopyMode::ReferenceType);
   bool Success;
   Array<String> Files;
 };
@@ -80,4 +80,4 @@ private:
   static void Callback(Array<String>& files, void* userData);
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,6 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 
-namespace Zero
+namespace Raverie
 {
 
 template <typename ClientDataType>
@@ -217,4 +217,4 @@ AvlDynamicAabbTree<ClientDataType>::~AvlDynamicAabbTree()
   BaseType::Clear();
 }
 
-} // namespace Zero
+} // namespace Raverie

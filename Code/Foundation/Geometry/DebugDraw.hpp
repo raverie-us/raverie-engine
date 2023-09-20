@@ -42,7 +42,7 @@
     AddInternal(spaceId, DebugDrawObjectAny(object));                                                                  \
   }
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Debug
@@ -195,7 +195,7 @@ public:
 class Arc : public DebugDrawObject<Arc>
 {
 public:
-  ZilchDeclareType(Arc, TypeCopyMode::ValueType);
+  RaverieDeclareType(Arc, TypeCopyMode::ValueType);
 
   DebugType::Enum GetDebugType() override
   {
@@ -223,7 +223,7 @@ public:
 class Box : public DebugDrawObject<Box>
 {
 public:
-  ZilchDeclareType(Box, TypeCopyMode::ValueType);
+  RaverieDeclareType(Box, TypeCopyMode::ValueType);
 
   DebugType::Enum GetDebugType() override
   {
@@ -270,7 +270,7 @@ public:
   {
   }
 
-  Box(const Zero::Aabb& aabb) :
+  Box(const Raverie::Aabb& aabb) :
       mPosition(aabb.GetCenter()),
       mHalfExtents(Math::ToVector2(aabb.GetHalfExtents())),
       mRotation(Quat::cIdentity)
@@ -291,7 +291,7 @@ public:
 class Capsule : public DebugDrawObject<Capsule>
 {
 public:
-  ZilchDeclareType(Capsule, TypeCopyMode::ValueType);
+  RaverieDeclareType(Capsule, TypeCopyMode::ValueType);
 
   DebugType::Enum GetDebugType() override
   {
@@ -314,7 +314,7 @@ public:
   {
   }
 
-  Capsule(const Zero::Capsule& capsule) : mStart(capsule.PointA), mEnd(capsule.PointB), mRadius(capsule.Radius)
+  Capsule(const Raverie::Capsule& capsule) : mStart(capsule.PointA), mEnd(capsule.PointB), mRadius(capsule.Radius)
   {
   }
 
@@ -330,7 +330,7 @@ public:
 class Circle : public DebugDrawObject<Circle>
 {
 public:
-  ZilchDeclareType(Circle, TypeCopyMode::ValueType);
+  RaverieDeclareType(Circle, TypeCopyMode::ValueType);
 
   DebugType::Enum GetDebugType() override
   {
@@ -358,7 +358,7 @@ public:
 class Cone : public DebugDrawObject<Cone>
 {
 public:
-  ZilchDeclareType(Cone, TypeCopyMode::ValueType);
+  RaverieDeclareType(Cone, TypeCopyMode::ValueType);
 
   DebugType::Enum GetDebugType() override
   {
@@ -392,7 +392,7 @@ public:
 class Cylinder : public DebugDrawObject<Cylinder>
 {
 public:
-  ZilchDeclareType(Cylinder, TypeCopyMode::ValueType);
+  RaverieDeclareType(Cylinder, TypeCopyMode::ValueType);
 
   DebugType::Enum GetDebugType() override
   {
@@ -415,7 +415,7 @@ public:
   {
   }
 
-  Cylinder(const Zero::Cylinder& cylinder) : mStart(cylinder.PointA), mEnd(cylinder.PointB), mRadius(cylinder.Radius)
+  Cylinder(const Raverie::Cylinder& cylinder) : mStart(cylinder.PointA), mEnd(cylinder.PointB), mRadius(cylinder.Radius)
   {
   }
 
@@ -431,7 +431,7 @@ public:
 class Frustum : public DebugDrawObject<Frustum>
 {
 public:
-  ZilchDeclareType(Frustum, TypeCopyMode::ValueType);
+  RaverieDeclareType(Frustum, TypeCopyMode::ValueType);
 
   DebugType::Enum GetDebugType() override
   {
@@ -451,7 +451,7 @@ public:
     Math::Swap(mPoints[4], mPoints[5]);
   }
 
-  Frustum(const Zero::Frustum& frustum)
+  Frustum(const Raverie::Frustum& frustum)
   {
     frustum.GetPoints(mPoints);
     Math::Swap(mPoints[0], mPoints[1]);
@@ -464,7 +464,7 @@ public:
 class Line : public DebugDrawObject<Line>
 {
 public:
-  ZilchDeclareType(Line, TypeCopyMode::ValueType);
+  RaverieDeclareType(Line, TypeCopyMode::ValueType);
 
   DebugType::Enum GetDebugType() override
   {
@@ -484,11 +484,11 @@ public:
   {
   }
 
-  Line(const Zero::Ray& ray, float t = 1.0f) : mStart(ray.Start), mEnd(ray.Start + ray.Direction * t), mHeadSize(1.0f)
+  Line(const Raverie::Ray& ray, float t = 1.0f) : mStart(ray.Start), mEnd(ray.Start + ray.Direction * t), mHeadSize(1.0f)
   {
   }
 
-  Line(const Zero::Segment& segment) : mStart(segment.Start), mEnd(segment.End), mHeadSize(0.0f)
+  Line(const Raverie::Segment& segment) : mStart(segment.Start), mEnd(segment.End), mHeadSize(0.0f)
   {
   }
 
@@ -507,7 +507,7 @@ public:
 class LineCross : public DebugDrawObject<LineCross>
 {
 public:
-  ZilchDeclareType(LineCross, TypeCopyMode::ValueType);
+  RaverieDeclareType(LineCross, TypeCopyMode::ValueType);
 
   DebugType::Enum GetDebugType() override
   {
@@ -533,7 +533,7 @@ public:
 class Obb : public DebugDrawObject<Obb>
 {
 public:
-  ZilchDeclareType(Obb, TypeCopyMode::ValueType);
+  RaverieDeclareType(Obb, TypeCopyMode::ValueType);
 
   DebugType::Enum GetDebugType() override
   {
@@ -580,14 +580,14 @@ public:
   {
   }
 
-  Obb(const Zero::Obb& obb) :
+  Obb(const Raverie::Obb& obb) :
       mPosition(obb.Center),
       mHalfExtents(obb.HalfExtents),
       mRotation(Math::ToQuaternion(obb.Basis))
   {
   }
 
-  Obb(const Zero::Aabb& aabb) :
+  Obb(const Raverie::Aabb& aabb) :
       mPosition(aabb.GetCenter()),
       mHalfExtents(aabb.GetHalfExtents()),
       mRotation(Quat::cIdentity)
@@ -608,7 +608,7 @@ public:
 class Sphere : public DebugDrawObject<Sphere>
 {
 public:
-  ZilchDeclareType(Sphere, TypeCopyMode::ValueType);
+  RaverieDeclareType(Sphere, TypeCopyMode::ValueType);
 
   DebugType::Enum GetDebugType() override
   {
@@ -624,7 +624,7 @@ public:
   {
   }
 
-  Sphere(const Zero::Sphere& sphere) : mPosition(sphere.mCenter), mRadius(sphere.mRadius)
+  Sphere(const Raverie::Sphere& sphere) : mPosition(sphere.mCenter), mRadius(sphere.mRadius)
   {
   }
 
@@ -643,7 +643,7 @@ public:
   // This has to be a reference type for now since this contains a string.
   // If copy constructors ever get implemented then this can return to a value
   // type.
-  ZilchDeclareType(Text, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Text, TypeCopyMode::ReferenceType);
 
   DebugType::Enum GetDebugType() override
   {
@@ -678,7 +678,7 @@ public:
 class Triangle : public DebugDrawObject<Triangle>
 {
 public:
-  ZilchDeclareType(Triangle, TypeCopyMode::ValueType);
+  RaverieDeclareType(Triangle, TypeCopyMode::ValueType);
 
   DebugType::Enum GetDebugType() override
   {
@@ -694,7 +694,7 @@ public:
   {
   }
 
-  Triangle(const Zero::Triangle& tri) : mPoint0(tri.p0), mPoint1(tri.p1), mPoint2(tri.p2)
+  Triangle(const Raverie::Triangle& tri) : mPoint0(tri.p0), mPoint1(tri.p1), mPoint2(tri.p2)
   {
   }
 
@@ -733,13 +733,13 @@ private:
 // DebugPrimitives.inl The 0 resolves the last trailing comma from
 // ConstMax<sizeof(X), The ; ends the statement for cMaxDebugSize
 static const uint cMaxDebugSize =
-#define ZeroDebugPrimitive(X) ConstMax < sizeof(X),
+#define RaverieDebugPrimitive(X) ConstMax < sizeof(X),
 #include "DebugPrimitives.inl"
-#undef ZeroDebugPrimitive
+#undef RaverieDebugPrimitive
     0
-#define ZeroDebugPrimitive(X) > ::Result
+#define RaverieDebugPrimitive(X) > ::Result
 #include "DebugPrimitives.inl"
-#undef ZeroDebugPrimitive
+#undef RaverieDebugPrimitive
     ;
 
 typedef VirtualAny<DebugDrawObjectBase, cMaxDebugSize> DebugDrawObjectAny;
@@ -753,9 +753,9 @@ public:
 
   DebugDraw();
 
-#define ZeroDebugPrimitive(X) DebugObjectAddMethods(X);
+#define RaverieDebugPrimitive(X) DebugObjectAddMethods(X);
 #include "DebugPrimitives.inl"
-#undef ZeroDebugPrimitive
+#undef RaverieDebugPrimitive
 
   DebugDrawObjectArray::range GetDebugObjects(uint spaceId);
   void ClearObjects();
@@ -784,7 +784,7 @@ public:
 // Global debug drawer
 extern Debug::DebugDraw* gDebugDraw;
 
-} // namespace Zero
+} // namespace Raverie
 
 #undef CustomPropertySetter
 #undef PropertySetter

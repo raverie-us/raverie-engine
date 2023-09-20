@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 u32 CountTrailingZeros(u32 x)
@@ -14,4 +14,4 @@ u32 CountLeadingZeros(u32 x)
   return CountLeadingZerosNonIntrinsic(x);
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,14 +1,14 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Environment object for command-line arguments and environmental variables.
 class Environment : public Object
 {
 public:
-  ZilchDeclareType(Environment, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Environment, TypeCopyMode::ReferenceType);
 
   static Environment* GetInstance();
 
@@ -53,4 +53,4 @@ public:
   }
 };
 
-} // namespace Zero
+} // namespace Raverie

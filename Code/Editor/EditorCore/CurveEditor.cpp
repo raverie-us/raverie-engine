@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace CurveEditorUi
@@ -26,7 +26,7 @@ DefineEvent(MouseExitCurve);
 DefineEvent(CurveDoubleClicked);
 } // namespace Events
 
-ZilchDefineType(CurveEvent, builder, type)
+RaverieDefineType(CurveEvent, builder, type)
 {
 }
 
@@ -1026,7 +1026,7 @@ void CurveEditorToolbar::range::FindNextControlPoint()
     Draggable* draggable = mRange.Front();
 
     // Stop once we've hit a control point
-    if (ZilchVirtualTypeId(draggable)->IsA(ZilchTypeId(ControlPoint)))
+    if (RaverieVirtualTypeId(draggable)->IsA(RaverieTypeId(ControlPoint)))
       return;
 
     mRange.PopFront();
@@ -1087,7 +1087,7 @@ public:
   }
 };
 
-ZilchDefineType(Draggable, builder, type)
+RaverieDefineType(Draggable, builder, type)
 {
 }
 
@@ -1176,7 +1176,7 @@ void Draggable::DeSelect()
   mEditor->DeSelect(this);
 }
 
-ZilchDefineType(ControlPoint, builder, type)
+RaverieDefineType(ControlPoint, builder, type)
 {
 }
 
@@ -1491,7 +1491,7 @@ ControlPoint* ControlPoint::GetNeighborControlPoint(int direction)
   return nullptr;
 }
 
-ZilchDefineType(Tangent, builder, type)
+RaverieDefineType(Tangent, builder, type)
 {
 }
 
@@ -1658,7 +1658,7 @@ void Tangent::OnRightMouseUp(MouseEvent* e)
     itemSplit = menu->AddEntry("Join");
   else
     itemSplit = menu->AddEntry("Split");
-  Zero::Connect(itemSplit, Events::MenuItemSelected, mControlPoint, &ControlPoint::OnSplitTangents);
+  Raverie::Connect(itemSplit, Events::MenuItemSelected, mControlPoint, &ControlPoint::OnSplitTangents);
 
   // Create the linear button
   cstr linearTangentName = "Linear Tangents";
@@ -1737,4 +1737,4 @@ bool Tangent::IsWeighted()
 
 } // namespace CurveEditing
 
-} // namespace Zero
+} // namespace Raverie

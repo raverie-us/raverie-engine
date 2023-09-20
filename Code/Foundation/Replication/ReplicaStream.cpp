@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 //                               ReplicaStream //
@@ -684,4 +684,4 @@ bool ReplicaStream::ReadChannelData(Replica* replica) const
   return true;
 }
 
-} // namespace Zero
+} // namespace Raverie

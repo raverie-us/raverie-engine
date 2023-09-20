@@ -4,14 +4,14 @@
 #include "Foundation/Geometry/QuickHull3D.hpp"
 #include "IndexedHalfEdgeMesh.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 /// Bound interface wrapper around quickhull3D. Allows adding points to build a
 /// mesh and then iterating over the resultant index-based half-edge-mesh.
 class QuickHull3DInterface
 {
-  ZilchDeclareType(QuickHull3DInterface, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(QuickHull3DInterface, TypeCopyMode::ReferenceType);
 
   QuickHull3DInterface();
   QuickHull3DInterface(const QuickHull3DInterface& rhs);
@@ -47,4 +47,4 @@ class QuickHull3DInterface
   HandleOf<IndexedHalfEdgeMesh> mMesh;
 };
 
-} // namespace Zero
+} // namespace Raverie

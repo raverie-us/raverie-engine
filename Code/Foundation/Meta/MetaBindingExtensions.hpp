@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Object Attributes
@@ -25,7 +25,7 @@ extern const String cProxy;
 /// The proxy was created because we failed to construct an object of this type
 /// (likely due to an exception in the constructor)
 extern const String cExceptionProxy;
-/// For ZilchComponent's, Initialize isn't called in an Editor Space. However,
+/// For RaverieComponent's, Initialize isn't called in an Editor Space. However,
 /// it the Component has this attribute, Initialize will be called.
 extern const String cRunInEditor;
 /// Used to determine whether a type that 'IsA(Resource)' is an interface, or an
@@ -142,27 +142,27 @@ namespace CommonGroups
 extern const String cAdvanced;
 } // namespace CommonGroups
 
-#define ZeroAdvancedGroup()                                                                                            \
-  AddAttribute(::Zero::PropertyAttributes::cGroup)->AddParameter(::Zero::CommonGroups::cAdvanced)
+#define RaverieAdvancedGroup()                                                                                            \
+  AddAttribute(::Raverie::PropertyAttributes::cGroup)->AddParameter(::Raverie::CommonGroups::cAdvanced)
 
 // Uncategorized
 extern const String cInvalidTypeName;
 
-#define ZeroBindDocumented() type->AddAttribute(::Zero::ObjectAttributes::cDocumented)
-#define ZeroBindExpanded() type->AddAttribute(::Zero::ObjectAttributes::cExpanded)
+#define RaverieBindDocumented() type->AddAttribute(::Raverie::ObjectAttributes::cDocumented)
+#define RaverieBindExpanded() type->AddAttribute(::Raverie::ObjectAttributes::cExpanded)
 
-#define ZeroBindSetup(SetupMode) type->HasOrAdd<::Zero::CogComponentMeta>(type)->mSetupMode = (SetupMode)
-#define ZeroBindDependency(Type) type->HasOrAdd<::Zero::CogComponentMeta>(type)->mDependencies.Insert(ZilchTypeId(Type))
-#define ZeroBindInterface(Type) type->HasOrAdd<::Zero::CogComponentMeta>(type)->AddInterface(ZilchTypeId(Type))
-#define ZeroBindTag(Tag) type->HasOrAdd<::Zero::CogComponentMeta>(type)->mTags.Insert(Tag)
-#define ZeroBindPropertyRename(oldName) Add(new ::Zero::MetaPropertyRename(oldName))
-#define ZeroSetPropertyGroup(groupName) Add(new ::Zero::MetaGroup(groupName))
-#define ZeroLocalModificationOverride() AddAttribute(::Zero::PropertyAttributes::cLocalModificationOverride)
+#define RaverieBindSetup(SetupMode) type->HasOrAdd<::Raverie::CogComponentMeta>(type)->mSetupMode = (SetupMode)
+#define RaverieBindDependency(Type) type->HasOrAdd<::Raverie::CogComponentMeta>(type)->mDependencies.Insert(RaverieTypeId(Type))
+#define RaverieBindInterface(Type) type->HasOrAdd<::Raverie::CogComponentMeta>(type)->AddInterface(RaverieTypeId(Type))
+#define RaverieBindTag(Tag) type->HasOrAdd<::Raverie::CogComponentMeta>(type)->mTags.Insert(Tag)
+#define RaverieBindPropertyRename(oldName) Add(new ::Raverie::MetaPropertyRename(oldName))
+#define RaverieSetPropertyGroup(groupName) Add(new ::Raverie::MetaGroup(groupName))
+#define RaverieLocalModificationOverride() AddAttribute(::Raverie::PropertyAttributes::cLocalModificationOverride)
 
 void BindEventSent(LibraryBuilder& builder, BoundType* boundType, StringParam eventName, BoundType* eventType);
-#define ZeroBindEvent(EventName, EventType) BindEventSent(builder, type, (EventName), ZilchTypeId(EventType))
-#define ZeroBindExternalEvent(EventName, EventType, SenderType)                                                        \
-  BindEventSent(builder, ZilchTypeId(SenderType), (EventName), ZilchTypeId(EventType))
+#define RaverieBindEvent(EventName, EventType) BindEventSent(builder, type, (EventName), RaverieTypeId(EventType))
+#define RaverieBindExternalEvent(EventName, EventType, SenderType)                                                        \
+  BindEventSent(builder, RaverieTypeId(SenderType), (EventName), RaverieTypeId(EventType))
 
 // Events
 namespace Events
@@ -187,7 +187,7 @@ DeclareEvent(ObjectModified);
 class MetaOperations : public ReferenceCountedEventObject
 {
 public:
-  ZilchDeclareType(MetaOperations, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MetaOperations, TypeCopyMode::ReferenceType);
 
   // When a property is changed in the editor, this should be called to properly
   // send events or run any special functionality per object type.
@@ -244,7 +244,7 @@ public:
 class PropertyEvent : public Event
 {
 public:
-  ZilchDeclareType(PropertyEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(PropertyEvent, TypeCopyMode::ReferenceType);
 
   PropertyEvent(HandleParam object, PropertyPathParam property, AnyParam oldValue, AnyParam newValue);
 
@@ -258,7 +258,7 @@ public:
 class TypeEvent : public Event
 {
 public:
-  ZilchDeclareType(TypeEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(TypeEvent, TypeCopyMode::ReferenceType);
   TypeEvent(BoundType* type) : mType(type)
   {
   }
@@ -270,7 +270,7 @@ public:
 class MetaDisplay : public ReferenceCountedEventObject
 {
 public:
-  ZilchDeclareType(MetaDisplay, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MetaDisplay, TypeCopyMode::ReferenceType);
 
   virtual String GetName(HandleParam object) = 0;
   virtual String GetDebugText(HandleParam object) = 0;
@@ -280,7 +280,7 @@ public:
 class TypeNameDisplay : public MetaDisplay
 {
 public:
-  ZilchDeclareType(TypeNameDisplay, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(TypeNameDisplay, TypeCopyMode::ReferenceType);
 
   String GetName(HandleParam object) override;
   String GetDebugText(HandleParam object) override;
@@ -290,7 +290,7 @@ public:
 class StringNameDisplay : public MetaDisplay
 {
 public:
-  ZilchDeclareType(StringNameDisplay, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(StringNameDisplay, TypeCopyMode::ReferenceType);
   StringNameDisplay(StringParam string);
 
   String GetName(HandleParam object) override;
@@ -379,7 +379,7 @@ typedef MetaTransformInstance& MetaTransformParam;
 class MetaTransform : public ReferenceCountedEventObject
 {
 public:
-  ZilchDeclareType(MetaTransform, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MetaTransform, TypeCopyMode::ReferenceType);
   virtual MetaTransformInstance GetInstance(HandleParam object) = 0;
 };
 
@@ -390,29 +390,29 @@ public:
 #define hasAll(type) HasRange<type>()
 
 // Array Binding
-#define ZeroDefineArrayType(arrayType)                                                                                 \
-  ZilchDefineTemplateType(ZeroMetaArray<arrayType>, builder, type)                                                     \
+#define RaverieDefineArrayType(arrayType)                                                                                 \
+  RaverieDefineTemplateType(RaverieMetaArray<arrayType>, builder, type)                                                     \
   {                                                                                                                    \
   }                                                                                                                    \
                                                                                                                        \
-  ZilchDefineExternalBaseType(arrayType, TypeCopyMode::ReferenceType, builder, type)                                   \
+  RaverieDefineExternalBaseType(arrayType, TypeCopyMode::ReferenceType, builder, type)                                   \
   {                                                                                                                    \
-    type->HandleManager = ZilchManagerId(PointerManager);                                                              \
-    type->Add(new ZeroMetaArray<arrayType>());                                                                         \
+    type->HandleManager = RaverieManagerId(PointerManager);                                                              \
+    type->Add(new RaverieMetaArray<arrayType>());                                                                         \
   }
 
-#define ZeroInitializeArrayTypeAs(arrayType, name)                                                                     \
-  ZilchInitializeTypeAs(ZeroMetaArray<arrayType>, "ZeroMetaArray" name);                                               \
-  ZilchInitializeExternalTypeAs(arrayType, name);
+#define RaverieInitializeArrayTypeAs(arrayType, name)                                                                     \
+  RaverieInitializeTypeAs(RaverieMetaArray<arrayType>, "RaverieMetaArray" name);                                               \
+  RaverieInitializeExternalTypeAs(arrayType, name);
 
 // Meta Attribute
 class MetaAttribute : public ReferenceCountedEventObject
 {
 public:
-  ZilchDeclareType(MetaAttribute, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MetaAttribute, TypeCopyMode::ReferenceType);
   virtual void PostProcess(Status& status, ReflectionObject* owner)
   {
   }
 };
 
-} // namespace Zero
+} // namespace Raverie

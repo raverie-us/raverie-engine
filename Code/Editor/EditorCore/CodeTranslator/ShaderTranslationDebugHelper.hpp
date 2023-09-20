@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class ScriptEditor;
@@ -9,15 +9,15 @@ class SearchViewEvent;
 class SearchView;
 class FloatingSearchView;
 
-// Helper to filter zilch fragments based upon an attribute
+// Helper to filter raverie fragments based upon an attribute
 class FragmentSearchProvider : public SearchProvider
 {
 public:
   FragmentSearchProvider(StringParam attribute);
   void Search(SearchData& search) override;
   void Search(SearchData& search,
-              ZilchShaderIRLibrary* shaderLibrary,
-              HashSet<ZilchShaderIRLibrary*>& visitedLibraries);
+              RaverieShaderIRLibrary* shaderLibrary,
+              HashSet<RaverieShaderIRLibrary*>& visitedLibraries);
 
   // The attribute to filter fragments by
   String mAttribute;
@@ -33,12 +33,12 @@ public:
 
   String mName;
 
-  typedef Zilch::Ref<ZilchShaderIRBackend> BackendPassRef;
+  typedef Raverie::Ref<RaverieShaderIRBackend> BackendPassRef;
   BackendPassRef mBackend;
 };
 
 // A result from debugging shader translation. This entry might not
-// actually be a translation as it could also be the zilch composite.
+// actually be a translation as it could also be the raverie composite.
 class ShaderTranslationEntry
 {
 public:
@@ -49,7 +49,7 @@ public:
   String ToString(bool shortFormat = false) const;
 
   // The name of this entry (typically the fragment name or something like
-  // "ZilchVertex").
+  // "RaverieVertex").
   String mName;
   // The translation string
   String mValue;
@@ -64,8 +64,8 @@ public:
 class ShaderTranslationDebugHelper : public Composite
 {
 public:
-  typedef Zilch::Ref<ShaderTranslationPassResult> TranslationPassResultRef;
-  typedef ShaderTranslationDebugHelper ZilchSelf;
+  typedef Raverie::Ref<ShaderTranslationPassResult> TranslationPassResultRef;
+  typedef ShaderTranslationDebugHelper RaverieSelf;
   ShaderTranslationDebugHelper(Composite* parent);
 
 private:
@@ -82,17 +82,17 @@ private:
   void OnMaterialSelected(SearchViewEvent* e);
   void OnRenderPassClicked(Event* e);
   void OnRenderPassSelected(SearchViewEvent* e);
-  void OnCompileZilchFragments(ZilchCompileFragmentEvent* event);
-  void OnScriptsCompiledPrePatch(ZilchCompileEvent* event);
+  void OnCompileRaverieFragments(RaverieCompileFragmentEvent* event);
+  void OnScriptsCompiledPrePatch(RaverieCompileEvent* event);
   void OnScriptCompilationFailed(Event* event);
-  // void ValidateComposition(ZilchShaderGenerator& generator,
-  // ZilchFragmentInfo& info, FragmentType::Enum fragmentType);
+  // void ValidateComposition(RaverieShaderGenerator& generator,
+  // RaverieFragmentInfo& info, FragmentType::Enum fragmentType);
   void OnRunTranslation(Event* e);
   void OnScriptDisplayChanged(Event* e);
 
-  ZilchShaderIRLibraryRef BuildShaderLibrary(ZilchShaderGenerator& generator,
-                                             ZilchShaderIRCompositor::ShaderDefinition& shaderDef);
-  bool CompilePipeline(ZilchShaderIRType* shaderType,
+  RaverieShaderIRLibraryRef BuildShaderLibrary(RaverieShaderGenerator& generator,
+                                             RaverieShaderIRCompositor::ShaderDefinition& shaderDef);
+  bool CompilePipeline(RaverieShaderIRType* shaderType,
                        ShaderPipelineDescription& pipeline,
                        Array<TranslationPassResultRef>& pipelineResults,
                        Array<TranslationPassResultRef>& debugPipelineResults);
@@ -105,7 +105,7 @@ private:
   ListBox* mAvailableScriptsListBox;
   TextCheckBox* mOptimizerCheckBox;
   FloatingSearchView* mActiveSearch;
-  ZilchShaderGenerator* mShaderGenerator;
+  RaverieShaderGenerator* mShaderGenerator;
 
   typedef Array<ShaderLanguageEntry> LanguageArray;
   typedef Array<ShaderTranslationEntry> TranslationEntryArray;
@@ -114,11 +114,11 @@ private:
   // The results from translation
   TranslationEntryArray mTranslationEntries;
 
-  ZilchShaderIRProject mShaderProject;
+  RaverieShaderIRProject mShaderProject;
 
   // Data sources needed for binding
   ContainerSource<LanguageArray> mLanguagesDataSource;
   ContainerSource<TranslationEntryArray> mTranslationEntriesDataSource;
 };
 
-} // namespace Zero
+} // namespace Raverie

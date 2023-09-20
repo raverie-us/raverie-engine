@@ -1,30 +1,30 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 //                                  NetSpace //
 
-ZilchDefineType(NetSpace, builder, type)
+RaverieDefineType(NetSpace, builder, type)
 {
-  ZeroBindComponent();
+  RaverieBindComponent();
 
   // Bind documentation
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
   // Bind base class as interface
-  ZeroBindInterface(NetObject);
+  RaverieBindInterface(NetObject);
 
   // Bind dependencies
-  ZeroBindDependency(Space);
+  RaverieBindDependency(Space);
 
   // Bind setup (can be added in the editor)
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindSetup(SetupMode::DefaultSerialization);
 
   // Bind space interface
-  ZilchBindGetterProperty(NetObjectCount)->Add(new EditInGameFilter);
-  ZilchBindGetterProperty(NetUserCount)->Add(new EditInGameFilter);
+  RaverieBindGetterProperty(NetObjectCount)->Add(new EditInGameFilter);
+  RaverieBindGetterProperty(NetUserCount)->Add(new EditInGameFilter);
 }
 
 NetSpace::NetSpace() :
@@ -474,4 +474,4 @@ void NetSpace::HandleNetObjectOfflinePostDispatch(NetObjectOffline* event)
   // (Nothing special to do here for net space)
 }
 
-} // namespace Zero
+} // namespace Raverie

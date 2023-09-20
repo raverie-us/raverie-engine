@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// The latency setting used by the audio system.
@@ -106,4 +106,4 @@ private:
   void InitializeRingBuffer(RingBuffer& ringBuffer, float* buffer, unsigned size);
 };
 
-} // namespace Zero
+} // namespace Raverie

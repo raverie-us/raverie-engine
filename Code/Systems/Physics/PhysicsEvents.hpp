@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -32,7 +32,7 @@ struct ManifoldPoint;
 class BaseCollisionEvent : public Event
 {
 public:
-  ZilchDeclareType(BaseCollisionEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(BaseCollisionEvent, TypeCopyMode::ReferenceType);
 
   BaseCollisionEvent();
   void Set(Physics::Manifold* manifold, StringParam eventType);
@@ -93,7 +93,7 @@ protected:
 class CollisionEvent : public BaseCollisionEvent
 {
 public:
-  ZilchDeclareType(CollisionEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CollisionEvent, TypeCopyMode::ReferenceType);
 
   CollisionEvent();
   void Set(Physics::Manifold* manifold, StringParam eventType);
@@ -124,7 +124,7 @@ public:
 class CollisionGroupEvent : public BaseCollisionEvent
 {
 public:
-  ZilchDeclareType(CollisionGroupEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CollisionGroupEvent, TypeCopyMode::ReferenceType);
 
   CollisionGroupEvent();
 
@@ -157,7 +157,7 @@ private:
 class PreSolveEvent : public BaseCollisionEvent
 {
 public:
-  ZilchDeclareType(PreSolveEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(PreSolveEvent, TypeCopyMode::ReferenceType);
 
   PreSolveEvent();
   void Set(Physics::Manifold* manifold, CollisionFilterBlock* preSolveBlock);
@@ -175,4 +175,4 @@ public:
   Link<PreSolveEvent> mEventLink;
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 const static float sGradientKeySize = Pixels(8);
@@ -474,4 +474,4 @@ void DrawColorGradient(ColorGradient* gradient, PixelBuffer* buffer)
   buffer->Upload();
 }
 
-} // namespace Zero
+} // namespace Raverie

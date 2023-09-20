@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 SkeletonProcessor::SkeletonProcessor(HierarchyDataMap& hierarchyData, MeshDataMap& meshData, String& rootNodeName) :
@@ -120,4 +120,4 @@ void SkeletonProcessor::UpdateCogPaths(String nodeName)
         BuildString(mRootNodeName, cAnimationPathDelimiterStr, mHierarchyDataMap[nodeName].mNodePath);
 }
 
-} // namespace Zero
+} // namespace Raverie

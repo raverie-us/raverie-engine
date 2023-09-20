@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Attributes
@@ -271,21 +271,21 @@ protected:
   {                                                                                                                    \
     String temp;                                                                                                       \
     stream.SerializeFieldDefault(name, temp, String());                                                                \
-    Zero::DecodeBinary(byteBufferBlock, temp);                                                                         \
+    Raverie::DecodeBinary(byteBufferBlock, temp);                                                                         \
   }                                                                                                                    \
   else                                                                                                                 \
   {                                                                                                                    \
     String temp;                                                                                                       \
-    Zero::EncodeBinary(byteBufferBlock, temp);                                                                         \
+    Raverie::EncodeBinary(byteBufferBlock, temp);                                                                         \
     stream.SerializeFieldDefault(name, temp, String());                                                                \
   }
 
-} // namespace Zero
+} // namespace Raverie
 
 #include "SerializationTraits.hpp"
 #include "EnumSerialization.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 template <typename type>
@@ -336,7 +336,7 @@ void Serializer::SerializeFieldRename(cstr oldFieldName, type& instance)
 template <typename type>
 void Serializer::SerializePolymorphic(type& instance)
 {
-  BoundType* boundType = ZilchVirtualTypeId(&instance);
+  BoundType* boundType = RaverieVirtualTypeId(&instance);
   StartPolymorphic(boundType);
   instance.Serialize(*this);
   EndPolymorphic();
@@ -353,4 +353,4 @@ void Serializer::SerializePolymorphic(const PolymorphicInfo& info, type& instanc
 void EncodeBinary(ByteBufferBlock& buffer, String& encodedOut);
 bool DecodeBinary(ByteBufferBlock& buffer, const String& encoded);
 
-} // namespace Zero
+} // namespace Raverie

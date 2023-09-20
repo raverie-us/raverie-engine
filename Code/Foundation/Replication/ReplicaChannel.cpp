@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 //                               ReplicaChannel //
@@ -1130,4 +1130,4 @@ bool ReplicaChannelType::GetAccurateTimestampOnChange() const
   return mAccurateTimestampOnChange;
 }
 
-} // namespace Zero
+} // namespace Raverie

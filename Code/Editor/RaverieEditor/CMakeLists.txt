@@ -45,8 +45,8 @@ target_link_libraries(RaverieEditor
     UiWidget
     Widget
     ZLib
-    Zilch
-    ZilchScript
-    ZilchShaders
+    Raverie
+    RaverieScript
+    RaverieShaders
     Exceptions
 )

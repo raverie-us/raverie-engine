@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -13,7 +13,7 @@ DefineEvent(ResourceRemoved);
 DefineEvent(ResourceReload);
 } // namespace Events
 
-ZilchDefineType(ResourceEvent, builder, type)
+RaverieDefineType(ResourceEvent, builder, type)
 {
 }
 
@@ -158,7 +158,7 @@ void ResourceManager::AddResource(ResourceEntry& entry, Resource* resource)
   resource->mResourceId = entry.mResourceId;
 
   resource->mContentItem = entry.mLibrarySource;
-  resource->mBuilderType = ZilchVirtualTypeId(entry.mBuilder);
+  resource->mBuilderType = RaverieVirtualTypeId(entry.mBuilder);
 
   // Send a resource added event on both this builder and on the resource system
   ResourceEvent event;
@@ -485,4 +485,4 @@ void ResourceManager::DestroyResources()
   ErrorIf(!ResourceIdMap.Empty(), "Resources that still have Ids are left!");
 }
 
-} // namespace Zero
+} // namespace Raverie

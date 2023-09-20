@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Physics
@@ -53,4 +53,4 @@ uint IConstraintSolver::GetSolverPositionIterationCount() const
 
 } // namespace Physics
 
-} // namespace Zero
+} // namespace Raverie

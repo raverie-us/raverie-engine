@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 //                                   NetUser //
@@ -11,7 +11,7 @@ namespace Zero
 class NetUser : public NetObject
 {
 public:
-  ZilchDeclareType(NetUser, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(NetUser, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   NetUser();
@@ -220,4 +220,4 @@ struct PendingNetUser
 /// Typedefs.
 typedef Array<PendingNetUser> PendingNetUserArray;
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Get the text drawing position for a given object
@@ -90,7 +90,7 @@ void DisplayCodeDefinition(CodeDefinition& definition)
   // This might be a generated stub code / document
   else if (resource == nullptr && definition.NameLocation.IsNative)
   {
-    String extension = FileExtensionManager::GetZilchScriptTypeEntry()->GetDefaultExtensionNoDot();
+    String extension = FileExtensionManager::GetRaverieScriptTypeEntry()->GetDefaultExtensionNoDot();
     definitionDocument =
         editor->OpenTextString(definition.NameLocation.Origin, definition.NameLocation.Code, extension);
   }
@@ -275,4 +275,4 @@ void ExpandAabbChildrenOnly(HandleParam instance, Aabb& aabb, bool world, bool e
     ExpandAabb(&child, aabb, IncludeMode::Children, world, !world, expandTransform);
 }
 
-} // namespace Zero
+} // namespace Raverie

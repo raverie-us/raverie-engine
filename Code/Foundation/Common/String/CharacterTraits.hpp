@@ -3,7 +3,7 @@
 #include "Utility/EnumDeclaration.hpp"
 #include "Utility/Typedefs.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 DeclareBitField7(CharacterBits, Graphical, Alpha, Number, WhiteSpace, Lower, Symbol, Control);
@@ -27,4 +27,4 @@ int ToUpper(Rune r);
 
 bool IsHex(Rune r);
 
-} // namespace Zero
+} // namespace Raverie

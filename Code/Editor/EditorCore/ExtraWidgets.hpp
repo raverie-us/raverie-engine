@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Profile
@@ -72,4 +72,4 @@ public:
                         WidgetRect clipRect);
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 String StringContainerAdapter(StringParam element)
 {
@@ -83,4 +83,4 @@ bool MatchesPartial(StringParam text, StringParam partial, RuneComparer compare)
   return false;
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class MultiConvexMeshCollider;
@@ -46,7 +46,7 @@ struct MultiConvexMeshRange
 class MultiConvexMeshCollider : public Collider
 {
 public:
-  ZilchDeclareType(MultiConvexMeshCollider, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MultiConvexMeshCollider, TypeCopyMode::ReferenceType);
 
   MultiConvexMeshCollider();
 
@@ -87,4 +87,4 @@ public:
   HandleOf<MultiConvexMesh> mMesh;
 };
 
-} // namespace Zero
+} // namespace Raverie

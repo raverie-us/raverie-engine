@@ -1,12 +1,12 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(TileMapSource, builder, type)
+RaverieDefineType(TileMapSource, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 }
 
 TileMapSource::TileMapSource()
@@ -38,4 +38,4 @@ TileMapSourceManager::TileMapSourceManager(BoundType* resourceType) : ResourceMa
   AddLoader("TileMapSource", new ChunkFileLoader<TileMapSourceManager, TileMapSourceLoadPattern>());
 }
 
-} // namespace Zero
+} // namespace Raverie

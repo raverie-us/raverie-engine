@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Physics
@@ -19,7 +19,7 @@ System* CreatePhysicsSystem();
 class PhysicsEngine : public System
 {
 public:
-  ZilchDeclareType(PhysicsEngine, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(PhysicsEngine, TypeCopyMode::ReferenceType);
 
   PhysicsEngine(void);
   virtual ~PhysicsEngine(void);
@@ -53,4 +53,4 @@ public:
   Memory::Heap* mHeap;
 };
 
-} // namespace Zero
+} // namespace Raverie

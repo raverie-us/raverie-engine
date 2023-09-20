@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class SlicedDefinition;
@@ -9,7 +9,7 @@ class SlicedDefinition;
 class ImageWidget : public Widget
 {
 public:
-  ZilchDeclareType(ImageWidget, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ImageWidget, TypeCopyMode::ReferenceType);
 
   SlicedDefinition* mDef;
   ImageWidget(Composite* parent, StringParam style, AttachType::Enum attachType = AttachType::Normal);
@@ -30,4 +30,4 @@ public:
   String GetDebugName() const override;
 };
 
-} // namespace Zero
+} // namespace Raverie

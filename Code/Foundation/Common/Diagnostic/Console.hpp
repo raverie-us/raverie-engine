@@ -4,7 +4,7 @@
 // quick ARM compiler fix, project isn't seeing/building this before console.hpp
 #include <stdarg.h>
 
-namespace Zero
+namespace Raverie
 {
 
 // Console Filtering
@@ -63,28 +63,28 @@ private:
   static void PrintVa(Filter::Enum, cstr format, va_list va);
 };
 
-} // namespace Zero
+} // namespace Raverie
 
 // Enable print of debug messages to the console
-#if !defined(ZERO_ENABLE_DEBUG_CONSOLE)
-#  if defined(ZeroDebug)
-#    define ZERO_ENABLE_DEBUG_CONSOLE 1
+#if !defined(RaverieEnableDebugConsole)
+#  if defined(RaverieDebug)
+#    define RaverieEnableDebugConsole 1
 #  else
-#    define ZERO_ENABLE_DEBUG_CONSOLE 0
+#    define RaverieEnableDebugConsole 0
 #  endif
 #endif
 
-#define ZPrintFilter(filter, ...) ::Zero::Console::Print(filter, __VA_ARGS__)
-#define ZPrint(...) ::Zero::Console::Print(Zero::Filter::DefaultFilter, __VA_ARGS__)
+#define ZPrintFilter(filter, ...) ::Raverie::Console::Print(filter, __VA_ARGS__)
+#define ZPrint(...) ::Raverie::Console::Print(Raverie::Filter::DefaultFilter, __VA_ARGS__)
 
 // Debug printing functions will only print in debug builds
 
-#if ZERO_ENABLE_DEBUG_CONSOLE
+#if RaverieEnableDebugConsole
 
-#  define DebugPrintFilter(filter, ...) ::Zero::Console::Print(filter, __VA_ARGS__)
-#  define DebugPrint(...) ::Zero::Console::Print(Zero::Filter::DefaultFilter, __VA_ARGS__)
+#  define DebugPrintFilter(filter, ...) ::Raverie::Console::Print(filter, __VA_ARGS__)
+#  define DebugPrint(...) ::Raverie::Console::Print(Raverie::Filter::DefaultFilter, __VA_ARGS__)
 #  define DebugTrace(format, ...)                                                                                      \
-    ::Zero::Console::Print(Zero::Filter::DefaultFilter, "%s(%d) : " format, __FILE__, __LINE__, __VA_ARGS__)
+    ::Raverie::Console::Print(Raverie::Filter::DefaultFilter, "%s(%d) : " format, __FILE__, __LINE__, __VA_ARGS__)
 
 #else
 

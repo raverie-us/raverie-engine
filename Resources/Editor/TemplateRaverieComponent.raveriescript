@@ -1,0 +1,13 @@
+// MIT Licensed (see LICENSE.md).
+
+class RESOURCE_NAME_ : RaverieComponent
+{
+	function Initialize(init : CogInitializer)
+	{
+		//Raverie.Connect(this.Space, Events.LogicUpdate, this.OnLogicUpdate);
+	}
+
+	function OnLogicUpdate(event : UpdateEvent)
+	{
+	}
+}

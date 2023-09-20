@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace AnimScrubberUi
@@ -1142,4 +1142,4 @@ void ScrubberDrawer::DrawPlayHead(ViewBlock& viewBlock,
   ProcessTextRange(fontProcessor, mFont, text, SnapToPixels(textPos), TextAlign::Left, Vec2(1, 1), size);
 }
 
-} // namespace Zero
+} // namespace Raverie

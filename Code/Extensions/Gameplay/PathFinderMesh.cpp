@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -385,43 +385,43 @@ NavMeshEdgeId PathFinderAlgorithmMesh::GetNextEdgeId()
 }
 
 // Path Finder Mesh
-ZilchDefineType(PathFinderMesh, builder, type)
+RaverieDefineType(PathFinderMesh, builder, type)
 {
-  ZeroBindDocumented();
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindInterface(PathFinder);
-  ZeroBindDependency(Transform);
-  ZeroBindEvent(Events::PathFinderGridFinished, PathFinderEvent<Vec3>);
+  RaverieBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindInterface(PathFinder);
+  RaverieBindDependency(Transform);
+  RaverieBindEvent(Events::PathFinderGridFinished, PathFinderEvent<Vec3>);
 
-  ZilchBindOverloadedMethod(SetMesh, ZilchInstanceOverload(void, Mesh*));
-  ZilchBindOverloadedMethod(SetMesh, ZilchInstanceOverload(void, Mesh*, float));
+  RaverieBindOverloadedMethod(SetMesh, RaverieInstanceOverload(void, Mesh*));
+  RaverieBindOverloadedMethod(SetMesh, RaverieInstanceOverload(void, Mesh*, float));
 
-  ZilchBindMethod(AddVertex);
+  RaverieBindMethod(AddVertex);
 
-  // ZilchBindOverloadedMethod(AddPolygon,
-  // ZilchInstanceOverload(NavMeshPolygonId, ArrayClass<u32>&));
-  ZilchBindOverloadedMethod(AddPolygon, ZilchInstanceOverload(NavMeshPolygonId, u32, u32, u32));
-  ZilchBindOverloadedMethod(AddPolygon, ZilchInstanceOverload(NavMeshPolygonId, u32, u32, u32, u32));
+  // RaverieBindOverloadedMethod(AddPolygon,
+  // RaverieInstanceOverload(NavMeshPolygonId, ArrayClass<u32>&));
+  RaverieBindOverloadedMethod(AddPolygon, RaverieInstanceOverload(NavMeshPolygonId, u32, u32, u32));
+  RaverieBindOverloadedMethod(AddPolygon, RaverieInstanceOverload(NavMeshPolygonId, u32, u32, u32, u32));
 
-  ZilchBindMethod(SetPolygonCost);
-  ZilchBindMethod(SetPolygonClientData);
-  ZilchBindMethod(SetEdgeCost);
-  ZilchBindMethod(SetEdgeClientData);
-  ZilchBindMethod(Clear);
+  RaverieBindMethod(SetPolygonCost);
+  RaverieBindMethod(SetPolygonClientData);
+  RaverieBindMethod(SetEdgeCost);
+  RaverieBindMethod(SetEdgeClientData);
+  RaverieBindMethod(Clear);
 
-  // ZilchBindOverloadedMethod(FindPath,
-  // ZilchInstanceOverload(HandleOf<ArrayClass<IntVec3>>, IntVec3Param,
-  // IntVec3Param)); ZilchBindOverloadedMethod(FindPath,
-  // ZilchInstanceOverload(HandleOf<ArrayClass<Real3>>, Real3Param,
-  // Real3Param)); ZilchBindOverloadedMethod(FindPathThreaded,
-  // ZilchInstanceOverload(HandleOf<PathFinderRequest>, IntVec3Param,
-  // IntVec3Param)); ZilchBindOverloadedMethod(FindPathThreaded,
-  // ZilchInstanceOverload(HandleOf<PathFinderRequest>, Real3Param,
+  // RaverieBindOverloadedMethod(FindPath,
+  // RaverieInstanceOverload(HandleOf<ArrayClass<IntVec3>>, IntVec3Param,
+  // IntVec3Param)); RaverieBindOverloadedMethod(FindPath,
+  // RaverieInstanceOverload(HandleOf<ArrayClass<Real3>>, Real3Param,
+  // Real3Param)); RaverieBindOverloadedMethod(FindPathThreaded,
+  // RaverieInstanceOverload(HandleOf<PathFinderRequest>, IntVec3Param,
+  // IntVec3Param)); RaverieBindOverloadedMethod(FindPathThreaded,
+  // RaverieInstanceOverload(HandleOf<PathFinderRequest>, Real3Param,
   // Real3Param));
 
-  ZilchBindMethod(WorldPositionToPolygon);
-  ZilchBindMethod(LocalPositionToPolygon);
+  RaverieBindMethod(WorldPositionToPolygon);
+  RaverieBindMethod(LocalPositionToPolygon);
 }
 
 PathFinderMesh::PathFinderMesh() : mTransform(nullptr), mMesh(new CopyOnWriteData<PathFinderAlgorithmMesh>())
@@ -435,7 +435,7 @@ void PathFinderMesh::Serialize(Serializer& stream)
 
 void PathFinderMesh::Initialize(CogInitializer& initializer)
 {
-  ZilchBase::Initialize(initializer);
+  RaverieBase::Initialize(initializer);
   mTransform = GetOwner()->has(Transform);
 }
 
@@ -612,7 +612,7 @@ HandleOf<ArrayClass<Vec3>> PathFinderMesh::FindPath(NavMeshPolygonId start, NavM
   HandleOf<ArrayClass<NavMeshPolygonId>> polygons =
       FindPathHelper<NavMeshPolygonId, PathFinderAlgorithmMesh>(mMesh, start, goal, mMaxIterations);
 
-  HandleOf<ArrayClass<Vec3>> output = ZilchAllocate(ArrayClass<Vec3>);
+  HandleOf<ArrayClass<Vec3>> output = RaverieAllocate(ArrayClass<Vec3>);
   forRange (NavMeshPolygonId polygonId, polygons->NativeArray.All())
   {
     NavMeshPolygon* polygon = mesh->GetPolygon(polygonId);
@@ -666,4 +666,4 @@ Vec3 PathFinderMesh::PolygonToWorldPosition(NavMeshPolygonId polygonId)
   return Vec3::cZero;
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 template <typename BaseType, uint MaxDerivedSize>
@@ -81,7 +81,7 @@ protected:
 
   union {
     byte mObjectData[MaxDerivedSize];
-    MaxAlignmentType mObjectDataAligned[ZeroAlignCount(MaxDerivedSize)];
+    MaxAlignmentType mObjectDataAligned[RaverieAlignCount(MaxDerivedSize)];
   };
 
   friend struct MoveWithoutDestructionOperator<VirtualAny<BaseType, MaxDerivedSize>>;
@@ -100,4 +100,4 @@ struct MoveWithoutDestructionOperator<VirtualAny<BaseType, MaxDerivedSize>>
   }
 };
 
-} // namespace Zero
+} // namespace Raverie

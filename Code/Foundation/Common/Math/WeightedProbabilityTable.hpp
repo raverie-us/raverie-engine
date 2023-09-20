@@ -31,7 +31,7 @@ struct WeightedProbabilityTable
     WeightType mWeightedProbability;
     uint mAlias;
   };
-  typedef Zero::Array<Item> Items;
+  typedef Raverie::Array<Item> Items;
 
   WeightedProbabilityTable()
   {
@@ -94,7 +94,7 @@ struct WeightedProbabilityTable
 
     // we need to figure out which items when normalized are > 1 and which are <
     // 1
-    typedef Zero::Array<uint> IndexArray;
+    typedef Raverie::Array<uint> IndexArray;
     IndexArray smallItems, largeItems;
     smallItems.Reserve(count);
     largeItems.Reserve(count);

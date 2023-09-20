@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 typedef OrderedHashMap<String, String> StringMap;
@@ -336,4 +336,4 @@ struct Policy<ArrayMultiMap<keytype, valuetype>>
 
 } // namespace Serialization
 
-} // namespace Zero
+} // namespace Raverie

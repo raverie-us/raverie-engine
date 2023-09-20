@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class UpdateEvent;
@@ -12,7 +12,7 @@ class HierarchyEvent;
 class HierarchySpline : public Component
 {
 public:
-  ZilchDeclareType(HierarchySpline, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(HierarchySpline, TypeCopyMode::ReferenceType);
 
   HierarchySpline();
 
@@ -68,4 +68,4 @@ private:
   HandleOf<Spline> mSpline;
 };
 
-} // namespace Zero
+} // namespace Raverie

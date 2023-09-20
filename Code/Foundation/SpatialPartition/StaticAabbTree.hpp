@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// A range for iterating through the leaf nodes of the StaticAabbTree. Used to
@@ -162,6 +162,6 @@ AabbNode<ClientDataType>* SerializeAabbTree(Serializer& stream);
 template <typename ClientDataType>
 void SerializeAabbTree(Serializer& stream, StaticAabbTree<ClientDataType>& tree);
 
-} // namespace Zero
+} // namespace Raverie
 
 #include "Foundation/SpatialPartition/StaticAabbTree.inl"

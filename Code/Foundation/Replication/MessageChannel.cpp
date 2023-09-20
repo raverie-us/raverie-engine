@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 //                                 MessageChannel //
@@ -110,9 +110,9 @@ InMessageChannel::InMessageChannel(const InMessageChannel& rhs) :
 InMessageChannel::InMessageChannel(MoveReference<InMessageChannel> rhs) :
     MessageChannel(*rhs),
     mLastSequenceId(rhs->mLastSequenceId),
-    mFragmentedMessages(ZeroMove(rhs->mFragmentedMessages)),
-    mMessages(ZeroMove(rhs->mMessages)),
-    mMessageSequence(ZeroMove(rhs->mMessageSequence)),
+    mFragmentedMessages(RaverieMove(rhs->mFragmentedMessages)),
+    mMessages(RaverieMove(rhs->mMessages)),
+    mMessageSequence(RaverieMove(rhs->mMessageSequence)),
     mClosed(rhs->mClosed),
     mFinalSequenceId(rhs->mFinalSequenceId)
 {
@@ -135,9 +135,9 @@ InMessageChannel& InMessageChannel::operator=(MoveReference<InMessageChannel> rh
 {
   MessageChannel::operator=(*rhs);
   mLastSequenceId = rhs->mLastSequenceId;
-  mFragmentedMessages = ZeroMove(rhs->mFragmentedMessages);
-  mMessages = ZeroMove(rhs->mMessages);
-  mMessageSequence = ZeroMove(rhs->mMessageSequence);
+  mFragmentedMessages = RaverieMove(rhs->mFragmentedMessages);
+  mMessages = RaverieMove(rhs->mMessages);
+  mMessageSequence = RaverieMove(rhs->mMessageSequence);
   mClosed = rhs->mClosed;
   mFinalSequenceId = rhs->mFinalSequenceId;
 
@@ -179,7 +179,7 @@ bool InMessageChannel::Push(MoveReference<Message> message)
     if (iter != mFragmentedMessages.End())
     {
       // Add message fragment
-      iter->Add(ZeroMove(message));
+      iter->Add(RaverieMove(message));
 
       // Fragmented message now complete?
       if (iter->IsComplete())
@@ -192,7 +192,7 @@ bool InMessageChannel::Push(MoveReference<Message> message)
         mFragmentedMessages.Erase(iter);
 
         // Push whole message
-        bool result = Push(ZeroMove(wholeMessage));
+        bool result = Push(RaverieMove(wholeMessage));
         Assert(result);
       }
 
@@ -228,9 +228,9 @@ bool InMessageChannel::Push(MoveReference<Message> message)
     if (message->IsFragment())
     {
       // Keep message fragment
-      FragmentedMessage fragmentedMessage(ZeroMove(message));
+      FragmentedMessage fragmentedMessage(RaverieMove(message));
       ArraySet<FragmentedMessage>::pointer_bool_pair insertResult =
-          mFragmentedMessages.Insert(ZeroMove(fragmentedMessage));
+          mFragmentedMessages.Insert(RaverieMove(fragmentedMessage));
       Assert(insertResult.second); // (Insertion should have succeeded)
     }
     // Whole?
@@ -243,7 +243,7 @@ bool InMessageChannel::Push(MoveReference<Message> message)
       mLastSequenceId = message->GetSequenceId();
 
       // Keep message
-      mMessages.Insert(ZeroMove(message));
+      mMessages.Insert(RaverieMove(message));
     }
 
     // Success
@@ -260,7 +260,7 @@ Array<Message> InMessageChannel::Release()
   case TransferMode::Immediate:
   case TransferMode::Sequenced:
     // Release all whole Messages
-    result = ZeroMove(static_cast<Array<Message>&>(mMessages));
+    result = RaverieMove(static_cast<Array<Message>&>(mMessages));
     mMessages.Clear();
     break;
 
@@ -269,7 +269,7 @@ Array<Message> InMessageChannel::Release()
     for (ArraySet<Message>::iterator iter = mMessages.Begin(); iter != mMessages.End();)
       if (mMessageSequence.IsVerified(iter->GetSequenceId()))
       {
-        result.PushBack(ZeroMove(*iter));
+        result.PushBack(RaverieMove(*iter));
         iter = mMessages.Erase(iter);
       }
       else
@@ -306,4 +306,4 @@ bool InMessageChannel::ReadyToDelete() const
          mMessages.Empty() && mFragmentedMessages.Empty();
 }
 
-} // namespace Zero
+} // namespace Raverie

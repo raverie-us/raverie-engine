@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 const real cAngularSleepEpsilon = real(0.16); // should be about (2/180)*pi
@@ -9,62 +9,62 @@ const real cLinearSleepEpsilon = real(0.16);  // should be about .016
 const real cTimeToSleep = real(1);            // 1 second
 const real RigidBody::mMaxVelocity = real(1e+10);
 
-ZilchDefineType(RigidBody, builder, type)
+RaverieDefineType(RigidBody, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDocumented();
-  ZeroBindTag(Tags::Physics);
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
+  RaverieBindTag(Tags::Physics);
 
-  ZeroBindDependency(Cog);
-  ZeroBindDependency(Transform);
-  ZeroBindEvent(Events::RigidBodySlept, ObjectEvent);
-  ZeroBindEvent(Events::RigidBodyAwoke, ObjectEvent);
+  RaverieBindDependency(Cog);
+  RaverieBindDependency(Transform);
+  RaverieBindEvent(Events::RigidBodySlept, ObjectEvent);
+  RaverieBindEvent(Events::RigidBodyAwoke, ObjectEvent);
 
   // Bind velocity methods
-  ZilchBindGetterSetterProperty(Velocity)->ZeroSerialize(Vec3::cZero);
-  ZilchBindGetterSetterProperty(AngularVelocity)->ZeroSerialize(Vec3::cZero);
-  ZilchBindMethod(ApplyLinearVelocity);
-  ZilchBindMethod(ApplyAngularVelocity);
-  ZilchBindMethod(ApplyVelocityAtPoint);
-  ZilchBindMethod(GetPointVelocity);
+  RaverieBindGetterSetterProperty(Velocity)->RaverieSerialize(Vec3::cZero);
+  RaverieBindGetterSetterProperty(AngularVelocity)->RaverieSerialize(Vec3::cZero);
+  RaverieBindMethod(ApplyLinearVelocity);
+  RaverieBindMethod(ApplyAngularVelocity);
+  RaverieBindMethod(ApplyVelocityAtPoint);
+  RaverieBindMethod(GetPointVelocity);
   // Bind force methods
-  ZilchBindGetterSetter(Force);
-  ZilchBindGetterSetter(Torque);
-  ZilchBindMethod(ApplyForceNoWakeUp);
-  ZilchBindMethod(ApplyTorqueNoWakeUp);
-  ZilchBindMethod(ApplyForceAtOffsetVectorNoWakeUp);
-  ZilchBindMethod(ApplyForceAtPointNoWakeUp);
-  ZilchBindMethod(ApplyForce);
-  ZilchBindMethod(ApplyTorque);
-  ZilchBindMethod(ApplyForceAtOffsetVector);
-  ZilchBindMethod(ApplyForceAtPoint);
+  RaverieBindGetterSetter(Force);
+  RaverieBindGetterSetter(Torque);
+  RaverieBindMethod(ApplyForceNoWakeUp);
+  RaverieBindMethod(ApplyTorqueNoWakeUp);
+  RaverieBindMethod(ApplyForceAtOffsetVectorNoWakeUp);
+  RaverieBindMethod(ApplyForceAtPointNoWakeUp);
+  RaverieBindMethod(ApplyForce);
+  RaverieBindMethod(ApplyTorque);
+  RaverieBindMethod(ApplyForceAtOffsetVector);
+  RaverieBindMethod(ApplyForceAtPoint);
   // Bind impulse methods
   // These 4 methods don't need to be bound because applying a non-zero vector
   // will always wake an object up after resolution unless the impulse is zero.
   // This prevents a frame delay issue of the object not getting forces. These
   // functions only exist currently for internal use.
-  // ZilchBindMethod(ApplyLinearImpulseNoWakeUp);
-  // ZilchBindMethod(ApplyAngularImpulseNoWakeUp);
-  // ZilchBindMethod(ApplyImpulseAtOffsetVectorNoWakeUp);
-  // ZilchBindMethod(ApplyImpulseAtPointNoWakeUp);
-  ZilchBindMethod(ApplyLinearImpulse);
-  ZilchBindMethod(ApplyAngularImpulse);
-  ZilchBindMethod(ApplyImpulseAtOffsetVector);
-  ZilchBindMethod(ApplyImpulseAtPoint);
+  // RaverieBindMethod(ApplyLinearImpulseNoWakeUp);
+  // RaverieBindMethod(ApplyAngularImpulseNoWakeUp);
+  // RaverieBindMethod(ApplyImpulseAtOffsetVectorNoWakeUp);
+  // RaverieBindMethod(ApplyImpulseAtPointNoWakeUp);
+  RaverieBindMethod(ApplyLinearImpulse);
+  RaverieBindMethod(ApplyAngularImpulse);
+  RaverieBindMethod(ApplyImpulseAtOffsetVector);
+  RaverieBindMethod(ApplyImpulseAtPoint);
 
-  ZilchBindGetterSetterProperty(DynamicState)->ZeroSerialize(RigidBodyDynamicState::Dynamic);
-  ZilchBindGetterSetterProperty(AllowSleep)->ZeroSerialize(true);
-  ZilchBindGetterSetter(Asleep)->ZeroSerialize(true);
-  ZilchBindMethod(ForceAwake);
-  ZilchBindMethod(ForceAsleep);
-  ZilchBindGetterSetterProperty(RotationLocked)->ZeroSerialize(false);
-  ZilchBindGetterSetterProperty(Mode2D)->ZeroSerialize(Mode2DStates::InheritFromSpace);
-  ZilchBindGetterProperty(Mass);
-  ZilchBindGetter(LocalInverseInertiaTensor);
-  ZilchBindGetter(WorldInverseInertiaTensor);
-  ZilchBindGetter(WorldCenterOfMass);
-  ZilchBindGetter(ActiveBody);
+  RaverieBindGetterSetterProperty(DynamicState)->RaverieSerialize(RigidBodyDynamicState::Dynamic);
+  RaverieBindGetterSetterProperty(AllowSleep)->RaverieSerialize(true);
+  RaverieBindGetterSetter(Asleep)->RaverieSerialize(true);
+  RaverieBindMethod(ForceAwake);
+  RaverieBindMethod(ForceAsleep);
+  RaverieBindGetterSetterProperty(RotationLocked)->RaverieSerialize(false);
+  RaverieBindGetterSetterProperty(Mode2D)->RaverieSerialize(Mode2DStates::InheritFromSpace);
+  RaverieBindGetterProperty(Mass);
+  RaverieBindGetter(LocalInverseInertiaTensor);
+  RaverieBindGetter(WorldInverseInertiaTensor);
+  RaverieBindGetter(WorldCenterOfMass);
+  RaverieBindGetter(ActiveBody);
 }
 
 RigidBody::RigidBody()
@@ -1164,4 +1164,4 @@ void RigidBody::RemoveBodyEffect(PhysicsEffect* effect)
   mEffects.Erase(effect);
 }
 
-} // namespace Zero
+} // namespace Raverie

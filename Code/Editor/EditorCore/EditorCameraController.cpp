@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 const float cMinLookDistance = 0.01f;
@@ -13,21 +13,21 @@ namespace Events
 DefineEvent(CameraControllerUpdated);
 } // namespace Events
 
-ZilchDefineType(EditorCameraController, builder, type)
+RaverieDefineType(EditorCameraController, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindDependency(Transform);
-  ZeroBindDependency(Camera);
+  RaverieBindComponent();
+  RaverieBindDependency(Transform);
+  RaverieBindDependency(Camera);
   type->AddAttribute(ObjectAttributes::cCore);
-  ZeroBindEvent(Events::CameraControllerUpdated, Event);
+  RaverieBindEvent(Events::CameraControllerUpdated, Event);
 
-  ZilchBindFieldProperty(mMoveSensitivity);
-  ZilchBindGetterSetterProperty(LookTarget);
-  ZilchBindGetterSetterProperty(LookDistance);
-  ZilchBindGetterSetterProperty(VerticalAngle);
-  ZilchBindGetterSetterProperty(HorizontalAngle);
-  ZilchBindGetterSetterProperty(ControlMode);
-  ZilchBindMethodProperty(Reset);
+  RaverieBindFieldProperty(mMoveSensitivity);
+  RaverieBindGetterSetterProperty(LookTarget);
+  RaverieBindGetterSetterProperty(LookDistance);
+  RaverieBindGetterSetterProperty(VerticalAngle);
+  RaverieBindGetterSetterProperty(HorizontalAngle);
+  RaverieBindGetterSetterProperty(ControlMode);
+  RaverieBindMethodProperty(Reset);
 }
 
 EditorCameraController::EditorCameraController()
@@ -596,4 +596,4 @@ void EditorCameraController::UpdateTransform()
   GetOwner()->DispatchEvent(Events::CameraControllerUpdated, &e);
 }
 
-} // namespace Zero
+} // namespace Raverie

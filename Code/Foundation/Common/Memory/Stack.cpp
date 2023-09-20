@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 namespace Memory
 {
@@ -81,4 +81,4 @@ void Stack::CleanUp()
 }
 
 } // namespace Memory
-} // namespace Zero
+} // namespace Raverie

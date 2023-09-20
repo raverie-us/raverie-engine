@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -9,11 +9,11 @@ namespace Events
 DefineEvent(CastFilterCallback);
 } // namespace Events
 
-ZilchDefineType(CastFilterEvent, builder, type)
+RaverieDefineType(CastFilterEvent, builder, type)
 {
-  ZeroBindDocumented();
-  ZilchBindGetterProperty(Object);
-  ZilchBindFieldProperty(mFilterState);
+  RaverieBindDocumented();
+  RaverieBindGetterProperty(Object);
+  RaverieBindFieldProperty(mFilterState);
 }
 
 CastFilterEvent::CastFilterEvent()
@@ -27,20 +27,20 @@ Cog* CastFilterEvent::GetObject()
   return mCollider->GetOwner();
 }
 
-ZilchDefineType(CastFilter, builder, type)
+RaverieDefineType(CastFilter, builder, type)
 {
   type->CreatableInScript = true;
 
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindDefaultCopyDestructor();
+  RaverieBindDefaultCopyDestructor();
 
-  ZilchBindGetterSetterProperty(IgnoreCog);
-  ZilchBindGetterSetterProperty(CollisionGroup);
+  RaverieBindGetterSetterProperty(IgnoreCog);
+  RaverieBindGetterSetterProperty(CollisionGroup);
 
-  ZeroBindEvent(Events::CastFilterCallback, CastFilterEvent);
-  ZilchBindFieldProperty(mCallbackObject);
-  ZilchBindFieldProperty(mCallbackEventName);
+  RaverieBindEvent(Events::CastFilterCallback, CastFilterEvent);
+  RaverieBindFieldProperty(mCallbackObject);
+  RaverieBindFieldProperty(mCallbackEventName);
 }
 
 CastFilter::CastFilter() : BaseCastFilter()
@@ -120,17 +120,17 @@ void CastFilter::SetIgnoreCog(Cog* cog)
   mIgnoredCog = cog;
 }
 
-ZilchDefineType(CastResult, builder, type)
+RaverieDefineType(CastResult, builder, type)
 {
-  ZilchBindDefaultCopyDestructor();
-  ZeroBindDocumented();
+  RaverieBindDefaultCopyDestructor();
+  RaverieBindDocumented();
 
-  ZilchBindGetterProperty(ObjectHit);
-  ZilchBindGetterProperty(Collider);
-  ZilchBindGetterProperty(WorldPosition);
-  ZilchBindGetterProperty(Normal);
-  ZilchBindGetterProperty(Distance);
-  ZilchBindMethod(GetLocalPosition);
+  RaverieBindGetterProperty(ObjectHit);
+  RaverieBindGetterProperty(Collider);
+  RaverieBindGetterProperty(WorldPosition);
+  RaverieBindGetterProperty(Normal);
+  RaverieBindGetterProperty(Distance);
+  RaverieBindMethod(GetLocalPosition);
 }
 
 CastResult::CastResult()
@@ -214,11 +214,11 @@ real CastResult::GetDistance()
   return mTime;
 }
 
-ZilchDefineType(CastResults, builder, type)
+RaverieDefineType(CastResults, builder, type)
 {
-  ZilchBindMethod(All);
-  ZilchBindMethod(Empty);
-  ZilchBindMethod(Clear);
+  RaverieBindMethod(All);
+  RaverieBindMethod(Empty);
+  RaverieBindMethod(Clear);
 }
 
 CastFilter CastResults::mDefaultFilter;
@@ -350,4 +350,4 @@ uint CastResultsRange::Size()
   return mRange.Size();
 }
 
-} // namespace Zero
+} // namespace Raverie

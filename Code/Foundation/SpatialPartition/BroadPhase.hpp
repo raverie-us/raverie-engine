@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class Serializer;
@@ -13,10 +13,10 @@ DeclareEnum2(BroadPhase, Dynamic, Static);
 /// An abstract interface for a BroadPhase class. Any BroadPhase to be used
 /// in the physics engine should derive and implement these functions. Depending
 /// on the implementation, some of these methods may be empty.
-class IBroadPhase : public IZilchObject
+class IBroadPhase : public IRaverieObject
 {
 public:
-  ZilchDeclareType(IBroadPhase, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(IBroadPhase, TypeCopyMode::ReferenceType);
 
   IBroadPhase();
   virtual ~IBroadPhase()
@@ -142,4 +142,4 @@ protected:
   Memory::Heap* mHeap;
 };
 
-} // namespace Zero
+} // namespace Raverie

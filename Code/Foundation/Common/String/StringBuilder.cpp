@@ -1,11 +1,11 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 char* AppendRange(char* bufferPos, char* bufferEnd, StringRange& b)
 {
-  ZeroCStringCopy(bufferPos, bufferEnd - bufferPos, b.mBegin, b.SizeInBytes());
+  RaverieCStringCopy(bufferPos, bufferEnd - bufferPos, b.mBegin, b.SizeInBytes());
   bufferPos += b.SizeInBytes();
   return bufferPos;
 }
@@ -144,4 +144,4 @@ void StringBuilder::Repeat(size_t count, StringParam str)
     Append(str);
 }
 
-} // namespace Zero
+} // namespace Raverie

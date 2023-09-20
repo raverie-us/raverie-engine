@@ -1,10 +1,10 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-using Zero::Array;
-using Zero::InList;
-using Zero::Link;
-using Zero::TrapezoidMap;
+using Raverie::Array;
+using Raverie::InList;
+using Raverie::Link;
+using Raverie::TrapezoidMap;
 
 namespace Geometry
 {
@@ -252,7 +252,7 @@ bool BuildSet(const TrapezoidMap& map, Array<uint>* indices, s32 seed, FillRule:
 
             if (mountain.Empty() == false)
             {
-              Zero::Reverse(mountain.Begin(), mountain.End());
+              Raverie::Reverse(mountain.Begin(), mountain.End());
               TriangulateMountain(map.mVertices, mountain, indices);
             }
           }
@@ -377,7 +377,7 @@ bool BuildSet(const TrapezoidMap& map, Array<uint>* indices, s32 seed, FillRule:
 
             if (mountain.Empty() == false)
             {
-              Zero::Reverse(mountain.Begin(), mountain.End());
+              Raverie::Reverse(mountain.Begin(), mountain.End());
               TriangulateMountain(map.mVertices, mountain, indices);
             }
           }

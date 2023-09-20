@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Interpolation Policies
@@ -381,4 +381,4 @@ struct Warp
 
 } // namespace Ease
 
-} // namespace Zero
+} // namespace Raverie

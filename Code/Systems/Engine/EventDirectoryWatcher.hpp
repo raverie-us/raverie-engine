@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -15,7 +15,7 @@ DeclareEvent(FileRenamed);
 class FileEditEvent : public Event
 {
 public:
-  ZilchDeclareType(FileEditEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(FileEditEvent, TypeCopyMode::ReferenceType);
   /// If it was a rename, this should be set to the old file name
   String OldFileName;
   String FileName;
@@ -28,7 +28,7 @@ public:
 class EventDirectoryWatcher : public EventObject
 {
 public:
-  ZilchDeclareType(EventDirectoryWatcher, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(EventDirectoryWatcher, TypeCopyMode::ReferenceType);
 
   EventDirectoryWatcher(StringParam directory);
 
@@ -36,4 +36,4 @@ public:
   DirectoryWatcher mWatcher;
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -40,7 +40,7 @@ Tweakable(Vec4, ActiveColor, Vec4(1, 1, 1, 1), cLocation);
 Tweakable(Vec4, ActiveHoverColor, Vec4(1, 1, 1, 1), cLocation);
 } // namespace IconButtonUi
 
-ZilchDefineType(ButtonBase, builder, type)
+RaverieDefineType(ButtonBase, builder, type)
 {
 }
 
@@ -256,7 +256,7 @@ void ButtonBase::Activate()
   }
 }
 
-ZilchDefineType(TextButton, builder, type)
+RaverieDefineType(TextButton, builder, type)
 {
 }
 
@@ -359,7 +359,7 @@ Thickness TextButton::GetPadding()
   return padding;
 }
 
-ZilchDefineType(IconButton, builder, type)
+RaverieDefineType(IconButton, builder, type)
 {
 }
 
@@ -464,7 +464,7 @@ void IconButton::OnMouseExit(MouseEvent* e)
   UpdateIconColor();
 }
 
-ZilchDefineType(ToggleIconButton, builder, type)
+RaverieDefineType(ToggleIconButton, builder, type)
 {
 }
 
@@ -539,4 +539,4 @@ void ToggleIconButton::OnButtonPressed(Event* e)
   UpdateIcon();
 }
 
-} // namespace Zero
+} // namespace Raverie

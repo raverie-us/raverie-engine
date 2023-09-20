@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -22,7 +22,7 @@ class SoundEvent;
 class SoundNode : public ReferenceCountedEventObject
 {
 public:
-  ZilchDeclareType(SoundNode, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SoundNode, TypeCopyMode::ReferenceType);
 
   SoundNode(StringParam name, int ID, bool listenerDependent, bool generator);
   virtual ~SoundNode();
@@ -158,9 +158,9 @@ private:
 class SimpleCollapseNode : public SoundNode
 {
 public:
-  ZilchDeclareType(SimpleCollapseNode, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SimpleCollapseNode, TypeCopyMode::ReferenceType);
 
-  SimpleCollapseNode(Zero::StringParam name, unsigned ID, bool listenerDependent, bool generator) :
+  SimpleCollapseNode(Raverie::StringParam name, unsigned ID, bool listenerDependent, bool generator) :
       SoundNode(name, ID, listenerDependent, generator)
   {
   }
@@ -178,7 +178,7 @@ public:
 class OutputNode : public SoundNode
 {
 public:
-  ZilchDeclareType(OutputNode, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(OutputNode, TypeCopyMode::ReferenceType);
 
   OutputNode();
 
@@ -195,9 +195,9 @@ public:
 class CombineNode : public SimpleCollapseNode
 {
 public:
-  ZilchDeclareType(CombineNode, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CombineNode, TypeCopyMode::ReferenceType);
 
-  CombineNode(Zero::StringParam name, unsigned ID);
+  CombineNode(Raverie::StringParam name, unsigned ID);
   virtual ~CombineNode()
   {
   }
@@ -214,9 +214,9 @@ private:
 class CombineAndPauseNode : public SimpleCollapseNode
 {
 public:
-  ZilchDeclareType(CombineAndPauseNode, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CombineAndPauseNode, TypeCopyMode::ReferenceType);
 
-  CombineAndPauseNode(Zero::StringParam name, unsigned ID);
+  CombineAndPauseNode(Raverie::StringParam name, unsigned ID);
   virtual ~CombineAndPauseNode()
   {
   }
@@ -242,4 +242,4 @@ private:
   bool mInterpolatingThreaded;
 };
 
-} // namespace Zero
+} // namespace Raverie

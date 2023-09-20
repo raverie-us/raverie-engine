@@ -4,18 +4,18 @@
 // Standard includes
 #include "Foundation/Common/CommonStandard.hpp"
 
-#include "Foundation/Zilch/Precompiled.hpp"
-using namespace Zilch;
+#include "Foundation/RaverieLanguage/Precompiled.hpp"
+using namespace Raverie;
 
 namespace Geometry
 {
 
 using namespace Math;
-using Zero::Array;
+using Raverie::Array;
 
 } // namespace Geometry
 
-namespace Zero
+namespace Raverie
 {
 #include "Math/MathImports.hpp"
 using Geometry::Vec3Array;
@@ -24,20 +24,20 @@ typedef Array<Array<Vec2>> ContourArray;
 
 namespace Csg
 {
-using Zero::ContourArray;
+using Raverie::ContourArray;
 } // namespace Csg
 
 // Geometry library
-class GeometryLibrary : public Zilch::StaticLibrary
+class GeometryLibrary : public Raverie::StaticLibrary
 {
 public:
-  ZilchDeclareStaticLibraryInternals(GeometryLibrary);
+  RaverieDeclareStaticLibraryInternals(GeometryLibrary);
 
   static void Initialize();
   static void Shutdown();
 };
 
-} // namespace Zero
+} // namespace Raverie
 
 namespace Intersection
 {

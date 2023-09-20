@@ -1,26 +1,26 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(ViewportMouseEvent, builder, type)
+RaverieDefineType(ViewportMouseEvent, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindFieldProperty(mWorldRay);
-  ZilchBindFieldProperty(mRayStart);
-  ZilchBindFieldProperty(mRayDirection);
-  ZilchBindFieldProperty(mHitPosition);
-  ZilchBindFieldProperty(mHitNormal);
-  ZilchBindFieldProperty(mHitUv);
-  ZilchBindFieldProperty(mHitDistance);
-  ZilchBindGetterProperty(HitObject);
-  ZilchBindGetterProperty(CameraViewport);
+  RaverieBindFieldProperty(mWorldRay);
+  RaverieBindFieldProperty(mRayStart);
+  RaverieBindFieldProperty(mRayDirection);
+  RaverieBindFieldProperty(mHitPosition);
+  RaverieBindFieldProperty(mHitNormal);
+  RaverieBindFieldProperty(mHitUv);
+  RaverieBindFieldProperty(mHitDistance);
+  RaverieBindGetterProperty(HitObject);
+  RaverieBindGetterProperty(CameraViewport);
 
-  ZilchBindMethod(ToWorldZPlane);
-  ZilchBindMethod(ToWorldViewPlane);
-  ZilchBindMethod(ToWorldPlane);
+  RaverieBindMethod(ToWorldZPlane);
+  RaverieBindMethod(ToWorldViewPlane);
+  RaverieBindMethod(ToWorldPlane);
 }
 
 ViewportMouseEvent::ViewportMouseEvent() :
@@ -82,7 +82,7 @@ Vec3 ViewportMouseEvent::ToWorldPlane(Vec3Param worldPlaneNormal, Vec3Param worl
   return viewport->ScreenToWorldPlane(Position, worldPlaneNormal, worldPlanePosition);
 }
 
-ZilchDefineType(ReactiveViewport, builder, type)
+RaverieDefineType(ReactiveViewport, builder, type)
 {
 }
 
@@ -455,7 +455,7 @@ Widget* ReactiveViewport::HitTest(Vec2 screenPoint, Widget* skip)
   return hit;
 }
 
-ZilchDefineType(GameWidget, builder, type)
+RaverieDefineType(GameWidget, builder, type)
 {
 }
 
@@ -482,7 +482,7 @@ void GameWidget::OnDestroy()
 
 bool GameWidget::TakeFocusOverride()
 {
-  CommandManager::GetInstance()->GetContext()->Remove(ZilchTypeId(Space));
+  CommandManager::GetInstance()->GetContext()->Remove(RaverieTypeId(Space));
 
   this->HardTakeFocus();
 
@@ -587,11 +587,11 @@ void GameWidget::OnUiRenderUpdate(Event* event)
   Mat4 scale;
   scale.Scale(1.0f, -1.0f, 1.0f);
   viewBlock.mWorldToView = scale * translation;
-  BuildOrthographicTransformZero(viewBlock.mViewToPerspective, size.y, size.x / size.y, -1.0f, 1.0f);
+  BuildOrthographicTransformEngine(viewBlock.mViewToPerspective, size.y, size.x / size.y, -1.0f, 1.0f);
 
   Mat4 apiPerspective;
   Z::gRenderer->BuildOrthographicTransform(apiPerspective, size.y, size.x / size.y, -1.0f, 1.0f);
-  viewBlock.mZeroPerspectiveToApiPerspective = apiPerspective * viewBlock.mViewToPerspective.Inverted();
+  viewBlock.mEnginePerspectiveToApiPerspective = apiPerspective * viewBlock.mViewToPerspective.Inverted();
 
   ColorTransform colorTx = {Vec4(1.0f)};
   WidgetRect clipRect = {0, 0, size.x, size.y};
@@ -661,4 +661,4 @@ void GameWidget::OnUpdate(UpdateEvent* event)
   mChildren.Sort(ViewportSorter());
 }
 
-} // namespace Zero
+} // namespace Raverie

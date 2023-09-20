@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Physics
@@ -26,24 +26,24 @@ struct InternalImplementation
 
   // testing a sub object of a collider (was used in complex colliders, not used
   // at the moment)
-  Zero::ShapeArrayLookup<Sphere> mSphereLookups;
-  Zero::ShapeArrayLookup<Aabb> mAabbLookups;
-  Zero::ShapeArrayLookup<Triangle> mTriangleLookups;
+  Raverie::ShapeArrayLookup<Sphere> mSphereLookups;
+  Raverie::ShapeArrayLookup<Aabb> mAabbLookups;
+  Raverie::ShapeArrayLookup<Triangle> mTriangleLookups;
 
   // cast functions
-  Zero::CastArrayLookup<Ray> mRayCastLookup;
-  Zero::CastArrayLookup<Segment> mSegmentCastLookup;
-  Zero::CastArrayLookup<Aabb> mAabbCastLookup;
-  Zero::CastArrayLookup<Sphere> mSphereCastLookup;
-  Zero::CastArrayLookup<Frustum> mFrustumCastLookup;
+  Raverie::CastArrayLookup<Ray> mRayCastLookup;
+  Raverie::CastArrayLookup<Segment> mSegmentCastLookup;
+  Raverie::CastArrayLookup<Aabb> mAabbCastLookup;
+  Raverie::CastArrayLookup<Sphere> mSphereCastLookup;
+  Raverie::CastArrayLookup<Frustum> mFrustumCastLookup;
 
   // specific shape overlap tests
-  Zero::OverlapArrayLookup<Vec3> mPointOverlapLookups;
-  Zero::OverlapArrayLookup<Aabb> mAabbOverlapLookups;
+  Raverie::OverlapArrayLookup<Vec3> mPointOverlapLookups;
+  Raverie::OverlapArrayLookup<Aabb> mAabbOverlapLookups;
 
   // table lookups (two colliders) for boolean and manifold versions
-  Zero::CollisionTableLookup mCollisionTable;
-  Zero::OverlapTableLookup mOverlapTable;
+  Raverie::CollisionTableLookup mCollisionTable;
+  Raverie::OverlapTableLookup mOverlapTable;
 };
 
 CollisionManager::CollisionManager()
@@ -184,4 +184,4 @@ bool CollisionManager::TestFrustumVsObject(void* userData,
 
 } // namespace Physics
 
-} // namespace Zero
+} // namespace Raverie

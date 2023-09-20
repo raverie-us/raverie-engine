@@ -2,7 +2,7 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -42,13 +42,13 @@ bool ParentSkeletonRange::Empty()
   return mSkeleton == nullptr;
 }
 
-ZilchDefineType(Bone, builder, type)
+RaverieDefineType(Bone, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindDocumented();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindComponent();
+  RaverieBindDocumented();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
 
-  ZeroBindDependency(Transform);
+  RaverieBindDependency(Transform);
 }
 
 void Bone::Serialize(Serializer& stream)
@@ -115,13 +115,13 @@ Mat4 Bone::GetLocalTransform()
   return localMatrix;
 }
 
-ZilchDefineType(Skeleton, builder, type)
+RaverieDefineType(Skeleton, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindDocumented();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindComponent();
+  RaverieBindDocumented();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
 
-  ZeroBindDependency(Transform);
+  RaverieBindDependency(Transform);
 }
 
 void Skeleton::Serialize(Serializer& stream)
@@ -325,4 +325,4 @@ float Skeleton::GetBoneRadius(BoneInfo& boneInfo)
   return radius;
 }
 
-} // namespace Zero
+} // namespace Raverie

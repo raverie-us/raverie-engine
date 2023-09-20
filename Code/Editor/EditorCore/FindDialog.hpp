@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 // Forward declarations
 class TextEditor;
@@ -21,7 +21,7 @@ class FindTextDialog : public Composite
 {
 public:
   // Type-defines
-  typedef FindTextDialog ZilchSelf;
+  typedef FindTextDialog RaverieSelf;
   typedef Array<String> StrArray;
   typedef ContainerSource<StrArray> StrSource;
 
@@ -284,7 +284,7 @@ class FindObjectDialog : public Composite
 {
 public:
   // Type-defines
-  typedef FindObjectDialog ZilchSelf;
+  typedef FindObjectDialog RaverieSelf;
 
   // Constructor
   FindObjectDialog(Composite* parent);
@@ -307,4 +307,4 @@ private:
   TextCheckBox* mRootObjectsOnly;
 };
 
-} // namespace Zero
+} // namespace Raverie

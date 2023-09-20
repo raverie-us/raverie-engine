@@ -1,6 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
-namespace Zero
+namespace Raverie
 {
 extern const String cBackground;
 extern const String cWhiteSquare;
@@ -18,4 +18,4 @@ extern const String cDragBox;
 extern const String Divider;
 extern const String DefaultTextStyle;
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 UvRect ComputeTextureRect(IntRect pixelRect, Vec2 textureSize);
@@ -36,7 +36,7 @@ class FileEditEvent;
 class SpriteFrame
 {
 public:
-  ZilchDeclareType(SpriteFrame, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SpriteFrame, TypeCopyMode::ReferenceType);
 
   SpriteFrame();
   ~SpriteFrame();
@@ -71,7 +71,7 @@ struct TextureArea
 class SpritePreview : public Composite
 {
 public:
-  ZilchDeclareType(SpritePreview, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SpritePreview, TypeCopyMode::ReferenceType);
 
   SpritePreview(Composite* parent);
   ~SpritePreview();
@@ -178,7 +178,7 @@ public:
 class SpriteSourceEditor : public Composite
 {
 public:
-  ZilchDeclareType(SpriteSourceEditor, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SpriteSourceEditor, TypeCopyMode::ReferenceType);
 
   SpriteSourceEditor(Composite* parent);
   ~SpriteSourceEditor();
@@ -311,4 +311,4 @@ public:
 
 void EditSprite(SpriteSource* spriteSource);
 
-} // namespace Zero
+} // namespace Raverie

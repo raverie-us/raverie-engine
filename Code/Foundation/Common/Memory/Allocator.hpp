@@ -16,7 +16,7 @@
 
 #else
 
-namespace Zero
+namespace Raverie
 {
 
 void* zAllocate(size_t numberOfBytes);
@@ -55,7 +55,7 @@ public:
   }
 };
 
-} // namespace Zero
+} // namespace Raverie
 
 #endif // UseMemoryGraph
 
@@ -127,7 +127,7 @@ public:
       return nullptr;
 #endif
     }
-    void* ptr = Zero::zAllocate(num * sizeof(T));
+    void* ptr = Raverie::zAllocate(num * sizeof(T));
     if (!ptr)
     {
 #ifdef RaverieExceptions
@@ -146,7 +146,7 @@ public:
 
   void deallocate(pointer p, size_type)
   {
-    Zero::zDeallocate(p);
+    Raverie::zDeallocate(p);
   }
 
   void Construct(pointer p, const T& value)

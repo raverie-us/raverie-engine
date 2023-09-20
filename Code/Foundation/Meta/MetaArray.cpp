@@ -1,15 +1,15 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Meta Array
-ZilchDefineType(MetaArray, builder, type)
+RaverieDefineType(MetaArray, builder, type)
 {
 }
 
-ZilchDefineType(MetaArrayWrapper, builder, type)
+RaverieDefineType(MetaArrayWrapper, builder, type)
 {
 }
 
@@ -58,4 +58,4 @@ MetaArray::Range MetaArray::All(HandleParam container)
   return r;
 }
 
-} // namespace Zero
+} // namespace Raverie

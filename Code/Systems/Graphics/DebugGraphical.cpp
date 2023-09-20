@@ -2,12 +2,12 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(DebugGraphical, builder, type)
+RaverieDefineType(DebugGraphical, builder, type)
 {
-  ZeroBindInterface(Graphical);
+  RaverieBindInterface(Graphical);
   type->AddAttribute(ObjectAttributes::cHidden);
 }
 
@@ -49,9 +49,9 @@ void DebugGraphical::AddToSpace()
   mGraphicsSpace->AddDebugGraphical(this);
 }
 
-ZilchDefineType(DebugGraphicalPrimitive, builder, type)
+RaverieDefineType(DebugGraphicalPrimitive, builder, type)
 {
-  ZeroBindComponent();
+  RaverieBindComponent();
   type->AddAttribute(ObjectAttributes::cHidden);
 }
 
@@ -94,9 +94,9 @@ void DebugGraphicalPrimitive::ExtractViewData(ViewNode& viewNode, ViewBlock& vie
   viewNode.mStreamedVertexCount = streamedVertices.Size() - viewNode.mStreamedVertexStart;
 }
 
-ZilchDefineType(DebugGraphicalThickLine, builder, type)
+RaverieDefineType(DebugGraphicalThickLine, builder, type)
 {
-  ZeroBindComponent();
+  RaverieBindComponent();
   type->AddAttribute(ObjectAttributes::cHidden);
 }
 
@@ -106,9 +106,9 @@ void DebugGraphicalThickLine::ExtractFrameData(FrameNode& frameNode, FrameBlock&
   frameNode.mBorderThickness = 2.0f;
 }
 
-ZilchDefineType(DebugGraphicalText, builder, type)
+RaverieDefineType(DebugGraphicalText, builder, type)
 {
-  ZeroBindComponent();
+  RaverieBindComponent();
   type->AddAttribute(ObjectAttributes::cHidden);
 }
 
@@ -167,4 +167,4 @@ void DebugGraphicalText::ExtractViewData(ViewNode& viewNode, ViewBlock& viewBloc
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

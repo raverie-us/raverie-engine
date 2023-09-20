@@ -2,7 +2,7 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Z
@@ -10,13 +10,13 @@ namespace Z
 Renderer* gRenderer = nullptr;
 }
 
-ZilchDefineExternalBaseType(GraphicsDriverSupport, TypeCopyMode::ReferenceType, builder, type)
+RaverieDefineExternalBaseType(GraphicsDriverSupport, TypeCopyMode::ReferenceType, builder, type)
 {
-  type->HandleManager = ZilchManagerId(PointerManager);
+  type->HandleManager = RaverieManagerId(PointerManager);
 
-  ZilchBindFieldGetter(mTextureCompression);
-  ZilchBindFieldGetter(mMultiTargetBlend);
-  ZilchBindFieldGetter(mSamplerObjects);
+  RaverieBindFieldGetter(mTextureCompression);
+  RaverieBindFieldGetter(mMultiTargetBlend);
+  RaverieBindFieldGetter(mSamplerObjects);
 }
 
-} // namespace Zero
+} // namespace Raverie

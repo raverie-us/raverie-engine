@@ -2,18 +2,18 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineTemplateType(ProxyObject<MaterialBlock>, builder, type)
+RaverieDefineTemplateType(ProxyObject<MaterialBlock>, builder, type)
 {
   type->AddAttribute(ObjectAttributes::cHidden);
 }
 
-ZilchDefineType(MaterialBlock, builder, type)
+RaverieDefineType(MaterialBlock, builder, type)
 {
   type->CreatableInScript = true;
-  ZilchBindDefaultCopyDestructor();
+  RaverieBindDefaultCopyDestructor();
 
   type->Add(new CogComponentMeta(type));
   type->Add(new MetaSerialization());
@@ -39,11 +39,11 @@ IndexRange MaterialBlock::AddShaderInputs(Array<ShaderInput>& shaderInputs)
 {
   IndexRange range;
 
-  ZilchShaderGenerator* shaderGenerator = Z::gEngine->has(GraphicsEngine)->mShaderGenerator;
+  RaverieShaderGenerator* shaderGenerator = Z::gEngine->has(GraphicsEngine)->mShaderGenerator;
 
   range.start = shaderInputs.Size();
 
-  BoundType* materialType = ZilchVirtualTypeId(this);
+  BoundType* materialType = RaverieVirtualTypeId(this);
   forRange (Property* metaProperty, materialType->GetProperties())
   {
     ShaderInputType::Enum type = MaterialFactory::GetInstance()->GetShaderInputType(metaProperty->PropertyType);
@@ -75,7 +75,7 @@ void FragmentConstructor(Call& call, ExceptionReport& report)
   MaterialBlock* materialBlock = new (memory) MaterialBlock;
 
   // Get default values stored on BoundType.
-  ByteBufferBlock& defaultMemory = materialBlock->ZilchGetDerivedType()->ComplexUserData.ReadObject<ByteBufferBlock>(0);
+  ByteBufferBlock& defaultMemory = materialBlock->RaverieGetDerivedType()->ComplexUserData.ReadObject<ByteBufferBlock>(0);
 
   // Initialize derived class.
   byte* fragmentMemory = memory + sizeof(MaterialBlock);
@@ -154,4 +154,4 @@ void FragmentTextureSetter(Call& call, ExceptionReport& report)
   materialBlock->MarkAsModified();
 }
 
-} // namespace Zero
+} // namespace Raverie

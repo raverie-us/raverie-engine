@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -36,7 +36,7 @@ public:
 class GraphicalEntry
 {
 public:
-  ZilchDeclareType(GraphicalEntry, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(GraphicalEntry, TypeCopyMode::ReferenceType);
 
   bool operator<(const GraphicalEntry& other) const;
 
@@ -63,7 +63,7 @@ typedef Array<GraphicalEntry>::range GraphicalEntryRange;
 class GraphicalSortEvent : public Event
 {
 public:
-  ZilchDeclareType(GraphicalSortEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(GraphicalSortEvent, TypeCopyMode::ReferenceType);
 
   /// Range of Graphicals that can have their sort values set.
   GraphicalEntryRange GetGraphicalEntries()
@@ -83,4 +83,4 @@ public:
 s32 GetGraphicalSortValue(
     Graphical& graphical, GraphicalSortMethod::Enum sortMethod, Vec3 pos, Vec3 camPos, Vec3 camDir);
 
-} // namespace Zero
+} // namespace Raverie

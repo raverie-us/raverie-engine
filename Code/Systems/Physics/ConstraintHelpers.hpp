@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class Collider;
@@ -76,4 +76,4 @@ void WakeUpConnected(EdgeListType& edgeList)
 
 } // namespace Physics
 
-} // namespace Zero
+} // namespace Raverie

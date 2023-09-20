@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Physics
@@ -87,4 +87,4 @@ struct PulleyJoint : public Joint
 
 typedef Physics::PulleyJoint PulleyJoint;
 
-} // namespace Zero
+} // namespace Raverie

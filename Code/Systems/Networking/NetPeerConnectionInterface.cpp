@@ -1,10 +1,10 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(NetPeerConnectionInterface, builder, type)
+RaverieDefineType(NetPeerConnectionInterface, builder, type)
 {
 }
 
@@ -30,4 +30,4 @@ EventReceiver* NetPeerConnectionInterface::GetReceiver()
   return &mReceiver;
 }
 
-} // namespace Zero
+} // namespace Raverie

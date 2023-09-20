@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Attribute Status
@@ -295,7 +295,7 @@ Any Cast(AnyParam value, BoundType* expectedType)
   if (valueType == expectedType)
     return value;
 
-  if (expectedType == ZilchTypeId(float) && valueType == ZilchTypeId(int))
+  if (expectedType == RaverieTypeId(float) && valueType == RaverieTypeId(int))
     return (float)value.Get<int>();
 
   return Any();
@@ -494,4 +494,4 @@ AttributeExtension* AttributeExtension::AllowMultiple(bool state)
   return this;
 }
 
-} // namespace Zero
+} // namespace Raverie

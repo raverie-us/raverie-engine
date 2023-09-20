@@ -1,14 +1,14 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class UiDockLayout : public UiLayout
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(UiDockLayout, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(UiDockLayout, TypeCopyMode::ReferenceType);
 
   /// Component Interface.
   void Initialize(CogInitializer& initializer) override;
@@ -21,4 +21,4 @@ public:
   Vec2 mSpacing;
 };
 
-} // namespace Zero
+} // namespace Raverie

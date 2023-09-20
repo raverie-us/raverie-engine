@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Forward declarations
@@ -15,7 +15,7 @@ class AnimationSettings
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(AnimationSettings, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(AnimationSettings, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   AnimationSettings();
@@ -78,4 +78,4 @@ private:
   AnimationEditor* mEditor;
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 String GetNameFromHandle(HandleParam object)
@@ -178,10 +178,10 @@ Handle MetaOperation::GetUndoObject()
   return mUndoHandle.GetHandle();
 }
 
-ZilchDefineType(PropertyOperation, builder, type)
+RaverieDefineType(PropertyOperation, builder, type)
 {
-  ZilchBindFieldGetter(mValueBefore);
-  ZilchBindFieldGetter(mValueAfter);
+  RaverieBindFieldGetter(mValueBefore);
+  RaverieBindFieldGetter(mValueAfter);
 }
 
 PropertyOperation::PropertyOperation(HandleParam object, PropertyPathParam property, AnyParam before, AnyParam after) :
@@ -208,7 +208,7 @@ PropertyOperation::PropertyOperation(HandleParam object, PropertyPathParam prope
   mPropertyWasModified = modifications->IsPropertyModified(object, property);
 
   ConnectThisTo(MetaDatabase::GetInstance(), Events::MetaRemoved, OnMetaRemoved);
-  ConnectThisTo(ZilchManager::GetInstance(), Events::ScriptsCompiledPrePatch, OnScriptsCompiled);
+  ConnectThisTo(RaverieManager::GetInstance(), Events::ScriptsCompiledPrePatch, OnScriptsCompiled);
 }
 
 PropertyOperation::~PropertyOperation()
@@ -265,7 +265,7 @@ void PropertyOperation::UpdateValueAfter()
   mValueAfter = mPropertyPath.GetValue(instance);
 }
 
-void PropertyOperation::OnScriptsCompiled(ZilchCompileEvent* e)
+void PropertyOperation::OnScriptsCompiled(RaverieCompileEvent* e)
 {
   if (mValueBefore.IsNull() || mValueAfter.IsNull())
     return;
@@ -781,4 +781,4 @@ void RestoreChildOrderOperation::Redo()
   MetaOperation::Redo();
 }
 
-} // namespace Zero
+} // namespace Raverie

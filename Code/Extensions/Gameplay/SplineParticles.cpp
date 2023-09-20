@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace
@@ -32,18 +32,18 @@ Vec3 GetSplineNormal(float radians, Vec3* normal, Vec3Param splineTangent)
   return Math::TransformNormal(rotation, localSpin);
 }
 
-ZilchDefineType(SplineParticleEmitter, builder, type)
+RaverieDefineType(SplineParticleEmitter, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindInterface(ParticleEmitterShared);
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindInterface(ParticleEmitterShared);
 
-  ZilchBindFieldProperty(mEmitRadius);
-  ZilchBindFieldProperty(mSpawnT)->Add(new EditorSlider(0, 1, 0.001f));
-  ZilchBindFieldProperty(mSpawnTVariance)->Add(new EditorSlider(0, 0.5f, 0.001f));
-  ZilchBindFieldProperty(mClampT);
-  ZilchBindFieldProperty(mTargetSplineCog);
-  ZilchBindGetterSetterProperty(Spline);
+  RaverieBindFieldProperty(mEmitRadius);
+  RaverieBindFieldProperty(mSpawnT)->Add(new EditorSlider(0, 1, 0.001f));
+  RaverieBindFieldProperty(mSpawnTVariance)->Add(new EditorSlider(0, 0.5f, 0.001f));
+  RaverieBindFieldProperty(mClampT);
+  RaverieBindFieldProperty(mTargetSplineCog);
+  RaverieBindGetterSetterProperty(Spline);
 
   // EmitterSize on the base doesn't do anything, so hide it
   // METAREFACTOR - What should we do here..?
@@ -193,28 +193,28 @@ void SplineParticleEmitter::SetSpline(Spline* spline)
   mSpline = spline;
 }
 
-ZilchDefineType(SplineParticleAnimator, builder, type)
+RaverieDefineType(SplineParticleAnimator, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDependency(Transform);
-  ZeroBindDependency(ParticleSystem);
-  ZeroBindDependency(SplineParticleEmitter);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDependency(Transform);
+  RaverieBindDependency(ParticleSystem);
+  RaverieBindDependency(SplineParticleEmitter);
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetterProperty(Speed);
-  ZilchBindFieldProperty(mAutoCalculateLifetime);
+  RaverieBindGetterSetterProperty(Speed);
+  RaverieBindFieldProperty(mAutoCalculateLifetime);
 
-  ZilchBindFieldProperty(mHelix)->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  ZilchBindFieldProperty(mHelixRadius)->ZeroFilterBool(mHelix);
-  ZilchBindFieldProperty(mHelixWaveLength)->ZeroFilterBool(mHelix);
-  ZilchBindFieldProperty(mHelixOffset)->ZeroFilterBool(mHelix);
+  RaverieBindFieldProperty(mHelix)->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  RaverieBindFieldProperty(mHelixRadius)->RaverieFilterBool(mHelix);
+  RaverieBindFieldProperty(mHelixWaveLength)->RaverieFilterBool(mHelix);
+  RaverieBindFieldProperty(mHelixOffset)->RaverieFilterBool(mHelix);
 
-  ZilchBindFieldProperty(mMode)->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  ZilchBindFieldProperty(mSpringFrequencyHz)
-      ->ZeroFilterEquality(mMode, SplineAnimatorMode::Enum, SplineAnimatorMode::Spring);
-  ZilchBindFieldProperty(mSpringDampingRatio)
-      ->ZeroFilterEquality(mMode, SplineAnimatorMode::Enum, SplineAnimatorMode::Spring);
+  RaverieBindFieldProperty(mMode)->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  RaverieBindFieldProperty(mSpringFrequencyHz)
+      ->RaverieFilterEquality(mMode, SplineAnimatorMode::Enum, SplineAnimatorMode::Spring);
+  RaverieBindFieldProperty(mSpringDampingRatio)
+      ->RaverieFilterEquality(mMode, SplineAnimatorMode::Enum, SplineAnimatorMode::Spring);
 }
 
 SplineParticleAnimator::~SplineParticleAnimator()
@@ -378,4 +378,4 @@ float SplineParticleAnimator::GetSpeed()
   return mSpeed;
 }
 
-} // namespace Zero
+} // namespace Raverie

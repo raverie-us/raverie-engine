@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class ContentComposition;
@@ -12,7 +12,7 @@ void SerializeComponents(Serializer& stream, ContentComposition* contentItem);
 class ContentComponent : public EventObject
 {
 public:
-  ZilchDeclareType(ContentComponent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ContentComponent, TypeCopyMode::ReferenceType);
   ContentComponent(){};
   virtual ~ContentComponent(){};
   ContentComposition* mOwner;
@@ -36,7 +36,7 @@ public:
 class ContentMetaComposition : public MetaComposition
 {
 public:
-  ZilchDeclareType(ContentMetaComposition, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ContentMetaComposition, TypeCopyMode::ReferenceType);
 
   ContentMetaComposition();
 
@@ -58,7 +58,7 @@ public:
 class ContentComposition : public ContentItem
 {
 public:
-  ZilchDeclareType(ContentComposition, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ContentComposition, TypeCopyMode::ReferenceType);
   DeclareSafeIdHandle(u64);
 
   ContentComposition();
@@ -99,7 +99,7 @@ public:
 class BuilderComponent : public ContentComponent
 {
 public:
-  ZilchDeclareType(BuilderComponent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(BuilderComponent, TypeCopyMode::ReferenceType);
   // ContentComponent Interface
   void Initialize(ContentComposition* item) override;
 
@@ -142,4 +142,4 @@ public:
   }
 };
 
-} // namespace Zero
+} // namespace Raverie

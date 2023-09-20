@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 String WebRequest::GetBoundary()
@@ -81,4 +81,4 @@ String WebRequest::GetUserAgent()
          "Gecko) Chrome/39.0.2171.71 Safari/537.36 Edge/12.0 Raverie";
 }
 
-} // namespace Zero
+} // namespace Raverie

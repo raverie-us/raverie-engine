@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Used to make enum members only take 1 byte
@@ -41,4 +41,4 @@ public:
     m##name = value;                                                                                                   \
   }
 
-} // namespace Zero
+} // namespace Raverie

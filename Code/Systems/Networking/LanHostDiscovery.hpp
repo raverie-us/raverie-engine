@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class LanHostDiscovery : public NetDiscoveryInterface
@@ -73,4 +73,4 @@ public:
   virtual void CleanUp();
 };
 
-} // namespace Zero
+} // namespace Raverie

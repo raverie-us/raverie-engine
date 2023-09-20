@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 inline u32 EndianSwap(u32 x)
@@ -137,4 +137,4 @@ void Download(StringParam filePath);
 // If we're passed a directory or a set of files or directories, then zip them and download as one.
 void Download(StringParam suggestedNameWithoutExtension, StringParam workingDirectory, const Array<String>& filePaths);
 
-} // namespace Zero
+} // namespace Raverie

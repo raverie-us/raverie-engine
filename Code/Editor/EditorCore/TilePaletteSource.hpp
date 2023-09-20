@@ -1,13 +1,13 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class TilePaletteSource : public Resource
 {
 public:
-  ZilchDeclareType(TilePaletteSource, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(TilePaletteSource, TypeCopyMode::ReferenceType);
 
   TilePaletteSource();
   ~TilePaletteSource();
@@ -30,4 +30,4 @@ public:
   TilePaletteSourceManager(BoundType* resourceType);
 };
 
-} // namespace Zero
+} // namespace Raverie

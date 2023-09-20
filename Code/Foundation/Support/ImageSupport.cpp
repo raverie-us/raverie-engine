@@ -11,7 +11,7 @@
 #include "stb_image.h"
 #include "stb_image_write.h"
 
-namespace Zero
+namespace Raverie
 {
 
 // Fill 'data' with 'size' bytes and return number of bytes actually read
@@ -270,12 +270,12 @@ void LoadImage(Status& status,
                TextureFormat::Enum* format,
                TextureFormat::Enum requireFormat)
 {
-#ifdef ZeroCustomPngSupport
+#ifdef RaverieCustomPngSupport
   if (IsPngLoadFormat(requireFormat) && IsPng(stream))
     return LoadPng(status, stream, output, width, height, format, requireFormat);
 #endif
 
-#ifdef ZeroCustomHdrSupport
+#ifdef RaverieCustomHdrSupport
   if (IsHdrLoadFormat(requireFormat) && IsHdr(stream))
     return LoadHdr(status, stream, output, width, height, format, requireFormat);
 #endif
@@ -487,12 +487,12 @@ void SaveImage(Status& status,
     return;
   }
 
-#ifdef ZeroCustomPngSupport
+#ifdef RaverieCustomPngSupport
   if (imageType == ImageSaveFormat::Png && IsPngSaveFormat(format))
     return SavePng(status, stream, image, width, height, format);
 #endif
 
-#ifdef ZeroCustomHdrSupport
+#ifdef RaverieCustomHdrSupport
   if (imageType == ImageSaveFormat::Hdr && IsHdrSaveFormat(format))
     return SaveHdr(status, stream, image, width, height, format);
 #endif
@@ -593,4 +593,4 @@ void SaveImage(Status& status, StringParam filename, Image* image, ImageSaveForm
   return SaveImage(status, file, image, imageType);
 }
 
-} // namespace Zero
+} // namespace Raverie

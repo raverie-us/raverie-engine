@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 LoadingWindow::LoadingWindow(Composite* composite) : Composite(composite, AttachType::Direct)
@@ -82,4 +82,4 @@ void LoadingWindow::UpdateTransform()
   Composite::UpdateTransform();
 }
 
-} // namespace Zero
+} // namespace Raverie

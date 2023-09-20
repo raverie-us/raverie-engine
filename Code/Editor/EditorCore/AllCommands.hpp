@@ -1,6 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
-namespace Zero
+namespace Raverie
 {
 
 class CommandManager;
@@ -15,4 +15,4 @@ void BindPhysicsTestCommands(Cog* configCog, CommandManager* commands);
 void BindDocumentationCommands(Cog* config, CommandManager* commands);
 void BindContentCommands(Cog* configCog, CommandManager* commands);
 
-} // namespace Zero
+} // namespace Raverie

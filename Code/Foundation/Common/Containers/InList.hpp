@@ -4,13 +4,13 @@
 #include "Diagnostic/Diagnostic.hpp"
 #include "ContainerCommon.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 const uintptr_t ObjListPtrDebugValue = (uintptr_t)0xFFFFDEAD;
 
 #ifndef DEBUGLINKS
-#  if ZeroDebug
+#  if RaverieDebug
 #    define DEBUGLINKS 1
 #  else
 #    define DEBUGLINKS 0
@@ -38,7 +38,7 @@ public:
 template <typename Parent, typename Member>
 __attribute__ ((optnone)) inline ptrdiff_t PointerToMemberOffset(const Member Parent::*ptrToMember)
 {
-  return (ptrdiff_t)ZeroOffsetOfHelper(Parent, ->*, ptrToMember);
+  return (ptrdiff_t)RaverieOffsetOfHelper(Parent, ->*, ptrToMember);
 }
 
 typedef const char* const cstrc;
@@ -458,8 +458,8 @@ public:
   // last objects located in the list
   void Swap(this_type& other)
   {
-    Zero::Swap(mHeader.Next, other.mHeader.Next);
-    Zero::Swap(mHeader.Prev, other.mHeader.Prev);
+    Raverie::Swap(mHeader.Next, other.mHeader.Next);
+    Raverie::Swap(mHeader.Prev, other.mHeader.Prev);
 
     // If the list contained pointers fix them
     if (mHeader.Next != other.GetHeader())
@@ -788,4 +788,4 @@ void OnlyDeleteObjectIn(InList<type, PtrToMember>& container)
   container.SafeForEach(container.Begin(), container.End(), DeleteOp<type>);
 }
 
-} // namespace Zero
+} // namespace Raverie

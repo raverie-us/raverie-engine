@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class GeometryImporter
@@ -32,7 +32,7 @@ public:
   // message
   String ProcessAssimpErrorMessage(StringParam errorMessage);
 
-  // Zero meta data
+  // Raverie meta data
   GeometryContent* mGeometryContent;
 
   // Assimp data
@@ -55,4 +55,4 @@ public:
   uint mUniquifyingIndex;
 };
 
-} // namespace Zero
+} // namespace Raverie

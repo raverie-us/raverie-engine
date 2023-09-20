@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// This represents the world transformation for physics to use. This is also
@@ -87,4 +87,4 @@ public:
   Transform* mTransform;
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -35,8 +35,8 @@ set(Editor_Property_Sources
 )
 
 set(Editor_Scintilla_Sources 
-    ${CMAKE_CURRENT_LIST_DIR}/Scintilla/ScintillaPlatformZero.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Scintilla/ScintillaPlatformZero.hpp
+    ${CMAKE_CURRENT_LIST_DIR}/Scintilla/ScintillaPlatformEngine.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/Scintilla/ScintillaPlatformEngine.hpp
 )
 
 target_sources(EditorCore
@@ -273,5 +273,5 @@ raverie_target_includes(EditorCore
   PUBLIC
     Scintilla
     Common
-    ZilchShaders
+    RaverieShaders
 )

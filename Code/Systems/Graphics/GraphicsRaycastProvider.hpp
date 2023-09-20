@@ -2,14 +2,14 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Provides the interface for casting through graphics space.
 class GraphicsRaycastProvider : public RaycastProvider
 {
 public:
-  ZilchDeclareType(GraphicsRaycastProvider, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(GraphicsRaycastProvider, TypeCopyMode::ReferenceType);
 
   GraphicsRaycastProvider();
   // This function currently only returns 1 result (2 if you get a display
@@ -27,4 +27,4 @@ public:
   bool mVisibleOnly;
 };
 
-} // namespace Zero
+} // namespace Raverie

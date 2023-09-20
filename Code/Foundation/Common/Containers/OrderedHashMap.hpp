@@ -4,7 +4,7 @@
 #include "HashMap.hpp"
 #include "InList.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 /// A hashmap that preserving insertion order, typically for displaying data in
@@ -289,4 +289,4 @@ protected:
   Sorter mSorter;
 };
 
-} // namespace Zero
+} // namespace Raverie

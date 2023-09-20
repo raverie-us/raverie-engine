@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 CogRestoreState::CogRestoreState()
@@ -282,4 +282,4 @@ void CogRestoreState::RestoreChildUndoIds(Cog* object, uint& childIndex)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Physics
@@ -27,4 +27,4 @@ inline void SerializeAngles(Serializer& stream, AngleAtom& angles)
 
 } // namespace Physics
 
-} // namespace Zero
+} // namespace Raverie

@@ -2,7 +2,7 @@
 #pragma once
 #include "GraphicsApi/BatchBuffer.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 /// Templated wrapper around batch buffer.
@@ -63,4 +63,4 @@ public:
   PrimitiveType::Enum mPrimtiveType;
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Tags
@@ -9,25 +9,25 @@ namespace Tags
 DefineTag(Joint);
 }
 
-ZilchDefineType(Joint, builder, type)
+RaverieDefineType(Joint, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZeroBindDependency(Cog);
-  ZeroBindDependency(ObjectLink);
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDependency(Cog);
+  RaverieBindDependency(ObjectLink);
+  RaverieBindSetup(SetupMode::DefaultSerialization);
 
-  ZilchBindGetterSetterProperty(Active);
-  ZilchBindGetterSetterProperty(SendsEvents);
-  ZilchBindGetterSetterProperty(AutoSnaps);
-  ZilchBindGetterSetterProperty(CollideConnected);
-  ZilchBindGetterSetterProperty(MaxImpulse);
-  ZilchBindMethod(GetOtherObject);
-  ZilchBindMethod(GetCog);
-  ZeroBindEvent(Events::JointExceedImpulseLimit, JointEvent);
+  RaverieBindGetterSetterProperty(Active);
+  RaverieBindGetterSetterProperty(SendsEvents);
+  RaverieBindGetterSetterProperty(AutoSnaps);
+  RaverieBindGetterSetterProperty(CollideConnected);
+  RaverieBindGetterSetterProperty(MaxImpulse);
+  RaverieBindMethod(GetOtherObject);
+  RaverieBindMethod(GetCog);
+  RaverieBindEvent(Events::JointExceedImpulseLimit, JointEvent);
 
-  ZeroBindTag(Tags::Physics);
-  ZeroBindTag(Tags::Joint);
+  RaverieBindTag(Tags::Physics);
+  RaverieBindTag(Tags::Joint);
 }
 
 Joint::Joint()
@@ -126,19 +126,19 @@ void Joint::OnDestroy(uint flags)
 
 void Joint::ComponentAdded(BoundType* typeId, Component* component)
 {
-  if (typeId == ZilchTypeId(JointLimit))
+  if (typeId == RaverieTypeId(JointLimit))
   {
     JointLimit* limit = static_cast<JointLimit*>(component);
     limit->mAtomIds = GetDefaultLimitIds();
     Physics::JointHelpers::ForceAwakeJoint(this);
   }
-  else if (typeId == ZilchTypeId(JointMotor))
+  else if (typeId == RaverieTypeId(JointMotor))
   {
     JointMotor* motor = static_cast<JointMotor*>(component);
     motor->mAtomIds = GetDefaultMotorIds();
     Physics::JointHelpers::ForceAwakeJoint(this);
   }
-  else if (typeId == ZilchTypeId(JointSpring))
+  else if (typeId == RaverieTypeId(JointSpring))
   {
     JointSpring* spring = static_cast<JointSpring*>(component);
     spring->mAtomIds = GetDefaultSpringIds();
@@ -148,11 +148,11 @@ void Joint::ComponentAdded(BoundType* typeId, Component* component)
 
 void Joint::ComponentRemoved(BoundType* typeId, Component* component)
 {
-  if (typeId == ZilchTypeId(JointLimit))
+  if (typeId == RaverieTypeId(JointLimit))
     Physics::JointHelpers::ForceAwakeJoint(this);
-  else if (typeId == ZilchTypeId(JointMotor))
+  else if (typeId == RaverieTypeId(JointMotor))
     Physics::JointHelpers::ForceAwakeJoint(this);
-  else if (typeId == ZilchTypeId(JointSpring))
+  else if (typeId == RaverieTypeId(JointSpring))
     Physics::JointHelpers::ForceAwakeJoint(this);
 }
 
@@ -736,4 +736,4 @@ void Joint::SetMaxImpulse(real maxImpulse)
   mMaxImpulse = maxImpulse;
 }
 
-} // namespace Zero
+} // namespace Raverie

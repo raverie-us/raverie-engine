@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -16,39 +16,39 @@ void GetStringsTextConfig(HandleParam instance, Property* property, Array<String
     strings.PushBack(scheme.first);
 }
 
-ZilchDefineType(ColorScheme, builder, type)
+RaverieDefineType(ColorScheme, builder, type)
 {
-  type->HandleManager = ZilchManagerId(PointerManager);
+  type->HandleManager = RaverieManagerId(PointerManager);
   type->Add(new MetaOperations());
 
-  ZilchBindGetterSetterProperty(ActiveScheme)->Add(new EditorIndexedStringArray(GetStringsTextConfig));
+  RaverieBindGetterSetterProperty(ActiveScheme)->Add(new EditorIndexedStringArray(GetStringsTextConfig));
 
-  ZilchBindFieldProperty(Default);
-  ZilchBindFieldProperty(Background);
-  ZilchBindFieldProperty(Selection);
-  ZilchBindFieldProperty(LineSelection);
-  ZilchBindFieldProperty(Comment);
-  ZilchBindFieldProperty(StringLiteral);
-  ZilchBindFieldProperty(Number);
-  ZilchBindFieldProperty(Keyword);
-  ZilchBindFieldProperty(Operator);
-  // until we have a zilch lexer setup that colors the class/function names
+  RaverieBindFieldProperty(Default);
+  RaverieBindFieldProperty(Background);
+  RaverieBindFieldProperty(Selection);
+  RaverieBindFieldProperty(LineSelection);
+  RaverieBindFieldProperty(Comment);
+  RaverieBindFieldProperty(StringLiteral);
+  RaverieBindFieldProperty(Number);
+  RaverieBindFieldProperty(Keyword);
+  RaverieBindFieldProperty(Operator);
+  // until we have a raverie lexer setup that colors the class/function names
   // these fields should not be exposed as a property since they currently have
   // no effect
-  ZilchBindField(ClassName);
-  ZilchBindField(FunctionName);
-  ZilchBindFieldProperty(SpecialWords);
-  ZilchBindFieldProperty(Error);
-  ZilchBindFieldProperty(Whitespace);
-  ZilchBindFieldProperty(Gutter);
-  ZilchBindFieldProperty(GutterText);
-  ZilchBindFieldProperty(Link);
-  ZilchBindFieldProperty(TextMatchIndicator);
-  ZilchBindFieldProperty(TextMatchHighlight);
-  ZilchBindFieldProperty(TextMatchOutlineAlpha)->Add(new EditorSlider());
+  RaverieBindField(ClassName);
+  RaverieBindField(FunctionName);
+  RaverieBindFieldProperty(SpecialWords);
+  RaverieBindFieldProperty(Error);
+  RaverieBindFieldProperty(Whitespace);
+  RaverieBindFieldProperty(Gutter);
+  RaverieBindFieldProperty(GutterText);
+  RaverieBindFieldProperty(Link);
+  RaverieBindFieldProperty(TextMatchIndicator);
+  RaverieBindFieldProperty(TextMatchHighlight);
+  RaverieBindFieldProperty(TextMatchOutlineAlpha)->Add(new EditorSlider());
 
-  ZilchBindGetterSetterProperty(SaveName);
-  ZilchBindMethodProperty(Save)->AddAttribute(FunctionAttributes::cInvalidatesObject);
+  RaverieBindGetterSetterProperty(SaveName);
+  RaverieBindMethodProperty(Save)->AddAttribute(FunctionAttributes::cInvalidatesObject);
 }
 
 void ColorPropertyChanged(BoundType* meta, Property* property, ObjPtr instance, AnyParam oldValue, AnyParam newValue)
@@ -258,4 +258,4 @@ void ColorScheme::Enumerate(StringParam directoryPath)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

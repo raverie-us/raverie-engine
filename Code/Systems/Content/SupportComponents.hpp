@@ -1,13 +1,13 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 /// Component to store the copyright info of a content item.
 class ContentCopyright : public ContentComponent
 {
 public:
-  ZilchDeclareType(ContentCopyright, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ContentCopyright, TypeCopyMode::ReferenceType);
 
   String Owner;
   String Date;
@@ -19,7 +19,7 @@ public:
 class ContentNotes : public ContentComponent
 {
 public:
-  ZilchDeclareType(ContentNotes, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ContentNotes, TypeCopyMode::ReferenceType);
 
   String Notes;
 
@@ -31,7 +31,7 @@ public:
 class ContentEditorOptions : public ContentComponent
 {
 public:
-  ZilchDeclareType(ContentEditorOptions, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ContentEditorOptions, TypeCopyMode::ReferenceType);
 
   void Serialize(Serializer& stream) override;
   void Initialize(ContentComposition* item) override;
@@ -43,7 +43,7 @@ public:
 class ResourceTemplate : public ContentComponent
 {
 public:
-  ZilchDeclareType(ResourceTemplate, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ResourceTemplate, TypeCopyMode::ReferenceType);
 
   void Serialize(Serializer& stream);
 
@@ -53,4 +53,4 @@ public:
   String mCategory;
   uint mCategorySortWeight;
 };
-} // namespace Zero
+} // namespace Raverie

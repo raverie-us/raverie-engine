@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Sound Space
@@ -11,7 +11,7 @@ namespace Zero
 class SoundSpace : public Component
 {
 public:
-  ZilchDeclareType(SoundSpace, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SoundSpace, TypeCopyMode::ReferenceType);
 
   SoundSpace();
   ~SoundSpace();
@@ -105,4 +105,4 @@ private:
   friend class SoundNodeGraph;
 };
 
-} // namespace Zero
+} // namespace Raverie

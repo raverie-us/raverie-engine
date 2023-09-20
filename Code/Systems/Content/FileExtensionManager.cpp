@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 String TypeExtensionEntry::GetDefaultExtensionNoDot() const
@@ -39,25 +39,23 @@ FileExtensionManager::FileExtensionManager()
 {
   // Create default type entries. The first one in the list is assumed to be the
   // default extension
-  TypeExtensionEntry& zilchEntry = mTypeExtensionEntries["ZilchScript"];
-  zilchEntry.mExtensions.PushBack("zilchscript");
-  zilchEntry.mExtensions.PushBack("z");
+  TypeExtensionEntry& raverieEntry = mTypeExtensionEntries["RaverieScript"];
+  raverieEntry.mExtensions.PushBack("raveriescript");
 
-  TypeExtensionEntry& fragEntry = mTypeExtensionEntries["ZilchFragment"];
-  fragEntry.mExtensions.PushBack("zilchfrag");
-  fragEntry.mExtensions.PushBack("zilchFrag");
+  TypeExtensionEntry& fragEntry = mTypeExtensionEntries["RaverieFragment"];
+  fragEntry.mExtensions.PushBack("raveriefrag");
 }
 
-TypeExtensionEntry* FileExtensionManager::GetZilchScriptTypeEntry()
+TypeExtensionEntry* FileExtensionManager::GetRaverieScriptTypeEntry()
 {
   FileExtensionManager* instance = FileExtensionManager::GetInstance();
-  return instance->mTypeExtensionEntries.FindPointer("ZilchScript");
+  return instance->mTypeExtensionEntries.FindPointer("RaverieScript");
 }
 
-TypeExtensionEntry* FileExtensionManager::GetZilchFragmentTypeEntry()
+TypeExtensionEntry* FileExtensionManager::GetRaverieFragmentTypeEntry()
 {
   FileExtensionManager* instance = FileExtensionManager::GetInstance();
-  return instance->mTypeExtensionEntries.FindPointer("ZilchFragment");
+  return instance->mTypeExtensionEntries.FindPointer("RaverieFragment");
 }
 
-} // namespace Zero
+} // namespace Raverie

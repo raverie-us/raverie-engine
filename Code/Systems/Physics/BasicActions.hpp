@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // lazy...cleanup later
@@ -145,4 +145,4 @@ void UpdateInBroadPhase(Collider* collider);
 ///(so that we don't teleport on a first frame)
 void QueueOverrideOldTransform(RigidBody* body);
 
-} // namespace Zero
+} // namespace Raverie

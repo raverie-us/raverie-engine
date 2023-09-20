@@ -318,7 +318,7 @@ DefinitionSet =
 	},
 
 	//---------------------------------------------------------------------- Row 6
-	ImageDefinition ZeroCommandDropdown =
+	ImageDefinition CommandDropdown =
 	{
 		string Texture = "ToolIcons",
 		int ImageMode = 0,

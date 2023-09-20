@@ -15,7 +15,7 @@
 /// Identity used:    a x b * c =     a * b x c     = c x a * b
 ///          dot(cross(a,b),c) = dot(a,cross(b,c)) = dot(cross(c,a),b)
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Physics
@@ -487,4 +487,4 @@ Collider* Contact::GetCollider(uint index) const
 
 } // namespace Physics
 
-} // namespace Zero
+} // namespace Raverie

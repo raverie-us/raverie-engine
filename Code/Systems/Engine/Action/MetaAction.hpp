@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Easing functions
@@ -43,4 +43,4 @@ public:
   ActionState::Enum Update(float dt) override;
 };
 
-} // namespace Zero
+} // namespace Raverie

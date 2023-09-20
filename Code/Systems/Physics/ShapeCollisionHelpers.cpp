@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 void IntersectionToPhysicsManifoldFull(Intersection::Manifold* iManifold, Physics::Manifold* pManifold)
@@ -232,4 +232,4 @@ void ColliderToShape(Collider* collider, ConvexMeshShape& convexMesh)
   convexMesh.mSupport.SetCenter(center + collider->mCollisionOffset);
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 bool NeedToBuild(StringParam source, StringParam destination);
@@ -39,7 +39,7 @@ template <typename type>
 void AddContentComponent(ContentSystem* system)
 {
   // METAREFACTOR - replace with generic meta composition
-  BoundType* contentType = ZilchTypeId(type);
+  BoundType* contentType = RaverieTypeId(type);
   system->ComponentFactory.Creators[contentType->Name] = MakeContentComponentT<type>;
   system->ContentComponents[contentType->Name] = contentType;
   // contentType->CreateObject = CreateObjectFunctionTemplate<type>;
@@ -49,11 +49,11 @@ template <typename type>
 void AddContent(ContentSystem* system)
 {
   // METAREFACTOR - replace with generic meta composition
-  BoundType* contentType = ZilchTypeId(type);
+  BoundType* contentType = RaverieTypeId(type);
   system->Creators[contentType->Name] = ContentTypeEntry(contentType, MakeContentItemT<type>);
 }
 
 // Compression Level
 DeclareEnum4(ResourceCompression, None, Low, Medium, High);
 
-} // namespace Zero
+} // namespace Raverie

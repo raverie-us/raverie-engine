@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 void MultiConvexMeshRange::ConvexMeshObject::Support(Vec3Param direction, Vec3Ptr support) const
@@ -81,14 +81,14 @@ void MultiConvexMeshRange::SkipDead()
   }
 }
 
-ZilchDefineType(MultiConvexMeshCollider, builder, type)
+RaverieDefineType(MultiConvexMeshCollider, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindInterface(Collider);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindInterface(Collider);
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetterProperty(Mesh);
+  RaverieBindGetterSetterProperty(Mesh);
 }
 
 MultiConvexMeshCollider::MultiConvexMeshCollider()
@@ -216,4 +216,4 @@ bool MultiConvexMeshCollider::Cast(const Ray& worldRay, ProxyResult& result, Bas
   return meshWasHit;
 }
 
-} // namespace Zero
+} // namespace Raverie

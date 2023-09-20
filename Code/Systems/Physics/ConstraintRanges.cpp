@@ -1,23 +1,23 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(ContactGraphEdge, builder, type)
+RaverieDefineType(ContactGraphEdge, builder, type)
 {
-  ZilchBindDefaultCopyDestructor();
+  RaverieBindDefaultCopyDestructor();
 
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindGetterProperty(Object);
-  ZilchBindGetterProperty(OtherObject);
-  ZilchBindGetterProperty(IsGhost);
-  ZilchBindGetterProperty(ContactPointCount);
-  ZilchBindGetterProperty(ContactPoints);
+  RaverieBindGetterProperty(Object);
+  RaverieBindGetterProperty(OtherObject);
+  RaverieBindGetterProperty(IsGhost);
+  RaverieBindGetterProperty(ContactPointCount);
+  RaverieBindGetterProperty(ContactPoints);
 
-  // ZilchBindGetterProperty(IsNew);
-  ZilchBindGetterProperty(FirstPoint);
+  // RaverieBindGetterProperty(IsNew);
+  RaverieBindGetterProperty(FirstPoint);
 }
 
 ContactGraphEdge::ContactGraphEdge(EdgeType* edge) : BaseType(edge)
@@ -73,17 +73,17 @@ Physics::Contact& ContactGraphEdge::GetContact()
   return GetConstraint();
 }
 
-ZilchDefineType(JointGraphEdge, builder, type)
+RaverieDefineType(JointGraphEdge, builder, type)
 {
-  ZilchBindDefaultCopyDestructor();
-  ZeroBindDocumented();
+  RaverieBindDefaultCopyDestructor();
+  RaverieBindDocumented();
 
-  ZilchBindGetterProperty(Object);
-  ZilchBindGetterProperty(OtherObject);
+  RaverieBindGetterProperty(Object);
+  RaverieBindGetterProperty(OtherObject);
 
-  ZilchBindGetterProperty(Valid);
-  ZilchBindGetterProperty(Joint);
-  ZilchBindGetterProperty(Owner);
+  RaverieBindGetterProperty(Valid);
+  RaverieBindGetterProperty(Joint);
+  RaverieBindGetterProperty(Owner);
 }
 
 typedef BodyFilterPolicy<Joint> JointBodyFilter;
@@ -139,4 +139,4 @@ ContactRange FilterContactRange(Collider* collider)
   return ContactRange(collider->mContactEdges.All());
 }
 
-} // namespace Zero
+} // namespace Raverie

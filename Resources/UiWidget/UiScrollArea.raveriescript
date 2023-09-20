@@ -1,0 +1,363 @@
+// MIT Licensed (see LICENSE.md).
+
+enum UiScrollBarAxis {X, Y}
+
+[RunInEditor]
+class UiScrollArea : RaverieComponent
+{
+  [Dependency] var UiWidget : UiWidget;
+  
+  // How many pixels to scroll for each tick of the mouse wheel.
+  [Property] var ScrollSpeed = Real2(35.0);
+  
+  // Used to smooth the scrolling.
+  [Property][Slider(0, 0.5, 0.05)] var ScrollAnimateTime = 0.2;
+  
+  // The amount of extra room in pixels on the top of the scrollable content. Acts as margins around the content.
+  [Property] var OverScrollTop = 0;
+  
+  // The amount of extra room in pixels on the bottom of the scrollable content. Acts as margins around the content.
+  [Property] var OverScrollBottom = 0;
+  
+  // The amount of extra room in pixels on the left of the scrollable content. Acts as margins around the content.
+  [Property] var OverScrollLeft = 0;
+  
+  // The amount of extra room in pixels on the right of the scrollable content. Acts as margins around the content.
+  [Property] var OverScrollRight = 0;
+  
+  // Set to false to hide the scroll bar.
+  [Property] var ScrollBarXActive = true;
+  
+  // Set to false to hide the scroll bar.
+  [Property] var ScrollBarYActive = true;
+  
+  [Property][Group("Internals")] var ContentCog = CogPath("Content");
+  [Property][Group("Internals")] var ScrollBarXPath = CogPath("ScrollBarX");
+  [Property][Group("Internals")] var ScrollBarYPath = CogPath("ScrollBarY");
+  
+  var Content : UiWidget;
+  var ScrollBarX : UiWidget;
+  var ScrollBarY : UiWidget;
+  
+  var DesiredOffset : Real2;
+  
+  // The sequence used for animating the scrolling based on `ScrollAnimateTime`.
+  var TranslateSequence : ActionSequence;
+  
+  var ContentOffset : Real2
+  {
+    get { return this.ContentOffsetInternal; }
+    set { this.ContentOffsetInternal = value; this.Snap(); this.DesiredOffset = this.ContentOffsetInternal; }
+  }
+  
+  var ContentOffsetInternal : Real2
+  {
+    get { return this.Content.LocalTopLeft * Real2(-1, 1); }
+    set { this.Content.LocalTopLeft = value * Real2(-1, 1); }
+  }
+  
+  // Content size with the over-scroll taken into account
+  var ScrollableContentSize : Real2
+  {
+    get
+    {
+      var scrollableClientSize = this.Content.Size;
+      scrollableClientSize.X += this.OverScrollLeft + this.OverScrollRight;
+      scrollableClientSize.Y += this.OverScrollTop + this.OverScrollBottom;
+      return scrollableClientSize;
+    }
+  }
+  
+  var OverScrollTopLeft : Real2
+  {
+    get { return Real2(this.OverScrollLeft, this.OverScrollTop); }
+  }
+  
+  function Initialize(init : CogInitializer)
+  {
+    Raverie.Connect(init, Events.AllObjectsInitialized, this.OnAllObjectsInitialized);
+    this.Content = this.ContentCog.UiWidget;
+    
+    Raverie.Connect(this.Owner, Events.MouseScroll, this.OnMouseScroll);
+    Raverie.Connect(this.Owner, Events.UiPreUpdate, this.OnPreTransformUpdate);
+    Raverie.Connect(this.Owner, Events.UiPostUpdate, this.OnPostTransformUpdate);
+    
+    this.ContentOffset = Real2(0);
+  }
+
+  function OnAllObjectsInitialized(event : CogInitializerEvent)
+  {
+    this.ScrollBarX = this.ScrollBarXPath.UiWidget;
+    this.ScrollBarY = this.ScrollBarYPath.UiWidget;
+    this.ScrollBarXPath.UiScrollBar.UiScrollArea = this;
+    this.ScrollBarYPath.UiScrollBar.UiScrollArea = this;
+  }
+  
+  function AttachToContent(widget : UiWidget)
+  {
+    widget.Owner.AttachTo(this.Content.Owner);
+  }
+  
+  function ScrollToTopLeft()
+  {
+    this.ContentOffset = Real2(0);
+  }
+  
+  // The given widget is expected to be a child of the 'Content' Cog.
+  function ScrollToWidget(widget : UiWidget, animateTime : Real) : Boolean
+  {
+    var worldRect = widget.WorldRectangle;
+    return this.ScrollToWorldRectangle(worldRect, animateTime);
+  }
+  
+  function ScrollToWorldRectangle(worldRect : Rectangle, animateTime : Real) : Boolean
+  {
+    var worldToContentLocal = Math.Invert(this.Content.Owner.Transform.WorldMatrix);
+    var localRect = worldRect.Transformed(worldToContentLocal);
+    
+    return this.ScrollToLocalRectangle(localRect, animateTime);
+  }
+  
+  // Expects the rectangle to be in the local space of the 'Content' Cog.
+  function ScrollToLocalRectangle(localRect : Rectangle, animateTime : Real) : Boolean
+  {
+    // The area currently visible in the scroll area
+    var visibleContentRect = this.UiWidget.WorldRectangle;
+    
+    var worldToContentLocal = Math.Invert(this.Content.Owner.Transform.WorldMatrix);
+    visibleContentRect.Transform(worldToContentLocal);
+    
+    // Don't scroll if it's already inside
+    if(visibleContentRect.Contains(localRect))
+      return false;
+    
+    // Snap top / bottom
+    if(localRect.Bottom < visibleContentRect.Bottom)
+      visibleContentRect.Bottom = localRect.Bottom;
+    else if (localRect.Top > visibleContentRect.Top)
+      visibleContentRect.Top = localRect.Top;
+    
+    // Snap left / right
+    if(localRect.Right > visibleContentRect.Right)
+      visibleContentRect.Right = localRect.Right;
+    else if (localRect.Left < visibleContentRect.Left)
+      visibleContentRect.Left = localRect.Left;
+    
+    // If we have an animation from scrolling, we need to cancel it
+    if(this.TranslateSequence != null)
+      this.TranslateSequence.Cancel();
+    
+    var desiredOffset = visibleContentRect.TopLeft * Real2(1, -1);
+    if(animateTime <= 0.016)
+    {
+      this.ContentOffset = desiredOffset;
+    }
+    else
+    {
+      this.TranslateSequence = Action.Sequence(this.Owner.Actions);
+      Action.Property(this.TranslateSequence, @this.ContentOffset, desiredOffset, animateTime, Ease.QuadOut);
+    }
+    
+    return true;
+  }
+  
+  function OnPreTransformUpdate(event : UiTransformUpdateEvent)
+  {
+    // We're controlling content manually, so it shouldn't be in layout
+    this.Content.InLayout = false;
+    
+    var ourSize = this.UiWidget.Size;
+    var contentSize = this.Content.Size;
+    
+    if(this.Content.SizePolicyX == UiSizePolicy.Flex)
+      contentSize.X = ourSize.X - this.Content.MarginRight;
+    if(this.Content.SizePolicyY == UiSizePolicy.Flex)
+      contentSize.Y = ourSize.Y - this.Content.MarginBottom;
+    
+    this.Content.Size = contentSize;
+  }
+  
+  function OnPostTransformUpdate(event : UiTransformUpdateEvent)
+  {
+    var ourSize = this.UiWidget.Size;
+    
+    var scrollableContentSize = this.ScrollableContentSize;
+    
+    // What percentage of the entire scrollable client area is visible at one time
+    var percentageVisible = ourSize / (scrollableContentSize + Real2(0.00001));
+    
+    // How far we've scrolled for each axis
+    var percentScrolled = (this.ContentOffset + this.OverScrollTopLeft) / (scrollableContentSize - ourSize + Real2(0.00001));
+    
+    var scrollBarVisible = Boolean2(this.ScrollBarXActive, this.ScrollBarYActive);
+    
+    for(var axis = 0; axis < 2; ++axis)
+    {
+      var bar = this.ScrollBarX;
+      if(axis == 1)
+        bar = this.ScrollBarY;
+      
+      // If we have enough room to display the entire client area, disable the
+      // scroll bar and move on
+      if(scrollBarVisible[axis] == false || ourSize[axis] >= scrollableContentSize[axis])
+      {
+        bar.Active = false;
+        continue;
+      }
+      
+      bar.Active = true;
+      
+      // Size the handle
+      var handle = bar.Owner.UiScrollBar.Handle.UiWidget;
+      var handleSize = handle.Size;
+      handleSize[axis] = (bar.Size[axis] * percentageVisible[axis]);
+      handle.Size = handleSize;
+      
+      // Move the handle
+      var topLeft = handle.LocalTopLeft;
+      topLeft[axis] = (bar.Size[axis] - handleSize[axis]) * percentScrolled[axis];
+      if(axis == 1)
+        topLeft[axis] *= -1;
+      handle.LocalTopLeft = topLeft;
+    }
+  }
+  
+  function OnMouseScroll(event : ViewportMouseEvent)
+  {
+    if(event.HandledEvent)
+      return;
+    
+    // Alt is our hotkey to interact with widgets in the editor
+    if(this.Space.IsEditorMode && event.AltPressed == false)
+      return;
+      
+    event.HandledEvent = true;
+    
+    var scroll = event.Scroll;
+    if(event.ShiftPressed)
+    {
+      scroll.X = scroll.Y;
+      scroll.Y = 0;
+    }
+    
+    this.Scroll(scroll * this.ScrollSpeed);
+  }
+  
+  function Scroll(pixels : Real2)
+  {
+    var scroll = pixels;
+    scroll *= Real2(-1, 1);
+    
+    // Editor Spaces aren't running, so until we can run animations on FrameUpdate, just snap the scrolling
+    if(this.ScrollAnimateTime <= 0.016 || this.Space.IsEditorMode)
+    {
+      this.ContentOffset -= scroll;
+    }
+    else
+    {
+      var newOffset = this.DesiredOffset - scroll;
+      var oldOffset = this.ContentOffset;
+      
+      this.ContentOffsetInternal = newOffset;
+      this.Snap();
+      newOffset = this.ContentOffset;
+      
+      if(newOffset != this.DesiredOffset)
+      {
+        this.DesiredOffset = newOffset;
+        this.ContentOffsetInternal = oldOffset;
+      
+        if(this.TranslateSequence != null)
+          this.TranslateSequence.Cancel();
+        
+        this.TranslateSequence = Action.Sequence(this.Owner.Actions);
+        Action.Property(this.TranslateSequence, @this.ContentOffsetInternal, newOffset, this.ScrollAnimateTime, Ease.Linear);
+      }
+    }
+  }
+  
+  function Snap()
+  {
+    var ourSize = this.UiWidget.Size;
+    this.ContentOffsetInternal = Math.Max(this.ContentOffset, -this.OverScrollTopLeft);
+    this.ContentOffsetInternal = Math.Min(this.ContentOffset, Math.Max(this.ScrollableContentSize - this.OverScrollTopLeft - ourSize, Real2(0)));
+  }
+  
+  function GetScrollPercent(axis : UiScrollBarAxis) : Real
+  {
+    var topLeft = -this.OverScrollTopLeft;
+    var bottomRight = topLeft + this.ScrollableContentSize;
+    bottomRight -= this.UiWidget.Size;
+    
+    var scrollableSize = (bottomRight[axis] - topLeft[axis]);
+    if(scrollableSize < 0.00001)
+      return 0.0;
+    return ((this.ContentOffset[axis] - topLeft[axis]) / scrollableSize) * 100.0;
+  }
+  
+  function SetScrollPercent(axis : UiScrollBarAxis, percent : Real)
+  {
+    percent = Math.Clamp(percent / 100.0, 0, 1);
+    
+    var topLeft = -this.OverScrollTopLeft;
+    var bottomRight = topLeft + this.ScrollableContentSize;
+    bottomRight -= this.UiWidget.Size;
+    
+    var offset = this.ContentOffset;
+    offset[axis] = Math.Lerp(topLeft[axis], bottomRight[axis], percent);
+    this.ContentOffset = offset;
+  }
+}
+
+[RunInEditor]
+class UiScrollBar : RaverieComponent
+{
+  [Dependency] var UiWidget : UiWidget;
+  [Dependency] var MouseCapture : MouseCapture;
+  
+  [Property] var Axis : UiScrollBarAxis = UiScrollBarAxis.X;
+  [Property][Group("Internals")] var Handle = CogPath("Handle");
+  
+  var UiScrollArea : UiScrollArea;
+  
+  var GrabOffset : Real;
+  
+  function Initialize(init : CogInitializer)
+  {
+    Raverie.Connect(this.Handle.Cog, Events.LeftMouseDown, this.OnLeftMouseDown);
+    Raverie.Connect(this.Owner, Events.MouseDragMove, this.OnMouseDragMove);
+  }
+  
+  function OnLeftMouseDown(event : ViewportMouseEvent)
+  {
+    // Alt is our hotkey to interact with widgets in the editor
+    if(this.Space.IsEditorMode == true && event.AltPressed == false)
+      return;
+      
+    var mousePosWorld = event.ToWorldZPlane(0).XY;
+    var mousePosLocal = this.Handle.UiWidget.TransformPointInverse(mousePosWorld);
+    this.GrabOffset = mousePosLocal[this.Axis];
+    
+    this.MouseCapture.Capture(event);
+  }
+  
+  function OnMouseDragMove(event : ViewportMouseEvent)
+  {
+    var handle = this.Handle.UiWidget;
+    var mousePosWorld = event.ToWorldZPlane(0).XY;
+    var mousePosLocal = this.UiWidget.TransformPointInverse(mousePosWorld);
+    
+    // New top left for the handle
+    var newHandlePosition = handle.LocalTopLeft;
+    newHandlePosition[this.Axis] = mousePosLocal[this.Axis] - this.GrabOffset;
+    
+    var barSize = this.UiWidget.Size[this.Axis];
+    var handleSize = handle.Size[this.Axis];
+    
+    var percentageScrolled = newHandlePosition[this.Axis] / (barSize - handleSize);
+    if(this.Axis == 1)
+      percentageScrolled *= -1.0;
+    
+    this.UiScrollArea.SetScrollPercent(this.Axis, percentageScrolled * 100.0);
+  }
+}

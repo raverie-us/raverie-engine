@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 cstr KeyNames[Keys::KeyMax + 1] = {0};
 
@@ -138,4 +138,4 @@ void FileDialogInfo::AddFilter(StringParam description, StringParam filter)
   mSearchFilters.PushBack(FileDialogFilter(description, filter));
 }
 
-} // namespace Zero
+} // namespace Raverie

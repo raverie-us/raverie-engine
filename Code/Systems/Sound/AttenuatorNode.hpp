@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Attenuation Per Listener
@@ -25,7 +25,7 @@ public:
 class AttenuatorNode : public SimpleCollapseNode
 {
 public:
-  ZilchDeclareType(AttenuatorNode, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(AttenuatorNode, TypeCopyMode::ReferenceType);
 
   AttenuatorNode(StringParam name,
                  const unsigned ID,
@@ -64,7 +64,7 @@ private:
   void UpdateDistanceInterpolator();
   void UpdateLowPassInterpolator();
 
-  typedef Zero::HashMap<ListenerNode*, AttenuationPerListener*> DataPerListenerMapType;
+  typedef Raverie::HashMap<ListenerNode*, AttenuationPerListener*> DataPerListenerMapType;
 
   // Previous volume and low pass for each listener
   DataPerListenerMapType DataPerListener;
@@ -89,4 +89,4 @@ private:
   InterpolatingObject LowPassInterpolator;
 };
 
-} // namespace Zero
+} // namespace Raverie

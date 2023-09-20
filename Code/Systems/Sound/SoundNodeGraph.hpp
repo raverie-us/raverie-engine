@@ -2,14 +2,14 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 // Node Print Info
 
 class NodePrintInfo
 {
 public:
-  ZilchDeclareType(NodePrintInfo, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(NodePrintInfo, TypeCopyMode::ReferenceType);
   NodePrintInfo(int level, const String& name, int ID, bool hasOutput, HandleOf<SoundNode> node) :
       mLevel(level),
       mName(name),
@@ -69,4 +69,4 @@ private:
   void PositionCleanUp(Array<NodeInfoListType>& infoByLevel, int largestLevel);
 };
 
-} // namespace Zero
+} // namespace Raverie

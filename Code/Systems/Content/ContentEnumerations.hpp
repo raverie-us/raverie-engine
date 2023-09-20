@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 DeclareEnum3(Generation, None, Build, Import);
@@ -10,4 +10,4 @@ DeclareEnum3(ImageProcessorCodes, Success, Failed, Reload);
 DeclareEnum3(LoopingMode, Default, Once, Looping);
 DeclareEnum2(PhysicsMeshType, PhysicsMesh, ConvexMesh);
 
-} // namespace Zero
+} // namespace Raverie

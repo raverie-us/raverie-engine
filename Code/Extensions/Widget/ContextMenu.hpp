@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 class ContextMenuEntry;
 class ContextMenuItem;
@@ -56,7 +56,7 @@ typedef const Context& ContextParam;
 // Context Menu Event
 class ContextMenuEvent : public Event
 {
-  ZilchDeclareType(ContextMenuEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ContextMenuEvent, TypeCopyMode::ReferenceType);
 
   ContextMenuEvent(ContextMenuEntry* rootEntry);
   ContextMenuEvent(ContextMenuEntry* rootEntry, Handle source);
@@ -70,12 +70,12 @@ typedef Array<ContextMenuEntry*> ContextMenuEntryChildren;
 class ContextMenuEntry : public SafeId32EventObject
 {
 public:
-  ZilchDeclareType(ContextMenuEntry, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ContextMenuEntry, TypeCopyMode::ReferenceType);
 
   ContextMenuEntry(StringParam name = String(), StringParam icon = String(), bool readOnly = false);
   virtual ~ContextMenuEntry();
 
-  // Context Menu Entry Interface (for use in zilch and C++)
+  // Context Menu Entry Interface (for use in raverie and C++)
   /// Adds the provided entry to the this entries children
   void AddEntry(ContextMenuEntry* entry);
   /// Adds a new entry with the provided name with an icon if one is provided to
@@ -133,14 +133,14 @@ public:
 class ContextMenuEntryDivider : public ContextMenuEntry
 {
 public:
-  ZilchDeclareType(ContextMenuEntryDivider, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ContextMenuEntryDivider, TypeCopyMode::ReferenceType);
   Widget* Create(ContextMenu* parent) override;
 };
 
 class ContextMenuEntryCommand : public ContextMenuEntry
 {
 public:
-  ZilchDeclareType(ContextMenuEntryCommand, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ContextMenuEntryCommand, TypeCopyMode::ReferenceType);
   ContextMenuEntryCommand(Command* command);
   ContextMenuEntryCommand(StringParam commandName);
 
@@ -153,7 +153,7 @@ public:
 class ContextMenuEntryMenu : public ContextMenuEntry
 {
 public:
-  ZilchDeclareType(ContextMenuEntryMenu, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ContextMenuEntryMenu, TypeCopyMode::ReferenceType);
   ContextMenuEntryMenu(StringParam menuName);
 
   Widget* Create(ContextMenu* parent) override;
@@ -165,7 +165,7 @@ public:
 class ContextMenuItem : public Composite
 {
 public:
-  typedef ContextMenuItem ZilchSelf;
+  typedef ContextMenuItem RaverieSelf;
   ContextMenuItem(Composite* parent, ContextMenuEntry* entry);
 
   void SetName(StringParam name, StringParam icon = String());
@@ -240,7 +240,7 @@ public:
 class ContextMenu : public PopUp
 {
 public:
-  typedef ContextMenu ZilchSelf;
+  typedef ContextMenu RaverieSelf;
   ContextMenu(Widget* target, ContextMenuEntry* rootEntry = nullptr);
   ~ContextMenu() override;
 
@@ -260,7 +260,7 @@ public:
   ContextMenuEntry* GetRootEntry();
   ContextMenuEntry* AddEntry(StringParam name, bool readOnly = false);
   void AddDivider();
-  void AddZeroContextMenu(StringParam menuName);
+  void AddContextMenu(StringParam menuName);
   void AddCommand(Command* command);
   void AddCommandByName(StringParam commandName);
 
@@ -302,7 +302,7 @@ private:
 class MenuBarItem : public Composite
 {
 public:
-  ZilchDeclareType(MenuBarItem, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MenuBarItem, TypeCopyMode::ReferenceType);
 
   MenuBarItem(Composite* widget);
   void UpdateTransform() override;
@@ -325,7 +325,7 @@ public:
 class MenuBar : public Composite
 {
 public:
-  ZilchDeclareType(MenuBar, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MenuBar, TypeCopyMode::ReferenceType);
 
   MenuBar(Composite* widget);
 
@@ -340,14 +340,14 @@ public:
 #define ConnectMenu(menu, optionName, function, readOnly)                                                              \
   {                                                                                                                    \
     ContextMenuEntry* entry = menu->AddEntry(String(optionName), readOnly);                                            \
-    ConnectThisTo(entry, Zero::Events::MenuItemSelected, function);                                                    \
+    ConnectThisTo(entry, Raverie::Events::MenuItemSelected, function);                                                    \
   }
 
 template <typename ContextType>
 ContextType* Context::Get()
 {
-  BoundType* type = ZilchTypeId(ContextType);
+  BoundType* type = RaverieTypeId(ContextType);
   return Get(type).Get<ContextType*>();
 }
 
-} // namespace Zero
+} // namespace Raverie

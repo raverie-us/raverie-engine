@@ -4,7 +4,7 @@
 #include "String/String.hpp"
 #include "Utility/Status.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 class ByteBufferBlock;
@@ -174,4 +174,4 @@ struct MoveWithoutDestructionOperator<ByteBufferBlock>
   }
 };
 
-} // namespace Zero
+} // namespace Raverie

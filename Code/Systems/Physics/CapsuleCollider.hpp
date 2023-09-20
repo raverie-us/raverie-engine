@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// How should a capsule collider respond to non-uniform scale?
@@ -15,7 +15,7 @@ DeclareEnum2(CapsuleScalingMode, PreserveHeight, PreserveScale);
 class CapsuleCollider : public Collider
 {
 public:
-  ZilchDeclareType(CapsuleCollider, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CapsuleCollider, TypeCopyMode::ReferenceType);
 
   CapsuleCollider();
 
@@ -77,4 +77,4 @@ private:
   CapsuleScalingMode::Enum mScalingMode;
 };
 
-} // namespace Zero
+} // namespace Raverie

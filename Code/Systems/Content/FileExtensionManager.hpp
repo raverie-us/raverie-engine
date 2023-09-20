@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// An individual type's available extensions.
@@ -33,10 +33,10 @@ class FileExtensionManager : public LazySingleton<FileExtensionManager, EventObj
 public:
   FileExtensionManager();
 
-  static TypeExtensionEntry* GetZilchScriptTypeEntry();
-  static TypeExtensionEntry* GetZilchFragmentTypeEntry();
+  static TypeExtensionEntry* GetRaverieScriptTypeEntry();
+  static TypeExtensionEntry* GetRaverieFragmentTypeEntry();
 
   HashMap<String, TypeExtensionEntry> mTypeExtensionEntries;
 };
 
-} // namespace Zero
+} // namespace Raverie

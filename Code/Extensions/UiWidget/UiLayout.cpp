@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Whether or not the given widget should be in the layout
@@ -10,16 +10,16 @@ bool NeedsLayout(UiWidget* widget)
   return widget->GetActive() && widget->GetInLayout() && !widget->GetOwner()->GetMarkedForDestruction();
 }
 
-ZilchDefineType(UiLayout, builder, type)
+RaverieDefineType(UiLayout, builder, type)
 {
-  ZeroBindDocumented();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDependency(UiWidget);
+  RaverieBindDocumented();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDependency(UiWidget);
 
-  ZilchBindGetterSetterProperty(PaddingLeft);
-  ZilchBindGetterSetterProperty(PaddingTop);
-  ZilchBindGetterSetterProperty(PaddingRight);
-  ZilchBindGetterSetterProperty(PaddingBottom);
+  RaverieBindGetterSetterProperty(PaddingLeft);
+  RaverieBindGetterSetterProperty(PaddingTop);
+  RaverieBindGetterSetterProperty(PaddingRight);
+  RaverieBindGetterSetterProperty(PaddingBottom);
 }
 
 void UiLayout::Serialize(Serializer& stream)
@@ -175,4 +175,4 @@ void UiLayout::UiFilteredChildren::SkipInvalid()
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

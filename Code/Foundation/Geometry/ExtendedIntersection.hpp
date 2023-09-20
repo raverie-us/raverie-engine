@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 bool SupportShapeOverlap(const Intersection::SupportShape& a, const Intersection::SupportShape& b);
@@ -209,4 +209,4 @@ bool Overlap(const SweptTriangle& sweptTri, const Tetrahedron& tetrahedron);
 bool Overlap(const SweptTriangle& sweptTri, const ConvexMeshShape& supportShape);
 bool Overlap(const SweptTriangle& sweptTri1, const SweptTriangle& sweptTri2);
 
-} // namespace Zero
+} // namespace Raverie

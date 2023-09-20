@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Threaded Volume Modifier
@@ -39,4 +39,4 @@ private:
   unsigned mLifetimeFrameCounter;
 };
 
-} // namespace Zero
+} // namespace Raverie

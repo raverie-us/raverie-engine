@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -54,17 +54,17 @@ String NamedMouseDown[] = {Events::LeftMouseDown, Events::RightMouseDown, Events
 String NamedMouseUp[] = {Events::LeftMouseUp, Events::RightMouseUp, Events::MiddleMouseUp};
 String NamedMouseClick[] = {Events::LeftClick, Events::RightClick, Events::MiddleClick};
 
-ZilchDefineType(FocusEvent, builder, type)
+RaverieDefineType(FocusEvent, builder, type)
 {
 }
 
-ZilchDefineType(HandleableEvent, builder, type)
+RaverieDefineType(HandleableEvent, builder, type)
 {
-  ZilchBindFieldProperty(Handled);
-  ZeroBindDocumented();
+  RaverieBindFieldProperty(Handled);
+  RaverieBindDocumented();
 }
 
-ZilchDefineType(MouseDragEvent, builder, type)
+RaverieDefineType(MouseDragEvent, builder, type)
 {
 }
 
@@ -88,37 +88,37 @@ MouseEvent::MouseEvent()
   HandledEventScript = false;
 }
 
-ZilchDefineType(MouseEvent, builder, type)
+RaverieDefineType(MouseEvent, builder, type)
 {
-  ZeroBindDocumented();
-  ZilchBindFieldProperty(Button);
-  ZilchBindFieldProperty(ButtonDown);
-  ZilchBindFieldProperty(Position);
-  ZilchBindFieldProperty(Movement);
-  ZilchBindFieldProperty(Scroll);
-  ZilchBindFieldProperty(ShiftPressed);
-  ZilchBindFieldProperty(AltPressed);
-  ZilchBindFieldProperty(CtrlPressed);
-  ZilchBindGetterProperty(Mouse);
-  ZilchBindMethod(IsButtonDown);
-  ZilchBindMethod(IsButtonUp);
+  RaverieBindDocumented();
+  RaverieBindFieldProperty(Button);
+  RaverieBindFieldProperty(ButtonDown);
+  RaverieBindFieldProperty(Position);
+  RaverieBindFieldProperty(Movement);
+  RaverieBindFieldProperty(Scroll);
+  RaverieBindFieldProperty(ShiftPressed);
+  RaverieBindFieldProperty(AltPressed);
+  RaverieBindFieldProperty(CtrlPressed);
+  RaverieBindGetterProperty(Mouse);
+  RaverieBindMethod(IsButtonDown);
+  RaverieBindMethod(IsButtonUp);
 
-  ZilchBindFieldPropertyAs(HandledEventScript, "HandledEvent");
+  RaverieBindFieldPropertyAs(HandledEventScript, "HandledEvent");
 }
 
-ZilchDefineType(MouseFileDropEvent, builder, type)
+RaverieDefineType(MouseFileDropEvent, builder, type)
 {
-  ZilchBindMember(Files);
+  RaverieBindMember(Files);
 }
 
 MouseFileDropEvent::MouseFileDropEvent() : MouseEvent()
 {
-  Files = ZilchAllocate(ArrayString);
+  Files = RaverieAllocate(ArrayString);
 }
 
 MouseFileDropEvent::MouseFileDropEvent(const MouseEvent& rhs) : MouseEvent(rhs)
 {
-  Files = ZilchAllocate(ArrayString);
+  Files = RaverieAllocate(ArrayString);
 }
 
 void MouseFileDropEvent::Copy(const OsMouseDropEvent& rhs)
@@ -127,4 +127,4 @@ void MouseFileDropEvent::Copy(const OsMouseDropEvent& rhs)
   files.Insert(files.Begin(), rhs.Files.Begin(), rhs.Files.End());
 }
 
-} // namespace Zero
+} // namespace Raverie

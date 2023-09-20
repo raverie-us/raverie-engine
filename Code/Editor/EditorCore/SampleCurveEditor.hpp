@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Forward Declarations
@@ -15,7 +15,7 @@ class SampleCurveEditor : public CurveEditor
 {
 public:
   /// Typedefs.
-  typedef SampleCurveEditor ZilchSelf;
+  typedef SampleCurveEditor RaverieSelf;
 
   /// Constructor.
   SampleCurveEditor(Composite* parent, GraphWidget* graph);
@@ -32,7 +32,7 @@ public:
 class SampleCurveObject : public CurveObject
 {
 public:
-  typedef SampleCurveObject ZilchSelf;
+  typedef SampleCurveObject RaverieSelf;
   SampleCurveObject(SampleCurveEditor* editor, SampleCurve* curve);
 
   void GetCurve(Vec3Array& curve) override;
@@ -72,7 +72,7 @@ class MultiSampleCurveEditor : public Composite
 {
 public:
   /// Typedefs.
-  typedef MultiSampleCurveEditor ZilchSelf;
+  typedef MultiSampleCurveEditor RaverieSelf;
 
   /// Constructor.
   MultiSampleCurveEditor(Composite* parent);
@@ -106,4 +106,4 @@ private:
   SampleCurveEditor* mCurveEditor;
 };
 
-} // namespace Zero
+} // namespace Raverie

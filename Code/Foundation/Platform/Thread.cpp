@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 const bool ThreadingEnabled = false;
 
@@ -11,12 +11,12 @@ struct ThreadPrivateData
 
 Thread::Thread()
 {
-  ZeroConstructPrivateData(ThreadPrivateData);
+  RaverieConstructPrivateData(ThreadPrivateData);
 }
 
 Thread::~Thread()
 {
-  ZeroDestructPrivateData(ThreadPrivateData);
+  RaverieDestructPrivateData(ThreadPrivateData);
 }
 
 bool Thread::IsValid()
@@ -27,7 +27,7 @@ bool Thread::IsValid()
 bool Thread::Initialize(EntryFunction entryFunction, void* instance, StringParam threadName)
 {
   Error("Cannot initialize thread '%s' on a single threaded platform (check "
-        "Zero::ThreadingEnabled)",
+        "Raverie::ThreadingEnabled)",
         threadName.c_str());
   return false;
 }
@@ -71,4 +71,4 @@ size_t Thread::GetCurrentThreadId()
   return 0;
 }
 
-} // namespace Zero
+} // namespace Raverie

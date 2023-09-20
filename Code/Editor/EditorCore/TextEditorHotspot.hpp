@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 class TextEditor;
 class MouseEvent;
@@ -30,4 +30,4 @@ public:
   static void ClickHotspotsAt(TextEditor* textEditor, int position);
 };
 
-} // namespace Zero
+} // namespace Raverie

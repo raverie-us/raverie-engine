@@ -1,6 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
-namespace Zero
+namespace Raverie
 {
 
 // Loading operations are complex with many levels of indirection. Many times
@@ -28,7 +28,7 @@ public:
 // Using a simple array for the error stack
 typedef Array<ErrorContext*> ErrorContextStack;
 // Thread local context
-ZeroThreadLocal extern ErrorContextStack* ActiveErrorContextStack;
+RaverieThreadLocal extern ErrorContextStack* ActiveErrorContextStack;
 // Do a Notify and print the error context stack
 void DoNotifyErrorWithContext(StringParam message, NotifyException::Enum notifyException = NotifyException::Script);
 // Cleanup Error Context
@@ -76,4 +76,4 @@ public:
 // Standard usage is PushErrorContextObject("Loading Level", level)
 #define PushErrorContextObject(message, contextObject) ErrorContextObject __entry(message, contextObject);
 
-} // namespace Zero
+} // namespace Raverie

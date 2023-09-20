@@ -1,17 +1,17 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(GenericPhysicsMesh, builder, type)
+RaverieDefineType(GenericPhysicsMesh, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindGetterProperty(Vertices);
-  ZilchBindGetterProperty(Indices);
-  ZilchBindMethod(Validate);
-  ZilchBindMethod(UpdateAndNotifyIfModified);
+  RaverieBindGetterProperty(Vertices);
+  RaverieBindGetterProperty(Indices);
+  RaverieBindMethod(Validate);
+  RaverieBindMethod(UpdateAndNotifyIfModified);
 }
 
 GenericPhysicsMesh::GenericPhysicsMesh()
@@ -383,4 +383,4 @@ const IndexArray& GenericPhysicsMesh::GetIndexArray() const
   return mIndices;
 }
 
-} // namespace Zero
+} // namespace Raverie

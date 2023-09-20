@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 void AddLinks(Cog* object, MetaSelection* selection)
 {
@@ -126,4 +126,4 @@ void FilterChildrenAndProtected(const Array<Handle>& objectsIn,
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

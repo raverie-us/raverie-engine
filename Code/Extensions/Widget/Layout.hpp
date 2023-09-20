@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace DockMode
@@ -46,7 +46,7 @@ DeclareEnum2(LimitMode, Limited, Unlimited);
 
 struct LayoutArea
 {
-  ZilchDeclareType(LayoutArea, TypeCopyMode::ValueType);
+  RaverieDeclareType(LayoutArea, TypeCopyMode::ValueType);
 
   LimitMode::Enum HorizLimit = LimitMode::Unlimited;
   LimitMode::Enum VerticalLimit = LimitMode::Unlimited;
@@ -72,7 +72,7 @@ LayoutResult AspectLayout(Vec2 aspect, Vec2 size);
 class Layout
 {
 public:
-  ZilchDeclareType(Layout, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Layout, TypeCopyMode::ReferenceType);
 
   Layout(Thickness padding = Thickness::cZero);
 
@@ -89,7 +89,7 @@ public:
 class FillLayout : public Layout
 {
 public:
-  ZilchDeclareType(FillLayout, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(FillLayout, TypeCopyMode::ReferenceType);
 
   FillLayout(Thickness padding = Thickness::cZero);
   Vec2 Measure(Composite* widget, LayoutArea data) override;
@@ -99,7 +99,7 @@ public:
 class StackLayout : public Layout
 {
 public:
-  ZilchDeclareType(StackLayout, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(StackLayout, TypeCopyMode::ReferenceType);
 
   StackLayout(Thickness padding = Thickness::cZero);
   StackLayout(LayoutDirection::Enum direction, Vec2 spacing = Vec2::cZero, Thickness padding = Thickness::cZero);
@@ -117,7 +117,7 @@ public:
 class EdgeDockLayout : public Layout
 {
 public:
-  ZilchDeclareType(EdgeDockLayout, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(EdgeDockLayout, TypeCopyMode::ReferenceType);
 
   Vec2 Measure(Composite* widget, LayoutArea data) override;
   Vec2 DoLayout(Composite* widget, LayoutArea data) override;
@@ -126,7 +126,7 @@ public:
 class DockLayout : public Layout
 {
 public:
-  ZilchDeclareType(DockLayout, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(DockLayout, TypeCopyMode::ReferenceType);
 
   DockLayout(Thickness padding = Thickness::cZero);
 
@@ -137,7 +137,7 @@ public:
 class RatioLayout : public Layout
 {
 public:
-  ZilchDeclareType(RatioLayout, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(RatioLayout, TypeCopyMode::ReferenceType);
 
   RatioLayout(Thickness padding = Thickness::cZero);
 
@@ -150,7 +150,7 @@ public:
 class GridLayout : public Layout
 {
 public:
-  ZilchDeclareType(GridLayout, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(GridLayout, TypeCopyMode::ReferenceType);
 
   GridLayout(Thickness padding = Thickness::cZero);
 
@@ -192,4 +192,4 @@ void PlaceWithLayout(LayoutResult& result, Widget* widget);
 
 LayoutResult RemoveThickness(Thickness thickness, Vec2Param outerSize, Vec3Param offset = Vec3::cZero);
 
-} // namespace Zero
+} // namespace Raverie

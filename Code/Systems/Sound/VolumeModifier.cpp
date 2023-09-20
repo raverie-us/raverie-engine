@@ -2,7 +2,7 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 // Threaded Volume Modifier
 
@@ -84,4 +84,4 @@ float InstanceVolumeModifier::GetFutureVolume(unsigned frames)
     return Interpolator.ValueAtIndex(Interpolator.GetCurrentFrame() + frames);
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 Ray ToRay(const Segment& segment)
@@ -198,4 +198,4 @@ Capsule ToCapsule(const Cylinder& cylinder)
   return Capsule(cylinder.PointA, cylinder.PointB, cylinder.Radius);
 }
 
-} // namespace Zero
+} // namespace Raverie

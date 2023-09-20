@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class TreeView;
@@ -13,7 +13,7 @@ struct TreeFormatting;
 class ErrorList : public Composite
 {
 public:
-  typedef ErrorList ZilchSelf;
+  typedef ErrorList RaverieSelf;
 
   ErrorList(Composite* parent);
   ~ErrorList();
@@ -32,4 +32,4 @@ private:
   ErrorListSource* mSource;
 };
 
-} // Namespace Zero
+} // namespace Raverie

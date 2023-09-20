@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Physics
@@ -236,4 +236,4 @@ JointEvent* CreateJointEvent(JointMotor* motor, StringParam eventName)
 
 } // namespace Physics
 
-} // namespace Zero
+} // namespace Raverie

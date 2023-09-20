@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 PhysicsMeshProcessor::PhysicsMeshProcessor(PhysicsMeshBuilder* physicsMeshBuilder, MeshDataMap& meshDataMap) :
@@ -169,4 +169,4 @@ uint PhysicsMeshProcessor::RemoveDegenerateTriangles(VertexPositionArray& vertic
   return amountRemoved;
 }
 
-} // namespace Zero
+} // namespace Raverie

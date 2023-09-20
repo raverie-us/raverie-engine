@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 DeclareEnum2(JointFrameOfReference, ObjectA, ObjectB);
@@ -102,4 +102,4 @@ struct RevoluteJoint : public Joint
 
 typedef Physics::RevoluteJoint RevoluteJoint;
 
-} // namespace Zero
+} // namespace Raverie

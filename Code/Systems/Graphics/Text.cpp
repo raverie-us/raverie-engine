@@ -1,9 +1,9 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
-ZilchDefineType(TextDefinition, builder, type)
+RaverieDefineType(TextDefinition, builder, type)
 {
 }
 
@@ -19,4 +19,4 @@ void TextDefinition::Serialize(Serializer& stream)
   SerializeName(FontColor);
 }
 
-} // namespace Zero
+} // namespace Raverie

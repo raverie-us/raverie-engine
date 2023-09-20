@@ -1837,7 +1837,7 @@ DocumentationLibrary
 				{
 					var Name = "SystemVolume"
 					var Type = "Real"
-					var Description = "An overall volume modifier that is applied to all audio produced by Zero."
+					var Description = "An overall volume modifier that is applied to all audio produced by Raverie."
 				}
 			}
 			var Methods = Array
@@ -77782,7 +77782,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 		{
 			var Name = "Zero"
 			var Library = "GameplayLibrary"
-			var Description = "Global functionality exposed to Zilch script. Bound as \"Zero\" to script (e.g. Zero.Keyboard) ZeroStatic was used to avoid the conflict with namespace Zero)."
+			var Description = "Global functionality exposed to Raverie script. Bound as \"Raverie\" to script (e.g. Raverie.Keyboard) RaverieStatic was used to avoid the conflict with namespace Raverie)."
 			var Properties = Array
 			{
 				Property
@@ -77929,43 +77929,43 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 		}
 		Object
 		{
-			var Name = "ZeroMetaArrayAnimationClips"
+			var Name = "RaverieMetaArrayAnimationClips"
 			var BaseClass = "MetaArray"
 			var Library = "ContentMetaLibrary"
 		}
 		Object
 		{
-			var Name = "ZeroMetaArrayContentLibraryReferenceArray"
+			var Name = "RaverieMetaArrayContentLibraryReferenceArray"
 			var BaseClass = "MetaArray"
 			var Library = "EngineLibrary"
 		}
 		Object
 		{
-			var Name = "ZeroMetaArrayNetPropertyInfos"
+			var Name = "RaverieMetaArrayNetPropertyInfos"
 			var BaseClass = "MetaArray"
 			var Library = "NetworkingLibrary"
 		}
 		Object
 		{
-			var Name = "ZeroMetaArrayRevisions"
+			var Name = "RaverieMetaArrayRevisions"
 			var BaseClass = "MetaArray"
 			var Library = "MetaLibrary"
 		}
 		Object
 		{
-			var Name = "ZeroMetaArraySounds"
+			var Name = "RaverieMetaArraySounds"
 			var BaseClass = "MetaArray"
 			var Library = "SoundLibrary"
 		}
 		Object
 		{
-			var Name = "ZeroMetaArraySoundTags"
+			var Name = "RaverieMetaArraySoundTags"
 			var BaseClass = "MetaArray"
 			var Library = "SoundLibrary"
 		}
 		Object
 		{
-			var Name = "ZilchCompiledEvent"
+			var Name = "RaverieCompiledEvent"
 			var BaseClass = "Event"
 			var Library = "EngineLibrary"
 			var Tags = Array
@@ -77975,7 +77975,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 		}
 		Object
 		{
-			var Name = "ZilchCompileEvent"
+			var Name = "RaverieCompileEvent"
 			var BaseClass = "Event"
 			var Library = "EngineLibrary"
 			var Tags = Array
@@ -77985,7 +77985,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 		}
 		Object
 		{
-			var Name = "ZilchCompileFragmentEvent"
+			var Name = "RaverieCompileFragmentEvent"
 			var BaseClass = "Event"
 			var Library = "EngineLibrary"
 			var Tags = Array
@@ -77995,10 +77995,10 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 		}
 		Object
 		{
-			var Name = "ZilchComponent"
+			var Name = "RaverieComponent"
 			var BaseClass = "Component"
-			var Library = "ZilchScriptLibrary"
-			var Description = "A base class for all Zilch components defined in script."
+			var Library = "RaverieScriptLibrary"
+			var Description = "A base class for all Raverie components defined in script."
 			var Tags = Array
 			{
 				"Component"
@@ -78007,13 +78007,13 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 			{
 				Method
 				{
-					var Name = "ZilchComponent"
+					var Name = "RaverieComponent"
 				}
 			}
 		}
 		Object
 		{
-			var Name = "ZilchDocumentResource"
+			var Name = "RaverieDocumentResource"
 			var BaseClass = "DocumentResource"
 			var Library = "EngineLibrary"
 			var Tags = Array
@@ -78032,9 +78032,9 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 		}
 		Object
 		{
-			var Name = "ZilchEvent"
+			var Name = "RaverieEvent"
 			var BaseClass = "Event"
-			var Library = "ZilchScriptLibrary"
+			var Library = "RaverieScriptLibrary"
 			var Tags = Array
 			{
 				"Event"
@@ -78043,14 +78043,14 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 			{
 				Method
 				{
-					var Name = "ZilchEvent"
+					var Name = "RaverieEvent"
 				}
 			}
 		}
 		Object
 		{
-			var Name = "ZilchFragment"
-			var BaseClass = "ZilchDocumentResource"
+			var Name = "RaverieFragment"
+			var BaseClass = "RaverieDocumentResource"
 			var Library = "GraphicsLibrary"
 			var Tags = Array
 			{
@@ -78059,13 +78059,13 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 		}
 		Object
 		{
-			var Name = "ZilchFragmentBuilder"
+			var Name = "RaverieFragmentBuilder"
 			var BaseClass = "BaseTextBuilder"
 			var Library = "ContentMetaLibrary"
 		}
 		Object
 		{
-			var Name = "ZilchLibraryResource"
+			var Name = "RaverieLibraryResource"
 			var BaseClass = "Resource"
 			var Library = "EngineLibrary"
 			var Tags = Array
@@ -78075,9 +78075,9 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 		}
 		Object
 		{
-			var Name = "ZilchObject"
+			var Name = "RaverieObject"
 			var BaseClass = "EventObject"
-			var Library = "ZilchScriptLibrary"
+			var Library = "RaverieScriptLibrary"
 			var Methods = Array
 			{
 				Method
@@ -78100,13 +78100,13 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				}
 				Method
 				{
-					var Name = "ZilchObject"
+					var Name = "RaverieObject"
 				}
 			}
 		}
 		Object
 		{
-			var Name = "ZilchPreCompilationEvent"
+			var Name = "RaveriePreCompilationEvent"
 			var BaseClass = "Event"
 			var Library = "EngineLibrary"
 			var Tags = Array
@@ -78116,10 +78116,10 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 		}
 		Object
 		{
-			var Name = "ZilchScript"
-			var BaseClass = "ZilchDocumentResource"
-			var Library = "ZilchScriptLibrary"
-			var Description = "Zilch script file Resource."
+			var Name = "RaverieScript"
+			var BaseClass = "RaverieDocumentResource"
+			var Library = "RaverieScriptLibrary"
+			var Description = "Raverie script file Resource."
 			var Tags = Array
 			{
 				"Resource"
@@ -78127,7 +78127,7 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 		}
 		Object
 		{
-			var Name = "ZilchScriptBuilder"
+			var Name = "RaverieScriptBuilder"
 			var BaseClass = "BaseTextBuilder"
 			var Library = "ContentMetaLibrary"
 		}

@@ -1,14 +1,14 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class Operation;
 class OperationBatch;
 class OperationQueue;
 class PropertyOperation;
-class ZilchCompileEvent;
+class RaverieCompileEvent;
 
 namespace Events
 {
@@ -22,7 +22,7 @@ DeclareEvent(OperationRedo);
 class OperationQueueEvent : public Event
 {
 public:
-  ZilchDeclareType(OperationQueueEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(OperationQueueEvent, TypeCopyMode::ReferenceType);
 
   OperationQueueEvent() : mOperation(nullptr)
   {
@@ -59,7 +59,7 @@ public:
 class Operation : public SafeId32EventObject, public OperationLink
 {
 public:
-  ZilchDeclareDerivedTypeExplicit(Operation, SafeId32EventObject, TypeCopyMode::ReferenceType);
+  RaverieDeclareDerivedTypeExplicit(Operation, SafeId32EventObject, TypeCopyMode::ReferenceType);
 
   typedef BaseInList<OperationLink, Operation, &OperationLink::link> OperationList;
   typedef OperationList::range OperationRange;
@@ -144,7 +144,7 @@ public:
 class OperationBatch : public Operation
 {
 public:
-  ZilchDeclareType(OperationBatch, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(OperationBatch, TypeCopyMode::ReferenceType);
 
   OperationBatch() : Operation()
   {
@@ -175,7 +175,7 @@ class UndoMap;
 class OperationQueue : public ReferenceCountedEventObject
 {
 public:
-  ZilchDeclareType(OperationQueue, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(OperationQueue, TypeCopyMode::ReferenceType);
 
   OperationQueue();
   ~OperationQueue();
@@ -391,4 +391,4 @@ namespace Z
 extern UndoMap* gUndoMap;
 }
 
-} // namespace Zero
+} // namespace Raverie

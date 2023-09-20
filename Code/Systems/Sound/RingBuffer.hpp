@@ -4,7 +4,7 @@
 
 #define RingBufferAtomicType s32
 
-namespace Zero
+namespace Raverie
 {
 
 // Ring Buffer
@@ -59,4 +59,4 @@ private:
   RingBufferAtomicType BigMask;
 };
 
-} // namespace Zero
+} // namespace Raverie

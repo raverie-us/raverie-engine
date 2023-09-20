@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 /// The choices for how to load and play an audio file.
 /// <param name="StreamFromFile">The audio data will be read from the file and
@@ -18,7 +18,7 @@ DeclareEnum4(AudioFileLoadType, StreamFromFile, StreamFromMemory, Uncompressed, 
 class AudioContent : public ContentComposition
 {
 public:
-  ZilchDeclareType(AudioContent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(AudioContent, TypeCopyMode::ReferenceType);
 
   AudioContent();
 };
@@ -28,7 +28,7 @@ const String SoundExtension = ".snd";
 class SoundBuilder : public DirectBuilderComponent
 {
 public:
-  ZilchDeclareType(SoundBuilder, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SoundBuilder, TypeCopyMode::ReferenceType);
 
   /// If Streamed is selected, or if Auto is selected and the file is longer
   /// than one minute, the sound file will be streamed from disk at runtime
@@ -62,4 +62,4 @@ public:
   bool mStreamed;
 };
 
-} // namespace Zero
+} // namespace Raverie

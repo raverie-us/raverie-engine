@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class DataNode;
@@ -68,4 +68,4 @@ public:
   DataNode* mLastEndedNode;
 };
 
-} // namespace Zero
+} // namespace Raverie

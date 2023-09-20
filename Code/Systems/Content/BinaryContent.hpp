@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // BinaryContent Item. Binary content is content that is directly edited
@@ -10,7 +10,7 @@ namespace Zero
 class BinaryContent : public ContentComposition
 {
 public:
-  ZilchDeclareType(BinaryContent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(BinaryContent, TypeCopyMode::ReferenceType);
 
   BinaryContent();
 };
@@ -19,7 +19,7 @@ public:
 class BinaryBuilder : public DirectBuilderComponent
 {
 public:
-  ZilchDeclareType(BinaryBuilder, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(BinaryBuilder, TypeCopyMode::ReferenceType);
 
   BinaryBuilder() : DirectBuilderComponent(0, ".bin", String())
   {
@@ -37,4 +37,4 @@ public:
   }
 };
 
-} // namespace Zero
+} // namespace Raverie

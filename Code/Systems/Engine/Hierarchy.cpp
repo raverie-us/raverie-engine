@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Events
@@ -15,31 +15,31 @@ DefineEvent(ChildrenOrderChanged);
 } // namespace Events
 
 // Hierarchy Event
-ZilchDefineType(HierarchyEvent, builder, type)
+RaverieDefineType(HierarchyEvent, builder, type)
 {
-  ZeroBindDocumented();
-  ZeroBindEvent(Events::Attached, HierarchyEvent);
-  ZeroBindEvent(Events::Detached, HierarchyEvent);
-  ZeroBindEvent(Events::ChildAttached, HierarchyEvent);
-  ZeroBindEvent(Events::ChildDetached, HierarchyEvent);
-  ZeroBindEvent(Events::ChildrenOrderChanged, Event);
-  ZilchBindFieldProperty(Parent);
-  ZilchBindFieldProperty(Child);
+  RaverieBindDocumented();
+  RaverieBindEvent(Events::Attached, HierarchyEvent);
+  RaverieBindEvent(Events::Detached, HierarchyEvent);
+  RaverieBindEvent(Events::ChildAttached, HierarchyEvent);
+  RaverieBindEvent(Events::ChildDetached, HierarchyEvent);
+  RaverieBindEvent(Events::ChildrenOrderChanged, Event);
+  RaverieBindFieldProperty(Parent);
+  RaverieBindFieldProperty(Child);
 }
 
-ZilchDefineType(HierarchyComposition, builder, type)
+RaverieDefineType(HierarchyComposition, builder, type)
 {
 }
 
 // Hierarchy
-ZilchDefineType(Hierarchy, builder, type)
+RaverieDefineType(Hierarchy, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindDocumented();
-  ZilchBindGetter(Children);
+  RaverieBindComponent();
+  RaverieBindDocumented();
+  RaverieBindGetter(Children);
 
   if (cBindCogChildrenReverseRange)
-    ZilchBindGetter(ChildrenReversed);
+    RaverieBindGetter(ChildrenReversed);
 
   type->AddAttribute(ObjectAttributes::cHidden);
   type->Add(new HierarchyComposition());
@@ -170,7 +170,7 @@ void Hierarchy::DestroyChildren()
 }
 
 // Hierarchy Composition
-HierarchyComposition::HierarchyComposition() : MetaComposition(ZilchTypeId(Cog))
+HierarchyComposition::HierarchyComposition() : MetaComposition(RaverieTypeId(Cog))
 {
 }
 
@@ -199,7 +199,7 @@ Handle HierarchyComposition::GetComponentAt(HandleParam instance, uint index)
 
 bool HierarchyComposition::CanAddComponent(HandleParam owner, BoundType* typeToAdd, AddInfo* info)
 {
-  if (typeToAdd == ZilchTypeId(Cog))
+  if (typeToAdd == RaverieTypeId(Cog))
     return true;
   info->Reason = "Only Cogs can be added to Hierarchy";
   return false;
@@ -227,4 +227,4 @@ void RelativeAttach(Transform* child, Transform* parent)
   child->GetOwner()->AttachToPreserveLocal(parent->GetOwner());
 }
 
-} // namespace Zero
+} // namespace Raverie

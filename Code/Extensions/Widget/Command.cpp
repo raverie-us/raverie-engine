@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -39,7 +39,7 @@ String SeperateWords(StringParam sourceString)
   return output.ToString();
 }
 
-ZilchDefineType(CommandUpdateEvent, builder, type)
+RaverieDefineType(CommandUpdateEvent, builder, type)
 {
 }
 
@@ -47,11 +47,11 @@ CommandUpdateEvent::CommandUpdateEvent(Command* command) : mCommand(command)
 {
 }
 
-ZilchDefineType(CommandEvent, builder, type)
+RaverieDefineType(CommandEvent, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindGetterProperty(Space);
+  RaverieBindGetterProperty(Space);
 }
 
 CommandEvent::CommandEvent(Object* source, CommandManager* manager) : ObjectEvent(source), mManager(manager)
@@ -63,7 +63,7 @@ Space* CommandEvent::GetSpace()
   return mManager->GetContext()->Get<Space>();
 }
 
-ZilchDefineType(CommandExecuter, builder, type)
+RaverieDefineType(CommandExecuter, builder, type)
 {
 }
 
@@ -85,7 +85,7 @@ CommandExecuter* BuildMetaCommandExecuter(StringParam executionFunction)
   ReturnIf(systemObject == nullptr, nullptr, "Failed to find system object '%s'", object.c_str());
 
   // Find Function
-  BoundType* metaType = ZilchVirtualTypeId(systemObject);
+  BoundType* metaType = RaverieVirtualTypeId(systemObject);
   Function* function = metaType->GetFunction(functionName);
 
   ReturnIf(function == nullptr || !function->FunctionType->Parameters.Empty(),
@@ -100,7 +100,7 @@ CommandExecuter* BuildMetaCommandExecuter(StringParam executionFunction)
   return executer;
 }
 
-ZilchDefineType(Command, builder, type)
+RaverieDefineType(Command, builder, type)
 {
 }
 
@@ -274,9 +274,9 @@ void MenuDefinition::Serialize(Serializer& stream)
 }
 
 // Manager
-ZilchDefineType(CommandManager, builder, type)
+RaverieDefineType(CommandManager, builder, type)
 {
-  ZeroBindEvent(Events::CommandExecute, CommandEvent);
+  RaverieBindEvent(Events::CommandExecute, CommandEvent);
 }
 
 CommandManager::CommandManager()
@@ -471,7 +471,7 @@ bool CommandManager::TestCommandCopyPasteShortcuts(ClipboardEvent* event)
 
   GetContext()->Add(event);
   command->ExecuteCommand();
-  GetContext()->Remove(ZilchVirtualTypeId(event));
+  GetContext()->Remove(RaverieVirtualTypeId(event));
 
   return true;
 }
@@ -608,8 +608,8 @@ Context* CommandManager::GetContext()
   return &mContext;
 }
 
-ZilchDefineType(CommandCaptureContextEvent, builder, type)
+RaverieDefineType(CommandCaptureContextEvent, builder, type)
 {
 }
 
-} // namespace Zero
+} // namespace Raverie

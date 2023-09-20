@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Tags
@@ -35,7 +35,7 @@ public:
 class GraphicalEvent : public Event
 {
 public:
-  ZilchDeclareType(GraphicalEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(GraphicalEvent, TypeCopyMode::ReferenceType);
   /// The viewing CameraViewport for EnterView/ExitView.
   HandleOf<Cog> mViewingObject;
 };
@@ -44,7 +44,7 @@ public:
 class Graphical : public Component
 {
 public:
-  ZilchDeclareType(Graphical, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Graphical, TypeCopyMode::ReferenceType);
 
   // Component Interface
 
@@ -150,4 +150,4 @@ public:
   VisibilityFlag mLastVisibleFlags;
 };
 
-} // namespace Zero
+} // namespace Raverie

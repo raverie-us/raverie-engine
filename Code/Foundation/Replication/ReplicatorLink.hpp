@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 //                               ReplicatorLink //
@@ -341,4 +341,4 @@ private:
   ReplicatorLink& operator=(const ReplicatorLink&);
 };
 
-} // namespace Zero
+} // namespace Raverie

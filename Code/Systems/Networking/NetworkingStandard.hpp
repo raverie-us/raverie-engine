@@ -6,24 +6,24 @@
 #include "Foundation/Meta/MetaStandard.hpp"
 #include "Foundation/Support/SupportStandard.hpp"
 
-// Zilch Library Dependencies
-#include "Foundation/Zilch/Precompiled.hpp"
-using namespace Zilch;
+// Raverie Library Dependencies
+#include "Foundation/RaverieLanguage/Precompiled.hpp"
+using namespace Raverie;
 
-namespace Zero
+namespace Raverie
 {
 
 // Networking library
-class NetworkingLibrary : public Zilch::StaticLibrary
+class NetworkingLibrary : public Raverie::StaticLibrary
 {
 public:
-  ZilchDeclareStaticLibraryInternals(NetworkingLibrary);
+  RaverieDeclareStaticLibraryInternals(NetworkingLibrary);
 
   static void Initialize();
   static void Shutdown();
 };
 
-} // namespace Zero
+} // namespace Raverie
 
 // Extension Library Dependencies
 #include "Foundation/Replication/ReplicationStandard.hpp"
@@ -41,7 +41,7 @@ public:
 #include "WebServer.hpp"
 
 // NetPeer Forward Declarations
-namespace Zero
+namespace Raverie
 {
 class BitStreamExtended;
 class EventBundle;
@@ -63,7 +63,7 @@ class NetUser;
 struct PendingNetUser;
 class NetSpace;
 class NetPeer;
-} // namespace Zero
+} // namespace Raverie
 
 // NetPeer Includes
 #include "BitStreamExtended.hpp"

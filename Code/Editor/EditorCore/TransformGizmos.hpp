@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Forward Declarations
@@ -27,7 +27,7 @@ class ObjectTransformGizmoEvent : public GizmoEvent
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(ObjectTransformGizmoEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ObjectTransformGizmoEvent, TypeCopyMode::ReferenceType);
 
   /// Constructor.
   ObjectTransformGizmoEvent(Component* sourceGizmo, Cog* owner, ViewportMouseEvent* base);
@@ -99,7 +99,7 @@ class ObjectTransformGizmo : public Component
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(ObjectTransformGizmo, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ObjectTransformGizmo, TypeCopyMode::ReferenceType);
 
   /// Component Interface.
   void Serialize(Serializer& stream) override;
@@ -171,7 +171,7 @@ class ObjectTranslateGizmo : public ObjectTransformGizmo
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(ObjectTranslateGizmo, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ObjectTranslateGizmo, TypeCopyMode::ReferenceType);
 
   /// Component Interface.
   void Serialize(Serializer& stream) override;
@@ -195,7 +195,7 @@ class ObjectScaleGizmo : public ObjectTransformGizmo
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(ObjectScaleGizmo, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ObjectScaleGizmo, TypeCopyMode::ReferenceType);
 
   /// Component Interface.
   void Serialize(Serializer& stream) override;
@@ -224,7 +224,7 @@ class ObjectRotateGizmo : public ObjectTransformGizmo
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(ObjectRotateGizmo, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ObjectRotateGizmo, TypeCopyMode::ReferenceType);
 
   /// Component Interface.
   void Serialize(Serializer& stream) override;
@@ -245,4 +245,4 @@ public:
   bool mAffectRotation;
 };
 
-} // namespace Zero
+} // namespace Raverie

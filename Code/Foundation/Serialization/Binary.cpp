@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 BinaryBufferSaver::BinaryBufferSaver()
@@ -189,4 +189,4 @@ void BinaryFileSaver::Data(byte* data, uint sizeInBytes)
   mFile.Write(data, sizeInBytes);
 }
 
-} // namespace Zero
+} // namespace Raverie

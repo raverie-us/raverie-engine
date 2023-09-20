@@ -2,7 +2,7 @@
 #pragma once
 #include "ContainerCommon.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 template <typename argument, typename result>
@@ -202,7 +202,7 @@ inline Pair<iterator, iterator> Partition(iterator first, iterator last, Compare
   iterator pivot = first;
 
   // Swap the pivot value to the front
-  Zero::Swap(*pivot, *(first + size / 2));
+  Raverie::Swap(*pivot, *(first + size / 2));
 
   // Move first to the first valid element
   ++first;
@@ -211,11 +211,11 @@ inline Pair<iterator, iterator> Partition(iterator first, iterator last, Compare
   // of the first, middle, and last elements. This prevents N^2
   // performance on a already sorted list
   if (comparer(*last, *first))
-    Zero::Swap(*last, *first);
+    Raverie::Swap(*last, *first);
   if (comparer(*pivot, *first))
-    Zero::Swap(*pivot, *first);
+    Raverie::Swap(*pivot, *first);
   if (comparer(*last, *pivot))
-    Zero::Swap(*last, *pivot);
+    Raverie::Swap(*last, *pivot);
 
   // store the pivot value on the stack
   type pivotValue = *pivot;
@@ -238,12 +238,12 @@ inline Pair<iterator, iterator> Partition(iterator first, iterator last, Compare
     // If the two value are not the middle
     if (first < last)
     {
-      Zero::Swap(*first, *last);
+      Raverie::Swap(*first, *last);
     }
   };
 
   // Move pivot back into position
-  Zero::Swap(*pivot, *last);
+  Raverie::Swap(*pivot, *last);
 
   // return the last and first of the two new ranges.
   return Pair<iterator, iterator>(last, first);
@@ -353,7 +353,7 @@ void Reverse(iterator start, iterator end)
   --end;
   while (start < end)
   {
-    Zero::Swap(*start, *end);
+    Raverie::Swap(*start, *end);
     ++start;
     --end;
   }
@@ -627,4 +627,4 @@ void RemoveSwap(ArrayType& array, size_t index)
   array.PopBack();
 }
 
-} // namespace Zero
+} // namespace Raverie

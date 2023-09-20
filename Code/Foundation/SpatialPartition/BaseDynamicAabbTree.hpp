@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Base policy for DynamicAabbTrees.
@@ -158,6 +158,6 @@ protected:
   uint mProxyCount;
 };
 
-} // namespace Zero
+} // namespace Raverie
 
 #include "BaseDynamicAabbTree.inl"

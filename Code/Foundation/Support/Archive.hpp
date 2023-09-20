@@ -5,7 +5,7 @@
 //#include "EnumDeclaration.hpp"
 //#include "Status.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 class ByteBuffer;
@@ -157,4 +157,4 @@ private:
   void WriteZipInternal(Stream& file);
 };
 
-} // namespace Zero
+} // namespace Raverie

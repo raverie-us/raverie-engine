@@ -266,7 +266,7 @@ void SplineCurve::GetPoints(const Vec3Array& points, Vec3Array& results, real er
     // add the start, mid and last point to the stack (need the middle point
     // since the spline is cubic, this "approximates" each sub-section as a
     // quadratic)
-    Zero::Array<PointData> stack;
+    Raverie::Array<PointData> stack;
     PointData firstPoint = ComputePointData<Policy>(real(0.0), cp0, cp1, cp2, cp3);
     PointData centerPoint = ComputePointData<Policy>(real(0.5), cp0, cp1, cp2, cp3);
     PointData lastPoint = ComputePointData<Policy>(real(1.0), cp0, cp1, cp2, cp3);
@@ -594,7 +594,7 @@ void PiecewiseFunction::AddControlPoint(Vec2Param pos, Vec2Param tanIn, Vec2Para
   mBakedCurve.Clear();
 }
 
-void PiecewiseFunction::SetControlPoints(Zero::Array<ControlPoint>& controlPoints)
+void PiecewiseFunction::SetControlPoints(Raverie::Array<ControlPoint>& controlPoints)
 {
   mControlPoints.Assign(controlPoints.All());
 

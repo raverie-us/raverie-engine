@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Physics
@@ -43,14 +43,14 @@ struct LinearAxisPolicy : public DefaultFragmentPolicy<LinearAxisJoint>
 
 ImplementJointType(LinearAxisJoint);
 
-ZilchDefineType(LinearAxisJoint, builder, type)
+RaverieDefineType(LinearAxisJoint, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindInterface(Joint);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindInterface(Joint);
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetterProperty(WorldAxis);
+  RaverieBindGetterSetterProperty(WorldAxis);
 }
 
 LinearAxisJoint::LinearAxisJoint()
@@ -198,4 +198,4 @@ void LinearAxisJoint::SetWorldAxis(Vec3Param axis)
 
 } // namespace Physics
 
-} // namespace Zero
+} // namespace Raverie

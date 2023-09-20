@@ -17,7 +17,7 @@
   Ji   : [0, -i, 0, i]
 */
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Physics
@@ -30,12 +30,12 @@ ImplementJointType(WeldJoint);
 ImplementAnchorAccessors(WeldJoint, mAnchors);
 ImplementAngleAccessors(WeldJoint, mReferenceAngle);
 
-ZilchDefineType(WeldJoint, builder, type)
+RaverieDefineType(WeldJoint, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindInterface(Joint);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindInterface(Joint);
+  RaverieBindDocumented();
 
   BindAnchorAccessors(Vec3(1));
   BindAngleAccessors();
@@ -167,4 +167,4 @@ uint WeldJoint::GetDefaultSpringIds() const
 
 } // namespace Physics
 
-} // namespace Zero
+} // namespace Raverie

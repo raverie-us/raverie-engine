@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Physics
@@ -57,4 +57,4 @@ struct ManipulatorJoint : public Joint
 
 typedef Physics::ManipulatorJoint ManipulatorJoint;
 
-} // namespace Zero
+} // namespace Raverie

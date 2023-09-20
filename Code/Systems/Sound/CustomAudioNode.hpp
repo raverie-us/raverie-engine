@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -15,7 +15,7 @@ DeclareEvent(CustomAudioNodeSamplesNeeded);
 class CustomAudioNodeEvent : public Event
 {
 public:
-  ZilchDeclareType(CustomAudioNodeEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CustomAudioNodeEvent, TypeCopyMode::ReferenceType);
 
   CustomAudioNodeEvent(unsigned samples) : SamplesNeeded(samples)
   {
@@ -30,7 +30,7 @@ public:
 class SoundBuffer : public ReferenceCountedObject
 {
 public:
-  ZilchDeclareType(SoundBuffer, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SoundBuffer, TypeCopyMode::ReferenceType);
 
   /// Adds a new audio sample to the end of the buffer.
   void AddSampleToBuffer(float sample);
@@ -45,7 +45,7 @@ public:
   void AddMicUncompressedData(const HandleOf<ArrayClass<float>>& audioData);
 
   // Internals
-  Zero::Array<float> mBuffer;
+  Raverie::Array<float> mBuffer;
 };
 
 // Custom Audio Node
@@ -54,7 +54,7 @@ public:
 class CustomAudioNode : public SoundNode
 {
 public:
-  ZilchDeclareType(CustomAudioNode, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CustomAudioNode, TypeCopyMode::ReferenceType);
 
   CustomAudioNode(StringParam name, unsigned ID);
   ~CustomAudioNode();
@@ -113,4 +113,4 @@ private:
   unsigned mMinimumBufferSize;
 };
 
-} // namespace Zero
+} // namespace Raverie

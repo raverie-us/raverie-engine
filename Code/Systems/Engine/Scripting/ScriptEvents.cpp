@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -12,8 +12,8 @@ DefineEvent(SyntaxError);
 DefineEvent(UnhandledException);
 } // namespace Events
 
-ZilchDefineType(ScriptEvent, builder, type)
+RaverieDefineType(ScriptEvent, builder, type)
 {
 }
 
-} // namespace Zero
+} // namespace Raverie

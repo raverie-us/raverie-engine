@@ -63,11 +63,11 @@
   }
 
 #define BindAnchorAccessors(defaults)                                                                                  \
-  ZilchBindGetterSetterProperty(LocalPointA)->ZeroSerialize(defaults);                                                 \
-  ZilchBindGetterSetterProperty(LocalPointB)->ZeroSerialize(defaults);                                                 \
-  ZilchBindMethod(SetWorldPoints);                                                                                     \
-  ZilchBindGetterSetterProperty(WorldPointA);                                                                          \
-  ZilchBindGetterSetterProperty(WorldPointB);
+  RaverieBindGetterSetterProperty(LocalPointA)->RaverieSerialize(defaults);                                                 \
+  RaverieBindGetterSetterProperty(LocalPointB)->RaverieSerialize(defaults);                                                 \
+  RaverieBindMethod(SetWorldPoints);                                                                                     \
+  RaverieBindGetterSetterProperty(WorldPointA);                                                                          \
+  RaverieBindGetterSetterProperty(WorldPointB);
 
 #define DeclareAxisAccessors(ConstraintType, axes)                                                                     \
   /* The locally defined axis on object A.*/                                                                           \
@@ -107,9 +107,9 @@
   }
 
 #define BindAxisAccessors(defaults)                                                                                    \
-  ZilchBindGetterSetterProperty(LocalAxisA)->ZeroSerialize(defaults);                                                  \
-  ZilchBindGetterSetterProperty(LocalAxisB)->ZeroSerialize(defaults);                                                  \
-  ZilchBindGetterSetterProperty(WorldAxis);
+  RaverieBindGetterSetterProperty(LocalAxisA)->RaverieSerialize(defaults);                                                  \
+  RaverieBindGetterSetterProperty(LocalAxisB)->RaverieSerialize(defaults);                                                  \
+  RaverieBindGetterSetterProperty(WorldAxis);
 
 #define DeclareAngleAccessors(ConstraintType, angleAtom)                                                               \
   /* The local space reference frame of object A. This frame is*/                                                      \
@@ -140,5 +140,5 @@
   }
 
 #define BindAngleAccessors()                                                                                           \
-  ZilchBindGetterSetterProperty(LocalBasisA);                                                                          \
-  ZilchBindGetterSetterProperty(LocalBasisB);
+  RaverieBindGetterSetterProperty(LocalBasisA);                                                                          \
+  RaverieBindGetterSetterProperty(LocalBasisB);

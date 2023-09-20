@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 Debug::DebugDraw* gDebugDraw = nullptr;
@@ -46,224 +46,224 @@ float GetViewDistance(Vec3Param location, Vec3Param eyePosition, Vec3 viewDirect
 template <typename DebugObjectType>
 void DebugDrawObject<DebugObjectType>::SetupTypeHelper(LibraryBuilder& builder, BoundType* type)
 {
-  typedef DebugObjectType ZilchSelf;
-  ZilchBindFieldProperty(mColor);
+  typedef DebugObjectType RaverieSelf;
+  RaverieBindFieldProperty(mColor);
   type->AddAttribute(ExportDocumentation);
-  // ZilchBindFieldProperty(mDuration); // Not implemented
-  // ZilchBindFieldProperty(mWidth); // Not implemented
+  // RaverieBindFieldProperty(mDuration); // Not implemented
+  // RaverieBindFieldProperty(mWidth); // Not implemented
 
-  // ZilchBindGetterSetterProperty(BackShade); // Not implemented
-  // ZilchBindGetterSetterProperty(Border); // Not implemented
-  // ZilchBindGetterSetterProperty(Filled); // Not implemented
-  ZilchBindGetterSetterProperty(OnTop);
-  ZilchBindGetterSetterProperty(ViewAligned);
-  ZilchBindGetterSetterProperty(ViewScaled);
-  ZilchBindFieldProperty(mViewScaleOffset);
+  // RaverieBindGetterSetterProperty(BackShade); // Not implemented
+  // RaverieBindGetterSetterProperty(Border); // Not implemented
+  // RaverieBindGetterSetterProperty(Filled); // Not implemented
+  RaverieBindGetterSetterProperty(OnTop);
+  RaverieBindGetterSetterProperty(ViewAligned);
+  RaverieBindGetterSetterProperty(ViewScaled);
+  RaverieBindFieldProperty(mViewScaleOffset);
 }
 
-ZilchDefineType(Arc, builder, type)
+RaverieDefineType(Arc, builder, type)
 {
   DebugDrawObject<Arc>::SetupTypeHelper(builder, type);
 
-  ZilchBindDestructor();
-  ZilchBindDefaultConstructor();
-  ZilchFullBindConstructor(builder, type, ZilchSelf, "start, mid, end", Vec3, Vec3, Vec3);
+  RaverieBindDestructor();
+  RaverieBindDefaultConstructor();
+  RaverieFullBindConstructor(builder, type, RaverieSelf, "start, mid, end", Vec3, Vec3, Vec3);
 
-  ZilchBindFieldProperty(mStart);
-  ZilchBindFieldProperty(mMid);
-  ZilchBindFieldProperty(mEnd);
+  RaverieBindFieldProperty(mStart);
+  RaverieBindFieldProperty(mMid);
+  RaverieBindFieldProperty(mEnd);
 }
 
-ZilchDefineType(Box, builder, type)
+RaverieDefineType(Box, builder, type)
 {
   DebugDrawObject<Box>::SetupTypeHelper(builder, type);
 
-  ZilchBindDestructor();
-  ZilchBindDefaultConstructor();
-  ZilchFullBindConstructor(builder, type, ZilchSelf, "position, halfExtents", Vec3, Vec2);
-  ZilchFullBindConstructor(builder, type, ZilchSelf, "position, halfExtents", Vec3, float);
-  ZilchFullBindConstructor(builder, type, ZilchSelf, "position, halfExtents, rotation", Vec3, Vec2, Quat);
-  ZilchFullBindConstructor(builder, type, ZilchSelf, "position, halfExtents, rotation", Vec3, float, Quat);
-  ZilchFullBindConstructor(builder, type, ZilchSelf, "aabb", Aabb);
+  RaverieBindDestructor();
+  RaverieBindDefaultConstructor();
+  RaverieFullBindConstructor(builder, type, RaverieSelf, "position, halfExtents", Vec3, Vec2);
+  RaverieFullBindConstructor(builder, type, RaverieSelf, "position, halfExtents", Vec3, float);
+  RaverieFullBindConstructor(builder, type, RaverieSelf, "position, halfExtents, rotation", Vec3, Vec2, Quat);
+  RaverieFullBindConstructor(builder, type, RaverieSelf, "position, halfExtents, rotation", Vec3, float, Quat);
+  RaverieFullBindConstructor(builder, type, RaverieSelf, "aabb", Aabb);
 
-  ZilchBindFieldProperty(mPosition);
-  ZilchBindFieldProperty(mHalfExtents);
-  ZilchBindFieldProperty(mRotation);
+  RaverieBindFieldProperty(mPosition);
+  RaverieBindFieldProperty(mHalfExtents);
+  RaverieBindFieldProperty(mRotation);
 
-  // ZilchBindGetterSetterProperty(Corners); // Not implemented
+  // RaverieBindGetterSetterProperty(Corners); // Not implemented
 
   // Temporarily bound only on types that implement it
-  ZilchBindGetterSetterProperty(Filled);
+  RaverieBindGetterSetterProperty(Filled);
 }
 
-ZilchDefineType(Capsule, builder, type)
+RaverieDefineType(Capsule, builder, type)
 {
   DebugDrawObject<Capsule>::SetupTypeHelper(builder, type);
 
-  ZilchBindDestructor();
-  ZilchBindDefaultConstructor();
-  ZilchFullBindConstructor(builder, type, ZilchSelf, "start, end, radius", Vec3, Vec3, float);
-  ZilchFullBindConstructor(builder, type, ZilchSelf, "position, axis, height, radius", Vec3, Vec3, float, float);
+  RaverieBindDestructor();
+  RaverieBindDefaultConstructor();
+  RaverieFullBindConstructor(builder, type, RaverieSelf, "start, end, radius", Vec3, Vec3, float);
+  RaverieFullBindConstructor(builder, type, RaverieSelf, "position, axis, height, radius", Vec3, Vec3, float, float);
 
-  ZilchBindFieldProperty(mStart);
-  ZilchBindFieldProperty(mEnd);
-  ZilchBindFieldProperty(mRadius);
+  RaverieBindFieldProperty(mStart);
+  RaverieBindFieldProperty(mEnd);
+  RaverieBindFieldProperty(mRadius);
 }
 
-ZilchDefineType(Circle, builder, type)
+RaverieDefineType(Circle, builder, type)
 {
   DebugDrawObject<Circle>::SetupTypeHelper(builder, type);
 
-  ZilchBindDestructor();
-  ZilchBindDefaultConstructor();
-  ZilchFullBindConstructor(builder, type, ZilchSelf, "position, axis, radius", Vec3, Vec3, float);
+  RaverieBindDestructor();
+  RaverieBindDefaultConstructor();
+  RaverieFullBindConstructor(builder, type, RaverieSelf, "position, axis, radius", Vec3, Vec3, float);
 
-  ZilchBindFieldProperty(mPosition);
-  ZilchBindFieldProperty(mAxis);
-  ZilchBindFieldProperty(mRadius);
+  RaverieBindFieldProperty(mPosition);
+  RaverieBindFieldProperty(mAxis);
+  RaverieBindFieldProperty(mRadius);
 }
 
-ZilchDefineType(Cone, builder, type)
+RaverieDefineType(Cone, builder, type)
 {
   DebugDrawObject<Cone>::SetupTypeHelper(builder, type);
 
-  ZilchBindDestructor();
-  ZilchBindDefaultConstructor();
-  ZilchFullBindConstructor(builder, type, ZilchSelf, "position, direction, length, radius", Vec3, Vec3, float, float);
+  RaverieBindDestructor();
+  RaverieBindDefaultConstructor();
+  RaverieFullBindConstructor(builder, type, RaverieSelf, "position, direction, length, radius", Vec3, Vec3, float, float);
 
-  ZilchBindFieldProperty(mPosition);
-  ZilchBindFieldProperty(mDirection);
-  ZilchBindFieldProperty(mLength);
-  ZilchBindFieldProperty(mRadius);
+  RaverieBindFieldProperty(mPosition);
+  RaverieBindFieldProperty(mDirection);
+  RaverieBindFieldProperty(mLength);
+  RaverieBindFieldProperty(mRadius);
 }
 
-ZilchDefineType(Cylinder, builder, type)
+RaverieDefineType(Cylinder, builder, type)
 {
   DebugDrawObject<Cylinder>::SetupTypeHelper(builder, type);
 
-  ZilchBindDestructor();
-  ZilchBindDefaultConstructor();
-  ZilchFullBindConstructor(builder, type, ZilchSelf, "start, end, radius", Vec3, Vec3, float);
-  ZilchFullBindConstructor(builder, type, ZilchSelf, "position, axis, height, radius", Vec3, Vec3, float, float);
+  RaverieBindDestructor();
+  RaverieBindDefaultConstructor();
+  RaverieFullBindConstructor(builder, type, RaverieSelf, "start, end, radius", Vec3, Vec3, float);
+  RaverieFullBindConstructor(builder, type, RaverieSelf, "position, axis, height, radius", Vec3, Vec3, float, float);
 
-  ZilchBindFieldProperty(mStart);
-  ZilchBindFieldProperty(mEnd);
-  ZilchBindFieldProperty(mRadius);
+  RaverieBindFieldProperty(mStart);
+  RaverieBindFieldProperty(mEnd);
+  RaverieBindFieldProperty(mRadius);
 }
 
-ZilchDefineType(Frustum, builder, type)
+RaverieDefineType(Frustum, builder, type)
 {
   DebugDrawObject<Frustum>::SetupTypeHelper(builder, type);
 
-  ZilchBindConstructor();
-  ZilchBindConstructor(Zero::Frustum);
-  ZilchBindDestructor();
+  RaverieBindConstructor();
+  RaverieBindConstructor(Raverie::Frustum);
+  RaverieBindDestructor();
 }
 
-ZilchDefineType(Line, builder, type)
+RaverieDefineType(Line, builder, type)
 {
   DebugDrawObject<Line>::SetupTypeHelper(builder, type);
 
-  ZilchBindDestructor();
-  ZilchBindDefaultConstructor();
-  ZilchFullBindConstructor(builder, type, ZilchSelf, "start, end", Vec3, Vec3);
-  ZilchFullBindConstructor(builder, type, ZilchSelf, "start, end, headSize", Vec3, Vec3, float);
-  ZilchFullBindConstructor(builder, type, ZilchSelf, "ray", Ray);
-  ZilchFullBindConstructor(builder, type, ZilchSelf, "ray, t", Ray, float);
-  ZilchFullBindConstructor(builder, type, ZilchSelf, "segment", Segment);
+  RaverieBindDestructor();
+  RaverieBindDefaultConstructor();
+  RaverieFullBindConstructor(builder, type, RaverieSelf, "start, end", Vec3, Vec3);
+  RaverieFullBindConstructor(builder, type, RaverieSelf, "start, end, headSize", Vec3, Vec3, float);
+  RaverieFullBindConstructor(builder, type, RaverieSelf, "ray", Ray);
+  RaverieFullBindConstructor(builder, type, RaverieSelf, "ray, t", Ray, float);
+  RaverieFullBindConstructor(builder, type, RaverieSelf, "segment", Segment);
 
-  ZilchBindFieldProperty(mStart);
-  ZilchBindFieldProperty(mEnd);
-  ZilchBindFieldProperty(mHeadSize);
+  RaverieBindFieldProperty(mStart);
+  RaverieBindFieldProperty(mEnd);
+  RaverieBindFieldProperty(mHeadSize);
 
-  ZilchBindGetterSetterProperty(DualHeads);
-  ZilchBindGetterSetterProperty(BoxHeads);
+  RaverieBindGetterSetterProperty(DualHeads);
+  RaverieBindGetterSetterProperty(BoxHeads);
 
   // Temporarily bound only on types that implement it
-  ZilchBindGetterSetterProperty(Filled);
+  RaverieBindGetterSetterProperty(Filled);
 }
 
-ZilchDefineType(LineCross, builder, type)
+RaverieDefineType(LineCross, builder, type)
 {
   DebugDrawObject<LineCross>::SetupTypeHelper(builder, type);
 
-  ZilchBindDestructor();
-  ZilchBindDefaultConstructor();
-  ZilchFullBindConstructor(builder, type, ZilchSelf, "position, halfExtents", Vec3, float);
+  RaverieBindDestructor();
+  RaverieBindDefaultConstructor();
+  RaverieFullBindConstructor(builder, type, RaverieSelf, "position, halfExtents", Vec3, float);
 
-  ZilchBindFieldProperty(mPosition);
-  ZilchBindFieldProperty(mHalfExtents);
+  RaverieBindFieldProperty(mPosition);
+  RaverieBindFieldProperty(mHalfExtents);
 }
 
-ZilchDefineType(Obb, builder, type)
+RaverieDefineType(Obb, builder, type)
 {
   DebugDrawObject<Obb>::SetupTypeHelper(builder, type);
 
-  ZilchBindDestructor();
-  ZilchBindDefaultConstructor();
-  ZilchFullBindConstructor(builder, type, ZilchSelf, "position, halfExtents", Vec3, Vec3);
-  ZilchFullBindConstructor(builder, type, ZilchSelf, "position, halfExtents", Vec3, float);
-  ZilchFullBindConstructor(builder, type, ZilchSelf, "position, halfExtents, rotation", Vec3, Vec3, Quat);
-  ZilchFullBindConstructor(builder, type, ZilchSelf, "position, halfExtents, rotation", Vec3, float, Quat);
-  ZilchFullBindConstructor(builder, type, ZilchSelf, "position, halfExtents, rotation", Vec3, Vec3, Mat3);
-  // ZilchFullBindConstructor(builder, type, ZilchSelf, "obb", Obb);
-  ZilchFullBindConstructor(builder, type, ZilchSelf, "aabb", Aabb);
+  RaverieBindDestructor();
+  RaverieBindDefaultConstructor();
+  RaverieFullBindConstructor(builder, type, RaverieSelf, "position, halfExtents", Vec3, Vec3);
+  RaverieFullBindConstructor(builder, type, RaverieSelf, "position, halfExtents", Vec3, float);
+  RaverieFullBindConstructor(builder, type, RaverieSelf, "position, halfExtents, rotation", Vec3, Vec3, Quat);
+  RaverieFullBindConstructor(builder, type, RaverieSelf, "position, halfExtents, rotation", Vec3, float, Quat);
+  RaverieFullBindConstructor(builder, type, RaverieSelf, "position, halfExtents, rotation", Vec3, Vec3, Mat3);
+  // RaverieFullBindConstructor(builder, type, RaverieSelf, "obb", Obb);
+  RaverieFullBindConstructor(builder, type, RaverieSelf, "aabb", Aabb);
 
-  ZilchBindFieldProperty(mPosition);
-  ZilchBindFieldProperty(mHalfExtents);
-  ZilchBindFieldProperty(mRotation);
+  RaverieBindFieldProperty(mPosition);
+  RaverieBindFieldProperty(mHalfExtents);
+  RaverieBindFieldProperty(mRotation);
 
-  ZilchBindGetterSetterProperty(Corners);
+  RaverieBindGetterSetterProperty(Corners);
 
   // Temporarily bound only on types that implement it
-  ZilchBindGetterSetterProperty(Filled);
+  RaverieBindGetterSetterProperty(Filled);
 }
 
-ZilchDefineType(Sphere, builder, type)
+RaverieDefineType(Sphere, builder, type)
 {
   DebugDrawObject<Sphere>::SetupTypeHelper(builder, type);
 
-  ZilchBindDestructor();
-  ZilchBindDefaultConstructor();
-  ZilchFullBindConstructor(builder, type, ZilchSelf, "position, radius", Vec3, float);
-  ZilchFullBindConstructor(builder, type, ZilchSelf, "sphere", Sphere);
+  RaverieBindDestructor();
+  RaverieBindDefaultConstructor();
+  RaverieFullBindConstructor(builder, type, RaverieSelf, "position, radius", Vec3, float);
+  RaverieFullBindConstructor(builder, type, RaverieSelf, "sphere", Sphere);
 
-  ZilchBindFieldProperty(mPosition);
-  ZilchBindFieldProperty(mRadius);
+  RaverieBindFieldProperty(mPosition);
+  RaverieBindFieldProperty(mRadius);
 
-  ZilchBindGetterSetterProperty(Colored);
+  RaverieBindGetterSetterProperty(Colored);
 }
 
-ZilchDefineType(Text, builder, type)
+RaverieDefineType(Text, builder, type)
 {
   DebugDrawObject<Text>::SetupTypeHelper(builder, type);
 
-  ZilchBindDestructor();
-  ZilchBindDefaultConstructor();
-  ZilchFullBindConstructor(builder, type, ZilchSelf, "position, textHeight, text", Vec3, float, String);
+  RaverieBindDestructor();
+  RaverieBindDefaultConstructor();
+  RaverieFullBindConstructor(builder, type, RaverieSelf, "position, textHeight, text", Vec3, float, String);
 
-  ZilchBindFieldProperty(mPosition);
-  ZilchBindFieldProperty(mRotation);
-  ZilchBindFieldProperty(mTextHeight);
-  ZilchBindFieldProperty(mText);
+  RaverieBindFieldProperty(mPosition);
+  RaverieBindFieldProperty(mRotation);
+  RaverieBindFieldProperty(mTextHeight);
+  RaverieBindFieldProperty(mText);
 
-  ZilchBindGetterSetterProperty(Centered);
+  RaverieBindGetterSetterProperty(Centered);
 }
 
-ZilchDefineType(Triangle, builder, type)
+RaverieDefineType(Triangle, builder, type)
 {
   DebugDrawObject<Triangle>::SetupTypeHelper(builder, type);
 
-  ZilchBindDestructor();
-  ZilchBindDefaultConstructor();
-  ZilchBindConstructor(Vec3, Vec3, Vec3);
+  RaverieBindDestructor();
+  RaverieBindDefaultConstructor();
+  RaverieBindConstructor(Vec3, Vec3, Vec3);
 
-  ZilchBindFieldProperty(mPoint0);
-  ZilchBindFieldProperty(mPoint1);
-  ZilchBindFieldProperty(mPoint2);
+  RaverieBindFieldProperty(mPoint0);
+  RaverieBindFieldProperty(mPoint1);
+  RaverieBindFieldProperty(mPoint2);
 
   // Temporarily bound only on types that implement it
-  ZilchBindGetterSetterProperty(Filled);
+  RaverieBindGetterSetterProperty(Filled);
 }
 
 //// Draw a circle clipped to given plane
@@ -1314,4 +1314,4 @@ void DebugDraw::AddInternal(uint spaceId, const DebugDrawObjectAny& object)
 
 } // namespace Debug
 
-} // namespace Zero
+} // namespace Raverie

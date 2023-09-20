@@ -1,12 +1,12 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(PropertyPath, builder, type)
+RaverieDefineType(PropertyPath, builder, type)
 {
-  ZilchBindDefaultCopyDestructor();
+  RaverieBindDefaultCopyDestructor();
 }
 
 PropertyPath::PropertyPath(Property* prop)
@@ -281,4 +281,4 @@ bool PropertPathHandle::SetValue(AnyParam newValue)
   return mPath.SetValue(mRootObject, newValue);
 }
 
-} // namespace Zero
+} // namespace Raverie

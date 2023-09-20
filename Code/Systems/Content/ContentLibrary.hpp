@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 class ResourcePackage;
 
@@ -12,7 +12,7 @@ DeclareEnum2(LibraryState, Enumerated, Loaded);
 class ContentLibrary : public Object
 {
 public:
-  ZilchDeclareType(ContentLibrary, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ContentLibrary, TypeCopyMode::ReferenceType);
 
   ContentLibrary();
   ~ContentLibrary();
@@ -84,4 +84,4 @@ private:
   friend class ContentSystem;
 };
 
-} // namespace Zero
+} // namespace Raverie

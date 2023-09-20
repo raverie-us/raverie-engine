@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace DownloadUi
@@ -113,4 +113,4 @@ void DownloadTaskJob::UpdateDownloadProgress()
   UpdateProgress(mName, percentComplete, progressText);
 }
 
-} // namespace Zero
+} // namespace Raverie

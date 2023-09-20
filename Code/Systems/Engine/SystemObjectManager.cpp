@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Z
@@ -32,7 +32,7 @@ void SystemObjectManager::Add(Object* object, BoundType* metaType, ObjectCleanup
 
 void SystemObjectManager::Add(Object* object, ObjectCleanup::Enum cleanup)
 {
-  Add(object, ZilchVirtualTypeId(object), cleanup);
+  Add(object, RaverieVirtualTypeId(object), cleanup);
 }
 
 void StartSystemObjects()
@@ -45,4 +45,4 @@ void CleanUpSystemObjects()
   delete Z::gSystemObjects;
 }
 
-} // namespace Zero
+} // namespace Raverie

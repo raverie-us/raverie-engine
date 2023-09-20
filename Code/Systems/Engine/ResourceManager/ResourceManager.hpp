@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 DeclareEnum3(RemoveMode,
@@ -36,7 +36,7 @@ DeclareEvent(ResourceReload);
 class ResourceEvent : public Event
 {
 public:
-  ZilchDeclareType(ResourceEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ResourceEvent, TypeCopyMode::ReferenceType);
   ResourceEvent();
   ResourceEvent(ResourceManager* manager, Resource* resource);
   String Name;
@@ -213,8 +213,8 @@ public:
 // creation of a runtime resource in script is intended then bind the resource's
 // CreateRuntime method.
 #define DeclareResourceManager(ManagerType, ManagerResourceType)                                                       \
-  typedef ResourceManager ZilchBase;                                                                                   \
-  typedef ManagerType ZilchSelf;                                                                                       \
+  typedef ResourceManager RaverieBase;                                                                                   \
+  typedef ManagerType RaverieSelf;                                                                                       \
   typedef ManagerResourceType ResourceType;                                                                            \
   typedef ManagerResourceType RT;                                                                                      \
   typedef ManagerType self_type;                                                                                       \
@@ -275,7 +275,7 @@ public:
   ManagerType* ManagerType::Instance = NULL;                                                                           \
   void ManagerType::Initialize()                                                                                       \
   {                                                                                                                    \
-    BoundType* metaType = ZilchTypeId(ManagerResourceType);                                                            \
+    BoundType* metaType = RaverieTypeId(ManagerResourceType);                                                            \
     ManagerType::Instance = new ManagerType(metaType);                                                                 \
   }
 
@@ -330,4 +330,4 @@ void SerializeResourceImpl(cstr fieldName,
 #define SerializeNullableResourceNameDefault(name, managerName, defaultValue)                                          \
   SerializeResourceImpl<managerName>(#name, stream, name, defaultValue, true);
 
-} // namespace Zero
+} // namespace Raverie

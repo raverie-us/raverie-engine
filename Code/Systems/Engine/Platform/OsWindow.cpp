@@ -2,7 +2,7 @@
 #include "Precompiled.hpp"
 #include "Foundation/Platform/PlatformCommunication.hpp"
 
-namespace Zero
+namespace Raverie
 {
 namespace Events
 {
@@ -28,12 +28,12 @@ DefineEvent(OsWindowBorderHitTest);
 const String cOsKeyboardEventsFromState[] = {Events::OsKeyUp, Events::OsKeyDown, Events::OsKeyRepeated};
 OsWindow* OsWindow::sInstance = nullptr;
 
-ZilchDefineType(OsWindow, builder, type)
+RaverieDefineType(OsWindow, builder, type)
 {
-  ZilchBindGetterProperty(ClientSize);
-  ZilchBindMethod(HasFocus);
-  ZilchBindSetter(MouseCapture);
-  ZilchBindGetterSetter(MouseTrap);
+  RaverieBindGetterProperty(ClientSize);
+  RaverieBindMethod(HasFocus);
+  RaverieBindSetter(MouseCapture);
+  RaverieBindGetterSetter(MouseTrap);
 }
 
 OsWindow::OsWindow()
@@ -129,12 +129,12 @@ void OsWindow::FillMouseEvent(IntVec2Param clientPosition, MouseButtons::Enum mo
   mouseEvent.MouseButton = mouseButton;
 }
 
-void ZeroExportNamed(ExportQuit)() {
+void RaverieExportNamed(ExportQuit)() {
   OsWindowEvent event;
   OsWindow::sInstance->DispatchEvent(Events::OsClose, &event);
 }
 
-void ZeroExportNamed(ExportFocusChanged)(bool focused)
+void RaverieExportNamed(ExportFocusChanged)(bool focused)
 {
   Shell::sInstance->mHasFocus = focused;
   OsWindowEvent focusEvent;
@@ -152,11 +152,11 @@ void ZeroExportNamed(ExportFocusChanged)(bool focused)
 }
 
 Array<String> gDroppedFiles;
-void ZeroExportNamed(ExportFileDropAdd)(const char* filePath) {
+void RaverieExportNamed(ExportFileDropAdd)(const char* filePath) {
   gDroppedFiles.PushBack(filePath);
 }
 
-void ZeroExportNamed(ExportFileDropFinish)(int32_t clientX, int32_t clientY) {
+void RaverieExportNamed(ExportFileDropFinish)(int32_t clientX, int32_t clientY) {
   IntVec2 clientPosition(clientX, clientY);
   OsMouseDropEvent mouseDrop;
   OsWindow::sInstance->FillMouseEvent(clientPosition, MouseButtons::None, mouseDrop);
@@ -167,7 +167,7 @@ void ZeroExportNamed(ExportFileDropFinish)(int32_t clientX, int32_t clientY) {
   OsWindow::sInstance->SendMouseDropEvent(mouseDrop);
 }
 
-void ZeroExportNamed(ExportSizeChanged)(int32_t clientWidth, int32_t clientHeight)
+void RaverieExportNamed(ExportSizeChanged)(int32_t clientWidth, int32_t clientHeight)
 {
   IntVec2 clientSize(clientWidth, clientHeight);
   Shell::sInstance->mClientSize = clientSize;
@@ -176,14 +176,14 @@ void ZeroExportNamed(ExportSizeChanged)(int32_t clientWidth, int32_t clientHeigh
   OsWindow::sInstance->DispatchEvent(Events::OsResized, &sizeEvent);
 }
 
-void ZeroExportNamed(ExportTextTyped)(uint32_t rune)
+void RaverieExportNamed(ExportTextTyped)(uint32_t rune)
 {
   KeyboardTextEvent textEvent(rune);
   textEvent.EventId = Events::OsKeyTyped;
   OsWindow::sInstance->SendKeyboardTextEvent(textEvent);
 }
 
-void ZeroExportNamed(ExportKeyboardButtonChanged)(Zero::Keys::Enum key, Zero::KeyState::Enum state)
+void RaverieExportNamed(ExportKeyboardButtonChanged)(Raverie::Keys::Enum key, Raverie::KeyState::Enum state)
 {
   Shell::sInstance->mKeyState[key] = (state == KeyState::Down || state == KeyState::Repeated);
   KeyboardEvent keyEvent;
@@ -191,7 +191,7 @@ void ZeroExportNamed(ExportKeyboardButtonChanged)(Zero::Keys::Enum key, Zero::Ke
   OsWindow::sInstance->SendKeyboardEvent(keyEvent);
 }
 
-void ZeroExportNamed(ExportMouseButtonChanged)(int32_t clientX, int32_t clientY, Zero::MouseButtons::Enum button, Zero::MouseState::Enum state)
+void RaverieExportNamed(ExportMouseButtonChanged)(int32_t clientX, int32_t clientY, Raverie::MouseButtons::Enum button, Raverie::MouseState::Enum state)
 {
   IntVec2 clientPosition(clientX, clientY);
   Shell::sInstance->mMouseState[button] = (state == MouseState::Down);
@@ -201,7 +201,7 @@ void ZeroExportNamed(ExportMouseButtonChanged)(int32_t clientX, int32_t clientY,
   OsWindow::sInstance->SendMouseEvent(mouseEvent);
 }
 
-void ZeroExportNamed(ExportMouseMove)(int32_t clientX, int32_t clientY, int32_t dx, int32_t dy) {
+void RaverieExportNamed(ExportMouseMove)(int32_t clientX, int32_t clientY, int32_t dx, int32_t dy) {
   IntVec2 clientPosition(clientX, clientY);
   OsMouseEvent mouseEvent;
   OsWindow::sInstance->FillMouseEvent(clientPosition, MouseButtons::None, mouseEvent);
@@ -213,7 +213,7 @@ void ZeroExportNamed(ExportMouseMove)(int32_t clientX, int32_t clientY, int32_t 
   Z::gMouse->mRawMovement += Vec2(dx, dy);
 }
 
-void ZeroExportNamed(ExportMouseScroll)(int32_t clientX, int32_t clientY, float scrollX, float scrollY)
+void RaverieExportNamed(ExportMouseScroll)(int32_t clientX, int32_t clientY, float scrollX, float scrollY)
 {
   IntVec2 clientPosition(clientX, clientY);
   OsMouseEvent mouseEvent;
@@ -224,7 +224,7 @@ void ZeroExportNamed(ExportMouseScroll)(int32_t clientX, int32_t clientY, float 
   OsWindow::sInstance->SendMouseEvent(mouseEvent);
 }
 
-void ZeroExportNamed(ExportGamepadConnectionChanged)(uint32_t gamepadIndex, const char* id, bool connected) {
+void RaverieExportNamed(ExportGamepadConnectionChanged)(uint32_t gamepadIndex, const char* id, bool connected) {
   auto& gamepad = Shell::sInstance->GetOrCreateGamepad(gamepadIndex);
   gamepad.mConnected = connected;
 
@@ -240,7 +240,7 @@ void ZeroExportNamed(ExportGamepadConnectionChanged)(uint32_t gamepadIndex, cons
   OsWindow::sInstance->DispatchEvent(Events::OsDeviceChanged, &event);
 }
 
-void ZeroExportNamed(ExportGamepadButtonChanged)(uint32_t gamepadIndex, uint32_t buttonIndex, bool pressed, bool touched, float value) {
+void RaverieExportNamed(ExportGamepadButtonChanged)(uint32_t gamepadIndex, uint32_t buttonIndex, bool pressed, bool touched, float value) {
   auto& gamepad = Shell::sInstance->GetOrCreateGamepad(gamepadIndex);
   auto& button = gamepad.GetOrCreateButton(buttonIndex);
 
@@ -249,12 +249,12 @@ void ZeroExportNamed(ExportGamepadButtonChanged)(uint32_t gamepadIndex, uint32_t
   button.mValue = value;
 }
 
-void ZeroExportNamed(ExportGamepadAxisChanged)(uint32_t gamepadIndex, uint32_t axisIndex, float value) {
+void RaverieExportNamed(ExportGamepadAxisChanged)(uint32_t gamepadIndex, uint32_t axisIndex, float value) {
   auto& gamepad = Shell::sInstance->GetOrCreateGamepad(gamepadIndex);
   gamepad.GetOrCreateAxis(axisIndex).mValue = value;
 }
 
-ZilchDefineType(OsWindowEvent, builder, type)
+RaverieDefineType(OsWindowEvent, builder, type)
 {
 }
 
@@ -267,7 +267,7 @@ void OsWindowEvent::Serialize(Serializer& stream)
   SerializeNameDefault(EventId, String());
 }
 
-ZilchDefineType(OsMouseEvent, builder, type)
+RaverieDefineType(OsMouseEvent, builder, type)
 {
 }
 
@@ -314,7 +314,7 @@ void OsMouseEvent::Serialize(Serializer& stream)
   SerializeNameDefault(XTwoForwardButton, false);
 }
 
-ZilchDefineType(OsWindowBorderHitTest, builder, type)
+RaverieDefineType(OsWindowBorderHitTest, builder, type)
 {
 }
 
@@ -323,7 +323,7 @@ OsWindowBorderHitTest::OsWindowBorderHitTest() :
 {
 }
 
-ZilchDefineType(OsMouseDropEvent, builder, type)
+RaverieDefineType(OsMouseDropEvent, builder, type)
 {
 }
 
@@ -333,4 +333,4 @@ void OsMouseDropEvent::Serialize(Serializer& stream)
   SerializeName(Files);
 }
 
-} // namespace Zero
+} // namespace Raverie

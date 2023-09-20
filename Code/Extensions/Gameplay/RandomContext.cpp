@@ -1,49 +1,49 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(RandomContext, builder, type)
+RaverieDefineType(RandomContext, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultConstructor);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultConstructor);
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetterProperty(Seed);
-  ZilchBindFieldProperty(mRandomSeed);
+  RaverieBindGetterSetterProperty(Seed);
+  RaverieBindFieldProperty(mRandomSeed);
 
-  ZilchBindGetterProperty(MaxInt);
+  RaverieBindGetterProperty(MaxInt);
 
-  ZilchBindMethod(Bool);
-  ZilchBindMethod(Int);
-  ZilchBindMethod(Float);
-  ZilchBindMethod(Real);
-  ZilchBindMethod(DoubleReal);
-  ZilchBindMethod(UnitVector2);
-  ZilchBindMethod(UnitReal2);
-  ZilchBindMethod(Vector2);
-  ZilchBindMethod(Real2);
-  ZilchBindMethod(UnitVector3);
-  ZilchBindMethod(UnitReal3);
-  ZilchBindMethod(Vector3);
-  ZilchBindMethod(Real3);
-  ZilchBindMethod(Quaternion);
-  ZilchBindMethod(RangeInclusiveMax);
-  ZilchBindMethod(RangeExclusiveMax);
-  ZilchBindMethod(IntVariance);
-  ZilchBindMethod(Range);
-  ZilchBindMethod(DoubleRange);
-  ZilchBindMethod(FloatVariance);
-  ZilchBindMethod(RealVariance);
-  ZilchBindMethod(DoubleRealVariance);
-  ZilchBindMethod(DieRoll);
-  ZilchBindMethod(Probability);
-  ZilchBindMethod(CoinFlip);
-  ZilchBindMethod(Rotation);
-  ZilchBindMethod(BellCurve);
-  ZilchBindMethod(BellCurveRange);
-  ZilchBindMethod(BellCurveDistribution);
+  RaverieBindMethod(Bool);
+  RaverieBindMethod(Int);
+  RaverieBindMethod(Float);
+  RaverieBindMethod(Real);
+  RaverieBindMethod(DoubleReal);
+  RaverieBindMethod(UnitVector2);
+  RaverieBindMethod(UnitReal2);
+  RaverieBindMethod(Vector2);
+  RaverieBindMethod(Real2);
+  RaverieBindMethod(UnitVector3);
+  RaverieBindMethod(UnitReal3);
+  RaverieBindMethod(Vector3);
+  RaverieBindMethod(Real3);
+  RaverieBindMethod(Quaternion);
+  RaverieBindMethod(RangeInclusiveMax);
+  RaverieBindMethod(RangeExclusiveMax);
+  RaverieBindMethod(IntVariance);
+  RaverieBindMethod(Range);
+  RaverieBindMethod(DoubleRange);
+  RaverieBindMethod(FloatVariance);
+  RaverieBindMethod(RealVariance);
+  RaverieBindMethod(DoubleRealVariance);
+  RaverieBindMethod(DieRoll);
+  RaverieBindMethod(Probability);
+  RaverieBindMethod(CoinFlip);
+  RaverieBindMethod(Rotation);
+  RaverieBindMethod(BellCurve);
+  RaverieBindMethod(BellCurveRange);
+  RaverieBindMethod(BellCurveDistribution);
 }
 
 void RandomContext::Serialize(Serializer& stream)
@@ -243,4 +243,4 @@ float RandomContext::BellCurveDistribution(float center, float range, float stan
   return mRandom.BellCurve(center, range, standardDeviation);
 }
 
-} // namespace Zero
+} // namespace Raverie

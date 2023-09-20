@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 void FlipManifoldInfo(Intersection::Manifold* manifold)
@@ -1890,4 +1890,4 @@ bool Collide(const SweptTriangle& sweptTri1, const SweptTriangle& sweptTri2, Int
   return SupportShapeCollide(a, b, manifold);
 }
 
-} // namespace Zero
+} // namespace Raverie

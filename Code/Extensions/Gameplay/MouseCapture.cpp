@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -165,21 +165,21 @@ public:
   }
 };
 
-ZilchDefineType(MouseCapture, builder, type)
+RaverieDefineType(MouseCapture, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
 
-  ZilchBindMethod(Capture);
-  ZilchBindOverloadedMethod(ReleaseCapture, ZilchInstanceOverload(void));
-  ZilchBindOverloadedMethod(ReleaseCapture, ZilchInstanceOverload(void, ViewportMouseEvent*));
-  ZilchBindGetter(IsCaptured);
+  RaverieBindMethod(Capture);
+  RaverieBindOverloadedMethod(ReleaseCapture, RaverieInstanceOverload(void));
+  RaverieBindOverloadedMethod(ReleaseCapture, RaverieInstanceOverload(void, ViewportMouseEvent*));
+  RaverieBindGetter(IsCaptured);
 
-  ZeroBindEvent(Events::MouseDragStart, ViewportMouseEvent);
-  ZeroBindEvent(Events::MouseDragMove, ViewportMouseEvent);
-  ZeroBindEvent(Events::MouseDragUpdate, ViewportMouseEvent);
-  ZeroBindEvent(Events::MouseDragEnd, ViewportMouseEvent);
+  RaverieBindEvent(Events::MouseDragStart, ViewportMouseEvent);
+  RaverieBindEvent(Events::MouseDragMove, ViewportMouseEvent);
+  RaverieBindEvent(Events::MouseDragUpdate, ViewportMouseEvent);
+  RaverieBindEvent(Events::MouseDragEnd, ViewportMouseEvent);
 }
 
 void MouseCapture::Initialize(CogInitializer& initializer)
@@ -237,4 +237,4 @@ void MouseCapture::OnMouseDragUpdate(ViewportMouseEvent* e)
   mLastMouseEvent = *e;
 }
 
-} // namespace Zero
+} // namespace Raverie

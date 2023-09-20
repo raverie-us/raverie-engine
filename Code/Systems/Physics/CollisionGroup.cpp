@@ -1,17 +1,17 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(CollisionGroup, builder, type)
+RaverieDefineType(CollisionGroup, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZeroBindTag(Tags::Physics);
+  RaverieBindTag(Tags::Physics);
 
-  ZilchBindMethod(CreateRuntime);
-  ZilchBindMethod(RuntimeClone);
+  RaverieBindMethod(CreateRuntime);
+  RaverieBindMethod(RuntimeClone);
 }
 
 CollisionGroup::CollisionGroup()
@@ -85,4 +85,4 @@ CollisionGroupManager::CollisionGroupManager(BoundType* resourceType) : Resource
   mExtension = DataResourceExtension;
 }
 
-} // namespace Zero
+} // namespace Raverie

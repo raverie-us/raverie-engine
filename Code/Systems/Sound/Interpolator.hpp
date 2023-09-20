@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// The type of curve used for attenuating volume by SoundAttenuators.
@@ -108,4 +108,4 @@ private:
   float (*GetValue)(const float current, const float total, const float startValue, const float endValue);
 };
 
-} // namespace Zero
+} // namespace Raverie

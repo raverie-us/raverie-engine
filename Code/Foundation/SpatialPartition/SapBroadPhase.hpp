@@ -1,13 +1,13 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class SapBroadPhase : public IBroadPhase
 {
 public:
-  ZilchDeclareType(SapBroadPhase, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SapBroadPhase, TypeCopyMode::ReferenceType);
 
   typedef Sap<void*> BroadPhaseType;
   typedef SapRange<void*, Aabb> DefaultRange;
@@ -47,4 +47,4 @@ private:
   ClientPairArray mDataPairs;
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,16 +1,16 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 // @TrevorS: Move this to be filled out automatically in my binding!
 BoundType* ObjectBindingVirtualTypeFn(const byte* memory)
 {
   const Object* object = (const Object*)memory;
-  return object->ZilchGetDerivedType();
+  return object->RaverieGetDerivedType();
 }
 
-ZilchDefineType(Object, builder, type)
+RaverieDefineType(Object, builder, type)
 {
   type->GetBindingVirtualType = &ObjectBindingVirtualTypeFn;
 }
@@ -34,7 +34,7 @@ Object::~Object()
 
 bool Object::SetProperty(StringParam propertyName, AnyParam val)
 {
-  Property* prop = ZilchVirtualTypeId(this)->GetProperty(propertyName);
+  Property* prop = RaverieVirtualTypeId(this)->GetProperty(propertyName);
   if (prop == nullptr)
     return false;
   prop->SetValue(this, val);
@@ -43,10 +43,10 @@ bool Object::SetProperty(StringParam propertyName, AnyParam val)
 
 Any Object::GetProperty(StringParam propertyName)
 {
-  Property* prop = ZilchVirtualTypeId(this)->GetProperty(propertyName);
+  Property* prop = RaverieVirtualTypeId(this)->GetProperty(propertyName);
   if (prop)
     return prop->GetValue(this);
   return Any();
 }
 
-} // namespace Zero
+} // namespace Raverie

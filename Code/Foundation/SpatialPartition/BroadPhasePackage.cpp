@@ -1,9 +1,9 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
-ZilchDefineType(BroadPhasePackage, builder, type)
+RaverieDefineType(BroadPhasePackage, builder, type)
 {
 }
 
@@ -30,7 +30,7 @@ void BroadPhasePackage::Serialize(Serializer& stream)
 
 void BroadPhasePackage::SaveToStream(Serializer& stream)
 {
-  stream.StartPolymorphic(ZilchVirtualTypeId(this));
+  stream.StartPolymorphic(RaverieVirtualTypeId(this));
 
   // Serialize flags
   SerializeName(mRefineRayCast);
@@ -41,7 +41,7 @@ void BroadPhasePackage::SaveToStream(Serializer& stream)
   IBroadPhase* broadPhase = mBroadPhases[BroadPhase::Dynamic];
   if (broadPhase != nullptr)
   {
-    BoundType* type = ZilchVirtualTypeId(broadPhase);
+    BoundType* type = RaverieVirtualTypeId(broadPhase);
     stream.StartPolymorphic(type);
     broadPhase->Serialize(stream);
     stream.EndPolymorphic();
@@ -50,7 +50,7 @@ void BroadPhasePackage::SaveToStream(Serializer& stream)
   broadPhase = mBroadPhases[BroadPhase::Static];
   if (broadPhase != nullptr)
   {
-    BoundType* type = ZilchVirtualTypeId(broadPhase);
+    BoundType* type = RaverieVirtualTypeId(broadPhase);
     stream.StartPolymorphic(type);
     broadPhase->Serialize(stream);
     stream.EndPolymorphic();
@@ -348,4 +348,4 @@ bool BroadPhasePackage::GetFirstContactInStatic(CastDataParam rayData, Vec3& poi
   return false;
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 void MakeInvisible(Cog* cog)
@@ -62,7 +62,7 @@ void OnionSkinning::Update()
   CreateObjects();
 
   // Apply the translation track
-  bool translationApplied = ApplyTrack(ZilchTypeId(Transform), "Translation");
+  bool translationApplied = ApplyTrack(RaverieTypeId(Transform), "Translation");
 
   // If there was no translation track, no reason to show any other tracks
   if (!translationApplied)
@@ -70,8 +70,8 @@ void OnionSkinning::Update()
     Clear();
     return;
   }
-  ApplyTrack(ZilchTypeId(Transform), "Rotation");
-  ApplyTrack(ZilchTypeId(Transform), "Scale");
+  ApplyTrack(RaverieTypeId(Transform), "Rotation");
+  ApplyTrack(RaverieTypeId(Transform), "Scale");
 }
 
 void OnionSkinning::Clear()
@@ -186,4 +186,4 @@ float OnionSkinning::GetObjectSampleTime(uint objectIndex)
   return t;
 }
 
-} // namespace Zero
+} // namespace Raverie

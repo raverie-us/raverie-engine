@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Computes the size of a directory (which can take a bit of time).
@@ -9,7 +9,7 @@ namespace Zero
 class DirectorySizeJob : public BackgroundTaskJob
 {
 public:
-  typedef DirectorySizeJob ZilchSelf;
+  typedef DirectorySizeJob RaverieSelf;
 
   DirectorySizeJob(StringParam directory);
 
@@ -25,4 +25,4 @@ public:
   u32 mUpdateCounter;
 };
 
-} // namespace Zero
+} // namespace Raverie

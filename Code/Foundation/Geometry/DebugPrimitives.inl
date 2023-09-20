@@ -1,5 +1,5 @@
 // MIT Licensed (see LICENSE.md).
-ZeroDebugPrimitive(Arc) ZeroDebugPrimitive(Box) ZeroDebugPrimitive(Capsule) ZeroDebugPrimitive(Circle)
-    ZeroDebugPrimitive(Cone) ZeroDebugPrimitive(Cylinder) ZeroDebugPrimitive(Frustum) ZeroDebugPrimitive(Line)
-        ZeroDebugPrimitive(LineCross) ZeroDebugPrimitive(Obb) ZeroDebugPrimitive(Sphere) ZeroDebugPrimitive(Text)
-            ZeroDebugPrimitive(Triangle)
+RaverieDebugPrimitive(Arc) RaverieDebugPrimitive(Box) RaverieDebugPrimitive(Capsule) RaverieDebugPrimitive(Circle)
+    RaverieDebugPrimitive(Cone) RaverieDebugPrimitive(Cylinder) RaverieDebugPrimitive(Frustum) RaverieDebugPrimitive(Line)
+        RaverieDebugPrimitive(LineCross) RaverieDebugPrimitive(Obb) RaverieDebugPrimitive(Sphere) RaverieDebugPrimitive(Text)
+            RaverieDebugPrimitive(Triangle)

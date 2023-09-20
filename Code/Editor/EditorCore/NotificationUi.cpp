@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace NotificationUi
@@ -286,4 +286,4 @@ void DoNotifyPopup(Composite* root, NotifyEvent* event)
   mNotifcationWindow->AnimateToOpenThenClose();
 }
 
-} // namespace Zero
+} // namespace Raverie

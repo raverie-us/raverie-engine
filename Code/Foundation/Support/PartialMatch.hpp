@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 static const int cNoMatch = INT_MIN;
@@ -286,4 +286,4 @@ StringFilterResult<typename RangeType::value_type> FilterStrings(RangeType range
   return FilterStrings(range, searchText, StringContainerAdapter);
 }
 
-} // namespace Zero
+} // namespace Raverie

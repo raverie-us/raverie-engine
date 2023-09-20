@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Pixel buffer is a simple interface for dynamically drawing to textures.
@@ -77,4 +77,4 @@ private:
   PixelBuffer& operator=(const PixelBuffer&);
 };
 
-} // namespace Zero
+} // namespace Raverie

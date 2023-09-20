@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 DeclareEnum3(StoreResult, Added, Replaced, Failed);
@@ -10,7 +10,7 @@ DeclareEnum3(StoreResult, Added, Replaced, Failed);
 class ObjectStore : public ExplicitSingleton<ObjectStore>
 {
 public:
-  ZilchDeclareType(ObjectStore, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ObjectStore, TypeCopyMode::ReferenceType);
 
   /// Set the object store name. This is to prevent
   /// store name conflicts.
@@ -58,4 +58,4 @@ private:
   Array<String> mEntries;
 };
 
-} // namespace Zero
+} // namespace Raverie

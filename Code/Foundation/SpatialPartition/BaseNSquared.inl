@@ -1,6 +1,6 @@
 // MIT Licensed (see LICENSE.md).
 
-namespace Zero
+namespace Raverie
 {
 
 template <typename ClientDataType>
@@ -65,4 +65,4 @@ uint BaseNSquared<ClientDataType>::GetNewProxyIndex()
   return index;
 }
 
-} // namespace Zero
+} // namespace Raverie

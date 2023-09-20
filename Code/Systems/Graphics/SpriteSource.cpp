@@ -2,7 +2,7 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 class SpriteSourceLoader : public ResourceLoader
@@ -85,14 +85,14 @@ public:
   }
 };
 
-ZilchDefineType(SpriteSource, builder, type)
+RaverieDefineType(SpriteSource, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
-  ZilchBindField(FrameCount);
+  RaverieBindField(FrameCount);
 
-  ZilchBindMethod(GetSize);
-  ZilchBindMethod(GetOrigin);
+  RaverieBindMethod(GetSize);
+  RaverieBindMethod(GetOrigin);
 }
 
 void SpriteSource::Unload()
@@ -177,4 +177,4 @@ SpriteSourceManager::SpriteSourceManager(BoundType* resourceType) : ResourceMana
   mExtension = "png";
 }
 
-} // namespace Zero
+} // namespace Raverie

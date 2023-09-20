@@ -1,9 +1,9 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
-ZilchDefineType(TextContent, builder, type)
+RaverieDefineType(TextContent, builder, type)
 {
 }
 
@@ -23,15 +23,15 @@ ContentItem* MakeTextContent(ContentInitializer& initializer)
   if (initializer.Extension == "txt")
     builder = new TextBuilder();
 
-  TypeExtensionEntry* zilchTypeEntry = FileExtensionManager::GetZilchScriptTypeEntry();
-  if (zilchTypeEntry->IsValidExtensionNoDot(initializer.Extension))
-    builder = new ZilchScriptBuilder();
+  TypeExtensionEntry* raverieTypeEntry = FileExtensionManager::GetRaverieScriptTypeEntry();
+  if (raverieTypeEntry->IsValidExtensionNoDot(initializer.Extension))
+    builder = new RaverieScriptBuilder();
 
-  TypeExtensionEntry* fragmentTypeEntry = FileExtensionManager::GetZilchFragmentTypeEntry();
+  TypeExtensionEntry* fragmentTypeEntry = FileExtensionManager::GetRaverieFragmentTypeEntry();
   // at the moment the extension always comes through as
   // lower case so add both cases to cover any future changes
   if (fragmentTypeEntry->IsValidExtensionNoDot(initializer.Extension))
-    builder = new ZilchFragmentBuilder();
+    builder = new RaverieFragmentBuilder();
 
   builder->Generate(initializer);
 
@@ -40,9 +40,9 @@ ContentItem* MakeTextContent(ContentInitializer& initializer)
   return content;
 }
 
-ZilchDefineType(BaseTextBuilder, builder, type)
+RaverieDefineType(BaseTextBuilder, builder, type)
 {
-  ZeroBindDependency(TextContent);
+  RaverieBindDependency(TextContent);
 }
 
 void BaseTextBuilder::Generate(ContentInitializer& initializer)
@@ -51,13 +51,13 @@ void BaseTextBuilder::Generate(ContentInitializer& initializer)
   mResourceId = GenerateUniqueId64();
 }
 
-ZilchDefineType(TextBuilder, builder, type)
+RaverieDefineType(TextBuilder, builder, type)
 {
 }
-ZilchDefineType(ZilchScriptBuilder, builder, type)
+RaverieDefineType(RaverieScriptBuilder, builder, type)
 {
 }
-ZilchDefineType(ZilchFragmentBuilder, builder, type)
+RaverieDefineType(RaverieFragmentBuilder, builder, type)
 {
 }
 
@@ -65,19 +65,19 @@ void CreateScriptContent(ContentSystem* system)
 {
   AddContent<TextContent>(system);
   AddContentComponent<TextBuilder>(system);
-  AddContentComponent<ZilchScriptBuilder>(system);
-  AddContentComponent<ZilchFragmentBuilder>(system);
+  AddContentComponent<RaverieScriptBuilder>(system);
+  AddContentComponent<RaverieFragmentBuilder>(system);
 
-  ContentTypeEntry text(ZilchTypeId(TextContent), MakeTextContent);
+  ContentTypeEntry text(RaverieTypeId(TextContent), MakeTextContent);
   system->CreatorsByExtension["txt"] = text;
 
-  TypeExtensionEntry* zilchExtensions = FileExtensionManager::GetInstance()->GetZilchScriptTypeEntry();
-  for (size_t i = 0; i < zilchExtensions->mExtensions.Size(); ++i)
-    system->CreatorsByExtension[zilchExtensions->mExtensions[i]] = text;
+  TypeExtensionEntry* raverieExtensions = FileExtensionManager::GetInstance()->GetRaverieScriptTypeEntry();
+  for (size_t i = 0; i < raverieExtensions->mExtensions.Size(); ++i)
+    system->CreatorsByExtension[raverieExtensions->mExtensions[i]] = text;
 
-  TypeExtensionEntry* fragmentExtensions = FileExtensionManager::GetInstance()->GetZilchFragmentTypeEntry();
+  TypeExtensionEntry* fragmentExtensions = FileExtensionManager::GetInstance()->GetRaverieFragmentTypeEntry();
   for (size_t i = 0; i < fragmentExtensions->mExtensions.Size(); ++i)
     system->CreatorsByExtension[fragmentExtensions->mExtensions[i]] = text;
 }
 
-} // namespace Zero
+} // namespace Raverie

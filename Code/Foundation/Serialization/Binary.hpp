@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // NOTE: We currently don't support polymorphic types with binary serialization.
@@ -278,4 +278,4 @@ private:
   byte* mBuffer;
 };
 
-} // namespace Zero
+} // namespace Raverie

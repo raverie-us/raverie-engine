@@ -9,7 +9,7 @@
   member = value;                                                                                                      \
   mDirtyPerspective = true;
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -18,28 +18,28 @@ DefineEvent(CameraUpdate);
 DefineEvent(CameraDestroyed);
 } // namespace Events
 
-ZilchDefineType(Camera, builder, type)
+RaverieDefineType(Camera, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDependency(Transform);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDependency(Transform);
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetterProperty(NearPlane);
-  ZilchBindGetterSetterProperty(FarPlane);
-  ZilchBindGetterSetterProperty(PerspectiveMode)->AddAttribute(PropertyAttributes::cInvalidatesObject);
-  ZilchBindGetterSetterProperty(FieldOfView)
+  RaverieBindGetterSetterProperty(NearPlane);
+  RaverieBindGetterSetterProperty(FarPlane);
+  RaverieBindGetterSetterProperty(PerspectiveMode)->AddAttribute(PropertyAttributes::cInvalidatesObject);
+  RaverieBindGetterSetterProperty(FieldOfView)
       ->Add(new EditorSlider(45, 135, 1))
-      ->ZeroFilterEquality(mPerspectiveMode, PerspectiveMode::Enum, PerspectiveMode::Perspective);
-  ZilchBindGetterSetterProperty(Size)->ZeroFilterEquality(
+      ->RaverieFilterEquality(mPerspectiveMode, PerspectiveMode::Enum, PerspectiveMode::Perspective);
+  RaverieBindGetterSetterProperty(Size)->RaverieFilterEquality(
       mPerspectiveMode, PerspectiveMode::Enum, PerspectiveMode::Orthographic);
 
-  ZilchBindGetter(CameraViewportCog);
-  ZilchBindGetter(WorldTranslation);
-  ZilchBindGetter(WorldDirection);
-  ZilchBindGetter(WorldUp);
+  RaverieBindGetter(CameraViewportCog);
+  RaverieBindGetter(WorldTranslation);
+  RaverieBindGetter(WorldDirection);
+  RaverieBindGetter(WorldUp);
 
-  ZilchBindMethod(GetFrustum);
+  RaverieBindMethod(GetFrustum);
 }
 
 void Camera::Serialize(Serializer& stream)
@@ -186,14 +186,14 @@ Mat4 Camera::GetPerspectiveTransform()
 
   if (mPerspectiveMode == PerspectiveMode::Perspective)
   {
-    BuildPerspectiveTransformZero(
+    BuildPerspectiveTransformEngine(
         mViewToPerspective, Math::DegToRad(mFieldOfView), mAspectRatio, mNearPlane, mFarPlane);
     Z::gRenderer->BuildPerspectiveTransform(
         mViewToApiPerspective, Math::DegToRad(mFieldOfView), mAspectRatio, mNearPlane, mFarPlane);
   }
   else
   {
-    BuildOrthographicTransformZero(mViewToPerspective, mSize, mAspectRatio, mNearPlane, mFarPlane);
+    BuildOrthographicTransformEngine(mViewToPerspective, mSize, mAspectRatio, mNearPlane, mFarPlane);
     Z::gRenderer->BuildOrthographicTransform(mViewToApiPerspective, mSize, mAspectRatio, mNearPlane, mFarPlane);
   }
 
@@ -218,7 +218,7 @@ void Camera::GetViewData(ViewBlock& block)
   block.mViewToPerspective = GetPerspectiveTransform();
 
   Mat4 apiPerspective = GetApiPerspectiveTransform();
-  block.mZeroPerspectiveToApiPerspective = apiPerspective * block.mViewToPerspective.SafeInverted();
+  block.mEnginePerspectiveToApiPerspective = apiPerspective * block.mViewToPerspective.SafeInverted();
 
   block.mNearPlane = mNearPlane;
   block.mFarPlane = mFarPlane;
@@ -255,4 +255,4 @@ Frustum Camera::GetFrustum(float aspect) const
   return f;
 }
 
-} // namespace Zero
+} // namespace Raverie

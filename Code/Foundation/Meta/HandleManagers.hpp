@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // ReferenceCounted
@@ -52,15 +52,15 @@ public:
 // The reason for adding this internals version was so that we could avoid two
 // HandleIdType typedefs. This should never be called outside this file.
 #define DeclareReferenceCountedHandleInternals()                                                                       \
-  ReferenceCountData mZeroHandleReferenceCount;                                                                        \
+  ReferenceCountData mRaverieHandleReferenceCount;                                                                        \
   void AddReference()                                                                                                  \
   {                                                                                                                    \
-    ++mZeroHandleReferenceCount.mCount;                                                                                \
+    ++mRaverieHandleReferenceCount.mCount;                                                                                \
   }                                                                                                                    \
   int Release()                                                                                                        \
   {                                                                                                                    \
-    ErrorIf(mZeroHandleReferenceCount.mCount == 0, "Invalid Release. ReferenceCount is zero.");                        \
-    int referenceCount = --mZeroHandleReferenceCount.mCount;                                                           \
+    ErrorIf(mRaverieHandleReferenceCount.mCount == 0, "Invalid Release. ReferenceCount is zero.");                        \
+    int referenceCount = --mRaverieHandleReferenceCount.mCount;                                                           \
     if (referenceCount == 0)                                                                                           \
       delete this;                                                                                                     \
     return referenceCount;                                                                                             \
@@ -68,11 +68,11 @@ public:
 
 #define DeclareSafeIdHandle(idType)                                                                                    \
   typedef idType HandleIdType;                                                                                         \
-  HandleIdData<HandleIdType> mZeroHandleId;                                                                            \
-  static HandleIdType mZeroHandleCurrentId;                                                                            \
-  static HashMap<HandleIdType, ZilchSelf*> mZeroHandleLiveObjects;
+  HandleIdData<HandleIdType> mRaverieHandleId;                                                                            \
+  static HandleIdType mRaverieHandleCurrentId;                                                                            \
+  static HashMap<HandleIdType, RaverieSelf*> mRaverieHandleLiveObjects;
 
-#define DeclareThreadSafeIdHandle(idType) DeclareSafeIdHandle(idType) static ThreadLock mZeroHandleLock;
+#define DeclareThreadSafeIdHandle(idType) DeclareSafeIdHandle(idType) static ThreadLock mRaverieHandleLock;
 
 #define DeclareReferenceCountedSafeIdHandle(idType) DeclareReferenceCountedHandleInternals() DeclareSafeIdHandle(idType)
 
@@ -81,10 +81,10 @@ public:
 
 // Define
 #define DefineSafeIdHandle(type)                                                                                       \
-  type::HandleIdType type::mZeroHandleCurrentId = 1;                                                                   \
-  HashMap<type::HandleIdType, type*> type::mZeroHandleLiveObjects;
+  type::HandleIdType type::mRaverieHandleCurrentId = 1;                                                                   \
+  HashMap<type::HandleIdType, type*> type::mRaverieHandleLiveObjects;
 
-#define DefineThreadSafeIdHandle(type) DefineSafeIdHandle(type) ThreadLock type::mZeroHandleLock;
+#define DefineThreadSafeIdHandle(type) DefineSafeIdHandle(type) ThreadLock type::mRaverieHandleLock;
 
 #define DefineReferenceCountedSafeIdHandle(type) DefineReferenceCountedHandle(type) DefineSafeIdHandle(type)
 
@@ -92,16 +92,16 @@ public:
 
 // Constructor
 // Call in the constructor and copy constructor of the object
-#define ConstructReferenceCountedHandle() mZeroHandleReferenceCount.mCount = 0;
+#define ConstructReferenceCountedHandle() mRaverieHandleReferenceCount.mCount = 0;
 
 #define ConstructSafeIdHandle()                                                                                        \
-  mZeroHandleId.mId = mZeroHandleCurrentId++;                                                                          \
-  mZeroHandleLiveObjects.Insert(mZeroHandleId.mId, this);
+  mRaverieHandleId.mId = mRaverieHandleCurrentId++;                                                                          \
+  mRaverieHandleLiveObjects.Insert(mRaverieHandleId.mId, this);
 
 #define ConstructThreadSafeIdHandle()                                                                                  \
-  mZeroHandleLock.Lock();                                                                                              \
+  mRaverieHandleLock.Lock();                                                                                              \
   ConstructSafeIdHandle();                                                                                             \
-  mZeroHandleLock.Unlock();
+  mRaverieHandleLock.Unlock();
 
 #define ConstructReferenceCountedSafeIdHandle()                                                                        \
   ConstructReferenceCountedHandle();                                                                                   \
@@ -114,16 +114,16 @@ public:
 // Destructor
 // Call in the destructor of the object
 #define DestructReferenceCountedHandle()                                                                               \
-  ErrorIf(mZeroHandleReferenceCount.mCount != 0, "Bad reference Count. Object is being deleted with references!");
+  ErrorIf(mRaverieHandleReferenceCount.mCount != 0, "Bad reference Count. Object is being deleted with references!");
 
 #define DestructSafeIdHandle()                                                                                         \
-  bool isErased = mZeroHandleLiveObjects.Erase(mZeroHandleId.mId);                                                     \
+  bool isErased = mRaverieHandleLiveObjects.Erase(mRaverieHandleId.mId);                                                     \
   ErrorIf(!isErased, "The handle was not in the live objects map, but should have been");
 
 #define DestructThreadSafeIdHandle()                                                                                   \
-  mZeroHandleLock.Lock();                                                                                              \
+  mRaverieHandleLock.Lock();                                                                                              \
   DestructSafeIdHandle();                                                                                              \
-  mZeroHandleLock.Unlock();
+  mRaverieHandleLock.Unlock();
 
 // For the last two, we don't want to call 'DestructReferenceCountedHandle'
 // because it's safe to delete the object even if it still has references
@@ -133,26 +133,26 @@ public:
 
 // Bind Manager
 // Call in the meta initialization of the class type
-#define ZeroBindHandle() type->HandleManager = ZilchManagerId(ZeroHandleManager<ZilchSelf>);
+#define RaverieBindHandle() type->HandleManager = RaverieManagerId(RaverieHandleManager<RaverieSelf>);
 
 // Register Manager
 // Call in the meta initialization of the library
-#define ZeroRegisterHandleManager(type) ZilchRegisterSharedHandleManager(ZeroHandleManager<type>);
+#define RaverieRegisterHandleManager(type) RaverieRegisterSharedHandleManager(RaverieHandleManager<type>);
 
 // Handle Manager
 template <typename T>
-class ZeroHandleManager : public HandleManager
+class RaverieHandleManager : public HandleManager
 {
 public:
-  ZeroHandleManager(ExecutableState* state) : HandleManager(state)
+  RaverieHandleManager(ExecutableState* state) : HandleManager(state)
   {
   }
 
   typedef typename T::HandleIdType IdType;
 
-  ZeroDeclareHasMemberTrait(IsReferenceCounted, mZeroHandleReferenceCount);
-  ZeroDeclareHasMemberTrait(IsSafeId, mZeroHandleId);
-  ZeroDeclareHasMemberTrait(IsThreadSafe, mZeroHandleLock);
+  RaverieDeclareHasMemberTrait(IsReferenceCounted, mRaverieHandleReferenceCount);
+  RaverieDeclareHasMemberTrait(IsSafeId, mRaverieHandleId);
+  RaverieDeclareHasMemberTrait(IsThreadSafe, mRaverieHandleLock);
 
   // Handle Data
   struct HandleData
@@ -168,10 +168,10 @@ public:
 
     if (IsSafeId<T>::value)
     {
-      // METAREFACTOR - If we only ever go through ZilchAllocate for objects
+      // METAREFACTOR - If we only ever go through RaverieAllocate for objects
       // that use this handle manager, we can assign the id here and not have to
       // deal with the raw object issue. Is this something we should do? Or is
-      // that annoying to ZilchAllocate everything?
+      // that annoying to RaverieAllocate everything?
       HandleData& data = *(HandleData*)(handleToInitialize.Data);
       data.mId = (IdType)-1;
       data.mRawObject = zAllocate(type->Size);
@@ -229,7 +229,7 @@ public:
 
     HandleData& data = *(HandleData*)(handleToInitialize.Data);
     if (instance != nullptr)
-      data.mId = instance->mZeroHandleId.mId;
+      data.mId = instance->mRaverieHandleId.mId;
   }
 
   // Reference counted and safe id
@@ -247,7 +247,7 @@ public:
     if (instance != nullptr)
     {
       instance->AddReference();
-      data.mId = instance->mZeroHandleId.mId;
+      data.mId = instance->mRaverieHandleId.mId;
     }
   }
 
@@ -268,7 +268,7 @@ public:
     if (data.mRawObject)
       return (byte*)data.mRawObject;
 
-    T* object = T::mZeroHandleLiveObjects.FindValue(data.mId, nullptr);
+    T* object = T::mRaverieHandleLiveObjects.FindValue(data.mId, nullptr);
     return (byte*)object;
   }
 
@@ -281,9 +281,9 @@ public:
     if (data.mRawObject)
       return (byte*)data.mRawObject;
 
-    T::mZeroHandleLock.Lock();
-    T* object = T::mZeroHandleLiveObjects.FindValue(data.mId, nullptr);
-    T::mZeroHandleLock.Unlock();
+    T::mRaverieHandleLock.Lock();
+    T* object = T::mRaverieHandleLiveObjects.FindValue(data.mId, nullptr);
+    T::mRaverieHandleLock.Unlock();
     return (byte*)object;
   }
 
@@ -308,7 +308,7 @@ public:
     instance->Release();
 
     // METAREFACTOR - To get rid of Reference class below, Release has to change
-    // to not manually deleting itself. This will not call the zilch destructor
+    // to not manually deleting itself. This will not call the raverie destructor
     // on inherited types, causing leaks.
     return ReleaseResult::TakeNoAction;
   }
@@ -320,7 +320,7 @@ public:
   }
 };
 
-// Zero Handle Object
+// Raverie Handle Object
 // Used as the default base for inheritable handle types
 class EmptyClass
 {
@@ -331,7 +331,7 @@ template <typename Base = EmptyClass>
 class ReferenceCounted : public Base
 {
 public:
-  ZilchDeclareType(ReferenceCounted, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ReferenceCounted, TypeCopyMode::ReferenceType);
   DeclareReferenceCountedHandle();
 
   ReferenceCounted()
@@ -351,9 +351,9 @@ public:
 };
 
 template <typename Base>
-void ReferenceCounted<Base>::ZilchSetupType(ZZ::LibraryBuilder& builder, ZZ::BoundType* type)
+void ReferenceCounted<Base>::RaverieSetupType(::Raverie::LibraryBuilder& builder, ::Raverie::BoundType* type)
 {
-  ZeroBindHandle();
+  RaverieBindHandle();
 }
 
 // Safe Id
@@ -361,7 +361,7 @@ template <typename idType, typename Base = EmptyClass>
 class SafeId : public Base
 {
 public:
-  ZilchDeclareType(SafeId, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SafeId, TypeCopyMode::ReferenceType);
   DeclareSafeIdHandle(idType);
 
   SafeId()
@@ -386,15 +386,15 @@ public:
 };
 
 template <typename idType, typename Base>
-typename SafeId<idType, Base>::HandleIdType SafeId<idType, Base>::mZeroHandleCurrentId = 1;
+typename SafeId<idType, Base>::HandleIdType SafeId<idType, Base>::mRaverieHandleCurrentId = 1;
 template <typename idType, typename Base>
 HashMap<typename SafeId<idType, Base>::HandleIdType, SafeId<idType, Base>*>
-    SafeId<idType, Base>::mZeroHandleLiveObjects;
+    SafeId<idType, Base>::mRaverieHandleLiveObjects;
 
 template <typename idType, typename Base>
-void SafeId<idType, Base>::ZilchSetupType(ZZ::LibraryBuilder& builder, ZZ::BoundType* type)
+void SafeId<idType, Base>::RaverieSetupType(::Raverie::LibraryBuilder& builder, ::Raverie::BoundType* type)
 {
-  ZeroBindHandle();
+  RaverieBindHandle();
 }
 
 // Thread Safe Id
@@ -402,7 +402,7 @@ template <typename idType, typename Base = EmptyClass>
 class ThreadSafeId : public Base
 {
 public:
-  ZilchDeclareType(ThreadSafeId, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ThreadSafeId, TypeCopyMode::ReferenceType);
   DeclareThreadSafeIdHandle(idType);
 
   ThreadSafeId()
@@ -427,24 +427,24 @@ public:
 };
 
 template <typename idType, typename Base>
-typename ThreadSafeId<idType, Base>::HandleIdType ThreadSafeId<idType, Base>::mZeroHandleCurrentId = 1;
+typename ThreadSafeId<idType, Base>::HandleIdType ThreadSafeId<idType, Base>::mRaverieHandleCurrentId = 1;
 template <typename idType, typename Base>
 HashMap<typename ThreadSafeId<idType, Base>::HandleIdType, ThreadSafeId<idType, Base>*>
-    ThreadSafeId<idType, Base>::mZeroHandleLiveObjects;
+    ThreadSafeId<idType, Base>::mRaverieHandleLiveObjects;
 template <typename idType, typename Base>
-ThreadLock ThreadSafeId<idType, Base>::mZeroHandleLock;
+ThreadLock ThreadSafeId<idType, Base>::mRaverieHandleLock;
 
 template <typename idType, typename Base>
-void ThreadSafeId<idType, Base>::ZilchSetupType(ZZ::LibraryBuilder& builder, ZZ::BoundType* type)
+void ThreadSafeId<idType, Base>::RaverieSetupType(::Raverie::LibraryBuilder& builder, ::Raverie::BoundType* type)
 {
-  ZeroBindHandle();
+  RaverieBindHandle();
 }
 // Reference Counted Safe Id
 template <typename idType, typename Base = EmptyClass>
 class ReferenceCountedSafeId : public Base
 {
 public:
-  ZilchDeclareType(ReferenceCountedSafeId, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ReferenceCountedSafeId, TypeCopyMode::ReferenceType);
   DeclareReferenceCountedSafeIdHandle(idType);
 
   ReferenceCountedSafeId()
@@ -469,23 +469,23 @@ public:
 };
 
 template <typename idType, typename Base>
-typename ReferenceCountedSafeId<idType, Base>::HandleIdType ReferenceCountedSafeId<idType, Base>::mZeroHandleCurrentId =
+typename ReferenceCountedSafeId<idType, Base>::HandleIdType ReferenceCountedSafeId<idType, Base>::mRaverieHandleCurrentId =
     1;
 template <typename idType, typename Base>
 HashMap<typename ReferenceCountedSafeId<idType, Base>::HandleIdType, ReferenceCountedSafeId<idType, Base>*>
-    ReferenceCountedSafeId<idType, Base>::mZeroHandleLiveObjects;
+    ReferenceCountedSafeId<idType, Base>::mRaverieHandleLiveObjects;
 
 template <typename idType, typename Base>
-void ReferenceCountedSafeId<idType, Base>::ZilchSetupType(ZZ::LibraryBuilder& builder, ZZ::BoundType* type)
+void ReferenceCountedSafeId<idType, Base>::RaverieSetupType(::Raverie::LibraryBuilder& builder, ::Raverie::BoundType* type)
 {
-  ZeroBindHandle();
+  RaverieBindHandle();
 }
 // Counted Thread Safe Id
 template <typename idType, typename Base = EmptyClass>
 class ReferenceCountedThreadSafeId : public Base
 {
 public:
-  ZilchDeclareType(ReferenceCountedThreadSafeId, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ReferenceCountedThreadSafeId, TypeCopyMode::ReferenceType);
   DeclareReferenceCountedThreadSafeIdHandle(idType);
 
   ReferenceCountedThreadSafeId()
@@ -511,16 +511,16 @@ public:
 
 template <typename idType, typename Base>
 typename ReferenceCountedThreadSafeId<idType, Base>::HandleIdType
-    ReferenceCountedThreadSafeId<idType, Base>::mZeroHandleCurrentId = 1;
+    ReferenceCountedThreadSafeId<idType, Base>::mRaverieHandleCurrentId = 1;
 template <typename idType, typename Base>
 HashMap<typename ReferenceCountedThreadSafeId<idType, Base>::HandleIdType, ReferenceCountedThreadSafeId<idType, Base>*>
-    ReferenceCountedThreadSafeId<idType, Base>::mZeroHandleLiveObjects;
+    ReferenceCountedThreadSafeId<idType, Base>::mRaverieHandleLiveObjects;
 template <typename idType, typename Base>
-ThreadLock ReferenceCountedThreadSafeId<idType, Base>::mZeroHandleLock;
+ThreadLock ReferenceCountedThreadSafeId<idType, Base>::mRaverieHandleLock;
 
 template <typename idType, typename Base>
-void ReferenceCountedThreadSafeId<idType, Base>::ZilchSetupType(ZZ::LibraryBuilder& builder, ZZ::BoundType* type)
+void ReferenceCountedThreadSafeId<idType, Base>::RaverieSetupType(::Raverie::LibraryBuilder& builder, ::Raverie::BoundType* type)
 {
-  ZeroBindHandle();
+  RaverieBindHandle();
 }
-} // namespace Zero
+} // namespace Raverie

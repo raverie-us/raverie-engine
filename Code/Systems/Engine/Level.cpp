@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 class LevelLoader : public ResourceLoader
@@ -22,9 +22,9 @@ public:
   }
 };
 
-ZilchDefineType(Level, builder, type)
+RaverieDefineType(Level, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 }
 
 Level::Level()
@@ -126,4 +126,4 @@ void LevelManager::ClearCachedLevels()
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

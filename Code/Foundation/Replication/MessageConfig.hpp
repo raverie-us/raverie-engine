@@ -41,7 +41,7 @@ StaticAssertWithinRange(Range4, MESSAGE_CHANNEL_ID_BITS, 1, UINTMAX_BITS);
 #define MESSAGE_SEQUENCE_ID_BITS 16
 StaticAssertWithinRange(Range5, MESSAGE_SEQUENCE_ID_BITS, 1, UINTMAX_BITS);
 
-namespace Zero
+namespace Raverie
 {
 
 //                                Message Type //
@@ -201,4 +201,4 @@ static const Bits MessageHeaderBitsTCDF = MinMessageHeaderBits + MessageT + Mess
 /// Maximum message header size
 static const Bits MaxMessageHeaderBits = MessageHeaderBitsTCDF;
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Resource loader for engine's data file format (.data)
@@ -194,4 +194,4 @@ public:
   }
 };
 
-} // namespace Zero
+} // namespace Raverie

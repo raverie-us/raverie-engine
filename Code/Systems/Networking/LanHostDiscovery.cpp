@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 LanHostDiscovery::LanHostDiscovery(NetPeer* netPeer) : NetDiscoveryInterface(netPeer)
@@ -286,4 +286,4 @@ void LanHostDiscovery::CleanUp()
 {
 }
 
-} // namespace Zero
+} // namespace Raverie

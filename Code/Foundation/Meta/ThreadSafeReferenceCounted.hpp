@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class ThreadSafeReferenceCountedHandleData
@@ -126,10 +126,10 @@ public:
 
 // Call in the constructor of the object
 #define ConstructThreadSafeReferenceCountedHandle()                                                                    \
-  ErrorIf(ZilchVirtualTypeId(this)->HandleManager !=                                                                   \
-              ZilchManagerId(ThreadSafeReferenceCountedHandleManager<ZilchSelf>),                                      \
+  ErrorIf(RaverieVirtualTypeId(this)->HandleManager !=                                                                   \
+              RaverieManagerId(ThreadSafeReferenceCountedHandleManager<RaverieSelf>),                                      \
           "Set type->HandleManager = "                                                                                 \
-          "ZilchManagerId(ThreadSafeReferenceCountedHandleManager<ZilchSelf>; in "                                     \
+          "RaverieManagerId(ThreadSafeReferenceCountedHandleManager<RaverieSelf>; in "                                     \
           "binding");                                                                                                  \
   mLock.Lock();                                                                                                        \
   mHandleId.mId = mCurrentId++;                                                                                        \
@@ -145,18 +145,18 @@ public:
   ErrorIf(!isErased, "The handle was not in the live objects map, but should have been");
 
 // Call in the meta definition of the object
-#define ZeroBindThreadSafeReferenceCountedHandle()                                                                     \
-  type->HandleManager = ZilchManagerId(ThreadSafeReferenceCountedHandleManager<ZilchSelf>);
+#define RaverieBindThreadSafeReferenceCountedHandle()                                                                     \
+  type->HandleManager = RaverieManagerId(ThreadSafeReferenceCountedHandleManager<RaverieSelf>);
 
 // Call in engine/system initialization for type that will be using this manager
-#define ZeroRegisterThreadSafeReferenceCountedHandleManager(type)                                                      \
-  ZilchRegisterSharedHandleManager(ThreadSafeReferenceCountedHandleManager<type>);
+#define RaverieRegisterThreadSafeReferenceCountedHandleManager(type)                                                      \
+  RaverieRegisterSharedHandleManager(ThreadSafeReferenceCountedHandleManager<type>);
 
 // Inherit from this class to get all standard behavior of this handle manager
 class ThreadSafeReferenceCounted
 {
 public:
-  ZilchDeclareType(ThreadSafeReferenceCounted, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ThreadSafeReferenceCounted, TypeCopyMode::ReferenceType);
   DeclareThreadSafeReferenceCountedHandle(ThreadSafeReferenceCounted);
 
   ThreadSafeReferenceCounted();
@@ -164,4 +164,4 @@ public:
   virtual ~ThreadSafeReferenceCounted();
 };
 
-} // namespace Zero
+} // namespace Raverie

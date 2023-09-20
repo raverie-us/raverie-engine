@@ -7,7 +7,7 @@
 #include "Extensions/Widget/CommandBinding.hpp"
 #include "Systems/Engine/Configuration.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 class EditorCreateObjectCommand : public CommandExecuter
@@ -35,7 +35,7 @@ void EditorCreateObjectCommand::Execute(Command* command, CommandManager* manage
 {
   Space* space = manager->GetContext()->Get<Space>();
   if (space == nullptr)
-    return CommandFailed(command, ZilchTypeId(Space));
+    return CommandFailed(command, RaverieTypeId(Space));
 
   Editor* editor = Z::gEditor;
 
@@ -111,7 +111,7 @@ public:
   {
     Space* space = manager->GetContext()->Get<Space>();
     if (space == nullptr)
-      return CommandFailed(command, ZilchTypeId(Space));
+      return CommandFailed(command, RaverieTypeId(Space));
 
     (*Function)(space, Vec3(0, 0, 0), Size, Height, Width);
   }
@@ -352,7 +352,7 @@ void BindCreationCommands(Cog* configCog, CommandManager* commands)
 
   commands->AddCommand("CreateGrid", new EditorCreateObjectCommand(CoreArchetypes::Grid));
 
-  bool devConfig = Z::gEngine->GetConfigCog()->has(Zero::DeveloperConfig) != nullptr;
+  bool devConfig = Z::gEngine->GetConfigCog()->has(Raverie::DeveloperConfig) != nullptr;
   if (devConfig)
   {
     commands->AddCommand("CreatePyramid", new StackCreateCommand(CreatePyramid, Vec3(1, 1, 1), 7, 0));
@@ -363,4 +363,4 @@ void BindCreationCommands(Cog* configCog, CommandManager* commands)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

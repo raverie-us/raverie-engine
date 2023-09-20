@@ -2,7 +2,7 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // Ring Buffer
@@ -131,4 +131,4 @@ unsigned RingBuffer::Read(void* data, int elementCount)
   return elementCount;
 }
 
-} // namespace Zero
+} // namespace Raverie

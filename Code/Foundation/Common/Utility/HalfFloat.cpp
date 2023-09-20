@@ -4,7 +4,7 @@
 #include "Precompiled.hpp"
 #include "HalfFloat.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 u16 HalfFloatConverter::ToHalfFloat(float float32)
@@ -148,4 +148,4 @@ u32 HalfFloatConverter::ConvertMantissa(u32 i)
   return (m | e);
 }
 
-} // namespace Zero
+} // namespace Raverie

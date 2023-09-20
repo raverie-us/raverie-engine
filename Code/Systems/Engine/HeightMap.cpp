@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Events
@@ -15,13 +15,13 @@ DefineEvent(HeightMapSave);
 /// The icon we use
 const String cHeightMapIcon("HeightMap");
 
-ZilchDefineType(HeightMapEvent, builder, type)
+RaverieDefineType(HeightMapEvent, builder, type)
 {
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 }
 
 // HeightPatch
-ZilchDefineType(HeightPatch, builder, type)
+RaverieDefineType(HeightPatch, builder, type)
 {
 }
 
@@ -190,14 +190,14 @@ const CellIndex HeightMap::sCellIndexMin = CellIndex(0, 0);
 const CellIndex HeightMap::sCellIndexMax =
     CellIndex(HeightPatch::PaddedNumVerticesPerSide - 1, HeightPatch::PaddedNumVerticesPerSide - 1);
 
-ZilchDefineType(HeightMap, builder, type)
+RaverieDefineType(HeightMap, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDocumented();
-  ZeroBindDependency(Transform);
-  ZilchBindGetterProperty(Source);
-  ZilchBindGetterSetterProperty(UnitsPerPatch);
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
+  RaverieBindDependency(Transform);
+  RaverieBindGetterProperty(Source);
+  RaverieBindGetterSetterProperty(UnitsPerPatch);
 }
 
 /// Constructor
@@ -872,7 +872,7 @@ void HeightMap::SaveToHeightMapSource(Serializer& stream)
 
   if (Z::gRuntimeEditor)
     mSource = (HeightMapSource*)Z::gRuntimeEditor->NewResourceOnWrite(HeightMapSourceManager::GetInstance(),
-                                                                      ZilchTypeId(HeightMap),
+                                                                      RaverieTypeId(HeightMap),
                                                                       "Source",
                                                                       GetSpace(),
                                                                       mSource,
@@ -2205,4 +2205,4 @@ void HeightMap::SaveToObj(StringParam fileName, HeightMap* heightMap)
   file.Close();
 }
 
-} // namespace Zero
+} // namespace Raverie

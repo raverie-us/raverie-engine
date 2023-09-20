@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 InternetHostDiscovery::InternetHostDiscovery(NetPeer* netPeer) :
@@ -398,7 +398,7 @@ void InternetHostDiscovery::CleanUp()
 //  InternetDiscovery Specific Implementation
 //
 
-void InternetHostDiscovery::ReceiveNetHostRecordList(IpAddress const& theirIpAddress, Zero::Message const& message)
+void InternetHostDiscovery::ReceiveNetHostRecordList(IpAddress const& theirIpAddress, Raverie::Message const& message)
 {
   Assert(mNetPeer); // should have non-null net peer
 
@@ -459,7 +459,7 @@ void InternetHostDiscovery::ReceiveNetHostRecordList(IpAddress const& theirIpAdd
     // put them in the request as a responding host.
     hostRequest->mRespondingHosts.InsertOrAssign(record.mIpAddress);
 
-    respondingHostData->mBasicHostInfo = ZeroMove(record.mBasicHostInfo.GetBitStream());
+    respondingHostData->mBasicHostInfo = RaverieMove(record.mBasicHostInfo.GetBitStream());
     respondingHostData->mRoundTripTime = 0;
     respondingHostData->mRefreshResult = NetRefreshResult::IndirectBasicHostInfo;
   }
@@ -503,4 +503,4 @@ bool InternetHostDiscovery::TryMasterServerConnection()
   return false;
 }
 
-} // namespace Zero
+} // namespace Raverie

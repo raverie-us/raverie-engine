@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class ImportOptions;
@@ -23,4 +23,4 @@ void UpdateToContent(Cog* object, UpdateFlags::Type flags);
 // (Generation of Archetypes, Materials, etc)
 void DoEditorSideImporting(ResourcePackage* package, ImportOptions* options);
 
-} // namespace Zero
+} // namespace Raverie

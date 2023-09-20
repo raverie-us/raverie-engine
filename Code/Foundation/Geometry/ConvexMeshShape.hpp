@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 struct ConvexMeshShape
@@ -20,4 +20,4 @@ struct ConvexMeshShape
   Aabb mWorldAabb;
 };
 
-} // namespace Zero
+} // namespace Raverie

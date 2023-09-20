@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 DeclareBitField1(TorqueFlags, LocalTorque);
@@ -10,7 +10,7 @@ DeclareBitField1(TorqueFlags, LocalTorque);
 class TorqueEffect : public PhysicsEffect
 {
 public:
-  ZilchDeclareType(TorqueEffect, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(TorqueEffect, TypeCopyMode::ReferenceType);
 
   TorqueEffect();
 
@@ -48,4 +48,4 @@ private:
   Vec3 mWorldTorqueAxis;
 };
 
-} // namespace Zero
+} // namespace Raverie

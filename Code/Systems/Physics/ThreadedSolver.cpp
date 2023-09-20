@@ -10,15 +10,15 @@ void ThreadedDrawFragment(ListType& jointList, ByteColor& color)
     typename ListType::sub_reference joint = jointRange.Front();
     jointRange.PopFront();
 
-    Zero::Vec3 posA = joint.GetCollider(0)->GetWorldTranslation();
-    Zero::Vec3 posB = joint.GetCollider(1)->GetWorldTranslation();
-    Zero::gDebugDraw->Add(Zero::Debug::Line(posA, posB).Color(color));
+    Raverie::Vec3 posA = joint.GetCollider(0)->GetWorldTranslation();
+    Raverie::Vec3 posB = joint.GetCollider(1)->GetWorldTranslation();
+    Raverie::gDebugDraw->Add(Raverie::Debug::Line(posA, posB).Color(color));
   }
 
   color = (color << 8) ^ Color::Red;
 }
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Physics
@@ -211,4 +211,4 @@ void ThreadedSolver::DrawJoints(uint debugFlag)
 
 } // namespace Physics
 
-} // namespace Zero
+} // namespace Raverie

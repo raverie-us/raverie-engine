@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class Spline;
@@ -18,7 +18,7 @@ DeclareEvent(QuerySpline);
 class SplineEvent : public Event
 {
 public:
-  ZilchDeclareType(SplineEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SplineEvent, TypeCopyMode::ReferenceType);
 
   SplineEvent();
   SplineEvent(Spline* spline);
@@ -33,7 +33,7 @@ public:
 class SplineControlPoint
 {
 public:
-  ZilchDeclareType(SplineControlPoint, TypeCopyMode::ValueType);
+  RaverieDeclareType(SplineControlPoint, TypeCopyMode::ValueType);
 
   SplineControlPoint();
   SplineControlPoint(Vec3Param position);
@@ -47,7 +47,7 @@ public:
 class SplineControlPoints : public SafeId32Object
 {
 public:
-  ZilchDeclareType(SplineControlPoints, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SplineControlPoints, TypeCopyMode::ReferenceType);
 
   SplineControlPoints();
   ~SplineControlPoints();
@@ -75,7 +75,7 @@ public:
 class SplineBakedPoint
 {
 public:
-  ZilchDeclareType(SplineBakedPoint, TypeCopyMode::ValueType);
+  RaverieDeclareType(SplineBakedPoint, TypeCopyMode::ValueType);
 
   SplineBakedPoint();
   SplineBakedPoint(Vec3Param position);
@@ -89,7 +89,7 @@ public:
 class SplineBakedPoints : SafeId32Object
 {
 public:
-  ZilchDeclareType(SplineBakedPoints, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(SplineBakedPoints, TypeCopyMode::ReferenceType);
 
   SplineBakedPoints();
   ~SplineBakedPoints();
@@ -104,7 +104,7 @@ public:
 class SplineSampleData
 {
 public:
-  ZilchDeclareType(SplineSampleData, TypeCopyMode::ValueType);
+  RaverieDeclareType(SplineSampleData, TypeCopyMode::ValueType);
 
   SplineSampleData();
 
@@ -121,7 +121,7 @@ public:
 class Spline : public ReferenceCountedEventObject
 {
 public:
-  ZilchDeclareType(Spline, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Spline, TypeCopyMode::ReferenceType);
 
   Spline();
 
@@ -176,4 +176,4 @@ private:
   Math::BakedCurve mBakedCurve;
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 //
@@ -14,7 +14,7 @@ namespace Zero
 class NetPeerConnectionInterface
 {
 public:
-  ZilchDeclareType(NetPeerConnectionInterface, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(NetPeerConnectionInterface, TypeCopyMode::ReferenceType);
 
   /// Constructors.
   NetPeerConnectionInterface(NetPeer* netPeer);
@@ -50,4 +50,4 @@ public:
   EventReceiver mReceiver;
 };
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 MarchingSquares::MarchingSquares()
@@ -511,4 +511,4 @@ void MarchingSquares::SolveDoubleEdge(real val0Edge0,
   segments.PushBack(Segment2d(p0, p1));
 }
 
-} // namespace Zero
+} // namespace Raverie

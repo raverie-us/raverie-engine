@@ -5,7 +5,7 @@
 #include "Containers/ArraySet.hpp"
 #include "Containers/BitStream.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 /// Maintains a complete ID sequence record
@@ -25,7 +25,7 @@ public:
   /// Move Constructor
   IdSequence(MoveReference<IdSequence> rhs) :
       mNext(rhs->mNext),
-      mMissing(ZeroMove(rhs->mMissing)),
+      mMissing(RaverieMove(rhs->mMissing)),
       mVerified(rhs->mVerified)
   {
   }
@@ -34,7 +34,7 @@ public:
   IdSequence& operator=(MoveReference<IdSequence> rhs)
   {
     mNext = rhs->mNext;
-    mMissing = ZeroMove(rhs->mMissing);
+    mMissing = RaverieMove(rhs->mMissing);
     mVerified = rhs->mVerified;
 
     return *this;
@@ -121,12 +121,12 @@ public:
     }
 
     /// Constructor
-    IdSequenceHistory(Id next, MoveReference<BitStream> history) : mNext(next), mHistory(ZeroMove(history))
+    IdSequenceHistory(Id next, MoveReference<BitStream> history) : mNext(next), mHistory(RaverieMove(history))
     {
     }
 
     /// Move Constructor
-    IdSequenceHistory(MoveReference<IdSequenceHistory> rhs) : mNext(rhs->mNext), mHistory(ZeroMove(rhs->mHistory))
+    IdSequenceHistory(MoveReference<IdSequenceHistory> rhs) : mNext(rhs->mNext), mHistory(RaverieMove(rhs->mHistory))
     {
     }
 
@@ -155,7 +155,7 @@ public:
       --range;
     }
 
-    return IdSequenceHistory(mNext, ZeroMove(history));
+    return IdSequenceHistory(mNext, RaverieMove(history));
   }
 
 private:
@@ -170,8 +170,8 @@ struct MoveWithoutDestructionOperator<IdSequence<Id>>
 {
   static inline void MoveWithoutDestruction(IdSequence<Id>* dest, IdSequence<Id>* source)
   {
-    new (dest) IdSequence<Id>(ZeroMove(*source));
+    new (dest) IdSequence<Id>(RaverieMove(*source));
   }
 };
 
-} //  namespace Zero
+} //  namespace Raverie

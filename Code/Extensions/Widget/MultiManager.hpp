@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class LayoutInfo
@@ -32,7 +32,7 @@ public:
 class MultiManager : public EventObject
 {
 public:
-  ZilchDeclareType(MultiManager, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MultiManager, TypeCopyMode::ReferenceType);
 
   MultiManager(RootWidget* rootWidget, MultiDock* mainDock);
 
@@ -68,4 +68,4 @@ public:
   void OnWindowKeyDown(KeyboardEvent* event);
 };
 
-} // namespace Zero
+} // namespace Raverie

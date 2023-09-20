@@ -1,59 +1,59 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(Orientation, builder, type)
+RaverieDefineType(Orientation, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindDocumented();
-  ZeroBindDependency(Transform);
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindDocumented();
+  RaverieBindDependency(Transform);
 
-  ZilchBindMethod(DebugDrawBases);
+  RaverieBindMethod(DebugDrawBases);
 
-  ZilchBindGetterSetterProperty(DefaultOrientationBases);
-  ZilchBindGetterSetterProperty(LocalOrientationBasis)->Add(new EditorRotationBasis("OrientationBasisGizmo"));
+  RaverieBindGetterSetterProperty(DefaultOrientationBases);
+  RaverieBindGetterSetterProperty(LocalOrientationBasis)->Add(new EditorRotationBasis("OrientationBasisGizmo"));
 
-  ZilchBindGetter(OrientationRight);
-  ZilchBindGetter(OrientationUp);
-  ZilchBindGetter(OrientationForward);
+  RaverieBindGetter(OrientationRight);
+  RaverieBindGetter(OrientationUp);
+  RaverieBindGetter(OrientationForward);
 
-  ZilchBindGetter(LocalRight);
+  RaverieBindGetter(LocalRight);
   // Show the local up and forward as read-only properties
-  ZilchBindGetterProperty(LocalUp);
-  ZilchBindGetterProperty(LocalForward);
+  RaverieBindGetterProperty(LocalUp);
+  RaverieBindGetterProperty(LocalForward);
 
-  ZilchBindGetter(WorldRight);
-  ZilchBindGetter(WorldUp);
-  ZilchBindGetter(WorldForward);
+  RaverieBindGetter(WorldRight);
+  RaverieBindGetter(WorldUp);
+  RaverieBindGetter(WorldForward);
 
-  ZilchBindGetter(LocalToWorldRotation);
-  ZilchBindGetter(LocalToOrientationRotation);
-  ZilchBindGetter(OrientationToLocalRotation);
-  ZilchBindGetter(OrientationToWorldRotation);
-  ZilchBindGetter(WorldToLocalRotation);
-  ZilchBindGetter(WorldToOrientationRotation);
+  RaverieBindGetter(LocalToWorldRotation);
+  RaverieBindGetter(LocalToOrientationRotation);
+  RaverieBindGetter(OrientationToLocalRotation);
+  RaverieBindGetter(OrientationToWorldRotation);
+  RaverieBindGetter(WorldToLocalRotation);
+  RaverieBindGetter(WorldToOrientationRotation);
 
-  ZilchBindMethod(SetLocalLookAtRotation);
-  ZilchBindMethod(SetWorldLookAtRotation);
+  RaverieBindMethod(SetLocalLookAtRotation);
+  RaverieBindMethod(SetWorldLookAtRotation);
 
-  ZilchBindGetterSetterProperty(GlobalUp);
-  ZilchBindMethod(LookAtPoint);
-  ZilchBindMethod(LookAtDirection);
+  RaverieBindGetterSetterProperty(GlobalUp);
+  RaverieBindMethod(LookAtPoint);
+  RaverieBindMethod(LookAtDirection);
 
-  ZilchBindMethod(GetLookAtPointRotation);
-  ZilchBindMethod(GetLookAtDirectionRotation);
+  RaverieBindMethod(GetLookAtPointRotation);
+  RaverieBindMethod(GetLookAtDirectionRotation);
 
-  ZilchBindMethod(LookAtPointWithUp);
-  ZilchBindMethod(LookAtDirectionWithUp);
+  RaverieBindMethod(LookAtPointWithUp);
+  RaverieBindMethod(LookAtDirectionWithUp);
 
-  ZilchBindMethod(GetLookAtPointWithUpRotation);
-  ZilchBindMethod(GetLookAtDirectionWithUpRotation);
+  RaverieBindMethod(GetLookAtPointWithUpRotation);
+  RaverieBindMethod(GetLookAtDirectionWithUpRotation);
 
-  ZilchBindGetter(AbsoluteAngle);
-  ZilchBindMethod(ComputeSignedAngle);
+  RaverieBindGetter(AbsoluteAngle);
+  RaverieBindMethod(ComputeSignedAngle);
 }
 
 void Orientation::Serialize(Serializer& stream)
@@ -507,4 +507,4 @@ void Orientation::ToWorld(Cog* cog, Vec3* upOut, Vec3* forwardOut)
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

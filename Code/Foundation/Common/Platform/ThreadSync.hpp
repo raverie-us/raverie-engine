@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 /// Thread Lock
 /// Safe to lock multiple times from the same thread
@@ -14,7 +14,7 @@ public:
   void Unlock();
 
 private:
-  ZeroDeclarePrivateData(ThreadLock, 48);
+  RaverieDeclarePrivateData(ThreadLock, 48);
 };
 
 // Wrapper around an unnamed event.
@@ -31,7 +31,7 @@ public:
   OsHandle GetHandle();
 
 private:
-  ZeroDeclarePrivateData(OsEvent, 8);
+  RaverieDeclarePrivateData(OsEvent, 8);
 };
 
 const int MaxSemaphoreCount = 0x0FFFFFFF;
@@ -50,7 +50,7 @@ public:
 private:
   OsHandle mHandle;
 
-  ZeroDeclarePrivateData(Semaphore, 8);
+  RaverieDeclarePrivateData(Semaphore, 8);
 };
 
 /// Not fully implemented as it's currently only needed for interprocess
@@ -64,7 +64,7 @@ public:
   void Initialize(Status& status, const char* mutexName, bool failIfAlreadyExists = false);
 
 private:
-  ZeroDeclarePrivateData(InterprocessMutex, 8);
+  RaverieDeclarePrivateData(InterprocessMutex, 8);
 };
 
 class CountdownEvent
@@ -82,4 +82,4 @@ private:
   int mCount;
 };
 
-} // namespace Zero
+} // namespace Raverie

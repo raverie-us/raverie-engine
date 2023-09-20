@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Forward Declarations
@@ -34,7 +34,7 @@ class UiTransformUpdateEvent : public Event
 {
 public:
   /// Meta Initialization.
-  ZilchDeclareType(UiTransformUpdateEvent, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(UiTransformUpdateEvent, TypeCopyMode::ReferenceType);
 
   UiTransformUpdateEvent() : mRootWidget(nullptr)
   {
@@ -138,7 +138,7 @@ public:
   typedef UiWidget* return_type;
 
   /// Meta Initialization.
-  ZilchDeclareType(UiWidgetCastResultsRange, TypeCopyMode::ValueType);
+  RaverieDeclareType(UiWidgetCastResultsRange, TypeCopyMode::ValueType);
 
   /// Constructor.
   UiWidgetCastResultsRange(const UiWidgetArray& overlappingWidgets);
@@ -163,7 +163,7 @@ public:
   typedef ComponentHierarchy<UiWidget> BaseType;
 
   /// Meta Initialization.
-  ZilchDeclareType(UiWidget, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(UiWidget, TypeCopyMode::ReferenceType);
 
   ~UiWidget();
 
@@ -410,4 +410,4 @@ extern const float cUiWidgetSnapSize;
 
 typedef ComponentHandle<UiWidget> UiWidgetHandle;
 
-} // namespace Zero
+} // namespace Raverie

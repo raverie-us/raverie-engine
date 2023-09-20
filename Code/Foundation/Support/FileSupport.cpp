@@ -11,7 +11,7 @@
 extern unsigned char VirtualFileSystemData[];
 extern unsigned int VirtualFileSystemSize;
 
-namespace Zero
+namespace Raverie
 {
 void WriteStringRangeToFile(StringParam path, StringRange range)
 {
@@ -299,7 +299,7 @@ void Download(StringParam filePath)
 {
   Download(FilePath::GetFileNameWithoutExtension(filePath),
            FilePath::GetDirectoryPath(filePath),
-           Array<String>(ZeroInit, filePath));
+           Array<String>(RaverieInit, filePath));
 }
 
 void Download(StringParam suggestedNameWithoutExtension, StringParam workingDirectory, const Array<String>& filePaths)
@@ -362,4 +362,4 @@ void Download(StringParam suggestedNameWithoutExtension, StringParam workingDire
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

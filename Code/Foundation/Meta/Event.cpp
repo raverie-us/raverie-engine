@@ -1,9 +1,9 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
-ZilchDefineType(EventObject, builder, type)
+RaverieDefineType(EventObject, builder, type)
 {
 }
 
@@ -37,12 +37,12 @@ namespace Tags
 DefineTag(Event);
 }
 
-ZilchDefineType(Event, builder, type)
+RaverieDefineType(Event, builder, type)
 {
-  ZeroBindDocumented();
-  ZilchBindFieldGetterProperty(EventId);
-  ZeroBindTag(Tags::Event);
-  ZilchBindMethod(Terminate);
+  RaverieBindDocumented();
+  RaverieBindFieldGetterProperty(EventId);
+  RaverieBindTag(Tags::Event);
+  RaverieBindMethod(Terminate);
 }
 
 volatile int gEventCount = 0;
@@ -75,14 +75,14 @@ void Event::Terminate()
 }
 
 // ObjectEvent
-ZilchDefineType(ObjectEvent, builder, type)
+RaverieDefineType(ObjectEvent, builder, type)
 {
-  ZeroBindDocumented();
-  ZilchBindFieldGetterProperty(Source);
+  RaverieBindDocumented();
+  RaverieBindFieldGetterProperty(Source);
 
-  ZeroBindEvent(Events::ComponentsModified, ObjectEvent);
-  ZeroBindEvent(Events::ObjectModified, ObjectEvent);
-  ZeroBindEvent(Events::ObjectStructureModified, ObjectEvent);
+  RaverieBindEvent(Events::ComponentsModified, ObjectEvent);
+  RaverieBindEvent(Events::ObjectModified, ObjectEvent);
+  RaverieBindEvent(Events::ObjectStructureModified, ObjectEvent);
 }
 
 Object* ObjectEvent::GetSource()
@@ -204,7 +204,7 @@ void EventConnection::DelayDestructDelegates()
 // When the EventConnection itself is deleted it will unlink itself from the
 // receiver and dispatcher lists so we just need to handle removing its entry
 // for the unique connection list to properly handle delay destructed event
-// connections i.e ZilchEventConnections during patching
+// connections i.e RaverieEventConnections during patching
 void EventConnection::DisconnectSelf()
 {
   if (mDispatcher)
@@ -231,7 +231,7 @@ void EventConnection::RaiseError(StringParam message)
 
 void EventDispatchList::Dispatch(Event* event)
 {
-  BoundType* sentEventType = ZilchVirtualTypeId(event);
+  BoundType* sentEventType = RaverieVirtualTypeId(event);
 
   // if we have no connections then don't do anything
   if (mConnections.Empty())
@@ -434,7 +434,7 @@ void EventDispatcher::Dispatch(StringParam eventId, Event* event)
   if (event->mTerminated)
     return;
 
-  BoundType* sentEventType = ZilchVirtualTypeId(event);
+  BoundType* sentEventType = RaverieVirtualTypeId(event);
 
   // Validate that, if this event is bound, we're actually sending the proper
   // event!
@@ -614,4 +614,4 @@ bool EventObject::HasReceivers(StringParam eventId)
   return GetDispatcher()->HasReceivers(eventId);
 }
 
-} // namespace Zero
+} // namespace Raverie

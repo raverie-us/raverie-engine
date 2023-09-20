@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class MultiDock;
@@ -55,7 +55,7 @@ struct DockingShell
 class MultiDock : public Composite
 {
 public:
-  ZilchDeclareType(MultiDock, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(MultiDock, TypeCopyMode::ReferenceType);
 
   MultiDock(Composite* parent);
   ~MultiDock();
@@ -80,4 +80,4 @@ public:
   Vec2 mAnimateSize;
 };
 
-} // namespace Zero
+} // namespace Raverie

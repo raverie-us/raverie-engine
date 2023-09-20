@@ -1,15 +1,15 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
-ZilchDefineType(ContentCopyright, builder, type)
+RaverieDefineType(ContentCopyright, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::CallSetDefaults);
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::CallSetDefaults);
 
-  ZilchBindFieldProperty(Owner);
-  ZilchBindFieldProperty(Date);
+  RaverieBindFieldProperty(Owner);
+  RaverieBindFieldProperty(Date);
 }
 
 void ContentCopyright::Serialize(Serializer& stream)
@@ -18,12 +18,12 @@ void ContentCopyright::Serialize(Serializer& stream)
   SerializeName(Date);
 }
 
-ZilchDefineType(ContentNotes, builder, type)
+RaverieDefineType(ContentNotes, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::CallSetDefaults);
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::CallSetDefaults);
 
-  ZilchBindFieldProperty(Notes);
+  RaverieBindFieldProperty(Notes);
 }
 
 void ContentNotes::Serialize(Serializer& stream)
@@ -31,12 +31,12 @@ void ContentNotes::Serialize(Serializer& stream)
   SerializeName(Notes);
 }
 
-ZilchDefineType(ContentEditorOptions, builder, type)
+RaverieDefineType(ContentEditorOptions, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::CallSetDefaults);
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::CallSetDefaults);
 
-  ZilchBindFieldProperty(mShowInEditor);
+  RaverieBindFieldProperty(mShowInEditor);
 }
 
 void ContentEditorOptions::Serialize(Serializer& stream)
@@ -50,16 +50,16 @@ void ContentEditorOptions::Initialize(ContentComposition* item)
   item->ShowInEditor = mShowInEditor;
 }
 
-ZilchDefineType(ResourceTemplate, builder, type)
+RaverieDefineType(ResourceTemplate, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::CallSetDefaults);
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::CallSetDefaults);
 
-  ZilchBindFieldProperty(mDisplayName);
-  ZilchBindFieldProperty(mDescription);
-  ZilchBindFieldProperty(mSortWeight);
-  ZilchBindFieldProperty(mCategory);
-  ZilchBindFieldProperty(mCategorySortWeight);
+  RaverieBindFieldProperty(mDisplayName);
+  RaverieBindFieldProperty(mDescription);
+  RaverieBindFieldProperty(mSortWeight);
+  RaverieBindFieldProperty(mCategory);
+  RaverieBindFieldProperty(mCategorySortWeight);
 }
 
 void ResourceTemplate::Serialize(Serializer& stream)
@@ -79,4 +79,4 @@ void CreateSupportContent(ContentSystem* system)
   AddContentComponent<ResourceTemplate>(system);
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 const bool cDebugQuickHull = false;
@@ -1549,4 +1549,4 @@ void QuickHull3D::DrawFinalHull(const Array<Vec3>& points)
   DrawHull(step);
 }
 
-} // namespace Zero
+} // namespace Raverie

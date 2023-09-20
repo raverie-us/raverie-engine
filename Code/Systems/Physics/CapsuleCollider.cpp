@@ -1,23 +1,23 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(CapsuleCollider, builder, type)
+RaverieDefineType(CapsuleCollider, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindSetup(SetupMode::DefaultSerialization);
-  ZeroBindInterface(Collider);
-  ZeroBindDocumented();
+  RaverieBindComponent();
+  RaverieBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindInterface(Collider);
+  RaverieBindDocumented();
 
-  ZilchBindGetterSetterProperty(Radius);
-  ZilchBindGetterSetterProperty(Height);
-  ZilchBindGetterSetterProperty(Direction);
-  ZilchBindGetterSetterProperty(ScalingMode);
+  RaverieBindGetterSetterProperty(Radius);
+  RaverieBindGetterSetterProperty(Height);
+  RaverieBindGetterSetterProperty(Direction);
+  RaverieBindGetterSetterProperty(ScalingMode);
 
-  ZilchBindGetter(WorldRadius);
-  ZilchBindGetter(WorldCylinderHeight);
+  RaverieBindGetter(WorldRadius);
+  RaverieBindGetter(WorldCylinderHeight);
 }
 
 CapsuleCollider::CapsuleCollider()
@@ -276,4 +276,4 @@ void CapsuleCollider::ComputeWorldPoints(Vec3Ref pointA, Vec3Ref pointB) const
   pointB = worldTranslation - worldHalfHeight;
 }
 
-} // namespace Zero
+} // namespace Raverie

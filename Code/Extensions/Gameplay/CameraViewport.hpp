@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 /// Manages all setup between Camera, Renderer, and viewport UI
@@ -9,7 +9,7 @@ namespace Zero
 class CameraViewport : public ViewportInterface
 {
 public:
-  ZilchDeclareType(CameraViewport, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(CameraViewport, TypeCopyMode::ReferenceType);
 
   // Component Interface
 
@@ -166,4 +166,4 @@ public:
   bool mCompleteSetup;
 };
 
-} // namespace Zero
+} // namespace Raverie

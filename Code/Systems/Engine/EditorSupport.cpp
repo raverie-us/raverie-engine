@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 namespace Z
@@ -52,4 +52,4 @@ const String ViewCube = "ViewCube";
 const String Wedge = "Wedge";
 } // namespace CoreArchetypes
 
-} // namespace Zero
+} // namespace Raverie

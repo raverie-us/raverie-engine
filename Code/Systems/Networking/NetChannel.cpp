@@ -1,35 +1,35 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 //                                 NetChannel //
 
-ZilchDefineType(NetChannel, builder, type)
+RaverieDefineType(NetChannel, builder, type)
 {
   // Bind tags
-  ZeroBindTag(Tags::Networking);
+  RaverieBindTag(Tags::Networking);
 
   // Bind documentation
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
   // Bind operations
-  ZilchBindGetterProperty(Name);
-  ZilchBindGetterProperty(NetChannelType);
-  ZilchBindCustomGetterProperty(IsScheduled);
-  ZilchBindCustomGetterProperty(IsNapping);
-  ZilchBindMethod(WakeUp);
-  ZilchBindMethod(TakeNap);
-  ZilchBindGetterSetterProperty(ChangeFlag);
-  ZilchBindMethod(ReplicateNow);
-  ZilchBindGetterProperty(LastChangeTimestamp);
-  ZilchBindGetterProperty(LastChangeTimePassed);
-  ZilchBindGetterSetterProperty(Authority);
+  RaverieBindGetterProperty(Name);
+  RaverieBindGetterProperty(NetChannelType);
+  RaverieBindCustomGetterProperty(IsScheduled);
+  RaverieBindCustomGetterProperty(IsNapping);
+  RaverieBindMethod(WakeUp);
+  RaverieBindMethod(TakeNap);
+  RaverieBindGetterSetterProperty(ChangeFlag);
+  RaverieBindMethod(ReplicateNow);
+  RaverieBindGetterProperty(LastChangeTimestamp);
+  RaverieBindGetterProperty(LastChangeTimePassed);
+  RaverieBindGetterSetterProperty(Authority);
 
   // Bind property management
-  ZilchBindMethod(HasNetProperty);
-  ZilchBindMethod(GetNetProperty);
+  RaverieBindMethod(HasNetProperty);
+  RaverieBindMethod(GetNetProperty);
 }
 
 NetChannel::NetChannel(const String& name, NetChannelType* netChannelType) : ReplicaChannel(name, netChannelType)
@@ -178,7 +178,7 @@ String NetChannel::GetCombinedNetPropertyName(Component* component, StringParam 
     return String();
 
   // Return combined net property name ("ComponentName_PropertyName")
-  return String::Format("%s_%s", ZilchVirtualTypeId(component)->Name.c_str(), propertyName.c_str());
+  return String::Format("%s_%s", RaverieVirtualTypeId(component)->Name.c_str(), propertyName.c_str());
 }
 
 bool NetChannel::HasNetProperty(Component* component, StringParam propertyName) const
@@ -257,7 +257,7 @@ NetProperty* NetChannel::AddNetProperty(Component* component,
   NetPropertyType* netPropertyType = nullptr;
 
   // Is Cog type?
-  if (property->PropertyType == ZilchTypeId(Cog))
+  if (property->PropertyType == RaverieTypeId(Cog))
   {
     // Get or add corresponding net property type
     netPropertyType = netPeer->GetOrAddReplicaPropertyType(netPropertyTypeName,
@@ -268,7 +268,7 @@ NetProperty* NetChannel::AddNetProperty(Component* component,
                                                            netPropertyConfig);
   }
   // Is CogPath type?
-  else if (property->PropertyType == ZilchTypeId(CogPath))
+  else if (property->PropertyType == RaverieTypeId(CogPath))
   {
     // Get or add corresponding net property type
     netPropertyType = netPeer->GetOrAddReplicaPropertyType(netPropertyTypeName,
@@ -282,7 +282,7 @@ NetProperty* NetChannel::AddNetProperty(Component* component,
   else
   {
     // Get basic native type from the underlying property type
-    NativeType* nativeType = ZilchTypeToBasicNativeType(property->PropertyType);
+    NativeType* nativeType = RaverieTypeToBasicNativeType(property->PropertyType);
     if (!nativeType) // Unable? (The underlying property type is not a basic
                      // native type?)
     {
@@ -432,39 +432,39 @@ void NetChannel::ClearNetProperties()
 
 //                               NetChannelType //
 
-ZilchDefineType(NetChannelType, builder, type)
+RaverieDefineType(NetChannelType, builder, type)
 {
   // Bind tags
-  ZeroBindTag(Tags::Networking);
+  RaverieBindTag(Tags::Networking);
 
   // Bind documentation
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
   // Bind operations
-  ZilchBindGetterProperty(Name);
+  RaverieBindGetterProperty(Name);
 
   // Bind configuration
-  ZilchBindMethod(ResetConfig);
-  ZilchBindMethod(SetConfig);
-  ZilchBindGetterSetterProperty(DetectOutgoingChanges);
-  ZilchBindGetterSetterProperty(AcceptIncomingChanges);
-  ZilchBindGetterSetterProperty(EventOnOutgoingPropertyChange);
-  ZilchBindGetterSetterProperty(EventOnIncomingPropertyChange);
-  ZilchBindGetterSetterProperty(AuthorityMode);
-  ZilchBindGetterSetterProperty(AuthorityDefault);
-  ZilchBindGetterSetterProperty(AllowRelay);
-  ZilchBindGetterSetterProperty(AllowNapping);
-  ZilchBindGetterSetterProperty(AwakeDuration);
-  ZilchBindGetterSetterProperty(DetectionMode);
-  ZilchBindGetterSetterProperty(AwakeDetectionInterval);
-  ZilchBindGetterSetterProperty(NapDetectionInterval);
-  ZilchBindGetterSetterProperty(ReplicateOnOnline);
-  // ZilchBindGetterSetterProperty(ReplicateOnChange);
-  ZilchBindGetterSetterProperty(ReplicateOnOffline);
-  ZilchBindGetterSetterProperty(SerializationMode);
-  ZilchBindGetterSetterProperty(ReliabilityMode);
-  ZilchBindGetterSetterProperty(TransferMode);
-  ZilchBindGetterSetterProperty(AccurateTimestampOnChange);
+  RaverieBindMethod(ResetConfig);
+  RaverieBindMethod(SetConfig);
+  RaverieBindGetterSetterProperty(DetectOutgoingChanges);
+  RaverieBindGetterSetterProperty(AcceptIncomingChanges);
+  RaverieBindGetterSetterProperty(EventOnOutgoingPropertyChange);
+  RaverieBindGetterSetterProperty(EventOnIncomingPropertyChange);
+  RaverieBindGetterSetterProperty(AuthorityMode);
+  RaverieBindGetterSetterProperty(AuthorityDefault);
+  RaverieBindGetterSetterProperty(AllowRelay);
+  RaverieBindGetterSetterProperty(AllowNapping);
+  RaverieBindGetterSetterProperty(AwakeDuration);
+  RaverieBindGetterSetterProperty(DetectionMode);
+  RaverieBindGetterSetterProperty(AwakeDetectionInterval);
+  RaverieBindGetterSetterProperty(NapDetectionInterval);
+  RaverieBindGetterSetterProperty(ReplicateOnOnline);
+  // RaverieBindGetterSetterProperty(ReplicateOnChange);
+  RaverieBindGetterSetterProperty(ReplicateOnOffline);
+  RaverieBindGetterSetterProperty(SerializationMode);
+  RaverieBindGetterSetterProperty(ReliabilityMode);
+  RaverieBindGetterSetterProperty(TransferMode);
+  RaverieBindGetterSetterProperty(AccurateTimestampOnChange);
 }
 
 NetChannelType::NetChannelType(const String& name) : ReplicaChannelType(name)
@@ -821,37 +821,37 @@ bool NetChannelType::GetAccurateTimestampOnChange() const
 
 //                              NetChannelConfig //
 
-ZilchDefineType(NetChannelConfig, builder, type)
+RaverieDefineType(NetChannelConfig, builder, type)
 {
   // Bind tags
-  ZeroBindTag(Tags::Networking);
+  RaverieBindTag(Tags::Networking);
 
   // Bind documentation
-  ZeroBindDocumented();
+  RaverieBindDocumented();
 
   // Bind setup (can be added in the editor)
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindSetup(SetupMode::DefaultSerialization);
 
   // Bind data members
-  ZilchBindFieldProperty(mDetectOutgoingChanges);
-  ZilchBindFieldProperty(mAcceptIncomingChanges);
-  ZilchBindFieldProperty(mEventOnOutgoingPropertyChange);
-  ZilchBindFieldProperty(mEventOnIncomingPropertyChange);
-  ZilchBindFieldProperty(mAuthorityMode);
-  ZilchBindFieldProperty(mAuthorityDefault);
-  ZilchBindFieldProperty(mAllowRelay);
-  ZilchBindFieldProperty(mAllowNapping);
-  ZilchBindFieldProperty(mAwakeDuration);
-  ZilchBindFieldProperty(mDetectionMode);
-  ZilchBindFieldProperty(mAwakeDetectionInterval);
-  ZilchBindFieldProperty(mNapDetectionInterval);
-  ZilchBindFieldProperty(mReplicateOnOnline);
-  // ZilchBindFieldProperty(mReplicateOnChange);
-  ZilchBindFieldProperty(mReplicateOnOffline);
-  ZilchBindFieldProperty(mSerializationMode);
-  ZilchBindFieldProperty(mReliabilityMode);
-  ZilchBindFieldProperty(mTransferMode);
-  ZilchBindFieldProperty(mAccurateTimestampOnChange);
+  RaverieBindFieldProperty(mDetectOutgoingChanges);
+  RaverieBindFieldProperty(mAcceptIncomingChanges);
+  RaverieBindFieldProperty(mEventOnOutgoingPropertyChange);
+  RaverieBindFieldProperty(mEventOnIncomingPropertyChange);
+  RaverieBindFieldProperty(mAuthorityMode);
+  RaverieBindFieldProperty(mAuthorityDefault);
+  RaverieBindFieldProperty(mAllowRelay);
+  RaverieBindFieldProperty(mAllowNapping);
+  RaverieBindFieldProperty(mAwakeDuration);
+  RaverieBindFieldProperty(mDetectionMode);
+  RaverieBindFieldProperty(mAwakeDetectionInterval);
+  RaverieBindFieldProperty(mNapDetectionInterval);
+  RaverieBindFieldProperty(mReplicateOnOnline);
+  // RaverieBindFieldProperty(mReplicateOnChange);
+  RaverieBindFieldProperty(mReplicateOnOffline);
+  RaverieBindFieldProperty(mSerializationMode);
+  RaverieBindFieldProperty(mReliabilityMode);
+  RaverieBindFieldProperty(mTransferMode);
+  RaverieBindFieldProperty(mAccurateTimestampOnChange);
 }
 
 void NetChannelConfig::Serialize(Serializer& stream)
@@ -902,4 +902,4 @@ NetChannelConfigManager::NetChannelConfigManager(BoundType* resourceType) : Reso
   mExtension = DataResourceExtension;
 }
 
-} // namespace Zero
+} // namespace Raverie

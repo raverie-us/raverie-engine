@@ -2,7 +2,7 @@
 #pragma once
 #include "Math.hpp"
 
-namespace Zero
+namespace Raverie
 {
 using Math::IntVec2;
 
@@ -67,4 +67,4 @@ struct IntRect
   int SizeY;
 };
 
-} // namespace Zero
+} // namespace Raverie

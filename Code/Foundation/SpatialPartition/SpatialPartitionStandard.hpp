@@ -5,20 +5,20 @@
 #include "Foundation/Geometry/GeometryStandard.hpp"
 #include "Foundation/Serialization/SerializationStandard.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // SpatialPartition library
-class SpatialPartitionLibrary : public Zilch::StaticLibrary
+class SpatialPartitionLibrary : public Raverie::StaticLibrary
 {
 public:
-  ZilchDeclareStaticLibraryInternals(SpatialPartitionLibrary);
+  RaverieDeclareStaticLibraryInternals(SpatialPartitionLibrary);
 
   static void Initialize();
   static void Shutdown();
 };
 
-} // namespace Zero
+} // namespace Raverie
 
 // Project includes
 #include "BroadPhaseProxy.hpp"

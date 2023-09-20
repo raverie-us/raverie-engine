@@ -2,7 +2,7 @@
 
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 void ExtractCubemapFaces(Status& status,
@@ -11,4 +11,4 @@ void ExtractCubemapFaces(Status& status,
                          TextureFormat::Enum format);
 void MipmapCubemap(Array<MipHeader>& mipHeaders, Array<byte*>& imageData, TextureFormat::Enum format, bool compressed);
 
-} // namespace Zero
+} // namespace Raverie

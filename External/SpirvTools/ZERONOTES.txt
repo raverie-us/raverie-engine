@@ -1,2 +1,0 @@
-You must build the RaverieEngineSpirvTools repo with RaverieEngineSpirvHeaders checked out in "RaverieEngineSpirvTools/externals/".
-After building, copy the *.inc and DebugInfo.h from the RaverieEngineSpirvTools root directory into our "Libraries/SpirvTools/Build/".

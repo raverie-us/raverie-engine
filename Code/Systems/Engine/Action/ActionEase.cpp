@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 // The Warp ease contains a vertical asymptote. We shouldn't
@@ -12,4 +12,4 @@ namespace Zero
 // fifty thousand for the InOut ease
 const float Ease::Warp::MinDifferenceFromAsymptote = 7.9579e-12f;
 
-} // namespace Zero
+} // namespace Raverie

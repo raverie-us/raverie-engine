@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 Aabb::Aabb()
@@ -365,4 +365,4 @@ void Aabb::Zero(void)
   mMax.ZeroOut();
 }
 
-} // namespace Zero
+} // namespace Raverie

@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class RootWidget;
@@ -9,7 +9,7 @@ class RootWidget;
 class WidgetManager : public ExplicitSingleton<WidgetManager, EventObject>
 {
 public:
-  ZilchDeclareType(WidgetManager, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(WidgetManager, TypeCopyMode::ReferenceType);
 
   WidgetManager();
   ~WidgetManager();
@@ -30,4 +30,4 @@ namespace Z
 extern WidgetManager* gWidgetManager;
 }
 
-} // namespace Zero
+} // namespace Raverie

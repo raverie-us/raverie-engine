@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 // Delimiter for paths to object tracks.
@@ -50,7 +50,7 @@ struct ScalingKey
 class ObjectTrack
 {
 public:
-  ZilchDeclareType(ObjectTrack, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(ObjectTrack, TypeCopyMode::ReferenceType);
 
   /// Constructor / destructor
   ObjectTrack();
@@ -94,7 +94,7 @@ class AnimationGraph;
 class Animation : public Resource
 {
 public:
-  ZilchDeclareType(Animation, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Animation, TypeCopyMode::ReferenceType);
 
   Animation();
   ~Animation();
@@ -131,4 +131,4 @@ public:
   AnimationManager(BoundType* resourceType);
 };
 
-} // namespace Zero
+} // namespace Raverie

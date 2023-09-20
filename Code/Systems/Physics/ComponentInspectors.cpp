@@ -2,21 +2,21 @@
 
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(ColliderInspector, builder, type)
+RaverieDefineType(ColliderInspector, builder, type)
 {
-  ZeroBindComponent();
-  ZeroBindDependency(Collider);
-  ZeroBindSetup(SetupMode::DefaultSerialization);
+  RaverieBindComponent();
+  RaverieBindDependency(Collider);
+  RaverieBindSetup(SetupMode::DefaultSerialization);
 
-  ZilchBindMethod(GetColliderLocalCenterOfMass);
-  ZilchBindMethod(ComputeMass);
-  ZilchBindMethod(GetLocalInverseInertiaTensorRow0);
-  ZilchBindMethod(GetLocalInverseInertiaTensorRow1);
-  ZilchBindMethod(GetLocalInverseInertiaTensorRow2);
-  type->AddAttribute(::Zero::ObjectAttributes::cDoNotDocument);
+  RaverieBindMethod(GetColliderLocalCenterOfMass);
+  RaverieBindMethod(ComputeMass);
+  RaverieBindMethod(GetLocalInverseInertiaTensorRow0);
+  RaverieBindMethod(GetLocalInverseInertiaTensorRow1);
+  RaverieBindMethod(GetLocalInverseInertiaTensorRow2);
+  type->AddAttribute(::Raverie::ObjectAttributes::cDoNotDocument);
 }
 
 Vec3 ColliderInspector::GetColliderLocalCenterOfMass() const
@@ -53,4 +53,4 @@ Mat3 ColliderInspector::GetInertia() const
   return inertia;
 }
 
-} // namespace Zero
+} // namespace Raverie

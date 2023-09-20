@@ -1,10 +1,10 @@
 // MIT Licensed (see LICENSE.md).
 #include "Precompiled.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
-ZilchDefineType(Job, builder, type)
+RaverieDefineType(Job, builder, type)
 {
 }
 
@@ -172,7 +172,7 @@ bool JobSystem::RunOneJob()
 
 void JobSystem::RunJob(Job* job)
 {
-  ProfileScopeFunctionArgs(ZilchVirtualTypeId(job)->Name);
+  ProfileScopeFunctionArgs(RaverieVirtualTypeId(job)->Name);
   job->ExecuteAsyncBegin();
 }
 
@@ -192,4 +192,4 @@ void JobSystem::JobComplete(Job* job)
     RunJob(job);
 }
 
-} // namespace Zero
+} // namespace Raverie

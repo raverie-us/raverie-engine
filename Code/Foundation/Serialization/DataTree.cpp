@@ -4,7 +4,7 @@
 #include "Platform/File.hpp"
 #include "LegacyDataTreeParser.hpp"
 
-namespace Zero
+namespace Raverie
 {
 
 HashMap<String, String> ValidTypeNameConversions;
@@ -404,4 +404,4 @@ bool DataTreeLoader::EnumField(cstr enumTypeName, cstr fieldName, uint& enumValu
   }
 }
 
-} // namespace Zero
+} // namespace Raverie

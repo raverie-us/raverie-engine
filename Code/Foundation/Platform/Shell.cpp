@@ -2,7 +2,7 @@
 #include "Precompiled.hpp"
 #include "Foundation/Platform/PlatformCommunication.hpp"
 
-namespace Zero
+namespace Raverie
 {
 Shell* Shell::sInstance = nullptr;
 IntVec2 Shell::sInitialClientSize = IntVec2::cZero;
@@ -65,12 +65,12 @@ void Shell::OpenFile(FileDialogInfo& config)
   ImportOpenFileDialog(&config, config.mMultiple, accept.c_str());
 }
 
-void ZeroExportNamed(ExportOpenFileDialogAdd)(void* dialog, const char* filePath) {
+void RaverieExportNamed(ExportOpenFileDialogAdd)(void* dialog, const char* filePath) {
   FileDialogInfo& config = *(FileDialogInfo*)dialog;
   config.mFiles.PushBack(filePath);
 }
 
-void ZeroExportNamed(ExportOpenFileDialogFinish)(void* dialog) {
+void RaverieExportNamed(ExportOpenFileDialogFinish)(void* dialog) {
   FileDialogInfo& config = *(FileDialogInfo*)dialog;
   config.mCallback(config.mFiles, config.mUserData);
 }
@@ -139,4 +139,4 @@ GamepadRawAxisState& GamepadRawState::GetOrCreateAxis(uint32_t axisIndex) {
   return mAxes[axisIndex];
 }
 
-} // namespace Zero
+} // namespace Raverie

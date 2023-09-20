@@ -1,7 +1,7 @@
 // MIT Licensed (see LICENSE.md).
 #pragma once
 
-namespace Zero
+namespace Raverie
 {
 
 class KeyboardEvent;
@@ -19,7 +19,7 @@ void FindNextFocus(Widget* widget, FocusDirection::Enum direction);
 class Spacer : public Widget
 {
 public:
-  ZilchDeclareType(Spacer, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Spacer, TypeCopyMode::ReferenceType);
 
   Spacer(Composite* parent);
   Spacer(Composite* parent, SizePolicy::Enum policy, Vec2Param size);
@@ -32,7 +32,7 @@ public:
 class Splitter : public Composite
 {
 public:
-  ZilchDeclareType(Splitter, TypeCopyMode::ReferenceType);
+  RaverieDeclareType(Splitter, TypeCopyMode::ReferenceType);
 
   Splitter(Composite* parent);
   ~Splitter();
@@ -65,4 +65,4 @@ public:
   Vec2 mRightStartMinSize;
 };
 
-} // namespace Zero
+} // namespace Raverie
