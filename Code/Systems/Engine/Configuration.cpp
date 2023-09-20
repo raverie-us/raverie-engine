@@ -208,8 +208,6 @@ Cog* LoadConfig(ModifyConfigFn modifier, void* userData)
 
   ZPrint("Build Version: %s\n", GetBuildVersionName().c_str());
 
-  ZPrint("Loading configuration for %s...\n", GetApplicationName().c_str());
-
   static const String cDataDirectoryName("Data");
 
   String documentDirectory = GetUserDocumentsDirectory();

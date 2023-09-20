@@ -359,8 +359,6 @@ bool EngineLibrary::Initialize()
   RegisterPropertyAttributeType(PropertyAttributes::cDependency, MetaDependency)->TypeMustBe(Component);
   RegisterPropertyAttributeType(PropertyAttributes::cResourceProperty, MetaEditorResource)->TypeMustBe(Resource);
 
-  ZPrintFilter(Filter::DefaultFilter, "Engine Initialize...\n");
-
   EngineObject::sEngineHeap = new Memory::Heap("Engine", Memory::GetRoot());
 
   UndoMap::Initialize();

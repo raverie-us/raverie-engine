@@ -184,8 +184,6 @@ void GameOrEditorStartup::Startup()
   if (mLoadContent)
     LoadContentConfig();
 
-  ZPrint("Creating main window.\n");
-
   OsShell* osShell = engine->has(OsShell);
 
   String name = BuildString(GetOrganization(), " ", GetApplicationName());
@@ -315,7 +313,6 @@ void GameOrEditorStartup::NextPhase()
 {
   ZPrint("Completed phase: %s\n", StartupPhase::Names[mPhase]);
   mPhase = (StartupPhase::Enum)(mPhase + 1);
-  ZPrint("Next phase: %s\n", StartupPhase::Names[mPhase]);
 }
 
 void GameOrEditorStartup::UserInitializeConfig(Cog* configCog)
