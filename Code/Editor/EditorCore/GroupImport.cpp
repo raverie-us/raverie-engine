@@ -39,7 +39,7 @@ String StripResourceExtension(StringParam filename)
     MetaDatabase* metaDatabase = MetaDatabase::GetInstance();
     BoundType* type = metaDatabase->FindType(resourceExtension);
     // If it is a Raverie Engine resource strip it from the filename
-    if (type->IsA(RaverieTypeId(Resource)))
+    if (type && type->IsA(RaverieTypeId(Resource)))
     {
       // Replace the .ResourceType with nothing and return that filename to
       // import Raverie Engine created resources files from another project and get
