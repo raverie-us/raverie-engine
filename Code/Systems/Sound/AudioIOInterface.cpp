@@ -1,11 +1,12 @@
 // MIT Licensed (see LICENSE.md).
 
 #include "Precompiled.hpp"
+#include "Foundation/Platform/PlatformCommunication.hpp"
 
 namespace Raverie
 {
 
-// Audio IO Interface
+const float cAudioBufferSizeMultiplier = 0.05;
 
 AudioIOInterface::AudioIOInterface() : MixedOutputBuffer(nullptr), InputBuffer(nullptr), mOutputStreamLatency(AudioLatency::Low)
 {
@@ -20,12 +21,6 @@ AudioIOInterface::~AudioIOInterface()
     delete[] InputBuffer;
 }
 
-bool AudioIOInterface::InitializeAPI()
-{
-  // Return false if the API is not initialized successfully
-  return AudioIO.InitializeAPI(&mApiErrorMessage) == StreamStatus::Initialized;
-}
-
 bool AudioIOInterface::Initialize(bool initOutput, bool initInput)
 {
   bool returnValue = true;
@@ -34,40 +29,23 @@ bool AudioIOInterface::Initialize(bool initOutput, bool initInput)
   if (initOutput && StreamInfoList[StreamTypes::Output].mStatus != StreamStatus::Initialized)
   {
     StreamInfo& outputInfo = StreamInfoList[StreamTypes::Output];
-    outputInfo.mStatus = AudioIO.InitializeStream(StreamTypes::Output, &outputInfo.mErrorMessage);
-    if (outputInfo.mStatus != StreamStatus::Initialized)
-      returnValue = false;
-    else
-    {
-      outputInfo.mChannels = AudioIO.GetStreamChannels(StreamTypes::Output);
-      outputInfo.mSampleRate = AudioIO.GetStreamSampleRate(StreamTypes::Output);
+    outputInfo.mChannels = cAudioChannels;
+    outputInfo.mSampleRate = cAudioSampleRate;
 
-      InitializeOutputBuffers();
-    }
+    InitializeOutputBuffers();
   }
 
   // Initialize input stream
   if (initInput && StreamInfoList[StreamTypes::Input].mStatus != StreamStatus::Initialized)
   {
     StreamInfo& inputInfo = StreamInfoList[StreamTypes::Input];
-    inputInfo.mStatus = AudioIO.InitializeStream(StreamTypes::Input, &inputInfo.mErrorMessage);
-    if (inputInfo.mStatus != StreamStatus::Initialized)
-      returnValue = false;
-    else
-    {
-      inputInfo.mChannels = AudioIO.GetStreamChannels(StreamTypes::Input);
-      inputInfo.mSampleRate = AudioIO.GetStreamSampleRate(StreamTypes::Input);
+    inputInfo.mChannels = cAudioChannels;
+    inputInfo.mSampleRate = cAudioSampleRate;
 
-      InitializeInputBuffers();
-    }
+    InitializeInputBuffers();
   }
 
   return returnValue;
-}
-
-void AudioIOInterface::ShutDown()
-{
-  AudioIO.ShutDownAPI();
 }
 
 bool AudioIOInterface::StartStreams(bool startOutput, bool startInput)
@@ -75,60 +53,36 @@ bool AudioIOInterface::StartStreams(bool startOutput, bool startInput)
   if (!startOutput && !startInput)
     return false;
 
-  bool returnValue = true;
-
   // Start output stream if requested
   if (startOutput)
   {
-    // Start the stream, passing in the IOCallback function and this object as
-    // the data
-    StreamInfoList[StreamTypes::Output].mStatus = AudioIO.StartStream(StreamTypes::Output, &StreamInfoList[StreamTypes::Output].mErrorMessage, IOCallback, this);
-
-    // Check if it was started successfully
-    if (StreamInfoList[StreamTypes::Output].mStatus != StreamStatus::Started)
-      returnValue = false;
+    StreamInfoList[StreamTypes::Output].mStatus = StreamStatus::Started;
   }
 
   // Start input stream if requested
   if (startInput)
   {
-    // Start the stream, passing in the IOCallback function and this object as
-    // the data
-    StreamInfoList[StreamTypes::Input].mStatus = AudioIO.StartStream(StreamTypes::Input, &StreamInfoList[StreamTypes::Input].mErrorMessage, IOCallback, this);
-
-    // Check if it was started successfully
-    if (StreamInfoList[StreamTypes::Input].mStatus != StreamStatus::Started)
-      returnValue = false;
+    StreamInfoList[StreamTypes::Input].mStatus = StreamStatus::Started;
   }
 
-  return returnValue;
+  return true;
 }
 
 bool AudioIOInterface::StopStreams(bool stopOutput, bool stopInput)
 {
-  bool returnValue = true;
-
   // Stop output stream if requested
   if (stopOutput)
   {
-    StreamInfoList[StreamTypes::Output].mStatus = AudioIO.StopStream(StreamTypes::Output, &StreamInfoList[StreamTypes::Output].mErrorMessage);
-
-    // Check if it was stopped successfully
-    if (StreamInfoList[StreamTypes::Output].mStatus != StreamStatus::Stopped)
-      returnValue = false;
+    StreamInfoList[StreamTypes::Output].mStatus = StreamStatus::Stopped;
   }
 
   // Stop input stream if requested
   if (stopInput)
   {
-    StreamInfoList[StreamTypes::Input].mStatus = AudioIO.StopStream(StreamTypes::Input, &StreamInfoList[StreamTypes::Input].mErrorMessage);
-
-    // Check if it was stopped successfully
-    if (StreamInfoList[StreamTypes::Input].mStatus != StreamStatus::Stopped)
-      returnValue = false;
+    StreamInfoList[StreamTypes::Input].mStatus = StreamStatus::Stopped;
   }
 
-  return returnValue;
+  return true;
 }
 
 StreamStatus::Enum AudioIOInterface::GetStreamStatus(StreamTypes::Enum whichStream)
@@ -184,18 +138,13 @@ void AudioIOInterface::SetOutputLatencyThreaded(AudioLatency::Enum newLatency)
 
   // Set the latency variable
   mOutputStreamLatency = newLatency;
-  // Shut down the output stream so we can change the buffer size
-  AudioIO.StopStream(StreamTypes::Output, nullptr);
   // Set up the output buffer with the current latency setting
   InitializeRingBuffer(OutputRingBuffer, MixedOutputBuffer, OutputBufferSizePerLatency[mOutputStreamLatency]);
-  // Restart the audio output
-  AudioIO.InitializeStream(StreamTypes::Output, nullptr);
-  StreamInfoList[StreamTypes::Output].mStatus = AudioIO.StartStream(StreamTypes::Output, &StreamInfoList[StreamTypes::Output].mErrorMessage, IOCallback, this);
 }
 
 void AudioIOInterface::InitializeOutputBuffers()
 {
-  unsigned size = GetBufferSize(AudioIO.GetStreamSampleRate(StreamTypes::Output), AudioIO.GetStreamChannels(StreamTypes::Output));
+  unsigned size = GetBufferSize(cAudioSampleRate, cAudioChannels);
 
   OutputBufferSizePerLatency[AudioLatency::Low] = size;
   OutputBufferSizePerLatency[AudioLatency::High] = size * 4;
@@ -205,7 +154,7 @@ void AudioIOInterface::InitializeOutputBuffers()
 
 void AudioIOInterface::InitializeInputBuffers()
 {
-  unsigned size = GetBufferSize(AudioIO.GetStreamSampleRate(StreamTypes::Input), AudioIO.GetStreamChannels(StreamTypes::Input));
+  unsigned size = GetBufferSize(cAudioSampleRate, cAudioChannels);
 
   InitializeRingBuffer(InputRingBuffer, InputBuffer, size * 2);
 }
@@ -216,7 +165,7 @@ unsigned AudioIOInterface::GetBufferSize(unsigned sampleRate, unsigned channels)
   unsigned size = BufferSizeStartValue;
   // We need to get close to a value that accounts for the sample rate and
   // channels
-  float checkValue = AudioIO.GetBufferSizeMultiplier() * sampleRate * channels;
+  float checkValue = cAudioBufferSizeMultiplier * sampleRate * channels;
   // Continue multiplying by 2 until we get close enough (buffer must be
   // multiple of 2)
   while (size < checkValue)
@@ -255,8 +204,10 @@ void AudioIOInterface::GetMixedOutputSamples(float* outputBuffer, const unsigned
   OutputRingBuffer.Read((void*)outputBuffer, samples);
 
   // If there weren't enough available, set the rest to 0
-  if (samples < samplesNeeded)
+  if (samples < samplesNeeded) {
     memset(outputBuffer + samples, 0, (samplesNeeded - samples) * sizeof(float));
+    ZPrint("Missed samples (engine) %d\n", samplesNeeded - samples);
+  }
 
   // Signal the semaphore for the mix thread
   MixThreadSemaphore.Increment();
@@ -270,12 +221,18 @@ void AudioIOInterface::SaveInputSamples(const float* inputBuffer, unsigned frame
   InputRingBuffer.Write(inputBuffer, frames * StreamInfoList[StreamTypes::Input].mChannels);
 }
 
-void IOCallback(float* outputBuffer, float* inputBuffer, unsigned framesPerBuffer, void* data)
-{
-  if (outputBuffer)
-    ((AudioIOInterface*)data)->GetMixedOutputSamples(outputBuffer, framesPerBuffer);
-  if (inputBuffer)
-    ((AudioIOInterface*)data)->SaveInputSamples(inputBuffer, framesPerBuffer);
+const float* RaverieExportNamed(ExportAudioOutput)(size_t framesRequested) {
+  static Array<float> sTemporaryBuffer;
+  size_t samplesRequested = framesRequested * cAudioChannels;
+  if (sTemporaryBuffer.Size() < samplesRequested) {
+    sTemporaryBuffer.Resize(samplesRequested);
+  }
+  Z::gEngine->has(SoundSystem)->Mixer.AudioIO.GetMixedOutputSamples(sTemporaryBuffer.Data(), framesRequested);
+  return sTemporaryBuffer.Data();
+}
+
+void RaverieExportNamed(ExportAudioInput)(const float* samplesPerChannel, size_t frames) {
+  Z::gEngine->has(SoundSystem)->Mixer.AudioIO.SaveInputSamples(samplesPerChannel, frames);
 }
 
 } // namespace Raverie

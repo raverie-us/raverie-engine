@@ -30,6 +30,14 @@ void RaverieExportNamed(ExportInitialize)(
   startup->mProjectArchive.SetData(projectDataSteal, projectLength, true);
   startup->mBuiltContentArchive.SetData(builtContentDataSteal, builtContentLength, true);
   gCommandLine = arguments;
+
+  // Run until we are ready to update
+  for (;;) {
+    StartupPhase::Enum nextPhase = startup->RunIteration();
+    if (nextPhase == StartupPhase::EngineUpdate) {
+      break;
+    }
+  }
 }
 
 void RaverieExportNamed(ExportRunIteration)()

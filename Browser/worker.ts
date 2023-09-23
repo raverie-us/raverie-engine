@@ -13,7 +13,10 @@ import {
   MessageProjectSave,
   MessageInitialize,
   MessageOpenUrl,
-  MessageGamepadVibrate
+  MessageGamepadVibrate,
+  MessageAudioOutput,
+  ToAudioMessageType,
+  AudioConstants
 } from "./shared";
 
 const modulePromise = WebAssembly.compileStreaming(fetch(wasmUrl));
@@ -41,11 +44,25 @@ type GLsizeiPointer = number;
 // Platform
 type CharPointer = number;
 
+//let audioPort: MessagePort | null = null;
+//const audioPostMessage = <T extends ToAudioMessageType>(message: T) => {
+//  if (audioPort) {
+//    console.log("Sent audio message", message);
+//    audioPort.postMessage(message);
+//  }
+//};
 const mainPostMessage = <T extends ToMainMessageType>(message: T) => {
   postMessage(message);
 };
 
 const start = async (message: MessageInitialize) => {
+  // We need to buffer any messages we receive until we connect up our message 
+  const bufferedMessages: MessageEvent<ToWorkerMessageType>[] = [];
+  const onBufferMessage = (event: MessageEvent<ToWorkerMessageType>) => {
+    bufferedMessages.push(event);
+  }
+  addEventListener("message", onBufferMessage);
+
   const module = await modulePromise;
 
   const gl = message.canvas.getContext("webgl2", {
@@ -626,10 +643,10 @@ const start = async (message: MessageInitialize) => {
   const ExportOpenFileDialogFinish = instance.exports.ExportOpenFileDialogFinish as (dialog: number) => void;
   const ExportSizeChanged = instance.exports.ExportSizeChanged as (clientWidth: number, clientHeight: number) => void;
   const ExportFocusChanged = instance.exports.ExportFocusChanged as (focusedBool: number) => void;
-
   const ExportGamepadConnectionChanged = instance.exports.ExportGamepadConnectionChanged as (gamepadIndex: number, idCharPtr: number, connectedBool: number) => void;
   const ExportGamepadButtonChanged = instance.exports.ExportGamepadButtonChanged as (gamepadIndex: number, buttonIndex: number, pressedBool: number, touchedBool: number, value: number) => void;
   const ExportGamepadAxisChanged = instance.exports.ExportGamepadAxisChanged as (gamepadIndex: number, axisIndex: number, value: number) => void;
+  const ExportAudioOutput = instance.exports.ExportAudioOutput as (framesRequested: number) => number;
 
   const allocateAndCopy = (buffer: Uint8Array | null) => {
     if (!buffer) {
@@ -724,9 +741,21 @@ const start = async (message: MessageInitialize) => {
       case "gamepadAxisChanged":
         ExportGamepadAxisChanged(data.gamepadIndex, data.axisIndex, data.value);
         break;
+      case "audioPort":
+        //audioPort = data.port;
+        break;
+      case "audioOutputRequest": {
+        // It always outputs all the data it can, including 0s if needed
+        const floatPtr = ExportAudioOutput(data.framesRequested);
+        mainPostMessage<MessageAudioOutput>({
+          type: "audioOutput",
+          id: data.id,
+          samplesPerChannel: new Float32Array(readBuffer(floatPtr, data.framesRequested * 4/*sizeof(float)*/ * AudioConstants.Channels)),
+        });
+        break;
+      }
     }
   };
-  addEventListener("message", onMessage);
 
   let requestedAnimationFrame = -1;
   const handleCrash = () => {
@@ -739,8 +768,8 @@ const start = async (message: MessageInitialize) => {
 
   const decoder = new TextDecoder();
   const encoder = new TextEncoder();
-  const readLengthString = (startPointer: number, length: number) =>
-    decoder.decode(new DataView(memory.buffer, startPointer, length));
+  const readLengthString = (startPointer: number, lengthBytes: number) =>
+    decoder.decode(new DataView(memory.buffer, startPointer, lengthBytes));
   const readNullTerminatedString = (startPointer: number) => {
     const buffer = new Uint8Array(memory.buffer);
     let length = 0;
@@ -752,8 +781,8 @@ const start = async (message: MessageInitialize) => {
     }
     return decoder.decode(new DataView(memory.buffer, startPointer, length));
   }
-  const readBuffer = (startPointer: number, length: number) => {
-    return memory.buffer.slice(startPointer, startPointer + length)
+  const readBuffer = (startPointer: number, lengthBytes: number) => {
+    return memory.buffer.slice(startPointer, startPointer + lengthBytes)
   }
 
   const getPixelsView = (width: GLsizei, height: GLsizei, format: GLenum, type: GLenum, pixels: VoidPointer): ArrayBufferView | null => {
@@ -805,6 +834,12 @@ const start = async (message: MessageInitialize) => {
     builtContentArchiveBytePtr,
     message.builtContentArchive?.byteLength || 0);
   ExportFree(commandLineCharPtr);
+
+  removeEventListener("message", onBufferMessage);
+  addEventListener("message", onMessage);
+  for (const bufferedMessage of bufferedMessages) {
+    onMessage(bufferedMessage);
+  }
 
   let mustSendYieldComplete = false;
   const doUpdate = () => {

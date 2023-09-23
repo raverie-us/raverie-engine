@@ -5,7 +5,6 @@ raverie_setup_library(Platform ${CMAKE_CURRENT_LIST_DIR} TRUE)
 target_sources(Platform
   PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/Atomic.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/Audio.cpp
     ${CMAKE_CURRENT_LIST_DIR}/DirectoryWatcher.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Intrinsics.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Shell.cpp

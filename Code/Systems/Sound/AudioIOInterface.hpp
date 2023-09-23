@@ -11,6 +11,13 @@ namespace Raverie
 /// can fix some audio problems in some cases.</param>
 DeclareEnum2(AudioLatency, Low, High);
 
+DeclareEnum2(StreamTypes, Output, Input);
+DeclareEnum6(StreamStatus, Uninitialized, Initialized, Started, Stopped, ApiProblem, DeviceProblem);
+
+// We always input and output at a fixed rate/number of channels for now
+const unsigned cAudioSampleRate = 44100;
+const unsigned cAudioChannels = 2;
+
 class StreamInfo
 {
 public:
@@ -24,8 +31,6 @@ public:
   unsigned mSampleRate;
 };
 
-void IOCallback(float* outputBuffer, float* inputBuffer, unsigned framesPerBuffer, void* data);
-
 // Input Output Interface
 
 class AudioIOInterface
@@ -34,12 +39,8 @@ public:
   AudioIOInterface();
   ~AudioIOInterface();
 
-  // Initializes the audio API
-  bool InitializeAPI();
   // Initializes the input and/or output streams, depending on parameters
   bool Initialize(bool initOutput, bool initInput);
-  // Shuts down the audio API. Streams should be already stopped.
-  void ShutDown();
   // Starts the output and/or input streams, depending on parameters
   bool StartStreams(bool startOutput, bool startInput);
   // Stops the output and/or input streams, depending on parameters
@@ -74,8 +75,6 @@ public:
   void SaveInputSamples(const float* inputBuffer, unsigned frames);
 
 private:
-  // Object to handle OS-specific audio input and output
-  AudioInputOutput AudioIO;
   // Buffer used for the OutputRingBuffer
   float* MixedOutputBuffer;
   // The number of mix buffer frames for each latency setting

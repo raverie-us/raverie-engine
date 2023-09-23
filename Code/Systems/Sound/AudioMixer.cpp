@@ -61,11 +61,6 @@ OsInt StartMix(void* mixer)
 
 void AudioMixer::StartMixing(Status& status)
 {
-  // Initialize the audio API and the input & output streams
-  // If initialization was not successful, set the message on the status object
-  if (!AudioIO.InitializeAPI())
-    status.SetFailed(AudioIO.GetSystemErrorMessage());
-
   // Initialize audio output (input will get initialized when needed)
   // If not successful, set the message on the status object
   if (!AudioIO.Initialize(true, false))
@@ -121,7 +116,6 @@ void AudioMixer::ShutDown()
 
   // Shut down audio output, input, and API
   AudioIO.StopStreams(true, true);
-  AudioIO.ShutDown();
 
   if (LowPass)
     delete LowPass;

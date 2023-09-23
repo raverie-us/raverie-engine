@@ -293,5 +293,7 @@ extern "C"
   void RaverieExportNamed(ExportFileDropFinish)(int32_t clientX, int32_t clientY);
   void RaverieExportNamed(ExportOpenFileDialogAdd)(void* dialog, const char* filePath);
   void RaverieExportNamed(ExportOpenFileDialogFinish)(void* dialog);
+  const float* RaverieExportNamed(ExportAudioOutput)(size_t framesRequested);
+  void RaverieExportNamed(ExportAudioInput)(const float* samplesPerChannel, size_t frames);
   void RaverieExportNamed(ExportQuit)();
 }

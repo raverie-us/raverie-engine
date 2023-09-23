@@ -149,6 +149,12 @@ export enum KeyState {
   Repeated,
 }
 
+// Should match AudioIOInterface.hpp
+export enum AudioConstants {
+  SampleRate = 44100,
+  Channels = 2,
+}
+
 export interface MessageInitialize {
   type: "initialize";
   canvas: OffscreenCanvas;
@@ -255,6 +261,17 @@ export interface MessageGamepadAxisChanged {
   value: number;
 }
 
+export interface MessageAudioPort {
+  type: "audioPort";
+  port: MessagePort;
+}
+
+export interface MessageAudioOutputRequest {
+  type: "audioOutputRequest";
+  id: number;
+  framesRequested: number;
+}
+
 export type ToWorkerMessageType =
   MessageInitialize |
   MessageMouseMove |
@@ -270,7 +287,9 @@ export type ToWorkerMessageType =
   MessageFocusChanged |
   MessageGamepadConnectionChanged |
   MessageGamepadButtonChanged |
-  MessageGamepadAxisChanged;
+  MessageGamepadAxisChanged |
+  MessageAudioOutputRequest |
+  MessageAudioPort;
 
 export interface MessageYieldDraw {
   type: "yieldDraw";
@@ -336,6 +355,12 @@ export interface MessageGamepadVibrate {
   intensity: number;
 }
 
+export interface MessageAudioOutput {
+  type: "audioOutput";
+  samplesPerChannel: Float32Array;
+  id: number;
+}
+
 export type ToMainMessageType =
   MessageYieldDraw |
   MessageYieldComplete |
@@ -347,4 +372,8 @@ export type ToMainMessageType =
   MessageProgressUpdate |
   MessageProjectSave |
   MessageOpenUrl |
-  MessageGamepadVibrate;
+  MessageGamepadVibrate |
+  MessageAudioOutput;
+
+  export type ToAudioMessageType =
+    MessageAudioOutput;
