@@ -192,6 +192,10 @@ export class RaverieEngine extends EventTarget {
           id: audioRequestId
         });
         ++audioRequestId;
+
+        if (missedSamples) {
+          console.log("Missed samples (main)", needSampleCount - audioSamplesPerChannel.length, "audioRequestId", audioRequestId, "audioResponseId", audioResponseId);
+        }
       }
       
       const samplesWeCanRead = Math.min(needSampleCount, haveSampleCount);
@@ -199,10 +203,6 @@ export class RaverieEngine extends EventTarget {
       for (let i = 0; i < samplesWeCanRead; ++i) {
         lChannel[i] = audioSamplesPerChannel[i * 2 + 0] || 0;
         rChannel[i] = audioSamplesPerChannel[i * 2 + 1] || 0;
-      }
-
-      if (missedSamples) {
-        console.log("Missed samples (main)", needSampleCount - audioSamplesPerChannel.length, "audioRequestId", audioRequestId, "audioResponseId", audioResponseId);
       }
   
       audioSamplesPerChannel = audioSamplesPerChannel.slice(samplesWeCanRead * AudioConstants.Channels);
