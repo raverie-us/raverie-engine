@@ -10,8 +10,6 @@ target_sources(Networking
     ${CMAKE_CURRENT_LIST_DIR}/EventBundle.hpp
     ${CMAKE_CURRENT_LIST_DIR}/InternetHostDiscovery.cpp
     ${CMAKE_CURRENT_LIST_DIR}/InternetHostDiscovery.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/IrcClient.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/IrcClient.hpp
     ${CMAKE_CURRENT_LIST_DIR}/LanHostDiscovery.cpp
     ${CMAKE_CURRENT_LIST_DIR}/LanHostDiscovery.hpp
     ${CMAKE_CURRENT_LIST_DIR}/NetChannel.cpp
@@ -49,16 +47,8 @@ target_sources(Networking
     ${CMAKE_CURRENT_LIST_DIR}/PingManager.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Precompiled.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/SendableEvent.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/SendableEvent.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/SimpleSocket.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/SimpleSocket.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/TcpSocket.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/TcpSocket.hpp
     ${CMAKE_CURRENT_LIST_DIR}/WebRequester.cpp
     ${CMAKE_CURRENT_LIST_DIR}/WebRequester.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/WebServer.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/WebServer.hpp
 )
 
 raverie_target_includes(Networking

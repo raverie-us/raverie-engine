@@ -12593,77 +12593,6 @@ DocumentationLibrary
 		}
 		Object
 		{
-			var Name = "ConnectionData"
-			var Library = "NetworkingLibrary"
-			var Properties = Array
-			{
-				Property
-				{
-					var Name = "Address"
-					var Type = "Integer"
-				}
-				Property
-				{
-					var Name = "Host"
-					var Type = "String"
-				}
-				Property
-				{
-					var Name = "Incoming"
-					var Type = "Boolean"
-				}
-				Property
-				{
-					var Name = "Index"
-					var Type = "Integer"
-				}
-				Property
-				{
-					var Name = "Port"
-					var Type = "Integer"
-				}
-			}
-		}
-		Object
-		{
-			var Name = "ConnectionEvent"
-			var BaseClass = "Event"
-			var Library = "NetworkingLibrary"
-			var Tags = Array
-			{
-				"Event"
-			}
-			var Properties = Array
-			{
-				Property
-				{
-					var Name = "Address"
-					var Type = "Integer"
-				}
-				Property
-				{
-					var Name = "Host"
-					var Type = "String"
-				}
-				Property
-				{
-					var Name = "Incoming"
-					var Type = "Boolean"
-				}
-				Property
-				{
-					var Name = "Index"
-					var Type = "Integer"
-				}
-				Property
-				{
-					var Name = "Port"
-					var Type = "Integer"
-				}
-			}
-		}
-		Object
-		{
 			var Name = "Console"
 			var Library = "Core"
 			var Methods = Array
@@ -62907,24 +62836,6 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 		}
 		Object
 		{
-			var Name = "ReceivedDataEvent"
-			var BaseClass = "ConnectionEvent"
-			var Library = "NetworkingLibrary"
-			var Tags = Array
-			{
-				"Event"
-			}
-			var Properties = Array
-			{
-				Property
-				{
-					var Name = "Buffer"
-					var Type = "String"
-				}
-			}
-		}
-		Object
-		{
 			var Name = "RecordingNode"
 			var BaseClass = "SoundNode"
 			var Library = "SoundLibrary"
@@ -66856,17 +66767,6 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 		}
 		Object
 		{
-			var Name = "SendableEvent"
-			var BaseClass = "Event"
-			var Library = "NetworkingLibrary"
-			var Description = "This event can be sent over the network."
-			var Tags = Array
-			{
-				"Event"
-			}
-		}
-		Object
-		{
 			var Name = "SerializationFilter"
 			var BaseClass = "ReferenceCountedEventObject"
 			var Library = "SerializationLibrary"
@@ -67456,32 +67356,6 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				{
 					var Name = "SimpleGizmoBase"
 					var Description = "Constructor."
-				}
-			}
-		}
-		Object
-		{
-			var Name = "SimpleSocket"
-			var BaseClass = "Component"
-			var Library = "NetworkingLibrary"
-			var Tags = Array
-			{
-				"Component"
-			}
-			var Properties = Array
-			{
-				Property
-				{
-					var Name = "Socket"
-					var Type = "TcpSocket"
-					var ReadOnly = true
-				}
-			}
-			var Methods = Array
-			{
-				Method
-				{
-					var Name = "SimpleSocket"
 				}
 			}
 		}
@@ -73073,214 +72947,6 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 			var Tags = Array
 			{
 				"Event"
-			}
-		}
-		Object
-		{
-			var Name = "TcpSocket"
-			var BaseClass = "EventObject"
-			var Library = "NetworkingLibrary"
-			var Description = "Manages all the client/server/peer connections ."
-			var Properties = Array
-			{
-				Property
-				{
-					var Name = "ConnectionCount"
-					var Type = "Integer"
-					var Description = "Get the number of connections we have."
-					var ReadOnly = true
-				}
-				Property
-				{
-					var Name = "IncomingConnectionCount"
-					var Type = "Integer"
-					var Description = "Get the number of incoming connections."
-					var ReadOnly = true
-				}
-				Property
-				{
-					var Name = "OutgoingConnectionCount"
-					var Type = "Integer"
-					var Description = "Get the number of outgoing connections."
-					var ReadOnly = true
-				}
-			}
-			var Methods = Array
-			{
-				Method
-				{
-					var Name = "Close"
-					var Description = "Close all activity (whether listening or connected to a server)."
-				}
-				Method
-				{
-					var Name = "CloseConnection"
-					var Parameters = "(Integer index)"
-					var ParameterList = Array
-					{
-						Parameter
-						{
-							var Name = "index"
-							var Type = "Integer"
-						}
-					}
-				}
-				Method
-				{
-					var Name = "Connect"
-					var Description = "Attempt to connect to a host on the given port."
-					var Parameters = "(String host, Integer port)"
-					var ParameterList = Array
-					{
-						Parameter
-						{
-							var Name = "host"
-							var Type = "String"
-						}
-						Parameter
-						{
-							var Name = "port"
-							var Type = "Integer"
-						}
-					}
-				}
-				Method
-				{
-					var Name = "IsConnected"
-					var Description = "Check if we are currently connected to anyone."
-					var ReturnType = "Boolean"
-				}
-				Method
-				{
-					var Name = "Listen"
-					var Description = "Listen for incoming connections."
-					var ReturnType = "Boolean"
-					var Parameters = "(Integer port, Integer maxConnections)"
-					var ParameterList = Array
-					{
-						Parameter
-						{
-							var Name = "port"
-							var Type = "Integer"
-						}
-						Parameter
-						{
-							var Name = "maxConnections"
-							var Type = "Integer"
-						}
-					}
-				}
-				Method
-				{
-					var Name = "Listen"
-					var Description = "Listen for incoming connections."
-					var ReturnType = "Boolean"
-					var Parameters = "(Integer port, Integer maxConnections, TcpSocketBind bindTo)"
-					var ParameterList = Array
-					{
-						Parameter
-						{
-							var Name = "port"
-							var Type = "Integer"
-						}
-						Parameter
-						{
-							var Name = "maxConnections"
-							var Type = "Integer"
-						}
-						Parameter
-						{
-							var Name = "bindTo"
-							var Type = "TcpSocketBind"
-						}
-					}
-				}
-				Method
-				{
-					var Name = "SendTo"
-					var Description = "Send an event to a specific connection index."
-					var Parameters = "(String eventId, SendableEvent event, Integer index)"
-					var ParameterList = Array
-					{
-						Parameter
-						{
-							var Name = "eventId"
-							var Type = "String"
-						}
-						Parameter
-						{
-							var Name = "event"
-							var Type = "SendableEvent"
-						}
-						Parameter
-						{
-							var Name = "index"
-							var Type = "Integer"
-						}
-					}
-				}
-				Method
-				{
-					var Name = "SendToAll"
-					var Description = "Send an event to all connections."
-					var Parameters = "(String eventId, SendableEvent event)"
-					var ParameterList = Array
-					{
-						Parameter
-						{
-							var Name = "eventId"
-							var Type = "String"
-						}
-						Parameter
-						{
-							var Name = "event"
-							var Type = "SendableEvent"
-						}
-					}
-				}
-				Method
-				{
-					var Name = "SendToAllAndSelf"
-					var Description = "Send an event to all connections and dispatch on self."
-					var Parameters = "(String eventId, SendableEvent event)"
-					var ParameterList = Array
-					{
-						Parameter
-						{
-							var Name = "eventId"
-							var Type = "String"
-						}
-						Parameter
-						{
-							var Name = "event"
-							var Type = "SendableEvent"
-						}
-					}
-				}
-				Method
-				{
-					var Name = "SendToAllExcept"
-					var Description = "Send an event to all connections except a particular connection index."
-					var Parameters = "(String eventId, SendableEvent event, Integer exceptIndex)"
-					var ParameterList = Array
-					{
-						Parameter
-						{
-							var Name = "eventId"
-							var Type = "String"
-						}
-						Parameter
-						{
-							var Name = "event"
-							var Type = "SendableEvent"
-						}
-						Parameter
-						{
-							var Name = "exceptIndex"
-							var Type = "Integer"
-						}
-					}
-				}
 			}
 		}
 		Object
@@ -82024,21 +81690,6 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				Object
 				{
 					var key = "TwoSpaces"
-				}
-			}
-		}
-		Object
-		{
-			var Name = "TcpSocketBind"
-			var EnumValues = Map
-			{
-				Object
-				{
-					var key = "Any"
-				}
-				Object
-				{
-					var key = "Loopback"
 				}
 			}
 		}

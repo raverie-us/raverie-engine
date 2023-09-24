@@ -7,7 +7,6 @@ namespace Raverie
 class Cog;
 class CommandManager;
 class Editor;
-class TcpSocket;
 
 void BindProjectCommands(Cog* config, CommandManager* commands);
 /// Returns false when the project file couldn't be opened.

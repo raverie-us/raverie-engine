@@ -10,10 +10,8 @@ namespace Raverie
 RaverieDefineRange(EventRange);
 RaverieDefineRange(NetUserRange);
 RaverieDefineRange(NetHostRange);
-RaverieDefineRange(WebServerHeaderRange);
 
 // Enums
-RaverieDefineEnum(TcpSocketBind);
 RaverieDefineEnum(NetUserAddResponse);
 RaverieDefineEnum(Network);
 RaverieDefineEnum(NetRefreshResult);
@@ -37,7 +35,6 @@ RaverieDefineEnum(DisconnectReason);
 RaverieDefineEnum(UserConnectResponse);
 RaverieDefineEnum(TransferMode);
 RaverieDefineEnum(Receipt);
-RaverieDefineEnum(WebServerRequestMethod);
 
 RaverieDefineExternalBaseType(WebResponseCode::Enum, TypeCopyMode::ValueType, builder, type)
 {
@@ -92,10 +89,8 @@ RaverieDefineStaticLibrary(NetworkingLibrary)
   RaverieInitializeRange(EventRange);
   RaverieInitializeRange(NetUserRange);
   RaverieInitializeRange(NetHostRange);
-  RaverieInitializeRange(WebServerHeaderRange);
 
   // Enums
-  RaverieInitializeEnum(TcpSocketBind);
   RaverieInitializeEnum(NetUserAddResponse);
   RaverieInitializeEnum(Network);
   RaverieInitializeEnum(NetRefreshResult);
@@ -119,18 +114,13 @@ RaverieDefineStaticLibrary(NetworkingLibrary)
   RaverieInitializeEnum(UserConnectResponse);
   RaverieInitializeEnum(TransferMode);
   RaverieInitializeEnum(Receipt);
-  RaverieInitializeEnum(WebServerRequestMethod);
   RaverieInitializeEnum(WebResponseCode);
 
   // Meta Arrays
   RaverieInitializeArrayTypeAs(NetPropertyInfoArray, "NetPropertyInfos");
 
   // Events
-  RaverieInitializeType(ConnectionEvent);
-  RaverieInitializeType(ReceivedDataEvent);
-  RaverieInitializeType(SendableEvent);
   RaverieInitializeType(WebResponseEvent);
-  RaverieInitializeType(WebServerRequestEvent);
   RaverieInitializeType(AcquireNetHostInfo);
   RaverieInitializeType(NetHostUpdate);
   RaverieInitializeType(NetHostListUpdate);
@@ -184,10 +174,6 @@ RaverieDefineStaticLibrary(NetworkingLibrary)
   InitializePropertyFilterForType(String);
 
   // Other Networking Type Initialization
-  RaverieInitializeType(TcpSocket);
-  RaverieInitializeType(SimpleSocket);
-  RaverieInitializeType(ConnectionData);
-  RaverieInitializeType(WebServer);
   RaverieInitializeType(AsyncWebRequest);
   RaverieInitializeType(WebRequester);
 
