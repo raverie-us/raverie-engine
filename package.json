@@ -10,6 +10,7 @@
     "browser-build": "cd Browser && npm run build",
     "browser-preview": "cd Browser && npm run preview",
     "start": "ts-node-esm index.ts",
+    "projectUpgrade": "ts-node-esm projectUpgrade.ts",
     "lint": "eslint ."
   },
   "repository": {
