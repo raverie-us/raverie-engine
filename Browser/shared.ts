@@ -158,6 +158,7 @@ export enum AudioConstants {
 export interface MessageInitialize {
   type: "initialize";
   canvas: OffscreenCanvas;
+  audioPort: MessagePort;
   args: string;
   focused: boolean;
   projectArchive: Uint8Array | null;
@@ -261,17 +262,6 @@ export interface MessageGamepadAxisChanged {
   value: number;
 }
 
-export interface MessageAudioPort {
-  type: "audioPort";
-  port: MessagePort;
-}
-
-export interface MessageAudioOutputRequest {
-  type: "audioOutputRequest";
-  id: number;
-  framesRequested: number;
-}
-
 export type ToWorkerMessageType =
   MessageInitialize |
   MessageMouseMove |
@@ -287,9 +277,7 @@ export type ToWorkerMessageType =
   MessageFocusChanged |
   MessageGamepadConnectionChanged |
   MessageGamepadButtonChanged |
-  MessageGamepadAxisChanged |
-  MessageAudioOutputRequest |
-  MessageAudioPort;
+  MessageGamepadAxisChanged;
 
 export interface MessageYieldDraw {
   type: "yieldDraw";
@@ -355,12 +343,6 @@ export interface MessageGamepadVibrate {
   intensity: number;
 }
 
-export interface MessageAudioOutput {
-  type: "audioOutput";
-  samplesPerChannel: Float32Array;
-  id: number;
-}
-
 export type ToMainMessageType =
   MessageYieldDraw |
   MessageYieldComplete |
@@ -372,8 +354,23 @@ export type ToMainMessageType =
   MessageProgressUpdate |
   MessageProjectSave |
   MessageOpenUrl |
-  MessageGamepadVibrate |
-  MessageAudioOutput;
+  MessageGamepadVibrate;
 
-  export type ToAudioMessageType =
-    MessageAudioOutput;
+export interface MessageAudioOutputRequest {
+  type: "audioOutputRequest";
+  id: number;
+  framesRequested: number;
+}
+
+export type ToWorkerAudioMessageType =
+  MessageAudioOutputRequest;
+
+
+export interface MessageAudioOutput {
+  type: "audioOutput";
+  samplesPerChannel: Float32Array;
+  id: number;
+}
+
+export type ToAudioMessageType =
+  MessageAudioOutput;

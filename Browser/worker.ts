@@ -16,7 +16,8 @@ import {
   MessageGamepadVibrate,
   MessageAudioOutput,
   ToAudioMessageType,
-  AudioConstants
+  AudioConstants,
+  ToWorkerAudioMessageType
 } from "./shared";
 
 const fetchWithProgress = async (path: string, onProgress: (percent: number) => void) => {
@@ -41,13 +42,6 @@ const fetchWithProgress = async (path: string, onProgress: (percent: number) => 
   return new Response(response.body?.pipeThrough(ts), response);
 }
 
-//let audioPort: MessagePort | null = null;
-//const audioPostMessage = <T extends ToAudioMessageType>(message: T) => {
-//  if (audioPort) {
-//    console.log("Sent audio message", message);
-//    audioPort.postMessage(message);
-//  }
-//};
 const mainPostMessage = <T extends ToMainMessageType>(message: T) => {
   postMessage(message);
 };
@@ -83,7 +77,7 @@ type GLsizeiPointer = number;
 // Platform
 type CharPointer = number;
 
-const start = async (message: MessageInitialize) => {
+const start = async (initMessage: MessageInitialize) => {
   // We need to buffer any messages we receive until we connect up our message 
   const bufferedMessages: MessageEvent<ToWorkerMessageType>[] = [];
   const onBufferMessage = (event: MessageEvent<ToWorkerMessageType>) => {
@@ -93,7 +87,7 @@ const start = async (message: MessageInitialize) => {
 
   const module = await modulePromise;
 
-  const gl = message.canvas.getContext("webgl2", {
+  const gl = initMessage.canvas.getContext("webgl2", {
     antialias: false,
     alpha: false,
     preserveDrawingBuffer: false
@@ -676,6 +670,22 @@ const start = async (message: MessageInitialize) => {
   const ExportGamepadAxisChanged = instance.exports.ExportGamepadAxisChanged as (gamepadIndex: number, axisIndex: number, value: number) => void;
   const ExportAudioOutput = instance.exports.ExportAudioOutput as (framesRequested: number) => number;
 
+
+  const audioPostMessage = <T extends ToAudioMessageType>(message: T) => {
+    initMessage.audioPort.postMessage(message);
+  };
+  initMessage.audioPort.onmessage = (event: MessageEvent<ToWorkerAudioMessageType>) => {
+    const data = event.data;
+
+    // It always outputs all the data it can, including 0s if needed
+    const floatPtr = ExportAudioOutput(data.framesRequested);
+    audioPostMessage<MessageAudioOutput>({
+      type: "audioOutput",
+      id: data.id,
+      samplesPerChannel: new Float32Array(readBuffer(floatPtr, data.framesRequested * 4/*sizeof(float)*/ * AudioConstants.Channels)),
+    });
+  };
+
   const allocateAndCopy = (buffer: Uint8Array | null) => {
     if (!buffer) {
       return 0;
@@ -747,8 +757,8 @@ const start = async (message: MessageInitialize) => {
         break;
       }
       case "sizeChanged":
-        message.canvas.width = data.clientWidth;
-        message.canvas.height = data.clientHeight;
+        initMessage.canvas.width = data.clientWidth;
+        initMessage.canvas.height = data.clientHeight;
         ExportSizeChanged(data.clientWidth, data.clientHeight);
         // Since the OffscreenCanvas clears the back buffer to black/transparent upon any resize
         // we run another engine iteration immediately to render out a frame to avoid resize flicker
@@ -769,19 +779,6 @@ const start = async (message: MessageInitialize) => {
       case "gamepadAxisChanged":
         ExportGamepadAxisChanged(data.gamepadIndex, data.axisIndex, data.value);
         break;
-      case "audioPort":
-        //audioPort = data.port;
-        break;
-      case "audioOutputRequest": {
-        // It always outputs all the data it can, including 0s if needed
-        const floatPtr = ExportAudioOutput(data.framesRequested);
-        mainPostMessage<MessageAudioOutput>({
-          type: "audioOutput",
-          id: data.id,
-          samplesPerChannel: new Float32Array(readBuffer(floatPtr, data.framesRequested * 4/*sizeof(float)*/ * AudioConstants.Channels)),
-        });
-        break;
-      }
     }
   };
 
@@ -849,18 +846,18 @@ const start = async (message: MessageInitialize) => {
     }
   }
 
-  const commandLineCharPtr = allocateNullTerminatedString(message.args);
-  const projectArchiveBytePtr = allocateAndCopy(message.projectArchive);
-  const builtContentArchiveBytePtr = allocateAndCopy(message.builtContentArchive);
+  const commandLineCharPtr = allocateNullTerminatedString(initMessage.args);
+  const projectArchiveBytePtr = allocateAndCopy(initMessage.projectArchive);
+  const builtContentArchiveBytePtr = allocateAndCopy(initMessage.builtContentArchive);
   ExportInitialize(
     commandLineCharPtr,
-    message.canvas.width,
-    message.canvas.height,
-    Number(message.focused),
+    initMessage.canvas.width,
+    initMessage.canvas.height,
+    Number(initMessage.focused),
     projectArchiveBytePtr,
-    message.projectArchive?.byteLength || 0,
+    initMessage.projectArchive?.byteLength || 0,
     builtContentArchiveBytePtr,
-    message.builtContentArchive?.byteLength || 0);
+    initMessage.builtContentArchive?.byteLength || 0);
   ExportFree(commandLineCharPtr);
 
   removeEventListener("message", onBufferMessage);

@@ -7,15 +7,24 @@ const concat = (a: Float32Array, b: Float32Array) => {
   return c;
 }
 
-class RaverieAudio extends AudioWorkletProcessor {
+export interface MessageAudioWorkletInitialize {
+  audioPort: MessagePort;
+}
+
+class RaverieAudioWorklet extends AudioWorkletProcessor {
   private frames = new Float32Array();
 
   public constructor() {
     super();
-    console.log("constructed RaverieAudio");
-    this.port.addEventListener("message", (event: MessageEvent<ToAudioMessageType>) => {
-      console.log("Got audio message", event.data);
-      this.frames = concat(this.frames, event.data.samplesPerChannel);
+    console.log("constructed RaverieAudioWorklet");
+    this.port.addEventListener("message", (event: MessageEvent<MessageAudioWorkletInitialize>) => {
+      console.log("Got audio initialization", event.data);
+
+      event.data.audioPort.addEventListener("message", (event: MessageEvent<ToAudioMessageType>) => {
+        // TODO(trevor): Not working, just for test
+        console.log("Got audio data");
+        this.frames = event.data.samplesPerChannel;
+      });
     });
   }
 
@@ -49,4 +58,4 @@ class RaverieAudio extends AudioWorkletProcessor {
   }
 }
 
-registerProcessor("raverie-audio", RaverieAudio);
+registerProcessor("raverie-audio", RaverieAudioWorklet);

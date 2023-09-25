@@ -1,14 +1,9 @@
 import RaverieEngineWorker from "./worker.ts?worker";
-//import RaverieAudioWorklet from "./audioWorklet?url";
 import Logo from "./logo.png?data-url";
 import {
-  AudioConstants,
   Cursor,
   KeyState,
   Keys,
-  MessageAudioOutput,
-  MessageAudioOutputRequest,
-  MessageAudioPort,
   MessageCopy,
   MessageFilesDropped,
   MessageFocusChanged,
@@ -30,6 +25,7 @@ import {
   ToMainMessageType,
   ToWorkerMessageType
 } from "./shared";
+import { RaverieAudio } from "./audioMain";
 
 const EventTypeProjectSave = "projectSave";
 interface RaverieEngineEventMap {
@@ -154,62 +150,6 @@ export class RaverieEngine extends EventTarget {
       }
     }
 
-    const audioContext = new AudioContext({
-      sampleRate: AudioConstants.SampleRate,
-      latencyHint: "interactive"
-    });
-
-    let audioSamplesPerChannel = new Float32Array();
-    let audioRequestId = 0;
-    let audioResponseId = 0;
-    const audioRequestsAhead = 3;
-    const audioMissedMultiplier = 4;
-    const audioScriptNode = audioContext.createScriptProcessor(512, 0, 2);
-    audioScriptNode.onaudioprocess = (event) => {
-      const outputBuffer = event.outputBuffer;
-
-      if (outputBuffer.numberOfChannels !== AudioConstants.Channels) {
-        throw new Error(`Unexpected number of channels ${outputBuffer.numberOfChannels}`);
-      }
-
-      const lChannel = outputBuffer.getChannelData(0);
-      const rChannel = outputBuffer.getChannelData(1);
-
-      if (lChannel.length !== rChannel.length) {
-        throw new Error("Expected channels to be of the same length");
-      }
-
-      const needSampleCount = lChannel.length;
-      const haveSampleCount = Math.floor(audioSamplesPerChannel.length / 2);
-      const missedSamples = needSampleCount > haveSampleCount;
-
-      if (audioRequestId - audioResponseId < audioRequestsAhead) {
-        workerPostMessage<MessageAudioOutputRequest>({
-          type: "audioOutputRequest",
-          framesRequested: missedSamples
-            ? needSampleCount * audioMissedMultiplier
-            : needSampleCount,
-          id: audioRequestId
-        });
-        ++audioRequestId;
-
-        if (missedSamples) {
-          console.log("Missed samples (main)", needSampleCount - audioSamplesPerChannel.length, "audioRequestId", audioRequestId, "audioResponseId", audioResponseId);
-        }
-      }
-      
-      const samplesWeCanRead = Math.min(needSampleCount, haveSampleCount);
-
-      for (let i = 0; i < samplesWeCanRead; ++i) {
-        lChannel[i] = audioSamplesPerChannel[i * 2 + 0] || 0;
-        rChannel[i] = audioSamplesPerChannel[i * 2 + 1] || 0;
-      }
-  
-      audioSamplesPerChannel = audioSamplesPerChannel.slice(samplesWeCanRead * AudioConstants.Channels);
-    };
-    audioScriptNode.connect(audioContext.destination);
-    //const audioModulePromise = audioContext.audioWorklet.addModule(RaverieAudioWorklet);
-    
     const downloadFile = (filename: string, buffer: ArrayBuffer) => {
       const blob = new Blob([buffer]);
       const url  = window.URL.createObjectURL(blob);
@@ -346,15 +286,6 @@ export class RaverieEngine extends EventTarget {
             }
             break;
           }
-          case "audioOutput": {
-            audioResponseId = data.id;
-            const newAudioFrames = new Float32Array(audioSamplesPerChannel.length + data.samplesPerChannel.length);
-            newAudioFrames.set(audioSamplesPerChannel, 0);
-            newAudioFrames.set(data.samplesPerChannel, audioSamplesPerChannel.length);
-            audioSamplesPerChannel = newAudioFrames;
-            //const audioBuffer = audioContext.createBuffer(AudioConstants.Channels, _, AudioConstants.SampleRate);
-            break;
-          }
       }
     });
     
@@ -365,17 +296,6 @@ export class RaverieEngine extends EventTarget {
         worker.postMessage(message);
       }
     }
-
-    //audioModulePromise.then(() => {
-    //  const raverieAudio = new AudioWorkletNode(audioContext, "raverie-audio");
-    //  console.log("Created audio worklet");
-    //  raverieAudio.connect(audioContext.destination);
-    //  
-    //  workerPostMessage<MessageAudioPort>({
-    //    type: "audioPort",
-    //    port: raverieAudio.port
-    //  });
-    //});
     
     input.addEventListener("change", async (event) => {
       if (currentDialog) {
@@ -397,15 +317,18 @@ export class RaverieEngine extends EventTarget {
         currentDialog = null;
       }
     });
+
+    const audio = new RaverieAudio();
     
     workerPostMessage<MessageInitialize>({
       type: "initialize",
       canvas: offscreenCanvas,
+      audioPort: audio.workerPort,
       args,
       focused,
       projectArchive,
       builtContentArchive,
-    }, [offscreenCanvas]);
+    }, [offscreenCanvas, audio.workerPort]);
     
     canvas.addEventListener("mousemove", (event) => {
       const rect = canvas.getBoundingClientRect();
@@ -676,14 +599,11 @@ export class RaverieEngine extends EventTarget {
       }
     });
 
-    const attemptResumeAudio = () => {
-      if (audioContext.state === "suspended") {
-        console.log("Resuming audio");
-        audioContext.resume();
-      }
+    const attemptStartAudio = () => {
+      audio.start();
     }
-    window.addEventListener("pointerdown", attemptResumeAudio);
-    window.addEventListener("keydown", attemptResumeAudio);
+    window.addEventListener("pointerdown", attemptStartAudio);
+    window.addEventListener("keydown", attemptStartAudio);
 
     const updateFocus = () => {
       const hasFocus = checkFocus();
