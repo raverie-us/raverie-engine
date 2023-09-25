@@ -314,7 +314,7 @@ export class RaverieEngine extends EventTarget {
               loading.style.visibility = "visible";
               loading.style.opacity = "1";
               if (data.text !== "") {
-                loadingText.textContent = data.text;
+                loadingText.textContent = `${Math.round(data.percent * 100)}% - ${data.text}`;
               }
             }
             break;

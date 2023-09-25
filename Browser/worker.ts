@@ -19,7 +19,46 @@ import {
   AudioConstants
 } from "./shared";
 
-const modulePromise = WebAssembly.compileStreaming(fetch(wasmUrl));
+const fetchWithProgress = async (path: string, onProgress: (percent: number) => void) => {
+  const response = await fetch(path);
+  // May be incorrect if compressed
+  const contentLength = response.headers.get("Content-Length");
+  if (!contentLength) {
+    return response;
+  }
+
+  const totalBytes = parseInt(contentLength, 10);
+
+  let loadedBytes = 0;
+  const ts = new TransformStream<Uint8Array, Uint8Array>({
+    transform (chunk, ctrl) {
+      loadedBytes += chunk.byteLength;
+      onProgress(loadedBytes / totalBytes);
+      ctrl.enqueue(chunk)
+    }
+  });
+
+  return new Response(response.body?.pipeThrough(ts), response);
+}
+
+//let audioPort: MessagePort | null = null;
+//const audioPostMessage = <T extends ToAudioMessageType>(message: T) => {
+//  if (audioPort) {
+//    console.log("Sent audio message", message);
+//    audioPort.postMessage(message);
+//  }
+//};
+const mainPostMessage = <T extends ToMainMessageType>(message: T) => {
+  postMessage(message);
+};
+
+const modulePromise = WebAssembly.compileStreaming(fetchWithProgress(wasmUrl, (percent) => {
+  mainPostMessage<MessageProgressUpdate>({
+    type: "progressUpdate",
+    text: "Downloading Runtime",
+    percent
+  });
+}));
 
 // GL
 type GLfloat = number;
@@ -43,17 +82,6 @@ type GLsizeiPointer = number;
 
 // Platform
 type CharPointer = number;
-
-//let audioPort: MessagePort | null = null;
-//const audioPostMessage = <T extends ToAudioMessageType>(message: T) => {
-//  if (audioPort) {
-//    console.log("Sent audio message", message);
-//    audioPort.postMessage(message);
-//  }
-//};
-const mainPostMessage = <T extends ToMainMessageType>(message: T) => {
-  postMessage(message);
-};
 
 const start = async (message: MessageInitialize) => {
   // We need to buffer any messages we receive until we connect up our message 
