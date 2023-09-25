@@ -205,7 +205,6 @@ namespace Raverie
 
 #include "Platform/PrivateImplementation.hpp"
 #include "Platform/Utilities.hpp"
-#include "Platform/OsHandle.hpp"
 #include "Platform/Thread.hpp"
 #include "Platform/ThreadSync.hpp"
 #include "Platform/File.hpp"

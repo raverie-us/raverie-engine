@@ -7,6 +7,8 @@ namespace Raverie
 // Is threading enabled on this platform?
 extern const bool ThreadingEnabled;
 
+typedef unsigned long OsInt;
+
 /// Thread class manages Os threads.
 class Thread
 {
@@ -39,12 +41,6 @@ public:
 
   // Is the thread completed?
   bool IsCompleted();
-
-  // Removes the thread from this object.
-  OsHandle Detach();
-
-  // Get the OsHandle to the thread.
-  OsHandle GetThreadHandle();
 
   // Get the thread id of this thread
   size_t GetThreadId();

@@ -51,16 +51,6 @@ bool Thread::IsCompleted()
   return true;
 }
 
-OsHandle Thread::Detach()
-{
-  return nullptr;
-}
-
-OsHandle Thread::GetThreadHandle()
-{
-  return nullptr;
-}
-
 size_t Thread::GetThreadId()
 {
   return 0;

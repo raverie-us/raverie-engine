@@ -452,8 +452,6 @@ public:
   void SetSocketOption(Status& status, SocketTcpOption::Enum option, const void* value, size_t valueLength);
   void SetSocketOption(Status& status, SocketUdpOption::Enum option, const void* value, size_t valueLength);
 
-  /// Native socket handle
-  OsHandle mHandle;
   /// Socket address family
   SocketAddressFamily::Enum mAddressFamily;
   /// Socket protocol type

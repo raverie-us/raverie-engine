@@ -28,7 +28,6 @@ public:
   void Signal();
   void Reset();
   void Wait();
-  OsHandle GetHandle();
 
 private:
   RaverieDeclarePrivateData(OsEvent, 8);
@@ -48,8 +47,6 @@ public:
   void WaitAndDecrement();
 
 private:
-  OsHandle mHandle;
-
   RaverieDeclarePrivateData(Semaphore, 8);
 };
 

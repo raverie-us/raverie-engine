@@ -558,19 +558,6 @@ bool File::Open(StringParam filePath, FileMode::Enum mode, FileAccessPattern::En
   return true;
 }
 
-void File::Open(OsHandle handle, FileMode::Enum mode)
-{
-  Error("Virtual File System does not support opening files via OsHandle");
-}
-
-void File::Open(Status& status, FILE* file, FileMode::Enum mode)
-{
-  RaverieGetPrivateData(FilePrivateData);
-  // We could support this by offering a dual interface where we also store a
-  // FILE*
-  Error("Memory File does not support opening files via FILE");
-}
-
 bool File::IsOpen()
 {
   RaverieGetPrivateData(FilePrivateData);

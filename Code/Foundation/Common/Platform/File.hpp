@@ -52,14 +52,6 @@ public:
   /// wanted to keep current asserting functionality)
   bool Open(StringParam filePath, FileMode::Enum mode, FileAccessPattern::Enum accessPattern, FileShare::Enum share = FileShare::Unspecified, Status* status = nullptr);
 
-  /// Creates a file from an OsHandle (cannot fail, assumes the OS handle is
-  /// valid)
-  void Open(OsHandle handle, FileMode::Enum mode);
-
-  /// Creates a file from a standard C FILE pointer
-  /// The most common case is passing in stdin, stdout, and stderr
-  void Open(Status& status, FILE* file, FileMode::Enum mode);
-
   /// Close the file
   void Close();
 

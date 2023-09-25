@@ -146,7 +146,6 @@ set(Common_Platform_Sources
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Lock.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Main.cpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Main.hpp
-    ${CMAKE_CURRENT_LIST_DIR}/Platform/OsHandle.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Platform.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/PrivateImplementation.hpp
     ${CMAKE_CURRENT_LIST_DIR}/Platform/Shell.cpp
