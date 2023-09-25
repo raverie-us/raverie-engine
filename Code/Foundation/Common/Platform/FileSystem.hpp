@@ -10,6 +10,31 @@ extern const Rune cDirectorySeparatorRune;
 extern const char cDirectorySeparatorCstr[];
 extern bool cFileSystemCaseSensitive;
 
+DeclareEnum2(EntryType, File, Directory);
+
+class SystemEntry : public LinkBase
+{
+public:
+  SystemEntry();
+  ~SystemEntry();
+
+  SystemEntry* FindChild(StringParam name);
+  SystemEntry* FindOrAddChild(StringParam name, EntryType::Enum type);
+  bool DeleteChild(StringParam name);
+  void CopyTo(SystemEntry* copyTo);
+  SystemEntry* CloneUnattached();
+  void AttachTo(SystemEntry* parent);
+  bool Delete();
+
+  SystemEntry* mParent;
+  EntryType::Enum mType;
+  String mName;
+  typedef BaseInList<LinkBase, SystemEntry> EntryList;
+  EntryList mChildren;
+  Array<byte> mFileData;
+  TimeType mModifiedTime;
+};
+
 /// Some platforms require initialization of thier file system (mounting
 /// devices, virtual files, etc). Create this object on the stack and keep it
 /// alive until you're done (with scopes).
@@ -184,7 +209,7 @@ public:
 
 private:
   String mPath;
-  RaverieDeclarePrivateData(FileRange, 720);
+  SystemEntry::EntryList::range mRange;
 };
 
 } // namespace Raverie

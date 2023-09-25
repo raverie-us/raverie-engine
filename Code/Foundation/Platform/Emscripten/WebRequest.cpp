@@ -4,16 +4,6 @@
 namespace Raverie
 {
 
-class WebRequestPrivateData
-{
-public:
-  WebRequestPrivateData() : mIsRunning(false)
-  {
-  }
-
-  bool mIsRunning;
-};
-
 extern "C" EMSCRIPTEN_KEEPALIVE void EmscriptenWebRequestOnHeadersReceived(char* responseHeaders, int responseCode, WebRequest* request)
 {
   Array<String> headers;

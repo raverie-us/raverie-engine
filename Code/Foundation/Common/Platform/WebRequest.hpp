@@ -130,8 +130,6 @@ public:
   WebRequestDataFn mOnDataReceived;
   WebRequestCompleteFn mOnComplete;
   void* mUserData;
-
-  RaverieDeclarePrivateDataBytes(128);
 };
 
 } // namespace Raverie

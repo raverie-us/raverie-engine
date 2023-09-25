@@ -37,6 +37,8 @@ size_t WriteToFile(cstr filePath, const byte* data, size_t bufferSize);
 bool CompareFile(Status& status, StringParam filePath1, StringParam filePath2);
 bool CompareFileAndString(Status& status, StringParam filePath, StringParam string);
 
+class SystemEntry;
+
 /// Os file class
 class File
 {
@@ -91,7 +93,8 @@ public:
   void Duplicate(Status& status, File& destinationFile);
 
 private:
-  RaverieDeclarePrivateData(File, 50);
+  SystemEntry* mEntry = nullptr;
+  size_t mPosition = 0;
 
   String mFilePath;
   FileMode::Enum mFileMode;

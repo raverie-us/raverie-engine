@@ -5,18 +5,12 @@ namespace Raverie
 {
 const bool ThreadingEnabled = false;
 
-struct ThreadPrivateData
-{
-};
-
 Thread::Thread()
 {
-  RaverieConstructPrivateData(ThreadPrivateData);
 }
 
 Thread::~Thread()
 {
-  RaverieDestructPrivateData(ThreadPrivateData);
 }
 
 bool Thread::IsValid()

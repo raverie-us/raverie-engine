@@ -17,7 +17,6 @@ class IpAddress : public SocketAddress
 private:
   /// Base methods and data hidden to provide desired behavior
   using SocketAddress::GetIpPort;
-  using SocketAddress::mPrivateData;
   using SocketAddress::SetIpPort;
   using SocketAddress::SetIpv4;
   using SocketAddress::SetIpv6;

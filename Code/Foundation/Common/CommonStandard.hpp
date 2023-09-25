@@ -203,7 +203,6 @@ namespace Raverie
 #include "Math/Rect.hpp"
 #include "Utility/Image.hpp"
 
-#include "Platform/PrivateImplementation.hpp"
 #include "Platform/Utilities.hpp"
 #include "Platform/Thread.hpp"
 #include "Platform/ThreadSync.hpp"

@@ -30,38 +30,27 @@ Timer::~Timer()
 {
 }
 
-struct TimerPrivateData
-{
-  Timer::TickType mStart;
-  Timer::TickType mLast;
-  Timer::TickType mCurrent;
-};
-
 void Timer::Reset()
 {
-  RaverieGetPrivateData(TimerPrivateData);
-  self->mStart = GetTimeNanosecond();
-  self->mCurrent = self->mStart;
-  self->mLast = self->mStart;
+  mStart = GetTimeNanosecond();
+  mCurrent = mStart;
+  mLast = mStart;
 }
 
 void Timer::Update()
 {
-  RaverieGetPrivateData(TimerPrivateData);
-  self->mLast = self->mCurrent;
-  self->mCurrent = GetTimeNanosecond();
+  mLast = mCurrent;
+  mCurrent = GetTimeNanosecond();
 }
 
 double Timer::Time() const
 {
-  RaverieGetPrivateData(TimerPrivateData);
-  return double(self->mCurrent - self->mStart) * NanosecondToSecond;
+  return double(mCurrent - mStart) * NanosecondToSecond;
 }
 
 double Timer::TimeDelta() const
 {
-  RaverieGetPrivateData(TimerPrivateData);
-  return double(self->mCurrent - self->mLast) * NanosecondToSecond;
+  return double(mCurrent - mLast) * NanosecondToSecond;
 }
 
 double Timer::UpdateAndGetTime()
@@ -87,15 +76,13 @@ TimeMs Timer::UpdateAndGetTimeMilliseconds()
 
 double Timer::TimeNoUpdate() const
 {
-  RaverieGetPrivateData(TimerPrivateData);
   u64 current = GetTimeNanosecond();
-  return double(current - self->mStart) * NanosecondToSecond;
+  return double(current - mStart) * NanosecondToSecond;
 }
 
 Timer::TickType Timer::GetTickTime() const
 {
-  RaverieGetPrivateData(TimerPrivateData);
-  return self->mCurrent;
+  return mCurrent;
 }
 
 double Timer::TicksToSeconds(TickType ticks) const

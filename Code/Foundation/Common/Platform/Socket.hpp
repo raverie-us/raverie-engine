@@ -76,9 +76,6 @@ public:
 
   /// Clears the socket address
   void Clear();
-
-  /// Address data
-  RaverieDeclarePrivateDataBytes(SocketAddressStorageBytes);
 };
 
 /// Serializes a socket address (currently only defined for InternetworkV4 and

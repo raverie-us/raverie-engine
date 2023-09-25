@@ -76,7 +76,9 @@ public:
   double TicksToSeconds(TickType ticks) const;
 
 private:
-  RaverieDeclarePrivateDataBytes(50);
+  Timer::TickType mStart = 0;
+  Timer::TickType mLast = 0;
+  Timer::TickType mCurrent = 0;
 };
 
 } // namespace Raverie

@@ -66,7 +66,7 @@ public:
 
 private:
   String mThreadName;
-  RaverieDeclarePrivateData(Thread, 20);
+  // TODO(trevor): To support threads, must add a handle/pointer to thread primitive here
 };
 
 } // namespace Raverie

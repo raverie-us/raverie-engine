@@ -3,10 +3,6 @@
 
 namespace Raverie
 {
-struct ThreadLockPrivateData
-{
-};
-
 ThreadLock::ThreadLock()
 {
 }

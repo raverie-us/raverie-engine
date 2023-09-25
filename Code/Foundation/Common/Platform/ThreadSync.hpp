@@ -14,7 +14,7 @@ public:
   void Unlock();
 
 private:
-  RaverieDeclarePrivateData(ThreadLock, 48);
+  // TODO(trevor): To support threads, must add a handle/pointer to thread primitive here
 };
 
 // Wrapper around an unnamed event.
@@ -30,7 +30,7 @@ public:
   void Wait();
 
 private:
-  RaverieDeclarePrivateData(OsEvent, 8);
+  // TODO(trevor): To support threads, must add a handle/pointer to thread primitive here
 };
 
 const int MaxSemaphoreCount = 0x0FFFFFFF;
@@ -47,7 +47,7 @@ public:
   void WaitAndDecrement();
 
 private:
-  RaverieDeclarePrivateData(Semaphore, 8);
+  // TODO(trevor): To support threads, must add a handle/pointer to thread primitive here
 };
 
 /// Not fully implemented as it's currently only needed for interprocess
@@ -61,7 +61,7 @@ public:
   void Initialize(Status& status, const char* mutexName, bool failIfAlreadyExists = false);
 
 private:
-  RaverieDeclarePrivateData(InterprocessMutex, 8);
+  // TODO(trevor): To support threads, must add a handle/pointer to thread primitive here
 };
 
 class CountdownEvent

@@ -11,31 +11,6 @@ bool cFileSystemCaseSensitive = false;
 
 static const String cRoot(cDirectorySeparatorCstr);
 
-DeclareEnum2(EntryType, File, Directory);
-
-class SystemEntry : public LinkBase
-{
-public:
-  SystemEntry();
-  ~SystemEntry();
-
-  SystemEntry* FindChild(StringParam name);
-  SystemEntry* FindOrAddChild(StringParam name, EntryType::Enum type);
-  bool DeleteChild(StringParam name);
-  void CopyTo(SystemEntry* copyTo);
-  SystemEntry* CloneUnattached();
-  void AttachTo(SystemEntry* parent);
-  bool Delete();
-
-  SystemEntry* mParent;
-  EntryType::Enum mType;
-  String mName;
-  typedef BaseInList<LinkBase, SystemEntry> EntryList;
-  EntryList mChildren;
-  Array<byte> mFileData;
-  TimeType mModifiedTime;
-};
-
 class FileSystem : public ExplicitSingleton<FileSystem>
 {
 public:
@@ -437,41 +412,31 @@ String UniqueFileId(StringParam fullpath)
   return FilePath::Normalize(fullpath);
 }
 
-struct FileRangePrivateData
-{
-  SystemEntry::EntryList::range mRange;
-};
-
 FileRange::FileRange(StringParam path) : mPath(path)
 {
-  RaverieConstructPrivateData(FileRangePrivateData);
   SystemEntry* entry = FileSystem::GetInstance()->FindEntry(path);
   if (entry && entry->mType == EntryType::Directory)
-    self->mRange = entry->mChildren.All();
+    mRange = entry->mChildren.All();
 }
 
 FileRange::~FileRange()
 {
-  RaverieDestructPrivateData(FileRangePrivateData);
 }
 
 bool FileRange::Empty()
 {
-  RaverieGetPrivateData(FileRangePrivateData);
-  return self->mRange.Empty();
+  return mRange.Empty();
 }
 
 String FileRange::Front()
 {
-  RaverieGetPrivateData(FileRangePrivateData);
-  SystemEntry& entry = self->mRange.Front();
+  SystemEntry& entry = mRange.Front();
   return entry.mName;
 }
 
 FileEntry FileRange::FrontEntry()
 {
-  RaverieGetPrivateData(FileRangePrivateData);
-  SystemEntry& frontEntry = self->mRange.Front();
+  SystemEntry& frontEntry = mRange.Front();
   FileEntry result;
   result.mPath = mPath;
   result.mFileName = frontEntry.mName;
@@ -481,36 +446,24 @@ FileEntry FileRange::FrontEntry()
 
 void FileRange::PopFront()
 {
-  RaverieGetPrivateData(FileRangePrivateData);
-  self->mRange.PopFront();
+  mRange.PopFront();
 }
 
 const int File::PlatformMaxPath = 4096;
 
-struct FilePrivateData
-{
-  SystemEntry* mEntry;
-  size_t mPosition;
-};
-
 File::File()
 {
-  RaverieConstructPrivateData(FilePrivateData);
-  self->mEntry = nullptr;
-  self->mPosition = 0;
 }
 
 File::~File()
 {
   Close();
-  RaverieDestructPrivateData(FilePrivateData);
 }
 
 size_t File::Size()
 {
-  RaverieGetPrivateData(FilePrivateData);
-  if (self->mEntry)
-    return self->mEntry->mFileData.Size();
+  if (mEntry)
+    return mEntry->mFileData.Size();
   return 0;
 }
 
@@ -521,7 +474,6 @@ long long File::CurrentFileSize()
 
 bool File::Open(StringParam filePath, FileMode::Enum mode, FileAccessPattern::Enum accessPattern, FileShare::Enum share, Status* status)
 {
-  RaverieGetPrivateData(FilePrivateData);
 
   SystemEntry* entry = nullptr;
   if (mode == FileMode::Read)
@@ -547,58 +499,54 @@ bool File::Open(StringParam filePath, FileMode::Enum mode, FileAccessPattern::En
   }
   else if (mode == FileMode::Append)
   {
-    self->mPosition = entry->mFileData.Size();
+    mPosition = entry->mFileData.Size();
   }
 
   // Currently don't handle/set locked
 
   mFileMode = mode;
   mFilePath = filePath;
-  self->mEntry = entry;
+  mEntry = entry;
   return true;
 }
 
 bool File::IsOpen()
 {
-  RaverieGetPrivateData(FilePrivateData);
-  return self->mEntry != nullptr;
+  return mEntry != nullptr;
 }
 
 void File::Close()
 {
-  RaverieGetPrivateData(FilePrivateData);
 
   // Guard against closing more than once.
-  if (!self->mEntry)
+  if (!mEntry)
     return;
 
-  self->mEntry = nullptr;
+  mEntry = nullptr;
   if (mFileMode != FileMode::Read)
     FileModifiedState::EndFileModified(mFilePath);
 }
 
 FilePosition File::Tell()
 {
-  RaverieGetPrivateData(FilePrivateData);
-  return self->mPosition;
+  return mPosition;
 }
 
 bool File::Seek(FilePosition pos, SeekOrigin::Enum rel)
 {
-  RaverieGetPrivateData(FilePrivateData);
-  if (!self->mEntry)
+  if (!mEntry)
     return false;
 
   switch (rel)
   {
   case SeekOrigin::Begin:
-    self->mPosition = (size_t)pos;
+    mPosition = (size_t)pos;
     break;
   case SeekOrigin::Current:
-    self->mPosition += (size_t)pos;
+    mPosition += (size_t)pos;
     break;
   case SeekOrigin::End:
-    self->mPosition = self->mEntry->mFileData.Size() + (size_t)pos;
+    mPosition = mEntry->mFileData.Size() + (size_t)pos;
     break;
   default:
     return false;
@@ -609,49 +557,46 @@ bool File::Seek(FilePosition pos, SeekOrigin::Enum rel)
 
 size_t File::Write(byte* data, size_t sizeInBytes)
 {
-  RaverieGetPrivateData(FilePrivateData);
-  SystemEntry* entry = self->mEntry;
+  SystemEntry* entry = mEntry;
   if (!entry)
     return 0;
 
-  size_t newSize = Math::Max(self->mPosition + sizeInBytes, entry->mFileData.Size());
+  size_t newSize = Math::Max(mPosition + sizeInBytes, entry->mFileData.Size());
   entry->mFileData.Resize(newSize);
 
-  memcpy(entry->mFileData.Data() + self->mPosition, data, sizeInBytes);
-  self->mPosition += sizeInBytes;
+  memcpy(entry->mFileData.Data() + mPosition, data, sizeInBytes);
+  mPosition += sizeInBytes;
   return sizeInBytes;
 }
 
 size_t File::Read(Status& status, byte* data, size_t sizeInBytes)
 {
-  RaverieGetPrivateData(FilePrivateData);
-  if (!self->mEntry)
+  if (!mEntry)
   {
     status.SetFailed("No file was open");
     return 0;
   }
 
-  if (self->mPosition >= self->mEntry->mFileData.Size())
+  if (mPosition >= mEntry->mFileData.Size())
     return 0;
 
-  size_t dataLeft = self->mEntry->mFileData.Size() - self->mPosition;
+  size_t dataLeft = mEntry->mFileData.Size() - mPosition;
   sizeInBytes = Math::Min(sizeInBytes, dataLeft);
 
-  memcpy(data, self->mEntry->mFileData.Data() + self->mPosition, sizeInBytes);
-  self->mPosition += sizeInBytes;
+  memcpy(data, mEntry->mFileData.Data() + mPosition, sizeInBytes);
+  mPosition += sizeInBytes;
   return sizeInBytes;
 }
 
 bool File::HasData(Status& status)
 {
-  RaverieGetPrivateData(FilePrivateData);
-  if (!self->mEntry)
+  if (!mEntry)
   {
     status.SetFailed("No file was open");
     return false;
   }
 
-  return self->mPosition < self->mEntry->mFileData.Size();
+  return mPosition < mEntry->mFileData.Size();
 }
 
 void File::Flush()
@@ -661,17 +606,14 @@ void File::Flush()
 
 void File::Duplicate(Status& status, File& destinationFile)
 {
-  RaverieGetPrivateData(FilePrivateData);
-  RaverieGetObjectPrivateData(FilePrivateData, &destinationFile, other);
-
-  if (!self->mEntry || !other->mEntry)
+  if (!mEntry || !destinationFile.mEntry)
   {
     status.SetFailed("File is not valid. Open a valid file before attempting "
                      "file operations.");
     return;
   }
 
-  self->mEntry->CopyTo(other->mEntry);
+  mEntry->CopyTo(destinationFile.mEntry);
 }
 
 void RaverieExportNamed(ExportFileCreate)(const char* filePath, byte* dataSteal, size_t dataLength)
