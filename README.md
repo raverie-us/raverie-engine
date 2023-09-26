@@ -1,9 +1,6 @@
 # About
 The Raverie Engine is a light-weight game engine that aims to recreate the Macromedia/Adobe Flash experience of old.
 
-# Architecture
-The Raverie Engine is built to run on any platform and targets pure WASM as its only output. This means that the output does not include executables, glue code, etc (we do not use Emscripten). The list of imports and exports is cleanly defined in `PlatformCommunication.hpp` and can easily be implemented by any platform, including the browser.
-
 # Getting started
 Checkout the repository and all submodules:
 
@@ -56,3 +53,6 @@ To run a newly created build, the easiest way is to run in a browser:
 This will print out a link that you can visit in the browser which will run the engine, for example http://172.17.0.*:8080/
 
 Note that the `localhost` link will not work as it's only accessible from inside the Docker container.
+
+# Architecture
+The Raverie Engine is built to run on any platform and targets pure WASM as its only output. This means that the output does not include executables, glue code, etc (we do not use Emscripten). The list of imports and exports is cleanly defined in `PlatformCommunication.hpp` and can easily be implemented by any platform, including the browser.
