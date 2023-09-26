@@ -120,6 +120,7 @@ export class RaverieEngine extends EventTarget {
     loadingText.style.fontSize = "1em";
     loadingText.style.color = "#fff";
     loadingText.style.fontFamily = "monospace";
+    loadingText.textContent = "Downloading Runtime";
     loadingCenter.append(loadingText);
     
     // Force layout and set the opacity to 1 so it transitions

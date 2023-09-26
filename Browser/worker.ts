@@ -20,39 +20,11 @@ import {
   ToWorkerAudioMessageType
 } from "./shared";
 
-const fetchWithProgress = async (path: string, onProgress: (percent: number) => void) => {
-  const response = await fetch(path);
-  // May be incorrect if compressed
-  const contentLength = response.headers.get("Content-Length");
-  if (!contentLength) {
-    return response;
-  }
-
-  const totalBytes = parseInt(contentLength, 10);
-
-  let loadedBytes = 0;
-  const ts = new TransformStream<Uint8Array, Uint8Array>({
-    transform (chunk, ctrl) {
-      loadedBytes += chunk.byteLength;
-      onProgress(loadedBytes / totalBytes);
-      ctrl.enqueue(chunk)
-    }
-  });
-
-  return new Response(response.body?.pipeThrough(ts), response);
-}
-
 const mainPostMessage = <T extends ToMainMessageType>(message: T) => {
-  postMessage(message);
+postMessage(message);
 };
 
-const modulePromise = WebAssembly.compileStreaming(fetchWithProgress(wasmUrl, (percent) => {
-  mainPostMessage<MessageProgressUpdate>({
-    type: "progressUpdate",
-    text: "Downloading Runtime",
-    percent
-  });
-}));
+const modulePromise = WebAssembly.compileStreaming(fetch(wasmUrl));
 
 // GL
 type GLfloat = number;
