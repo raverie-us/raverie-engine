@@ -109,6 +109,28 @@ export class RaverieEngine extends EventTarget {
     loadingCenter.style.flexDirection = "column";
     loadingCenter.style.alignItems = "center";
     loading.append(loadingCenter);
+
+    const loadingSheen = document.createElement("div");
+    loadingSheen.style.position = "absolute";
+    loadingSheen.style.width = "100%";
+    loadingSheen.style.height = "100%";
+    loadingSheen.style.background = "linear-gradient(-30deg, transparent 45%, white, transparent 55%)";
+    loadingSheen.style.mixBlendMode = "overlay";
+    loadingSheen.style.filter = "blur(3px)";
+    loadingSheen.animate(
+      [
+        { "backgroundPositionY": "-50vh" },
+        { "backgroundPositionY": "50vh" },
+      ],
+      {
+        duration: 2000,
+        direction: "alternate",
+        easing: "ease-in-out",
+        iterations: Infinity,
+      },
+    )
+
+    loading.append(loadingSheen);
     
     const logo = document.createElement("img");
     logo.src = Logo;
