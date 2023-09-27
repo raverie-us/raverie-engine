@@ -675,16 +675,39 @@ const build = async (options) => {
   console.log("Built");
 };
 
+const determineWasmPath = (buildDir: string) =>
+  path.join(buildDir, "Code", executable.dir, executable.name, `${executable.name}.wasm`);
+
+const optimize = async (options) => {
+  const combo = determineCmakeCombo(options);
+  const buildDir = activateBuildDir(combo);
+  const wasmPath = determineWasmPath(buildDir);
+
+  const originalWasmPath = `${wasmPath}.original`;
+  await fs.promises.rename(wasmPath, originalWasmPath);
+  
+  const execOptions: ExecOptions = {
+    err: printErrorLine,
+    reject: false,
+    stdio: [
+      "ignore",
+      "pipe",
+      "pipe"
+    ]
+  };
+
+  console.log("Running wasm-opt...");
+  await execSimple("/binaryen/bin/wasm-opt", ["-O1", "-o", wasmPath, originalWasmPath], execOptions);
+}
+
 const prebuilt = async (options) => {
   console.log("Copying Prebuilt Content");
   const endPnot = preventNoOutputTimeout();
   const combo = determineCmakeCombo(options);
   rimraf.sync(dirs.prebuiltContent);
 
-  const buildDir = activateBuildDir(combo);
-
-  // We use executable.name twice since it's RaverieEditor/RaverieEditor
-  const wasmPath = path.join(buildDir, "Code", executable.dir, executable.name, executable.name);
+  // We need to do this because this creates the 'Active' symlink, which the page builder uses
+  activateBuildDir(combo);
 
   const port = 3000;
   const server = await (await vite).createServer({
@@ -792,6 +815,7 @@ const all = async (options) => {
   //await documentation(options);
   // Build again so that the VFS will have the prebuilt content
   await build(options);
+  await optimize(options);
 };
 
 const main = async () => {
@@ -807,11 +831,13 @@ const main = async () => {
     usage(`cmake ${comboOptions}`).
     command("build", "Build a cmake project", empty, build).
     usage(`build [--target=...] [--parallel=...] ${comboOptions}`).
+    command("optimize", "Optimize the output wasm", empty, optimize).
+    usage(`optimize ${comboOptions}`).
     command("documentation", "Build generated documentation", empty, documentation).
     usage("documentation").
     command("prebuilt", "Copy prebuilt content", empty, prebuilt).
     usage(`prebuilt ${comboOptions}`).
-    command("all", "Run all the expected commands in order: cmake build prebuilt documentation build", empty, all).
+    command("all", "Run all the expected commands in order: cmake build prebuilt documentation build optimize", empty, all).
     usage(`all ${comboOptions}`).
     demand(1).
     help().

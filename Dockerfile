@@ -38,6 +38,11 @@ RUN npm install --omit=optional --no-progress --no-audit --unsafe-perm --global
 # https://github.com/WebAssembly/wasi-sdk/issues/334
 COPY External/Emscripten/Repo/system/lib/libcxxabi/include/cxxabi.h /wasi-sysroot/include/c++/v1/cxxabi.h
 
+RUN curl -o /binaryen.gz -L https://github.com/WebAssembly/binaryen/releases/download/version_116/binaryen-version_116-x86_64-linux.tar.gz
+RUN tar -xf /binaryen.gz
+RUN rm /binaryen.gz
+RUN mv /binaryen-version_116 /binaryen
+
 ARG USER_ID
 RUN useradd -m -s /bin/bash -u $USER_ID user
 USER $USER_ID
