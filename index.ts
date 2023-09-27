@@ -802,6 +802,39 @@ const documentation = async () => {
   }));
 };
 
+const deploy = async (options) => {
+  console.log("Creating GitHub Pages build/branch...");
+
+  // We need to do this because this creates the 'Active' symlink, which the page builder uses
+  const combo = determineCmakeCombo(options);
+  activateBuildDir(combo);
+
+  const execOptions: ExecOptions = {
+    cwd: dirs.repo,
+    err: printErrorLine,
+    reject: true,
+    stdio: [
+      "ignore",
+      "pipe",
+      "pipe"
+    ]
+  };
+
+  const changes = await execSimple("git", ["status", "--porcelain=v1"], execOptions);
+  if (changes !== "") {
+    console.log("You must commit your current changes; cannot deploy a build with modified files in git\n", changes);
+    return;
+  }
+
+  const currentBranch = await execSimple("git", ["branch", "--show-current"], execOptions);
+  await execSimple("git", ["branch", "--force", "pages", "HEAD"], execOptions);
+  await execSimple("git", ["checkout", "pages"], execOptions);
+  await execSimple("npm", ["run", "browser-build"], execOptions);
+  await execSimple("git", ["add", "--all"], execOptions);
+  await execSimple("git", ["commit", "-am", "GitHub pages build"], execOptions);
+  await execSimple("git", ["checkout", currentBranch], execOptions);
+}
+
 const disk = () => {
   printSizes(path.parse(process.cwd()).root);
 };
@@ -837,6 +870,8 @@ const main = async () => {
     usage("documentation").
     command("prebuilt", "Copy prebuilt content", empty, prebuilt).
     usage(`prebuilt ${comboOptions}`).
+    command("deploy", "Deploy the build", empty, deploy).
+    usage(`deploy ${comboOptions}`).
     command("all", "Run all the expected commands in order: cmake build prebuilt documentation build optimize", empty, all).
     usage(`all ${comboOptions}`).
     demand(1).
