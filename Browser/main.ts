@@ -74,8 +74,8 @@ export class RaverieEngine extends EventTarget {
     canvas.style.outline = "none";
     canvas.tabIndex = 1;
     const initialRect = mainElement.getBoundingClientRect();
-    canvas.width = initialRect.width;
-    canvas.height = initialRect.height;
+    canvas.width = initialRect.width * window.devicePixelRatio;
+    canvas.height = initialRect.height * window.devicePixelRatio;
     mainElement.append(canvas);
     const offscreenCanvas = canvas.transferControlToOffscreen();
     
@@ -352,25 +352,29 @@ export class RaverieEngine extends EventTarget {
       projectArchive,
       builtContentArchive,
     }, [offscreenCanvas, audio.workerPort]);
+
+    const mouseCoords = (event: MouseEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      return {
+        clientX: (event.clientX - rect.left) * window.devicePixelRatio,
+        clientY: (event.clientY - rect.top) * window.devicePixelRatio,
+      }
+    }
     
     canvas.addEventListener("mousemove", (event) => {
-      const rect = canvas.getBoundingClientRect();
       workerPostMessage<MessageMouseMove>({
         type: "mouseMove",
-        clientX: event.clientX - rect.left,
-        clientY: event.clientY - rect.top,
-        dx: event.movementX,
-        dy: event.movementY
+        ...mouseCoords(event),
+        dx: event.movementX * window.devicePixelRatio,
+        dy: event.movementY * window.devicePixelRatio
       });
     });
     
     canvas.addEventListener("wheel", (event) => {
       const SCROLL_SCALE = 1 / 60;
-      const rect = canvas.getBoundingClientRect();
       workerPostMessage<MessageMouseScroll>({
         type: "mouseScroll",
-        clientX: event.clientX - rect.left,
-        clientY: event.clientY - rect.top,
+        ...mouseCoords(event),
         scrollX: event.deltaX * SCROLL_SCALE,
         scrollY: -event.deltaY * SCROLL_SCALE,
       });
@@ -389,11 +393,9 @@ export class RaverieEngine extends EventTarget {
     }
     
     const onMouseButtonChanged = (event: MouseEvent) => {
-      const rect = canvas.getBoundingClientRect();
       workerPostMessage<MessageMouseButtonChanged>({
         type: "mouseButtonChanged",
-        clientX: event.clientX - rect.left,
-        clientY: event.clientY - rect.top,
+        ...mouseCoords(event),
         button: mapMouseButton(event.button),
         state: (event.type === "mouseup") ? MouseState.Up : MouseState.Down
       });
@@ -617,8 +619,8 @@ export class RaverieEngine extends EventTarget {
     canvas.addEventListener("drop", (event) => {
       event.preventDefault();
       if (event.dataTransfer) {
-        const rect = canvas.getBoundingClientRect();
-        dropFiles(event.dataTransfer, event.clientX - rect.left, event.clientY - rect.top);
+        const coords = mouseCoords(event);
+        dropFiles(event.dataTransfer, coords.clientX, coords.clientY);
       }
     });
 
@@ -650,8 +652,8 @@ export class RaverieEngine extends EventTarget {
       for (const entry of entries) {
         workerPostMessage<MessageSizeChanged>({
           type: "sizeChanged",
-          clientWidth: entry.contentRect.width,
-          clientHeight: entry.contentRect.height
+          clientWidth: entry.contentRect.width * window.devicePixelRatio,
+          clientHeight: entry.contentRect.height * window.devicePixelRatio
         });
       }
     });
