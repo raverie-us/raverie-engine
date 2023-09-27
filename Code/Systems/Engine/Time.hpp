@@ -46,8 +46,6 @@ public:
   float RealTimePassed;
 };
 
-DeclareEnum2(TimeMode, FixedFrametime, ActualFrametime);
-
 /// Time space component controls time for a Space.
 class TimeSpace : public Component
 {
@@ -83,17 +81,12 @@ public:
   float GetTimeScale();
   void SetTimeScale(float timeScale);
 
-  /// The maximum amount of time we send when running in 'ActualFrametime' mode
-  /// If this value is set too high and the user does anything to pause their
+  /// The minimum frame rate we send to the game.
+  /// If this value is set too low and the user does anything to pause their
   /// system or the game (example grabbing the window) then a large frame time
   /// will be sent out and physics objects will jump very far (causing tunneling
   /// and random bounces)
-  float mMaxDt;
-
-  /// The minimum amount of time we send when running in 'ActualFrametime' mode
-  /// Ideally this is set to a very small non-zero value to prevent any division
-  /// by zero errors
-  float mMinDt;
+  float mMinFrameRate;
 
   /// Scale the speed of time for interesting effects like bullet time or fast
   /// paced gameplay
@@ -103,26 +96,6 @@ public:
   /// When paused, the Dt will remain at whatever it was (it will NOT be set to
   /// 0)
   bool mPaused;
-
-  /// When set to fixed framerate the Dt/frame time will never change (it will
-  /// send whatever the project frame-rate-limiter is set to) This means it is
-  /// important to run with a frame-rate limiter of some kind otherwise the game
-  /// will appear to run much faster/slower Note: For determinism, you should
-  /// always run in FixedFrametime mode When set to actual framerate we will
-  /// send out the real time that the engine is encountering (clamped by MinDt /
-  /// MaxDt)
-  TimeMode::Enum mTimeMode;
-
-  // Note: These only exist because meta cannot bind member enums!
-  /// When set to fixed framerate the Dt/frame time will never change (it will
-  /// send whatever the project frame-rate-limiter is set to) This means it is
-  /// important to run with a frame-rate limiter of some kind otherwise the game
-  /// will appear to run much faster/slower Note: For determinism, you should
-  /// always run in FixedFrametime mode When set to actual framerate we will
-  /// send out the real time that the engine is encountering (clamped by MinDt /
-  /// MaxDt)
-  TimeMode::Enum GetTimeMode() const;
-  void SetTimeMode(TimeMode::Enum value);
 
   /// The current frame we are on (starts at 0 and counts up for every frame
   /// that is run) This value counts up regardless of if the space is paused
@@ -168,11 +141,6 @@ public:
     return "TimeSystem";
   }
 
-  float GetTargetDt() const;
-
-  void OnProjectLoaded(ObjectEvent* event);
-  void OnProjectCogModified(Event* event);
-
   typedef InList<TimeSpace> TimeSpaceList;
   TimeSpaceList List;
 
@@ -182,8 +150,6 @@ public:
   double mEngineRuntime;
 
   HandleOf<Cog> mProjectCog;
-  bool mLimitFrameRate;
-  uint mFrameRate;
 
 private:
   // Main system timer

@@ -76,6 +76,7 @@ RaverieDefineType(ParticleSystem, builder, type)
   RaverieBindGetterSetterProperty(ChildSystem);
   RaverieBindFieldProperty(mSystemSpace);
   RaverieBindGetterSetterProperty(WarmUpTime);
+  RaverieBindGetterSetterProperty(WarmUpFrameRate);
   RaverieBindGetterSetterProperty(PreviewInEditor);
 
   RaverieBindMethod(AllParticles);
@@ -92,6 +93,7 @@ void ParticleSystem::Serialize(Serializer& stream)
   SerializeNameDefault(mChildSystem, false);
   SerializeEnumNameDefault(SystemSpace, mSystemSpace, SystemSpace::WorldSpace);
   SerializeNameDefault(mWarmUpTime, 0.0f);
+  SerializeNameDefault(mWarmUpFrameRate, 60.0f);
   SerializeNameDefault(mPreviewInEditor, false);
 }
 
@@ -130,9 +132,7 @@ void ParticleSystem::ScriptInitialize(CogInitializer& initializer)
   // of this, we have to warm up the particle system at a later point, hence the
   // use of ScriptInitialize
 
-  // Use the engines dt for simulating the warm up
-  float timeStep = Z::gEngine->has(TimeSystem)->GetTargetDt();
-
+  const float timeStep = 1.0f / mWarmUpFrameRate;
   float timeLeft = mWarmUpTime;
   while (timeLeft > 0.0f)
   {
@@ -244,9 +244,22 @@ void ParticleSystem::SetWarmUpTime(float time)
     DoNotifyWarning("WarmUpTime too high",
                     "Max warm up time is 20 seconds. "
                     "Setting this too high can cause large stalls.");
+    mWarmUpTime = cMaxWarmUpTime;
     return;
   }
   mWarmUpTime = time;
+}
+
+float ParticleSystem::GetWarmUpFrameRate()
+{
+  return mWarmUpFrameRate;
+}
+
+void ParticleSystem::SetWarmUpFrameRate(float frameRate)
+{
+  const float cMaxWarmUpFrameRate = 100.0f;
+  const float cMinWarmUpFrameRate = 10.0f;
+  mWarmUpFrameRate = Math::Clamp(frameRate, cMinWarmUpFrameRate, cMaxWarmUpFrameRate);
 }
 
 bool ParticleSystem::GetPreviewInEditor()

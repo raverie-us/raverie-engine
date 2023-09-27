@@ -315,36 +315,6 @@ String ProjectDescription::GetTagsString(StringParam splitChar)
   return tagText;
 }
 
-RaverieDefineType(FrameRateSettings, builder, type)
-{
-  RaverieBindComponent();
-  RaverieBindDocumented();
-  RaverieBindSetup(SetupMode::DefaultSerialization);
-
-  RaverieBindFieldProperty(mLimitFrameRate);
-  RaverieBindGetterSetterProperty(FrameRate);
-}
-
-void FrameRateSettings::Serialize(Serializer& stream)
-{
-  SerializeNameDefault(mLimitFrameRate, true);
-  SerializeNameDefault(mFrameRate, 60);
-}
-
-void FrameRateSettings::Initialize(CogInitializer& initializer)
-{
-}
-
-int FrameRateSettings::GetFrameRate()
-{
-  return mFrameRate;
-}
-
-void FrameRateSettings::SetFrameRate(int frameRate)
-{
-  mFrameRate = Math::Max(frameRate, 1);
-}
-
 RaverieDefineType(DebugSettings, builder, type)
 {
   RaverieBindComponent();

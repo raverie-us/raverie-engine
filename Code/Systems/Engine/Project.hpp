@@ -144,23 +144,6 @@ public:
   HashSet<String> mProjectTags;
 };
 
-/// Settings for how the frame rate of the engine should be controlled.
-class FrameRateSettings : public Component
-{
-public:
-  RaverieDeclareType(FrameRateSettings, TypeCopyMode::ReferenceType);
-
-  void Serialize(Serializer& stream) override;
-  void Initialize(CogInitializer& initializer) override;
-
-  /// If the engine should limit the frame rate.
-  bool mLimitFrameRate;
-  /// How many frames per second the engine should be limited at.
-  int GetFrameRate();
-  void SetFrameRate(int frameRate);
-  int mFrameRate;
-};
-
 class DebugSettings : public Component
 {
 public:

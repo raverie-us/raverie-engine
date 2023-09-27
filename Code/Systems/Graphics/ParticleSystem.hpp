@@ -73,6 +73,9 @@ public:
   float GetWarmUpTime();
   void SetWarmUpTime(float time);
   float mWarmUpTime;
+  float GetWarmUpFrameRate();
+  void SetWarmUpFrameRate(float frameRate);
+  float mWarmUpFrameRate;
 
   /// If the particle system should run on frame update in the editor instead of
   /// logic update.

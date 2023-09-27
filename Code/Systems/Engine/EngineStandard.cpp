@@ -37,7 +37,6 @@ RaverieDefineEnum(MouseButtons);
 RaverieDefineEnum(SplineType);
 RaverieDefineEnum(StoreResult);
 RaverieDefineEnum(TabWidth);
-RaverieDefineEnum(TimeMode);
 
 void LocationBind(LibraryBuilder& builder, BoundType* type)
 {
@@ -118,7 +117,6 @@ RaverieDefineStaticLibrary(EngineLibrary)
   RaverieInitializeEnum(SplineType);
   RaverieInitializeEnum(StoreResult);
   RaverieInitializeEnum(TabWidth);
-  RaverieInitializeEnum(TimeMode);
 
   // Arrays
   RaverieInitializeArrayTypeAs(Array<ContentLibraryReference>, "ContentLibraryReferenceArray");
@@ -290,7 +288,6 @@ RaverieDefineStaticLibrary(EngineLibrary)
 
   RaverieInitializeType(MainConfig);
   RaverieInitializeType(EditorConfig);
-  RaverieInitializeType(FrameRateSettings);
   RaverieInitializeType(DebugSettings);
   RaverieInitializeType(ExportSettings);
   RaverieInitializeType(ContentConfig);

@@ -19413,45 +19413,6 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 		}
 		Object
 		{
-			var Name = "FrameRateSettings"
-			var BaseClass = "Component"
-			var Library = "EngineLibrary"
-			var Description = "Settings for how the frame rate of the engine should be controlled."
-			var Tags = Array
-			{
-				"Component"
-			}
-			var Properties = Array
-			{
-				Property
-				{
-					var Name = "FrameRate"
-					var Type = "Integer"
-					var Description = "How many frames per second the engine should be limited at."
-				}
-				Property
-				{
-					var Name = "LimitFrameRate"
-					var Type = "Boolean"
-					var Description = "If the engine should limit the frame rate."
-				}
-				Property
-				{
-					var Name = "VerticalSync"
-					var Type = "Boolean"
-					var Description = "If the frame rate should sync with the monitor's refresh rate, superseded by LimitFrameRate."
-				}
-			}
-			var Methods = Array
-			{
-				Method
-				{
-					var Name = "FrameRateSettings"
-				}
-			}
-		}
-		Object
-		{
 			var Name = "Frustum"
 			var Library = "GeometryLibrary"
 			var Methods = Array
@@ -74102,15 +74063,15 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				}
 				Property
 				{
-					var Name = "MaxDt"
+					var Name = "MaxFrameRate"
 					var Type = "Real"
-					var Description = "The maximum amount of time we send when running in 'ActualFrametime' mode If this value is set too high and the user does anything to pause their system or the game (example grabbing the window) then a large frame time will be sent out and physics objects will jump very far (causing tunneling and random bounces)"
+					var Description = "The maximum amount of time we per frame. If this value is set too high and the user does anything to pause their system or the game (example grabbing the window) then a large frame time will be sent out and physics objects will jump very far (causing tunneling and random bounces)"
 				}
 				Property
 				{
-					var Name = "MinDt"
+					var Name = "MinFrameRate"
 					var Type = "Real"
-					var Description = "The minimum amount of time we send when running in 'ActualFrametime' mode Ideally this is set to a very small non-zero value to prevent any division by zero errors."
+					var Description = "The minimum amount of time we per frame. Ideally this is set to a very small non-zero value to prevent any division by zero errors."
 				}
 				Property
 				{
@@ -74134,12 +74095,6 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 					var Name = "StepCount"
 					var Type = "Integer"
 					var Description = "Causes the engine to update multiple times before rendering a frame."
-				}
-				Property
-				{
-					var Name = "TimeMode"
-					var Type = "TimeMode"
-					var Description = "When set to fixed framerate the Dt/frame time will never change (it will send whatever the project frame-rate-limiter is set to) This means it is important to run with a frame-rate limiter of some kind otherwise the game will appear to run much faster/slower Note: For determinism, you should always run in FixedFrametime mode When set to actual framerate we will send out the real time that the engine is encountering (clamped by MinDt / MaxDt)"
 				}
 				Property
 				{
@@ -82091,21 +82046,6 @@ Example: ('Content\\Powerups\\') results in 'Content\\Powerups'
 				Object
 				{
 					var key = "Timecodes"
-				}
-			}
-		}
-		Object
-		{
-			var Name = "TimeMode"
-			var EnumValues = Map
-			{
-				Object
-				{
-					var key = "ActualFrametime"
-				}
-				Object
-				{
-					var key = "FixedFrametime"
 				}
 			}
 		}

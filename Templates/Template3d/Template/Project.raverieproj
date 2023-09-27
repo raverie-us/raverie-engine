@@ -12,10 +12,4 @@ Cog
 		var AutoTakeProjectScreenshot = true
 		var Guid = 0x0000000000000000
 	}
-	FrameRateSettings 
-	{
-		var VerticalSync = false
-		var LimitFrameRate = true
-		var FrameRate = 60
-	}
 }
