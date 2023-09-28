@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "browser-install": "cd Browser && npm install",
+    "install-all": "npm install && cd Browser && npm install",
     "browser-dev": "cd Browser && npm run dev",
     "browser-build": "cd Browser && npm run build",
     "browser-pages-build": "cd Browser && npm run pages-build",
