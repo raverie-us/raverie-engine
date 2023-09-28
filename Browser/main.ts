@@ -1,4 +1,3 @@
-import RaverieEngineWorker from "./worker.ts?worker";
 import Logo from "./logo.png?data-url";
 import {
   Cursor,
@@ -52,18 +51,27 @@ export interface RaverieEngine {
   removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
 }
 
+export interface RaverieEngineConfig {
+  parent: HTMLElement;
+  workerUrl: string;
+  wasmUrl: string;
+  args?: string;
+  projectArchive?: Uint8Array;
+  builtContentArchive?: Uint8Array;
+}
+
 export class RaverieEngine extends EventTarget {
   public readonly mainElement: HTMLDivElement;
   public readonly canvas: HTMLCanvasElement;
 
-  public constructor(parent: HTMLElement, args: string, projectArchive: Uint8Array | null, builtContentArchive: Uint8Array | null) {
+  public constructor(config: RaverieEngineConfig) {
     super();
     const mainElement = document.createElement("div");
     this.mainElement = mainElement;
     mainElement.style.position = "relative";
     mainElement.style.width = "100%";
     mainElement.style.height = "100%";
-    parent.append(mainElement);
+    config.parent.append(mainElement);
     
     const canvas = document.createElement("canvas");
     this.canvas = canvas;
@@ -187,7 +195,7 @@ export class RaverieEngine extends EventTarget {
       window.URL.revokeObjectURL(url);
     }
     
-    const worker = new RaverieEngineWorker();
+    const worker = new Worker(config.workerUrl, {name: "RaverieWorker", type: "module"});
     worker.addEventListener("message", (event: MessageEvent<ToMainMessageType>) => {
       const data = event.data;
       switch (data.type) {
@@ -345,12 +353,13 @@ export class RaverieEngine extends EventTarget {
     
     workerPostMessage<MessageInitialize>({
       type: "initialize",
+      wasmUrl: config.wasmUrl,
       canvas: offscreenCanvas,
       audioPort: audio.workerPort,
-      args,
+      args: config.args,
       focused,
-      projectArchive,
-      builtContentArchive,
+      projectArchive: config.projectArchive,
+      builtContentArchive: config.builtContentArchive,
     }, [offscreenCanvas, audio.workerPort]);
 
     const mouseCoords = (event: MouseEvent) => {

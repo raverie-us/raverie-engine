@@ -157,12 +157,13 @@ export enum AudioConstants {
 
 export interface MessageInitialize {
   type: "initialize";
+  wasmUrl: string;
   canvas: OffscreenCanvas;
   audioPort: MessagePort;
-  args: string;
+  args?: string;
   focused: boolean;
-  projectArchive: Uint8Array | null;
-  builtContentArchive: Uint8Array | null;
+  projectArchive?: Uint8Array;
+  builtContentArchive?: Uint8Array;
 }
 
 export interface MessageMouseMove {

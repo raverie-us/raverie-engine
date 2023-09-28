@@ -829,7 +829,7 @@ const deploy = async (options) => {
   const currentBranch = await execSimple("git", ["branch", "--show-current"], execOptions);
   await execSimple("git", ["branch", "--force", "pages", "HEAD"], execOptions);
   await execSimple("git", ["checkout", "pages"], execOptions);
-  await execSimple("npm", ["run", "browser-build"], execOptions);
+  await execSimple("npm", ["run", "browser-pages-build"], execOptions);
   await execSimple("git", ["add", "--all"], execOptions);
   await execSimple("git", ["commit", "-am", "GitHub pages build"], execOptions);
   await execSimple("git", ["checkout", currentBranch], execOptions);

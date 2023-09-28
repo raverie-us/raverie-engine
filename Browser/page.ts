@@ -1,4 +1,6 @@
 import { RaverieEngine } from "./main";
+import RaverieEngineWorkerUrl from "./worker.ts?worker&url";
+import RaverieEngineWasmUrl from "../Build/Active/Code/Editor/RaverieEditor/RaverieEditor.wasm?url";
 
 const url = new URL(location.href);
 const args = url.searchParams.get("args") || "";
@@ -27,15 +29,23 @@ const projectArchiveKey = "projectArchive";
 const projectArchiveStr = playGame ? null : localStorage.getItem(projectArchiveKey);
 const projectArchive = projectArchiveStr
   ? base64ToUint8Buffer(projectArchiveStr)
-  : null;
+  : undefined;
 
 const builtContentArchiveKey = "builtContentArchive";
 const builtContentArchiveStr = playGame ? localStorage.getItem(builtContentArchiveKey) : null;
 const builtContentArchive = builtContentArchiveStr
   ? base64ToUint8Buffer(builtContentArchiveStr)
-  : null;
+  : undefined;
 
-const raverieEngine = new RaverieEngine(document.body, args, projectArchive, builtContentArchive);
+const raverieEngine = new RaverieEngine({
+  parent: document.body,
+  workerUrl: RaverieEngineWorkerUrl,
+  wasmUrl: RaverieEngineWasmUrl,
+  args,
+  projectArchive,
+  builtContentArchive
+});
+
 raverieEngine.canvas.focus();
 raverieEngine.addEventListener("projectSave", (event) => {
   try {

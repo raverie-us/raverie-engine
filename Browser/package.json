@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite --host",
     "build": "vite build",
+    "pages-build": "PAGES_BUILD=1 vite build",
     "preview": "vite preview"
   },
   "keywords": [],
@@ -15,6 +16,7 @@
     "@types/audioworklet": "^0.0.50",
     "@types/mime-types": "^2.1.1",
     "mime-types": "^2.1.35",
-    "vite": "^4.4.9"
+    "vite": "^4.4.9",
+    "vite-plugin-dts": "^3.6.0"
   }
 }

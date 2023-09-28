@@ -1,6 +1,8 @@
 import { defineConfig, Plugin } from "vite";
+import dts from "vite-plugin-dts";
 import * as fs from "fs";
 import * as mimetypes from "mime-types";
+import { resolve } from "path";
 
 const dataUrlLoader: Plugin = {
   name: "data-url-loader",
@@ -34,8 +36,23 @@ export default defineConfig({
     port: 8080,
   },
   build: {
-    outDir: "../docs/"
+    outDir: process.env.PAGES_BUILD ? "../docs/" : "../Build/Browser",
+    emptyOutDir: true,
+    assetsDir: "",
+    rollupOptions: {
+      preserveEntrySignatures: "strict",
+      output: {
+        entryFileNames: `[name].js`,
+        chunkFileNames: `[name].js`,
+        assetFileNames: `[name].[ext]`
+      },
+      input: {
+        "raverie-engine": resolve(__dirname, "main.ts"),
+        "raverie-engine-worker": resolve(__dirname, "worker.ts"),
+        "page": resolve(__dirname, "index.html"),
+      }
+    }
   },
   base: "",
-  plugins: [dataUrlLoader, rawBufferLoader]
+  plugins: [dts({ rollupTypes: true }), dataUrlLoader, rawBufferLoader]
 });
