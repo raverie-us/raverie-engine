@@ -71,6 +71,7 @@ export class RaverieEngine extends EventTarget {
     mainElement.style.position = "relative";
     mainElement.style.width = "100%";
     mainElement.style.height = "100%";
+    mainElement.style.overflow = "hidden";
     config.parent.append(mainElement);
     
     const canvas = document.createElement("canvas");
