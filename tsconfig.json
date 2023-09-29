@@ -3,7 +3,7 @@
     "strict": false,
     "esModuleInterop": true,
     "moduleResolution": "nodenext",
-    "module": "es2022",
+    "module": "nodenext",
     "target": "es2022"
   }
 }
