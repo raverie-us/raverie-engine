@@ -60,9 +60,13 @@ export interface RaverieEngineConfig {
   builtContentArchive?: Uint8Array;
 }
 
+type DestructFunction = () => void;
+
 export class RaverieEngine extends EventTarget {
   public readonly mainElement: HTMLDivElement;
-  public readonly canvas: HTMLCanvasElement;
+  private requestedAnimationFrame = -1;
+
+  private destructables: DestructFunction[] = [];
 
   public constructor(config: RaverieEngineConfig) {
     super();
@@ -73,9 +77,12 @@ export class RaverieEngine extends EventTarget {
     mainElement.style.height = "100%";
     mainElement.style.overflow = "hidden";
     config.parent.append(mainElement);
+    this.destructables.push(() => {
+      mainElement.remove();
+      delete (this as any).mainElement;
+    });
     
     const canvas = document.createElement("canvas");
-    this.canvas = canvas;
     canvas.style.position = "absolute";
     canvas.style.width = "100%";
     canvas.style.height = "100%";
@@ -197,7 +204,7 @@ export class RaverieEngine extends EventTarget {
     }
     
     const worker = new Worker(config.workerUrl, {name: "RaverieWorker", type: "module"});
-    worker.addEventListener("message", (event: MessageEvent<ToMainMessageType>) => {
+    const onWorkerMessage = (event: MessageEvent<ToMainMessageType>) => {
       const data = event.data;
       switch (data.type) {
         case "yieldDraw":
@@ -319,6 +326,11 @@ export class RaverieEngine extends EventTarget {
             break;
           }
       }
+    };
+    worker.addEventListener("message", onWorkerMessage);
+    this.destructables.push(() => {
+      worker.terminate();
+      worker.removeEventListener("message", onWorkerMessage);
     });
     
     const workerPostMessage = <T extends ToWorkerMessageType>(message: T, transfer?: Transferable[]) => {
@@ -566,16 +578,6 @@ export class RaverieEngine extends EventTarget {
       event.preventDefault();
     });
     
-    const copyCutHandler = (event: ClipboardEvent) => {
-      if (document.activeElement === canvas) {
-        workerPostMessage<MessageCopy>({
-          type: "copy",
-          isCut: event.type === "cut"
-        });
-        event.preventDefault();
-      }
-    };
-    
     const dropFiles = async (dataTransfer: DataTransfer, clientX: number, clientY: number) => {
       const files: MessagePartFile[] = [];
       for (const file of dataTransfer.files) {
@@ -593,10 +595,17 @@ export class RaverieEngine extends EventTarget {
       });
     }
     
-    // These two event handlers don't work on the canvas (only on document) so we must check focus
-    document.addEventListener("copy", copyCutHandler);
-    document.addEventListener("cut", copyCutHandler);
-    document.addEventListener("paste", (event) => {
+    const copyCutHandler = (event: ClipboardEvent) => {
+      if (document.activeElement === canvas) {
+        workerPostMessage<MessageCopy>({
+          type: "copy",
+          isCut: event.type === "cut"
+        });
+        event.preventDefault();
+      }
+    };
+    
+    const pasteHandler = (event: ClipboardEvent) => {
       if (document.activeElement === canvas) {
         let dataTransfer = event.clipboardData;
         if (emulatedClipboardText) {
@@ -619,6 +628,17 @@ export class RaverieEngine extends EventTarget {
           }
         }
       }
+    }
+    
+    // These two event handlers don't work on the canvas (only on document) so we must check focus
+    document.addEventListener("copy", copyCutHandler);
+    document.addEventListener("cut", copyCutHandler);
+    document.addEventListener("paste", pasteHandler);
+
+    this.destructables.push(() => {
+      document.removeEventListener("copy", copyCutHandler);
+      document.removeEventListener("cut", copyCutHandler);
+      document.removeEventListener("paste", pasteHandler);
     });
     
     // We have to prevent default on dragover otherwise it opens the file with it's usual behavior
@@ -639,6 +659,10 @@ export class RaverieEngine extends EventTarget {
     }
     window.addEventListener("pointerdown", attemptStartAudio);
     window.addEventListener("keydown", attemptStartAudio);
+    this.destructables.push(() => {
+      window.removeEventListener("pointerdown", attemptStartAudio);
+      window.removeEventListener("keydown", attemptStartAudio);
+    });
 
     const updateFocus = () => {
       const hasFocus = checkFocus();
@@ -657,6 +681,11 @@ export class RaverieEngine extends EventTarget {
     window.addEventListener("focus", updateFocus);
     window.addEventListener("blur", updateFocus);
     document.addEventListener("visibilitychange", updateFocus);
+    this.destructables.push(() => {
+      window.removeEventListener("focus", updateFocus);
+      window.removeEventListener("blur", updateFocus);
+      document.removeEventListener("visibilitychange", updateFocus);
+    });
     
     const resizeObserver = new ResizeObserver((entries) => {
       for (const entry of entries) {
@@ -671,6 +700,9 @@ export class RaverieEngine extends EventTarget {
     resizeObserver.observe(mainElement);
     
     document.addEventListener("pointerlockchange", updateMouseTrapped);
+    this.destructables.push(() => {
+      document.removeEventListener("pointerlockchange", updateMouseTrapped);
+    });
     
     const recaptureTrappedMouse = () => {
       if (mouseTrapped && document.pointerLockElement !== canvas) {
@@ -750,10 +782,21 @@ export class RaverieEngine extends EventTarget {
         }
 
         prevGamepads = gamepads;
-        requestAnimationFrame(doGamepadUpdate);
+        this.requestedAnimationFrame = requestAnimationFrame(doGamepadUpdate);
       }
 
       doGamepadUpdate();
+
+      this.destructables.push(() => {
+        cancelAnimationFrame(this.requestedAnimationFrame);
+      });
     };
+  }
+
+  public destroy() {
+    for (const destructable of this.destructables) {
+      destructable();
+    }
+    this.destructables.length = 0;
   }
 }
