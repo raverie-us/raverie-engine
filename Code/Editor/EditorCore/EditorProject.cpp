@@ -135,9 +135,12 @@ bool OpenProjectFile(StringParam filename)
   // Prevent components from being added or removed from the project cog
   projectCog->mFlags.SetFlag(CogFlags::ScriptComponentsLocked);
 
-  ProjectSettings* project = projectCog->has(ProjectSettings);
-  if (project == nullptr)
-    return false;
+  ProjectSettings* project = HasOrAdd<ProjectSettings>(projectCog);
+  
+  String newProjectName = Environment::GetValue<String>("SetProjectName");
+  if (!newProjectName.Empty()) {
+    project->ProjectName = newProjectName;
+  }
 
   // Begin the loading project
   String projectFolder = FilePath::GetDirectoryPath(filename);

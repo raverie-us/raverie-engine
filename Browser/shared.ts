@@ -160,7 +160,7 @@ export interface MessageInitialize {
   wasmUrl: string;
   canvas: OffscreenCanvas;
   audioPort: MessagePort;
-  args?: string;
+  args?: string | null;
   focused: boolean;
   projectArchive?: Uint8Array;
   builtContentArchive?: Uint8Array;

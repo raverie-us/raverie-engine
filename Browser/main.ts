@@ -55,7 +55,7 @@ export interface RaverieEngineConfig {
   parent: HTMLElement;
   workerUrl: string;
   wasmUrl: string;
-  args?: string;
+  args?: string | null;
   projectArchive?: Uint8Array;
   builtContentArchive?: Uint8Array;
 }
