@@ -17,7 +17,7 @@ RaverieDefineType(ProjectSettings, builder, type)
   RaverieBindDocumented();
   type->AddAttribute(ObjectAttributes::cCore);
 
-  RaverieBindFieldGetter(ProjectName);
+  RaverieBindField(ProjectName);
   RaverieBindFieldGetter(ProjectFolder);
   RaverieBindFieldGetter(ContentFolder);
   RaverieBindFieldGetter(EditorContentFolder);
