@@ -10,4 +10,4 @@ else
   DIR=$(pwd)
 fi
 
-docker run --rm --cap-add=SYS_ADMIN --user `id -u`:`id -g` -v"$HOME":"/home/user" -v"`pwd`/Build/Cache":'/cache/' -v$DIR:$DIR -w`pwd` raverie-engine "$@"
+docker run --rm -it --cap-add=SYS_ADMIN --network host --user `id -u`:`id -g` -v"$HOME":"/home/user" -v"`pwd`/Build/Cache":'/cache/' -v$DIR:$DIR -w`pwd` raverie-engine "$@"

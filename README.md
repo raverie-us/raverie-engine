@@ -13,6 +13,26 @@ Or if you already checked the repo out without cloning submodules, be sure to ru
 git submodule update --init --recursive
 ```
 
+# Docker Setup
+To build Raverie in a consistent build environment, we use Docker containers.
+
+Windows only, install the WSL and run the rest of the commands inside the WSL/bash:
+```bash
+wsl --install
+```
+
+To install Docker:
+```bash
+sudo snap install docker
+```
+
+We require docker to be usable without sudo (https://docs.docker.com/engine/install/linux-postinstall/):
+```bash
+sudo groupadd docker
+sudo usermod -aG docker $USER
+newgrp docker
+```
+
 # Building
 Whilst the Raverie Engine can run on any platform, it is currently only built on Linux and requires Docker, but may work on other *nix platforms.
 
